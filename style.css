@@ -1,0 +1,265 @@
+:root{
+
+  --main-color:#ff3d00;
+
+  --second-color:#0d47a1;
+
+  --gold-color:#ffc107;
+
+  --bg-color:#f5f5f5;
+
+  --text-color:#222;
+
+  --white:#fff;
+}
+
+
+
+body{
+
+  margin:0;
+  padding:0;
+
+  background:var(--bg-color);
+
+  font-family:'Cairo',sans-serif;
+
+  direction:rtl;
+}
+
+
+
+.container{
+
+  width:90%;
+
+  max-width:450px;
+
+  margin:auto;
+
+  margin-top:30px;
+}
+
+
+
+.card{
+
+  background:var(--white);
+
+  padding:20px;
+
+  border-radius:25px;
+
+  box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+
+
+.logo{
+
+  text-align:center;
+
+  margin-bottom:20px;
+}
+
+
+
+.logo img{
+
+  width:120px;
+}
+
+
+
+.title{
+
+  text-align:center;
+
+  color:var(--second-color);
+
+  font-size:24px;
+
+  margin-bottom:20px;
+}
+
+
+
+input,
+select{
+
+  width:100%;
+
+  padding:14px;
+
+  margin-top:12px;
+
+  border:1px solid #ddd;
+
+  border-radius:14px;
+
+  box-sizing:border-box;
+
+  font-size:15px;
+
+  background:white;
+
+  outline:none;
+}
+
+
+
+input:focus,
+select:focus{
+
+  border-color:var(--main-color);
+}
+
+
+
+button{
+
+  width:100%;
+
+  padding:14px;
+
+  margin-top:15px;
+
+  border:none;
+
+  border-radius:14px;
+
+  background:linear-gradient(
+
+    45deg,
+
+    var(--main-color),
+
+    #ff7043
+
+  );
+
+  color:white;
+
+  font-size:16px;
+
+  font-weight:bold;
+
+  cursor:pointer;
+
+  transition:0.3s;
+}
+
+
+
+button:hover{
+
+  transform:scale(1.02);
+}
+
+
+
+.link{
+
+  text-align:center;
+
+  margin-top:15px;
+}
+
+
+
+.link a{
+
+  color:var(--main-color);
+
+  text-decoration:none;
+
+  font-weight:bold;
+}
+
+
+
+.message-box{
+
+  background:white;
+
+  padding:30px;
+
+  border-radius:25px;
+
+  text-align:center;
+
+  box-shadow:0 5px 20px rgba(0,0,0,0.08);
+}
+
+
+
+.message-box h2{
+
+  color:var(--main-color);
+}
+
+
+
+.message-box p{
+
+  color:#666;
+
+  line-height:2;
+}
+
+
+
+.support-btn{
+
+  display:block;
+
+  width:100%;
+
+  padding:14px;
+
+  margin-top:20px;
+
+  background:var(--second-color);
+
+  color:white;
+
+  text-align:center;
+
+  border-radius:14px;
+
+  text-decoration:none;
+
+  font-weight:bold;
+}
+
+
+
+.tabs{
+
+  display:flex;
+
+  gap:10px;
+
+  margin-bottom:20px;
+}
+
+
+
+.tabs button{
+
+  flex:1;
+}
+
+
+
+.section{
+
+  display:none;
+}
+
+
+
+.active{
+
+  display:block;
+}
