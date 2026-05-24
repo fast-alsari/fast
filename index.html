@@ -19,7 +19,6 @@
 
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -27,14 +26,10 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
-<!-- أيقونات -->
-
 <link rel="stylesheet"
 
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-
-<!-- الخريطة -->
 
 <link rel="stylesheet"
 
@@ -622,66 +617,7 @@ id="driver_vehicle_image">
 
 </div>
 
-
-
-
-
-
-
-
-
-<!-- صفحة الانتظار -->
-
-<div id="pendingSection"
-
-class="card section">
-
-
-
-<div class="logo">
-
-<img src="Logo.png">
-
 </div>
-
-
-
-
-
-<div class="pending-icon">
-
-<i class="fa-solid fa-clock"></i>
-
-</div>
-
-
-
-
-
-<h2 class="title">
-
-تم استلام طلبك
-
-</h2>
-
-
-
-
-
-<p class="pending-text">
-
-انتظر ريثما يتم مراجعة حسابك
-
-وسوف نتواصل معك خلال أقل من 24 ساعة
-
-</p>
-
-</div>
-
-</div>
-
-
-
 
 
 
@@ -691,17 +627,6 @@ class="card section">
 <script>
 
 
-
-// رابط السكربت السري
-
-const SECRET_URL =
-
-"https://script.google.com/macros/s/ضع_الرابط_السري_هنا/exec";
-
-
-
-
-
 let map;
 
 let marker;
@@ -709,7 +634,6 @@ let marker;
 let latitude = "";
 
 let longitude = "";
-
 
 
 
@@ -724,10 +648,7 @@ let store_longitude = "";
 
 
 
-
-
-
-// اظهار واخفاء الرمز السري
+// اظهار واخفاء كلمة السر
 
 function togglePassword(id,icon){
 
@@ -741,16 +662,17 @@ if(input.type == "password"){
 
 input.type = "text";
 
+
 icon.classList.remove("fa-eye");
 
 icon.classList.add("fa-eye-slash");
-
 
 
 }else{
 
 
 input.type = "password";
+
 
 icon.classList.remove("fa-eye-slash");
 
@@ -764,12 +686,17 @@ icon.classList.add("fa-eye");
 
 
 
-
-
-
-// خريطة الزبون - الشرقاط
+// خريطة الزبون
 
 function loadMap(){
+
+
+if(map){
+
+map.remove();
+
+}
+
 
 
 map = L.map('map')
@@ -785,9 +712,23 @@ L.tileLayer(
 
 {
 
-maxZoom:19
+maxZoom:19,
 
-}).addTo(map);
+minZoom:6
+
+}
+
+).addTo(map);
+
+
+
+
+
+setTimeout(function(){
+
+map.invalidateSize();
+
+},300);
 
 
 
@@ -830,13 +771,17 @@ longitude
 
 
 
-
-
-
-
-// خريطة المتجر - الشرقاط
+// خريطة المتجر
 
 function loadStoreMap(){
+
+
+if(storeMap){
+
+storeMap.remove();
+
+}
+
 
 
 storeMap = L.map('storeMap')
@@ -852,9 +797,23 @@ L.tileLayer(
 
 {
 
-maxZoom:19
+maxZoom:19,
 
-}).addTo(storeMap);
+minZoom:6
+
+}
+
+).addTo(storeMap);
+
+
+
+
+
+setTimeout(function(){
+
+storeMap.invalidateSize();
+
+},300);
 
 
 
@@ -897,10 +856,6 @@ store_longitude
 
 
 
-
-
-
-
 // تبديل الصفحات
 
 function showSection(sectionId){
@@ -925,10 +880,6 @@ document
 .classList.add('active');
 
 }
-
-
-
-
 
 
 
@@ -1027,521 +978,19 @@ document.getElementById("driverForm")
 
 
 
+function login(){
 
-
-
-
-
-// تسجيل الدخول
-
-async function login(){
-
-
-
-let phone = document
-
-.getElementById("login_phone")
-
-.value;
-
-
-
-
-
-let password = document
-
-.getElementById("login_password")
-
-.value;
-
-
-
-
-
-
-if(phone == "" || password == ""){
-
-
-alert(
-
-"⚠️ يرجى ملء جميع الحقول"
-
-);
-
-
-return;
+alert("هنا تضيف كود تسجيل الدخول");
 
 }
 
 
 
+function registerAccount(){
 
-
-
-let response = await fetch(SECRET_URL,{
-
-
-method:"POST",
-
-
-body:JSON.stringify({
-
-action:"login",
-
-phone:phone,
-
-password:password
-
-})
-
-});
-
-
-
-
-
-let result = await response.json();
-
-
-
-
-
-
-if(result.success){
-
-
-
-localStorage.setItem(
-
-"user",
-
-JSON.stringify(result)
-
-);
-
-
-
-
-window.location.href = "home-store.html";
-
-
-
-}else{
-
-
-localStorage.removeItem("user");
-
-
-
-alert(
-
-"رقم الهاتف او الرمز السري غير صحيح"
-
-);
+alert("هنا تضيف كود إنشاء الحساب");
 
 }
-
-}
-
-
-
-
-
-
-
-
-
-// إنشاء الحساب
-
-async function registerAccount(){
-
-
-
-let type = document
-
-.getElementById("account_type")
-
-.value;
-
-
-
-
-
-
-
-
-
-
-// الزبون
-
-if(type == "customer"){
-
-
-
-let data = {
-
-
-action:"register_customer",
-
-
-
-id:"CUS"+Date.now(),
-
-
-
-name:document
-
-.getElementById("customer_name")
-
-.value,
-
-
-
-
-phone:document
-
-.getElementById("customer_phone")
-
-.value,
-
-
-
-
-address:document
-
-.getElementById("customer_address")
-
-.value,
-
-
-
-
-nearpoint:document
-
-.getElementById("customer_nearpoint")
-
-.value,
-
-
-
-
-password:document
-
-.getElementById("customer_password")
-
-.value,
-
-
-
-
-latitude:latitude,
-
-longitude:longitude
-
-}
-
-
-
-
-
-
-if(
-
-data.name == "" ||
-
-data.phone == "" ||
-
-data.address == "" ||
-
-data.nearpoint == "" ||
-
-data.password == "" ||
-
-latitude == ""
-
-){
-
-alert(
-
-"⚠️ املأ جميع الحقول"
-
-);
-
-return;
-
-}
-
-
-
-
-
-
-
-await fetch(SECRET_URL,{
-
-
-method:"POST",
-
-
-body:JSON.stringify(data)
-
-});
-
-
-
-
-
-
-window.location.href = "home-store.html";
-
-}
-
-
-
-
-
-
-
-
-
-
-// المتجر
-
-if(type == "store"){
-
-
-
-let data = {
-
-
-action:"register_store",
-
-
-
-id:"STO"+Date.now(),
-
-
-
-owner:document
-
-.getElementById("store_owner")
-
-.value,
-
-
-
-
-phone:document
-
-.getElementById("store_phone")
-
-.value,
-
-
-
-
-store_name:document
-
-.getElementById("store_name")
-
-.value,
-
-
-
-
-category:document
-
-.getElementById("store_category")
-
-.value,
-
-
-
-
-password:document
-
-.getElementById("store_password")
-
-.value,
-
-
-
-
-latitude:store_latitude,
-
-longitude:store_longitude
-
-}
-
-
-
-
-
-
-
-if(
-
-data.owner == "" ||
-
-data.phone == "" ||
-
-data.store_name == "" ||
-
-data.password == "" ||
-
-store_latitude == ""
-
-){
-
-alert(
-
-"⚠️ املأ جميع الحقول"
-
-);
-
-return;
-
-}
-
-
-
-
-
-
-
-await fetch(SECRET_URL,{
-
-
-method:"POST",
-
-
-body:JSON.stringify(data)
-
-});
-
-
-
-
-
-
-showSection("pendingSection");
-
-}
-
-
-
-
-
-
-
-
-
-
-// الدليفري
-
-if(type == "driver"){
-
-
-
-let data = {
-
-
-action:"register_driver",
-
-
-
-id:"DRV"+Date.now(),
-
-
-
-name:document
-
-.getElementById("driver_name")
-
-.value,
-
-
-
-
-phone:document
-
-.getElementById("driver_phone")
-
-.value,
-
-
-
-
-vehicle:document
-
-.getElementById("driver_vehicle")
-
-.value,
-
-
-
-
-password:document
-
-.getElementById("driver_password")
-
-.value
-
-}
-
-
-
-
-
-
-
-if(
-
-data.name == "" ||
-
-data.phone == "" ||
-
-data.password == ""
-
-){
-
-alert(
-
-"⚠️ املأ جميع الحقول"
-
-);
-
-return;
-
-}
-
-
-
-
-
-
-
-await fetch(SECRET_URL,{
-
-
-method:"POST",
-
-
-body:JSON.stringify(data)
-
-});
-
-
-
-
-
-
-showSection("pendingSection");
-
-}
-
-}
-
 
 
 </script>
