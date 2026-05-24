@@ -25,16 +25,13 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-
 <link rel="stylesheet"
 
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-
 <link rel="stylesheet"
 
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
@@ -386,7 +383,15 @@ placeholder="اسم المتجر">
 
 <select id="store_category">
 
-<option>مطاعم</option>
+<option value="">
+
+اختر نوع المتجر
+
+</option>
+
+<option>مطعم</option>
+
+<option>مخبز</option>
 
 <option>ماركت</option>
 
@@ -394,7 +399,23 @@ placeholder="اسم المتجر">
 
 <option>مواد انشائية</option>
 
-<option>صيدليات</option>
+<option>أدوات احتياطية</option>
+
+<option>ملابس</option>
+
+<option>صيدلية</option>
+
+<option>حلويات</option>
+
+<option>عطور</option>
+
+<option>مكتبة</option>
+
+<option>الكترونيات</option>
+
+<option>أجهزة كهربائية</option>
+
+<option>عصائر ومشروبات</option>
 
 </select>
 
@@ -459,14 +480,270 @@ id="store_card">
 
 
 
+
+<!-- أوقات العمل -->
+
+<div class="work-times">
+
+<h3>
+
+أوقات عمل المتجر
+
+</h3>
+
+
+
+
+
+<div class="day-row">
+
+<label>الأحد</label>
+
+<div class="time-selects">
+
+<select id="sun_from">
+
+<option>مغلق</option>
+<option>6 صباحاً</option>
+<option>7 صباحاً</option>
+<option>8 صباحاً</option>
+<option>9 صباحاً</option>
+<option>10 صباحاً</option>
+<option>11 صباحاً</option>
+<option>12 ظهراً</option>
+<option>1 ظهراً</option>
+<option>2 ظهراً</option>
+<option>3 عصراً</option>
+<option>4 عصراً</option>
+<option>5 عصراً</option>
+<option>6 مساءً</option>
+<option>7 مساءً</option>
+<option>8 مساءً</option>
+<option>9 مساءً</option>
+<option>10 مساءً</option>
+<option>11 مساءً</option>
+
+</select>
+
+
+
+<select id="sun_to">
+
+<option>مغلق</option>
+<option>6 صباحاً</option>
+<option>7 صباحاً</option>
+<option>8 صباحاً</option>
+<option>9 صباحاً</option>
+<option>10 صباحاً</option>
+<option>11 صباحاً</option>
+<option>12 ظهراً</option>
+<option>1 ظهراً</option>
+<option>2 ظهراً</option>
+<option>3 عصراً</option>
+<option>4 عصراً</option>
+<option>5 عصراً</option>
+<option>6 مساءً</option>
+<option>7 مساءً</option>
+<option>8 مساءً</option>
+<option>9 مساءً</option>
+<option>10 مساءً</option>
+<option>11 مساءً</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class="day-row">
+
+<label>الاثنين</label>
+
+<div class="time-selects">
+
+<select id="mon_from">
+
+<option>مغلق</option>
+<option>6 صباحاً</option>
+<option>7 صباحاً</option>
+<option>8 صباحاً</option>
+<option>9 صباحاً</option>
+<option>10 صباحاً</option>
+<option>11 صباحاً</option>
+<option>12 ظهراً</option>
+<option>1 ظهراً</option>
+<option>2 ظهراً</option>
+<option>3 عصراً</option>
+<option>4 عصراً</option>
+<option>5 عصراً</option>
+<option>6 مساءً</option>
+<option>7 مساءً</option>
+<option>8 مساءً</option>
+<option>9 مساءً</option>
+<option>10 مساءً</option>
+<option>11 مساءً</option>
+
+</select>
+
+
+
+<select id="mon_to">
+
+<option>مغلق</option>
+<option>6 صباحاً</option>
+<option>7 صباحاً</option>
+<option>8 صباحاً</option>
+<option>9 صباحاً</option>
+<option>10 صباحاً</option>
+<option>11 صباحاً</option>
+<option>12 ظهراً</option>
+<option>1 ظهراً</option>
+<option>2 ظهراً</option>
+<option>3 عصراً</option>
+<option>4 عصراً</option>
+<option>5 عصراً</option>
+<option>6 مساءً</option>
+<option>7 مساءً</option>
+<option>8 مساءً</option>
+<option>9 مساءً</option>
+<option>10 مساءً</option>
+<option>11 مساءً</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class="day-row">
+
+<label>الثلاثاء</label>
+
+<div class="time-selects">
+
+<select id="tue_from">
+
+<option>مغلق</option>
+<option>6 صباحاً</option>
+<option>7 صباحاً</option>
+<option>8 صباحاً</option>
+<option>9 صباحاً</option>
+<option>10 صباحاً</option>
+<option>11 صباحاً</option>
+<option>12 ظهراً</option>
+<option>1 ظهراً</option>
+<option>2 ظهراً</option>
+<option>3 عصراً</option>
+<option>4 عصراً</option>
+<option>5 عصراً</option>
+<option>6 مساءً</option>
+<option>7 مساءً</option>
+<option>8 مساءً</option>
+<option>9 مساءً</option>
+<option>10 مساءً</option>
+<option>11 مساءً</option>
+
+</select>
+
+
+
+<select id="tue_to">
+
+<option>مغلق</option>
+<option>6 صباحاً</option>
+<option>7 صباحاً</option>
+<option>8 صباحاً</option>
+<option>9 صباحاً</option>
+<option>10 صباحاً</option>
+<option>11 صباحاً</option>
+<option>12 ظهراً</option>
+<option>1 ظهراً</option>
+<option>2 ظهراً</option>
+<option>3 عصراً</option>
+<option>4 عصراً</option>
+<option>5 عصراً</option>
+<option>6 مساءً</option>
+<option>7 مساءً</option>
+<option>8 مساءً</option>
+<option>9 مساءً</option>
+<option>10 مساءً</option>
+<option>11 مساءً</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+
+
+
+
+<div class="day-row">
+
+<label>الأربعاء</label>
+
+<div class="time-selects">
+
+<select id="wed_from">
+
+<option>مغلق</option>
+<option>6 صباحاً</option>
+<option>7 صباحاً</option>
+<option>8 صباحاً</option>
+<option>9 صباحاً</option>
+<option>10 صباحاً</option>
+<option>11 صباحاً</option>
+<option>12 ظهراً</option>
+<option>1 ظهراً</option>
+<option>2 ظهراً</option>
+<option>3 عصراً</option>
+<option>4 عصراً</option>
+<option>5 عصراً</option>
+<option>6 مساءً</option>
+<option>7 مساءً</option>
+<option>8 مساءً</option>
+<option>9 مساءً</option>
+<option>10 مساءً</option>
+<option>11 مساءً</option>
+
+</select>
+
+
+
+<select id="wed_to">
+
+<option>مغلق</option>
+<option>6 صباحاً</option>
+<option>7 مساءً</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+
+
+
+
 <p class="map-title">
 
 حدد موقع المتجر على الخريطة
 
 </p>
-
-
-
 
 <div id="storeMap"
 
@@ -484,13 +761,12 @@ class="map-box">
 
 
 
+
 <!-- الدليفري -->
 
 <div id="driverForm"
 
 style="display:none;">
-
-
 
 
 
@@ -618,383 +894,3 @@ id="driver_vehicle_image">
 </div>
 
 </div>
-
-
-
-
-
-
-<script>
-
-
-let map;
-
-let marker;
-
-let latitude = "";
-
-let longitude = "";
-
-
-
-let storeMap;
-
-let storeMarker;
-
-let store_latitude = "";
-
-let store_longitude = "";
-
-
-
-
-// اظهار واخفاء كلمة السر
-
-function togglePassword(id,icon){
-
-
-let input = document.getElementById(id);
-
-
-
-if(input.type == "password"){
-
-
-input.type = "text";
-
-
-icon.classList.remove("fa-eye");
-
-icon.classList.add("fa-eye-slash");
-
-
-}else{
-
-
-input.type = "password";
-
-
-icon.classList.remove("fa-eye-slash");
-
-icon.classList.add("fa-eye");
-
-}
-
-}
-
-
-
-
-
-// خريطة الزبون
-
-function loadMap(){
-
-
-if(map){
-
-map.remove();
-
-}
-
-
-
-map = L.map('map')
-
-.setView([35.4893,43.2275],13);
-
-
-
-
-L.tileLayer(
-
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-
-{
-
-maxZoom:19,
-
-minZoom:6
-
-}
-
-).addTo(map);
-
-
-
-
-
-setTimeout(function(){
-
-map.invalidateSize();
-
-},300);
-
-
-
-
-
-map.on('click', function(e){
-
-
-latitude = e.latlng.lat;
-
-longitude = e.latlng.lng;
-
-
-
-
-
-if(marker){
-
-map.removeLayer(marker);
-
-}
-
-
-
-
-
-marker = L.marker([
-
-latitude,
-
-longitude
-
-]).addTo(map);
-
-});
-
-}
-
-
-
-
-
-// خريطة المتجر
-
-function loadStoreMap(){
-
-
-if(storeMap){
-
-storeMap.remove();
-
-}
-
-
-
-storeMap = L.map('storeMap')
-
-.setView([35.4893,43.2275],13);
-
-
-
-
-L.tileLayer(
-
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-
-{
-
-maxZoom:19,
-
-minZoom:6
-
-}
-
-).addTo(storeMap);
-
-
-
-
-
-setTimeout(function(){
-
-storeMap.invalidateSize();
-
-},300);
-
-
-
-
-
-storeMap.on('click', function(e){
-
-
-store_latitude = e.latlng.lat;
-
-store_longitude = e.latlng.lng;
-
-
-
-
-
-if(storeMarker){
-
-storeMap.removeLayer(storeMarker);
-
-}
-
-
-
-
-
-storeMarker = L.marker([
-
-store_latitude,
-
-store_longitude
-
-]).addTo(storeMap);
-
-});
-
-}
-
-
-
-
-
-// تبديل الصفحات
-
-function showSection(sectionId){
-
-
-let sections = document.querySelectorAll('.section');
-
-
-
-sections.forEach(section => {
-
-section.classList.remove('active');
-
-});
-
-
-
-document
-
-.getElementById(sectionId)
-
-.classList.add('active');
-
-}
-
-
-
-
-
-// تغيير نوع الحساب
-
-function changeRegisterForm(){
-
-
-let type = document
-
-.getElementById("account_type")
-
-.value;
-
-
-
-
-
-document.getElementById("customerForm")
-
-.style.display = "none";
-
-
-document.getElementById("storeForm")
-
-.style.display = "none";
-
-
-document.getElementById("driverForm")
-
-.style.display = "none";
-
-
-
-
-
-
-if(type == "customer"){
-
-
-document.getElementById("customerForm")
-
-.style.display = "block";
-
-
-
-setTimeout(function(){
-
-loadMap();
-
-},500);
-
-}
-
-
-
-
-
-
-if(type == "store"){
-
-
-document.getElementById("storeForm")
-
-.style.display = "block";
-
-
-
-setTimeout(function(){
-
-loadStoreMap();
-
-},500);
-
-}
-
-
-
-
-
-
-if(type == "driver"){
-
-
-document.getElementById("driverForm")
-
-.style.display = "block";
-
-}
-
-}
-
-
-
-
-
-function login(){
-
-alert("هنا تضيف كود تسجيل الدخول");
-
-}
-
-
-
-function registerAccount(){
-
-alert("هنا تضيف كود إنشاء الحساب");
-
-}
-
-
-</script>
-
-</body>
-
-</html>
