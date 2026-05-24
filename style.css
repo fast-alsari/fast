@@ -38,6 +38,8 @@ body{
   margin:auto;
 
   margin-top:30px;
+
+  margin-bottom:30px;
 }
 
 
@@ -66,7 +68,20 @@ body{
 
 .logo img{
 
-  width:120px;
+  width:130px;
+}
+
+
+
+.app-text{
+
+  text-align:center;
+
+  color:#777;
+
+  margin-bottom:20px;
+
+  font-size:15px;
 }
 
 
@@ -104,6 +119,8 @@ select{
   background:white;
 
   outline:none;
+
+  font-family:'Cairo',sans-serif;
 }
 
 
@@ -147,6 +164,8 @@ button{
   cursor:pointer;
 
   transition:0.3s;
+
+  font-family:'Cairo',sans-serif;
 }
 
 
@@ -174,80 +193,8 @@ button:hover{
   text-decoration:none;
 
   font-weight:bold;
-}
 
-
-
-.message-box{
-
-  background:white;
-
-  padding:30px;
-
-  border-radius:25px;
-
-  text-align:center;
-
-  box-shadow:0 5px 20px rgba(0,0,0,0.08);
-}
-
-
-
-.message-box h2{
-
-  color:var(--main-color);
-}
-
-
-
-.message-box p{
-
-  color:#666;
-
-  line-height:2;
-}
-
-
-
-.support-btn{
-
-  display:block;
-
-  width:100%;
-
-  padding:14px;
-
-  margin-top:20px;
-
-  background:var(--second-color);
-
-  color:white;
-
-  text-align:center;
-
-  border-radius:14px;
-
-  text-decoration:none;
-
-  font-weight:bold;
-}
-
-
-
-.tabs{
-
-  display:flex;
-
-  gap:10px;
-
-  margin-bottom:20px;
-}
-
-
-
-.tabs button{
-
-  flex:1;
+  cursor:pointer;
 }
 
 
@@ -262,4 +209,102 @@ button:hover{
 .active{
 
   display:block;
+}
+
+
+
+.password-box{
+
+  position:relative;
+
+  width:100%;
+}
+
+
+
+.password-box input{
+
+  padding-left:45px;
+}
+
+
+
+.password-box i{
+
+  position:absolute;
+
+  left:15px;
+
+  top:50%;
+
+  transform:translateY(-50%);
+
+  color:#777;
+
+  cursor:pointer;
+
+  font-size:18px;
+}
+
+
+
+.map-title{
+
+  margin-top:20px;
+
+  color:#444;
+
+  font-size:15px;
+}
+
+
+
+.map-box{
+
+  width:100%;
+
+  height:300px;
+
+  border-radius:20px;
+
+  overflow:hidden;
+
+  margin-top:10px;
+
+  border:2px solid #eee;
+}
+
+
+
+.upload-title{
+
+  margin-top:20px;
+
+  color:#444;
+
+  font-size:15px;
+}
+
+
+
+.pending-icon{
+
+  text-align:center;
+
+  font-size:70px;
+
+  color:var(--gold-color);
+
+  margin-bottom:20px;
+}
+
+
+
+.pending-text{
+
+  text-align:center;
+
+  color:#666;
+
+  line-height:2;
 }
