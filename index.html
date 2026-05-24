@@ -18,7 +18,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
-<!-- مكتبة الخريطة -->
+<!-- الخريطة -->
 
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
@@ -64,6 +64,7 @@
 
 
 
+
 <input 
 type="text" 
 id="login_phone" 
@@ -89,6 +90,7 @@ placeholder="ادخل كلمة المرور">
 
 
 
+
 <div class="link">
 
 <a onclick="showSection('registerSection')">
@@ -107,7 +109,8 @@ placeholder="ادخل كلمة المرور">
 
 
 
-<!-- إنشاء الحساب -->
+
+<!-- إنشاء حساب -->
 
 <div id="registerSection" class="card section">
 
@@ -156,6 +159,13 @@ onchange="changeRegisterForm()">
 
 </option>
 
+
+<option value="driver">
+
+سائق توصيل
+
+</option>
+
 </select>
 
 
@@ -165,7 +175,8 @@ onchange="changeRegisterForm()">
 
 
 
-<!-- تسجيل الزبون -->
+
+<!-- الزبون -->
 
 <div id="customerForm" style="display:none;">
 
@@ -221,7 +232,6 @@ style="height:300px;border-radius:15px;">
 
 </div>
 
-
 </div>
 
 
@@ -232,7 +242,8 @@ style="height:300px;border-radius:15px;">
 
 
 
-<!-- تسجيل المتجر -->
+
+<!-- المتجر -->
 
 <div id="storeForm" style="display:none;">
 
@@ -260,6 +271,7 @@ placeholder="اسم المتجر">
 
 
 
+
 <select id="store_category">
 
 <option>مطاعم</option>
@@ -273,6 +285,7 @@ placeholder="اسم المتجر">
 <option>صيدليات</option>
 
 </select>
+
 
 
 
@@ -314,6 +327,24 @@ id="store_card">
 
 
 
+
+<p style="margin-top:15px;">
+
+حدد موقع المتجر على الخريطة
+
+</p>
+
+
+
+<div 
+id="storeMap" 
+style="height:300px;border-radius:15px;">
+
+</div>
+
+
+
+
 <div class="message-box" style="margin-top:20px;">
 
 <h3>
@@ -323,11 +354,13 @@ id="store_card">
 </h3>
 
 
+
 <p>
 
 عادة يتم قبول طلبات إضافة المتاجر خلال أقل من 24 ساعة
 
 </p>
+
 
 
 
@@ -342,6 +375,119 @@ class="support-btn">
 </div>
 
 </div>
+
+
+
+
+
+
+
+
+
+<!-- الدليفري -->
+
+<div id="driverForm" style="display:none;">
+
+
+
+<input 
+type="text" 
+id="driver_name" 
+placeholder="الاسم الكامل">
+
+
+
+<input 
+type="text" 
+id="driver_phone" 
+placeholder="رقم الهاتف">
+
+
+
+
+
+<select id="driver_vehicle">
+
+<option>دراجة</option>
+
+<option>سيارة</option>
+
+</select>
+
+
+
+
+
+<input 
+type="password" 
+id="driver_password" 
+placeholder="كلمة المرور">
+
+
+
+
+<p style="margin-top:15px;">
+
+صورة الهوية (الوجه فقط)
+
+</p>
+
+
+
+<input 
+type="file" 
+id="driver_card">
+
+
+
+
+<p style="margin-top:15px;">
+
+صورة الدراجة او السيارة
+
+</p>
+
+
+
+<input 
+type="file" 
+id="driver_vehicle_image">
+
+
+
+
+<div class="message-box" style="margin-top:20px;">
+
+<h3>
+
+بانتظار الموافقة
+
+</h3>
+
+
+
+<p>
+
+عادة يتم قبول طلبات سائقين التوصيل خلال أقل من 24 ساعة
+
+</p>
+
+
+
+
+<a 
+href="tel:07700000000" 
+class="support-btn">
+
+الاتصال بالدعم السريع
+
+</a>
+
+</div>
+
+</div>
+
+
 
 
 
@@ -384,7 +530,6 @@ class="support-btn">
 <script>
 
 
-
 let map;
 
 let marker;
@@ -395,8 +540,19 @@ let longitude = "";
 
 
 
+let storeMap;
 
-// تشغيل الخريطة
+let storeMarker;
+
+let store_latitude = "";
+
+let store_longitude = "";
+
+
+
+
+
+// خريطة الزبون
 
 function loadMap(){
 
@@ -436,11 +592,74 @@ map.removeLayer(marker);
 
 
 
-marker = L.marker([latitude, longitude]).addTo(map);
+marker = L.marker([
+
+latitude,
+
+longitude
+
+]).addTo(map);
 
 });
 
 }
+
+
+
+
+
+// خريطة المتجر
+
+function loadStoreMap(){
+
+
+storeMap = L.map('storeMap').setView([33.3152,44.3661], 12);
+
+
+L.tileLayer(
+
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
+{
+
+maxZoom:19
+
+}).addTo(storeMap);
+
+
+
+
+storeMap.on('click', function(e){
+
+
+store_latitude = e.latlng.lat;
+
+store_longitude = e.latlng.lng;
+
+
+
+
+if(storeMarker){
+
+storeMap.removeLayer(storeMarker);
+
+}
+
+
+
+
+storeMarker = L.marker([
+
+store_latitude,
+
+store_longitude
+
+]).addTo(storeMap);
+
+});
+
+}
+
 
 
 
@@ -491,6 +710,8 @@ document.getElementById("customerForm").style.display = "none";
 
 document.getElementById("storeForm").style.display = "none";
 
+document.getElementById("driverForm").style.display = "none";
+
 
 
 
@@ -516,9 +737,27 @@ if(type == "store"){
 
 document.getElementById("storeForm").style.display = "block";
 
+
+setTimeout(function(){
+
+loadStoreMap();
+
+},500);
+
+}
+
+
+
+
+if(type == "driver"){
+
+
+document.getElementById("driverForm").style.display = "block";
+
 }
 
 }
+
 
 
 
@@ -537,6 +776,7 @@ function registerAccount(){
 let type = document
 .getElementById("account_type")
 .value;
+
 
 
 
@@ -582,7 +822,6 @@ let password = document
 
 
 
-
 if(
 
 name == "" ||
@@ -613,7 +852,6 @@ return;
 
 
 
-
 let data = {
 
 
@@ -637,14 +875,12 @@ longitude:longitude
 
 
 
-
 google.script.run
 
 .withSuccessHandler(function(res){
 
 
 alert(res);
-
 
 
 window.location.href = "home-store.html";
@@ -654,6 +890,7 @@ window.location.href = "home-store.html";
 .registerCustomer(data);
 
 }
+
 
 
 
@@ -701,7 +938,6 @@ let password = document
 
 
 
-
 if(
 
 owner == "" ||
@@ -710,7 +946,9 @@ phone == "" ||
 
 storeName == "" ||
 
-password == ""
+password == "" ||
+
+store_latitude == ""
 
 ){
 
@@ -728,8 +966,6 @@ return;
 
 
 
-
-
 let data = {
 
 
@@ -741,10 +977,13 @@ store_name:storeName,
 
 category:category,
 
-password:password
+password:password,
+
+latitude:store_latitude,
+
+longitude:store_longitude
 
 }
-
 
 
 
@@ -770,7 +1009,110 @@ showSection('loginSection');
 
 }
 
+
+
+
+
+
+
+
+
+
+// تسجيل الدليفري
+
+if(type == "driver"){
+
+
+
+let driverName = document
+.getElementById("driver_name")
+.value;
+
+
+
+let driverPhone = document
+.getElementById("driver_phone")
+.value;
+
+
+
+let vehicleType = document
+.getElementById("driver_vehicle")
+.value;
+
+
+
+let password = document
+.getElementById("driver_password")
+.value;
+
+
+
+
+
+if(
+
+driverName == "" ||
+
+driverPhone == "" ||
+
+password == ""
+
+){
+
+alert(
+
+"⚠️ املأ جميع الحقول للتمتع باستخدام التوصيل السريع"
+
+);
+
+return;
+
 }
+
+
+
+
+
+let data = {
+
+
+name:driverName,
+
+phone:driverPhone,
+
+vehicle:vehicleType,
+
+password:password
+
+}
+
+
+
+
+
+google.script.run
+
+.withSuccessHandler(function(res){
+
+
+alert(
+
+"تم إرسال طلب إضافة سائق التوصيل بنجاح"
+
+);
+
+
+showSection('loginSection');
+
+})
+
+.registerDriver(data);
+
+}
+
+}
+
 
 
 
@@ -800,7 +1142,6 @@ let password = document
 
 
 
-
 if(phone == "" || password == ""){
 
 alert(
@@ -817,8 +1158,6 @@ return;
 
 
 
-
-
 let data = {
 
 
@@ -827,7 +1166,6 @@ phone:phone,
 password:password
 
 }
-
 
 
 
@@ -873,7 +1211,6 @@ alert(
 .checkLogin(data);
 
 }
-
 
 
 </script>
