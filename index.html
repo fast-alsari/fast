@@ -18,9 +18,19 @@
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 
+<!-- أيقونات -->
+
+<link rel="stylesheet"
+
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+
 <!-- الخريطة -->
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link rel="stylesheet"
+
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
@@ -30,13 +40,19 @@
 
 
 
+
 <div class="container">
+
+
 
 
 
 <!-- تسجيل الدخول -->
 
-<div id="loginSection" class="card section active">
+<div id="loginSection"
+
+class="card section active">
+
 
 
 <div class="logo">
@@ -47,11 +63,13 @@
 
 
 
-<p style="text-align:center;color:#777;">
+
+<p class="app-text">
 
 نوصلك طلبك بأقل من ساعة
 
 </p>
+
 
 
 
@@ -65,18 +83,40 @@
 
 
 
-<input 
-type="text" 
-id="login_phone" 
-placeholder="ادخل رقم الهاتف">
+<input
+
+type="text"
+
+id="login_phone"
+
+placeholder="رقم الهاتف">
 
 
 
 
-<input 
-type="password" 
-id="login_password" 
-placeholder="ادخل كلمة المرور">
+
+
+<div class="password-box">
+
+<input
+
+type="password"
+
+id="login_password"
+
+placeholder="الرمز السري">
+
+
+
+<i class="fa-solid fa-eye"
+
+onclick="togglePassword('login_password',this)">
+
+</i>
+
+</div>
+
+
 
 
 
@@ -86,6 +126,7 @@ placeholder="ادخل كلمة المرور">
 تسجيل الدخول
 
 </button>
+
 
 
 
@@ -110,9 +151,13 @@ placeholder="ادخل كلمة المرور">
 
 
 
+
+
 <!-- إنشاء حساب -->
 
-<div id="registerSection" class="card section">
+<div id="registerSection"
+
+class="card section">
 
 
 
@@ -134,8 +179,11 @@ placeholder="ادخل كلمة المرور">
 
 
 
-<select 
-id="account_type" 
+
+<select
+
+id="account_type"
+
 onchange="changeRegisterForm()">
 
 
@@ -178,47 +226,87 @@ onchange="changeRegisterForm()">
 
 <!-- الزبون -->
 
-<div id="customerForm" style="display:none;">
+<div id="customerForm"
+
+style="display:none;">
 
 
 
-<input 
-type="text" 
-id="customer_name" 
+<input
+
+type="text"
+
+id="customer_name"
+
 placeholder="الاسم الكامل">
 
 
 
-<input 
-type="text" 
-id="customer_phone" 
+
+
+<input
+
+type="text"
+
+id="customer_phone"
+
 placeholder="رقم الهاتف">
 
 
 
-<input 
-type="text" 
-id="customer_address" 
+
+
+<input
+
+type="text"
+
+id="customer_address"
+
 placeholder="العنوان الكامل">
 
 
 
-<input 
-type="text" 
-id="customer_nearpoint" 
+
+
+<input
+
+type="text"
+
+id="customer_nearpoint"
+
 placeholder="اقرب نقطة دالة">
 
 
 
-<input 
-type="password" 
-id="customer_password" 
-placeholder="كلمة المرور">
+
+
+
+<div class="password-box">
+
+<input
+
+type="password"
+
+id="customer_password"
+
+placeholder="الرمز السري">
+
+
+
+<i class="fa-solid fa-eye"
+
+onclick="togglePassword('customer_password',this)">
+
+</i>
+
+</div>
 
 
 
 
-<p style="margin-top:15px;">
+
+
+<p class="map-title">
 
 حدد موقعك على الخريطة
 
@@ -226,9 +314,11 @@ placeholder="كلمة المرور">
 
 
 
-<div 
-id="map" 
-style="height:300px;border-radius:15px;">
+
+
+<div id="map"
+
+class="map-box">
 
 </div>
 
@@ -245,28 +335,46 @@ style="height:300px;border-radius:15px;">
 
 <!-- المتجر -->
 
-<div id="storeForm" style="display:none;">
+<div id="storeForm"
+
+style="display:none;">
 
 
 
-<input 
-type="text" 
-id="store_owner" 
+
+
+<input
+
+type="text"
+
+id="store_owner"
+
 placeholder="الاسم الكامل">
 
 
 
-<input 
-type="text" 
-id="store_phone" 
+
+
+<input
+
+type="text"
+
+id="store_phone"
+
 placeholder="رقم الهاتف">
 
 
 
-<input 
-type="text" 
-id="store_name" 
+
+
+<input
+
+type="text"
+
+id="store_name"
+
 placeholder="اسم المتجر">
+
 
 
 
@@ -290,45 +398,64 @@ placeholder="اسم المتجر">
 
 
 
-<input 
-type="password" 
-id="store_password" 
-placeholder="كلمة المرور">
+
+
+<div class="password-box">
+
+<input
+
+type="password"
+
+id="store_password"
+
+placeholder="الرمز السري">
+
+
+
+<i class="fa-solid fa-eye"
+
+onclick="togglePassword('store_password',this)">
+
+</i>
+
+</div>
 
 
 
 
-<p style="margin-top:15px;">
+
+
+<p class="upload-title">
 
 صورة المتجر
 
 </p>
 
+<input type="file"
 
-
-<input 
-type="file" 
 id="store_image">
 
 
 
 
-<p style="margin-top:15px;">
 
-صورة البطاقة الموحدة (الوجه فقط)
+
+<p class="upload-title">
+
+صورة البطاقة الموحدة
 
 </p>
 
+<input type="file"
 
-
-<input 
-type="file" 
 id="store_card">
 
 
 
 
-<p style="margin-top:15px;">
+
+
+<p class="map-title">
 
 حدد موقع المتجر على الخريطة
 
@@ -336,41 +463,10 @@ id="store_card">
 
 
 
-<div 
-id="storeMap" 
-style="height:300px;border-radius:15px;">
 
-</div>
+<div id="storeMap"
 
-
-
-
-<div class="message-box" style="margin-top:20px;">
-
-<h3>
-
-بانتظار الموافقة
-
-</h3>
-
-
-
-<p>
-
-عادة يتم قبول طلبات إضافة المتاجر خلال أقل من 24 ساعة
-
-</p>
-
-
-
-
-<a 
-href="tel:07700000000" 
-class="support-btn">
-
-الاتصال بالدعم السريع
-
-</a>
+class="map-box">
 
 </div>
 
@@ -386,21 +482,34 @@ class="support-btn">
 
 <!-- الدليفري -->
 
-<div id="driverForm" style="display:none;">
+<div id="driverForm"
+
+style="display:none;">
 
 
 
-<input 
-type="text" 
-id="driver_name" 
+
+
+<input
+
+type="text"
+
+id="driver_name"
+
 placeholder="الاسم الكامل">
 
 
 
-<input 
-type="text" 
-id="driver_phone" 
+
+
+<input
+
+type="text"
+
+id="driver_phone"
+
 placeholder="رقم الهاتف">
+
 
 
 
@@ -418,74 +527,60 @@ placeholder="رقم الهاتف">
 
 
 
-<input 
-type="password" 
-id="driver_password" 
-placeholder="كلمة المرور">
+
+
+<div class="password-box">
+
+<input
+
+type="password"
+
+id="driver_password"
+
+placeholder="الرمز السري">
+
+
+
+<i class="fa-solid fa-eye"
+
+onclick="togglePassword('driver_password',this)">
+
+</i>
+
+</div>
 
 
 
 
-<p style="margin-top:15px;">
 
-صورة الهوية (الوجه فقط)
+
+<p class="upload-title">
+
+صورة الهوية
 
 </p>
 
+<input type="file"
 
-
-<input 
-type="file" 
 id="driver_card">
 
 
 
 
-<p style="margin-top:15px;">
 
-صورة الدراجة او السيارة
+
+<p class="upload-title">
+
+صورة السيارة او الدراجة
 
 </p>
 
+<input type="file"
 
-
-<input 
-type="file" 
 id="driver_vehicle_image">
 
-
-
-
-<div class="message-box" style="margin-top:20px;">
-
-<h3>
-
-بانتظار الموافقة
-
-</h3>
-
-
-
-<p>
-
-عادة يتم قبول طلبات سائقين التوصيل خلال أقل من 24 ساعة
-
-</p>
-
-
-
-
-<a 
-href="tel:07700000000" 
-class="support-btn">
-
-الاتصال بالدعم السريع
-
-</a>
-
 </div>
 
-</div>
 
 
 
@@ -505,6 +600,7 @@ class="support-btn">
 
 
 
+
 <div class="link">
 
 <a onclick="showSection('loginSection')">
@@ -514,6 +610,62 @@ class="support-btn">
 </a>
 
 </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+<!-- صفحة الانتظار -->
+
+<div id="pendingSection"
+
+class="card section">
+
+
+
+<div class="logo">
+
+<img src="Logo.png">
+
+</div>
+
+
+
+
+
+<div class="pending-icon">
+
+<i class="fa-solid fa-clock"></i>
+
+</div>
+
+
+
+
+
+<h2 class="title">
+
+تم استلام طلبك
+
+</h2>
+
+
+
+
+
+<p class="pending-text">
+
+انتظر ريثما يتم مراجعة حسابك
+
+وسوف نتواصل معك خلال أقل من 24 ساعة
+
+</p>
 
 </div>
 
@@ -530,6 +682,17 @@ class="support-btn">
 <script>
 
 
+
+// رابط السكربت السري
+
+const SECRET_URL =
+
+"https://script.google.com/macros/s/ضع_الرابط_السري_هنا/exec";
+
+
+
+
+
 let map;
 
 let marker;
@@ -537,6 +700,7 @@ let marker;
 let latitude = "";
 
 let longitude = "";
+
 
 
 
@@ -552,12 +716,58 @@ let store_longitude = "";
 
 
 
+
+
+// اظهار واخفاء الرمز السري
+
+function togglePassword(id,icon){
+
+
+let input = document.getElementById(id);
+
+
+
+if(input.type == "password"){
+
+
+input.type = "text";
+
+icon.classList.remove("fa-eye");
+
+icon.classList.add("fa-eye-slash");
+
+
+
+}else{
+
+
+input.type = "password";
+
+icon.classList.remove("fa-eye-slash");
+
+icon.classList.add("fa-eye");
+
+}
+
+}
+
+
+
+
+
+
+
+
 // خريطة الزبون
 
 function loadMap(){
 
 
-map = L.map('map').setView([33.3152,44.3661], 12);
+map = L.map('map')
+
+.setView([33.3152,44.3661],12);
+
+
 
 
 L.tileLayer(
@@ -573,6 +783,7 @@ maxZoom:19
 
 
 
+
 map.on('click', function(e){
 
 
@@ -583,11 +794,13 @@ longitude = e.latlng.lng;
 
 
 
+
 if(marker){
 
 map.removeLayer(marker);
 
 }
+
 
 
 
@@ -608,12 +821,20 @@ longitude
 
 
 
+
+
+
+
 // خريطة المتجر
 
 function loadStoreMap(){
 
 
-storeMap = L.map('storeMap').setView([33.3152,44.3661], 12);
+storeMap = L.map('storeMap')
+
+.setView([33.3152,44.3661],12);
+
+
 
 
 L.tileLayer(
@@ -629,6 +850,7 @@ maxZoom:19
 
 
 
+
 storeMap.on('click', function(e){
 
 
@@ -639,11 +861,13 @@ store_longitude = e.latlng.lng;
 
 
 
+
 if(storeMarker){
 
 storeMap.removeLayer(storeMarker);
 
 }
+
 
 
 
@@ -667,12 +891,14 @@ store_longitude
 
 
 
+
 // تبديل الصفحات
 
 function showSection(sectionId){
 
 
 let sections = document.querySelectorAll('.section');
+
 
 
 sections.forEach(section => {
@@ -682,11 +908,15 @@ section.classList.remove('active');
 });
 
 
+
 document
+
 .getElementById(sectionId)
+
 .classList.add('active');
 
 }
+
 
 
 
@@ -701,16 +931,30 @@ function changeRegisterForm(){
 
 
 let type = document
+
 .getElementById("account_type")
+
 .value;
 
 
 
-document.getElementById("customerForm").style.display = "none";
 
-document.getElementById("storeForm").style.display = "none";
 
-document.getElementById("driverForm").style.display = "none";
+document.getElementById("customerForm")
+
+.style.display = "none";
+
+
+document.getElementById("storeForm")
+
+.style.display = "none";
+
+
+document.getElementById("driverForm")
+
+.style.display = "none";
+
+
 
 
 
@@ -718,7 +962,10 @@ document.getElementById("driverForm").style.display = "none";
 if(type == "customer"){
 
 
-document.getElementById("customerForm").style.display = "block";
+document.getElementById("customerForm")
+
+.style.display = "block";
+
 
 
 setTimeout(function(){
@@ -732,10 +979,15 @@ loadMap();
 
 
 
+
+
 if(type == "store"){
 
 
-document.getElementById("storeForm").style.display = "block";
+document.getElementById("storeForm")
+
+.style.display = "block";
+
 
 
 setTimeout(function(){
@@ -749,365 +1001,14 @@ loadStoreMap();
 
 
 
-if(type == "driver"){
 
-
-document.getElementById("driverForm").style.display = "block";
-
-}
-
-}
-
-
-
-
-
-
-
-
-
-
-// إنشاء الحساب
-
-function registerAccount(){
-
-
-
-let type = document
-.getElementById("account_type")
-.value;
-
-
-
-
-
-
-
-
-// تسجيل الزبون
-
-if(type == "customer"){
-
-
-
-let name = document
-.getElementById("customer_name")
-.value;
-
-
-
-let phone = document
-.getElementById("customer_phone")
-.value;
-
-
-
-let address = document
-.getElementById("customer_address")
-.value;
-
-
-
-let nearpoint = document
-.getElementById("customer_nearpoint")
-.value;
-
-
-
-let password = document
-.getElementById("customer_password")
-.value;
-
-
-
-
-
-if(
-
-name == "" ||
-
-phone == "" ||
-
-address == "" ||
-
-nearpoint == "" ||
-
-password == "" ||
-
-latitude == ""
-
-){
-
-alert(
-
-"⚠️ املأ جميع الحقول للتمتع باستخدام التوصيل السريع"
-
-);
-
-return;
-
-}
-
-
-
-
-
-let data = {
-
-
-name:name,
-
-phone:phone,
-
-address:address,
-
-nearpoint:nearpoint,
-
-password:password,
-
-latitude:latitude,
-
-longitude:longitude
-
-}
-
-
-
-
-
-google.script.run
-
-.withSuccessHandler(function(res){
-
-
-alert(res);
-
-
-window.location.href = "home-store.html";
-
-})
-
-.registerCustomer(data);
-
-}
-
-
-
-
-
-
-
-
-
-
-// تسجيل المتجر
-
-if(type == "store"){
-
-
-
-let owner = document
-.getElementById("store_owner")
-.value;
-
-
-
-let phone = document
-.getElementById("store_phone")
-.value;
-
-
-
-let storeName = document
-.getElementById("store_name")
-.value;
-
-
-
-let category = document
-.getElementById("store_category")
-.value;
-
-
-
-let password = document
-.getElementById("store_password")
-.value;
-
-
-
-
-
-if(
-
-owner == "" ||
-
-phone == "" ||
-
-storeName == "" ||
-
-password == "" ||
-
-store_latitude == ""
-
-){
-
-alert(
-
-"⚠️ املأ جميع الحقول للتمتع باستخدام التوصيل السريع"
-
-);
-
-return;
-
-}
-
-
-
-
-
-let data = {
-
-
-owner:owner,
-
-phone:phone,
-
-store_name:storeName,
-
-category:category,
-
-password:password,
-
-latitude:store_latitude,
-
-longitude:store_longitude
-
-}
-
-
-
-
-
-google.script.run
-
-.withSuccessHandler(function(res){
-
-
-alert(
-
-"تم إرسال طلب إضافة المتجر بنجاح"
-
-);
-
-
-showSection('loginSection');
-
-})
-
-.registerStore(data);
-
-}
-
-
-
-
-
-
-
-
-
-
-// تسجيل الدليفري
 
 if(type == "driver"){
 
 
+document.getElementById("driverForm")
 
-let driverName = document
-.getElementById("driver_name")
-.value;
-
-
-
-let driverPhone = document
-.getElementById("driver_phone")
-.value;
-
-
-
-let vehicleType = document
-.getElementById("driver_vehicle")
-.value;
-
-
-
-let password = document
-.getElementById("driver_password")
-.value;
-
-
-
-
-
-if(
-
-driverName == "" ||
-
-driverPhone == "" ||
-
-password == ""
-
-){
-
-alert(
-
-"⚠️ املأ جميع الحقول للتمتع باستخدام التوصيل السريع"
-
-);
-
-return;
-
-}
-
-
-
-
-
-let data = {
-
-
-name:driverName,
-
-phone:driverPhone,
-
-vehicle:vehicleType,
-
-password:password
-
-}
-
-
-
-
-
-google.script.run
-
-.withSuccessHandler(function(res){
-
-
-alert(
-
-"تم إرسال طلب إضافة سائق التوصيل بنجاح"
-
-);
-
-
-showSection('loginSection');
-
-})
-
-.registerDriver(data);
+.style.display = "block";
 
 }
 
@@ -1124,19 +1025,26 @@ showSection('loginSection');
 
 // تسجيل الدخول
 
-function login(){
+async function login(){
 
 
 
 let phone = document
+
 .getElementById("login_phone")
+
 .value;
+
+
 
 
 
 let password = document
+
 .getElementById("login_password")
+
 .value;
+
 
 
 
@@ -1144,9 +1052,209 @@ let password = document
 
 if(phone == "" || password == ""){
 
+
 alert(
 
-"⚠️ يرجى إدخال رقم الهاتف وكلمة المرور"
+"⚠️ يرجى ملء جميع الحقول"
+
+);
+
+
+return;
+
+}
+
+
+
+
+
+
+let response = await fetch(SECRET_URL,{
+
+
+method:"POST",
+
+
+body:JSON.stringify({
+
+action:"login",
+
+phone:phone,
+
+password:password
+
+})
+
+});
+
+
+
+
+
+let result = await response.json();
+
+
+
+
+
+
+if(result.success){
+
+
+
+localStorage.setItem(
+
+"user",
+
+JSON.stringify(result)
+
+);
+
+
+
+
+window.location.href = "home-store.html";
+
+
+
+}else{
+
+
+localStorage.removeItem("user");
+
+
+
+alert(
+
+"رقم الهاتف او الرمز السري غير صحيح"
+
+);
+
+}
+
+}
+
+
+
+
+
+
+
+
+
+// إنشاء الحساب
+
+async function registerAccount(){
+
+
+
+let type = document
+
+.getElementById("account_type")
+
+.value;
+
+
+
+
+
+
+
+
+
+
+// الزبون
+
+if(type == "customer"){
+
+
+
+let data = {
+
+
+action:"register_customer",
+
+
+
+id:"CUS"+Date.now(),
+
+
+
+name:document
+
+.getElementById("customer_name")
+
+.value,
+
+
+
+
+phone:document
+
+.getElementById("customer_phone")
+
+.value,
+
+
+
+
+address:document
+
+.getElementById("customer_address")
+
+.value,
+
+
+
+
+nearpoint:document
+
+.getElementById("customer_nearpoint")
+
+.value,
+
+
+
+
+password:document
+
+.getElementById("customer_password")
+
+.value,
+
+
+
+
+latitude:latitude,
+
+longitude:longitude
+
+}
+
+
+
+
+
+
+if(
+
+data.name == "" ||
+
+data.phone == "" ||
+
+data.address == "" ||
+
+data.nearpoint == "" ||
+
+data.password == "" ||
+
+latitude == ""
+
+){
+
+alert(
+
+"⚠️ املأ جميع الحقول"
 
 );
 
@@ -1158,59 +1266,273 @@ return;
 
 
 
-let data = {
 
 
-phone:phone,
-
-password:password
-
-}
+await fetch(SECRET_URL,{
 
 
+method:"POST",
 
 
+body:JSON.stringify(data)
 
-google.script.run
-
-.withSuccessHandler(function(res){
+});
 
 
 
-if(res.success){
-
-
-
-localStorage.setItem(
-
-"user",
-
-JSON.stringify(res)
-
-);
 
 
 
 window.location.href = "home-store.html";
 
+}
 
 
-}else{
 
+
+
+
+
+
+
+
+// المتجر
+
+if(type == "store"){
+
+
+
+let data = {
+
+
+action:"register_store",
+
+
+
+id:"STO"+Date.now(),
+
+
+
+owner:document
+
+.getElementById("store_owner")
+
+.value,
+
+
+
+
+phone:document
+
+.getElementById("store_phone")
+
+.value,
+
+
+
+
+store_name:document
+
+.getElementById("store_name")
+
+.value,
+
+
+
+
+category:document
+
+.getElementById("store_category")
+
+.value,
+
+
+
+
+password:document
+
+.getElementById("store_password")
+
+.value,
+
+
+
+
+latitude:store_latitude,
+
+longitude:store_longitude
+
+}
+
+
+
+
+
+
+
+if(
+
+data.owner == "" ||
+
+data.phone == "" ||
+
+data.store_name == "" ||
+
+data.password == "" ||
+
+store_latitude == ""
+
+){
 
 alert(
 
-"رقم الهاتف او كلمة المرور غير صحيحة"
+"⚠️ املأ جميع الحقول"
 
 );
 
-}
-
-})
-
-.checkLogin(data);
+return;
 
 }
+
+
+
+
+
+
+
+await fetch(SECRET_URL,{
+
+
+method:"POST",
+
+
+body:JSON.stringify(data)
+
+});
+
+
+
+
+
+
+showSection("pendingSection");
+
+}
+
+
+
+
+
+
+
+
+
+
+// الدليفري
+
+if(type == "driver"){
+
+
+
+let data = {
+
+
+action:"register_driver",
+
+
+
+id:"DRV"+Date.now(),
+
+
+
+name:document
+
+.getElementById("driver_name")
+
+.value,
+
+
+
+
+phone:document
+
+.getElementById("driver_phone")
+
+.value,
+
+
+
+
+vehicle:document
+
+.getElementById("driver_vehicle")
+
+.value,
+
+
+
+
+password:document
+
+.getElementById("driver_password")
+
+.value
+
+}
+
+
+
+
+
+
+
+if(
+
+data.name == "" ||
+
+data.phone == "" ||
+
+data.password == ""
+
+){
+
+alert(
+
+"⚠️ املأ جميع الحقول"
+
+);
+
+return;
+
+}
+
+
+
+
+
+
+
+await fetch(SECRET_URL,{
+
+
+method:"POST",
+
+
+body:JSON.stringify(data)
+
+});
+
+
+
+
+
+
+showSection("pendingSection");
+
+}
+
+}
+
 
 
 </script>
