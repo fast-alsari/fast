@@ -8,199 +8,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>عالسريع</title>
+
 <link rel="stylesheet" href="style.css">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-
-<style>
-
-:root{
-
-  --main-color:#ff3d00;
-
-  --second-color:#0d47a1;
-
-  --gold-color:#ffc107;
-
-  --bg-color:#f5f5f5;
-
-  --text-color:#222;
-
-  --white:#fff;
-}
-
-
-body{
-
-  margin:0;
-  padding:0;
-
-  background:var(--bg-color);
-
-  font-family:'Cairo',sans-serif;
-
-  direction:rtl;
-}
-
-
-.container{
-
-  width:90%;
-
-  max-width:430px;
-
-  margin:auto;
-
-  margin-top:30px;
-}
-
-
-.card{
-
-  background:white;
-
-  padding:25px;
-
-  border-radius:25px;
-
-  box-shadow:0 5px 20px rgba(0,0,0,0.08);
-}
-
-
-.logo{
-
-  text-align:center;
-
-  margin-bottom:20px;
-}
-
-
-.logo img{
-
-  width:170px;
-}
-
-
-.title{
-
-  text-align:center;
-
-  color:var(--second-color);
-
-  font-size:24px;
-
-  margin-bottom:20px;
-}
-
-
-input,
-select{
-
-  width:100%;
-
-  padding:14px;
-
-  margin-top:12px;
-
-  border:1px solid #ddd;
-
-  border-radius:14px;
-
-  box-sizing:border-box;
-
-  font-size:15px;
-
-  font-family:'Cairo',sans-serif;
-
-  outline:none;
-}
-
-
-input:focus,
-select:focus{
-
-  border-color:var(--main-color);
-}
-
-
-button{
-
-  width:100%;
-
-  padding:14px;
-
-  margin-top:15px;
-
-  border:none;
-
-  border-radius:14px;
-
-  background:linear-gradient(
-
-    45deg,
-
-    var(--main-color),
-
-    #ff7043
-
-  );
-
-  color:white;
-
-  font-size:16px;
-
-  font-weight:bold;
-
-  font-family:'Cairo',sans-serif;
-
-  cursor:pointer;
-}
-
-
-.link{
-
-  text-align:center;
-
-  margin-top:18px;
-}
-
-
-.link a{
-
-  color:var(--main-color);
-
-  text-decoration:none;
-
-  font-weight:bold;
-
-  cursor:pointer;
-}
-
-
-.section{
-
-  display:none;
-}
-
-
-.active{
-
-  display:block;
-}
-
-</style>
-
 </head>
 
 <body>
 
 
-<div class="container">
 
+<div class="container">
 
 
 
@@ -210,7 +33,7 @@ button{
 
   <div class="logo">
 
-    <img src="Logo.png">
+    <img src="logo.png">
 
   </div>
 
@@ -222,10 +45,16 @@ button{
   </h2>
 
 
-  <input type="text" id="login_phone" placeholder="رقم الهاتف">
+  <input 
+  type="text" 
+  id="login_phone" 
+  placeholder="رقم الهاتف">
 
 
-  <input type="password" id="login_password" placeholder="كلمة المرور">
+  <input 
+  type="password" 
+  id="login_password" 
+  placeholder="كلمة المرور">
 
 
   <button onclick="login()">
@@ -257,7 +86,7 @@ button{
 
   <div class="logo">
 
-    <img src="ضع_رابط_الشعار_هنا">
+    <img src="logo.png">
 
   </div>
 
@@ -270,9 +99,15 @@ button{
 
 
 
-  <select id="account_type" onchange="changeRegisterForm()">
+  <select 
+  id="account_type" 
+  onchange="changeRegisterForm()">
 
-    <option value="">اختر نوع الحساب</option>
+    <option value="">
+
+      اختر نوع الحساب
+
+    </option>
 
     <option value="customer">
 
@@ -298,98 +133,147 @@ button{
 
 
 
-  <!-- الزبون -->
+<!-- الزبون -->
 
-  <div id="customerForm" style="display:none;">
+<div 
+id="customerForm" 
+style="display:none;">
 
-    <input type="text" id="customer_name" placeholder="الاسم الكامل">
-
-    <input type="text" id="customer_phone" placeholder="رقم الهاتف">
-
-    <input type="password" id="customer_password" placeholder="كلمة المرور">
-
-  </div>
-
+  <input 
+  type="text" 
+  id="customer_name" 
+  placeholder="الاسم الكامل">
 
 
+  <input 
+  type="text" 
+  id="customer_phone" 
+  placeholder="رقم الهاتف">
 
 
-  <!-- المتجر -->
+  <input 
+  type="password" 
+  id="customer_password" 
+  placeholder="كلمة المرور">
 
-  <div id="storeForm" style="display:none;">
-
-    <input type="text" id="store_owner" placeholder="اسم صاحب المتجر">
-
-    <input type="text" id="store_name" placeholder="اسم المتجر">
-
-    <input type="text" id="store_phone" placeholder="رقم الهاتف">
-
-
-    <select id="store_category">
-
-      <option>مطاعم</option>
-
-      <option>ماركت</option>
-
-      <option>خضروات</option>
-
-      <option>مواد انشائية</option>
-
-      <option>صيدليات</option>
-
-    </select>
-
-
-    <input type="password" id="store_password" placeholder="كلمة المرور">
-
-  </div>
+</div>
 
 
 
 
 
-  <!-- الدليفري -->
 
-  <div id="driverForm" style="display:none;">
+<!-- المتجر -->
 
-    <input type="text" id="driver_name" placeholder="الاسم الكامل">
+<div 
+id="storeForm" 
+style="display:none;">
 
-    <input type="text" id="driver_phone" placeholder="رقم الهاتف">
-
-
-    <select id="driver_vehicle">
-
-      <option>دراجة</option>
-
-      <option>سيارة</option>
-
-    </select>
+  <input 
+  type="text" 
+  id="store_owner" 
+  placeholder="اسم صاحب المتجر">
 
 
-    <input type="password" id="driver_password" placeholder="كلمة المرور">
+  <input 
+  type="text" 
+  id="store_name" 
+  placeholder="اسم المتجر">
 
-  </div>
 
-
-
-
-  <button onclick="registerAccount()">
-
-    إنشاء الحساب
-
-  </button>
+  <input 
+  type="text" 
+  id="store_phone" 
+  placeholder="رقم الهاتف">
 
 
 
-  <div class="link">
+  <select id="store_category">
 
-    <a onclick="showSection('loginSection')">
+    <option>مطاعم</option>
 
-      العودة لتسجيل الدخول
+    <option>ماركت</option>
 
-    </a>
+    <option>خضروات</option>
 
-  </div>
+    <option>مواد انشائية</option>
+
+    <option>صيدليات</option>
+
+  </select>
+
+
+
+  <input 
+  type="password" 
+  id="store_password" 
+  placeholder="كلمة المرور">
+
+</div>
+
+
+
+
+
+
+<!-- الدليفري -->
+
+<div 
+id="driverForm" 
+style="display:none;">
+
+  <input 
+  type="text" 
+  id="driver_name" 
+  placeholder="الاسم الكامل">
+
+
+  <input 
+  type="text" 
+  id="driver_phone" 
+  placeholder="رقم الهاتف">
+
+
+
+  <select id="driver_vehicle">
+
+    <option>دراجة</option>
+
+    <option>سيارة</option>
+
+  </select>
+
+
+
+  <input 
+  type="password" 
+  id="driver_password" 
+  placeholder="كلمة المرور">
+
+</div>
+
+
+
+
+
+<button onclick="registerAccount()">
+
+  إنشاء الحساب
+
+</button>
+
+
+
+
+<div class="link">
+
+  <a onclick="showSection('loginSection')">
+
+    العودة لتسجيل الدخول
+
+  </a>
+
+</div>
 
 </div>
 
@@ -402,11 +286,13 @@ button{
 <script>
 
 
+
 // تبديل الصفحات
 
 function showSection(sectionId){
 
   let sections = document.querySelectorAll('.section');
+
 
   sections.forEach(section => {
 
@@ -414,8 +300,13 @@ function showSection(sectionId){
 
   });
 
-  document.getElementById(sectionId).classList.add('active');
+
+  document
+  .getElementById(sectionId)
+  .classList.add('active');
+
 }
+
 
 
 
@@ -424,35 +315,59 @@ function showSection(sectionId){
 function changeRegisterForm(){
 
 
-  let type = document.getElementById("account_type").value;
+  let type = document
+  .getElementById("account_type")
+  .value;
 
 
-  document.getElementById("customerForm").style.display = "none";
 
-  document.getElementById("storeForm").style.display = "none";
+  document
+  .getElementById("customerForm")
+  .style.display = "none";
 
-  document.getElementById("driverForm").style.display = "none";
+
+  document
+  .getElementById("storeForm")
+  .style.display = "none";
+
+
+  document
+  .getElementById("driverForm")
+  .style.display = "none";
+
 
 
 
   if(type == "customer"){
 
-    document.getElementById("customerForm").style.display = "block";
+    document
+    .getElementById("customerForm")
+    .style.display = "block";
+
   }
+
 
 
   if(type == "store"){
 
-    document.getElementById("storeForm").style.display = "block";
+    document
+    .getElementById("storeForm")
+    .style.display = "block";
+
   }
+
 
 
   if(type == "driver"){
 
-    document.getElementById("driverForm").style.display = "block";
+    document
+    .getElementById("driverForm")
+    .style.display = "block";
+
   }
 
 }
+
 
 
 
@@ -462,98 +377,150 @@ function changeRegisterForm(){
 function registerAccount(){
 
 
-  let type = document.getElementById("account_type").value;
+  let type = document
+  .getElementById("account_type")
+  .value;
 
 
 
-  // الزبون
-
-  if(type == "customer"){
 
 
-    let data = {
+// الزبون
 
-      name:document.getElementById("customer_name").value,
-
-      phone:document.getElementById("customer_phone").value,
-
-      password:document.getElementById("customer_password").value
-    }
+if(type == "customer"){
 
 
-    google.script.run
-    .withSuccessHandler(function(res){
+  let data = {
 
-      alert(res);
+    name:document
+    .getElementById("customer_name")
+    .value,
 
-    })
-    .registerCustomer(data);
 
+    phone:document
+    .getElementById("customer_phone")
+    .value,
+
+
+    password:document
+    .getElementById("customer_password")
+    .value
   }
 
 
 
+  google.script.run
 
-  // المتجر
+  .withSuccessHandler(function(res){
 
-  if(type == "store"){
+    alert(res);
 
+  })
 
-    let data = {
-
-      owner:document.getElementById("store_owner").value,
-
-      store_name:document.getElementById("store_name").value,
-
-      phone:document.getElementById("store_phone").value,
-
-      category:document.getElementById("store_category").value,
-
-      password:document.getElementById("store_password").value
-    }
-
-
-    google.script.run
-    .withSuccessHandler(function(res){
-
-      alert(res);
-
-    })
-    .registerStore(data);
-
-  }
-
-
-
-
-  // الدليفري
-
-  if(type == "driver"){
-
-
-    let data = {
-
-      name:document.getElementById("driver_name").value,
-
-      phone:document.getElementById("driver_phone").value,
-
-      vehicle:document.getElementById("driver_vehicle").value,
-
-      password:document.getElementById("driver_password").value
-    }
-
-
-    google.script.run
-    .withSuccessHandler(function(res){
-
-      alert(res);
-
-    })
-    .registerDriver(data);
-
-  }
+  .registerCustomer(data);
 
 }
+
+
+
+
+
+
+// المتجر
+
+if(type == "store"){
+
+
+  let data = {
+
+    owner:document
+    .getElementById("store_owner")
+    .value,
+
+
+    store_name:document
+    .getElementById("store_name")
+    .value,
+
+
+    phone:document
+    .getElementById("store_phone")
+    .value,
+
+
+    category:document
+    .getElementById("store_category")
+    .value,
+
+
+    password:document
+    .getElementById("store_password")
+    .value
+  }
+
+
+
+  google.script.run
+
+  .withSuccessHandler(function(res){
+
+    alert(res);
+
+  })
+
+  .registerStore(data);
+
+}
+
+
+
+
+
+
+// الدليفري
+
+if(type == "driver"){
+
+
+  let data = {
+
+    name:document
+    .getElementById("driver_name")
+    .value,
+
+
+    phone:document
+    .getElementById("driver_phone")
+    .value,
+
+
+    vehicle:document
+    .getElementById("driver_vehicle")
+    .value,
+
+
+    password:document
+    .getElementById("driver_password")
+    .value
+  }
+
+
+
+  google.script.run
+
+  .withSuccessHandler(function(res){
+
+    alert(res);
+
+  })
+
+  .registerDriver(data);
+
+}
+
+}
+
+
 
 
 
@@ -561,9 +528,10 @@ function registerAccount(){
 
 function login(){
 
-  alert("هنا راح نكمل كود تسجيل الدخول بالخطوة الجاية");
+  alert("نكمل كود تسجيل الدخول بالخطوة الجاية");
 
 }
+
 
 </script>
 
