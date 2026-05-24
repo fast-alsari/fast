@@ -525,21 +525,6 @@ id="store_card">
 
 </h3>
 
-<script>
-
-const days = [
-
-"الأحد",
-"الاثنين",
-"الثلاثاء",
-"الأربعاء",
-"الخميس",
-"الجمعة",
-"السبت"
-
-];
-
-</script>
 
 <div id="daysContainer"></div>
 
@@ -678,12 +663,71 @@ class="card section">
 
 </div>
 
+<script type="module">
+
+// =========================
+// Firebase
+// =========================
+
+import { initializeApp }
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import { getAnalytics }
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
 
 
 
+const firebaseConfig = {
+
+apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+
+authDomain: "fast-937c9.firebaseapp.com",
+
+projectId: "fast-937c9",
+
+storageBucket: "fast-937c9.firebasestorage.app",
+
+messagingSenderId: "221388561840",
+
+appId: "1:221388561840:web:ec9d75183ddd7d44be0a75",
+
+measurementId: "G-CEKHEPNR9X"
+
+};
 
 
-<script>
+
+const app = initializeApp(firebaseConfig);
+
+const analytics = getAnalytics(app);
+
+console.log("Firebase Connected");
+
+
+
+// =========================
+// ايام الاسبوع
+// =========================
+
+const days = [
+
+"الأحد",
+"الاثنين",
+"الثلاثاء",
+"الأربعاء",
+"الخميس",
+"الجمعة",
+"السبت"
+
+];
+
+
+
+// =========================
+// متغيرات الخرائط
+// =========================
 
 let map;
 let marker;
@@ -697,7 +741,9 @@ let store_longitude="";
 
 
 
-// عرض الاوقات
+// =========================
+// الساعات
+// =========================
 
 const hours = [
 
@@ -725,10 +771,16 @@ const hours = [
 
 
 
+// =========================
+// انشاء اوقات العمل
+// =========================
+
 const daysContainer =
 document.getElementById("daysContainer");
 
 
+
+if(daysContainer){
 
 days.forEach((day,index)=>{
 
@@ -762,12 +814,15 @@ daysContainer.innerHTML += html;
 
 });
 
+}
 
 
 
+// =========================
 // اظهار كلمة السر
+// =========================
 
-function togglePassword(id,icon){
+window.togglePassword = function(id,icon){
 
 let input =
 document.getElementById(id);
@@ -790,13 +845,13 @@ icon.classList.add("fa-eye");
 
 }
 
-}
+};
 
 
 
-
-
+// =========================
 // خريطة الزبون
+// =========================
 
 function loadMap(){
 
@@ -806,8 +861,12 @@ map.remove();
 
 }
 
+
+
 map = L.map('map')
 .setView([35.4893,43.2275],13);
+
+
 
 L.tileLayer(
 
@@ -822,22 +881,31 @@ minZoom:6
 
 ).addTo(map);
 
+
+
 setTimeout(()=>{
 
 map.invalidateSize();
 
 },300);
 
+
+
 map.on('click',function(e){
 
 latitude=e.latlng.lat;
+
 longitude=e.latlng.lng;
+
+
 
 if(marker){
 
 map.removeLayer(marker);
 
 }
+
+
 
 marker = L.marker([
 
@@ -852,9 +920,9 @@ longitude
 
 
 
-
-
+// =========================
 // خريطة المتجر
+// =========================
 
 function loadStoreMap(){
 
@@ -864,8 +932,12 @@ storeMap.remove();
 
 }
 
+
+
 storeMap = L.map('storeMap')
 .setView([35.4893,43.2275],13);
+
+
 
 L.tileLayer(
 
@@ -880,22 +952,31 @@ minZoom:6
 
 ).addTo(storeMap);
 
+
+
 setTimeout(()=>{
 
 storeMap.invalidateSize();
 
 },300);
 
+
+
 storeMap.on('click',function(e){
 
 store_latitude=e.latlng.lat;
+
 store_longitude=e.latlng.lng;
+
+
 
 if(storeMarker){
 
 storeMap.removeLayer(storeMarker);
 
 }
+
+
 
 storeMarker = L.marker([
 
@@ -910,14 +991,16 @@ store_longitude
 
 
 
+// =========================
+// تغيير الصفحات
+// =========================
 
-
-// التنقل
-
-function showSection(sectionId){
+window.showSection = function(sectionId){
 
 let sections =
 document.querySelectorAll('.section');
+
+
 
 sections.forEach(section=>{
 
@@ -925,22 +1008,26 @@ section.classList.remove('active');
 
 });
 
+
+
 document
 .getElementById(sectionId)
 .classList.add('active');
 
-}
+};
 
 
 
+// =========================
+// تغيير نوع الحساب
+// =========================
 
-
-// تغيير الحساب
-
-function changeRegisterForm(){
+window.changeRegisterForm = function(){
 
 let type =
 document.getElementById("account_type").value;
+
+
 
 document.getElementById("customerForm")
 .style.display="none";
@@ -958,6 +1045,8 @@ if(type==="customer"){
 document.getElementById("customerForm")
 .style.display="block";
 
+
+
 setTimeout(()=>{
 
 loadMap();
@@ -972,6 +1061,8 @@ if(type==="store"){
 
 document.getElementById("storeForm")
 .style.display="block";
+
+
 
 setTimeout(()=>{
 
@@ -990,25 +1081,31 @@ document.getElementById("driverForm")
 
 }
 
-}
+};
 
 
 
+// =========================
+// تسجيل الدخول
+// =========================
+
+window.login = function(){
+
+alert("Firebase متصل بنجاح");
+
+};
 
 
-function login(){
 
-alert("هنا تضيف كود تسجيل الدخول");
+// =========================
+// إنشاء الحساب
+// =========================
 
-}
+window.registerAccount = function(){
 
+alert("سيتم ربط الحسابات بالفايربيس");
 
-
-function registerAccount(){
-
-alert("هنا تضيف كود إنشاء الحساب");
-
-}
+};
 
 </script>
 
