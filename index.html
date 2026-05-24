@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<title>استعلام عن الطالب</title>
+<style>
+  body { font-family: Arial, sans-serif; direction: rtl; text-align: center; background: #f2f2f2; }
+  .container { max-width: 700px; margin: 60px auto; background: #fff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+  input, button { width: 100%; padding: 10px; margin: 8px 0; border-radius: 8px; border: 1px solid #ccc; }
+  button { background: #007bff; color: white; border: none; cursor: pointer; }
+  button:hover { background: #0056b3; }
+  .result { margin-top: 20px; text-align: right; }
+  .section { margin-top: 15px; padding: 10px; border-top: 2px solid #007bff; }
+  .section h3 { color: #007bff; margin-top: 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+  th, td { border: 1px solid #ddd; padding: 8px; text-align: right; }
+  th { background-color: #007bff; color: white; }
+</style>
+</head>
+<body>
+  <div class="container">
+    <h2>نظام الاستعلام عن الطالب</h2>
+    <input id="studentCode" placeholder="أدخل رقم الطالب" />
+    <input id="parentNumber" placeholder="أدخل رقم ولي الأمر" />
+    <button onclick="searchStudent()">بحث</button>
+    <div id="output" class="result"></div>
+  </div>
+
+<script>
+  async function searchStudent() {
+    const code = document.getElementById("studentCode").value.trim();
+    const parent = document.getElementById("parentNumber").value.trim();
+    const output = document.getElementById("output");
+    output.innerHTML = "⏳ جاري البحث...";
+
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vReghaYoMk3f8ffSBLRHIwZieEWCfk5Yx8W6c843TXkC6wpA78Z0X5nw21RRpxMdQ/pub?gid=1229272896&single=true&output=csv";
+
+    try {
+      const resp = await fetch(sheetURL);
+      if (!resp.ok) throw new Error("فشل في جلب البيانات من Google Sheets");
+      const text = await resp.text();
+      const rows = text.split("\n").map(r => r.split(","));
+
+      const header = rows[0].map(h => h.trim());
+      const dataRows = rows.slice(1);
+
+      // تحويل كل صف إلى كائن يسهل التعامل معه
+      const objects = dataRows.map(r => {
+        const obj = {};
+        for (let i = 0; i < header.length; i++) {
+          obj[header[i]] = (r[i] || "").trim();
+        }
+        return obj;
+      });
+
+      // نبحث عن الصف المطابق
+      const student = objects.find(o => o["كود الطالب"] === code && o["رقم ولي الامر"] === parent);
+
+      if (!student) {
+        output.innerHTML = "❌ لم أجد أي بيانات تطابق الكود ورقم ولي الأمر.";
+        return;
+      }
+
+      // بناء العرض
+      let html = "";
+
+      // المعلومات العامة (قبل عمود الدرجات)
+      html += `<div class="section"><h3>المعلومات العامة</h3><table>`;
+      for (let heading of header) {
+        // إذا العنوان قبل العمود AC — نفترض أن الدرجات تبدأ من مؤشر 28 تقريباً
+        const idx = header.indexOf(heading);
+        if (idx < 28) {
+          html += `<tr><th>${heading}</th><td>${student[heading]}</td></tr>`;
+        }
+      }
+      html += `</table></div>`;
+
+      // المعلومات المالية (أي عمود يحتوي كلمات مثل "قسط" أو "باقي")
+      html += `<div class="section"><h3>المعلومات المالية</h3><table>`;
+      for (let heading of header) {
+        if (/قسط|مبلغ|باقي|واصل|كفالة|مدفوع/i.test(heading)) {
+          html += `<tr><th>${heading}</th><td>${student[heading]}</td></tr>`;
+        }
+      }
+      html += `</table></div>`;
+
+      // الدرجات — تقسيم إلى مواد من عمود AC إلى عمود ER
+      html += `<div class="section"><h3>الدرجات التفصيلية</h3>`;
+      const totalCols = header.length;
+      const startIndex = 28; // تقريبياً
+      const subjectCount = 12;
+      const perSubject = Math.floor((totalCols - startIndex) / subjectCount);
+
+      for (let s = 0; s < subjectCount; s++) {
+        const subjectName = ["الإسلامية","العربي","الانكليزي","الرياضيات","الكيمياء","الفيزياء","الاحياء","الاجتماعيات","الحاسوب","الرياضة","الفنية","السلوك"][s];
+        html += `<h4>${subjectName}</h4><table><tr>`;
+        for (let c = startIndex + s * perSubject; c < startIndex + (s + 1) * perSubject; c++) {
+          html += `<th>${header[c]}</th>`;
+        }
+        html += `</tr><tr>`;
+        for (let c = startIndex + s * perSubject; c < startIndex + (s + 1) * perSubject; c++) {
+          html += `<td>${student[header[c]]}</td>`;
+        }
+        html += `</tr></table>`;
+      }
+
+      html += `</div>`;
+
+      // ملاحظات ونتيجة
+      html += `<div class="section"><h3>ملاحظات ونتيجة</h3><table>`;
+      for (let key of ["ملاحظات كرت","ملاحظات النتيجة","الكتب","المعدل"]) {
+        if (header.includes(key)) {
+          html += `<tr><th>${key}</th><td>${student[key]}</td></tr>`;
+        }
+      }
+      html += `</table></div>`;
+
+      output.innerHTML = html;
+
+    } catch (err) {
+      console.error(err);
+      output.innerHTML = "⚠️ خطأ أثناء جلب البيانات. تأكد أن الملف نشرته للويب بشكل صحيح.";
+    }
+  }
+</script>
+
+</body>
+</html>
