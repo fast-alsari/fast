@@ -394,9 +394,7 @@ onclick="logout()">
 <div class="add-product-box">
 
 <div class="section-title">
-
 اضافة منتج جديد
-
 </div>
 
 <div class="input-group">
@@ -462,9 +460,7 @@ onclick="addProduct()">
 </div>
 
 <div class="section-title">
-
 منتجات المتجر
-
 </div>
 
 <div
@@ -529,6 +525,7 @@ JSON.parse(
 localStorage.getItem("user")
 );
 
+// اذا ماكو جلسة
 if(!currentUser){
 
 window.location.href =
@@ -536,11 +533,49 @@ window.location.href =
 
 }
 
+// اذا الحساب زبون
+if(currentUser.type === "customer"){
+
+window.location.href =
+"home.html";
+
+}
+
+// اذا الحساب سائق
+if(currentUser.type === "driver"){
+
+window.location.href =
+"driver.html";
+
+}
+
+// اذا الحساب ادمن
+if(currentUser.type === "admin"){
+
+window.location.href =
+"add.html";
+
+}
+
+// اذا مو متجر
+if(currentUser.type !== "store"){
+
+localStorage.removeItem("user");
+
+window.location.href =
+"index.html";
+
+}
+
 // =========================
-// تحديث بيانات المتجر من فايربيس
+// جلب بيانات المتجر
 // =========================
 
-const storeSnapshot =
+let storeSnapshot;
+
+try{
+
+storeSnapshot =
 await get(
 child(
 ref(database),
@@ -548,7 +583,21 @@ ref(database),
 )
 );
 
+}catch(error){
+
+console.log(error);
+
+alert("حدث خطأ بالاتصال");
+
+window.location.href =
+"index.html";
+
+}
+
+// اذا المتجر محذوف
 if(!storeSnapshot.exists()){
+
+alert("هذا الحساب غير موجود");
 
 localStorage.removeItem("user");
 
@@ -564,14 +613,87 @@ storeSnapshot.val();
 // التحقق من الحالة
 // =========================
 
-if(freshStore.status !== "active"){
+if(
+freshStore.status === "pending"
+){
 
-alert("تم تعطيل حساب المتجر");
+alert(
+"بانتظار موافقة الادمن على حساب المتجر"
+);
+
+window.location.href =
+"index.html";
+
+}
+
+if(
+freshStore.status === "disabled"
+){
+
+alert(
+"تم تعطيل حساب المتجر"
+);
 
 localStorage.removeItem("user");
 
 window.location.href =
 "index.html";
+
+}
+
+if(
+freshStore.status === "banned"
+){
+
+alert(
+"تم حظر حساب المتجر"
+);
+
+localStorage.removeItem("user");
+
+window.location.href =
+"index.html";
+
+}
+
+if(
+freshStore.status !== "active"
+){
+
+alert(
+"الحساب غير مفعل"
+);
+
+localStorage.removeItem("user");
+
+window.location.href =
+"index.html";
+
+}
+
+// =========================
+// انتهاء الاشتراك
+// =========================
+
+if(freshStore.expireDate){
+
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+if(today > freshStore.expireDate){
+
+alert(
+"انتهت صلاحية المتجر"
+);
+
+localStorage.removeItem("user");
+
+window.location.href =
+"index.html";
+
+}
 
 }
 
@@ -923,9 +1045,7 @@ ${statusText}
 container.innerHTML =
 
 `<div class="empty">
-
 لا توجد منتجات حالياً
-
 </div>`;
 
 }
