@@ -22,7 +22,7 @@ href="https://fonts.googleapis.com">
 href="https://fonts.gstatic.com"
 crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
 
 <link rel="stylesheet"
@@ -32,13 +32,18 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 <body>
 
-<!-- HEADER -->
+<!-- الصفحة الرئيسية -->
+
+<div id="homePage"
+class="page active-page">
 
 <header class="main-header">
 
-<div class="header-top">
+<div class="header-box">
 
-<div>
+<div class="top-row">
+
+<div class="user-info">
 
 <h2 id="welcomeText">
 
@@ -46,9 +51,9 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 
 </h2>
 
-<p class="header-subtitle">
+<p>
 
-اطلب كل ما تحتاجه بسهولة
+نوصلك طلبك بأقل من ساعة 🚀
 
 </p>
 
@@ -61,18 +66,13 @@ class="profile-image">
 
 </div>
 
+</div>
+
 </header>
 
-<!-- الصفحات -->
-
-<div class="pages-wrapper">
-
-<!-- الرئيسية -->
-
-<section id="homePage"
-class="page active-page">
-
 <!-- البحث -->
+
+<div class="search-section">
 
 <div class="search-box">
 
@@ -81,15 +81,55 @@ class="page active-page">
 <input
 type="text"
 id="searchInput"
-placeholder="ابحث عن متجر...">
+placeholder="ابحث عن متجر او مطعم">
 
 </div>
 
-<!-- الفلاتر -->
+</div>
 
-<div
-id="categoriesContainer"
-class="categories-container">
+<!-- الفلترة -->
+
+<div class="filters">
+
+<button
+class="filter-btn active"
+data-category="all">
+
+الكل
+
+</button>
+
+<button
+class="filter-btn"
+data-category="مطعم">
+
+مطاعم
+
+</button>
+
+<button
+class="filter-btn"
+data-category="ماركت">
+
+ماركت
+
+</button>
+
+<button
+class="filter-btn"
+data-category="مخبز">
+
+مخابز
+
+</button>
+
+<button
+class="filter-btn"
+data-category="صيدلية">
+
+صيدليات
+
+</button>
 
 </div>
 
@@ -101,45 +141,40 @@ class="stores-container">
 
 </div>
 
-</section>
+</div>
 
 <!-- السلة -->
 
-<section id="cartPage"
+<div id="cartPage"
 class="page">
 
-<div class="page-title">
+<div class="cart-container"
+id="cartContainer">
 
-السلة 🛒
+<div class="empty-box">
+
+لا توجد طلبات بالسلة
 
 </div>
-
-<div id="cartContainer">
-
-<p class="empty-text">
-
-لا توجد منتجات بالسلة
-
-</p>
 
 </div>
 
 <button
-id="sendOrderBtn"
-class="main-btn">
+class="send-order-btn"
+onclick="sendOrder()">
 
 ارسال الطلب
 
 </button>
 
-</section>
+</div>
 
 <!-- الحساب -->
 
-<section id="accountPage"
+<div id="accountPage"
 class="page">
 
-<div class="account-card">
+<div class="account-box">
 
 <img
 id="accountImage"
@@ -158,6 +193,12 @@ class="account-image">
 
 </p>
 
+<p id="accountAddress">
+
+العنوان
+
+</p>
+
 <p id="accountType">
 
 نوع الحساب
@@ -165,8 +206,8 @@ class="account-image">
 </p>
 
 <button
-onclick="logout()"
-class="logout-btn">
+class="logout-btn"
+onclick="logout()">
 
 تسجيل الخروج
 
@@ -174,23 +215,17 @@ class="logout-btn">
 
 </div>
 
-</section>
-
 </div>
 
 <!-- البار السفلي -->
 
-<nav class="bottom-nav">
+<div class="bottom-bar">
 
 <div
-class="nav-item active-nav"
+class="nav-item active"
 onclick="showPage('homePage',this)">
 
-<div class="nav-circle">
-
 <i class="fa-solid fa-house"></i>
-
-</div>
 
 <span>
 
@@ -204,11 +239,7 @@ onclick="showPage('homePage',this)">
 class="nav-item"
 onclick="showPage('cartPage',this)">
 
-<div class="nav-circle">
-
 <i class="fa-solid fa-cart-shopping"></i>
-
-</div>
 
 <span>
 
@@ -222,11 +253,7 @@ onclick="showPage('cartPage',this)">
 class="nav-item"
 onclick="showPage('accountPage',this)">
 
-<div class="nav-circle">
-
 <i class="fa-solid fa-user"></i>
-
-</div>
 
 <span>
 
@@ -236,9 +263,7 @@ onclick="showPage('accountPage',this)">
 
 </div>
 
-</nav>
-
-<!-- FIREBASE -->
+</div>
 
 <script type="module">
 
@@ -250,12 +275,12 @@ import {
 getDatabase,
 ref,
 get,
-child
+child,
+push,
+set
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
-
-// Firebase Config
 
 const firebaseConfig = {
 
@@ -291,10 +316,14 @@ initializeApp(firebaseConfig);
 const database =
 getDatabase(app);
 
-// الجلسة
+// =====================
+// التحقق من الجلسة
+// =====================
 
 const currentUser =
-JSON.parse(localStorage.getItem("user"));
+JSON.parse(
+localStorage.getItem("user")
+);
 
 if(!currentUser){
 
@@ -303,7 +332,9 @@ window.location.href =
 
 }
 
-// معلومات المستخدم
+// =====================
+// معلومات الحساب
+// =====================
 
 document.getElementById("welcomeText")
 .innerHTML =
@@ -319,7 +350,13 @@ currentUser.owner;
 document.getElementById("accountPhone")
 .innerHTML =
 
-currentUser.phone;
+currentUser.phone || "";
+
+document.getElementById("accountAddress")
+.innerHTML =
+
+currentUser.address ||
+"لا يوجد عنوان";
 
 document.getElementById("accountType")
 .innerHTML =
@@ -336,7 +373,9 @@ document.getElementById("accountImage")
 
 }
 
-// الصفحات
+// =====================
+// تغيير الصفحات
+// =====================
 
 window.showPage =
 function(pageId,element){
@@ -354,114 +393,24 @@ document.getElementById(pageId)
 document.querySelectorAll(".nav-item")
 .forEach(item=>{
 
-item.classList.remove("active-nav");
+item.classList.remove("active");
 
 });
 
-element.classList.add("active-nav");
+element.classList.add("active");
 
 };
 
-// السلة
-
-let cart = JSON.parse(
-localStorage.getItem("cart")
-) || [];
-
-function saveCart(){
-
-localStorage.setItem(
-"cart",
-JSON.stringify(cart)
-);
-
-}
-
-function renderCart(){
-
-const cartContainer =
-document.getElementById("cartContainer");
-
-if(cart.length===0){
-
-cartContainer.innerHTML = `
-
-<p class="empty-text">
-
-لا توجد منتجات بالسلة
-
-</p>
-
-`;
-
-return;
-
-}
-
-cartContainer.innerHTML = "";
-
-cart.forEach((item,index)=>{
-
-cartContainer.innerHTML += `
-
-<div class="cart-item">
-
-<img
-src="${item.image}"
-class="cart-image">
-
-<div class="cart-info">
-
-<h3>
-
-${item.name}
-
-</h3>
-
-<p>
-
-${item.store}
-
-</p>
-
-</div>
-
-<button
-onclick="removeCart(${index})"
-class="remove-btn">
-
-حذف
-
-</button>
-
-</div>
-
-`;
-
-});
-
-}
-
-window.removeCart =
-function(index){
-
-cart.splice(index,1);
-
-saveCart();
-
-renderCart();
-
-};
-
+// =====================
 // تحميل المتاجر
-
-async function loadStores(){
+// =====================
 
 const storesContainer =
 document.getElementById("storesContainer");
 
-const categoriesContainer =
-document.getElementById("categoriesContainer");
+let allStores = [];
+
+async function loadStores(){
 
 storesContainer.innerHTML = "";
 
@@ -474,108 +423,33 @@ child(ref(database),"stores")
 
 if(snapshot.exists()){
 
-const stores = snapshot.val();
+const stores =
+snapshot.val();
 
-let categories = [];
+allStores = [];
 
 for(let key in stores){
 
-const store = stores[key];
+const store =
+stores[key];
 
-if(store.status==="active"){
+if(store.status === "active"){
 
-if(!categories.includes(store.category)){
-
-categories.push(store.category);
-
-}
-
-storesContainer.innerHTML += `
-
-<div
-class="store-card"
-data-category="${store.category}">
-
-<img
-class="store-image"
-src="${store.image || 'store.png'}">
-
-<div class="store-info">
-
-<div class="store-name-box">
-
-<h3>
-
-${store.store_name}
-
-</h3>
-
-<img
-src="ok.png"
-class="verified-icon">
-
-</div>
-
-<p class="store-category">
-
-${store.category}
-
-</p>
-
-<p class="store-distance">
-
-📍 قريب منك
-
-</p>
-
-<button
-class="add-btn"
-onclick='addToCart(
-"${store.store_name}",
-"${store.image || 'store.png'}"
-)'>
-
-إضافة للسلة
-
-</button>
-
-</div>
-
-</div>
-
-`;
+allStores.push(store);
 
 }
 
 }
 
-// الفلاتر
+renderStores(allStores);
 
-categoriesContainer.innerHTML =
+}else{
 
-`<button
-class="category-btn active-category"
-onclick="filterStores('all',this)">
+storesContainer.innerHTML =
 
-الكل
-
-</button>`;
-
-categories.forEach(category=>{
-
-categoriesContainer.innerHTML += `
-
-<button
-class="category-btn"
-onclick="filterStores('${category}',this)">
-
-${category}
-
-</button>
-
-`;
-
-});
+`<div class="empty-box">
+لا توجد متاجر
+</div>`;
 
 }
 
@@ -589,41 +463,90 @@ console.log(error);
 
 loadStores();
 
-// فلترة
+// =====================
+// عرض المتاجر
+// =====================
 
-window.filterStores =
-function(category,element){
+function renderStores(stores){
 
-document.querySelectorAll(".category-btn")
-.forEach(btn=>{
+storesContainer.innerHTML = "";
 
-btn.classList.remove("active-category");
+if(stores.length === 0){
 
-});
+storesContainer.innerHTML =
 
-element.classList.add("active-category");
+`<div class="empty-box">
+لا توجد نتائج
+</div>`;
 
-document.querySelectorAll(".store-card")
-.forEach(card=>{
-
-if(
-category==="all" ||
-card.dataset.category===category
-){
-
-card.style.display="flex";
-
-}else{
-
-card.style.display="none";
+return;
 
 }
 
+stores.forEach(store=>{
+
+storesContainer.innerHTML += `
+
+<div class="store-card">
+
+<img
+src="${
+store.image ||
+'store.png'
+}"
+class="store-image">
+
+<div class="store-content">
+
+<div class="store-name">
+
+<h3>
+
+${store.store_name}
+
+</h3>
+
+<img
+src="ok.png"
+class="verify-icon">
+
+</div>
+
+<div class="store-category">
+
+${store.category}
+
+</div>
+
+<div class="store-distance">
+
+📍 يبعد عنك تقريباً
+${Math.floor(Math.random()*10)+1}
+كم
+
+</div>
+
+<button
+class="store-btn"
+onclick='addToCart(${JSON.stringify(store)})'>
+
+اضافة للسلة
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
 });
 
-};
+}
 
-// البحث المباشر
+// =====================
+// البحث
+// =====================
 
 document.getElementById("searchInput")
 .addEventListener("input",function(){
@@ -631,19 +554,54 @@ document.getElementById("searchInput")
 let value =
 this.value.toLowerCase();
 
-document.querySelectorAll(".store-card")
-.forEach(card=>{
+let filtered =
+allStores.filter(store=>
 
-let text =
-card.innerText.toLowerCase();
+store.store_name
+.toLowerCase()
+.includes(value)
 
-if(text.includes(value)){
+);
 
-card.style.display="flex";
+renderStores(filtered);
+
+});
+
+// =====================
+// الفلترة
+// =====================
+
+document.querySelectorAll(".filter-btn")
+.forEach(button=>{
+
+button.addEventListener("click",()=>{
+
+document.querySelectorAll(".filter-btn")
+.forEach(btn=>{
+
+btn.classList.remove("active");
+
+});
+
+button.classList.add("active");
+
+const category =
+button.dataset.category;
+
+if(category === "all"){
+
+renderStores(allStores);
 
 }else{
 
-card.style.display="none";
+const filtered =
+allStores.filter(store=>
+
+store.category === category
+
+);
+
+renderStores(filtered);
 
 }
 
@@ -651,33 +609,118 @@ card.style.display="none";
 
 });
 
-// إضافة للسلة
+// =====================
+// السلة
+// =====================
+
+let cart =
+
+JSON.parse(
+localStorage.getItem("cart")
+) || [];
 
 window.addToCart =
-function(name,image){
+function(store){
 
-cart.push({
+cart.push(store);
 
-name:name,
-image:image,
-store:name
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
 
-});
-
-saveCart();
-
-renderCart();
-
-alert("تمت الإضافة للسلة");
+loadCart();
 
 };
 
+function loadCart(){
+
+const cartContainer =
+document.getElementById("cartContainer");
+
+cartContainer.innerHTML = "";
+
+if(cart.length === 0){
+
+cartContainer.innerHTML =
+
+`<div class="empty-box">
+لا توجد طلبات بالسلة
+</div>`;
+
+return;
+
+}
+
+cart.forEach((item,index)=>{
+
+cartContainer.innerHTML += `
+
+<div class="cart-item">
+
+<img
+src="${
+item.image ||
+'store.png'
+}"
+class="cart-image">
+
+<div class="cart-info">
+
+<h3>
+
+${item.store_name}
+
+</h3>
+
+<p>
+
+${item.category}
+
+</p>
+
+</div>
+
+<button
+class="remove-btn"
+onclick="removeCart(${index})">
+
+حذف
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+loadCart();
+
+window.removeCart =
+function(index){
+
+cart.splice(index,1);
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+loadCart();
+
+};
+
+// =====================
 // ارسال الطلب
+// =====================
 
-document.getElementById("sendOrderBtn")
-.onclick = function(){
+window.sendOrder =
+async function(){
 
-if(cart.length===0){
+if(cart.length === 0){
 
 alert("السلة فارغة");
 
@@ -685,20 +728,52 @@ return;
 
 }
 
-alert("تم ارسال الطلب");
+const orderId =
+"ORDER"+Date.now();
 
-cart = [];
+const orderData = {
 
-saveCart();
+id:orderId,
 
-renderCart();
+customerId:currentUser.id,
+
+customerName:
+currentUser.name,
+
+customerPhone:
+currentUser.phone,
+
+orders:cart,
+
+status:"pending",
+
+createdAt:Date.now()
 
 };
 
-// تسجيل خروج
+await set(
 
-window.logout =
-function(){
+ref(database,"orders/"+orderId),
+
+orderData
+
+);
+
+localStorage.removeItem("cart");
+
+cart = [];
+
+loadCart();
+
+alert("تم ارسال الطلب");
+
+};
+
+// =====================
+// تسجيل الخروج
+// =====================
+
+window.logout = function(){
 
 localStorage.removeItem("user");
 
@@ -706,8 +781,6 @@ window.location.href =
 "index.html";
 
 };
-
-renderCart();
 
 </script>
 
