@@ -134,18 +134,22 @@ border:3px solid transparent;
 
 .vip-store{
 background:
-linear-gradient(white,white) padding-box,
+linear-gradient(#fff,#fff) padding-box,
 linear-gradient(
-90deg,
+135deg,
 #ff0000,
 #000000,
 #ff8800,
 #000000,
-#ff0000
+#ff2200
 ) border-box;
 
-background-size:100% 100%,300% 300%;
-animation:vipMove 4s linear infinite;
+background-size:300% 300%;
+animation:vipMove 5s ease infinite;
+
+box-shadow:
+0 0 15px rgba(255,80,0,.25),
+0 0 30px rgba(0,0,0,.12);
 }
 
 @keyframes vipMove{
@@ -166,14 +170,59 @@ background-position:0% 50%;
 
 .vip-badge{
 position:absolute;
-top:12px;
-left:12px;
-background:linear-gradient(135deg,#ff0000,#000,#ff8800);
+top:10px;
+left:10px;
+width:72px;
+height:72px;
+border-radius:20px;
+background:
+linear-gradient(
+135deg,
+#ff0000,
+#000,
+#ff8800
+);
+
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+
 color:white;
-padding:7px 14px;
-border-radius:14px;
-font-size:12px;
 font-weight:bold;
+
+box-shadow:0 5px 20px rgba(0,0,0,.25);
+
+animation:vipPulse 2s infinite;
+
+z-index:10;
+}
+
+.vip-fire{
+font-size:24px;
+line-height:20px;
+}
+
+.vip-text{
+font-size:13px;
+margin-top:6px;
+letter-spacing:1px;
+}
+
+@keyframes vipPulse{
+
+0%{
+transform:scale(1);
+}
+
+50%{
+transform:scale(1.07);
+}
+
+100%{
+transform:scale(1);
+}
+
 }
 
 .store-header{
@@ -336,12 +385,36 @@ align-items:center;
 margin-bottom:15px;
 }
 
-.qty-box input{
-width:90px;
-padding:12px;
-border-radius:12px;
-border:1px solid #ddd;
+.qty-controller{
+display:flex;
+align-items:center;
+gap:10px;
+background:#f2f2f2;
+padding:6px 10px;
+border-radius:16px;
+}
+
+.qty-btn{
+width:34px;
+height:34px;
+border:none;
+border-radius:10px;
+background:#ff8800;
+color:white;
+font-size:20px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.qty-input{
+width:45px;
+height:34px;
+text-align:center;
+border:none;
+background:white;
+border-radius:10px;
 font-size:16px;
+font-weight:bold;
 }
 
 .add-btn{
@@ -349,7 +422,7 @@ width:100%;
 padding:15px;
 border:none;
 border-radius:16px;
-background:#ff8800;
+background:#00b894;
 color:white;
 font-size:16px;
 font-weight:bold;
@@ -499,6 +572,8 @@ color:#777;
 
 <body>
 
+<!-- الرئيسية -->
+
 <div id="homePage"
 class="page active-page">
 
@@ -537,34 +612,10 @@ placeholder="ابحث عن متجر">
 
 </div>
 
-<div class="filters">
-
-<button class="filter-btn active"
-data-category="all">
-الكل
-</button>
-
-<button class="filter-btn"
-data-category="مطعم">
-مطاعم
-</button>
-
-<button class="filter-btn"
-data-category="ماركت">
-ماركت
-</button>
-
-<button class="filter-btn"
-data-category="صيدلية">
-صيدليات
-</button>
-
-</div>
+<div class="filters"></div>
 
 <div id="storesContainer"
-class="stores-container">
-
-</div>
+class="stores-container"></div>
 
 </div>
 
@@ -606,138 +657,7 @@ class="single-store-image">
 </div>
 
 <div id="singleProductsContainer"
-class="products-container">
-
-</div>
-
-</div>
-
-<!-- السلة -->
-
-<div id="cartPage"
-class="page">
-
-<div id="cartContainer"
-class="cart-container">
-
-</div>
-
-<div class="summary-box">
-
-<p>
-المجموع :
-<span id="itemsTotal">
-0
-</span>
-د.ع
-</p>
-
-<p>
-اجرة التوصيل : 3000 د.ع
-</p>
-
-<input
-type="number"
-id="tipInput"
-class="tip-input"
-placeholder="اكرامية للسائق">
-
-<h2>
-المبلغ الكلي :
-<span id="finalTotal">
-0
-</span>
-د.ع
-</h2>
-
-<br>
-
-<button
-class="send-order"
-onclick="sendOrder()">
-
-طلب توصيل 🚀
-
-</button>
-
-</div>
-
-</div>
-
-<!-- الحساب -->
-
-<div id="accountPage"
-class="page">
-
-<div class="account-card">
-
-<img
-src="user.png"
-class="account-image">
-
-<h2 id="accountName">
-اسم المستخدم
-</h2>
-
-<br>
-
-<p id="accountPhone"></p>
-
-<p id="accountAddress"></p>
-
-<p id="accountType"></p>
-
-<button
-class="logout-btn"
-onclick="logout()">
-
-تسجيل الخروج
-
-</button>
-
-</div>
-
-</div>
-
-<!-- البار السفلي -->
-
-<div class="bottom-bar">
-
-<div
-class="nav-item active"
-onclick="showPage('homePage',this)">
-
-<i class="fa-solid fa-house"></i>
-
-<span>
-الرئيسية
-</span>
-
-</div>
-
-<div
-class="nav-item"
-onclick="showPage('cartPage',this)">
-
-<i class="fa-solid fa-cart-shopping"></i>
-
-<span>
-السلة
-</span>
-
-</div>
-
-<div
-class="nav-item"
-onclick="showPage('accountPage',this)">
-
-<i class="fa-solid fa-user"></i>
-
-<span>
-الحساب
-</span>
-
-</div>
+class="products-container"></div>
 
 </div>
 
@@ -750,30 +670,23 @@ import {
 getDatabase,
 ref,
 get,
-child,
-set
+child
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
 
-apiKey:
-"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
-authDomain:
-"fast-937c9.firebaseapp.com",
+authDomain:"fast-937c9.firebaseapp.com",
 
-projectId:
-"fast-937c9",
+projectId:"fast-937c9",
 
-storageBucket:
-"fast-937c9.firebasestorage.app",
+storageBucket:"fast-937c9.firebasestorage.app",
 
-messagingSenderId:
-"221388561840",
+messagingSenderId:"221388561840",
 
-appId:
-"1:221388561840:web:ec9d75183ddd7d44be0a75",
+appId:"1:221388561840:web:ec9d75183ddd7d44be0a75",
 
 databaseURL:
 "https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
@@ -800,26 +713,12 @@ document.getElementById("welcomeText")
 .innerHTML =
 `اهلاً ${currentUser.name}`;
 
-document.getElementById("accountName")
-.innerHTML =
-currentUser.name;
-
-document.getElementById("accountPhone")
-.innerHTML =
-`📞 ${currentUser.phone}`;
-
-document.getElementById("accountAddress")
-.innerHTML =
-`📍 ${currentUser.address || ""}`;
-
-document.getElementById("accountType")
-.innerHTML =
-`👤 ${currentUser.type}`;
-
 let allStores = [];
 
 const storesContainer =
 document.getElementById("storesContainer");
+
+/* تحميل المتاجر */
 
 async function loadStores(){
 
@@ -880,6 +779,8 @@ allStores.sort((a,b)=>
 (b.vip === true) - (a.vip === true)
 );
 
+generateFilters(allStores);
+
 renderStores(allStores);
 
 }
@@ -888,14 +789,117 @@ renderStores(allStores);
 
 loadStores();
 
+/* الفلاتر */
+
+function generateFilters(stores){
+
+const filtersContainer =
+document.querySelector(".filters");
+
+filtersContainer.innerHTML = "";
+
+filtersContainer.innerHTML += `
+<button
+class="filter-btn active"
+data-category="all">
+الكل
+</button>
+`;
+
+let categories = [];
+
+stores.forEach(store=>{
+
+if(
+store.category &&
+!categories.includes(store.category)
+){
+
+categories.push(store.category);
+
+}
+
+});
+
+categories.forEach(category=>{
+
+filtersContainer.innerHTML += `
+<button
+class="filter-btn"
+data-category="${category}">
+${category}
+</button>
+`;
+
+});
+
+attachFilterEvents();
+
+}
+
+function attachFilterEvents(){
+
+document.querySelectorAll(".filter-btn")
+.forEach(button=>{
+
+button.addEventListener("click",()=>{
+
+document.querySelectorAll(".filter-btn")
+.forEach(btn=>{
+
+btn.classList.remove("active");
+
+});
+
+button.classList.add("active");
+
+let category =
+button.dataset.category;
+
+if(category === "all"){
+
+renderStores(allStores);
+
+}else{
+
+let vipStores =
+allStores.filter(store=>store.vip);
+
+let normalStores =
+allStores.filter(store=>
+store.category === category
+);
+
+let merged = [
+...vipStores,
+...normalStores
+];
+
+let unique =
+merged.filter(
+(v,i,a)=>
+a.findIndex(t=>t.id===v.id)===i
+);
+
+renderStores(unique);
+
+}
+
+});
+
+});
+
+}
+
+/* عرض المتاجر */
+
 function renderStores(stores){
 
 storesContainer.innerHTML = "";
 
 if(stores.length === 0){
 
-storesContainer.innerHTML =
-`
+storesContainer.innerHTML = `
 <div class="empty">
 لا توجد متاجر
 </div>
@@ -914,9 +918,19 @@ class="store-card ${store.vip ? "vip-store" : ""}"
 onclick="openStore(${index})">
 
 ${store.vip ? `
+
 <div class="vip-badge">
+
+<div class="vip-fire">
+🔥
+</div>
+
+<div class="vip-text">
 VIP
 </div>
+
+</div>
+
 ` : ""}
 
 <div class="store-header">
@@ -959,6 +973,8 @@ class="ok-icon">
 
 }
 
+/* فتح المتجر */
+
 window.openStore =
 async function(index){
 
@@ -983,8 +999,7 @@ store.image || "store.png";
 const container =
 document.getElementById("singleProductsContainer");
 
-container.innerHTML =
-`
+container.innerHTML = `
 <div class="empty">
 جاري تحميل المنتجات...
 </div>
@@ -1005,16 +1020,12 @@ if(snapshot.exists()){
 const products =
 snapshot.val();
 
-let found = false;
-
 for(let key in products){
 
 const product =
 products[key];
 
 if(product.status === "active"){
-
-found = true;
 
 container.innerHTML += `
 
@@ -1042,23 +1053,34 @@ ${product.price} د.ع
 الكمية
 </span>
 
+<div class="qty-controller">
+
+<button
+class="qty-btn"
+onclick="decreaseQty('${product.id}')">
+-
+</button>
+
 <input
-type="number"
+type="text"
+readonly
 value="1"
-min="1"
-id="qty_${product.id}">
+id="qty_${product.id}"
+class="qty-input">
+
+<button
+class="qty-btn"
+onclick="increaseQty('${product.id}')">
++
+</button>
+
+</div>
 
 </div>
 
 <button
-class="add-btn"
-onclick='addToCart(
-${JSON.stringify(product)},
-"${store.store_name}"
-)'>
-
+class="add-btn">
 اضافة الى السلة
-
 </button>
 
 </div>
@@ -1068,26 +1090,6 @@ ${JSON.stringify(product)},
 }
 
 }
-
-if(!found){
-
-container.innerHTML =
-`
-<div class="empty">
-لا توجد منتجات حالياً
-</div>
-`;
-
-}
-
-}else{
-
-container.innerHTML =
-`
-<div class="empty">
-لا توجد منتجات
-</div>
-`;
 
 }
 
@@ -1101,266 +1103,29 @@ document.getElementById("singleStorePage")
 
 };
 
-let cart =
-JSON.parse(
-localStorage.getItem("cart")
-) || [];
+window.increaseQty =
+function(id){
 
-window.addToCart =
-function(product,storeName){
+const input =
+document.getElementById(`qty_${id}`);
 
-let qty =
-Number(
-document.getElementById(
-`qty_${product.id}`
-).value
-);
-
-cart.push({
-
-storeName:storeName,
-name:product.name,
-price:Number(product.price),
-qty:qty,
-image:product.image || "product.png"
-
-});
-
-localStorage.setItem(
-"cart",
-JSON.stringify(cart)
-);
-
-loadCart();
-
-alert("تمت الاضافة للسلة");
+input.value =
+Number(input.value) + 1;
 
 };
 
-function loadCart(){
+window.decreaseQty =
+function(id){
 
-const cartContainer =
-document.getElementById("cartContainer");
+const input =
+document.getElementById(`qty_${id}`);
 
-cartContainer.innerHTML = "";
+if(Number(input.value) > 1){
 
-if(cart.length === 0){
-
-cartContainer.innerHTML =
-`
-<div class="empty">
-السلة فارغة
-</div>
-`;
-
-updateTotals();
-
-return;
+input.value =
+Number(input.value) - 1;
 
 }
-
-cart.forEach((item,index)=>{
-
-cartContainer.innerHTML += `
-
-<div class="cart-item">
-
-<img
-src="${item.image}"
-class="cart-image">
-
-<div class="cart-info">
-
-<h3>
-${item.name}
-</h3>
-
-<p>
-🏪 ${item.storeName}
-</p>
-
-<p>
-الكمية : ${item.qty}
-</p>
-
-<p>
-${item.price * item.qty} د.ع
-</p>
-
-</div>
-
-<button
-class="delete-btn"
-onclick="removeCart(${index})">
-
-حذف
-
-</button>
-
-</div>
-
-`;
-
-});
-
-updateTotals();
-
-}
-
-loadCart();
-
-window.removeCart =
-function(index){
-
-cart.splice(index,1);
-
-localStorage.setItem(
-"cart",
-JSON.stringify(cart)
-);
-
-loadCart();
-
-};
-
-function updateTotals(){
-
-let itemsTotal = 0;
-
-cart.forEach(item=>{
-
-itemsTotal +=
-item.price * item.qty;
-
-});
-
-let delivery = 3000;
-
-let tip =
-Number(
-document.getElementById("tipInput")
-.value || 0
-);
-
-document.getElementById("itemsTotal")
-.innerHTML =
-itemsTotal;
-
-document.getElementById("finalTotal")
-.innerHTML =
-itemsTotal + delivery + tip;
-
-}
-
-document.getElementById("tipInput")
-.addEventListener(
-"input",
-updateTotals
-);
-
-window.sendOrder =
-async function(){
-
-if(cart.length === 0){
-
-alert("السلة فارغة");
-
-return;
-
-}
-
-let total = 0;
-
-cart.forEach(item=>{
-
-total +=
-item.price * item.qty;
-
-});
-
-let tip =
-Number(
-document.getElementById("tipInput")
-.value || 0
-);
-
-let orderId =
-"ORDER"+Date.now();
-
-let orderData = {
-
-id:orderId,
-
-customerId:
-currentUser.id,
-
-customerName:
-currentUser.name,
-
-customerPhone:
-currentUser.phone,
-
-items:cart,
-
-deliveryPrice:3000,
-
-tip:tip,
-
-totalPrice:
-total + 3000 + tip,
-
-status:"waiting_driver",
-
-createdAt:Date.now()
-
-};
-
-await set(
-ref(database,"orders/"+orderId),
-orderData
-);
-
-cart = [];
-
-localStorage.removeItem("cart");
-
-loadCart();
-
-alert("تم ارسال الطلب 🚀");
-
-};
-
-window.showPage =
-function(pageId,element){
-
-document.querySelectorAll(".page")
-.forEach(page=>{
-
-page.classList.remove("active-page");
-
-});
-
-document.getElementById(pageId)
-.classList.add("active-page");
-
-document.querySelectorAll(".nav-item")
-.forEach(item=>{
-
-item.classList.remove("active");
-
-});
-
-element.classList.add("active");
-
-};
-
-window.logout =
-function(){
-
-localStorage.removeItem("user");
-
-window.location.href =
-"index.html";
 
 };
 
