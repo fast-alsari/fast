@@ -5,22 +5,25 @@
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <meta name="viewport"
-    content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-    <title>الرئيسية</title>
+<title>عالسريع</title>
 
-    <!-- ملف الستايل -->
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet"
+href="style.css">
 
-    <!-- خطوط -->
-    <link rel="preconnect"
-    href="https://fonts.googleapis.com">
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
 
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
-    rel="stylesheet">
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap"
+rel="stylesheet">
 
 </head>
 
@@ -30,26 +33,30 @@
 
 <header class="header">
 
-    <div class="header-top">
+<div class="header-top">
 
-        <div>
+<div>
 
-            <h2 id="welcomeText">
-                اهلاً بك 👋
-            </h2>
+<h2 id="welcomeText">
 
-            <p>
-                اطلب كل ما تحتاجه بسهولة
-            </p>
+اهلاً بك 👋
 
-        </div>
+</h2>
 
-        <img
-        id="userImage"
-        class="profile-image"
-        src="user.png">
+<p>
 
-    </div>
+اطلب كل ما تحتاجه بسهولة
+
+</p>
+
+</div>
+
+<img
+id="userImage"
+class="profile-image"
+src="user.png">
+
+</div>
 
 </header>
 
@@ -57,9 +64,56 @@
 
 <div class="search-box">
 
-    <input
-    type="text"
-    placeholder="ابحث عن متجر ...">
+<input
+type="text"
+id="searchInput"
+placeholder="ابحث عن متجر ...">
+
+</div>
+
+<!-- FILTER -->
+
+<div class="filter-buttons">
+
+<button
+class="filter-btn active"
+onclick="filterStores('all',this)">
+
+الكل
+
+</button>
+
+<button
+class="filter-btn"
+onclick="filterStores('مطعم',this)">
+
+مطاعم
+
+</button>
+
+<button
+class="filter-btn"
+onclick="filterStores('ماركت',this)">
+
+ماركت
+
+</button>
+
+<button
+class="filter-btn"
+onclick="filterStores('صيدلية',this)">
+
+صيدليات
+
+</button>
+
+<button
+class="filter-btn"
+onclick="filterStores('ملابس',this)">
+
+ملابس
+
+</button>
 
 </div>
 
@@ -67,19 +121,21 @@
 
 <section class="stores-section">
 
-    <div class="section-title">
+<div class="section-title">
 
-        <h3>
-            المتاجر المتاحة
-        </h3>
+<h3>
 
-    </div>
+المتاجر المتاحة
 
-    <div
-    class="stores-container"
-    id="storesContainer">
+</h3>
 
-    </div>
+</div>
+
+<div
+class="stores-container"
+id="storesContainer">
+
+</div>
 
 </section>
 
@@ -87,49 +143,56 @@
 
 <nav class="bottom-nav">
 
-    <a href="home.html"
-    class="nav-item active">
+<a href="home.html"
+class="nav-item active">
 
-        <img
-        src="home.png"
-        class="nav-icon">
+<img
+src="home.png"
+class="nav-icon">
 
-        <span>
-            الرئيسية
-        </span>
+<span>
 
-    </a>
+الرئيسية
 
-    <a href="cart.html"
-    class="nav-item">
+</span>
 
-        <img
-        src="cart.png"
-        class="nav-icon">
+</a>
 
-        <span>
-            السلة
-        </span>
+<a href="cart.html"
+class="nav-item">
 
-    </a>
+<img
+src="cart.png"
+class="nav-icon">
 
-    <a href="account.html"
-    class="nav-item">
+<span>
 
-        <img
-        src="user.png"
-        class="nav-icon">
+السلة
 
-        <span>
-            الحساب
-        </span>
+</span>
 
-    </a>
+</a>
+
+<a href="account.html"
+class="nav-item">
+
+<img
+src="user.png"
+class="nav-icon">
+
+<span>
+
+الحساب
+
+</span>
+
+</a>
 
 </nav>
 
-<!-- FIREBASE -->
 <script type="module">
+
+// Firebase
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -169,28 +232,30 @@ const database = getDatabase(app);
 
 
 
-// =======================
-// التحقق من الجلسة
-// =======================
+// ======================
+// SESSION
+// ======================
 
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
 if(!currentUser){
 
-window.location.href = "index.html";
+window.location.href =
+"index.html";
 
 }
 
 
 
-// =======================
-// معلومات المستخدم
-// =======================
+// ======================
+// USER INFO
+// ======================
 
 document.getElementById("welcomeText")
 .innerHTML =
-`اهلاً ${currentUser.name || currentUser.owner || "👋"}`;
+
+`اهلاً ${currentUser.name || "👋"}`;
 
 if(currentUser.image){
 
@@ -201,9 +266,97 @@ document.getElementById("userImage")
 
 
 
-// =======================
-// تحميل المتاجر
-// =======================
+// ======================
+// STORE FILTER
+// ======================
+
+let allStores = [];
+
+window.filterStores =
+function(category,button){
+
+document
+.querySelectorAll(".filter-btn")
+.forEach(btn=>{
+
+btn.classList.remove("active");
+
+});
+
+button.classList.add("active");
+
+if(category==="all"){
+
+renderStores(allStores);
+
+return;
+
+}
+
+let filtered =
+allStores.filter(store =>
+
+store.category === category
+
+);
+
+renderStores(filtered);
+
+};
+
+
+
+// ======================
+// DISTANCE
+// ======================
+
+function getDistanceFromLatLonInKm(
+lat1,
+lon1,
+lat2,
+lon2
+){
+
+const R = 6371;
+
+const dLat =
+deg2rad(lat2-lat1);
+
+const dLon =
+deg2rad(lon2-lon1);
+
+const a =
+
+Math.sin(dLat/2) *
+Math.sin(dLat/2) +
+
+Math.cos(deg2rad(lat1)) *
+Math.cos(deg2rad(lat2)) *
+
+Math.sin(dLon/2) *
+Math.sin(dLon/2);
+
+const c =
+2 * Math.atan2(
+Math.sqrt(a),
+Math.sqrt(1-a)
+);
+
+return (R * c).toFixed(1);
+
+}
+
+function deg2rad(deg){
+
+return deg * (Math.PI/180);
+
+}
+
+
+
+// ======================
+// LOAD STORES
+// ======================
 
 async function loadStores(){
 
@@ -223,57 +376,27 @@ if(snapshot.exists()){
 
 const stores = snapshot.val();
 
+allStores = [];
+
 for(let key in stores){
 
 const store = stores[key];
 
-if(store.status === "active"){
+if(store.status==="active"){
 
-storesContainer.innerHTML += `
-
-<div class="store-card">
-
-<img
-class="store-image"
-src="${
-store.image || "store.png"
-}">
-
-<div class="store-info">
-
-<div class="store-name-box">
-
-<h3>
-${store.store_name}
-</h3>
-
-<img
-src="ok.png"
-class="verified-icon">
-
-</div>
-
-<p class="store-status">
-
-🟢 متاح حالياً
-
-</p>
-
-</div>
-
-</div>
-
-`;
+allStores.push(store);
 
 }
 
 }
+
+renderStores(allStores);
 
 }else{
 
 storesContainer.innerHTML =
 
-"<p>لا توجد متاجر حالياً</p>";
+"<p class='empty-text'>لا توجد متاجر</p>";
 
 }
 
@@ -281,29 +404,143 @@ storesContainer.innerHTML =
 
 console.log(error);
 
-storesContainer.innerHTML =
-
-"<p>حدث خطأ بتحميل المتاجر</p>";
-
 }
 
 }
 
-loadStores();
+
+
+// ======================
+// RENDER STORES
+// ======================
+
+function renderStores(stores){
+
+const storesContainer =
+document.getElementById("storesContainer");
+
+storesContainer.innerHTML = "";
+
+stores.forEach(store=>{
+
+let distance = "غير معروف";
+
+if(
+currentUser.latitude &&
+store.latitude
+){
+
+distance =
+
+getDistanceFromLatLonInKm(
+
+currentUser.latitude,
+currentUser.longitude,
+
+store.latitude,
+store.longitude
+
+)
+
++ " كم";
+
+}
+
+storesContainer.innerHTML += `
+
+<div class="store-card">
+
+<div class="store-right">
+
+<img
+class="store-image"
+src="${
+store.image || "store.png"
+}">
+
+<div class="store-details">
+
+<div class="store-name-row">
+
+<div class="store-name">
+
+${store.store_name}
+
+</div>
+
+<img
+src="ok.png"
+class="verified-icon">
+
+</div>
+
+<div class="store-distance">
+
+📍 يبعد عنك ${distance}
+
+</div>
+
+<div class="store-status">
+
+🟢 متاح حالياً
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
 
 
 
-// =======================
-// تسجيل خروج
-// =======================
+// ======================
+// SEARCH
+// ======================
+
+document
+.getElementById("searchInput")
+
+.addEventListener("keyup",function(){
+
+let value =
+this.value.toLowerCase();
+
+let filtered =
+allStores.filter(store =>
+
+store.store_name
+.toLowerCase()
+.includes(value)
+
+);
+
+renderStores(filtered);
+
+});
+
+
+
+// ======================
+// LOGOUT
+// ======================
 
 window.logout = function(){
 
 localStorage.removeItem("user");
 
-window.location.href = "index.html";
+window.location.href =
+"index.html";
 
 };
+
+loadStores();
 
 </script>
 
