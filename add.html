@@ -1,214 +1,992 @@
-<!-- admin.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
 
-    <title>لوحة تحكم الادمن</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <!-- ربط ملف الستايل -->
-    <link rel="stylesheet" href="style.css">
+<title>لوحة تحكم الادمن</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+
+background:#f3f4f6;
+padding:20px;
+
+}
+
+.header{
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:25px;
+
+}
+
+.header h1{
+
+font-size:28px;
+color:#111827;
+
+}
+
+.logout-btn{
+
+background:#ef4444;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:12px;
+cursor:pointer;
+font-size:15px;
+font-weight:bold;
+
+}
+
+.logout-btn:hover{
+
+background:#dc2626;
+
+}
+
+.cards{
+
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:25px;
+
+}
+
+.card{
+
+padding:25px;
+border-radius:20px;
+color:white;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+
+}
+
+.card i{
+
+font-size:35px;
+margin-bottom:15px;
+
+}
+
+.card h2{
+
+font-size:30px;
+
+}
+
+.card p{
+
+font-size:18px;
+
+}
+
+.blue{
+
+background:linear-gradient(135deg,#2563eb,#1d4ed8);
+
+}
+
+.orange{
+
+background:linear-gradient(135deg,#f97316,#ea580c);
+
+}
+
+.green{
+
+background:linear-gradient(135deg,#10b981,#059669);
+
+}
+
+.black{
+
+background:linear-gradient(135deg,#111827,#374151);
+
+}
+
+.section{
+
+background:white;
+padding:20px;
+border-radius:20px;
+margin-bottom:25px;
+box-shadow:0 5px 15px rgba(0,0,0,0.05);
+
+}
+
+.section h3{
+
+margin-bottom:20px;
+color:#111827;
+
+}
+
+.user-card{
+
+border:1px solid #e5e7eb;
+padding:15px;
+border-radius:15px;
+margin-bottom:15px;
+
+}
+
+.user-card p{
+
+margin-bottom:10px;
+color:#374151;
+
+}
+
+.actions{
+
+display:flex;
+gap:10px;
+margin-top:15px;
+flex-wrap:wrap;
+
+}
+
+.accept{
+
+background:#10b981;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+.reject{
+
+background:#ef4444;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+.renew{
+
+background:#2563eb;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:10px;
+cursor:pointer;
+
+}
+
+.pending{
+
+background:#f59e0b;
+color:white;
+padding:5px 10px;
+border-radius:8px;
+font-size:13px;
+
+}
+
+.active{
+
+background:#10b981;
+color:white;
+padding:5px 10px;
+border-radius:8px;
+font-size:13px;
+
+}
+
+.expired{
+
+background:#ef4444;
+color:white;
+padding:5px 10px;
+border-radius:8px;
+font-size:13px;
+
+}
+
+</style>
 
 </head>
 
 <body>
 
-<!-- SIDEBAR -->
+<div class="header">
 
-<div class="sidebar">
+<h1>
 
-    <div class="logo">
-        ADMIN PANEL
-    </div>
+<i class="fa-solid fa-shield-halved"></i>
 
-    <ul>
+لوحة تحكم الادمن
 
-        <li><a href="#">الرئيسية</a></li>
-        <li><a href="#">الحسابات</a></li>
-        <li><a href="#">المتاجر</a></li>
-        <li><a href="#">السائقين</a></li>
-        <li><a href="#">الطلبات</a></li>
-        <li><a href="#">الأرباح</a></li>
-        <li><a href="#">الاشتراكات</a></li>
-        <li><a href="#">الإشعارات</a></li>
+</h1>
 
-        <li>
-            <a href="#" id="logoutBtn">
-                تسجيل الخروج
-            </a>
-        </li>
+<button class="logout-btn" onclick="logout()">
 
-    </ul>
+<i class="fa-solid fa-right-from-bracket"></i>
+
+تسجيل خروج
+
+</button>
 
 </div>
 
-<!-- MAIN -->
 
-<div class="main-content">
 
-    <!-- TOP CARDS -->
+<!-- الاحصائيات -->
 
-    <div class="top-cards">
+<div class="cards">
 
-        <div class="card">
-            <h2>عدد الزبائن</h2>
-            <p>350</p>
-        </div>
+<div class="card blue">
 
-        <div class="card">
-            <h2>عدد المتاجر</h2>
-            <p>70</p>
-        </div>
+<i class="fa-solid fa-users"></i>
 
-        <div class="card">
-            <h2>عدد السائقين</h2>
-            <p>48</p>
-        </div>
+<h2 id="customersCount">0</h2>
 
-        <div class="card">
-            <h2>الأرباح</h2>
-            <p>15M</p>
-        </div>
-
-    </div>
-
-    <!-- FILTERS -->
-
-    <div class="filters">
-
-        <input type="text" id="searchInput" placeholder="بحث بالاسم">
-
-        <select id="roleFilter">
-
-            <option value="">كل الحسابات</option>
-            <option value="زبون">زبون</option>
-            <option value="متجر">متجر</option>
-            <option value="سائق">سائق</option>
-
-        </select>
-
-    </div>
-
-    <!-- TABLE -->
-
-    <div class="table-box">
-
-        <table id="usersTable">
-
-            <thead>
-
-                <tr>
-
-                    <th>الصورة</th>
-                    <th>الاسم</th>
-                    <th>النوع</th>
-                    <th>الهوية</th>
-                    <th>المتجر / المركبة</th>
-                    <th>الحالة</th>
-                    <th>الاشتراك</th>
-                    <th>الأرباح</th>
-                    <th>المبيعات</th>
-                    <th>الإجراءات</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <!-- STORE -->
-
-                <tr>
-
-                    <td>
-                        <img class="profile-img" src="https://i.pravatar.cc/60?img=10">
-                    </td>
-
-                    <td>متجر السلطان</td>
-
-                    <td>متجر</td>
-
-                    <td>
-                        <img class="doc-img" src="https://images.unsplash.com/photo-1586281380349-632531db7ed4?q=80&w=400">
-                    </td>
-
-                    <td>
-                        <img class="doc-img" src="https://images.unsplash.com/photo-1556740749-887f6717d7e4?q=80&w=400">
-                    </td>
-
-                    <td>
-                        <span class="active">فعال</span>
-                    </td>
-
-                    <td>2026/7/15</td>
-
-                    <td>3,500,000 د.ع</td>
-
-                    <td>410 طلب</td>
-
-                    <td>
-
-                        <button class="view-btn">عرض</button>
-
-                        <button class="ban-btn">حظر</button>
-
-                    </td>
-
-                </tr>
-
-                <!-- DRIVER -->
-
-                <tr>
-
-                    <td>
-                        <img class="profile-img" src="https://i.pravatar.cc/60?img=15">
-                    </td>
-
-                    <td>علي كريم</td>
-
-                    <td>سائق</td>
-
-                    <td>
-                        <img class="doc-img" src="https://images.unsplash.com/photo-1601597111158-2fceff292cdc?q=80&w=400">
-                    </td>
-
-                    <td>
-                        <img class="doc-img" src="https://images.unsplash.com/photo-1558981806-ec527fa84c39?q=80&w=400">
-                    </td>
-
-                    <td>
-                        <span class="pending">انتظار</span>
-                    </td>
-
-                    <td>2026/6/30</td>
-
-                    <td>950,000 د.ع</td>
-
-                    <td>180 توصيل</td>
-
-                    <td>
-
-                        <button class="approve-btn">موافقة</button>
-
-                        <button class="ban-btn">رفض</button>
-
-                    </td>
-
-                </tr>
-
-            </tbody>
-
-        </table>
-
-    </div>
+<p>عدد المستخدمين</p>
 
 </div>
 
-<script src="admin.js"></script>
+<div class="card orange">
+
+<i class="fa-solid fa-store"></i>
+
+<h2 id="storesCount">0</h2>
+
+<p>عدد المتاجر</p>
+
+</div>
+
+<div class="card green">
+
+<i class="fa-solid fa-motorcycle"></i>
+
+<h2 id="driversCount">0</h2>
+
+<p>عدد السواق</p>
+
+</div>
+
+<div class="card black">
+
+<i class="fa-solid fa-box"></i>
+
+<h2 id="productsCount">0</h2>
+
+<p>عدد المنتجات</p>
+
+</div>
+
+</div>
+
+
+
+<!-- المتاجر -->
+
+<div class="section">
+
+<h3>
+
+<i class="fa-solid fa-store"></i>
+
+طلبات المتاجر
+
+</h3>
+
+<div id="storesContainer"></div>
+
+</div>
+
+
+
+<!-- السواق -->
+
+<div class="section">
+
+<h3>
+
+<i class="fa-solid fa-motorcycle"></i>
+
+طلبات السواق
+
+</h3>
+
+<div id="driversContainer"></div>
+
+</div>
+
+
+
+<!-- المنتجات -->
+
+<div class="section">
+
+<h3>
+
+<i class="fa-solid fa-box"></i>
+
+طلبات المنتجات
+
+</h3>
+
+<div id="productsContainer"></div>
+
+</div>
+
+
+
+<script type="module">
+
+import { initializeApp }
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+getDatabase,
+ref,
+get,
+update,
+remove
+}
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+
+
+// Firebase
+
+const firebaseConfig = {
+
+apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+
+authDomain: "fast-937c9.firebaseapp.com",
+
+projectId: "fast-937c9",
+
+storageBucket: "fast-937c9.firebasestorage.app",
+
+messagingSenderId: "221388561840",
+
+appId: "1:221388561840:web:ec9d75183ddd7d44be0a75",
+
+measurementId: "G-CEKHEPNR9X",
+
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const database = getDatabase(app);
+
+
+
+// حماية الصفحة
+
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
+
+if(!currentUser || currentUser.type !== "admin"){
+
+window.location.href = "index.html";
+
+}
+
+
+
+// تسجيل خروج
+
+window.logout = function(){
+
+localStorage.removeItem("user");
+
+window.location.href = "index.html";
+
+};
+
+
+
+// تحميل البيانات
+
+async function loadDashboard(){
+
+
+
+// المستخدمين
+
+let customersSnapshot =
+await get(ref(database,"customers"));
+
+let customersCount = 0;
+
+if(customersSnapshot.exists()){
+
+customersCount =
+Object.keys(customersSnapshot.val()).length;
+
+}
+
+document.getElementById("customersCount")
+.innerText = customersCount;
+
+
+
+// المتاجر
+
+let storesSnapshot =
+await get(ref(database,"stores"));
+
+let storesCount = 0;
+
+const storesContainer =
+document.getElementById("storesContainer");
+
+storesContainer.innerHTML = "";
+
+if(storesSnapshot.exists()){
+
+let stores = storesSnapshot.val();
+
+storesCount =
+Object.keys(stores).length;
+
+for(let id in stores){
+
+let store = stores[id];
+
+let statusClass = "pending";
+let statusText = "قيد الانتظار";
+
+if(store.status === "active"){
+
+statusClass = "active";
+statusText = "مفعل";
+
+}
+
+if(store.status === "expired"){
+
+statusClass = "expired";
+statusText = "منتهي";
+
+}
+
+storesContainer.innerHTML += `
+
+<div class="user-card">
+
+<p>
+<strong>اسم المتجر:</strong>
+${store.store_name}
+</p>
+
+<p>
+<strong>المالك:</strong>
+${store.owner}
+</p>
+
+<p>
+<strong>الهاتف:</strong>
+${store.phone}
+</p>
+
+<p>
+<strong>النوع:</strong>
+${store.category}
+</p>
+
+<p>
+
+<strong>الحالة:</strong>
+
+<span class="${statusClass}">
+${statusText}
+</span>
+
+</p>
+
+<p>
+
+<strong>تاريخ الانتهاء:</strong>
+
+${store.expireAt
+? new Date(store.expireAt)
+.toLocaleDateString('ar-EG')
+: "غير مفعل"}
+
+</p>
+
+<div class="actions">
+
+<button class="accept"
+onclick="approveStore('${id}')">
+
+تفعيل
+
+</button>
+
+<button class="renew"
+onclick="renewStore('${id}')">
+
+تجديد
+
+</button>
+
+<button class="reject"
+onclick="deleteStore('${id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+document.getElementById("storesCount")
+.innerText = storesCount;
+
+
+
+// السواق
+
+let driversSnapshot =
+await get(ref(database,"drivers"));
+
+let driversCount = 0;
+
+const driversContainer =
+document.getElementById("driversContainer");
+
+driversContainer.innerHTML = "";
+
+if(driversSnapshot.exists()){
+
+let drivers = driversSnapshot.val();
+
+driversCount =
+Object.keys(drivers).length;
+
+for(let id in drivers){
+
+let driver = drivers[id];
+
+let statusClass = "pending";
+let statusText = "قيد الانتظار";
+
+if(driver.status === "active"){
+
+statusClass = "active";
+statusText = "مفعل";
+
+}
+
+if(driver.status === "expired"){
+
+statusClass = "expired";
+statusText = "منتهي";
+
+}
+
+driversContainer.innerHTML += `
+
+<div class="user-card">
+
+<p>
+<strong>الاسم:</strong>
+${driver.name}
+</p>
+
+<p>
+<strong>الهاتف:</strong>
+${driver.phone}
+</p>
+
+<p>
+<strong>المركبة:</strong>
+${driver.vehicle}
+</p>
+
+<p>
+
+<strong>الحالة:</strong>
+
+<span class="${statusClass}">
+${statusText}
+</span>
+
+</p>
+
+<p>
+
+<strong>تاريخ الانتهاء:</strong>
+
+${driver.expireAt
+? new Date(driver.expireAt)
+.toLocaleDateString('ar-EG')
+: "غير مفعل"}
+
+</p>
+
+<div class="actions">
+
+<button class="accept"
+onclick="approveDriver('${id}')">
+
+تفعيل
+
+</button>
+
+<button class="renew"
+onclick="renewDriver('${id}')">
+
+تجديد
+
+</button>
+
+<button class="reject"
+onclick="deleteDriver('${id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+document.getElementById("driversCount")
+.innerText = driversCount;
+
+
+
+// المنتجات
+
+let productsSnapshot =
+await get(ref(database,"products"));
+
+let productsCount = 0;
+
+const productsContainer =
+document.getElementById("productsContainer");
+
+productsContainer.innerHTML = "";
+
+if(productsSnapshot.exists()){
+
+let products = productsSnapshot.val();
+
+productsCount =
+Object.keys(products).length;
+
+for(let id in products){
+
+let product = products[id];
+
+let statusClass = "pending";
+let statusText = "قيد الانتظار";
+
+if(product.status === "active"){
+
+statusClass = "active";
+statusText = "مقبول";
+
+}
+
+productsContainer.innerHTML += `
+
+<div class="user-card">
+
+<p>
+<strong>اسم المنتج:</strong>
+${product.name}
+</p>
+
+<p>
+<strong>المتجر:</strong>
+${product.storeName}
+</p>
+
+<p>
+<strong>السعر:</strong>
+${product.price}
+</p>
+
+<p>
+<strong>الوصف:</strong>
+${product.description}
+</p>
+
+<p>
+
+<strong>الحالة:</strong>
+
+<span class="${statusClass}">
+${statusText}
+</span>
+
+</p>
+
+<div class="actions">
+
+<button class="accept"
+onclick="approveProduct('${id}')">
+
+قبول
+
+</button>
+
+<button class="reject"
+onclick="deleteProduct('${id}')">
+
+رفض
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+document.getElementById("productsCount")
+.innerText = productsCount;
+
+}
+
+
+
+// تفعيل متجر
+
+window.approveStore = async function(id){
+
+let now = new Date();
+
+let expireDate = new Date(
+now.getFullYear(),
+now.getMonth() + 1,
+1,
+0,
+0,
+0
+);
+
+await update(
+ref(database,"stores/" + id),
+{
+status:"active",
+expireAt:expireDate.getTime()
+}
+);
+
+loadDashboard();
+
+};
+
+
+
+// تجديد متجر
+
+window.renewStore = async function(id){
+
+let now = new Date();
+
+let expireDate = new Date(
+now.getFullYear(),
+now.getMonth() + 1,
+1,
+0,
+0,
+0
+);
+
+await update(
+ref(database,"stores/" + id),
+{
+status:"active",
+expireAt:expireDate.getTime()
+}
+);
+
+loadDashboard();
+
+};
+
+
+
+// حذف متجر
+
+window.deleteStore = async function(id){
+
+await remove(
+ref(database,"stores/" + id)
+);
+
+loadDashboard();
+
+};
+
+
+
+// تفعيل سواق
+
+window.approveDriver = async function(id){
+
+let now = new Date();
+
+let expireDate = new Date(
+now.getFullYear(),
+now.getMonth() + 1,
+1,
+0,
+0,
+0
+);
+
+await update(
+ref(database,"drivers/" + id),
+{
+status:"active",
+expireAt:expireDate.getTime()
+}
+);
+
+loadDashboard();
+
+};
+
+
+
+// تجديد سواق
+
+window.renewDriver = async function(id){
+
+let now = new Date();
+
+let expireDate = new Date(
+now.getFullYear(),
+now.getMonth() + 1,
+1,
+0,
+0,
+0
+);
+
+await update(
+ref(database,"drivers/" + id),
+{
+status:"active",
+expireAt:expireDate.getTime()
+}
+);
+
+loadDashboard();
+
+};
+
+
+
+// حذف سواق
+
+window.deleteDriver = async function(id){
+
+await remove(
+ref(database,"drivers/" + id)
+);
+
+loadDashboard();
+
+};
+
+
+
+// قبول منتج
+
+window.approveProduct = async function(id){
+
+await update(
+ref(database,"products/" + id),
+{
+status:"active"
+}
+);
+
+loadDashboard();
+
+};
+
+
+
+// حذف منتج
+
+window.deleteProduct = async function(id){
+
+await remove(
+ref(database,"products/" + id)
+);
+
+loadDashboard();
+
+};
+
+
+
+// تشغيل
+
+loadDashboard();
+
+</script>
 
 </body>
 
