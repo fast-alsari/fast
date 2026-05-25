@@ -7,7 +7,9 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>لوحة تحكم الادمن</title>
+<title>
+لوحة تحكم الادمن
+</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
 
@@ -69,12 +71,38 @@ margin-bottom:10px;
 color:#0066ff;
 }
 
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.tab-btn{
+border:none;
+padding:12px 18px;
+border-radius:12px;
+background:#ddd;
+cursor:pointer;
+font-weight:bold;
+}
+
+.tab-btn.active{
+background:#ff7b00;
+color:white;
+}
+
 .section{
+display:none;
 background:#fff;
 padding:20px;
 border-radius:20px;
 margin-bottom:20px;
 box-shadow:0 4px 10px rgba(0,0,0,0.08);
+}
+
+.active-section{
+display:block;
 }
 
 .section-title{
@@ -130,6 +158,14 @@ background:#0984e3;
 background:#6c5ce7;
 }
 
+img{
+max-width:100px;
+max-height:100px;
+object-fit:cover;
+border-radius:15px;
+margin-top:10px;
+}
+
 </style>
 
 </head>
@@ -139,12 +175,21 @@ background:#6c5ce7;
 <div class="header">
 
 <div>
-<h1>لوحة تحكم الادمن</h1>
-<p>إدارة التطبيق بالكامل</p>
+<h1>
+لوحة تحكم الادمن
+</h1>
+
+<p>
+إدارة التطبيق بالكامل
+</p>
 </div>
 
-<button class="logout-btn" onclick="logout()">
+<button
+class="logout-btn"
+onclick="logout()">
+
 تسجيل الخروج
+
 </button>
 
 </div>
@@ -166,11 +211,54 @@ background:#6c5ce7;
 <p>السواق</p>
 </div>
 
+<div class="card">
+<h2 id="productsCount">0</h2>
+<p>المنتجات</p>
 </div>
 
-<!-- المستخدمين -->
+</div>
 
-<div class="section">
+<div class="tabs">
+
+<button
+class="tab-btn active"
+onclick="showSection('customersSection',this)">
+
+الزبائن
+
+</button>
+
+<button
+class="tab-btn"
+onclick="showSection('storesSection',this)">
+
+المتاجر
+
+</button>
+
+<button
+class="tab-btn"
+onclick="showSection('driversSection',this)">
+
+السواق
+
+</button>
+
+<button
+class="tab-btn"
+onclick="showSection('productsSection',this)">
+
+المنتجات
+
+</button>
+
+</div>
+
+<!-- الزبائن -->
+
+<div
+id="customersSection"
+class="section active-section">
 
 <h2 class="section-title">
 المستخدمين
@@ -182,7 +270,9 @@ background:#6c5ce7;
 
 <!-- المتاجر -->
 
-<div class="section">
+<div
+id="storesSection"
+class="section">
 
 <h2 class="section-title">
 المتاجر
@@ -194,13 +284,29 @@ background:#6c5ce7;
 
 <!-- السواق -->
 
-<div class="section">
+<div
+id="driversSection"
+class="section">
 
 <h2 class="section-title">
 السواق
 </h2>
 
 <div id="driversContainer"></div>
+
+</div>
+
+<!-- المنتجات -->
+
+<div
+id="productsSection"
+class="section">
+
+<h2 class="section-title">
+المنتجات
+</h2>
+
+<div id="productsContainer"></div>
 
 </div>
 
@@ -241,42 +347,66 @@ databaseURL:
 
 };
 
-const app = initializeApp(firebaseConfig);
+const app =
+initializeApp(firebaseConfig);
 
-const database = getDatabase(app);
-
-
-
-// حماية الصفحة
+const database =
+getDatabase(app);
 
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
 if(!currentUser || currentUser.type !== "admin"){
 
-window.location.href = "index.html";
+window.location.href =
+"index.html";
 
 }
 
-
-
-// تسجيل الخروج
+// تسجيل خروج
 
 window.logout = function(){
 
 localStorage.removeItem("user");
 
-window.location.href = "index.html";
+window.location.href =
+"index.html";
 
 };
 
+// تغيير الاقسام
 
+window.showSection =
+function(id,button){
+
+document.querySelectorAll(".section")
+.forEach(section=>{
+
+section.classList.remove("active-section");
+
+});
+
+document.getElementById(id)
+.classList.add("active-section");
+
+document.querySelectorAll(".tab-btn")
+.forEach(btn=>{
+
+btn.classList.remove("active");
+
+});
+
+button.classList.add("active");
+
+};
 
 // تحميل البيانات
 
 async function loadDashboard(){
 
-// المستخدمين
+// ======================
+// الزبائن
+// ======================
 
 let customersSnapshot =
 await get(ref(database,"customers"));
@@ -288,7 +418,8 @@ customersContainer.innerHTML = "";
 
 if(customersSnapshot.exists()){
 
-let customers = customersSnapshot.val();
+let customers =
+customersSnapshot.val();
 
 document.getElementById("customersCount")
 .innerText =
@@ -302,34 +433,66 @@ customersContainer.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${user.name}</p>
+<p>
+<strong>
+الاسم:
+</strong>
+${user.name}
+</p>
 
-<p><strong>الهاتف:</strong> ${user.phone}</p>
+<p>
+<strong>
+الهاتف:
+</strong>
+${user.phone}
+</p>
 
-<p><strong>العنوان:</strong> ${user.address || "-"}</p>
+<p>
+<strong>
+العنوان:
+</strong>
+${user.address || "-"}
+</p>
 
-<p><strong>الحالة:</strong> ${user.status}</p>
+<p>
+<strong>
+الحالة:
+</strong>
+${user.status}
+</p>
 
 <div class="actions">
 
-<button class="ban"
+<button
+class="ban"
 onclick="banCustomer('${id}')">
+
 حظر
+
 </button>
 
-<button class="accept"
+<button
+class="accept"
 onclick="unbanCustomer('${id}')">
+
 فك الحظر
+
 </button>
 
-<button class="reject"
+<button
+class="reject"
 onclick="deleteCustomer('${id}')">
+
 حذف
+
 </button>
 
-<button class="location"
+<button
+class="location"
 onclick="openLocation('${user.latitude}','${user.longitude}')">
+
 الموقع
+
 </button>
 
 </div>
@@ -342,9 +505,9 @@ onclick="openLocation('${user.latitude}','${user.longitude}')">
 
 }
 
-
-
+// ======================
 // المتاجر
+// ======================
 
 let storesSnapshot =
 await get(ref(database,"stores"));
@@ -356,7 +519,8 @@ storesContainer.innerHTML = "";
 
 if(storesSnapshot.exists()){
 
-let stores = storesSnapshot.val();
+let stores =
+storesSnapshot.val();
 
 document.getElementById("storesCount")
 .innerText =
@@ -370,47 +534,103 @@ storesContainer.innerHTML += `
 
 <div class="item">
 
-<p><strong>اسم المتجر:</strong> ${store.store_name}</p>
+<p>
+<strong>
+اسم المتجر:
+</strong>
+${store.store_name}
+</p>
 
-<p><strong>المالك:</strong> ${store.owner}</p>
+<p>
+<strong>
+المالك:
+</strong>
+${store.owner}
+</p>
 
-<p><strong>الهاتف:</strong> ${store.phone}</p>
+<p>
+<strong>
+الهاتف:
+</strong>
+${store.phone}
+</p>
 
-<p><strong>النوع:</strong> ${store.category}</p>
+<p>
+<strong>
+النوع:
+</strong>
+${store.category}
+</p>
 
-<p><strong>الحالة:</strong> ${store.status}</p>
+<p>
+<strong>
+الحالة:
+</strong>
+${store.status}
+</p>
 
-<p><strong>عدد الطلبات:</strong> ${store.orders || 0}</p>
+<p>
+<strong>
+عدد الطلبات:
+</strong>
+${store.orders || 0}
+</p>
 
-<p><strong>مبلغ البيع:</strong> ${store.sales || 0} د.ع</p>
+<p>
+<strong>
+مبلغ البيع:
+</strong>
+${store.sales || 0}
+د.ع
+</p>
 
-<p><strong>تاريخ الانتهاء:</strong> ${store.expireDate || "غير محدد"}</p>
+<p>
+<strong>
+تاريخ الانتهاء:
+</strong>
+${store.expireDate || "غير محدد"}
+</p>
 
 <div class="actions">
 
-<button class="accept"
+<button
+class="accept"
 onclick="activateStore('${id}')">
+
 تفعيل
+
 </button>
 
-<button class="ban"
+<button
+class="ban"
 onclick="disableStore('${id}')">
+
 إيقاف
+
 </button>
 
-<button class="reject"
+<button
+class="reject"
 onclick="deleteStore('${id}')">
+
 حذف
+
 </button>
 
-<button class="expire"
+<button
+class="expire"
 onclick="setExpireDate('stores','${id}')">
+
 تحديد انتهاء
+
 </button>
 
-<button class="location"
+<button
+class="location"
 onclick="openLocation('${store.latitude}','${store.longitude}')">
+
 الموقع
+
 </button>
 
 </div>
@@ -423,9 +643,9 @@ onclick="openLocation('${store.latitude}','${store.longitude}')">
 
 }
 
-
-
+// ======================
 // السواق
+// ======================
 
 let driversSnapshot =
 await get(ref(database,"drivers"));
@@ -437,7 +657,8 @@ driversContainer.innerHTML = "";
 
 if(driversSnapshot.exists()){
 
-let drivers = driversSnapshot.val();
+let drivers =
+driversSnapshot.val();
 
 document.getElementById("driversCount")
 .innerText =
@@ -451,40 +672,200 @@ driversContainer.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${driver.name}</p>
+<p>
+<strong>
+الاسم:
+</strong>
+${driver.name}
+</p>
 
-<p><strong>الهاتف:</strong> ${driver.phone}</p>
+<p>
+<strong>
+الهاتف:
+</strong>
+${driver.phone}
+</p>
 
-<p><strong>المركبة:</strong> ${driver.vehicle}</p>
+<p>
+<strong>
+المركبة:
+</strong>
+${driver.vehicle}
+</p>
 
-<p><strong>الحالة:</strong> ${driver.status}</p>
+<p>
+<strong>
+الحالة:
+</strong>
+${driver.status}
+</p>
 
-<p><strong>عدد الطلبات:</strong> ${driver.orders || 0}</p>
+<p>
+<strong>
+عدد الطلبات:
+</strong>
+${driver.orders || 0}
+</p>
 
-<p><strong>الارباح:</strong> ${driver.earnings || 0} د.ع</p>
+<p>
+<strong>
+الارباح:
+</strong>
+${driver.earnings || 0}
+د.ع
+</p>
 
-<p><strong>تاريخ الانتهاء:</strong> ${driver.expireDate || "غير محدد"}</p>
+<p>
+<strong>
+تاريخ الانتهاء:
+</strong>
+${driver.expireDate || "غير محدد"}
+</p>
 
 <div class="actions">
 
-<button class="accept"
+<button
+class="accept"
 onclick="activateDriver('${id}')">
+
 تفعيل
+
 </button>
 
-<button class="ban"
+<button
+class="ban"
 onclick="disableDriver('${id}')">
+
 إيقاف
+
 </button>
 
-<button class="reject"
+<button
+class="reject"
 onclick="deleteDriver('${id}')">
+
 حذف
+
 </button>
 
-<button class="expire"
+<button
+class="expire"
 onclick="setExpireDate('drivers','${id}')">
+
 تحديد انتهاء
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+// ======================
+// المنتجات
+// ======================
+
+let productsSnapshot =
+await get(ref(database,"store_products"));
+
+let productsContainer =
+document.getElementById("productsContainer");
+
+productsContainer.innerHTML = "";
+
+let totalProducts = 0;
+
+if(productsSnapshot.exists()){
+
+let storesProducts =
+productsSnapshot.val();
+
+for(let storeId in storesProducts){
+
+let products =
+storesProducts[storeId];
+
+for(let productId in products){
+
+totalProducts++;
+
+let product =
+products[productId];
+
+productsContainer.innerHTML += `
+
+<div class="item">
+
+<p>
+<strong>
+اسم المنتج:
+</strong>
+${product.name}
+</p>
+
+<p>
+<strong>
+المتجر:
+</strong>
+${product.storeName}
+</p>
+
+<p>
+<strong>
+السعر:
+</strong>
+${product.price}
+د.ع
+</p>
+
+<p>
+<strong>
+الوصف:
+</strong>
+${product.description}
+</p>
+
+<p>
+<strong>
+الحالة:
+</strong>
+${product.status}
+</p>
+
+<img
+src="${product.image}">
+
+<div class="actions">
+
+<button
+class="accept"
+onclick="
+approveProduct(
+'${storeId}',
+'${productId}'
+)
+">
+
+قبول
+
+</button>
+
+<button
+class="reject"
+onclick="
+rejectProduct(
+'${storeId}',
+'${productId}'
+)
+">
+
+رفض
+
 </button>
 
 </div>
@@ -499,13 +880,57 @@ onclick="setExpireDate('drivers','${id}')">
 
 }
 
+document.getElementById("productsCount")
+.innerText = totalProducts;
+
+}
+
 loadDashboard();
 
+// ======================
+// المنتجات
+// ======================
 
+window.approveProduct =
+async function(storeId,productId){
 
-// تفعيل متجر
+await update(
+ref(
+database,
+`store_products/${storeId}/${productId}`
+),
+{
+status:"active"
+}
+);
 
-window.activateStore = async function(id){
+loadDashboard();
+
+};
+
+window.rejectProduct =
+async function(storeId,productId){
+
+await update(
+ref(
+database,
+`store_products/${storeId}/${productId}`
+),
+{
+status:"rejected"
+}
+);
+
+loadDashboard();
+
+};
+
+// ======================
+// المتاجر
+// ======================
+
+window.activateStore =
+async function(id){
 
 await update(
 ref(database,"stores/"+id),
@@ -518,11 +943,8 @@ loadDashboard();
 
 };
 
-
-
-// تعطيل متجر
-
-window.disableStore = async function(id){
+window.disableStore =
+async function(id){
 
 await update(
 ref(database,"stores/"+id),
@@ -535,11 +957,25 @@ loadDashboard();
 
 };
 
+window.deleteStore =
+async function(id){
 
+if(!confirm("حذف المتجر ؟")) return;
 
-// تفعيل سائق
+await remove(
+ref(database,"stores/"+id)
+);
 
-window.activateDriver = async function(id){
+loadDashboard();
+
+};
+
+// ======================
+// السواق
+// ======================
+
+window.activateDriver =
+async function(id){
 
 await update(
 ref(database,"drivers/"+id),
@@ -552,11 +988,8 @@ loadDashboard();
 
 };
 
-
-
-// تعطيل سائق
-
-window.disableDriver = async function(id){
+window.disableDriver =
+async function(id){
 
 await update(
 ref(database,"drivers/"+id),
@@ -569,11 +1002,25 @@ loadDashboard();
 
 };
 
+window.deleteDriver =
+async function(id){
 
+if(!confirm("حذف السائق ؟")) return;
 
-// حظر مستخدم
+await remove(
+ref(database,"drivers/"+id)
+);
 
-window.banCustomer = async function(id){
+loadDashboard();
+
+};
+
+// ======================
+// الزبائن
+// ======================
+
+window.banCustomer =
+async function(id){
 
 await update(
 ref(database,"customers/"+id),
@@ -586,11 +1033,8 @@ loadDashboard();
 
 };
 
-
-
-// فك حظر مستخدم
-
-window.unbanCustomer = async function(id){
+window.unbanCustomer =
+async function(id){
 
 await update(
 ref(database,"customers/"+id),
@@ -603,16 +1047,10 @@ loadDashboard();
 
 };
 
+window.deleteCustomer =
+async function(id){
 
-
-// حذف مستخدم
-
-window.deleteCustomer = async function(id){
-
-let confirmDelete =
-confirm("هل تريد حذف المستخدم ؟");
-
-if(!confirmDelete) return;
+if(!confirm("حذف المستخدم ؟")) return;
 
 await remove(
 ref(database,"customers/"+id)
@@ -622,53 +1060,15 @@ loadDashboard();
 
 };
 
-
-
-// حذف متجر
-
-window.deleteStore = async function(id){
-
-let confirmDelete =
-confirm("هل تريد حذف المتجر ؟");
-
-if(!confirmDelete) return;
-
-await remove(
-ref(database,"stores/"+id)
-);
-
-loadDashboard();
-
-};
-
-
-
-// حذف سائق
-
-window.deleteDriver = async function(id){
-
-let confirmDelete =
-confirm("هل تريد حذف السائق ؟");
-
-if(!confirmDelete) return;
-
-await remove(
-ref(database,"drivers/"+id)
-);
-
-loadDashboard();
-
-};
-
-
-
-// تحديد انتهاء التفعيل
+// ======================
+// تحديد انتهاء
+// ======================
 
 window.setExpireDate =
 async function(type,id){
 
 let date =
-prompt("ادخل تاريخ الانتهاء مثال 2026-05-01");
+prompt("ادخل تاريخ الانتهاء");
 
 if(!date) return;
 
@@ -683,9 +1083,9 @@ loadDashboard();
 
 };
 
-
-
+// ======================
 // فتح الموقع
+// ======================
 
 window.openLocation =
 function(lat,lng){
