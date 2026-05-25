@@ -1,3 +1,4 @@
+ك 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -208,23 +209,51 @@ onclick="logout()">
 <div class="cards">
 
 <div class="card">
-<h2 id="customersCount">0</h2>
-<p>المستخدمين</p>
+
+<h2 id="customersCount">
+0
+</h2>
+
+<p>
+المستخدمين
+</p>
+
 </div>
 
 <div class="card">
-<h2 id="storesCount">0</h2>
-<p>المتاجر</p>
+
+<h2 id="storesCount">
+0
+</h2>
+
+<p>
+المتاجر
+</p>
+
 </div>
 
 <div class="card">
-<h2 id="driversCount">0</h2>
-<p>السواق</p>
+
+<h2 id="driversCount">
+0
+</h2>
+
+<p>
+السواق
+</p>
+
 </div>
 
 <div class="card">
-<h2 id="productsCount">0</h2>
-<p>المنتجات</p>
+
+<h2 id="productsCount">
+0
+</h2>
+
+<p>
+المنتجات
+</p>
+
 </div>
 
 </div>
@@ -442,29 +471,46 @@ customersContainer.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${user.name || "-"}</p>
+<p><strong>الاسم:</strong> ${user.name}</p>
 
-<p><strong>الهاتف:</strong> ${user.phone || "-"}</p>
+<p><strong>الهاتف:</strong> ${user.phone}</p>
 
 <p><strong>العنوان:</strong> ${user.address || "-"}</p>
 
-<p><strong>الحالة:</strong> ${user.status || "-"}</p>
+<p><strong>الحالة:</strong> ${user.status}</p>
 
 <div class="actions">
 
-<button class="ban"
+<button
+class="ban"
 onclick="banCustomer('${id}')">
+
 حظر
+
 </button>
 
-<button class="accept"
+<button
+class="accept"
 onclick="unbanCustomer('${id}')">
+
 فك الحظر
+
 </button>
 
-<button class="reject"
+<button
+class="reject"
 onclick="deleteCustomer('${id}')">
+
 حذف
+
+</button>
+
+<button
+class="location"
+onclick="openLocation('${user.latitude}','${user.longitude}')">
+
+الموقع
+
 </button>
 
 </div>
@@ -497,9 +543,9 @@ document.getElementById("storesCount")
 Object.keys(stores).length;
 
 let today =
-new Date();
-
-today.setHours(0,0,0,0);
+new Date()
+.toISOString()
+.split("T")[0];
 
 for(let id in stores){
 
@@ -509,30 +555,19 @@ let store = stores[id];
 
 if(
 store.accountType === "vip" &&
-store.vipExpireDate
+store.vipExpireDate &&
+store.vipExpireDate < today
 ){
-
-let expireDate =
-new Date(store.vipExpireDate);
-
-expireDate.setHours(0,0,0,0);
-
-if(expireDate < today){
 
 await update(
 ref(database,"stores/"+id),
 {
 accountType:"normal",
-vipExpireDate:"",
-vipActive:false
+vipExpireDate:""
 }
 );
 
 store.accountType = "normal";
-
-store.vipExpireDate = "";
-
-}
 
 }
 
@@ -540,26 +575,23 @@ storesContainer.innerHTML += `
 
 <div class="item">
 
-<p><strong>اسم المتجر:</strong> ${store.store_name || "-"}</p>
+<p><strong>اسم المتجر:</strong> ${store.store_name}</p>
 
-<p><strong>المالك:</strong> ${store.owner || "-"}</p>
+<p><strong>المالك:</strong> ${store.owner}</p>
 
-<p><strong>الهاتف:</strong> ${store.phone || "-"}</p>
+<p><strong>الهاتف:</strong> ${store.phone}</p>
 
-<p><strong>النوع:</strong> ${store.category || "-"}</p>
+<p><strong>النوع:</strong> ${store.category}</p>
 
-<p><strong>الحالة:</strong> ${store.status || "-"}</p>
+<p><strong>الحالة:</strong> ${store.status}</p>
 
 <p><strong>عدد الطلبات:</strong> ${store.orders || 0}</p>
 
-<p><strong>المبيعات:</strong> ${store.sales || 0} د.ع</p>
+<p><strong>مبلغ البيع:</strong> ${store.sales || 0} د.ع</p>
 
-<p><strong>انتهاء الحساب:</strong> ${store.expireDate || "غير محدد"}</p>
+<p><strong>تاريخ الانتهاء:</strong> ${store.expireDate || "غير محدد"}</p>
 
-<p>
-<strong>
-حالة VIP:
-</strong>
+<p><strong>حالة VIP:</strong>
 
 ${
 store.accountType === "vip"
@@ -571,51 +603,68 @@ store.accountType === "vip"
 
 </p>
 
-<p>
-<strong>
-تاريخ انتهاء VIP:
-</strong>
+<p><strong>انتهاء VIP:</strong>
 
-${
-store.vipExpireDate
-?
-store.vipExpireDate
-:
-"غير محدد"
-}
+${store.vipExpireDate || "غير محدد"}
 
 </p>
 
 <div class="actions">
 
-<button class="accept"
+<button
+class="accept"
 onclick="activateStore('${id}')">
+
 تفعيل
+
 </button>
 
-<button class="ban"
+<button
+class="ban"
 onclick="disableStore('${id}')">
+
 إيقاف
+
 </button>
 
-<button class="reject"
+<button
+class="reject"
 onclick="deleteStore('${id}')">
+
 حذف
+
 </button>
 
-<button class="expire"
+<button
+class="expire"
 onclick="setExpireDate('stores','${id}')">
+
 تحديد انتهاء
+
 </button>
 
-<button class="vip"
+<button
+class="vip"
 onclick="makeVip('${id}')">
+
 VIP
+
 </button>
 
-<button class="reject"
+<button
+class="reject"
 onclick="removeVip('${id}')">
+
 إزالة VIP
+
+</button>
+
+<button
+class="location"
+onclick="openLocation('${store.latitude}','${store.longitude}')">
+
+الموقع
+
 </button>
 
 </div>
@@ -655,13 +704,55 @@ driversContainer.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${driver.name || "-"}</p>
+<p><strong>الاسم:</strong> ${driver.name}</p>
 
-<p><strong>الهاتف:</strong> ${driver.phone || "-"}</p>
+<p><strong>الهاتف:</strong> ${driver.phone}</p>
 
-<p><strong>المركبة:</strong> ${driver.vehicle || "-"}</p>
+<p><strong>المركبة:</strong> ${driver.vehicle}</p>
 
-<p><strong>الحالة:</strong> ${driver.status || "-"}</p>
+<p><strong>الحالة:</strong> ${driver.status}</p>
+
+<p><strong>عدد الطلبات:</strong> ${driver.orders || 0}</p>
+
+<p><strong>الارباح:</strong> ${driver.earnings || 0} د.ع</p>
+
+<p><strong>تاريخ الانتهاء:</strong> ${driver.expireDate || "غير محدد"}</p>
+
+<div class="actions">
+
+<button
+class="accept"
+onclick="activateDriver('${id}')">
+
+تفعيل
+
+</button>
+
+<button
+class="ban"
+onclick="disableDriver('${id}')">
+
+إيقاف
+
+</button>
+
+<button
+class="reject"
+onclick="deleteDriver('${id}')">
+
+حذف
+
+</button>
+
+<button
+class="expire"
+onclick="setExpireDate('drivers','${id}')">
+
+تحديد انتهاء
+
+</button>
+
+</div>
 
 </div>
 
@@ -704,26 +795,44 @@ productsContainer.innerHTML += `
 
 <div class="item">
 
-<p><strong>اسم المنتج:</strong> ${product.name || "-"}</p>
+<p><strong>اسم المنتج:</strong> ${product.name}</p>
 
-<p><strong>المتجر:</strong> ${product.storeName || "-"}</p>
+<p><strong>المتجر:</strong> ${product.storeName}</p>
 
-<p><strong>السعر:</strong> ${product.price || 0} د.ع</p>
+<p><strong>السعر:</strong> ${product.price} د.ع</p>
 
-<p><strong>الحالة:</strong> ${product.status || "-"}</p>
+<p><strong>الوصف:</strong> ${product.description}</p>
 
-<img src="${product.image || "product.png"}">
+<p><strong>الحالة:</strong> ${product.status}</p>
+
+<img src="${product.image}">
 
 <div class="actions">
 
-<button class="accept"
-onclick="approveProduct('${storeId}','${productId}')">
+<button
+class="accept"
+onclick="
+approveProduct(
+'${storeId}',
+'${productId}'
+)
+">
+
 قبول
+
 </button>
 
-<button class="reject"
-onclick="rejectProduct('${storeId}','${productId}')">
+<button
+class="reject"
+onclick="
+rejectProduct(
+'${storeId}',
+'${productId}'
+)
+">
+
 رفض
+
 </button>
 
 </div>
@@ -739,23 +848,22 @@ onclick="rejectProduct('${storeId}','${productId}')">
 }
 
 document.getElementById("productsCount")
-.innerText =
-totalProducts;
-
-}
+.innerText = totalProducts;
 
 }
 
 loadDashboard();
 
-// منتجات
+// المنتجات
 
 window.approveProduct =
 async function(storeId,productId){
 
 await update(
-ref(database,
-`store_products/${storeId}/${productId}`),
+ref(
+database,
+`store_products/${storeId}/${productId}`
+),
 {
 status:"active"
 }
@@ -769,8 +877,10 @@ window.rejectProduct =
 async function(storeId,productId){
 
 await update(
-ref(database,
-`store_products/${storeId}/${productId}`),
+ref(
+database,
+`store_products/${storeId}/${productId}`
+),
 {
 status:"rejected"
 }
@@ -787,34 +897,16 @@ async function(id){
 
 let vipDate =
 prompt(
-"ادخل تاريخ انتهاء VIP\nمثال:\n2026-12-31"
+"ادخل تاريخ انتهاء VIP مثال 2026-12-31"
 );
 
-if(!vipDate){
-
-alert("يجب ادخال تاريخ");
-
-return;
-
-}
-
-let pattern =
-/^\d{4}-\d{2}-\d{2}$/;
-
-if(!pattern.test(vipDate)){
-
-alert("صيغة التاريخ غير صحيحة");
-
-return;
-
-}
+if(!vipDate) return;
 
 await update(
 ref(database,"stores/"+id),
 {
 accountType:"vip",
-vipExpireDate:vipDate,
-vipActive:true
+vipExpireDate:vipDate
 }
 );
 
@@ -831,8 +923,7 @@ await update(
 ref(database,"stores/"+id),
 {
 accountType:"normal",
-vipExpireDate:"",
-vipActive:false
+vipExpireDate:""
 }
 );
 
@@ -885,6 +976,49 @@ loadDashboard();
 
 };
 
+// السواق
+
+window.activateDriver =
+async function(id){
+
+await update(
+ref(database,"drivers/"+id),
+{
+status:"active"
+}
+);
+
+loadDashboard();
+
+};
+
+window.disableDriver =
+async function(id){
+
+await update(
+ref(database,"drivers/"+id),
+{
+status:"disabled"
+}
+);
+
+loadDashboard();
+
+};
+
+window.deleteDriver =
+async function(id){
+
+if(!confirm("حذف السائق ؟")) return;
+
+await remove(
+ref(database,"drivers/"+id)
+);
+
+loadDashboard();
+
+};
+
 // الزبائن
 
 window.banCustomer =
@@ -928,7 +1062,7 @@ loadDashboard();
 
 };
 
-// انتهاء الحساب
+// انتهاء
 
 window.setExpireDate =
 async function(type,id){
@@ -946,6 +1080,25 @@ expireDate:date
 );
 
 loadDashboard();
+
+};
+
+// الموقع
+
+window.openLocation =
+function(lat,lng){
+
+if(!lat || !lng){
+
+alert("لا يوجد موقع");
+
+return;
+
+}
+
+window.open(
+`https://maps.google.com/?q=${lat},${lng}`
+);
 
 };
 
