@@ -5,15 +5,18 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
 <title>
 لوحة تحكم الادمن
 </title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap"
+rel="stylesheet">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
 
@@ -158,6 +161,12 @@ background:#0984e3;
 background:#6c5ce7;
 }
 
+.vip{
+background:#111;
+color:#ff8800 !important;
+border:2px solid #ff8800 !important;
+}
+
 img{
 max-width:100px;
 max-height:100px;
@@ -175,6 +184,7 @@ margin-top:10px;
 <div class="header">
 
 <div>
+
 <h1>
 لوحة تحكم الادمن
 </h1>
@@ -182,6 +192,7 @@ margin-top:10px;
 <p>
 إدارة التطبيق بالكامل
 </p>
+
 </div>
 
 <button
@@ -197,23 +208,51 @@ onclick="logout()">
 <div class="cards">
 
 <div class="card">
-<h2 id="customersCount">0</h2>
-<p>المستخدمين</p>
+
+<h2 id="customersCount">
+0
+</h2>
+
+<p>
+المستخدمين
+</p>
+
 </div>
 
 <div class="card">
-<h2 id="storesCount">0</h2>
-<p>المتاجر</p>
+
+<h2 id="storesCount">
+0
+</h2>
+
+<p>
+المتاجر
+</p>
+
 </div>
 
 <div class="card">
-<h2 id="driversCount">0</h2>
-<p>السواق</p>
+
+<h2 id="driversCount">
+0
+</h2>
+
+<p>
+السواق
+</p>
+
 </div>
 
 <div class="card">
-<h2 id="productsCount">0</h2>
-<p>المنتجات</p>
+
+<h2 id="productsCount">
+0
+</h2>
+
+<p>
+المنتجات
+</p>
+
 </div>
 
 </div>
@@ -328,19 +367,19 @@ from
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
-authDomain: "fast-937c9.firebaseapp.com",
+authDomain:"fast-937c9.firebaseapp.com",
 
-projectId: "fast-937c9",
+projectId:"fast-937c9",
 
-storageBucket: "fast-937c9.firebasestorage.app",
+storageBucket:"fast-937c9.firebasestorage.app",
 
-messagingSenderId: "221388561840",
+messagingSenderId:"221388561840",
 
-appId: "1:221388561840:web:ec9d75183ddd7d44be0a75",
+appId:"1:221388561840:web:ec9d75183ddd7d44be0a75",
 
-measurementId: "G-CEKHEPNR9X",
+measurementId:"G-CEKHEPNR9X",
 
 databaseURL:
 "https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
@@ -404,9 +443,7 @@ button.classList.add("active");
 
 async function loadDashboard(){
 
-// ======================
 // الزبائن
-// ======================
 
 let customersSnapshot =
 await get(ref(database,"customers"));
@@ -433,33 +470,13 @@ customersContainer.innerHTML += `
 
 <div class="item">
 
-<p>
-<strong>
-الاسم:
-</strong>
-${user.name}
-</p>
+<p><strong>الاسم:</strong> ${user.name}</p>
 
-<p>
-<strong>
-الهاتف:
-</strong>
-${user.phone}
-</p>
+<p><strong>الهاتف:</strong> ${user.phone}</p>
 
-<p>
-<strong>
-العنوان:
-</strong>
-${user.address || "-"}
-</p>
+<p><strong>العنوان:</strong> ${user.address || "-"}</p>
 
-<p>
-<strong>
-الحالة:
-</strong>
-${user.status}
-</p>
+<p><strong>الحالة:</strong> ${user.status}</p>
 
 <div class="actions">
 
@@ -505,9 +522,7 @@ onclick="openLocation('${user.latitude}','${user.longitude}')">
 
 }
 
-// ======================
 // المتاجر
-// ======================
 
 let storesSnapshot =
 await get(ref(database,"stores"));
@@ -526,69 +541,71 @@ document.getElementById("storesCount")
 .innerText =
 Object.keys(stores).length;
 
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
 for(let id in stores){
 
 let store = stores[id];
+
+// انتهاء VIP
+
+if(
+store.accountType === "vip" &&
+store.vipExpireDate &&
+store.vipExpireDate < today
+){
+
+await update(
+ref(database,"stores/"+id),
+{
+accountType:"normal",
+vipExpireDate:""
+}
+);
+
+store.accountType = "normal";
+
+}
 
 storesContainer.innerHTML += `
 
 <div class="item">
 
-<p>
-<strong>
-اسم المتجر:
-</strong>
-${store.store_name}
+<p><strong>اسم المتجر:</strong> ${store.store_name}</p>
+
+<p><strong>المالك:</strong> ${store.owner}</p>
+
+<p><strong>الهاتف:</strong> ${store.phone}</p>
+
+<p><strong>النوع:</strong> ${store.category}</p>
+
+<p><strong>الحالة:</strong> ${store.status}</p>
+
+<p><strong>عدد الطلبات:</strong> ${store.orders || 0}</p>
+
+<p><strong>مبلغ البيع:</strong> ${store.sales || 0} د.ع</p>
+
+<p><strong>تاريخ الانتهاء:</strong> ${store.expireDate || "غير محدد"}</p>
+
+<p><strong>حالة VIP:</strong>
+
+${
+store.accountType === "vip"
+?
+"VIP 🔥"
+:
+"عادي"
+}
+
 </p>
 
-<p>
-<strong>
-المالك:
-</strong>
-${store.owner}
-</p>
+<p><strong>انتهاء VIP:</strong>
 
-<p>
-<strong>
-الهاتف:
-</strong>
-${store.phone}
-</p>
+${store.vipExpireDate || "غير محدد"}
 
-<p>
-<strong>
-النوع:
-</strong>
-${store.category}
-</p>
-
-<p>
-<strong>
-الحالة:
-</strong>
-${store.status}
-</p>
-
-<p>
-<strong>
-عدد الطلبات:
-</strong>
-${store.orders || 0}
-</p>
-
-<p>
-<strong>
-مبلغ البيع:
-</strong>
-${store.sales || 0}
-د.ع
-</p>
-
-<p>
-<strong>
-تاريخ الانتهاء:
-</strong>
-${store.expireDate || "غير محدد"}
 </p>
 
 <div class="actions">
@@ -626,6 +643,22 @@ onclick="setExpireDate('stores','${id}')">
 </button>
 
 <button
+class="vip"
+onclick="makeVip('${id}')">
+
+VIP
+
+</button>
+
+<button
+class="reject"
+onclick="removeVip('${id}')">
+
+إزالة VIP
+
+</button>
+
+<button
 class="location"
 onclick="openLocation('${store.latitude}','${store.longitude}')">
 
@@ -643,9 +676,7 @@ onclick="openLocation('${store.latitude}','${store.longitude}')">
 
 }
 
-// ======================
 // السواق
-// ======================
 
 let driversSnapshot =
 await get(ref(database,"drivers"));
@@ -672,55 +703,19 @@ driversContainer.innerHTML += `
 
 <div class="item">
 
-<p>
-<strong>
-الاسم:
-</strong>
-${driver.name}
-</p>
+<p><strong>الاسم:</strong> ${driver.name}</p>
 
-<p>
-<strong>
-الهاتف:
-</strong>
-${driver.phone}
-</p>
+<p><strong>الهاتف:</strong> ${driver.phone}</p>
 
-<p>
-<strong>
-المركبة:
-</strong>
-${driver.vehicle}
-</p>
+<p><strong>المركبة:</strong> ${driver.vehicle}</p>
 
-<p>
-<strong>
-الحالة:
-</strong>
-${driver.status}
-</p>
+<p><strong>الحالة:</strong> ${driver.status}</p>
 
-<p>
-<strong>
-عدد الطلبات:
-</strong>
-${driver.orders || 0}
-</p>
+<p><strong>عدد الطلبات:</strong> ${driver.orders || 0}</p>
 
-<p>
-<strong>
-الارباح:
-</strong>
-${driver.earnings || 0}
-د.ع
-</p>
+<p><strong>الارباح:</strong> ${driver.earnings || 0} د.ع</p>
 
-<p>
-<strong>
-تاريخ الانتهاء:
-</strong>
-${driver.expireDate || "غير محدد"}
-</p>
+<p><strong>تاريخ الانتهاء:</strong> ${driver.expireDate || "غير محدد"}</p>
 
 <div class="actions">
 
@@ -766,9 +761,7 @@ onclick="setExpireDate('drivers','${id}')">
 
 }
 
-// ======================
 // المنتجات
-// ======================
 
 let productsSnapshot =
 await get(ref(database,"store_products"));
@@ -801,44 +794,17 @@ productsContainer.innerHTML += `
 
 <div class="item">
 
-<p>
-<strong>
-اسم المنتج:
-</strong>
-${product.name}
-</p>
+<p><strong>اسم المنتج:</strong> ${product.name}</p>
 
-<p>
-<strong>
-المتجر:
-</strong>
-${product.storeName}
-</p>
+<p><strong>المتجر:</strong> ${product.storeName}</p>
 
-<p>
-<strong>
-السعر:
-</strong>
-${product.price}
-د.ع
-</p>
+<p><strong>السعر:</strong> ${product.price} د.ع</p>
 
-<p>
-<strong>
-الوصف:
-</strong>
-${product.description}
-</p>
+<p><strong>الوصف:</strong> ${product.description}</p>
 
-<p>
-<strong>
-الحالة:
-</strong>
-${product.status}
-</p>
+<p><strong>الحالة:</strong> ${product.status}</p>
 
-<img
-src="${product.image}">
+<img src="${product.image}">
 
 <div class="actions">
 
@@ -887,9 +853,7 @@ document.getElementById("productsCount")
 
 loadDashboard();
 
-// ======================
 // المنتجات
-// ======================
 
 window.approveProduct =
 async function(storeId,productId){
@@ -925,9 +889,50 @@ loadDashboard();
 
 };
 
-// ======================
+// VIP
+
+window.makeVip =
+async function(id){
+
+let vipDate =
+prompt(
+"ادخل تاريخ انتهاء VIP مثال 2026-12-31"
+);
+
+if(!vipDate) return;
+
+await update(
+ref(database,"stores/"+id),
+{
+accountType:"vip",
+vipExpireDate:vipDate
+}
+);
+
+alert("تم تفعيل VIP");
+
+loadDashboard();
+
+};
+
+window.removeVip =
+async function(id){
+
+await update(
+ref(database,"stores/"+id),
+{
+accountType:"normal",
+vipExpireDate:""
+}
+);
+
+alert("تم إزالة VIP");
+
+loadDashboard();
+
+};
+
 // المتاجر
-// ======================
 
 window.activateStore =
 async function(id){
@@ -970,9 +975,7 @@ loadDashboard();
 
 };
 
-// ======================
 // السواق
-// ======================
 
 window.activateDriver =
 async function(id){
@@ -1015,9 +1018,7 @@ loadDashboard();
 
 };
 
-// ======================
 // الزبائن
-// ======================
 
 window.banCustomer =
 async function(id){
@@ -1060,9 +1061,7 @@ loadDashboard();
 
 };
 
-// ======================
-// تحديد انتهاء
-// ======================
+// انتهاء
 
 window.setExpireDate =
 async function(type,id){
@@ -1083,9 +1082,7 @@ loadDashboard();
 
 };
 
-// ======================
-// فتح الموقع
-// ======================
+// الموقع
 
 window.openLocation =
 function(lat,lng){
@@ -1107,5 +1104,4 @@ window.open(
 </script>
 
 </body>
-
 </html>
