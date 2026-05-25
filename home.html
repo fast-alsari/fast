@@ -146,10 +146,6 @@ linear-gradient(
 
 background-size:300% 300%;
 animation:vipMove 5s ease infinite;
-
-box-shadow:
-0 0 15px rgba(255,80,0,.25),
-0 0 30px rgba(0,0,0,.12);
 }
 
 @keyframes vipMove{
@@ -172,41 +168,17 @@ background-position:0% 50%;
 position:absolute;
 bottom:12px;
 left:12px;
-
-background:
-linear-gradient(
-135deg,
-#ff0000,
-#000,
-#ff8800
-);
-
+background:linear-gradient(135deg,#ff0000,#000,#ff8800);
 padding:8px 16px;
-
 border-radius:16px;
-
 display:flex;
 align-items:center;
 gap:8px;
-
 color:white;
 font-weight:bold;
-
 box-shadow:0 5px 20px rgba(0,0,0,.25);
-
 animation:vipPulse 2s infinite;
-
 z-index:10;
-}
-
-.vip-fire{
-font-size:18px;
-line-height:18px;
-}
-
-.vip-text{
-font-size:13px;
-letter-spacing:1px;
 }
 
 @keyframes vipPulse{
@@ -661,475 +633,138 @@ class="products-container"></div>
 
 </div>
 
-<script type="module">
+<!-- السلة -->
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+<div id="cartPage"
+class="page">
 
-import {
-getDatabase,
-ref,
-get,
-child
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+<div id="cartContainer"
+class="cart-container">
 
-const firebaseConfig = {
-
-apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
-
-authDomain:"fast-937c9.firebaseapp.com",
-
-projectId:"fast-937c9",
-
-storageBucket:"fast-937c9.firebasestorage.app",
-
-messagingSenderId:"221388561840",
-
-appId:"1:221388561840:web:ec9d75183ddd7d44be0a75",
-
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
-
-};
-
-const app =
-initializeApp(firebaseConfig);
-
-const database =
-getDatabase(app);
-
-const currentUser =
-JSON.parse(localStorage.getItem("user"));
-
-if(!currentUser){
-
-window.location.href =
-"index.html";
-
-}
-
-document.getElementById("welcomeText")
-.innerHTML =
-`اهلاً ${currentUser.name}`;
-
-let allStores = [];
-
-const storesContainer =
-document.getElementById("storesContainer");
-
-/* تحميل المتاجر */
-
-async function loadStores(){
-
-const snapshot =
-await get(
-child(ref(database),"stores")
-);
-
-allStores = [];
-
-if(snapshot.exists()){
-
-const stores =
-snapshot.val();
-
-for(let key in stores){
-
-let store = stores[key];
-
-store.id = key;
-
-if(store.status === "active"){
-
-let vipActive = false;
-
-if(store.accountType === "vip"){
-
-if(store.vipExpireDate){
-
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
-
-if(today <= store.vipExpireDate){
-
-vipActive = true;
-
-}
-
-}else{
-
-vipActive = true;
-
-}
-
-}
-
-store.vip = vipActive;
-
-allStores.push(store);
-
-}
-
-}
-
-allStores.sort((a,b)=>
-(b.vip === true) - (a.vip === true)
-);
-
-generateFilters(allStores);
-
-renderStores(allStores);
-
-}
-
-}
-
-loadStores();
-
-/* الفلاتر */
-
-function generateFilters(stores){
-
-const filtersContainer =
-document.querySelector(".filters");
-
-filtersContainer.innerHTML = "";
-
-filtersContainer.innerHTML += `
-<button
-class="filter-btn active"
-data-category="all">
-الكل
-</button>
-`;
-
-let categories = [];
-
-stores.forEach(store=>{
-
-if(
-store.category &&
-!categories.includes(store.category)
-){
-
-categories.push(store.category);
-
-}
-
-});
-
-categories.forEach(category=>{
-
-filtersContainer.innerHTML += `
-<button
-class="filter-btn"
-data-category="${category}">
-${category}
-</button>
-`;
-
-});
-
-attachFilterEvents();
-
-}
-
-function attachFilterEvents(){
-
-document.querySelectorAll(".filter-btn")
-.forEach(button=>{
-
-button.addEventListener("click",()=>{
-
-document.querySelectorAll(".filter-btn")
-.forEach(btn=>{
-
-btn.classList.remove("active");
-
-});
-
-button.classList.add("active");
-
-let category =
-button.dataset.category;
-
-if(category === "all"){
-
-renderStores(allStores);
-
-}else{
-
-let vipStores =
-allStores.filter(store=>store.vip);
-
-let normalStores =
-allStores.filter(store=>
-store.category === category
-);
-
-let merged = [
-...vipStores,
-...normalStores
-];
-
-let unique =
-merged.filter(
-(v,i,a)=>
-a.findIndex(t=>t.id===v.id)===i
-);
-
-renderStores(unique);
-
-}
-
-});
-
-});
-
-}
-
-/* عرض المتاجر */
-
-function renderStores(stores){
-
-storesContainer.innerHTML = "";
-
-if(stores.length === 0){
-
-storesContainer.innerHTML = `
 <div class="empty">
-لا توجد متاجر
-</div>
-`;
-
-return;
-
-}
-
-stores.forEach((store,index)=>{
-
-storesContainer.innerHTML += `
-
-<div
-class="store-card ${store.vip ? "vip-store" : ""}"
-onclick="openStore(${index})">
-
-${store.vip ? `
-
-<div class="vip-badge">
-
-<div class="vip-fire">
-🔥
-</div>
-
-<div class="vip-text">
-VIP
+السلة فارغة
 </div>
 
 </div>
 
-` : ""}
-
-<div class="store-header">
-
-<img
-src="${store.image || "store.png"}"
-class="store-image">
-
-<div class="store-info">
-
-<div class="store-name">
-
-<h3>
-${store.store_name}
-</h3>
-
-<img
-src="ok.png"
-class="ok-icon">
-
-</div>
+<div class="summary-box">
 
 <p>
-🏪 ${store.category}
-</p>
-
-<p>
-📞 ${store.phone}
-</p>
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-}
-
-/* فتح المتجر */
-
-window.openStore =
-async function(index){
-
-const store =
-allStores[index];
-
-document.getElementById("singleStorePage")
-.style.display = "block";
-
-document.getElementById("singleStoreName")
-.innerHTML =
-store.store_name;
-
-document.getElementById("singleStoreCategory")
-.innerHTML =
-store.category;
-
-document.getElementById("singleStoreImage")
-.src =
-store.image || "store.png";
-
-const container =
-document.getElementById("singleProductsContainer");
-
-container.innerHTML = `
-<div class="empty">
-جاري تحميل المنتجات...
-</div>
-`;
-
-const snapshot =
-await get(
-child(
-ref(database),
-"store_products/"+store.id
-)
-);
-
-container.innerHTML = "";
-
-if(snapshot.exists()){
-
-const products =
-snapshot.val();
-
-for(let key in products){
-
-const product =
-products[key];
-
-if(product.status === "active"){
-
-container.innerHTML += `
-
-<div class="product-card">
-
-<img
-src="${product.image || "product.png"}"
-class="product-image">
-
-<div class="product-name">
-${product.name}
-</div>
-
-<div class="product-desc">
-${product.description || ""}
-</div>
-
-<div class="product-price">
-${product.price} د.ع
-</div>
-
-<div class="qty-box">
-
-<span>
-الكمية
+المجموع :
+<span id="itemsTotal">
+0
 </span>
+د.ع
+</p>
 
-<div class="qty-controller">
-
-<button
-class="qty-btn"
-onclick="decreaseQty('${product.id}')">
--
-</button>
+<p>
+اجرة التوصيل : 3000 د.ع
+</p>
 
 <input
-type="text"
-readonly
-value="1"
-id="qty_${product.id}"
-class="qty-input">
+type="number"
+id="tipInput"
+class="tip-input"
+placeholder="اكرامية للسائق">
+
+<h2>
+المبلغ الكلي :
+<span id="finalTotal">
+3000
+</span>
+د.ع
+</h2>
+
+<br>
 
 <button
-class="qty-btn"
-onclick="increaseQty('${product.id}')">
-+
+class="send-order"
+onclick="sendOrder()">
+
+طلب توصيل 🚀
+
 </button>
 
 </div>
 
 </div>
 
+<!-- الحساب -->
+
+<div id="accountPage"
+class="page">
+
+<div class="account-card">
+
+<img
+src="user.png"
+class="account-image">
+
+<h2 id="accountName">
+اسم المستخدم
+</h2>
+
+<br>
+
+<p id="accountPhone"></p>
+
+<p id="accountAddress"></p>
+
+<p id="accountType"></p>
+
 <button
-class="add-btn">
-اضافة الى السلة
+class="logout-btn"
+onclick="logout()">
+
+تسجيل الخروج
+
 </button>
 
 </div>
 
-`;
+</div>
 
-}
+<!-- البار السفلي -->
 
-}
+<div class="bottom-bar">
 
-}
+<div
+class="nav-item active"
+onclick="showPage('homePage',this)">
 
-};
+<i class="fa-solid fa-house"></i>
 
-window.backHome =
-function(){
+<span>
+الرئيسية
+</span>
 
-document.getElementById("singleStorePage")
-.style.display = "none";
+</div>
 
-};
+<div
+class="nav-item"
+onclick="showPage('cartPage',this)">
 
-window.increaseQty =
-function(id){
+<i class="fa-solid fa-cart-shopping"></i>
 
-const input =
-document.getElementById(`qty_${id}`);
+<span>
+السلة
+</span>
 
-input.value =
-Number(input.value) + 1;
+</div>
 
-};
+<div
+class="nav-item"
+onclick="showPage('accountPage',this)">
 
-window.decreaseQty =
-function(id){
+<i class="fa-solid fa-user"></i>
 
-const input =
-document.getElementById(`qty_${id}`);
+<span>
+الحساب
+</span>
 
-if(Number(input.value) > 1){
+</div>
 
-input.value =
-Number(input.value) - 1;
-
-}
-
-};
-
-</script>
+</div>
 
 </body>
 
