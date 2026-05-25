@@ -1,296 +1,265 @@
-﻿<!DOCTYPE html>
-<html lang="ar">
+<!-- home.html -->
+
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام استعلام عن الطالب</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
 
-body {
-  font-family: 'Cairo', sans-serif;
-  direction: rtl;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(to bottom, #e0f0ff, #ffffff);
-  overflow-x: hidden;
-}
+    <meta charset="UTF-8">
 
-header {
-  background: #007bff;
-  color: #fff;
-  text-align: center;
-  padding: 25px 10px;
-  font-size: 24px;
-  font-weight: bold;
-}
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
 
-header span {
-  display: block;
-  font-size: 16px;
-  font-weight: normal;
-  margin-top: 5px;
-  opacity: 0.8;
-}
+    <title>الرئيسية</title>
 
-.input-group {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 20px 0;
-}
+    <!-- ملف الستايل -->
+    <link rel="stylesheet" href="home.css">
 
-.input-group input {
-  flex: 0 0 160px;
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-}
+    <!-- خطوط -->
+    <link rel="preconnect"
+    href="https://fonts.googleapis.com">
 
-.input-group input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 8px rgba(0,123,255,0.3);
-}
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
+    rel="stylesheet">
 
-button {
-  padding: 10px 25px;
-  font-size: 14px;
-  border: none;
-  border-radius: 8px;
-  background: #28a745;
-  color: #fff;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #218838;
-  transform: scale(1.05);
-}
-
-.year-label {
-  text-align: center;
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 20px;
-  opacity: 0.8;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto 30px auto;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-  justify-items: center;
-}
-
-.section {
-  width: 100%;
-  min-height: 350px;
-  background: #fff;
-  border-radius: 15px;
-  padding: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  font-family: 'Cairo', sans-serif;
-  font-size: 14px;
-  overflow-x: auto;
-}
-
-.section h3 {
-  text-align: center;
-  color: #fff;
-  font-size: 18px;
-  border-radius: 10px;
-  padding: 10px 0;
-  margin-bottom: 15px;
-}
-
-.info { background: #007bff; }
-.finance { background: #28a745; }
-.notes { background: #dc3545; }
-.governance {
-  margin-top: 20px;
-  background: #343a40;
-  color: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  text-align: center;
-}
-
-.version {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 12px;
-  color: #555;
-}
-
-/* قسم الدرجات */
-.grades {
-  background: #ffc107;
-  color: #000;
-  font-size: 13px;
-}
-.grades h3 {
-  font-size: 14px; /* حجم صغير للعنوان */
-  padding: 5px 0;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  color: #000;
-  background: #ffc107;
-}
-.grades table th, .grades table td {
-  font-size: 11px; /* حجم أصغر لخلايا الجدول */
-  padding: 3px 2px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-}
-
-th, td {
-  padding: 6px 4px;
-  text-align: right;
-  border: 1px solid #ddd;
-  word-wrap: break-word;
-}
-
-tr:hover { background-color: rgba(0,123,255,0.1); }
-
-@media (max-width: 768px) {
-  .input-group input { flex: 0 0 140px; }
-  th, td { font-size: 10px; padding:2px; }
-  .container { grid-template-columns: 1fr; }
-  .section { min-height: auto; }
-}
-</style>
 </head>
+
 <body>
 
-<header>
-  🎓 ثانوية التحدي الأهلية
-  <span>العام الدراسي 2025-2026</span>
+<!-- HEADER -->
+
+<header class="header">
+
+    <div class="header-top">
+
+        <div>
+
+            <h2 id="welcomeText">
+                اهلاً بك 👋
+            </h2>
+
+            <p>
+                اطلب كل ما تحتاجه بسهولة
+            </p>
+
+        </div>
+
+        <img
+        id="userImage"
+        class="profile-image"
+        src="user.png">
+
+    </div>
+
 </header>
 
-<div class="input-group">
-  <input id="parentNumber" placeholder="أدخل رقم ولي الأمر">
-  <input id="studentCode" placeholder="أدخل كود الطالب">
-  <button onclick="searchStudent()">بحث</button>
+<!-- SEARCH -->
+
+<div class="search-box">
+
+    <input
+    type="text"
+    placeholder="ابحث عن متجر ...">
+
 </div>
 
-<div class="year-label">العام الدراسي 2025-2026</div>
-<div class="container" id="output"></div>
-<div class="version">الإصدار V0.1.2</div>
-<div class="governance">
-  قسم الحوكمة: جميع الحقوق محفوظة © ثانوية التحدي الأهلية
-</div>
+<!-- STORES -->
 
-<script>
-async function searchStudent(saveToStorage=true){
-  let code = document.getElementById("studentCode").value.trim();
-  let parent = document.getElementById("parentNumber").value.trim();
-  if(parent.startsWith("0")) parent = parent.substring(1);
-  if(code.startsWith("0")) code = code.substring(1);
+<section class="stores-section">
 
-  const output = document.getElementById("output");
-  if(!parent || !code){
-    output.innerHTML = "<p style='color:#dc3545; text-align:center;'>⚠️ الرجاء إدخال رقم ولي الأمر وكود الطالب لعرض النتائج.</p>";
-    return;
-  }
+    <div class="section-title">
 
-  if(saveToStorage){
-    localStorage.setItem("studentCode", code);
-    localStorage.setItem("parentNumber", parent);
-  }
+        <h3>
+            المتاجر المتاحة
+        </h3>
 
-  output.innerHTML = "<p style='text-align:center;'>⏳ جاري البحث...</p>";
+    </div>
 
-  const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vReghaYoMk3f8ffSBLRHIwZieEWCfk5Yx8W6c843TXkC6wpA78Z0X5nw21RRpxMdQ/pub?gid=1229272896&single=true&output=csv";
+    <div
+    class="stores-container"
+    id="storesContainer">
 
-  try{
-    const resp = await fetch(sheetURL);
-    if(!resp.ok) throw new Error("فشل في جلب البيانات");
-    const text = await resp.text();
-    const rows = text.split("\n").map(r=>r.split(","));
-    const header = rows[0].map(h=>h.trim());
-    const dataRows = rows.slice(1);
-    const objects = dataRows.map(r=>{
-      const obj={};
-      for(let i=0;i<header.length;i++) obj[header[i]]=(r[i]||"").trim();
-      return obj;
-    });
+    </div>
 
-    const student = objects.find(o=>o["كود الطالب"]===code && o["رقم ولي الامر"]===parent);
-    if(!student){ output.innerHTML="<p style='color:#dc3545; text-align:center;'>❌ لم أجد بيانات تطابق البحث.</p>"; return; }
+</section>
 
-    let html="";
+<!-- BOTTOM NAV -->
 
-    // المعلومات العامة
-    html+=`<div class="section info"><h3>المعلومات العامة</h3><table>`;
-    const studentFields=["id","رقم الطالب","اسم الطالب","الجنس","الصف","القاعة","رقم ولي الامر","رقم الخط","الملاحظات"];
-    for(let f of studentFields){ if(header.includes(f)) html+=`<tr><th>${f}</th><td>${student[f]}</td></tr>`; }
-    html+="</table></div>";
+<nav class="bottom-nav">
 
-    // المعلومات المالية
-    html+=`<div class="section finance"><h3>المعلومات المالية</h3><table>`;
-    const financeFields=["القسط 1","تاريخ 1","القسط 2","تاريخ 2","القسط 3","تاريخ 3","القسط 4","تاريخ 4","القسط 5","تاريخ 5","القسط 6","تاريخ 6","القسط 7","تاريخ 7","القسط 8","تاريخ 8","الباقي الكلي","المبلغ الكلي","الواصل الكلي","الكفالة","مبلغ الكفالة"];
-    for(let f of financeFields){ if(header.includes(f)) html+=`<tr><th>${f}</th><td>${student[f]||""}</td></tr>`; }
-    html+="</table></div>";
+    <a href="home.html"
+    class="nav-item active">
 
-    // الدرجات التفصيلية لكل مادة مع الأعمدة الشهرية والفصلية
-    const subjectsColumns = {
-      "الاسلامية": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "عربي": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الانكليزي": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الرياضيات": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الكيمياء": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الفيزياء": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الاحياء": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "اجتماعيات": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "حاسوب": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "رياضة": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "فنية": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "السلوك": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"]
-    };
+        <img
+        src="home.png"
+        class="nav-icon">
 
-    for(let subject in subjectsColumns){
-      html+=`<div class="section grades"><h3>الدرجات - ${subject}</h3><table><tr>`;
-      subjectsColumns[subject].forEach(colName=>{ html+=`<th>${colName}</th>`; });
-      html+="</tr><tr>";
-      subjectsColumns[subject].forEach(colName=>{ html+=`<td>${student[colName]||""}</td>`; });
-      html+="</tr></table></div>";
+        <span>
+            الرئيسية
+        </span>
+
+    </a>
+
+    <a href="cart.html"
+    class="nav-item">
+
+        <img
+        src="cart.png"
+        class="nav-icon">
+
+        <span>
+            السلة
+        </span>
+
+    </a>
+
+    <a href="account.html"
+    class="nav-item">
+
+        <img
+        src="user.png"
+        class="nav-icon">
+
+        <span>
+            الحساب
+        </span>
+
+    </a>
+
+</nav>
+
+<!-- FIREBASE -->
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+
+getFirestore,
+collection,
+getDocs
+
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+
+getAuth,
+onAuthStateChanged
+
+}
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+/* Firebase Config */
+
+const firebaseConfig = {
+
+  apiKey: "ضع_apiKey",
+
+  authDomain: "ضع_authDomain",
+
+  projectId: "ضع_projectId",
+
+  storageBucket: "ضع_storageBucket",
+
+  messagingSenderId: "ضع_messagingSenderId",
+
+  appId: "ضع_appId"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const db = getFirestore(app);
+
+const auth = getAuth(app);
+
+/* التحقق من تسجيل الدخول */
+
+onAuthStateChanged(auth, async(user)=>{
+
+    if(!user){
+
+        window.location.href =
+        "index.html";
+
+        return;
+
     }
 
-    // الملاحظات
-    html+=`<div class="section notes"><h3>ملاحظات وغياب</h3><table>`;
-    const noteFields=["ملاحظات كرت","ملاحظات النتيجة","الغياب","اختلاق مشاكل داخل المدرسة"];
-    for(let f of noteFields){ if(header.includes(f)) html+=`<tr><th>${f}</th><td>${student[f]||""}</td></tr>`; }
-    html+="</table></div>";
+    document.getElementById("welcomeText")
+    .innerHTML =
+    `اهلاً ${user.displayName || ""} 👋`;
 
-    output.innerHTML = html;
+    if(user.photoURL){
 
-  }catch(err){
-    console.error(err);
-    output.innerHTML = "<p style='color:#dc3545; text-align:center;'>❌ حدث خطأ أثناء جلب البيانات.</p>";
-  }
+        document.getElementById("userImage")
+        .src = user.photoURL;
+
+    }
+
+    loadStores();
+
+});
+
+/* تحميل المتاجر */
+
+async function loadStores(){
+
+    const storesContainer =
+    document.getElementById("storesContainer");
+
+    storesContainer.innerHTML = "";
+
+    const querySnapshot =
+    await getDocs(collection(db,"stores"));
+
+    querySnapshot.forEach((doc)=>{
+
+        const store = doc.data();
+
+        storesContainer.innerHTML += `
+
+        <div class="store-card">
+
+            <img
+            class="store-image"
+            src="${store.image}">
+
+            <div class="store-info">
+
+                <div class="store-name-box">
+
+                    <h3>
+                        ${store.name}
+                    </h3>
+
+                    <img
+                    src="ok.png"
+                    class="verified-icon">
+
+                </div>
+
+                <p class="store-status">
+
+                    🟢 متاح حالياً
+
+                </p>
+
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
 }
 
-// الاحتفاظ بالبيانات عند إعادة فتح الموقع
-window.addEventListener("DOMContentLoaded", ()=>{
-  const savedCode = localStorage.getItem("studentCode");
-  const savedParent = localStorage.getItem("parentNumber");
-  if(savedCode && savedParent){
-    document.getElementById("studentCode").value = savedCode;
-    document.getElementById("parentNumber").value = savedParent;
-    searchStudent(false);
-  }
-});
 </script>
 
 </body>
+
 </html>
