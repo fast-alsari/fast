@@ -24,6 +24,9 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 src="https://unpkg.com/leaflet/dist/leaflet.js">
 </script>
 
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
 <style>
 
 *{
@@ -61,6 +64,30 @@ color:white;
 
 box-shadow:
 0 5px 20px rgba(0,0,0,.12);
+}
+
+.header-left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.logout-btn{
+width:48px;
+height:48px;
+border:none;
+border-radius:14px;
+background:white;
+color:#ff5500;
+font-size:20px;
+cursor:pointer;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+box-shadow:
+0 5px 15px rgba(0,0,0,.12);
 }
 
 .driver-image{
@@ -258,10 +285,6 @@ font-weight:bold;
 cursor:pointer;
 }
 
-.no-orders{
-display:none;
-}
-
 </style>
 
 </head>
@@ -279,7 +302,16 @@ display:none;
 </h2>
 
 <p>
-الطلبات الحالية
+
+اهلاً،
+<span id="driverName">
+
+السائق
+
+</span>
+
+👋
+
 </p>
 
 <div class="driver-top-info">
@@ -305,9 +337,21 @@ id="expireDate">
 
 </div>
 
+<div class="header-left">
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+</button>
+
 <img
 src="driver.png"
 class="driver-image">
+
+</div>
 
 </header>
 
@@ -378,8 +422,7 @@ getDatabase,
 ref,
 onValue,
 update,
-get,
-child
+get
 
 }
 from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
@@ -414,7 +457,7 @@ getDatabase(app);
 
 const currentDriver =
 JSON.parse(
-localStorage.getItem("driver")
+localStorage.getItem("user")
 );
 
 if(!currentDriver){
@@ -424,11 +467,22 @@ window.location.href =
 
 }
 
+/* اسم السائق */
+
+document.getElementById(
+"driverName"
+).innerHTML =
+currentDriver.name || "سائق";
+
+/* نوع الحساب */
+
 document.getElementById(
 "driverAccountType"
 ).innerHTML =
 currentDriver.subscription ||
 "عادي";
+
+/* تاريخ الانتهاء */
 
 document.getElementById(
 "expireDate"
@@ -506,7 +560,7 @@ Object.keys(orders)
 const order =
 orders[key];
 
-/* انتهاء الطلب بعد ساعة */
+/* انتهاء الطلب */
 
 if(
 Date.now() -
@@ -525,7 +579,7 @@ return;
 
 }
 
-/* اذا الطلب انقبل */
+/* اذا الطلب مقبول */
 
 if(order.status !== "pending"){
 
@@ -535,7 +589,7 @@ return;
 
 found = true;
 
-/* تأخير حسب نوع الحساب */
+/* تأخير الحساب */
 
 setTimeout(()=>{
 
@@ -636,7 +690,7 @@ return;
 const order =
 snapshot.val();
 
-/* اذا مقبول */
+/* اذا الطلب مقبول */
 
 if(order.status !== "pending"){
 
@@ -801,7 +855,8 @@ return;
 }
 
 await update(
-ref(db,
+ref(
+db,
 "orders/" +
 currentOrderId
 ),
@@ -822,6 +877,20 @@ alert(
 window.location.reload();
 
 });
+
+/* تسجيل الخروج */
+
+window.logout =
+function(){
+
+localStorage.removeItem(
+"user"
+);
+
+window.location.href =
+"index.html";
+
+};
 
 </script>
 
