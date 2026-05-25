@@ -1,5 +1,3 @@
-<!-- home.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -60,7 +58,10 @@ src="user.png">
 
 </header>
 
-<!-- SEARCH -->
+<!-- HOME PAGE -->
+
+<div id="homePage"
+class="page active-page">
 
 <div class="search-box">
 
@@ -70,8 +71,6 @@ id="searchInput"
 placeholder="ابحث عن متجر ...">
 
 </div>
-
-<!-- FILTER -->
 
 <div class="filter-buttons">
 
@@ -107,29 +106,9 @@ onclick="filterStores('صيدلية',this)">
 
 </button>
 
-<button
-class="filter-btn"
-onclick="filterStores('ملابس',this)">
-
-ملابس
-
-</button>
-
 </div>
-
-<!-- STORES -->
 
 <section class="stores-section">
-
-<div class="section-title">
-
-<h3>
-
-المتاجر المتاحة
-
-</h3>
-
-</div>
 
 <div
 class="stores-container"
@@ -139,16 +118,107 @@ id="storesContainer">
 
 </section>
 
+</div>
+
+<!-- CART PAGE -->
+
+<div id="cartPage"
+class="page">
+
+<div class="page-title">
+
+السلة
+
+</div>
+
+<div id="cartContainer">
+
+<p class="empty-text">
+
+السلة فارغة
+
+</p>
+
+</div>
+
+<button
+class="send-order-btn"
+onclick="sendOrder()">
+
+ارسال الطلب
+
+</button>
+
+</div>
+
+<!-- ACCOUNT PAGE -->
+
+<div id="accountPage"
+class="page">
+
+<div class="account-card">
+
+<img
+id="accountImage"
+class="account-image"
+src="user.png">
+
+<h2 id="accountName">
+
+اسم المستخدم
+
+</h2>
+
+<div class="account-info">
+
+<div class="info-item"
+id="accountPhone">
+
+📞
+
+</div>
+
+<div class="info-item"
+id="accountAddress">
+
+📍
+
+</div>
+
+<div class="info-item"
+id="accountType">
+
+👤
+
+</div>
+
+</div>
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+تسجيل الخروج
+
+</button>
+
+</div>
+
+</div>
+
 <!-- BOTTOM NAV -->
 
 <nav class="bottom-nav">
 
-<a href="home.html"
-class="nav-item active">
+<div
+class="nav-item active-nav"
+onclick="openPage('homePage',this)">
 
-<img
-src="home.png"
-class="nav-icon">
+<div class="nav-circle">
+
+🏠
+
+</div>
 
 <span>
 
@@ -156,14 +226,17 @@ class="nav-icon">
 
 </span>
 
-</a>
+</div>
 
-<a href="cart.html"
-class="nav-item">
+<div
+class="nav-item"
+onclick="openPage('cartPage',this)">
 
-<img
-src="cart.png"
-class="nav-icon">
+<div class="nav-circle">
+
+🛒
+
+</div>
 
 <span>
 
@@ -171,14 +244,17 @@ class="nav-icon">
 
 </span>
 
-</a>
+</div>
 
-<a href="account.html"
-class="nav-item">
+<div
+class="nav-item"
+onclick="openPage('accountPage',this)">
 
-<img
-src="user.png"
-class="nav-icon">
+<div class="nav-circle">
+
+👤
+
+</div>
 
 <span>
 
@@ -186,13 +262,11 @@ class="nav-icon">
 
 </span>
 
-</a>
+</div>
 
 </nav>
 
 <script type="module">
-
-// Firebase
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -201,7 +275,9 @@ import {
 getDatabase,
 ref,
 get,
-child
+child,
+push,
+set
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
@@ -219,8 +295,6 @@ messagingSenderId: "221388561840",
 
 appId: "1:221388561840:web:ec9d75183ddd7d44be0a75",
 
-measurementId: "G-CEKHEPNR9X",
-
 databaseURL:
 "https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
@@ -232,9 +306,7 @@ const database = getDatabase(app);
 
 
 
-// ======================
-// SESSION
-// ======================
+// USER
 
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
@@ -248,29 +320,149 @@ window.location.href =
 
 
 
-// ======================
 // USER INFO
-// ======================
 
 document.getElementById("welcomeText")
 .innerHTML =
 
-`اهلاً ${currentUser.name || "👋"}`;
+`اهلاً ${currentUser.name || ""} 👋`;
 
-if(currentUser.image){
+document.getElementById("accountName")
+.innerHTML =
 
-document.getElementById("userImage")
-.src = currentUser.image;
+currentUser.name || "";
+
+document.getElementById("accountPhone")
+.innerHTML =
+
+"📞 " + currentUser.phone;
+
+document.getElementById("accountAddress")
+.innerHTML =
+
+"📍 " + (currentUser.address || "غير محدد");
+
+document.getElementById("accountType")
+.innerHTML =
+
+"👤 " + currentUser.type;
+
+
+
+// STORES
+
+let allStores = [];
+
+let cart = [];
+
+async function loadStores(){
+
+const storesContainer =
+document.getElementById("storesContainer");
+
+storesContainer.innerHTML = "";
+
+const snapshot =
+await get(
+child(ref(database),"stores")
+);
+
+if(snapshot.exists()){
+
+const stores = snapshot.val();
+
+allStores = [];
+
+for(let key in stores){
+
+const store = stores[key];
+
+if(store.status==="active"){
+
+allStores.push(store);
+
+}
+
+}
+
+renderStores(allStores);
+
+}
+
+}
+
+function renderStores(stores){
+
+const storesContainer =
+document.getElementById("storesContainer");
+
+storesContainer.innerHTML = "";
+
+stores.forEach(store=>{
+
+storesContainer.innerHTML += `
+
+<div class="store-card">
+
+<div class="store-right">
+
+<img
+class="store-image"
+src="${
+store.image || "store.png"
+}">
+
+<div class="store-details">
+
+<div class="store-name-row">
+
+<div class="store-name">
+
+${store.store_name}
+
+</div>
+
+<img
+src="ok.png"
+class="verified-icon">
+
+</div>
+
+<div class="store-distance">
+
+📍 ${store.category}
+
+</div>
+
+<div class="store-status">
+
+🟢 متاح حالياً
+
+</div>
+
+<button
+class="add-cart-btn"
+onclick='addToCart(${JSON.stringify(store)})'>
+
+اضافة للسلة
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+});
 
 }
 
 
 
-// ======================
-// STORE FILTER
-// ======================
-
-let allStores = [];
+// FILTER
 
 window.filterStores =
 function(category,button){
@@ -306,203 +498,7 @@ renderStores(filtered);
 
 
 
-// ======================
-// DISTANCE
-// ======================
-
-function getDistanceFromLatLonInKm(
-lat1,
-lon1,
-lat2,
-lon2
-){
-
-const R = 6371;
-
-const dLat =
-deg2rad(lat2-lat1);
-
-const dLon =
-deg2rad(lon2-lon1);
-
-const a =
-
-Math.sin(dLat/2) *
-Math.sin(dLat/2) +
-
-Math.cos(deg2rad(lat1)) *
-Math.cos(deg2rad(lat2)) *
-
-Math.sin(dLon/2) *
-Math.sin(dLon/2);
-
-const c =
-2 * Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a)
-);
-
-return (R * c).toFixed(1);
-
-}
-
-function deg2rad(deg){
-
-return deg * (Math.PI/180);
-
-}
-
-
-
-// ======================
-// LOAD STORES
-// ======================
-
-async function loadStores(){
-
-const storesContainer =
-document.getElementById("storesContainer");
-
-storesContainer.innerHTML = "";
-
-try{
-
-const snapshot =
-await get(
-child(ref(database),"stores")
-);
-
-if(snapshot.exists()){
-
-const stores = snapshot.val();
-
-allStores = [];
-
-for(let key in stores){
-
-const store = stores[key];
-
-if(store.status==="active"){
-
-allStores.push(store);
-
-}
-
-}
-
-renderStores(allStores);
-
-}else{
-
-storesContainer.innerHTML =
-
-"<p class='empty-text'>لا توجد متاجر</p>";
-
-}
-
-}catch(error){
-
-console.log(error);
-
-}
-
-}
-
-
-
-// ======================
-// RENDER STORES
-// ======================
-
-function renderStores(stores){
-
-const storesContainer =
-document.getElementById("storesContainer");
-
-storesContainer.innerHTML = "";
-
-stores.forEach(store=>{
-
-let distance = "غير معروف";
-
-if(
-currentUser.latitude &&
-store.latitude
-){
-
-distance =
-
-getDistanceFromLatLonInKm(
-
-currentUser.latitude,
-currentUser.longitude,
-
-store.latitude,
-store.longitude
-
-)
-
-+ " كم";
-
-}
-
-storesContainer.innerHTML += `
-
-<div class="store-card">
-
-<div class="store-right">
-
-<img
-class="store-image"
-src="${
-store.image || "store.png"
-}">
-
-<div class="store-details">
-
-<div class="store-name-row">
-
-<div class="store-name">
-
-${store.store_name}
-
-</div>
-
-<img
-src="ok.png"
-class="verified-icon">
-
-</div>
-
-<div class="store-distance">
-
-📍 يبعد عنك ${distance}
-
-</div>
-
-<div class="store-status">
-
-🟢 متاح حالياً
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`;
-
-});
-
-}
-
-
-
-// ======================
 // SEARCH
-// ======================
 
 document
 .getElementById("searchInput")
@@ -527,9 +523,148 @@ renderStores(filtered);
 
 
 
-// ======================
+// CART
+
+window.addToCart = function(store){
+
+cart.push(store);
+
+renderCart();
+
+};
+
+function renderCart(){
+
+const cartContainer =
+document.getElementById("cartContainer");
+
+if(cart.length===0){
+
+cartContainer.innerHTML =
+
+"<p class='empty-text'>السلة فارغة</p>";
+
+return;
+
+}
+
+cartContainer.innerHTML = "";
+
+cart.forEach(item=>{
+
+cartContainer.innerHTML += `
+
+<div class="cart-item">
+
+<img
+src="${
+item.image || "store.png"
+}">
+
+<div>
+
+<h3>
+
+${item.store_name}
+
+</h3>
+
+<p>
+
+${item.category}
+
+</p>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+
+// SEND ORDER
+
+window.sendOrder =
+async function(){
+
+if(cart.length===0){
+
+alert("السلة فارغة");
+
+return;
+
+}
+
+const orderId =
+Date.now();
+
+await set(
+
+ref(database,"orders/"+orderId),
+
+{
+
+id:orderId,
+
+user:currentUser,
+
+items:cart,
+
+status:"pending",
+
+createdAt:Date.now()
+
+}
+
+);
+
+alert("تم ارسال الطلب");
+
+cart = [];
+
+renderCart();
+
+};
+
+
+
+// PAGES
+
+window.openPage =
+function(pageId,element){
+
+document
+.querySelectorAll(".page")
+.forEach(page=>{
+
+page.classList.remove("active-page");
+
+});
+
+document
+.getElementById(pageId)
+.classList.add("active-page");
+
+document
+.querySelectorAll(".nav-item")
+.forEach(item=>{
+
+item.classList.remove("active-nav");
+
+});
+
+element.classList.add("active-nav");
+
+};
+
+
+
 // LOGOUT
-// ======================
 
 window.logout = function(){
 
