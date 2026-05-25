@@ -405,7 +405,7 @@ id="deliveryPage">
 <script type="module">
 
 import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 
@@ -416,25 +416,28 @@ update,
 get
 
 }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 /* FIREBASE */
 
 const firebaseConfig = {
 
-apiKey:"ضع_apiKey",
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
-authDomain:"ضع_authDomain",
+authDomain:"fast-937c9.firebaseapp.com",
 
-databaseURL:"ضع_databaseURL",
+projectId:"fast-937c9",
 
-projectId:"ضع_projectId",
+storageBucket:"fast-937c9.firebasestorage.app",
 
-storageBucket:"ضع_storageBucket",
+messagingSenderId:"221388561840",
 
-messagingSenderId:"ضع_senderId",
+appId:"1:221388561840:web:ec9d75183ddd7d44be0a75",
 
-appId:"ضع_appId"
+measurementId:"G-CEKHEPNR9X",
+
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
@@ -484,7 +487,7 @@ currentDriver.expireDate ||
 
 let currentOrderId = null;
 
-/* التأخير */
+/* تأخير حسب نوع الاشتراك */
 
 function getDelay(){
 
@@ -495,18 +498,10 @@ currentDriver.subscription ||
 ).toLowerCase();
 
 if(type === "vip"){
-
 return 0;
-
 }
 
-if(type === "sender"){
-
-return 60000;
-
-}
-
-return 120000;
+return 10000;
 
 }
 
@@ -549,23 +544,8 @@ const order =
 orders[key];
 
 if(
-Date.now() -
-order.createdAt >
-3600000
+order.status !== "waiting_driver"
 ){
-
-update(
-ref(db,"orders/"+key),
-{
-status:"expired"
-}
-);
-
-return;
-
-}
-
-if(order.status !== "pending"){
 
 return;
 
@@ -580,23 +560,15 @@ container.innerHTML += `
 <div class="order-card">
 
 <h3>
-
 ${order.customerName}
-
 </h3>
 
 <p>
-
-📍 من:
-${order.storeLocation}
-
+📞 ${order.customerPhone}
 </p>
 
 <p>
-
-🏠 الى:
-${order.customerAddress}
-
+📍 ${order.customerAddress}
 </p>
 
 <div class="price-box">
@@ -652,9 +624,7 @@ await get(orderRef);
 
 if(!snapshot.exists()){
 
-alert(
-"تم حذف الطلب"
-);
+alert("تم حذف الطلب");
 
 return;
 
@@ -663,11 +633,9 @@ return;
 const order =
 snapshot.val();
 
-if(order.status !== "pending"){
+if(order.status !== "waiting_driver"){
 
-alert(
-"تم قبول الطلب من سائق آخر"
-);
+alert("تم قبول الطلب من سائق آخر");
 
 return;
 
@@ -727,7 +695,7 @@ document.getElementById(
 "nearestPoint"
 ).innerHTML =
 "📌 " +
-order.nearestPoint;
+(order.nearestPoint || "لا يوجد");
 
 /* MAP */
 
@@ -762,9 +730,14 @@ driverLng
 )
 .addTo(map)
 .bindPopup(
-"موقعك الحالي"
+"موقعك"
 )
 .openPopup();
+
+if(
+order.customerLat &&
+order.customerLng
+){
 
 L.marker(
 [
@@ -793,6 +766,8 @@ color:"blue"
 }
 ).addTo(map);
 
+}
+
 });
 
 };
@@ -806,9 +781,7 @@ document.getElementById(
 async()=>{
 
 if(!currentOrderId){
-
 return;
-
 }
 
 await update(
@@ -835,7 +808,7 @@ window.location.reload();
 
 });
 
-/* تسجيل الخروج */
+/* تسجيل خروج */
 
 document.getElementById(
 "logoutBtn"
@@ -843,21 +816,9 @@ document.getElementById(
 "click",
 function(){
 
-/* حذف الجلسة */
-
 localStorage.removeItem(
 "user"
 );
-
-localStorage.removeItem(
-"driver"
-);
-
-sessionStorage.clear();
-
-localStorage.clear();
-
-/* تحويل */
 
 window.location.replace(
 "index.html"
