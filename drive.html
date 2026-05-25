@@ -10,14 +10,12 @@
 <meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
-<title>طلبات التوصيل</title>
+<title>
+طلبات التوصيل
+</title>
 
-<link rel="stylesheet" href="driver.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap"
 rel="stylesheet">
-
-<!-- LEAFLET MAP -->
 
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
@@ -25,6 +23,246 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 <script
 src="https://unpkg.com/leaflet/dist/leaflet.js">
 </script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f5f5f5;
+padding-bottom:40px;
+overflow-x:hidden;
+}
+
+/* HEADER */
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:20px;
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+color:white;
+
+box-shadow:
+0 5px 20px rgba(0,0,0,.12);
+}
+
+.driver-image{
+width:70px;
+height:70px;
+border-radius:50%;
+border:3px solid white;
+object-fit:cover;
+}
+
+.driver-top-info{
+margin-top:15px;
+display:flex;
+flex-direction:column;
+gap:8px;
+}
+
+.driver-badge{
+background:white;
+color:#ff6600;
+padding:8px 14px;
+border-radius:14px;
+font-size:14px;
+font-weight:bold;
+width:fit-content;
+}
+
+.expire-box{
+background:rgba(255,255,255,.2);
+padding:8px 14px;
+border-radius:14px;
+font-size:14px;
+width:fit-content;
+}
+
+/* RADAR */
+
+.radar-box{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+padding:80px 20px;
+}
+
+.radar{
+width:160px;
+height:160px;
+border-radius:50%;
+border:5px solid #ff8800;
+position:relative;
+animation:radarPulse 2s infinite;
+}
+
+.radar::before{
+content:"";
+position:absolute;
+top:50%;
+left:50%;
+width:20px;
+height:20px;
+background:#ff8800;
+border-radius:50%;
+transform:translate(-50%,-50%);
+}
+
+@keyframes radarPulse{
+
+0%{
+box-shadow:
+0 0 0 0 rgba(255,136,0,.5);
+}
+
+100%{
+box-shadow:
+0 0 0 50px rgba(255,136,0,0);
+}
+
+}
+
+.radar-text{
+margin-top:25px;
+font-size:18px;
+font-weight:bold;
+color:#777;
+}
+
+/* ORDERS */
+
+.orders-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.order-card{
+background:white;
+padding:20px;
+border-radius:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.order-card h3{
+font-size:22px;
+margin-bottom:12px;
+}
+
+.order-card p{
+margin-bottom:8px;
+color:#666;
+font-size:15px;
+}
+
+.price-box{
+margin-top:15px;
+background:#fff4e8;
+padding:14px;
+border-radius:16px;
+font-size:18px;
+font-weight:bold;
+color:#ff6600;
+text-align:center;
+}
+
+.order-buttons{
+display:flex;
+gap:10px;
+margin-top:18px;
+}
+
+.accept-btn{
+flex:1;
+padding:14px;
+border:none;
+border-radius:16px;
+background:#00b894;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.back-btn{
+flex:1;
+padding:14px;
+border:none;
+border-radius:16px;
+background:#ddd;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+/* DELIVERY PAGE */
+
+.delivery-page{
+display:none;
+}
+
+#map{
+height:55vh;
+width:100%;
+}
+
+.delivery-info{
+padding:20px;
+background:white;
+margin:15px;
+border-radius:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.delivery-info h3{
+margin-bottom:15px;
+font-size:22px;
+}
+
+.delivery-info p{
+margin-bottom:12px;
+font-size:16px;
+color:#555;
+}
+
+#deliveredBtn{
+width:calc(100% - 30px);
+margin:0 15px;
+padding:18px;
+border:none;
+border-radius:18px;
+background:#00b894;
+color:white;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.no-orders{
+display:none;
+}
+
+</style>
 
 </head>
 
@@ -34,70 +272,100 @@ src="https://unpkg.com/leaflet/dist/leaflet.js">
 
 <header class="header">
 
-    <div>
+<div>
 
-        <h2>
-            طلبات التوصيل
-        </h2>
+<h2>
+طلبات التوصيل
+</h2>
 
-        <p>
-            الطلبات الحالية
-        </p>
+<p>
+الطلبات الحالية
+</p>
 
-    </div>
+<div class="driver-top-info">
 
-    <img
-    src="driver.png"
-    class="driver-image">
+<div
+class="driver-badge"
+id="driverAccountType">
+
+VIP
+
+</div>
+
+<div
+class="expire-box"
+id="expireDate">
+
+ينتهي:
+2026/1/1
+
+</div>
+
+</div>
+
+</div>
+
+<img
+src="driver.png"
+class="driver-image">
 
 </header>
 
+<!-- NO ORDERS -->
+
+<div
+class="radar-box"
+id="radarBox">
+
+<div class="radar"></div>
+
+<div class="radar-text">
+
+جاري البحث عن طلبات...
+
+</div>
+
+</div>
+
 <!-- ORDERS -->
 
-<div class="orders-container"
+<div
+class="orders-container"
 id="ordersContainer">
 
 </div>
 
 <!-- DELIVERY PAGE -->
 
-<div class="delivery-page"
+<div
+class="delivery-page"
 id="deliveryPage">
 
-    <!-- MAP -->
+<div id="map"></div>
 
-    <div id="map"></div>
+<div class="delivery-info">
 
-    <!-- INFO -->
+<h3>
+معلومات الزبون
+</h3>
 
-    <div class="delivery-info">
+<p id="customerName"></p>
 
-        <h3>
-            معلومات الزبون
-        </h3>
+<p id="customerPhone"></p>
 
-        <p id="customerName"></p>
+<p id="customerAddress"></p>
 
-        <p id="customerPhone"></p>
-
-        <p id="customerAddress"></p>
-
-        <p id="nearestPoint"></p>
-
-    </div>
-
-    <!-- BUTTON -->
-
-    <button
-    id="deliveredBtn">
-
-    تم الايصال
-
-    </button>
+<p id="nearestPoint"></p>
 
 </div>
 
-<!-- FIREBASE -->
+<button id="deliveredBtn">
+
+تم الايصال
+
+</button>
+
+</div>
 
 <script type="module">
 
@@ -106,38 +374,33 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
 
-getFirestore,
-collection,
-getDocs,
-doc,
-updateDoc
+getDatabase,
+ref,
+onValue,
+update,
+get,
+child
 
 }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-import {
-
-getAuth,
-onAuthStateChanged
-
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
 
 /* FIREBASE */
 
 const firebaseConfig = {
 
-apiKey: "ضع_apiKey",
+apiKey:"ضع_apiKey",
 
-authDomain: "ضع_authDomain",
+authDomain:"ضع_authDomain",
 
-projectId: "ضع_projectId",
+databaseURL:"ضع_databaseURL",
 
-storageBucket: "ضع_storageBucket",
+projectId:"ضع_projectId",
 
-messagingSenderId: "ضع_senderId",
+storageBucket:"ضع_storageBucket",
 
-appId: "ضع_appId"
+messagingSenderId:"ضع_senderId",
+
+appId:"ضع_appId"
 
 };
 
@@ -145,168 +408,311 @@ const app =
 initializeApp(firebaseConfig);
 
 const db =
-getFirestore(app);
+getDatabase(app);
 
-const auth =
-getAuth(app);
+/* DRIVER */
+
+const currentDriver =
+JSON.parse(
+localStorage.getItem("driver")
+);
+
+if(!currentDriver){
+
+window.location.href =
+"index.html";
+
+}
+
+document.getElementById(
+"driverAccountType"
+).innerHTML =
+currentDriver.subscription ||
+"عادي";
+
+document.getElementById(
+"expireDate"
+).innerHTML =
+"ينتهي الاشتراك: " +
+(
+currentDriver.expireDate ||
+"غير محدد"
+);
 
 let currentOrderId = null;
 
-/* AUTH */
+/* حساب التأخير */
 
-onAuthStateChanged(auth,(user)=>{
+function getDelay(){
 
-    if(!user){
+const type =
+(
+currentDriver.subscription ||
+"normal"
+)
+.toLowerCase();
 
-        window.location.href =
-        "index.html";
+if(type === "vip"){
 
-        return;
+return 0;
 
-    }
+}
 
-    loadOrders();
+if(type === "sender"){
+
+return 60000;
+
+}
+
+return 120000;
+
+}
+
+/* الطلبات اللحظية */
+
+onValue(
+ref(db,"orders"),
+(snapshot)=>{
+
+const radarBox =
+document.getElementById(
+"radarBox"
+);
+
+const container =
+document.getElementById(
+"ordersContainer"
+);
+
+container.innerHTML = "";
+
+if(!snapshot.exists()){
+
+radarBox.style.display =
+"flex";
+
+return;
+
+}
+
+const orders =
+snapshot.val();
+
+let found = false;
+
+Object.keys(orders)
+.forEach((key)=>{
+
+const order =
+orders[key];
+
+/* انتهاء الطلب بعد ساعة */
+
+if(
+Date.now() -
+order.createdAt >
+3600000
+){
+
+update(
+ref(db,"orders/"+key),
+{
+status:"expired"
+}
+);
+
+return;
+
+}
+
+/* اذا الطلب انقبل */
+
+if(order.status !== "pending"){
+
+return;
+
+}
+
+found = true;
+
+/* تأخير حسب نوع الحساب */
+
+setTimeout(()=>{
+
+container.innerHTML += `
+
+<div class="order-card">
+
+<h3>
+
+${order.customerName}
+
+</h3>
+
+<p>
+
+📍 من:
+${order.storeLocation}
+
+</p>
+
+<p>
+
+🏠 الى:
+${order.customerAddress}
+
+</p>
+
+<div class="price-box">
+
+سعر التوصيل:
+${order.deliveryPrice}
+د.ع
+
+</div>
+
+<div class="order-buttons">
+
+<button
+class="accept-btn"
+onclick="acceptOrder(
+'${key}'
+)">
+
+قبول الطلب
+
+</button>
+
+<button
+class="back-btn">
+
+رجوع
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+radarBox.style.display =
+"none";
+
+},getDelay());
 
 });
 
-/* LOAD ORDERS */
+if(!found){
 
-async function loadOrders(){
-
-    const container =
-    document.getElementById(
-    "ordersContainer"
-    );
-
-    container.innerHTML = "";
-
-    const querySnapshot =
-    await getDocs(
-    collection(db,"orders")
-    );
-
-    querySnapshot.forEach((docSnap)=>{
-
-        const order =
-        docSnap.data();
-
-        if(order.status === "pending"){
-
-            container.innerHTML += `
-
-            <div class="order-card">
-
-                <h3>
-                    ${order.storeName}
-                </h3>
-
-                <p>
-
-                📍 من:
-                ${order.storeLocation}
-
-                </p>
-
-                <p>
-
-                🏠 الى:
-                ${order.customerAddress}
-
-                </p>
-
-                <p>
-
-                📌 اقرب نقطة:
-                ${order.nearestPoint}
-
-                </p>
-
-                <button
-                onclick="acceptOrder(
-                '${docSnap.id}',
-                '${order.customerName}',
-                '${order.customerPhone}',
-                '${order.customerAddress}',
-                '${order.nearestPoint}',
-                ${order.customerLat},
-                ${order.customerLng}
-                )">
-
-                قبول الطلب
-
-                </button>
-
-            </div>
-
-            `;
-
-        }
-
-    });
+radarBox.style.display =
+"flex";
 
 }
 
-/* ACCEPT ORDER */
+});
+
+/* قبول الطلب */
 
 window.acceptOrder =
-async(
-id,
-name,
-phone,
-address,
-point,
-lat,
-lng
-)=>{
+async function(id){
 
-currentOrderId = id;
+const orderRef =
+ref(db,"orders/"+id);
 
-/* تحديث الطلب */
+const snapshot =
+await get(orderRef);
 
-await updateDoc(
-doc(db,"orders",id),
-{
+if(!snapshot.exists()){
 
-status:"accepted"
+alert(
+"تم حذف الطلب"
+);
+
+return;
 
 }
+
+const order =
+snapshot.val();
+
+/* اذا مقبول */
+
+if(order.status !== "pending"){
+
+alert(
+"تم قبول الطلب من سائق آخر"
 );
+
+return;
+
+}
+
+/* قبول الطلب */
+
+await update(orderRef,{
+
+status:"accepted",
+
+acceptedDriver:
+currentDriver.name,
+
+driverId:
+currentDriver.id,
+
+acceptedAt:
+Date.now()
+
+});
+
+currentOrderId = id;
 
 /* اخفاء الطلبات */
 
 document.getElementById(
 "ordersContainer"
-).style.display = "none";
+).style.display =
+"none";
 
-/* اظهار صفحة التوصيل */
+document.getElementById(
+"radarBox"
+).style.display =
+"none";
+
+/* اظهار التوصيل */
 
 document.getElementById(
 "deliveryPage"
-).style.display = "block";
+).style.display =
+"block";
 
-/* معلومات الزبون */
+/* بيانات الزبون */
 
 document.getElementById(
 "customerName"
 ).innerHTML =
-"👤 " + name;
+"👤 " +
+order.customerName;
 
 document.getElementById(
 "customerPhone"
 ).innerHTML =
-"📞 " + phone;
+"📞 " +
+order.customerPhone;
 
 document.getElementById(
 "customerAddress"
 ).innerHTML =
-"📍 " + address;
+"📍 " +
+order.customerAddress;
 
 document.getElementById(
 "nearestPoint"
 ).innerHTML =
-"📌 " + point;
+"📌 " +
+order.nearestPoint;
 
-/* الخريطة */
+/* MAP */
 
 navigator.geolocation
 .getCurrentPosition((position)=>{
@@ -317,12 +723,13 @@ position.coords.latitude;
 const driverLng =
 position.coords.longitude;
 
-/* MAP */
-
 const map =
 L.map('map')
 .setView(
-[driverLat,driverLng],
+[
+driverLat,
+driverLng
+],
 13
 );
 
@@ -333,7 +740,10 @@ L.tileLayer(
 /* DRIVER */
 
 L.marker(
-[driverLat,driverLng]
+[
+driverLat,
+driverLng
+]
 )
 .addTo(map)
 .bindPopup(
@@ -344,19 +754,28 @@ L.marker(
 /* CUSTOMER */
 
 L.marker(
-[lat,lng]
+[
+order.customerLat,
+order.customerLng
+]
 )
 .addTo(map)
 .bindPopup(
 'موقع الزبون'
 );
 
-/* LINE */
+/* ROUTE */
 
 L.polyline(
 [
-[driverLat,driverLng],
-[lat,lng]
+[
+driverLat,
+driverLng
+],
+[
+order.customerLat,
+order.customerLng
+]
 ],
 {
 color:'blue'
@@ -365,9 +784,9 @@ color:'blue'
 
 });
 
-}
+};
 
-/* DELIVERED */
+/* تم التوصيل */
 
 document.getElementById(
 "deliveredBtn"
@@ -375,17 +794,30 @@ document.getElementById(
 "click",
 async()=>{
 
-await updateDoc(
-doc(db,"orders",
-currentOrderId),
+if(!currentOrderId){
+
+return;
+
+}
+
+await update(
+ref(db,
+"orders/" +
+currentOrderId
+),
 {
 
-status:"delivered"
+status:"delivered",
+
+deliveredAt:
+Date.now()
 
 }
 );
 
-alert("تم توصيل الطلب");
+alert(
+"تم توصيل الطلب"
+);
 
 window.location.reload();
 
