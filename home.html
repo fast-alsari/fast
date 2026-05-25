@@ -900,6 +900,7 @@ import {
 getDatabase,
 ref,
 get,
+set,
 child
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -963,14 +964,22 @@ currentUser.address || "---";
 
 document.getElementById("accountNearestPoint")
 .innerHTML =
-currentUser.nearestPoint || "---";
+currentUser.nearpoint || "---";
 
 document.getElementById("accountType")
 .innerHTML =
-currentUser.accountType || "مستخدم";
+currentUser.type || "مستخدم";
+
+/* متغيرات */
 
 let allStores = [];
-let cart = [];
+
+let allProducts = [];
+
+let cart =
+JSON.parse(
+localStorage.getItem("cart")
+) || [];
 
 const storesContainer =
 document.getElementById("storesContainer");
@@ -999,11 +1008,44 @@ store.id = key;
 
 if(store.status === "active"){
 
+let vipActive = false;
+
+if(store.accountType === "vip"){
+
+if(store.vipExpireDate){
+
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+if(today <= store.vipExpireDate){
+
+vipActive = true;
+
+}
+
+}else{
+
+vipActive = true;
+
+}
+
+}
+
+store.vip = vipActive;
+
 allStores.push(store);
 
 }
 
 }
+
+allStores.sort((a,b)=>
+(b.vip === true) - (a.vip === true)
+);
+
+generateFilters();
 
 renderStores(allStores);
 
@@ -1013,19 +1055,135 @@ renderStores(allStores);
 
 loadStores();
 
+/* فلترة */
+
+function generateFilters(){
+
+const filtersContainer =
+document.querySelector(".filters");
+
+filtersContainer.innerHTML = "";
+
+filtersContainer.innerHTML += `
+
+<button
+class="filter-btn active"
+data-category="all">
+
+الكل
+
+</button>
+
+`;
+
+let categories = [];
+
+allStores.forEach(store=>{
+
+if(
+store.category &&
+!categories.includes(store.category)
+){
+
+categories.push(store.category);
+
+}
+
+});
+
+categories.forEach(category=>{
+
+filtersContainer.innerHTML += `
+
+<button
+class="filter-btn"
+data-category="${category}">
+
+${category}
+
+</button>
+
+`;
+
+});
+
+document.querySelectorAll(".filter-btn")
+.forEach(button=>{
+
+button.addEventListener("click",()=>{
+
+document.querySelectorAll(".filter-btn")
+.forEach(btn=>{
+
+btn.classList.remove("active");
+
+});
+
+button.classList.add("active");
+
+let category =
+button.dataset.category;
+
+if(category === "all"){
+
+renderStores(allStores);
+
+}else{
+
+let filtered =
+allStores.filter(store=>
+store.category === category
+);
+
+renderStores(filtered);
+
+}
+
+});
+
+});
+
+}
+
 /* عرض المتاجر */
 
 function renderStores(stores){
 
 storesContainer.innerHTML = "";
 
+if(stores.length === 0){
+
+storesContainer.innerHTML = `
+
+<div class="empty">
+
+لا توجد نتائج
+
+</div>
+
+`;
+
+return;
+
+}
+
 stores.forEach((store,index)=>{
 
 storesContainer.innerHTML += `
 
 <div
-class="store-card"
-onclick="openStore(${index})">
+class="store-card ${store.vip ? "vip-store" : ""}"
+onclick="openStore('${store.id}')">
+
+${store.vip ? `
+
+<div class="vip-badge">
+
+🔥 VIP
+
+</div>
+
+` : ""}
 
 <div class="store-header">
 
@@ -1038,7 +1196,9 @@ class="store-image">
 <div class="store-name">
 
 <h3>
+
 ${store.store_name}
+
 </h3>
 
 <img
@@ -1048,11 +1208,15 @@ class="ok-icon">
 </div>
 
 <p>
+
 🏪 ${store.category}
+
 </p>
 
 <p>
+
 📞 ${store.phone}
+
 </p>
 
 </div>
@@ -1067,13 +1231,40 @@ class="ok-icon">
 
 }
 
-/* فتح المتجر */
+/* البحث */
+
+document.getElementById("searchInput")
+.addEventListener("input",function(){
+
+let value =
+this.value.toLowerCase();
+
+let filtered =
+allStores.filter(store=>
+
+(store.store_name || "")
+.toLowerCase()
+.includes(value)
+
+||
+
+(store.category || "")
+.toLowerCase()
+.includes(value)
+
+);
+
+renderStores(filtered);
+
+});
+
+/* فتح متجر */
 
 window.openStore =
-async function(index){
+async function(storeId){
 
 const store =
-allStores[index];
+allStores.find(s=>s.id === storeId);
 
 document.getElementById("singleStorePage")
 .style.display = "block";
@@ -1095,7 +1286,7 @@ document.getElementById("singleProductsContainer");
 
 container.innerHTML = `
 <div class="empty">
-جاري تحميل المنتجات...
+جاري التحميل...
 </div>
 `;
 
@@ -1121,7 +1312,21 @@ products[key];
 
 product.id = key;
 
+product.storeId =
+store.id;
+
+product.storeName =
+store.store_name;
+
+product.storeLat =
+store.latitude || "";
+
+product.storeLng =
+store.longitude || "";
+
 if(product.status === "active"){
+
+allProducts.push(product);
 
 container.innerHTML += `
 
@@ -1132,15 +1337,21 @@ src="${product.image || "product.png"}"
 class="product-image">
 
 <div class="product-name">
+
 ${product.name}
+
 </div>
 
 <div class="product-desc">
+
 ${product.description || ""}
+
 </div>
 
 <div class="product-price">
+
 ${product.price} د.ع
+
 </div>
 
 <div class="qty-box">
@@ -1154,7 +1365,9 @@ ${product.price} د.ع
 <button
 class="qty-btn"
 onclick="decreaseQty('${product.id}')">
+
 -
+
 </button>
 
 <input
@@ -1167,7 +1380,9 @@ class="qty-input">
 <button
 class="qty-btn"
 onclick="increaseQty('${product.id}')">
+
 +
+
 </button>
 
 </div>
@@ -1194,6 +1409,8 @@ onclick='addToCart(${JSON.stringify(product)})'>
 
 };
 
+/* رجوع */
+
 window.backHome =
 function(){
 
@@ -1202,6 +1419,8 @@ document.getElementById("singleStorePage")
 
 };
 
+/* كمية */
+
 window.increaseQty =
 function(id){
 
@@ -1209,7 +1428,7 @@ const input =
 document.getElementById(`qty_${id}`);
 
 input.value =
-Number(input.value) + 1;
+Number(input.value)+1;
 
 };
 
@@ -1219,37 +1438,44 @@ function(id){
 const input =
 document.getElementById(`qty_${id}`);
 
-if(Number(input.value) > 1){
+if(Number(input.value)>1){
 
 input.value =
-Number(input.value) - 1;
+Number(input.value)-1;
 
 }
 
 };
 
-/* اضافة للسلة */
+/* سلة */
 
 window.addToCart =
 function(product){
 
-const qty =
+let qty =
 Number(
-document.getElementById(`qty_${product.id}`).value
+document.getElementById(
+`qty_${product.id}`
+).value
 );
 
 cart.push({
+
 ...product,
 qty:qty
+
 });
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
 
 updateCart();
 
-alert("تمت الاضافة الى السلة");
+alert("تمت الاضافة");
 
 };
-
-/* تحديث السلة */
 
 function updateCart(){
 
@@ -1262,11 +1488,6 @@ document.getElementById("itemsTotal");
 const finalTotal =
 document.getElementById("finalTotal");
 
-const tip =
-Number(
-document.getElementById("tipInput").value || 0
-);
-
 cartContainer.innerHTML = "";
 
 if(cart.length === 0){
@@ -1277,8 +1498,11 @@ cartContainer.innerHTML = `
 </div>
 `;
 
-itemsTotal.innerHTML = "0 د.ع";
-finalTotal.innerHTML = "0 د.ع";
+itemsTotal.innerHTML =
+"0 د.ع";
+
+finalTotal.innerHTML =
+"0 د.ع";
 
 return;
 
@@ -1289,7 +1513,8 @@ let total = 0;
 cart.forEach((item,index)=>{
 
 let itemTotal =
-Number(item.price) * Number(item.qty);
+Number(item.price) *
+Number(item.qty);
 
 total += itemTotal;
 
@@ -1304,19 +1529,28 @@ class="cart-image">
 <div class="cart-info">
 
 <h3>
+
 ${item.name}
+
 </h3>
 
 <p>
-السعر: ${item.price} د.ع
+
+${item.storeName}
+
 </p>
 
 <p>
-الكمية: ${item.qty}
+
+الكمية:
+${item.qty}
+
 </p>
 
 <p>
-المجموع: ${itemTotal} د.ع
+
+${itemTotal} د.ع
+
 </p>
 
 </div>
@@ -1335,6 +1569,11 @@ onclick="deleteCartItem(${index})">
 
 });
 
+let tip =
+Number(
+document.getElementById("tipInput").value || 0
+);
+
 itemsTotal.innerHTML =
 `${total} د.ع`;
 
@@ -1343,12 +1582,17 @@ finalTotal.innerHTML =
 
 }
 
-/* حذف من السلة */
+updateCart();
 
 window.deleteCartItem =
 function(index){
 
 cart.splice(index,1);
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
 
 updateCart();
 
@@ -1360,7 +1604,7 @@ document.getElementById("tipInput")
 /* ارسال الطلب */
 
 window.sendOrder =
-function(){
+async function(){
 
 if(cart.length === 0){
 
@@ -1370,11 +1614,105 @@ return;
 
 }
 
-alert("تم ارسال طلب التوصيل بنجاح 🚀");
+navigator.geolocation.getCurrentPosition(
+
+async(position)=>{
+
+let total = 0;
+
+cart.forEach(item=>{
+
+total +=
+Number(item.price) *
+Number(item.qty);
+
+});
+
+let tip =
+Number(
+document.getElementById("tipInput").value || 0
+);
+
+const orderId =
+"ORDER"+Date.now();
+
+const orderData = {
+
+id:orderId,
+
+customerId:
+currentUser.id,
+
+customerName:
+currentUser.name,
+
+customerPhone:
+currentUser.phone,
+
+customerAddress:
+currentUser.address || "",
+
+nearestPoint:
+currentUser.nearpoint || "",
+
+customerLat:
+position.coords.latitude,
+
+customerLng:
+position.coords.longitude,
+
+items:cart,
+
+storeName:
+cart[0].storeName || "",
+
+storeLat:
+cart[0].storeLat || "",
+
+storeLng:
+cart[0].storeLng || "",
+
+deliveryPrice:2000,
+
+tip:tip,
+
+productsPrice:total,
+
+totalPrice:
+total + 2000 + tip,
+
+status:"pending",
+
+createdAt:Date.now()
 
 };
 
-/* الصفحات */
+await set(
+ref(database,"orders/"+orderId),
+orderData
+);
+
+cart = [];
+
+localStorage.removeItem("cart");
+
+updateCart();
+
+alert("تم ارسال الطلب 🚀");
+
+},
+
+()=>{
+
+alert("فعل GPS حتى يتم ارسال الطلب");
+
+}
+
+);
+
+};
+
+/* تنقل */
 
 window.showPage =
 function(pageId,element){
@@ -1400,7 +1738,7 @@ element.classList.add("active");
 
 };
 
-/* تسجيل الخروج */
+/* تسجيل خروج */
 
 window.logout =
 function(){
