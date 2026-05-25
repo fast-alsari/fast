@@ -66,43 +66,22 @@ box-shadow:
 0 5px 20px rgba(0,0,0,.12);
 }
 
-.header-left{
+.driver-info{
 display:flex;
-align-items:center;
-gap:12px;
+flex-direction:column;
+gap:10px;
 }
 
-.logout-btn{
-width:48px;
-height:48px;
-border:none;
-border-radius:14px;
-background:white;
-color:#ff5500;
-font-size:20px;
-cursor:pointer;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-box-shadow:
-0 5px 15px rgba(0,0,0,.12);
-}
-
-.driver-image{
-width:70px;
-height:70px;
-border-radius:50%;
-border:3px solid white;
-object-fit:cover;
+.driver-name{
+font-size:22px;
+font-weight:bold;
 }
 
 .driver-top-info{
-margin-top:15px;
 display:flex;
 flex-direction:column;
 gap:8px;
+margin-top:10px;
 }
 
 .driver-badge{
@@ -123,6 +102,35 @@ font-size:14px;
 width:fit-content;
 }
 
+.header-left{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.logout-btn{
+width:50px;
+height:50px;
+border:none;
+border-radius:16px;
+background:white;
+color:#ff5500;
+font-size:20px;
+cursor:pointer;
+
+display:flex;
+align-items:center;
+justify-content:center;
+}
+
+.driver-image{
+width:75px;
+height:75px;
+border-radius:50%;
+border:3px solid white;
+object-fit:cover;
+}
+
 /* RADAR */
 
 .radar-box{
@@ -134,12 +142,12 @@ padding:80px 20px;
 }
 
 .radar{
-width:160px;
-height:160px;
+width:170px;
+height:170px;
 border-radius:50%;
 border:5px solid #ff8800;
-position:relative;
 animation:radarPulse 2s infinite;
+position:relative;
 }
 
 .radar::before{
@@ -170,7 +178,7 @@ box-shadow:
 
 .radar-text{
 margin-top:25px;
-font-size:18px;
+font-size:20px;
 font-weight:bold;
 color:#777;
 }
@@ -193,21 +201,21 @@ box-shadow:0 5px 20px rgba(0,0,0,.08);
 
 .order-card h3{
 font-size:22px;
-margin-bottom:12px;
+margin-bottom:15px;
 }
 
 .order-card p{
-margin-bottom:8px;
-color:#666;
+margin-bottom:10px;
+color:#555;
 font-size:15px;
 }
 
 .price-box{
 margin-top:15px;
-background:#fff4e8;
-padding:14px;
+padding:15px;
 border-radius:16px;
-font-size:18px;
+background:#fff4e8;
+font-size:20px;
 font-weight:bold;
 color:#ff6600;
 text-align:center;
@@ -221,7 +229,7 @@ margin-top:18px;
 
 .accept-btn{
 flex:1;
-padding:14px;
+padding:15px;
 border:none;
 border-radius:16px;
 background:#00b894;
@@ -231,32 +239,21 @@ font-weight:bold;
 cursor:pointer;
 }
 
-.back-btn{
-flex:1;
-padding:14px;
-border:none;
-border-radius:16px;
-background:#ddd;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-}
-
-/* DELIVERY PAGE */
+/* DELIVERY */
 
 .delivery-page{
 display:none;
 }
 
 #map{
-height:55vh;
 width:100%;
+height:55vh;
 }
 
 .delivery-info{
-padding:20px;
 background:white;
 margin:15px;
+padding:20px;
 border-radius:25px;
 box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
@@ -295,23 +292,17 @@ cursor:pointer;
 
 <header class="header">
 
-<div>
+<div class="driver-info">
 
-<h2>
-طلبات التوصيل
-</h2>
-
-<p>
-
-اهلاً،
-<span id="driverName">
+<h2 class="driver-name"
+id="driverName">
 
 السائق
 
-</span>
+</h2>
 
-👋
-
+<p>
+طلبات التوصيل الحالية
 </p>
 
 <div class="driver-top-info">
@@ -320,7 +311,7 @@ cursor:pointer;
 class="driver-badge"
 id="driverAccountType">
 
-VIP
+عادي
 
 </div>
 
@@ -329,7 +320,7 @@ class="expire-box"
 id="expireDate">
 
 ينتهي:
-2026/1/1
+غير محدد
 
 </div>
 
@@ -341,7 +332,7 @@ id="expireDate">
 
 <button
 class="logout-btn"
-onclick="logout()">
+id="logoutBtn">
 
 <i class="fa-solid fa-right-from-bracket"></i>
 
@@ -355,7 +346,7 @@ class="driver-image">
 
 </header>
 
-<!-- NO ORDERS -->
+<!-- RADAR -->
 
 <div
 class="radar-box"
@@ -379,7 +370,7 @@ id="ordersContainer">
 
 </div>
 
-<!-- DELIVERY PAGE -->
+<!-- DELIVERY -->
 
 <div
 class="delivery-page"
@@ -453,36 +444,34 @@ initializeApp(firebaseConfig);
 const db =
 getDatabase(app);
 
-/* DRIVER */
+/* بيانات السائق */
 
 const currentDriver =
 JSON.parse(
 localStorage.getItem("user")
 );
 
+/* اذا ماكو جلسة */
+
 if(!currentDriver){
 
-window.location.href =
-"index.html";
+window.location.replace(
+"index.html"
+);
 
 }
 
-/* اسم السائق */
+/* اظهار بيانات السائق */
 
 document.getElementById(
 "driverName"
 ).innerHTML =
 currentDriver.name || "سائق";
 
-/* نوع الحساب */
-
 document.getElementById(
 "driverAccountType"
 ).innerHTML =
-currentDriver.subscription ||
-"عادي";
-
-/* تاريخ الانتهاء */
+currentDriver.subscription || "عادي";
 
 document.getElementById(
 "expireDate"
@@ -495,7 +484,7 @@ currentDriver.expireDate ||
 
 let currentOrderId = null;
 
-/* حساب التأخير */
+/* التأخير */
 
 function getDelay(){
 
@@ -503,8 +492,7 @@ const type =
 (
 currentDriver.subscription ||
 "normal"
-)
-.toLowerCase();
+).toLowerCase();
 
 if(type === "vip"){
 
@@ -522,7 +510,7 @@ return 120000;
 
 }
 
-/* الطلبات اللحظية */
+/* الطلبات */
 
 onValue(
 ref(db,"orders"),
@@ -560,8 +548,6 @@ Object.keys(orders)
 const order =
 orders[key];
 
-/* انتهاء الطلب */
-
 if(
 Date.now() -
 order.createdAt >
@@ -579,8 +565,6 @@ return;
 
 }
 
-/* اذا الطلب مقبول */
-
 if(order.status !== "pending"){
 
 return;
@@ -588,8 +572,6 @@ return;
 }
 
 found = true;
-
-/* تأخير الحساب */
 
 setTimeout(()=>{
 
@@ -629,18 +611,9 @@ ${order.deliveryPrice}
 
 <button
 class="accept-btn"
-onclick="acceptOrder(
-'${key}'
-)">
+onclick="acceptOrder('${key}')">
 
 قبول الطلب
-
-</button>
-
-<button
-class="back-btn">
-
-رجوع
 
 </button>
 
@@ -690,8 +663,6 @@ return;
 const order =
 snapshot.val();
 
-/* اذا الطلب مقبول */
-
 if(order.status !== "pending"){
 
 alert(
@@ -701,8 +672,6 @@ alert(
 return;
 
 }
-
-/* قبول الطلب */
 
 await update(orderRef,{
 
@@ -721,8 +690,6 @@ Date.now()
 
 currentOrderId = id;
 
-/* اخفاء الطلبات */
-
 document.getElementById(
 "ordersContainer"
 ).style.display =
@@ -733,14 +700,10 @@ document.getElementById(
 ).style.display =
 "none";
 
-/* اظهار التوصيل */
-
 document.getElementById(
 "deliveryPage"
 ).style.display =
 "block";
-
-/* بيانات الزبون */
 
 document.getElementById(
 "customerName"
@@ -778,7 +741,7 @@ const driverLng =
 position.coords.longitude;
 
 const map =
-L.map('map')
+L.map("map")
 .setView(
 [
 driverLat,
@@ -791,8 +754,6 @@ L.tileLayer(
 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 ).addTo(map);
 
-/* DRIVER */
-
 L.marker(
 [
 driverLat,
@@ -801,11 +762,9 @@ driverLng
 )
 .addTo(map)
 .bindPopup(
-'موقعك الحالي'
+"موقعك الحالي"
 )
 .openPopup();
-
-/* CUSTOMER */
 
 L.marker(
 [
@@ -815,10 +774,8 @@ order.customerLng
 )
 .addTo(map)
 .bindPopup(
-'موقع الزبون'
+"موقع الزبون"
 );
-
-/* ROUTE */
 
 L.polyline(
 [
@@ -832,7 +789,7 @@ order.customerLng
 ]
 ],
 {
-color:'blue'
+color:"blue"
 }
 ).addTo(map);
 
@@ -880,10 +837,13 @@ window.location.reload();
 
 /* تسجيل الخروج */
 
-window.logout =
+document.getElementById(
+"logoutBtn"
+).addEventListener(
+"click",
 function(){
 
-/* حذف بيانات الجلسة */
+/* حذف الجلسة */
 
 localStorage.removeItem(
 "user"
@@ -893,16 +853,17 @@ localStorage.removeItem(
 "driver"
 );
 
-/* حذف التخزين بالكامل */
+sessionStorage.clear();
 
 localStorage.clear();
 
 /* تحويل */
 
-window.location.href =
-"index.html";
+window.location.replace(
+"index.html"
+);
 
-};
+});
 
 </script>
 
