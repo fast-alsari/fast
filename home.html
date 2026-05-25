@@ -66,7 +66,10 @@ animation:vipGlow 3s linear infinite;
 .vip-header::before{
 content:"";
 position:absolute;
-inset:-4px;
+top:-4px;
+left:-4px;
+right:-4px;
+bottom:-4px;
 background:linear-gradient(
 90deg,
 #ff0000,
@@ -344,9 +347,7 @@ class="verify-icon">
 صاحب المتجر
 </p>
 
-<div
-id="vipBadge">
-</div>
+<div id="vipBadge"></div>
 
 </div>
 
@@ -519,6 +520,10 @@ initializeApp(firebaseConfig);
 const database =
 getDatabase(app);
 
+// =========================
+// جلب الجلسة
+// =========================
+
 const currentUser =
 JSON.parse(
 localStorage.getItem("user")
@@ -531,43 +536,92 @@ window.location.href =
 
 }
 
-if(currentUser.type !== "store"){
+// =========================
+// تحديث بيانات المتجر من فايربيس
+// =========================
+
+const storeSnapshot =
+await get(
+child(
+ref(database),
+"stores/"+currentUser.id
+)
+);
+
+if(!storeSnapshot.exists()){
+
+localStorage.removeItem("user");
 
 window.location.href =
 "index.html";
 
 }
 
+const freshStore =
+storeSnapshot.val();
+
+// =========================
+// التحقق من الحالة
+// =========================
+
+if(freshStore.status !== "active"){
+
+alert("تم تعطيل حساب المتجر");
+
+localStorage.removeItem("user");
+
+window.location.href =
+"index.html";
+
+}
+
+// =========================
+// تحديث الجلسة
+// =========================
+
+localStorage.setItem(
+"user",
+JSON.stringify(freshStore)
+);
+
+// =========================
+// عرض البيانات
+// =========================
+
 document.getElementById("storeName")
 .innerHTML =
-currentUser.store_name;
+freshStore.store_name;
 
 document.getElementById("ownerName")
 .innerHTML =
-`صاحب المتجر : ${currentUser.owner}`;
+`صاحب المتجر : ${freshStore.owner}`;
 
-if(currentUser.image){
+if(freshStore.image){
 
 document.getElementById("storeImage")
 .src =
-currentUser.image;
+freshStore.image;
 
 }
+
+// =========================
+// VIP
+// =========================
 
 let vipActive = false;
 
 if(
-currentUser.accountType === "vip"
+freshStore.accountType === "vip"
 ){
 
-if(currentUser.vipExpireDate){
+if(freshStore.vipExpireDate){
 
 let today =
 new Date()
 .toISOString()
 .split("T")[0];
 
-if(today <= currentUser.vipExpireDate){
+if(today <= freshStore.vipExpireDate){
 
 vipActive = true;
 
@@ -596,6 +650,10 @@ document.getElementById("vipBadge")
 `;
 
 }
+
+// =========================
+// الاحصائيات
+// =========================
 
 async function loadStats(){
 
@@ -626,7 +684,7 @@ order.items.forEach(item=>{
 
 if(
 item.storeName ===
-currentUser.store_name
+freshStore.store_name
 ){
 
 totalSales +=
@@ -655,6 +713,10 @@ totalOrders;
 }
 
 loadStats();
+
+// =========================
+// اضافة منتج
+// =========================
 
 window.addProduct =
 async function(){
@@ -705,10 +767,10 @@ let productData = {
 id:productId,
 
 storeId:
-currentUser.id,
+freshStore.id,
 
 storeName:
-currentUser.store_name,
+freshStore.store_name,
 
 name:name,
 
@@ -728,7 +790,7 @@ await set(
 
 ref(
 database,
-"store_products/"+currentUser.id+"/"+productId
+"store_products/"+freshStore.id+"/"+productId
 ),
 
 productData
@@ -755,6 +817,10 @@ loadProducts();
 
 };
 
+// =========================
+// تحميل المنتجات
+// =========================
+
 async function loadProducts(){
 
 const container =
@@ -766,7 +832,7 @@ const snapshot =
 await get(
 child(
 ref(database),
-"store_products/"+currentUser.id
+"store_products/"+freshStore.id
 )
 );
 
@@ -867,6 +933,10 @@ container.innerHTML =
 }
 
 loadProducts();
+
+// =========================
+// تسجيل خروج
+// =========================
 
 window.logout =
 function(){
