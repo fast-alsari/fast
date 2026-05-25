@@ -17,13 +17,6 @@ content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
 
@@ -37,8 +30,8 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#ffffff;
-padding-bottom:120px;
+background:#f7f7f7;
+padding-bottom:110px;
 overflow-x:hidden;
 }
 
@@ -56,7 +49,6 @@ padding:20px;
 border-bottom-left-radius:35px;
 border-bottom-right-radius:35px;
 color:white;
-box-shadow:0 8px 30px rgba(0,0,0,.15);
 }
 
 .header-top{
@@ -74,7 +66,7 @@ object-fit:cover;
 }
 
 .search-box{
-margin-top:20px;
+margin-top:18px;
 background:white;
 padding:15px;
 border-radius:18px;
@@ -82,17 +74,12 @@ display:flex;
 align-items:center;
 }
 
-.search-box i{
-color:#ff8800;
-font-size:18px;
-}
-
 .search-box input{
 border:none;
 outline:none;
 width:100%;
-margin-right:10px;
 font-size:15px;
+margin-right:10px;
 }
 
 .filters{
@@ -106,7 +93,7 @@ padding:15px;
 display:none;
 }
 
-.filters button{
+.filter-btn{
 border:none;
 padding:10px 18px;
 border-radius:14px;
@@ -116,7 +103,7 @@ cursor:pointer;
 white-space:nowrap;
 }
 
-.filters .active{
+.filter-btn.active{
 background:#ff8800;
 color:white;
 }
@@ -135,25 +122,41 @@ border-radius:28px;
 box-shadow:0 5px 20px rgba(0,0,0,.08);
 position:relative;
 overflow:hidden;
-border:2px solid transparent;
-}
-
-.vip-store{
-animation:vipBorder 2s linear infinite;
-background:
-linear-gradient(white,white) padding-box,
-linear-gradient(90deg,#ff0000,#000,#ff8800,#000,#ff0000) border-box;
+cursor:pointer;
 border:3px solid transparent;
 }
 
-@keyframes vipBorder{
+.vip-store{
+
+background:
+linear-gradient(white,white) padding-box,
+linear-gradient(
+90deg,
+#ff0000,
+#000000,
+#ff8800,
+#000000,
+#ff0000
+) border-box;
+
+background-size:100% 100%,300% 300%;
+
+animation:vipMove 3s linear infinite;
+
+}
+
+@keyframes vipMove{
 
 0%{
-filter:hue-rotate(0deg);
+background-position:0% 50%;
+}
+
+50%{
+background-position:100% 50%;
 }
 
 100%{
-filter:hue-rotate(360deg);
+background-position:0% 50%;
 }
 
 }
@@ -168,13 +171,13 @@ padding:7px 14px;
 border-radius:14px;
 font-size:12px;
 font-weight:bold;
+box-shadow:0 0 15px rgba(255,0,0,.4);
 }
 
 .store-header{
 display:flex;
 gap:15px;
 align-items:center;
-cursor:pointer;
 }
 
 .store-image{
@@ -202,41 +205,67 @@ font-size:20px;
 .ok-icon{
 width:18px;
 height:18px;
-object-fit:contain;
 }
 
 .store-info p{
-color:#666;
 font-size:14px;
-margin-bottom:5px;
+color:#666;
+margin-bottom:4px;
 }
+
+/* صفحة المتجر */
 
 .single-store-page{
 display:none;
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#f7f7f7;
+z-index:999;
+overflow-y:auto;
 padding-bottom:120px;
+animation:openPage .25s ease;
+}
+
+@keyframes openPage{
+
+from{
+transform:translateX(100px);
+opacity:0;
+}
+
+to{
+transform:translateX(0);
+opacity:1;
+}
+
 }
 
 .store-top-bar{
 background:linear-gradient(135deg,#ff8800,#ff5500);
 padding:20px;
-color:white;
 display:flex;
 align-items:center;
 gap:15px;
+color:white;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
+position:sticky;
+top:0;
+z-index:20;
 }
 
 .back-btn{
 width:45px;
 height:45px;
 border-radius:50%;
-background:white;
 border:none;
-color:#ff8800;
+background:white;
+color:#ff6600;
 font-size:18px;
 cursor:pointer;
-font-weight:bold;
 }
 
 .single-store-info{
@@ -284,8 +313,8 @@ margin-bottom:8px;
 .product-desc{
 font-size:14px;
 color:#666;
-margin-bottom:10px;
 line-height:1.7;
+margin-bottom:10px;
 }
 
 .product-price{
@@ -322,6 +351,8 @@ font-weight:bold;
 cursor:pointer;
 }
 
+/* السلة */
+
 .cart-container{
 padding:15px;
 display:flex;
@@ -350,16 +381,6 @@ object-fit:cover;
 flex:1;
 }
 
-.cart-info h3{
-margin-bottom:5px;
-}
-
-.cart-info p{
-font-size:14px;
-color:#666;
-margin-bottom:4px;
-}
-
 .delete-btn{
 background:red;
 border:none;
@@ -374,12 +395,6 @@ background:white;
 margin:15px;
 padding:20px;
 border-radius:25px;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
-}
-
-.summary-box p{
-margin-bottom:15px;
-font-size:16px;
 }
 
 .tip-input{
@@ -387,14 +402,7 @@ width:100%;
 padding:14px;
 border-radius:14px;
 border:1px solid #ddd;
-margin-bottom:15px;
-font-size:15px;
-}
-
-.total{
-font-size:22px;
-font-weight:bold;
-color:#ff8800;
+margin:15px 0;
 }
 
 .send-order{
@@ -409,12 +417,13 @@ font-weight:bold;
 cursor:pointer;
 }
 
+/* الحساب */
+
 .account-card{
 margin:20px;
 background:white;
 padding:25px;
 border-radius:30px;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
 text-align:center;
 }
 
@@ -425,15 +434,6 @@ border-radius:50%;
 border:4px solid #ff8800;
 margin-bottom:15px;
 object-fit:cover;
-}
-
-.account-info{
-margin-top:15px;
-text-align:right;
-}
-
-.account-info p{
-margin-bottom:10px;
 }
 
 .logout-btn{
@@ -449,18 +449,20 @@ margin-top:20px;
 cursor:pointer;
 }
 
+/* البار السفلي */
+
 .bottom-bar{
 position:fixed;
 bottom:0;
-right:0;
 left:0;
+right:0;
 height:85px;
 background:white;
 display:flex;
 justify-content:space-around;
 align-items:center;
 box-shadow:0 -5px 20px rgba(0,0,0,.08);
-z-index:999;
+z-index:1000;
 }
 
 .nav-item{
@@ -515,7 +517,6 @@ class="page active-page">
 
 <img
 src="user.png"
-id="userImage"
 class="user-image">
 
 </div>
@@ -535,50 +536,37 @@ placeholder="ابحث عن متجر">
 
 <div class="filters">
 
-<button
-class="filter-btn active"
+<button class="filter-btn active"
 data-category="all">
 
 الكل
 
 </button>
 
-<button
-class="filter-btn"
+<button class="filter-btn"
 data-category="مطعم">
 
 مطاعم
 
 </button>
 
-<button
-class="filter-btn"
+<button class="filter-btn"
 data-category="ماركت">
 
 ماركت
 
 </button>
 
-<button
-class="filter-btn"
+<button class="filter-btn"
 data-category="صيدلية">
 
 صيدليات
 
 </button>
 
-<button
-class="filter-btn"
-data-category="الكترونيات">
-
-الكترونيات
-
-</button>
-
 </div>
 
-<div
-id="storesContainer"
+<div id="storesContainer"
 class="stores-container">
 
 </div>
@@ -587,14 +575,12 @@ class="stores-container">
 
 <!-- صفحة المتجر -->
 
-<div
-id="singleStorePage"
+<div id="singleStorePage"
 class="single-store-page">
 
 <div class="store-top-bar">
 
-<button
-class="back-btn"
+<button class="back-btn"
 onclick="backHome()">
 
 <i class="fa-solid fa-arrow-right"></i>
@@ -624,8 +610,7 @@ class="single-store-image">
 
 </div>
 
-<div
-id="singleProductsContainer"
+<div id="singleProductsContainer"
 class="products-container">
 
 </div>
@@ -637,8 +622,7 @@ class="products-container">
 <div id="cartPage"
 class="page">
 
-<div
-id="cartContainer"
+<div id="cartContainer"
 class="cart-container">
 
 </div>
@@ -664,15 +648,15 @@ id="tipInput"
 class="tip-input"
 placeholder="اكرامية للسائق">
 
-<p class="total">
-
+<h2>
 المبلغ الكلي :
 <span id="finalTotal">
 0
 </span>
 د.ع
+</h2>
 
-</p>
+<br>
 
 <button
 class="send-order"
@@ -695,22 +679,19 @@ class="page">
 
 <img
 src="user.png"
-id="accountImage"
 class="account-image">
 
 <h2 id="accountName">
 اسم المستخدم
 </h2>
 
-<div class="account-info">
+<br>
 
 <p id="accountPhone"></p>
 
 <p id="accountAddress"></p>
 
 <p id="accountType"></p>
-
-</div>
 
 <button
 class="logout-btn"
@@ -785,25 +766,25 @@ from
 const firebaseConfig = {
 
 apiKey:
-"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+"YOUR_API_KEY",
 
 authDomain:
-"fast-937c9.firebaseapp.com",
+"YOUR_AUTH_DOMAIN",
 
 projectId:
-"fast-937c9",
+"YOUR_PROJECT_ID",
 
 storageBucket:
-"fast-937c9.firebasestorage.app",
+"YOUR_BUCKET",
 
 messagingSenderId:
-"221388561840",
+"YOUR_SENDER_ID",
 
 appId:
-"1:221388561840:web:ec9d75183ddd7d44be0a75",
+"YOUR_APP_ID",
 
 databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+"YOUR_DATABASE_URL"
 
 };
 
@@ -814,7 +795,9 @@ const database =
 getDatabase(app);
 
 const currentUser =
-JSON.parse(localStorage.getItem("user"));
+JSON.parse(
+localStorage.getItem("user")
+);
 
 if(!currentUser){
 
@@ -868,6 +851,35 @@ let store = stores[key];
 
 if(store.status === "active"){
 
+let vipActive = false;
+
+if(
+store.accountType === "vip"
+){
+
+if(store.vipExpireDate){
+
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+if(today <= store.vipExpireDate){
+
+vipActive = true;
+
+}
+
+}else{
+
+vipActive = true;
+
+}
+
+}
+
+store.vip = vipActive;
+
 allStores.push(store);
 
 }
@@ -893,9 +905,12 @@ storesContainer.innerHTML = "";
 if(stores.length === 0){
 
 storesContainer.innerHTML =
-`<div class="empty">
+
+`
+<div class="empty">
 لا توجد متاجر
-</div>`;
+</div>
+`;
 
 return;
 
@@ -905,7 +920,9 @@ stores.forEach(store=>{
 
 storesContainer.innerHTML += `
 
-<div class="store-card ${store.vip ? "vip-store" : ""}">
+<div
+class="store-card ${store.vip ? "vip-store" : ""}"
+onclick='openStore(${JSON.stringify(store)})'>
 
 ${store.vip ? `
 <div class="vip-badge">
@@ -913,9 +930,7 @@ VIP
 </div>
 ` : ""}
 
-<div
-class="store-header"
-onclick='openStore(${JSON.stringify(store)})'>
+<div class="store-header">
 
 <img
 src="${store.image || "store.png"}"
@@ -958,9 +973,6 @@ class="ok-icon">
 window.openStore =
 async function(store){
 
-document.getElementById("homePage")
-.style.display = "none";
-
 document.getElementById("singleStorePage")
 .style.display = "block";
 
@@ -980,9 +992,11 @@ const container =
 document.getElementById("singleProductsContainer");
 
 container.innerHTML =
-`<div class="empty">
+`
+<div class="empty">
 جاري تحميل المنتجات...
-</div>`;
+</div>
+`;
 
 const snapshot =
 await get(
@@ -1066,18 +1080,22 @@ ${JSON.stringify(product)},
 if(!found){
 
 container.innerHTML =
-`<div class="empty">
+`
+<div class="empty">
 لا توجد منتجات حالياً
-</div>`;
+</div>
+`;
 
 }
 
 }else{
 
 container.innerHTML =
-`<div class="empty">
+`
+<div class="empty">
 لا توجد منتجات
-</div>`;
+</div>
+`;
 
 }
 
@@ -1089,80 +1107,7 @@ function(){
 document.getElementById("singleStorePage")
 .style.display = "none";
 
-document.getElementById("homePage")
-.style.display = "block";
-
 };
-
-document.getElementById("searchInput")
-.addEventListener("input",function(){
-
-let value =
-this.value.toLowerCase();
-
-let filtered =
-allStores.filter(store=>
-
-store.store_name
-.toLowerCase()
-.includes(value)
-
-);
-
-renderStores(filtered);
-
-});
-
-document.querySelectorAll(".filter-btn")
-.forEach(button=>{
-
-button.addEventListener("click",()=>{
-
-document.querySelectorAll(".filter-btn")
-.forEach(btn=>{
-
-btn.classList.remove("active");
-
-});
-
-button.classList.add("active");
-
-let category =
-button.dataset.category;
-
-if(category === "all"){
-
-renderStores(allStores);
-
-}else{
-
-let vipStores =
-allStores.filter(store=>store.vip);
-
-let normalStores =
-allStores.filter(store=>
-store.category === category
-);
-
-let merged =
-[
-...vipStores,
-...normalStores
-];
-
-let unique =
-merged.filter(
-(v,i,a)=>
-a.findIndex(t=>t.id===v.id)===i
-);
-
-renderStores(unique);
-
-}
-
-});
-
-});
 
 let cart =
 JSON.parse(
@@ -1215,9 +1160,11 @@ cartContainer.innerHTML = "";
 if(cart.length === 0){
 
 cartContainer.innerHTML =
-`<div class="empty">
+`
+<div class="empty">
 السلة فارغة
-</div>`;
+</div>
+`;
 
 updateTotals();
 
@@ -1304,7 +1251,8 @@ item.price * item.qty;
 
 let delivery = 3000;
 
-let tip = Number(
+let tip =
+Number(
 document.getElementById("tipInput")
 .value || 0
 );
