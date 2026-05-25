@@ -1,4 +1,3 @@
-```html
 <!-- home.html -->
 
 <!DOCTYPE html>
@@ -23,7 +22,7 @@ rel="stylesheet">
 
 <style>
 
-{
+*{
 margin:0;
 padding:0;
 box-sizing:border-box;
@@ -36,6 +35,8 @@ padding-bottom:110px;
 overflow-x:hidden;
 }
 
+/* الصفحات */
+
 .page{
 display:none;
 }
@@ -44,7 +45,7 @@ display:none;
 display:block;
 }
 
-/ HEADER /
+/* الهيدر */
 
 .header{
 background:linear-gradient(135deg,#ff8800,#ff5500);
@@ -91,7 +92,7 @@ margin-right:10px;
 font-size:15px;
 }
 
-/ FILTERS /
+/* الفلاتر */
 
 .filters{
 display:flex;
@@ -112,6 +113,7 @@ background:#eee;
 font-weight:bold;
 cursor:pointer;
 white-space:nowrap;
+transition:.2s;
 }
 
 .filter-btn.active{
@@ -119,7 +121,7 @@ background:#ff8800;
 color:white;
 }
 
-/ STORES /
+/* المتاجر */
 
 .stores-container{
 padding:15px;
@@ -137,12 +139,12 @@ position:relative;
 overflow:hidden;
 cursor:pointer;
 border:3px solid transparent;
+transition:.2s;
 }
 
-/ VIP /
+/* VIP */
 
 .vip-store{
-
 background:
 linear-gradient(#fff,#fff) padding-box,
 linear-gradient(
@@ -155,13 +157,11 @@ linear-gradient(
 ) border-box;
 
 background-size:300% 300%;
-
 animation:vipMove 5s ease infinite;
 
 box-shadow:
 0 0 15px rgba(255,136,0,.35),
 0 0 30px rgba(0,0,0,.12);
-
 }
 
 @keyframes vipMove{
@@ -181,35 +181,18 @@ background-position:0% 50%;
 }
 
 .vip-badge{
-
 position:absolute;
-
 top:12px;
 left:12px;
-
-background:
-linear-gradient(
-135deg,
-#ff0000,
-#ff8800
-);
-
+background:linear-gradient(135deg,#ff0000,#ff8800);
 padding:8px 15px;
-
 border-radius:16px;
-
 color:white;
-
 font-size:13px;
 font-weight:bold;
-
-box-shadow:
-0 5px 20px rgba(0,0,0,.25);
-
+box-shadow:0 5px 20px rgba(0,0,0,.25);
 animation:vipPulse 2s infinite;
-
 z-index:20;
-
 }
 
 @keyframes vipPulse{
@@ -268,7 +251,7 @@ color:#666;
 margin-bottom:4px;
 }
 
-/ STORE PAGE /
+/* صفحة المتجر */
 
 .single-store-page{
 display:none;
@@ -290,6 +273,9 @@ display:flex;
 align-items:center;
 gap:15px;
 color:white;
+position:sticky;
+top:0;
+z-index:100;
 }
 
 .back-btn{
@@ -316,7 +302,7 @@ border-radius:18px;
 object-fit:cover;
 }
 
-/ PRODUCTS /
+/* المنتجات */
 
 .products-container{
 padding:15px;
@@ -404,7 +390,7 @@ font-weight:bold;
 cursor:pointer;
 }
 
-/ CART /
+/* السلة */
 
 .cart-container{
 padding:15px;
@@ -434,6 +420,15 @@ object-fit:cover;
 flex:1;
 }
 
+.cart-info h3{
+margin-bottom:6px;
+}
+
+.cart-info p{
+margin-bottom:4px;
+color:#555;
+}
+
 .delete-btn{
 background:red;
 border:none;
@@ -441,6 +436,7 @@ padding:10px 14px;
 border-radius:12px;
 color:white;
 cursor:pointer;
+font-weight:bold;
 }
 
 .summary-box{
@@ -448,12 +444,21 @@ background:white;
 margin:15px;
 padding:20px;
 border-radius:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
 .bill-line{
 display:flex;
 justify-content:space-between;
-margin-bottom:12px;
+margin-bottom:14px;
+font-size:16px;
+}
+
+.final-price{
+font-size:24px;
+font-weight:bold;
+color:#ff8800;
+margin-top:10px;
 }
 
 .tip-input{
@@ -462,6 +467,8 @@ padding:14px;
 border-radius:14px;
 border:1px solid #ddd;
 margin:15px 0;
+font-size:15px;
+outline:none;
 }
 
 .send-order{
@@ -476,14 +483,26 @@ font-weight:bold;
 cursor:pointer;
 }
 
-/ ACCOUNT /
+/* الحساب */
 
 .account-card{
 margin:20px;
 background:white;
 padding:25px;
 border-radius:30px;
+position:relative;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
 text-align:center;
+}
+
+.account-image{
+width:110px;
+height:110px;
+border-radius:50%;
+border:4px solid #ff8800;
+margin:20px auto;
+display:block;
+object-fit:cover;
 }
 
 .logout-btn{
@@ -495,9 +514,11 @@ color:white;
 font-size:16px;
 font-weight:bold;
 cursor:pointer;
+width:100%;
+margin-top:20px;
 }
 
-/ BOTTOM BAR /
+/* البار السفلي */
 
 .bottom-bar{
 position:fixed;
@@ -530,6 +551,8 @@ font-size:22px;
 margin-bottom:5px;
 }
 
+/* فارغ */
+
 .empty{
 text-align:center;
 padding:40px;
@@ -541,6 +564,8 @@ color:#777;
 </head>
 
 <body>
+
+<!-- الرئيسية -->
 
 <div id="homePage"
 class="page active-page">
@@ -587,14 +612,15 @@ class="stores-container"></div>
 
 </div>
 
-<!-- STORE PAGE -->
+<!-- صفحة المتجر -->
 
 <div id="singleStorePage"
 class="single-store-page">
 
 <div class="store-top-bar">
 
-<button class="back-btn"
+<button
+class="back-btn"
 onclick="backHome()">
 
 <i class="fa-solid fa-arrow-right"></i>
@@ -629,7 +655,7 @@ class="products-container"></div>
 
 </div>
 
-<!-- CART -->
+<!-- السلة -->
 
 <div id="cartPage"
 class="page">
@@ -661,7 +687,7 @@ id="tipInput"
 class="tip-input"
 placeholder="اكرامية للسائق">
 
-<div class="bill-line">
+<div class="bill-line final-price">
 <span>المجموع</span>
 <span id="finalTotal">0 د.ع</span>
 </div>
@@ -678,12 +704,16 @@ onclick="sendOrder()">
 
 </div>
 
-<!-- ACCOUNT -->
+<!-- الحساب -->
 
 <div id="accountPage"
 class="page">
 
 <div class="account-card">
+
+<img
+src="user.png"
+class="account-image">
 
 <h2 id="accountName">
 مستخدم
@@ -693,9 +723,9 @@ class="page">
 
 <p id="accountPhone"></p>
 
-<p id="accountAddress"></p>
-
 <br>
+
+<p id="accountAddress"></p>
 
 <button
 class="logout-btn"
@@ -709,7 +739,7 @@ onclick="logout()">
 
 </div>
 
-<!-- BOTTOM BAR -->
+<!-- البار السفلي -->
 
 <div class="bottom-bar">
 
@@ -800,9 +830,11 @@ window.location.href =
 
 }
 
+/* بيانات المستخدم */
+
 document.getElementById("welcomeText")
 .innerHTML =
-اهلاً ${currentUser.name};
+`اهلاً ${currentUser.name}`;
 
 document.getElementById("accountName")
 .innerHTML =
@@ -816,7 +848,7 @@ document.getElementById("accountAddress")
 .innerHTML =
 currentUser.address || "";
 
-/ VARIABLES /
+/* متغيرات */
 
 let allStores = [];
 
@@ -828,7 +860,7 @@ localStorage.getItem("cart")
 const storesContainer =
 document.getElementById("storesContainer");
 
-/ LOAD STORES /
+/* تحميل المتاجر */
 
 async function loadStores(){
 
@@ -852,15 +884,8 @@ store.id = key;
 
 if(store.status === "active"){
 
-let vipActive = false;
-
-if(store.accountType === "vip"){
-
-vipActive = true;
-
-}
-
-store.vip = vipActive;
+store.vip =
+store.accountType === "vip";
 
 allStores.push(store);
 
@@ -868,7 +893,7 @@ allStores.push(store);
 
 }
 
-/ VIP FIRST /
+/* VIP بالأعلى */
 
 allStores.sort((a,b)=>
 (b.vip === true) - (a.vip === true)
@@ -884,7 +909,7 @@ renderStores(allStores);
 
 loadStores();
 
-/ FILTERS /
+/* الفلاتر */
 
 function generateFilters(){
 
@@ -933,7 +958,9 @@ button.addEventListener("click",()=>{
 
 document.querySelectorAll(".filter-btn")
 .forEach(btn=>{
+
 btn.classList.remove("active");
+
 });
 
 button.classList.add("active");
@@ -962,7 +989,7 @@ renderStores(filtered);
 
 }
 
-/ RENDER STORES /
+/* عرض المتاجر */
 
 function renderStores(stores){
 
@@ -979,8 +1006,6 @@ storesContainer.innerHTML = `
 return;
 
 }
-
-/ VIP دائماً بالأعلى /
 
 stores.sort((a,b)=>
 (b.vip === true) - (a.vip === true)
@@ -1040,7 +1065,7 @@ class="ok-icon">
 
 }
 
-/ SEARCH /
+/* البحث */
 
 document.getElementById("searchInput")
 .addEventListener("input",function(){
@@ -1067,7 +1092,7 @@ renderStores(filtered);
 
 });
 
-/ OPEN STORE /
+/* فتح متجر */
 
 window.openStore =
 async function(storeId){
@@ -1206,6 +1231,8 @@ onclick='addToCart(${JSON.stringify(product)})'>
 
 };
 
+/* رجوع */
+
 window.backHome =
 function(){
 
@@ -1213,6 +1240,8 @@ document.getElementById("singleStorePage")
 .style.display = "none";
 
 };
+
+/* زيادة كمية */
 
 window.increaseQty =
 function(id){
@@ -1224,6 +1253,8 @@ input.value =
 Number(input.value)+1;
 
 };
+
+/* تقليل كمية */
 
 window.decreaseQty =
 function(id){
@@ -1240,7 +1271,7 @@ Number(input.value)-1;
 
 };
 
-/ ADD TO CART /
+/* اضافة للسلة */
 
 window.addToCart =
 function(product){
@@ -1252,7 +1283,7 @@ document.getElementById(
 ).value
 );
 
-/ متجر واحد فقط /
+/* متجر واحد فقط */
 
 if(
 cart.length > 0 &&
@@ -1284,6 +1315,8 @@ updateCart();
 alert("تمت الاضافة");
 
 };
+
+/* تحديث السلة */
 
 function updateCart(){
 
@@ -1384,6 +1417,8 @@ finalTotal.innerHTML =
 
 updateCart();
 
+/* حذف عنصر */
+
 window.deleteCartItem =
 function(index){
 
@@ -1401,7 +1436,7 @@ updateCart();
 document.getElementById("tipInput")
 .addEventListener("input",updateCart);
 
-/ SEND ORDER /
+/* ارسال الطلب */
 
 window.sendOrder =
 async function(){
@@ -1413,6 +1448,8 @@ alert("السلة فارغة");
 return;
 
 }
+
+/* GPS */
 
 if(!navigator.geolocation){
 
@@ -1531,7 +1568,7 @@ maximumAge:0
 
 };
 
-/ NAVIGATION /
+/* التنقل */
 
 window.showPage =
 function(pageId,element){
@@ -1557,7 +1594,7 @@ element.classList.add("active");
 
 };
 
-/ LOGOUT */
+/* تسجيل خروج */
 
 window.logout =
 function(){
@@ -1574,4 +1611,3 @@ window.location.href =
 </body>
 
 </html>
-`
