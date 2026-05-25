@@ -883,9 +883,21 @@ window.location.reload();
 window.logout =
 function(){
 
+/* حذف بيانات الجلسة */
+
 localStorage.removeItem(
 "user"
 );
+
+localStorage.removeItem(
+"driver"
+);
+
+/* حذف التخزين بالكامل */
+
+localStorage.clear();
+
+/* تحويل */
 
 window.location.href =
 "index.html";
