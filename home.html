@@ -1,954 +1,953 @@
+<!-- home.html -->
 
-‏<!-- home.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
-‏<!DOCTYPE html>
-‏<html lang="ar" dir="rtl">
+<head>
 
-‏<head>
+<meta charset="UTF-8">
 
-‏<meta charset="UTF-8">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-‏<meta name="viewport"
-‏content="width=device-width, initial-scale=1.0">
-
-‏<title>
+<title>
 عالسريع
-‏</title>
+</title>
 
-‏<link rel="stylesheet"
-‏href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-‏<link rel="preconnect"
-‏href="https://fonts.googleapis.com">
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
 
-‏<link rel="preconnect"
-‏href="https://fonts.gstatic.com"
-‏crossorigin>
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
 
-‏<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-‏rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+rel="stylesheet">
 
-‏<style>
+<style>
 
 *{
-‏margin:0;
-‏padding:0;
-‏box-sizing:border-box;
-‏font-family:'Cairo',sans-serif;
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
 }
 
-‏body{
-‏background:#ffffff;
-‏padding-bottom:120px;
-‏overflow-x:hidden;
+body{
+background:#ffffff;
+padding-bottom:120px;
+overflow-x:hidden;
 }
 
-‏.page{
-‏display:none;
+.page{
+display:none;
 }
 
-‏.active-page{
-‏display:block;
+.active-page{
+display:block;
 }
 
-‏.header{
-‏background:linear-gradient(135deg,#ff8800,#ff5500);
-‏padding:20px;
-‏border-bottom-left-radius:35px;
-‏border-bottom-right-radius:35px;
-‏color:white;
-‏box-shadow:0 8px 30px rgba(0,0,0,.15);
+.header{
+background:linear-gradient(135deg,#ff8800,#ff5500);
+padding:20px;
+border-bottom-left-radius:35px;
+border-bottom-right-radius:35px;
+color:white;
+box-shadow:0 8px 30px rgba(0,0,0,.15);
 }
 
-‏.header-top{
-‏display:flex;
-‏justify-content:space-between;
-‏align-items:center;
+.header-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
 }
 
-‏.user-image{
-‏width:65px;
-‏height:65px;
-‏border-radius:50%;
-‏border:3px solid white;
-‏object-fit:cover;
+.user-image{
+width:65px;
+height:65px;
+border-radius:50%;
+border:3px solid white;
+object-fit:cover;
 }
 
-‏.search-box{
-‏margin-top:20px;
-‏background:white;
-‏padding:15px;
-‏border-radius:18px;
-‏display:flex;
-‏align-items:center;
+.search-box{
+margin-top:20px;
+background:white;
+padding:15px;
+border-radius:18px;
+display:flex;
+align-items:center;
 }
 
-‏.search-box i{
-‏color:#ff8800;
-‏font-size:18px;
+.search-box i{
+color:#ff8800;
+font-size:18px;
 }
 
-‏.search-box input{
-‏border:none;
-‏outline:none;
-‏width:100%;
-‏margin-right:10px;
-‏font-size:15px;
+.search-box input{
+border:none;
+outline:none;
+width:100%;
+margin-right:10px;
+font-size:15px;
 }
 
-‏.filters{
-‏display:flex;
-‏gap:10px;
-‏overflow:auto;
-‏padding:15px;
+.filters{
+display:flex;
+gap:10px;
+overflow:auto;
+padding:15px;
 }
 
-‏.filters::-webkit-scrollbar{
-‏display:none;
+.filters::-webkit-scrollbar{
+display:none;
 }
 
-‏.filters button{
-‏border:none;
-‏padding:10px 18px;
-‏border-radius:14px;
-‏background:#eee;
-‏font-weight:bold;
-‏cursor:pointer;
-‏white-space:nowrap;
+.filters button{
+border:none;
+padding:10px 18px;
+border-radius:14px;
+background:#eee;
+font-weight:bold;
+cursor:pointer;
+white-space:nowrap;
 }
 
-‏.filters .active{
-‏background:#ff8800;
-‏color:white;
+.filters .active{
+background:#ff8800;
+color:white;
 }
 
-‏.stores-container{
-‏padding:15px;
-‏display:flex;
-‏flex-direction:column;
-‏gap:18px;
+.stores-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:18px;
 }
 
-‏.store-card{
-‏background:white;
-‏padding:15px;
-‏border-radius:28px;
-‏box-shadow:0 5px 20px rgba(0,0,0,.08);
-‏position:relative;
-‏overflow:hidden;
-‏border:2px solid transparent;
+.store-card{
+background:white;
+padding:15px;
+border-radius:28px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+position:relative;
+overflow:hidden;
+border:2px solid transparent;
 }
 
-‏.vip-store{
-‏animation:vipBorder 2s linear infinite;
-‏background:
-‏linear-gradient(white,white) padding-box,
-‏linear-gradient(90deg,#ff0000,#000,#ff8800,#000,#ff0000) border-box;
-‏border:3px solid transparent;
+.vip-store{
+animation:vipBorder 2s linear infinite;
+background:
+linear-gradient(white,white) padding-box,
+linear-gradient(90deg,#ff0000,#000,#ff8800,#000,#ff0000) border-box;
+border:3px solid transparent;
 }
 
-‏@keyframes vipBorder{
+@keyframes vipBorder{
 
 0%{
-‏filter:hue-rotate(0deg);
+filter:hue-rotate(0deg);
 }
 
 100%{
-‏filter:hue-rotate(360deg);
+filter:hue-rotate(360deg);
 }
 
 }
 
-‏.vip-badge{
-‏position:absolute;
-‏top:12px;
-‏left:12px;
-‏background:linear-gradient(135deg,#ff0000,#000,#ff8800);
-‏color:white;
-‏padding:7px 14px;
-‏border-radius:14px;
-‏font-size:12px;
-‏font-weight:bold;
+.vip-badge{
+position:absolute;
+top:12px;
+left:12px;
+background:linear-gradient(135deg,#ff0000,#000,#ff8800);
+color:white;
+padding:7px 14px;
+border-radius:14px;
+font-size:12px;
+font-weight:bold;
 }
 
-‏.store-header{
-‏display:flex;
-‏gap:15px;
-‏align-items:center;
-‏cursor:pointer;
+.store-header{
+display:flex;
+gap:15px;
+align-items:center;
+cursor:pointer;
 }
 
-‏.store-image{
-‏width:95px;
-‏height:95px;
-‏border-radius:22px;
-‏object-fit:cover;
+.store-image{
+width:95px;
+height:95px;
+border-radius:22px;
+object-fit:cover;
 }
 
-‏.store-info{
-‏flex:1;
+.store-info{
+flex:1;
 }
 
-‏.store-name{
-‏display:flex;
-‏align-items:center;
-‏gap:6px;
-‏margin-bottom:8px;
+.store-name{
+display:flex;
+align-items:center;
+gap:6px;
+margin-bottom:8px;
 }
 
-‏.store-name h3{
-‏font-size:20px;
+.store-name h3{
+font-size:20px;
 }
 
-‏.ok-icon{
-‏width:18px;
-‏height:18px;
-‏object-fit:contain;
+.ok-icon{
+width:18px;
+height:18px;
+object-fit:contain;
 }
 
-‏.store-info p{
-‏color:#666;
-‏font-size:14px;
-‏margin-bottom:5px;
+.store-info p{
+color:#666;
+font-size:14px;
+margin-bottom:5px;
 }
 
-‏.single-store-page{
-‏display:none;
-‏padding-bottom:120px;
+.single-store-page{
+display:none;
+padding-bottom:120px;
 }
 
-‏.store-top-bar{
-‏background:linear-gradient(135deg,#ff8800,#ff5500);
-‏padding:20px;
-‏color:white;
-‏display:flex;
-‏align-items:center;
-‏gap:15px;
-‏border-bottom-left-radius:30px;
-‏border-bottom-right-radius:30px;
+.store-top-bar{
+background:linear-gradient(135deg,#ff8800,#ff5500);
+padding:20px;
+color:white;
+display:flex;
+align-items:center;
+gap:15px;
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
 }
 
-‏.back-btn{
-‏width:45px;
-‏height:45px;
-‏border-radius:50%;
-‏background:white;
-‏border:none;
-‏color:#ff8800;
-‏font-size:18px;
-‏cursor:pointer;
-‏font-weight:bold;
+.back-btn{
+width:45px;
+height:45px;
+border-radius:50%;
+background:white;
+border:none;
+color:#ff8800;
+font-size:18px;
+cursor:pointer;
+font-weight:bold;
 }
 
-‏.single-store-info{
-‏display:flex;
-‏align-items:center;
-‏gap:12px;
+.single-store-info{
+display:flex;
+align-items:center;
+gap:12px;
 }
 
-‏.single-store-image{
-‏width:70px;
-‏height:70px;
-‏border-radius:18px;
-‏object-fit:cover;
-‏border:3px solid white;
+.single-store-image{
+width:70px;
+height:70px;
+border-radius:18px;
+object-fit:cover;
+border:3px solid white;
 }
 
-‏.products-container{
-‏padding:15px;
-‏display:flex;
-‏flex-direction:column;
-‏gap:18px;
+.products-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:18px;
 }
 
-‏.product-card{
-‏background:white;
-‏padding:15px;
-‏border-radius:25px;
-‏box-shadow:0 5px 20px rgba(0,0,0,.08);
+.product-card{
+background:white;
+padding:15px;
+border-radius:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
-‏.product-image{
-‏width:100%;
-‏height:220px;
-‏object-fit:cover;
-‏border-radius:20px;
-‏margin-bottom:12px;
+.product-image{
+width:100%;
+height:220px;
+object-fit:cover;
+border-radius:20px;
+margin-bottom:12px;
 }
 
-‏.product-name{
-‏font-size:20px;
-‏font-weight:bold;
-‏margin-bottom:8px;
+.product-name{
+font-size:20px;
+font-weight:bold;
+margin-bottom:8px;
 }
 
-‏.product-desc{
-‏font-size:14px;
-‏color:#666;
-‏margin-bottom:10px;
-‏line-height:1.7;
+.product-desc{
+font-size:14px;
+color:#666;
+margin-bottom:10px;
+line-height:1.7;
 }
 
-‏.product-price{
-‏font-size:20px;
-‏font-weight:bold;
-‏color:#ff8800;
-‏margin-bottom:12px;
+.product-price{
+font-size:20px;
+font-weight:bold;
+color:#ff8800;
+margin-bottom:12px;
 }
 
-‏.qty-box{
-‏display:flex;
-‏justify-content:space-between;
-‏align-items:center;
-‏margin-bottom:15px;
+.qty-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
 }
 
-‏.qty-box input{
-‏width:90px;
-‏padding:12px;
-‏border-radius:12px;
-‏border:1px solid #ddd;
-‏font-size:16px;
+.qty-box input{
+width:90px;
+padding:12px;
+border-radius:12px;
+border:1px solid #ddd;
+font-size:16px;
 }
 
-‏.add-btn{
-‏width:100%;
-‏padding:15px;
-‏border:none;
-‏border-radius:16px;
-‏background:#ff8800;
-‏color:white;
-‏font-size:16px;
-‏font-weight:bold;
-‏cursor:pointer;
+.add-btn{
+width:100%;
+padding:15px;
+border:none;
+border-radius:16px;
+background:#ff8800;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
 }
 
-‏.cart-container{
-‏padding:15px;
-‏display:flex;
-‏flex-direction:column;
-‏gap:15px;
+.cart-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:15px;
 }
 
-‏.cart-item{
-‏background:white;
-‏padding:15px;
-‏border-radius:22px;
-‏display:flex;
-‏gap:15px;
-‏align-items:center;
-‏box-shadow:0 5px 20px rgba(0,0,0,.08);
+.cart-item{
+background:white;
+padding:15px;
+border-radius:22px;
+display:flex;
+gap:15px;
+align-items:center;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
-‏.cart-image{
-‏width:80px;
-‏height:80px;
-‏border-radius:16px;
-‏object-fit:cover;
+.cart-image{
+width:80px;
+height:80px;
+border-radius:16px;
+object-fit:cover;
 }
 
-‏.cart-info{
-‏flex:1;
+.cart-info{
+flex:1;
 }
 
-‏.cart-info h3{
-‏margin-bottom:5px;
+.cart-info h3{
+margin-bottom:5px;
 }
 
-‏.cart-info p{
-‏font-size:14px;
-‏color:#666;
-‏margin-bottom:4px;
+.cart-info p{
+font-size:14px;
+color:#666;
+margin-bottom:4px;
 }
 
-‏.delete-btn{
-‏background:red;
-‏border:none;
-‏padding:10px 14px;
-‏border-radius:12px;
-‏color:white;
-‏cursor:pointer;
+.delete-btn{
+background:red;
+border:none;
+padding:10px 14px;
+border-radius:12px;
+color:white;
+cursor:pointer;
 }
 
-‏.summary-box{
-‏background:white;
-‏margin:15px;
-‏padding:20px;
-‏border-radius:25px;
-‏box-shadow:0 5px 20px rgba(0,0,0,.08);
+.summary-box{
+background:white;
+margin:15px;
+padding:20px;
+border-radius:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
-‏.summary-box p{
-‏margin-bottom:15px;
-‏font-size:16px;
+.summary-box p{
+margin-bottom:15px;
+font-size:16px;
 }
 
-‏.tip-input{
-‏width:100%;
-‏padding:14px;
-‏border-radius:14px;
-‏border:1px solid #ddd;
-‏margin-bottom:15px;
-‏font-size:15px;
+.tip-input{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:1px solid #ddd;
+margin-bottom:15px;
+font-size:15px;
 }
 
-‏.total{
-‏font-size:22px;
-‏font-weight:bold;
-‏color:#ff8800;
+.total{
+font-size:22px;
+font-weight:bold;
+color:#ff8800;
 }
 
-‏.send-order{
-‏width:100%;
-‏padding:16px;
-‏border:none;
-‏border-radius:16px;
-‏background:#00b894;
-‏color:white;
-‏font-size:17px;
-‏font-weight:bold;
-‏cursor:pointer;
+.send-order{
+width:100%;
+padding:16px;
+border:none;
+border-radius:16px;
+background:#00b894;
+color:white;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
 }
 
-‏.account-card{
-‏margin:20px;
-‏background:white;
-‏padding:25px;
-‏border-radius:30px;
-‏box-shadow:0 5px 20px rgba(0,0,0,.08);
-‏text-align:center;
+.account-card{
+margin:20px;
+background:white;
+padding:25px;
+border-radius:30px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+text-align:center;
 }
 
-‏.account-image{
-‏width:110px;
-‏height:110px;
-‏border-radius:50%;
-‏border:4px solid #ff8800;
-‏margin-bottom:15px;
-‏object-fit:cover;
+.account-image{
+width:110px;
+height:110px;
+border-radius:50%;
+border:4px solid #ff8800;
+margin-bottom:15px;
+object-fit:cover;
 }
 
-‏.account-info{
-‏margin-top:15px;
-‏text-align:right;
+.account-info{
+margin-top:15px;
+text-align:right;
 }
 
-‏.account-info p{
-‏margin-bottom:10px;
+.account-info p{
+margin-bottom:10px;
 }
 
-‏.logout-btn{
-‏width:100%;
-‏padding:16px;
-‏border:none;
-‏border-radius:16px;
-‏background:red;
-‏color:white;
-‏font-size:16px;
-‏font-weight:bold;
-‏margin-top:20px;
-‏cursor:pointer;
+.logout-btn{
+width:100%;
+padding:16px;
+border:none;
+border-radius:16px;
+background:red;
+color:white;
+font-size:16px;
+font-weight:bold;
+margin-top:20px;
+cursor:pointer;
 }
 
-‏.bottom-bar{
-‏position:fixed;
-‏bottom:0;
-‏right:0;
-‏left:0;
-‏height:85px;
-‏background:white;
-‏display:flex;
-‏justify-content:space-around;
-‏align-items:center;
-‏box-shadow:0 -5px 20px rgba(0,0,0,.08);
-‏z-index:999;
+.bottom-bar{
+position:fixed;
+bottom:0;
+right:0;
+left:0;
+height:85px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+box-shadow:0 -5px 20px rgba(0,0,0,.08);
+z-index:999;
 }
 
-‏.nav-item{
-‏display:flex;
-‏flex-direction:column;
-‏align-items:center;
-‏color:#888;
-‏cursor:pointer;
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+color:#888;
+cursor:pointer;
 }
 
-‏.nav-item.active{
-‏color:#ff8800;
+.nav-item.active{
+color:#ff8800;
 }
 
-‏.nav-item i{
-‏font-size:22px;
-‏margin-bottom:5px;
+.nav-item i{
+font-size:22px;
+margin-bottom:5px;
 }
 
-‏.empty{
-‏text-align:center;
-‏padding:40px;
-‏color:#777;
+.empty{
+text-align:center;
+padding:40px;
+color:#777;
 }
 
-‏</style>
+</style>
 
-‏</head>
+</head>
 
-‏<body>
+<body>
 
 <!-- الرئيسية -->
 
-‏<div id="homePage"
-‏class="page active-page">
+<div id="homePage"
+class="page active-page">
 
-‏<div class="header">
+<div class="header">
 
-‏<div class="header-top">
+<div class="header-top">
 
-‏<div>
+<div>
 
-‏<h2 id="welcomeText">
+<h2 id="welcomeText">
 اهلاً بك
-‏</h2>
+</h2>
 
-‏<p>
+<p>
 اطلب كل ما تحتاجه 🚀
-‏</p>
+</p>
 
-‏</div>
+</div>
 
-‏<img
-‏src="user.png"
-‏id="userImage"
-‏class="user-image">
+<img
+src="user.png"
+id="userImage"
+class="user-image">
 
-‏</div>
+</div>
 
-‏<div class="search-box">
+<div class="search-box">
 
-‏<i class="fa-solid fa-magnifying-glass"></i>
+<i class="fa-solid fa-magnifying-glass"></i>
 
-‏<input
-‏type="text"
-‏id="searchInput"
-‏placeholder="ابحث عن متجر">
+<input
+type="text"
+id="searchInput"
+placeholder="ابحث عن متجر">
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
-‏<div class="filters">
+<div class="filters">
 
-‏<button
-‏class="filter-btn active"
-‏data-category="all">
+<button
+class="filter-btn active"
+data-category="all">
 
 الكل
 
-‏</button>
+</button>
 
-‏<button
-‏class="filter-btn"
-‏data-category="مطعم">
+<button
+class="filter-btn"
+data-category="مطعم">
 
 مطاعم
 
-‏</button>
+</button>
 
-‏<button
-‏class="filter-btn"
-‏data-category="ماركت">
+<button
+class="filter-btn"
+data-category="ماركت">
 
 ماركت
 
-‏</button>
+</button>
 
-‏<button
-‏class="filter-btn"
-‏data-category="صيدلية">
+<button
+class="filter-btn"
+data-category="صيدلية">
 
 صيدليات
 
-‏</button>
+</button>
 
-‏<button
-‏class="filter-btn"
-‏data-category="الكترونيات">
+<button
+class="filter-btn"
+data-category="الكترونيات">
 
 الكترونيات
 
-‏</button>
+</button>
 
-‏</div>
+</div>
 
-‏<div
-‏id="storesContainer"
-‏class="stores-container">
+<div
+id="storesContainer"
+class="stores-container">
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
 <!-- صفحة المتجر -->
 
-‏<div
-‏id="singleStorePage"
-‏class="single-store-page">
+<div
+id="singleStorePage"
+class="single-store-page">
 
-‏<div class="store-top-bar">
+<div class="store-top-bar">
 
-‏<button
-‏class="back-btn"
-‏onclick="backHome()">
+<button
+class="back-btn"
+onclick="backHome()">
 
-‏<i class="fa-solid fa-arrow-right"></i>
+<i class="fa-solid fa-arrow-right"></i>
 
-‏</button>
+</button>
 
-‏<div class="single-store-info">
+<div class="single-store-info">
 
-‏<img
-‏id="singleStoreImage"
-‏src="store.png"
-‏class="single-store-image">
+<img
+id="singleStoreImage"
+src="store.png"
+class="single-store-image">
 
-‏<div>
+<div>
 
-‏<h2 id="singleStoreName">
+<h2 id="singleStoreName">
 اسم المتجر
-‏</h2>
+</h2>
 
-‏<p id="singleStoreCategory">
+<p id="singleStoreCategory">
 القسم
-‏</p>
+</p>
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
-‏<div
-‏id="singleProductsContainer"
-‏class="products-container">
+<div
+id="singleProductsContainer"
+class="products-container">
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
 <!-- السلة -->
 
-‏<div id="cartPage"
-‏class="page">
+<div id="cartPage"
+class="page">
 
-‏<div
-‏id="cartContainer"
-‏class="cart-container">
+<div
+id="cartContainer"
+class="cart-container">
 
-‏</div>
+</div>
 
-‏<div class="summary-box">
+<div class="summary-box">
 
-‏<p>
+<p>
 المجموع :
-‏<span id="itemsTotal">
+<span id="itemsTotal">
 0
-‏</span>
+</span>
 د.ع
-‏</p>
+</p>
 
-‏<p>
+<p>
 اجرة التوصيل :
 3000 د.ع
-‏</p>
+</p>
 
-‏<input
-‏type="number"
-‏id="tipInput"
-‏class="tip-input"
-‏placeholder="اكرامية للسائق">
+<input
+type="number"
+id="tipInput"
+class="tip-input"
+placeholder="اكرامية للسائق">
 
-‏<p class="total">
+<p class="total">
 
 المبلغ الكلي :
-‏<span id="finalTotal">
+<span id="finalTotal">
 0
-‏</span>
+</span>
 د.ع
 
-‏</p>
+</p>
 
-‏<button
-‏class="send-order"
-‏onclick="sendOrder()">
+<button
+class="send-order"
+onclick="sendOrder()">
 
 طلب توصيل 🚀
 
-‏</button>
+</button>
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
 <!-- الحساب -->
 
-‏<div id="accountPage"
-‏class="page">
+<div id="accountPage"
+class="page">
 
-‏<div class="account-card">
+<div class="account-card">
 
-‏<img
-‏src="user.png"
-‏id="accountImage"
-‏class="account-image">
+<img
+src="user.png"
+id="accountImage"
+class="account-image">
 
-‏<h2 id="accountName">
+<h2 id="accountName">
 اسم المستخدم
-‏</h2>
+</h2>
 
-‏<div class="account-info">
+<div class="account-info">
 
-‏<p id="accountPhone"></p>
+<p id="accountPhone"></p>
 
-‏<p id="accountAddress"></p>
+<p id="accountAddress"></p>
 
-‏<p id="accountType"></p>
+<p id="accountType"></p>
 
-‏</div>
+</div>
 
-‏<button
-‏class="logout-btn"
-‏onclick="logout()">
+<button
+class="logout-btn"
+onclick="logout()">
 
 تسجيل الخروج
 
-‏</button>
+</button>
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
 <!-- البار السفلي -->
 
-‏<div class="bottom-bar">
+<div class="bottom-bar">
 
-‏<div
-‏class="nav-item active"
-‏onclick="showPage('homePage',this)">
+<div
+class="nav-item active"
+onclick="showPage('homePage',this)">
 
-‏<i class="fa-solid fa-house"></i>
+<i class="fa-solid fa-house"></i>
 
-‏<span>
+<span>
 الرئيسية
-‏</span>
+</span>
 
-‏</div>
+</div>
 
-‏<div
-‏class="nav-item"
-‏onclick="showPage('cartPage',this)">
+<div
+class="nav-item"
+onclick="showPage('cartPage',this)">
 
-‏<i class="fa-solid fa-cart-shopping"></i>
+<i class="fa-solid fa-cart-shopping"></i>
 
-‏<span>
+<span>
 السلة
-‏</span>
+</span>
 
-‏</div>
+</div>
 
-‏<div
-‏class="nav-item"
-‏onclick="showPage('accountPage',this)">
+<div
+class="nav-item"
+onclick="showPage('accountPage',this)">
 
-‏<i class="fa-solid fa-user"></i>
+<i class="fa-solid fa-user"></i>
 
-‏<span>
+<span>
 الحساب
-‏</span>
+</span>
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
-‏<script type="module">
+<script type="module">
 
-‏import { initializeApp }
-‏from
-‏"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { initializeApp }
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-‏import {
-‏getDatabase,
-‏ref,
-‏get,
-‏child,
-‏set
+import {
+getDatabase,
+ref,
+get,
+child,
+set
 }
-‏from
-‏"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-‏const firebaseConfig = {
+const firebaseConfig = {
 
-‏apiKey:
-‏"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+apiKey:
+"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
-‏authDomain:
-‏"fast-937c9.firebaseapp.com",
+authDomain:
+"fast-937c9.firebaseapp.com",
 
-‏projectId:
-‏"fast-937c9",
+projectId:
+"fast-937c9",
 
-‏storageBucket:
-‏"fast-937c9.firebasestorage.app",
+storageBucket:
+"fast-937c9.firebasestorage.app",
 
-‏messagingSenderId:
+messagingSenderId:
 "221388561840",
 
-‏appId:
-‏"1:221388561840:web:ec9d75183ddd7d44be0a75",
+appId:
+"1:221388561840:web:ec9d75183ddd7d44be0a75",
 
-‏databaseURL:
-‏"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
-‏const app =
-‏initializeApp(firebaseConfig);
+const app =
+initializeApp(firebaseConfig);
 
-‏const database =
-‏getDatabase(app);
+const database =
+getDatabase(app);
 
-‏const currentUser =
-‏JSON.parse(localStorage.getItem("user"));
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
 
-‏if(!currentUser){
+if(!currentUser){
 
-‏window.location.href =
-‏"index.html";
+window.location.href =
+"index.html";
 
 }
 
-‏document.getElementById("welcomeText")
-‏.innerHTML =
+document.getElementById("welcomeText")
+.innerHTML =
 `اهلاً ${currentUser.name}`;
 
-‏document.getElementById("accountName")
-‏.innerHTML =
-‏currentUser.name;
+document.getElementById("accountName")
+.innerHTML =
+currentUser.name;
 
-‏document.getElementById("accountPhone")
-‏.innerHTML =
-‏`📞 ${currentUser.phone}`;
+document.getElementById("accountPhone")
+.innerHTML =
+`📞 ${currentUser.phone}`;
 
-‏document.getElementById("accountAddress")
-‏.innerHTML =
-‏`📍 ${currentUser.address || ""}`;
+document.getElementById("accountAddress")
+.innerHTML =
+`📍 ${currentUser.address || ""}`;
 
-‏document.getElementById("accountType")
-‏.innerHTML =
-‏`👤 ${currentUser.type}`;
+document.getElementById("accountType")
+.innerHTML =
+`👤 ${currentUser.type}`;
 
-‏let allStores = [];
+let allStores = [];
 
-‏const storesContainer =
-‏document.getElementById("storesContainer");
+const storesContainer =
+document.getElementById("storesContainer");
 
-‏async function loadStores(){
+async function loadStores(){
 
-‏const snapshot =
-‏await get(
-‏child(ref(database),"stores")
+const snapshot =
+await get(
+child(ref(database),"stores")
 );
 
-‏allStores = [];
+allStores = [];
 
-‏if(snapshot.exists()){
+if(snapshot.exists()){
 
-‏const stores =
-‏snapshot.val();
+const stores =
+snapshot.val();
 
-‏for(let key in stores){
+for(let key in stores){
 
-‏let store = stores[key];
+let store = stores[key];
 
-‏if(store.status === "active"){
+if(store.status === "active"){
 
-‏allStores.push(store);
-
-}
+allStores.push(store);
 
 }
 
-‏allStores.sort((a,b)=>
-‏(b.vip === true) - (a.vip === true)
+}
+
+allStores.sort((a,b)=>
+(b.vip === true) - (a.vip === true)
 );
 
-‏renderStores(allStores);
+renderStores(allStores);
 
 }
 
 }
 
-‏loadStores();
+loadStores();
 
-‏function renderStores(stores){
+function renderStores(stores){
 
-‏storesContainer.innerHTML = "";
+storesContainer.innerHTML = "";
 
-‏if(stores.length === 0){
+if(stores.length === 0){
 
-‏storesContainer.innerHTML =
-‏`<div class="empty">
+storesContainer.innerHTML =
+`<div class="empty">
 لا توجد متاجر
-‏</div>`;
+</div>`;
 
-‏return;
+return;
 
 }
 
-‏stores.forEach(store=>{
+stores.forEach(store=>{
 
-‏storesContainer.innerHTML += `
+storesContainer.innerHTML += `
 
-‏<div class="store-card ${store.vip ? "vip-store" : ""}">
+<div class="store-card ${store.vip ? "vip-store" : ""}">
 
-‏${store.vip ? `
-‏<div class="vip-badge">
-‏VIP
-‏</div>
+${store.vip ? `
+<div class="vip-badge">
+VIP
+</div>
 ` : ""}
 
-‏<div
-‏class="store-header"
-‏onclick='openStore(${JSON.stringify(store)})'>
+<div
+class="store-header"
+onclick='openStore(${JSON.stringify(store)})'>
 
-‏<img
-‏src="${store.image || "store.png"}"
-‏class="store-image">
+<img
+src="${store.image || "store.png"}"
+class="store-image">
 
-‏<div class="store-info">
+<div class="store-info">
 
-‏<div class="store-name">
+<div class="store-name">
 
-‏<h3>
-‏${store.store_name}
-‏</h3>
+<h3>
+${store.store_name}
+</h3>
 
-‏<img
-‏src="ok.png"
-‏class="ok-icon">
+<img
+src="ok.png"
+class="ok-icon">
 
-‏</div>
+</div>
 
-‏<p>
-‏🏪 ${store.category}
-‏</p>
+<p>
+🏪 ${store.category}
+</p>
 
-‏<p>
-‏📞 ${store.phone}
-‏</p>
+<p>
+📞 ${store.phone}
+</p>
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
-‏</div>
+</div>
 
 `;
 
@@ -956,107 +955,107 @@
 
 }
 
-‏window.openStore =
-‏async function(store){
+window.openStore =
+async function(store){
 
-‏document.getElementById("homePage")
-‏.style.display = "none";
+document.getElementById("homePage")
+.style.display = "none";
 
-‏document.getElementById("singleStorePage")
-‏.style.display = "block";
+document.getElementById("singleStorePage")
+.style.display = "block";
 
-‏document.getElementById("singleStoreName")
-‏.innerHTML =
-‏store.store_name;
+document.getElementById("singleStoreName")
+.innerHTML =
+store.store_name;
 
-‏document.getElementById("singleStoreCategory")
-‏.innerHTML =
-‏store.category;
+document.getElementById("singleStoreCategory")
+.innerHTML =
+store.category;
 
-‏document.getElementById("singleStoreImage")
-‏.src =
-‏store.image || "store.png";
+document.getElementById("singleStoreImage")
+.src =
+store.image || "store.png";
 
-‏const container =
-‏document.getElementById("singleProductsContainer");
+const container =
+document.getElementById("singleProductsContainer");
 
-‏container.innerHTML =
-‏`<div class="empty">
+container.innerHTML =
+`<div class="empty">
 جاري تحميل المنتجات...
-‏</div>`;
+</div>`;
 
-‏const snapshot =
-‏await get(
-‏child(
-‏ref(database),
-‏"store_products/"+store.id
+const snapshot =
+await get(
+child(
+ref(database),
+"store_products/"+store.id
 )
 );
 
-‏container.innerHTML = "";
+container.innerHTML = "";
 
-‏if(snapshot.exists()){
+if(snapshot.exists()){
 
-‏const products =
-‏snapshot.val();
+const products =
+snapshot.val();
 
-‏let found = false;
+let found = false;
 
-‏for(let key in products){
+for(let key in products){
 
-‏const product =
-‏products[key];
+const product =
+products[key];
 
-‏if(product.status === "active"){
+if(product.status === "active"){
 
-‏found = true;
+found = true;
 
-‏container.innerHTML += `
+container.innerHTML += `
 
-‏<div class="product-card">
+<div class="product-card">
 
-‏<img
-‏src="${product.image || "product.png"}"
-‏class="product-image">
+<img
+src="${product.image || "product.png"}"
+class="product-image">
 
-‏<div class="product-name">
-‏${product.name}
-‏</div>
+<div class="product-name">
+${product.name}
+</div>
 
-‏<div class="product-desc">
-‏${product.description}
-‏</div>
+<div class="product-desc">
+${product.description}
+</div>
 
-‏<div class="product-price">
-‏${product.price} د.ع
-‏</div>
+<div class="product-price">
+${product.price} د.ع
+</div>
 
-‏<div class="qty-box">
+<div class="qty-box">
 
-‏<span>
+<span>
 الكمية
-‏</span>
+</span>
 
-‏<input
-‏type="number"
-‏value="1"
-‏min="1"
-‏id="qty_${product.id}">
+<input
+type="number"
+value="1"
+min="1"
+id="qty_${product.id}">
 
-‏</div>
+</div>
 
-‏<button
-‏class="add-btn"
-‏onclick='addToCart(
-‏${JSON.stringify(product)},
-‏"${store.store_name}"
+<button
+class="add-btn"
+onclick='addToCart(
+${JSON.stringify(product)},
+"${store.store_name}"
 )'>
 
 اضافة الى السلة
 
-‏</button>
+</button>
 
-‏</div>
+</div>
 
 `;
 
@@ -1064,100 +1063,100 @@
 
 }
 
-‏if(!found){
+if(!found){
 
-‏container.innerHTML =
-‏`<div class="empty">
+container.innerHTML =
+`<div class="empty">
 لا توجد منتجات حالياً
-‏</div>`;
+</div>`;
 
 }
 
-‏}else{
+}else{
 
-‏container.innerHTML =
-‏`<div class="empty">
+container.innerHTML =
+`<div class="empty">
 لا توجد منتجات
-‏</div>`;
+</div>`;
 
 }
 
 };
 
-‏window.backHome =
-‏function(){
+window.backHome =
+function(){
 
-‏document.getElementById("singleStorePage")
-‏.style.display = "none";
+document.getElementById("singleStorePage")
+.style.display = "none";
 
-‏document.getElementById("homePage")
-‏.style.display = "block";
+document.getElementById("homePage")
+.style.display = "block";
 
 };
 
-‏document.getElementById("searchInput")
-‏.addEventListener("input",function(){
+document.getElementById("searchInput")
+.addEventListener("input",function(){
 
-‏let value =
-‏this.value.toLowerCase();
+let value =
+this.value.toLowerCase();
 
-‏let filtered =
-‏allStores.filter(store=>
+let filtered =
+allStores.filter(store=>
 
-‏store.store_name
-‏.toLowerCase()
-‏.includes(value)
+store.store_name
+.toLowerCase()
+.includes(value)
 
 );
 
-‏renderStores(filtered);
+renderStores(filtered);
 
 });
 
-‏document.querySelectorAll(".filter-btn")
-‏.forEach(button=>{
+document.querySelectorAll(".filter-btn")
+.forEach(button=>{
 
-‏button.addEventListener("click",()=>{
+button.addEventListener("click",()=>{
 
-‏document.querySelectorAll(".filter-btn")
-‏.forEach(btn=>{
+document.querySelectorAll(".filter-btn")
+.forEach(btn=>{
 
-‏btn.classList.remove("active");
+btn.classList.remove("active");
 
 });
 
-‏button.classList.add("active");
+button.classList.add("active");
 
-‏let category =
-‏button.dataset.category;
+let category =
+button.dataset.category;
 
-‏if(category === "all"){
+if(category === "all"){
 
-‏renderStores(allStores);
+renderStores(allStores);
 
-‏}else{
+}else{
 
-‏let vipStores =
-‏allStores.filter(store=>store.vip);
+let vipStores =
+allStores.filter(store=>store.vip);
 
-‏let normalStores =
-‏allStores.filter(store=>
-‏store.category === category
+let normalStores =
+allStores.filter(store=>
+store.category === category
 );
 
-‏let merged =
+let merged =
 [
-‏...vipStores,
-‏...normalStores
+...vipStores,
+...normalStores
 ];
 
-‏let unique =
-‏merged.filter(
-‏(v,i,a)=>
-‏a.findIndex(t=>t.id===v.id)===i
+let unique =
+merged.filter(
+(v,i,a)=>
+a.findIndex(t=>t.id===v.id)===i
 );
 
-‏renderStores(unique);
+renderStores(unique);
 
 }
 
@@ -1165,275 +1164,275 @@
 
 });
 
-‏let cart =
-‏JSON.parse(
-‏localStorage.getItem("cart")
+let cart =
+JSON.parse(
+localStorage.getItem("cart")
 ) || [];
 
-‏window.addToCart =
-‏function(product,storeName){
+window.addToCart =
+function(product,storeName){
 
-‏let qty =
-‏Number(
-‏document.getElementById(
-‏`qty_${product.id}`
-‏).value
+let qty =
+Number(
+document.getElementById(
+`qty_${product.id}`
+).value
 );
 
-‏cart.push({
+cart.push({
 
-‏storeName:storeName,
+storeName:storeName,
 
-‏name:product.name,
+name:product.name,
 
-‏price:Number(product.price),
+price:Number(product.price),
 
-‏qty:qty,
+qty:qty,
 
-‏image:
-‏product.image || "product.png"
+image:
+product.image || "product.png"
 
 });
 
-‏localStorage.setItem(
-‏"cart",
-‏JSON.stringify(cart)
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
 );
 
-‏loadCart();
+loadCart();
 
-‏alert("تمت الاضافة للسلة");
+alert("تمت الاضافة للسلة");
 
 };
 
-‏function loadCart(){
+function loadCart(){
 
-‏const cartContainer =
-‏document.getElementById("cartContainer");
+const cartContainer =
+document.getElementById("cartContainer");
 
-‏cartContainer.innerHTML = "";
+cartContainer.innerHTML = "";
 
-‏if(cart.length === 0){
+if(cart.length === 0){
 
-‏cartContainer.innerHTML =
-‏`<div class="empty">
+cartContainer.innerHTML =
+`<div class="empty">
 السلة فارغة
-‏</div>`;
+</div>`;
 
-‏updateTotals();
+updateTotals();
 
-‏return;
+return;
 
 }
 
-‏cart.forEach((item,index)=>{
+cart.forEach((item,index)=>{
 
-‏cartContainer.innerHTML += `
+cartContainer.innerHTML += `
 
-‏<div class="cart-item">
+<div class="cart-item">
 
-‏<img
-‏src="${item.image}"
-‏class="cart-image">
+<img
+src="${item.image}"
+class="cart-image">
 
-‏<div class="cart-info">
+<div class="cart-info">
 
-‏<h3>
-‏${item.name}
-‏</h3>
+<h3>
+${item.name}
+</h3>
 
-‏<p>
-‏🏪 ${item.storeName}
-‏</p>
+<p>
+🏪 ${item.storeName}
+</p>
 
-‏<p>
+<p>
 الكمية :
-‏${item.qty}
-‏</p>
+${item.qty}
+</p>
 
-‏<p>
-‏${item.price * item.qty}
+<p>
+${item.price * item.qty}
 د.ع
-‏</p>
+</p>
 
-‏</div>
+</div>
 
-‏<button
-‏class="delete-btn"
-‏onclick="removeCart(${index})">
+<button
+class="delete-btn"
+onclick="removeCart(${index})">
 
 حذف
 
-‏</button>
+</button>
 
-‏</div>
+</div>
 
 `;
 
 });
 
-‏updateTotals();
+updateTotals();
 
 }
 
-‏loadCart();
+loadCart();
 
-‏window.removeCart =
-‏function(index){
+window.removeCart =
+function(index){
 
-‏cart.splice(index,1);
+cart.splice(index,1);
 
-‏localStorage.setItem(
-‏"cart",
-‏JSON.stringify(cart)
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
 );
 
-‏loadCart();
+loadCart();
 
 };
 
-‏function updateTotals(){
+function updateTotals(){
 
-‏let itemsTotal = 0;
+let itemsTotal = 0;
 
-‏cart.forEach(item=>{
+cart.forEach(item=>{
 
-‏itemsTotal +=
-‏item.price * item.qty;
+itemsTotal +=
+item.price * item.qty;
 
 });
 
-‏let delivery = 3000;
+let delivery = 3000;
 
-‏let tip = Number(
-‏document.getElementById("tipInput")
-‏.value || 0
+let tip = Number(
+document.getElementById("tipInput")
+.value || 0
 );
 
-‏document.getElementById("itemsTotal")
-‏.innerHTML =
-‏itemsTotal;
+document.getElementById("itemsTotal")
+.innerHTML =
+itemsTotal;
 
-‏document.getElementById("finalTotal")
-‏.innerHTML =
-‏itemsTotal + delivery + tip;
+document.getElementById("finalTotal")
+.innerHTML =
+itemsTotal + delivery + tip;
 
 }
 
-‏document.getElementById("tipInput")
-‏.addEventListener(
-‏"input",
-‏updateTotals
+document.getElementById("tipInput")
+.addEventListener(
+"input",
+updateTotals
 );
 
-‏window.sendOrder =
-‏async function(){
+window.sendOrder =
+async function(){
 
-‏if(cart.length === 0){
+if(cart.length === 0){
 
-‏alert("السلة فارغة");
+alert("السلة فارغة");
 
-‏return;
+return;
 
 }
 
-‏let total = 0;
+let total = 0;
 
-‏cart.forEach(item=>{
+cart.forEach(item=>{
 
-‏total +=
-‏item.price * item.qty;
+total +=
+item.price * item.qty;
 
 });
 
-‏let tip =
-‏Number(
-‏document.getElementById("tipInput")
-‏.value || 0
+let tip =
+Number(
+document.getElementById("tipInput")
+.value || 0
 );
 
-‏let orderId =
-‏"ORDER"+Date.now();
+let orderId =
+"ORDER"+Date.now();
 
-‏let orderData = {
+let orderData = {
 
-‏id:orderId,
+id:orderId,
 
-‏customerId:
-‏currentUser.id,
+customerId:
+currentUser.id,
 
-‏customerName:
-‏currentUser.name,
+customerName:
+currentUser.name,
 
-‏customerPhone:
-‏currentUser.phone,
+customerPhone:
+currentUser.phone,
 
-‏items:cart,
+items:cart,
 
-‏deliveryPrice:3000,
+deliveryPrice:3000,
 
-‏tip:tip,
+tip:tip,
 
-‏totalPrice:
-‏total + 3000 + tip,
+totalPrice:
+total + 3000 + tip,
 
-‏status:"waiting_driver",
+status:"waiting_driver",
 
-‏createdAt:Date.now()
+createdAt:Date.now()
 
 };
 
-‏await set(
-‏ref(database,"orders/"+orderId),
-‏orderData
+await set(
+ref(database,"orders/"+orderId),
+orderData
 );
 
-‏cart = [];
+cart = [];
 
-‏localStorage.removeItem("cart");
+localStorage.removeItem("cart");
 
-‏loadCart();
+loadCart();
 
-‏alert("تم ارسال الطلب 🚀");
+alert("تم ارسال الطلب 🚀");
 
 };
 
-‏window.showPage =
-‏function(pageId,element){
+window.showPage =
+function(pageId,element){
 
-‏document.querySelectorAll(".page")
-‏.forEach(page=>{
+document.querySelectorAll(".page")
+.forEach(page=>{
 
-‏page.classList.remove("active-page");
+page.classList.remove("active-page");
 
 });
 
-‏document.getElementById(pageId)
-‏.classList.add("active-page");
+document.getElementById(pageId)
+.classList.add("active-page");
 
-‏document.querySelectorAll(".nav-item")
-‏.forEach(item=>{
+document.querySelectorAll(".nav-item")
+.forEach(item=>{
 
-‏item.classList.remove("active");
+item.classList.remove("active");
 
 });
 
-‏element.classList.add("active");
+element.classList.add("active");
 
 };
 
-‏window.logout =
-‏function(){
+window.logout =
+function(){
 
-‏localStorage.removeItem("user");
+localStorage.removeItem("user");
 
-‏window.location.href =
-‏"index.html";
+window.location.href =
+"index.html";
 
 };
 
-‏</script>
+</script>
 
-‏</body>
+</body>
 
 </html>
