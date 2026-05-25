@@ -49,6 +49,7 @@ padding:20px;
 border-bottom-left-radius:35px;
 border-bottom-right-radius:35px;
 color:white;
+box-shadow:0 8px 30px rgba(0,0,0,.15);
 }
 
 .header-top{
@@ -74,12 +75,17 @@ display:flex;
 align-items:center;
 }
 
+.search-box i{
+color:#ff8800;
+font-size:18px;
+}
+
 .search-box input{
 border:none;
 outline:none;
 width:100%;
-font-size:15px;
 margin-right:10px;
+font-size:15px;
 }
 
 .filters{
@@ -127,7 +133,6 @@ border:3px solid transparent;
 }
 
 .vip-store{
-
 background:
 linear-gradient(white,white) padding-box,
 linear-gradient(
@@ -140,9 +145,7 @@ linear-gradient(
 ) border-box;
 
 background-size:100% 100%,300% 300%;
-
-animation:vipMove 3s linear infinite;
-
+animation:vipMove 4s linear infinite;
 }
 
 @keyframes vipMove{
@@ -171,7 +174,6 @@ padding:7px 14px;
 border-radius:14px;
 font-size:12px;
 font-weight:bold;
-box-shadow:0 0 15px rgba(255,0,0,.4);
 }
 
 .store-header{
@@ -205,6 +207,7 @@ font-size:20px;
 .ok-icon{
 width:18px;
 height:18px;
+object-fit:contain;
 }
 
 .store-info p{
@@ -281,6 +284,8 @@ border-radius:18px;
 object-fit:cover;
 border:3px solid white;
 }
+
+/* المنتجات */
 
 .products-container{
 padding:15px;
@@ -494,8 +499,6 @@ color:#777;
 
 <body>
 
-<!-- الرئيسية -->
-
 <div id="homePage"
 class="page active-page">
 
@@ -538,30 +541,22 @@ placeholder="ابحث عن متجر">
 
 <button class="filter-btn active"
 data-category="all">
-
 الكل
-
 </button>
 
 <button class="filter-btn"
 data-category="مطعم">
-
 مطاعم
-
 </button>
 
 <button class="filter-btn"
 data-category="ماركت">
-
 ماركت
-
 </button>
 
 <button class="filter-btn"
 data-category="صيدلية">
-
 صيدليات
-
 </button>
 
 </div>
@@ -638,8 +633,7 @@ class="cart-container">
 </p>
 
 <p>
-اجرة التوصيل :
-3000 د.ع
+اجرة التوصيل : 3000 د.ع
 </p>
 
 <input
@@ -750,8 +744,7 @@ onclick="showPage('accountPage',this)">
 <script type="module">
 
 import { initializeApp }
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 getDatabase,
@@ -760,31 +753,30 @@ get,
 child,
 set
 }
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
 
 apiKey:
-"YOUR_API_KEY",
+"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
 authDomain:
-"YOUR_AUTH_DOMAIN",
+"fast-937c9.firebaseapp.com",
 
 projectId:
-"YOUR_PROJECT_ID",
+"fast-937c9",
 
 storageBucket:
-"YOUR_BUCKET",
+"fast-937c9.firebasestorage.app",
 
 messagingSenderId:
-"YOUR_SENDER_ID",
+"221388561840",
 
 appId:
-"YOUR_APP_ID",
+"1:221388561840:web:ec9d75183ddd7d44be0a75",
 
 databaseURL:
-"YOUR_DATABASE_URL"
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
@@ -795,9 +787,7 @@ const database =
 getDatabase(app);
 
 const currentUser =
-JSON.parse(
-localStorage.getItem("user")
-);
+JSON.parse(localStorage.getItem("user"));
 
 if(!currentUser){
 
@@ -849,13 +839,13 @@ for(let key in stores){
 
 let store = stores[key];
 
+store.id = key;
+
 if(store.status === "active"){
 
 let vipActive = false;
 
-if(
-store.accountType === "vip"
-){
+if(store.accountType === "vip"){
 
 if(store.vipExpireDate){
 
@@ -905,7 +895,6 @@ storesContainer.innerHTML = "";
 if(stores.length === 0){
 
 storesContainer.innerHTML =
-
 `
 <div class="empty">
 لا توجد متاجر
@@ -916,13 +905,13 @@ return;
 
 }
 
-stores.forEach(store=>{
+stores.forEach((store,index)=>{
 
 storesContainer.innerHTML += `
 
 <div
 class="store-card ${store.vip ? "vip-store" : ""}"
-onclick='openStore(${JSON.stringify(store)})'>
+onclick="openStore(${index})">
 
 ${store.vip ? `
 <div class="vip-badge">
@@ -971,7 +960,10 @@ class="ok-icon">
 }
 
 window.openStore =
-async function(store){
+async function(index){
+
+const store =
+allStores[index];
 
 document.getElementById("singleStorePage")
 .style.display = "block";
@@ -1037,7 +1029,7 @@ ${product.name}
 </div>
 
 <div class="product-desc">
-${product.description}
+${product.description || ""}
 </div>
 
 <div class="product-price">
@@ -1127,15 +1119,10 @@ document.getElementById(
 cart.push({
 
 storeName:storeName,
-
 name:product.name,
-
 price:Number(product.price),
-
 qty:qty,
-
-image:
-product.image || "product.png"
+image:product.image || "product.png"
 
 });
 
@@ -1193,13 +1180,11 @@ ${item.name}
 </p>
 
 <p>
-الكمية :
-${item.qty}
+الكمية : ${item.qty}
 </p>
 
 <p>
-${item.price * item.qty}
-د.ع
+${item.price * item.qty} د.ع
 </p>
 
 </div>
