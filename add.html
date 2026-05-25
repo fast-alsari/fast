@@ -452,28 +452,19 @@ customersContainer.innerHTML += `
 
 <div class="actions">
 
-<button
-class="ban"
+<button class="ban"
 onclick="banCustomer('${id}')">
-
 حظر
-
 </button>
 
-<button
-class="accept"
+<button class="accept"
 onclick="unbanCustomer('${id}')">
-
 فك الحظر
-
 </button>
 
-<button
-class="reject"
+<button class="reject"
 onclick="deleteCustomer('${id}')">
-
 حذف
-
 </button>
 
 </div>
@@ -514,7 +505,7 @@ for(let id in stores){
 
 let store = stores[id];
 
-// اصلاح انتهاء VIP
+// انتهاء VIP
 
 if(
 store.accountType === "vip" &&
@@ -538,6 +529,7 @@ vipActive:false
 );
 
 store.accountType = "normal";
+
 store.vipExpireDate = "";
 
 }
@@ -560,12 +552,11 @@ storesContainer.innerHTML += `
 
 <p><strong>عدد الطلبات:</strong> ${store.orders || 0}</p>
 
-<p><strong>مبلغ البيع:</strong> ${store.sales || 0} د.ع</p>
+<p><strong>المبيعات:</strong> ${store.sales || 0} د.ع</p>
 
 <p><strong>انتهاء الحساب:</strong> ${store.expireDate || "غير محدد"}</p>
 
 <p>
-
 <strong>
 حالة VIP:
 </strong>
@@ -581,7 +572,6 @@ store.accountType === "vip"
 </p>
 
 <p>
-
 <strong>
 تاريخ انتهاء VIP:
 </strong>
@@ -598,52 +588,34 @@ store.vipExpireDate
 
 <div class="actions">
 
-<button
-class="accept"
+<button class="accept"
 onclick="activateStore('${id}')">
-
 تفعيل
-
 </button>
 
-<button
-class="ban"
+<button class="ban"
 onclick="disableStore('${id}')">
-
 إيقاف
-
 </button>
 
-<button
-class="reject"
+<button class="reject"
 onclick="deleteStore('${id}')">
-
 حذف
-
 </button>
 
-<button
-class="expire"
+<button class="expire"
 onclick="setExpireDate('stores','${id}')">
-
 تحديد انتهاء
-
 </button>
 
-<button
-class="vip"
+<button class="vip"
 onclick="makeVip('${id}')">
-
 VIP
-
 </button>
 
-<button
-class="reject"
+<button class="reject"
 onclick="removeVip('${id}')">
-
 إزالة VIP
-
 </button>
 
 </div>
@@ -744,20 +716,14 @@ productsContainer.innerHTML += `
 
 <div class="actions">
 
-<button
-class="accept"
+<button class="accept"
 onclick="approveProduct('${storeId}','${productId}')">
-
 قبول
-
 </button>
 
-<button
-class="reject"
+<button class="reject"
 onclick="rejectProduct('${storeId}','${productId}')">
-
 رفض
-
 </button>
 
 </div>
@@ -773,7 +739,8 @@ onclick="rejectProduct('${storeId}','${productId}')">
 }
 
 document.getElementById("productsCount")
-.innerText = totalProducts;
+.innerText =
+totalProducts;
 
 }
 
@@ -781,16 +748,14 @@ document.getElementById("productsCount")
 
 loadDashboard();
 
-// المنتجات
+// منتجات
 
 window.approveProduct =
 async function(storeId,productId){
 
 await update(
-ref(
-database,
-`store_products/${storeId}/${productId}`
-),
+ref(database,
+`store_products/${storeId}/${productId}`),
 {
 status:"active"
 }
@@ -804,10 +769,8 @@ window.rejectProduct =
 async function(storeId,productId){
 
 await update(
-ref(
-database,
-`store_products/${storeId}/${productId}`
-),
+ref(database,
+`store_products/${storeId}/${productId}`),
 {
 status:"rejected"
 }
@@ -922,7 +885,7 @@ loadDashboard();
 
 };
 
-// السواق
+// الزبائن
 
 window.banCustomer =
 async function(id){
