@@ -132,99 +132,6 @@ cursor:pointer;
 border:3px solid transparent;
 }
 
-.vip-store{
-background:
-linear-gradient(#fff,#fff) padding-box,
-linear-gradient(
-135deg,
-#ff0000,
-#000000,
-#ff8800,
-#000000,
-#ff2200
-) border-box;
-
-background-size:300% 300%;
-animation:vipMove 5s ease infinite;
-
-box-shadow:
-0 0 15px rgba(255,80,0,.25),
-0 0 30px rgba(0,0,0,.12);
-}
-
-@keyframes vipMove{
-
-0%{
-background-position:0% 50%;
-}
-
-50%{
-background-position:100% 50%;
-}
-
-100%{
-background-position:0% 50%;
-}
-
-}
-
-.vip-badge{
-position:absolute;
-bottom:12px;
-left:12px;
-
-background:
-linear-gradient(
-135deg,
-#ff0000,
-#000,
-#ff8800
-);
-
-padding:8px 16px;
-
-border-radius:16px;
-
-display:flex;
-align-items:center;
-gap:8px;
-
-color:white;
-font-weight:bold;
-
-box-shadow:0 5px 20px rgba(0,0,0,.25);
-
-animation:vipPulse 2s infinite;
-
-z-index:10;
-}
-
-.vip-fire{
-font-size:18px;
-line-height:18px;
-}
-
-.vip-text{
-font-size:13px;
-letter-spacing:1px;
-}
-
-@keyframes vipPulse{
-
-0%{
-transform:scale(1);
-}
-
-50%{
-transform:scale(1.07);
-}
-
-100%{
-transform:scale(1);
-}
-
-}
-
 .store-header{
 display:flex;
 gap:15px;
@@ -459,6 +366,15 @@ object-fit:cover;
 flex:1;
 }
 
+.cart-info h3{
+margin-bottom:6px;
+}
+
+.cart-info p{
+margin-bottom:4px;
+color:#555;
+}
+
 .delete-btn{
 background:red;
 border:none;
@@ -466,6 +382,7 @@ padding:10px 14px;
 border-radius:12px;
 color:white;
 cursor:pointer;
+font-weight:bold;
 }
 
 .summary-box{
@@ -473,6 +390,28 @@ background:white;
 margin:15px;
 padding:20px;
 border-radius:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.bill-line{
+display:flex;
+justify-content:space-between;
+margin-bottom:14px;
+font-size:16px;
+}
+
+.final-price{
+font-size:24px;
+font-weight:bold;
+color:#ff8800;
+margin-top:10px;
+}
+
+.tip-title{
+margin-top:15px;
+margin-bottom:8px;
+font-size:14px;
+color:#666;
 }
 
 .tip-input{
@@ -480,7 +419,9 @@ width:100%;
 padding:14px;
 border-radius:14px;
 border:1px solid #ddd;
-margin:15px 0;
+margin-bottom:15px;
+font-size:15px;
+outline:none;
 }
 
 .send-order{
@@ -502,7 +443,21 @@ margin:20px;
 background:white;
 padding:25px;
 border-radius:30px;
-text-align:center;
+position:relative;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+}
+
+.top-logout{
+position:absolute;
+top:20px;
+left:20px;
+width:auto;
+padding:12px 18px;
+margin:0;
+display:flex;
+align-items:center;
+gap:8px;
+font-size:14px;
 }
 
 .account-image{
@@ -510,12 +465,59 @@ width:110px;
 height:110px;
 border-radius:50%;
 border:4px solid #ff8800;
-margin-bottom:15px;
+margin:40px auto 15px;
+display:block;
 object-fit:cover;
 }
 
+#accountName{
+text-align:center;
+margin-bottom:25px;
+font-size:24px;
+}
+
+.account-info-box{
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.account-info-item{
+display:flex;
+align-items:flex-start;
+gap:15px;
+background:#f8f8f8;
+padding:16px;
+border-radius:18px;
+}
+
+.info-icon{
+width:50px;
+height:50px;
+border-radius:15px;
+background:linear-gradient(135deg,#ff8800,#ff5500);
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
+font-size:20px;
+flex-shrink:0;
+}
+
+.account-info-item h4{
+font-size:15px;
+margin-bottom:5px;
+color:#444;
+}
+
+.account-info-item p{
+font-size:15px;
+color:#777;
+line-height:1.7;
+word-break:break-word;
+}
+
 .logout-btn{
-width:100%;
 padding:16px;
 border:none;
 border-radius:16px;
@@ -523,7 +525,6 @@ background:red;
 color:white;
 font-size:16px;
 font-weight:bold;
-margin-top:20px;
 cursor:pointer;
 }
 
@@ -661,6 +662,235 @@ class="products-container"></div>
 
 </div>
 
+<!-- السلة -->
+
+<div id="cartPage"
+class="page">
+
+<div id="cartContainer"
+class="cart-container">
+
+<div class="empty">
+السلة فارغة
+</div>
+
+</div>
+
+<div class="summary-box">
+
+<div class="bill-line">
+<span>مجموع المنتجات</span>
+<span id="itemsTotal">0</span>
+</div>
+
+<div class="bill-line">
+<span>سعر التوصيل</span>
+<span>2000 د.ع</span>
+</div>
+
+<div class="tip-title">
+اكرامية للسائق لكي يصل الطلب بأسرع وقت
+</div>
+
+<input
+type="number"
+id="tipInput"
+class="tip-input"
+placeholder="اكتب مبلغ الاكرامية">
+
+<div class="bill-line final-price">
+<span>المبلغ الكلي</span>
+<span id="finalTotal">0</span>
+</div>
+
+<br>
+
+<button
+class="send-order"
+onclick="sendOrder()">
+
+طلب توصيل 🚀
+
+</button>
+
+</div>
+
+</div>
+
+<!-- الحساب -->
+
+<div id="accountPage"
+class="page">
+
+<div class="account-card">
+
+<button
+class="logout-btn top-logout"
+onclick="logout()">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+تسجيل الخروج
+
+</button>
+
+<img
+src="user.png"
+class="account-image">
+
+<h2 id="accountName">
+اسم المستخدم
+</h2>
+
+<div class="account-info-box">
+
+<div class="account-info-item">
+
+<div class="info-icon">
+<i class="fa-solid fa-user"></i>
+</div>
+
+<div>
+
+<h4>
+الاسم الكامل
+</h4>
+
+<p id="accountFullName">
+---
+</p>
+
+</div>
+
+</div>
+
+<div class="account-info-item">
+
+<div class="info-icon">
+<i class="fa-solid fa-phone"></i>
+</div>
+
+<div>
+
+<h4>
+رقم الهاتف
+</h4>
+
+<p id="accountPhone">
+---
+</p>
+
+</div>
+
+</div>
+
+<div class="account-info-item">
+
+<div class="info-icon">
+<i class="fa-solid fa-location-dot"></i>
+</div>
+
+<div>
+
+<h4>
+العنوان
+</h4>
+
+<p id="accountAddress">
+---
+</p>
+
+</div>
+
+</div>
+
+<div class="account-info-item">
+
+<div class="info-icon">
+<i class="fa-solid fa-map-location-dot"></i>
+</div>
+
+<div>
+
+<h4>
+أقرب نقطة دالة
+</h4>
+
+<p id="accountNearestPoint">
+---
+</p>
+
+</div>
+
+</div>
+
+<div class="account-info-item">
+
+<div class="info-icon">
+<i class="fa-solid fa-crown"></i>
+</div>
+
+<div>
+
+<h4>
+نوع الحساب
+</h4>
+
+<p id="accountType">
+مستخدم
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- البار السفلي -->
+
+<div class="bottom-bar">
+
+<div
+class="nav-item active"
+onclick="showPage('homePage',this)">
+
+<i class="fa-solid fa-house"></i>
+
+<span>
+الرئيسية
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="showPage('cartPage',this)">
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+<span>
+السلة
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="showPage('accountPage',this)">
+
+<i class="fa-solid fa-user"></i>
+
+<span>
+الحساب
+</span>
+
+</div>
+
+</div>
+
 <script type="module">
 
 import { initializeApp }
@@ -713,7 +943,34 @@ document.getElementById("welcomeText")
 .innerHTML =
 `اهلاً ${currentUser.name}`;
 
+/* بيانات الحساب */
+
+document.getElementById("accountName")
+.innerHTML =
+currentUser.name || "مستخدم";
+
+document.getElementById("accountFullName")
+.innerHTML =
+currentUser.name || "---";
+
+document.getElementById("accountPhone")
+.innerHTML =
+currentUser.phone || "---";
+
+document.getElementById("accountAddress")
+.innerHTML =
+currentUser.address || "---";
+
+document.getElementById("accountNearestPoint")
+.innerHTML =
+currentUser.nearestPoint || "---";
+
+document.getElementById("accountType")
+.innerHTML =
+currentUser.accountType || "مستخدم";
+
 let allStores = [];
+let cart = [];
 
 const storesContainer =
 document.getElementById("storesContainer");
@@ -742,44 +999,11 @@ store.id = key;
 
 if(store.status === "active"){
 
-let vipActive = false;
-
-if(store.accountType === "vip"){
-
-if(store.vipExpireDate){
-
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
-
-if(today <= store.vipExpireDate){
-
-vipActive = true;
-
-}
-
-}else{
-
-vipActive = true;
-
-}
-
-}
-
-store.vip = vipActive;
-
 allStores.push(store);
 
 }
 
 }
-
-allStores.sort((a,b)=>
-(b.vip === true) - (a.vip === true)
-);
-
-generateFilters(allStores);
 
 renderStores(allStores);
 
@@ -789,149 +1013,19 @@ renderStores(allStores);
 
 loadStores();
 
-/* الفلاتر */
-
-function generateFilters(stores){
-
-const filtersContainer =
-document.querySelector(".filters");
-
-filtersContainer.innerHTML = "";
-
-filtersContainer.innerHTML += `
-<button
-class="filter-btn active"
-data-category="all">
-الكل
-</button>
-`;
-
-let categories = [];
-
-stores.forEach(store=>{
-
-if(
-store.category &&
-!categories.includes(store.category)
-){
-
-categories.push(store.category);
-
-}
-
-});
-
-categories.forEach(category=>{
-
-filtersContainer.innerHTML += `
-<button
-class="filter-btn"
-data-category="${category}">
-${category}
-</button>
-`;
-
-});
-
-attachFilterEvents();
-
-}
-
-function attachFilterEvents(){
-
-document.querySelectorAll(".filter-btn")
-.forEach(button=>{
-
-button.addEventListener("click",()=>{
-
-document.querySelectorAll(".filter-btn")
-.forEach(btn=>{
-
-btn.classList.remove("active");
-
-});
-
-button.classList.add("active");
-
-let category =
-button.dataset.category;
-
-if(category === "all"){
-
-renderStores(allStores);
-
-}else{
-
-let vipStores =
-allStores.filter(store=>store.vip);
-
-let normalStores =
-allStores.filter(store=>
-store.category === category
-);
-
-let merged = [
-...vipStores,
-...normalStores
-];
-
-let unique =
-merged.filter(
-(v,i,a)=>
-a.findIndex(t=>t.id===v.id)===i
-);
-
-renderStores(unique);
-
-}
-
-});
-
-});
-
-}
-
 /* عرض المتاجر */
 
 function renderStores(stores){
 
 storesContainer.innerHTML = "";
 
-if(stores.length === 0){
-
-storesContainer.innerHTML = `
-<div class="empty">
-لا توجد متاجر
-</div>
-`;
-
-return;
-
-}
-
 stores.forEach((store,index)=>{
 
 storesContainer.innerHTML += `
 
 <div
-class="store-card ${store.vip ? "vip-store" : ""}"
+class="store-card"
 onclick="openStore(${index})">
-
-${store.vip ? `
-
-<div class="vip-badge">
-
-<div class="vip-fire">
-🔥
-</div>
-
-<div class="vip-text">
-VIP
-</div>
-
-</div>
-
-` : ""}
 
 <div class="store-header">
 
@@ -1025,6 +1119,8 @@ for(let key in products){
 const product =
 products[key];
 
+product.id = key;
+
 if(product.status === "active"){
 
 container.innerHTML += `
@@ -1079,8 +1175,11 @@ onclick="increaseQty('${product.id}')">
 </div>
 
 <button
-class="add-btn">
+class="add-btn"
+onclick='addToCart(${JSON.stringify(product)})'>
+
 اضافة الى السلة
+
 </button>
 
 </div>
@@ -1129,139 +1228,192 @@ Number(input.value) - 1;
 
 };
 
-</script>
-<!-- السلة -->
+/* اضافة للسلة */
 
-<div id="cartPage"
-class="page">
+window.addToCart =
+function(product){
 
-<div id="cartContainer"
-class="cart-container">
+const qty =
+Number(
+document.getElementById(`qty_${product.id}`).value
+);
 
+cart.push({
+...product,
+qty:qty
+});
+
+updateCart();
+
+alert("تمت الاضافة الى السلة");
+
+};
+
+/* تحديث السلة */
+
+function updateCart(){
+
+const cartContainer =
+document.getElementById("cartContainer");
+
+const itemsTotal =
+document.getElementById("itemsTotal");
+
+const finalTotal =
+document.getElementById("finalTotal");
+
+const tip =
+Number(
+document.getElementById("tipInput").value || 0
+);
+
+cartContainer.innerHTML = "";
+
+if(cart.length === 0){
+
+cartContainer.innerHTML = `
 <div class="empty">
 السلة فارغة
 </div>
+`;
 
-</div>
+itemsTotal.innerHTML = "0 د.ع";
+finalTotal.innerHTML = "0 د.ع";
 
-<div class="summary-box">
+return;
 
-<p>
-المجموع :
-<span id="itemsTotal">
-0
-</span>
-د.ع
-</p>
+}
 
-<p>
-اجرة التوصيل : 3000 د.ع
-</p>
+let total = 0;
 
-<input
-type="number"
-id="tipInput"
-class="tip-input"
-placeholder="اكرامية للسائق">
+cart.forEach((item,index)=>{
 
-<h2>
-المبلغ الكلي :
-<span id="finalTotal">
-0
-</span>
-د.ع
-</h2>
+let itemTotal =
+Number(item.price) * Number(item.qty);
 
-<br>
+total += itemTotal;
 
-<button
-class="send-order"
-onclick="sendOrder()">
+cartContainer.innerHTML += `
 
-طلب توصيل 🚀
-
-</button>
-
-</div>
-
-</div>
-
-<!-- الحساب -->
-
-<div id="accountPage"
-class="page">
-
-<div class="account-card">
+<div class="cart-item">
 
 <img
-src="user.png"
-class="account-image">
+src="${item.image || "product.png"}"
+class="cart-image">
 
-<h2 id="accountName">
-اسم المستخدم
-</h2>
+<div class="cart-info">
 
-<br>
+<h3>
+${item.name}
+</h3>
 
-<p id="accountPhone"></p>
+<p>
+السعر: ${item.price} د.ع
+</p>
 
-<p id="accountAddress"></p>
+<p>
+الكمية: ${item.qty}
+</p>
 
-<p id="accountType"></p>
+<p>
+المجموع: ${itemTotal} د.ع
+</p>
+
+</div>
 
 <button
-class="logout-btn"
-onclick="logout()">
+class="delete-btn"
+onclick="deleteCartItem(${index})">
 
-تسجيل الخروج
+حذف
 
 </button>
 
 </div>
 
-</div>
+`;
 
-<!-- البار السفلي -->
+});
 
-<div class="bottom-bar">
+itemsTotal.innerHTML =
+`${total} د.ع`;
 
-<div
-class="nav-item active"
-onclick="showPage('homePage',this)">
+finalTotal.innerHTML =
+`${total + 2000 + tip} د.ع`;
 
-<i class="fa-solid fa-house"></i>
+}
 
-<span>
-الرئيسية
-</span>
+/* حذف من السلة */
 
-</div>
+window.deleteCartItem =
+function(index){
 
-<div
-class="nav-item"
-onclick="showPage('cartPage',this)">
+cart.splice(index,1);
 
-<i class="fa-solid fa-cart-shopping"></i>
+updateCart();
 
-<span>
-السلة
-</span>
+};
 
-</div>
+document.getElementById("tipInput")
+.addEventListener("input",updateCart);
 
-<div
-class="nav-item"
-onclick="showPage('accountPage',this)">
+/* ارسال الطلب */
 
-<i class="fa-solid fa-user"></i>
+window.sendOrder =
+function(){
 
-<span>
-الحساب
-</span>
+if(cart.length === 0){
 
-</div>
+alert("السلة فارغة");
 
-</div>
+return;
+
+}
+
+alert("تم ارسال طلب التوصيل بنجاح 🚀");
+
+};
+
+/* الصفحات */
+
+window.showPage =
+function(pageId,element){
+
+document.querySelectorAll(".page")
+.forEach(page=>{
+
+page.classList.remove("active-page");
+
+});
+
+document.getElementById(pageId)
+.classList.add("active-page");
+
+document.querySelectorAll(".nav-item")
+.forEach(item=>{
+
+item.classList.remove("active");
+
+});
+
+element.classList.add("active");
+
+};
+
+/* تسجيل الخروج */
+
+window.logout =
+function(){
+
+localStorage.removeItem("user");
+
+window.location.href =
+"index.html";
+
+};
+
+</script>
+
 </body>
 
 </html>
