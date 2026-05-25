@@ -9,18 +9,9 @@
 
 <title>لوحة تحكم الادمن</title>
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-rel="stylesheet">
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
 
@@ -32,166 +23,111 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f3f4f6;
+background:#f4f7fb;
 padding:20px;
 }
 
 .header{
+background:linear-gradient(45deg,#ff7b00,#0066ff);
+padding:20px;
+border-radius:20px;
+color:#fff;
 display:flex;
 justify-content:space-between;
 align-items:center;
-margin-bottom:25px;
-}
-
-.header h1{
-font-size:28px;
-color:#111827;
+margin-bottom:20px;
 }
 
 .logout-btn{
-background:#ef4444;
-color:white;
+background:#fff;
+color:#000;
 border:none;
-padding:12px 20px;
+padding:10px 18px;
 border-radius:12px;
 cursor:pointer;
-font-size:15px;
 font-weight:bold;
 }
 
 .cards{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-margin-bottom:25px;
+grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+gap:15px;
+margin-bottom:20px;
 }
 
 .card{
-padding:25px;
-border-radius:20px;
-color:white;
-box-shadow:0 5px 15px rgba(0,0,0,0.08);
-}
-
-.card i{
-font-size:35px;
-margin-bottom:15px;
+background:#fff;
+padding:20px;
+border-radius:18px;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
+text-align:center;
 }
 
 .card h2{
-font-size:30px;
-}
-
-.card p{
-font-size:18px;
-}
-
-.blue{
-background:linear-gradient(135deg,#2563eb,#1d4ed8);
-}
-
-.orange{
-background:linear-gradient(135deg,#f97316,#ea580c);
-}
-
-.green{
-background:linear-gradient(135deg,#10b981,#059669);
-}
-
-.black{
-background:linear-gradient(135deg,#111827,#374151);
+font-size:35px;
+margin-bottom:10px;
+color:#0066ff;
 }
 
 .section{
-background:white;
+background:#fff;
 padding:20px;
 border-radius:20px;
-margin-bottom:25px;
-box-shadow:0 5px 15px rgba(0,0,0,0.05);
-}
-
-.section h3{
 margin-bottom:20px;
-color:#111827;
+box-shadow:0 4px 10px rgba(0,0,0,0.08);
 }
 
-.user-card{
-border:1px solid #e5e7eb;
+.section-title{
+font-size:22px;
+margin-bottom:15px;
+color:#ff7b00;
+}
+
+.item{
+border:1px solid #ddd;
 padding:15px;
 border-radius:15px;
 margin-bottom:15px;
 }
 
-.user-card p{
-margin-bottom:10px;
-color:#374151;
+.item p{
+margin-bottom:8px;
 }
 
 .actions{
 display:flex;
-gap:10px;
-margin-top:15px;
 flex-wrap:wrap;
+gap:10px;
+margin-top:10px;
+}
+
+.actions button{
+border:none;
+padding:10px 15px;
+border-radius:10px;
+cursor:pointer;
+font-weight:bold;
+color:#fff;
 }
 
 .accept{
-background:#10b981;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:10px;
-cursor:pointer;
+background:#00b894;
 }
 
 .reject{
-background:#ef4444;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:10px;
-cursor:pointer;
-}
-
-.renew{
-background:#2563eb;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:10px;
-cursor:pointer;
+background:#d63031;
 }
 
 .ban{
-background:#111827;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:10px;
-cursor:pointer;
+background:#e17055;
 }
 
-.pending{
-background:#f59e0b;
-color:white;
-padding:5px 10px;
-border-radius:8px;
-font-size:13px;
+.location{
+background:#0984e3;
 }
 
-.active{
-background:#10b981;
-color:white;
-padding:5px 10px;
-border-radius:8px;
-font-size:13px;
-}
-
-.expired{
-background:#ef4444;
-color:white;
-padding:5px 10px;
-border-radius:8px;
-font-size:13px;
+.expire{
+background:#6c5ce7;
 }
 
 </style>
@@ -202,111 +138,71 @@ font-size:13px;
 
 <div class="header">
 
-<h1>
-
-<i class="fa-solid fa-shield-halved"></i>
-
-لوحة تحكم الادمن
-
-</h1>
+<div>
+<h1>لوحة تحكم الادمن</h1>
+<p>إدارة التطبيق بالكامل</p>
+</div>
 
 <button class="logout-btn" onclick="logout()">
-
-تسجيل خروج
-
+تسجيل الخروج
 </button>
 
 </div>
 
-
-
 <div class="cards">
 
-<div class="card blue">
-
-<i class="fa-solid fa-users"></i>
-
+<div class="card">
 <h2 id="customersCount">0</h2>
-
-<p>عدد المستخدمين</p>
-
+<p>المستخدمين</p>
 </div>
 
-<div class="card orange">
-
-<i class="fa-solid fa-store"></i>
-
+<div class="card">
 <h2 id="storesCount">0</h2>
-
-<p>عدد المتاجر</p>
-
+<p>المتاجر</p>
 </div>
 
-<div class="card green">
-
-<i class="fa-solid fa-motorcycle"></i>
-
+<div class="card">
 <h2 id="driversCount">0</h2>
-
-<p>عدد السواق</p>
-
-</div>
-
-<div class="card black">
-
-<i class="fa-solid fa-box"></i>
-
-<h2 id="productsCount">0</h2>
-
-<p>عدد المنتجات</p>
-
+<p>السواق</p>
 </div>
 
 </div>
 
-
+<!-- المستخدمين -->
 
 <div class="section">
 
-<h3>
-
+<h2 class="section-title">
 المستخدمين
-
-</h3>
+</h2>
 
 <div id="customersContainer"></div>
 
 </div>
 
-
+<!-- المتاجر -->
 
 <div class="section">
 
-<h3>
-
+<h2 class="section-title">
 المتاجر
-
-</h3>
+</h2>
 
 <div id="storesContainer"></div>
 
 </div>
 
-
+<!-- السواق -->
 
 <div class="section">
 
-<h3>
-
+<h2 class="section-title">
 السواق
-
-</h3>
+</h2>
 
 <div id="driversContainer"></div>
 
 </div>
-
-
 
 <script type="module">
 
@@ -349,6 +245,10 @@ const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
 
+
+
+// حماية الصفحة
+
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
@@ -358,6 +258,10 @@ window.location.href = "index.html";
 
 }
 
+
+
+// تسجيل الخروج
+
 window.logout = function(){
 
 localStorage.removeItem("user");
@@ -366,27 +270,29 @@ window.location.href = "index.html";
 
 };
 
+
+
+// تحميل البيانات
+
 async function loadDashboard(){
-
-
 
 // المستخدمين
 
 let customersSnapshot =
 await get(ref(database,"customers"));
 
-const customersContainer =
+let customersContainer =
 document.getElementById("customersContainer");
 
 customersContainer.innerHTML = "";
-
-let customersCount = 0;
 
 if(customersSnapshot.exists()){
 
 let customers = customersSnapshot.val();
 
-customersCount = Object.keys(customers).length;
+document.getElementById("customersCount")
+.innerText =
+Object.keys(customers).length;
 
 for(let id in customers){
 
@@ -394,60 +300,36 @@ let user = customers[id];
 
 customersContainer.innerHTML += `
 
-<div class="user-card">
+<div class="item">
 
-<p>
-<strong>الاسم:</strong>
-${user.name}
-</p>
+<p><strong>الاسم:</strong> ${user.name}</p>
 
-<p>
-<strong>الهاتف:</strong>
-${user.phone}
-</p>
+<p><strong>الهاتف:</strong> ${user.phone}</p>
 
-<p>
-<strong>العنوان:</strong>
-${user.address}
-</p>
+<p><strong>العنوان:</strong> ${user.address || "-"}</p>
 
-<p>
-
-<strong>الموقع:</strong>
-
-<a target="_blank"
-href="https://www.google.com/maps?q=${user.latitude},${user.longitude}">
-
-فتح الموقع
-
-</a>
-
-</p>
-
-<p>
-
-<strong>الحالة:</strong>
-
-${user.banned
-? '<span class="expired">محظور</span>'
-: '<span class="active">فعال</span>'}
-
-</p>
+<p><strong>الحالة:</strong> ${user.status}</p>
 
 <div class="actions">
 
 <button class="ban"
 onclick="banCustomer('${id}')">
-
 حظر
-
 </button>
 
 <button class="accept"
 onclick="unbanCustomer('${id}')">
-
 فك الحظر
+</button>
 
+<button class="reject"
+onclick="deleteCustomer('${id}')">
+حذف
+</button>
+
+<button class="location"
+onclick="openLocation('${user.latitude}','${user.longitude}')">
+الموقع
 </button>
 
 </div>
@@ -459,9 +341,6 @@ onclick="unbanCustomer('${id}')">
 }
 
 }
-
-document.getElementById("customersCount")
-.innerText = customersCount;
 
 
 
@@ -470,18 +349,18 @@ document.getElementById("customersCount")
 let storesSnapshot =
 await get(ref(database,"stores"));
 
-const storesContainer =
+let storesContainer =
 document.getElementById("storesContainer");
 
 storesContainer.innerHTML = "";
-
-let storesCount = 0;
 
 if(storesSnapshot.exists()){
 
 let stores = storesSnapshot.val();
 
-storesCount = Object.keys(stores).length;
+document.getElementById("storesCount")
+.innerText =
+Object.keys(stores).length;
 
 for(let id in stores){
 
@@ -489,103 +368,49 @@ let store = stores[id];
 
 storesContainer.innerHTML += `
 
-<div class="user-card">
+<div class="item">
 
-<p>
-<strong>اسم المتجر:</strong>
-${store.store_name}
-</p>
+<p><strong>اسم المتجر:</strong> ${store.store_name}</p>
 
-<p>
-<strong>المالك:</strong>
-${store.owner}
-</p>
+<p><strong>المالك:</strong> ${store.owner}</p>
 
-<p>
-<strong>الهاتف:</strong>
-${store.phone}
-</p>
+<p><strong>الهاتف:</strong> ${store.phone}</p>
 
-<p>
-<strong>النوع:</strong>
-${store.category}
-</p>
+<p><strong>النوع:</strong> ${store.category}</p>
 
-<p>
-<strong>عدد الطلبات:</strong>
-${store.ordersCount || 0}
-</p>
+<p><strong>الحالة:</strong> ${store.status}</p>
 
-<p>
-<strong>مبلغ المبيعات:</strong>
-${store.totalSales || 0} د.ع
-</p>
+<p><strong>عدد الطلبات:</strong> ${store.orders || 0}</p>
 
-<p>
+<p><strong>مبلغ البيع:</strong> ${store.sales || 0} د.ع</p>
 
-<strong>الحالة:</strong>
-
-${store.status === "active"
-? '<span class="active">مفعل</span>'
-: '<span class="pending">قيد الانتظار</span>'}
-
-</p>
-
-<p>
-
-<strong>ينتهي:</strong>
-
-${store.expireAt
-? new Date(store.expireAt)
-.toLocaleDateString('ar-EG')
-: 'غير محدد'}
-
-</p>
-
-<p>
-
-<strong>الموقع:</strong>
-
-<a target="_blank"
-href="https://www.google.com/maps?q=${store.latitude},${store.longitude}">
-
-فتح الموقع
-
-</a>
-
-</p>
-
-<input type="date"
-id="storeExpire_${id}">
+<p><strong>تاريخ الانتهاء:</strong> ${store.expireDate || "غير محدد"}</p>
 
 <div class="actions">
 
 <button class="accept"
-onclick="approveStore('${id}')">
-
+onclick="activateStore('${id}')">
 تفعيل
-
-</button>
-
-<button class="renew"
-onclick="setStoreExpire('${id}')">
-
-حفظ التاريخ
-
 </button>
 
 <button class="ban"
-onclick="banStore('${id}')">
-
-حظر
-
+onclick="disableStore('${id}')">
+إيقاف
 </button>
 
 <button class="reject"
 onclick="deleteStore('${id}')">
-
 حذف
+</button>
 
+<button class="expire"
+onclick="setExpireDate('stores','${id}')">
+تحديد انتهاء
+</button>
+
+<button class="location"
+onclick="openLocation('${store.latitude}','${store.longitude}')">
+الموقع
 </button>
 
 </div>
@@ -597,9 +422,6 @@ onclick="deleteStore('${id}')">
 }
 
 }
-
-document.getElementById("storesCount")
-.innerText = storesCount;
 
 
 
@@ -608,18 +430,18 @@ document.getElementById("storesCount")
 let driversSnapshot =
 await get(ref(database,"drivers"));
 
-const driversContainer =
+let driversContainer =
 document.getElementById("driversContainer");
 
 driversContainer.innerHTML = "";
-
-let driversCount = 0;
 
 if(driversSnapshot.exists()){
 
 let drivers = driversSnapshot.val();
 
-driversCount = Object.keys(drivers).length;
+document.getElementById("driversCount")
+.innerText =
+Object.keys(drivers).length;
 
 for(let id in drivers){
 
@@ -627,98 +449,42 @@ let driver = drivers[id];
 
 driversContainer.innerHTML += `
 
-<div class="user-card">
+<div class="item">
 
-<p>
-<strong>الاسم:</strong>
-${driver.name}
-</p>
+<p><strong>الاسم:</strong> ${driver.name}</p>
 
-<p>
-<strong>الهاتف:</strong>
-${driver.phone}
-</p>
+<p><strong>الهاتف:</strong> ${driver.phone}</p>
 
-<p>
-<strong>المركبة:</strong>
-${driver.vehicle}
-</p>
+<p><strong>المركبة:</strong> ${driver.vehicle}</p>
 
-<p>
-<strong>عدد الطلبات:</strong>
-${driver.ordersCount || 0}
-</p>
+<p><strong>الحالة:</strong> ${driver.status}</p>
 
-<p>
-<strong>مبلغ الربح:</strong>
-${driver.totalProfit || 0} د.ع
-</p>
+<p><strong>عدد الطلبات:</strong> ${driver.orders || 0}</p>
 
-<p>
+<p><strong>الارباح:</strong> ${driver.earnings || 0} د.ع</p>
 
-<strong>الحالة:</strong>
-
-${driver.status === "active"
-? '<span class="active">مفعل</span>'
-: '<span class="pending">قيد الانتظار</span>'}
-
-</p>
-
-<p>
-
-<strong>ينتهي:</strong>
-
-${driver.expireAt
-? new Date(driver.expireAt)
-.toLocaleDateString('ar-EG')
-: 'غير محدد'}
-
-</p>
-
-<p>
-
-<strong>الموقع:</strong>
-
-<a target="_blank"
-href="https://www.google.com/maps?q=${driver.latitude},${driver.longitude}">
-
-فتح الموقع
-
-</a>
-
-</p>
-
-<input type="date"
-id="driverExpire_${id}">
+<p><strong>تاريخ الانتهاء:</strong> ${driver.expireDate || "غير محدد"}</p>
 
 <div class="actions">
 
 <button class="accept"
-onclick="approveDriver('${id}')">
-
+onclick="activateDriver('${id}')">
 تفعيل
-
-</button>
-
-<button class="renew"
-onclick="setDriverExpire('${id}')">
-
-حفظ التاريخ
-
 </button>
 
 <button class="ban"
-onclick="banDriver('${id}')">
-
-حظر
-
+onclick="disableDriver('${id}')">
+إيقاف
 </button>
 
 <button class="reject"
 onclick="deleteDriver('${id}')">
-
 حذف
+</button>
 
+<button class="expire"
+onclick="setExpireDate('drivers','${id}')">
+تحديد انتهاء
 </button>
 
 </div>
@@ -731,19 +497,18 @@ onclick="deleteDriver('${id}')">
 
 }
 
-document.getElementById("driversCount")
-.innerText = driversCount;
-
 }
+
+loadDashboard();
 
 
 
 // تفعيل متجر
 
-window.approveStore = async function(id){
+window.activateStore = async function(id){
 
 await update(
-ref(database,"stores/" + id),
+ref(database,"stores/"+id),
 {
 status:"active"
 }
@@ -755,12 +520,29 @@ loadDashboard();
 
 
 
-// تفعيل سواق
+// تعطيل متجر
 
-window.approveDriver = async function(id){
+window.disableStore = async function(id){
 
 await update(
-ref(database,"drivers/" + id),
+ref(database,"stores/"+id),
+{
+status:"disabled"
+}
+);
+
+loadDashboard();
+
+};
+
+
+
+// تفعيل سائق
+
+window.activateDriver = async function(id){
+
+await update(
+ref(database,"drivers/"+id),
 {
 status:"active"
 }
@@ -772,71 +554,14 @@ loadDashboard();
 
 
 
-// تحديد انتهاء متجر
+// تعطيل سائق
 
-window.setStoreExpire = async function(id){
-
-let date =
-document.getElementById("storeExpire_" + id).value;
+window.disableDriver = async function(id){
 
 await update(
-ref(database,"stores/" + id),
+ref(database,"drivers/"+id),
 {
-expireAt:new Date(date).getTime()
-}
-);
-
-loadDashboard();
-
-};
-
-
-
-// تحديد انتهاء سواق
-
-window.setDriverExpire = async function(id){
-
-let date =
-document.getElementById("driverExpire_" + id).value;
-
-await update(
-ref(database,"drivers/" + id),
-{
-expireAt:new Date(date).getTime()
-}
-);
-
-loadDashboard();
-
-};
-
-
-
-// حظر متجر
-
-window.banStore = async function(id){
-
-await update(
-ref(database,"stores/" + id),
-{
-banned:true
-}
-);
-
-loadDashboard();
-
-};
-
-
-
-// حظر سواق
-
-window.banDriver = async function(id){
-
-await update(
-ref(database,"drivers/" + id),
-{
-banned:true
+status:"disabled"
 }
 );
 
@@ -851,9 +576,9 @@ loadDashboard();
 window.banCustomer = async function(id){
 
 await update(
-ref(database,"customers/" + id),
+ref(database,"customers/"+id),
 {
-banned:true
+status:"banned"
 }
 );
 
@@ -868,10 +593,29 @@ loadDashboard();
 window.unbanCustomer = async function(id){
 
 await update(
-ref(database,"customers/" + id),
+ref(database,"customers/"+id),
 {
-banned:false
+status:"active"
 }
+);
+
+loadDashboard();
+
+};
+
+
+
+// حذف مستخدم
+
+window.deleteCustomer = async function(id){
+
+let confirmDelete =
+confirm("هل تريد حذف المستخدم ؟");
+
+if(!confirmDelete) return;
+
+await remove(
+ref(database,"customers/"+id)
 );
 
 loadDashboard();
@@ -884,8 +628,13 @@ loadDashboard();
 
 window.deleteStore = async function(id){
 
+let confirmDelete =
+confirm("هل تريد حذف المتجر ؟");
+
+if(!confirmDelete) return;
+
 await remove(
-ref(database,"stores/" + id)
+ref(database,"stores/"+id)
 );
 
 loadDashboard();
@@ -894,19 +643,66 @@ loadDashboard();
 
 
 
-// حذف سواق
+// حذف سائق
 
 window.deleteDriver = async function(id){
 
+let confirmDelete =
+confirm("هل تريد حذف السائق ؟");
+
+if(!confirmDelete) return;
+
 await remove(
-ref(database,"drivers/" + id)
+ref(database,"drivers/"+id)
 );
 
 loadDashboard();
 
 };
 
+
+
+// تحديد انتهاء التفعيل
+
+window.setExpireDate =
+async function(type,id){
+
+let date =
+prompt("ادخل تاريخ الانتهاء مثال 2026-05-01");
+
+if(!date) return;
+
+await update(
+ref(database,`${type}/${id}`),
+{
+expireDate:date
+}
+);
+
 loadDashboard();
+
+};
+
+
+
+// فتح الموقع
+
+window.openLocation =
+function(lat,lng){
+
+if(!lat || !lng){
+
+alert("لا يوجد موقع");
+
+return;
+
+}
+
+window.open(
+`https://maps.google.com/?q=${lat},${lng}`
+);
+
+};
 
 </script>
 
