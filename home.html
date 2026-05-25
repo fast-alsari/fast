@@ -129,134 +129,181 @@
 </nav>
 
 <!-- FIREBASE -->
-
 <script type="module">
 
 import { initializeApp }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
-
-getFirestore,
-collection,
-getDocs
-
+getDatabase,
+ref,
+get,
+child
 }
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-import {
-
-getAuth,
-onAuthStateChanged
-
-}
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-/* Firebase Config */
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
 
-  apiKey: "ضع_apiKey",
+apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
-  authDomain: "ضع_authDomain",
+authDomain: "fast-937c9.firebaseapp.com",
 
-  projectId: "ضع_projectId",
+projectId: "fast-937c9",
 
-  storageBucket: "ضع_storageBucket",
+storageBucket: "fast-937c9.firebasestorage.app",
 
-  messagingSenderId: "ضع_messagingSenderId",
+messagingSenderId: "221388561840",
 
-  appId: "ضع_appId"
+appId: "1:221388561840:web:ec9d75183ddd7d44be0a75",
+
+measurementId: "G-CEKHEPNR9X",
+
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
 const app = initializeApp(firebaseConfig);
 
-const db = getFirestore(app);
+const database = getDatabase(app);
 
-const auth = getAuth(app);
 
-/* التحقق من تسجيل الدخول */
 
-onAuthStateChanged(auth, async(user)=>{
+// =======================
+// التحقق من الجلسة
+// =======================
 
-    if(!user){
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
 
-        window.location.href =
-        "index.html";
+if(!currentUser){
 
-        return;
+window.location.href = "index.html";
 
-    }
+}
 
-    document.getElementById("welcomeText")
-    .innerHTML =
-    `اهلاً ${user.displayName || ""} 👋`;
 
-    if(user.photoURL){
 
-        document.getElementById("userImage")
-        .src = user.photoURL;
+// =======================
+// معلومات المستخدم
+// =======================
 
-    }
+document.getElementById("welcomeText")
+.innerHTML =
+`اهلاً ${currentUser.name || currentUser.owner || "👋"}`;
 
-    loadStores();
+if(currentUser.image){
 
-});
+document.getElementById("userImage")
+.src = currentUser.image;
 
-/* تحميل المتاجر */
+}
+
+
+
+// =======================
+// تحميل المتاجر
+// =======================
 
 async function loadStores(){
 
-    const storesContainer =
-    document.getElementById("storesContainer");
+const storesContainer =
+document.getElementById("storesContainer");
 
-    storesContainer.innerHTML = "";
+storesContainer.innerHTML = "";
 
-    const querySnapshot =
-    await getDocs(collection(db,"stores"));
+try{
 
-    querySnapshot.forEach((doc)=>{
+const snapshot =
+await get(
+child(ref(database),"stores")
+);
 
-        const store = doc.data();
+if(snapshot.exists()){
 
-        storesContainer.innerHTML += `
+const stores = snapshot.val();
 
-        <div class="store-card">
+for(let key in stores){
 
-            <img
-            class="store-image"
-            src="${store.image}">
+const store = stores[key];
 
-            <div class="store-info">
+if(store.status === "active"){
 
-                <div class="store-name-box">
+storesContainer.innerHTML += `
 
-                    <h3>
-                        ${store.name}
-                    </h3>
+<div class="store-card">
 
-                    <img
-                    src="ok.png"
-                    class="verified-icon">
+<img
+class="store-image"
+src="${
+store.image || "store.png"
+}">
 
-                </div>
+<div class="store-info">
 
-                <p class="store-status">
+<div class="store-name-box">
 
-                    🟢 متاح حالياً
+<h3>
+${store.store_name}
+</h3>
 
-                </p>
+<img
+src="ok.png"
+class="verified-icon">
 
-            </div>
+</div>
 
-        </div>
+<p class="store-status">
 
-        `;
+🟢 متاح حالياً
 
-    });
+</p>
+
+</div>
+
+</div>
+
+`;
 
 }
+
+}
+
+}else{
+
+storesContainer.innerHTML =
+
+"<p>لا توجد متاجر حالياً</p>";
+
+}
+
+}catch(error){
+
+console.log(error);
+
+storesContainer.innerHTML =
+
+"<p>حدث خطأ بتحميل المتاجر</p>";
+
+}
+
+}
+
+loadStores();
+
+
+
+// =======================
+// تسجيل خروج
+// =======================
+
+window.logout = function(){
+
+localStorage.removeItem("user");
+
+window.location.href = "index.html";
+
+};
 
 </script>
 
