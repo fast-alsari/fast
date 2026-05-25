@@ -37,11 +37,20 @@ font-family:'Cairo',sans-serif;
 body{
 background:#ffffff;
 padding-bottom:120px;
+overflow-x:hidden;
+}
+
+.page{
+display:none;
+}
+
+.active-page{
+display:block;
 }
 
 .header{
-padding:20px;
 background:linear-gradient(135deg,#ff8800,#ffb300);
+padding:20px;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
 color:white;
@@ -57,8 +66,8 @@ align-items:center;
 width:60px;
 height:60px;
 border-radius:50%;
-object-fit:cover;
 border:3px solid white;
+object-fit:cover;
 }
 
 .search-box{
@@ -70,12 +79,16 @@ display:flex;
 align-items:center;
 }
 
+.search-box i{
+color:#ff8800;
+}
+
 .search-box input{
 border:none;
 outline:none;
 width:100%;
-font-size:15px;
 margin-right:10px;
+font-size:15px;
 }
 
 .filters{
@@ -108,8 +121,8 @@ gap:15px;
 
 .store-card{
 background:white;
-border-radius:25px;
 padding:15px;
+border-radius:25px;
 box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
@@ -121,19 +134,21 @@ cursor:pointer;
 }
 
 .store-image{
-width:85px;
-height:85px;
+width:90px;
+height:90px;
 border-radius:20px;
 object-fit:cover;
 }
 
 .store-info h3{
 font-size:18px;
-margin-bottom:5px;
+margin-bottom:6px;
 }
 
 .store-info p{
 color:#666;
+font-size:14px;
+margin-bottom:4px;
 }
 
 .products{
@@ -145,15 +160,15 @@ gap:15px;
 
 .product{
 background:#fafafa;
-border-radius:20px;
 padding:15px;
+border-radius:20px;
 }
 
 .product-image{
 width:100%;
 height:180px;
-border-radius:20px;
 object-fit:cover;
+border-radius:20px;
 margin-bottom:10px;
 }
 
@@ -185,7 +200,7 @@ margin-bottom:12px;
 
 .qty-row input{
 width:80px;
-padding:8px;
+padding:10px;
 border-radius:10px;
 border:1px solid #ddd;
 }
@@ -199,14 +214,7 @@ background:#ff8800;
 color:white;
 font-size:15px;
 font-weight:bold;
-}
-
-.page{
-display:none;
-}
-
-.active-page{
-display:block;
+cursor:pointer;
 }
 
 .cart-container{
@@ -218,8 +226,8 @@ gap:15px;
 
 .cart-item{
 background:white;
-border-radius:20px;
 padding:15px;
+border-radius:20px;
 display:flex;
 gap:15px;
 align-items:center;
@@ -237,12 +245,23 @@ object-fit:cover;
 flex:1;
 }
 
+.cart-info h3{
+margin-bottom:6px;
+}
+
+.cart-info p{
+font-size:14px;
+color:#666;
+margin-bottom:4px;
+}
+
 .delete-btn{
 background:red;
-color:white;
 border:none;
 padding:10px 14px;
 border-radius:12px;
+color:white;
+cursor:pointer;
 }
 
 .summary-box{
@@ -255,7 +274,6 @@ box-shadow:0 5px 20px rgba(0,0,0,.08);
 
 .summary-box p{
 margin-bottom:15px;
-font-size:16px;
 }
 
 .tip-input{
@@ -281,6 +299,7 @@ background:#00b894;
 color:white;
 font-size:17px;
 font-weight:bold;
+cursor:pointer;
 }
 
 .account-card{
@@ -296,9 +315,9 @@ text-align:center;
 width:110px;
 height:110px;
 border-radius:50%;
-object-fit:cover;
 border:4px solid #ff8800;
 margin-bottom:15px;
+object-fit:cover;
 }
 
 .account-info{
@@ -312,7 +331,6 @@ margin-bottom:10px;
 
 .logout-btn{
 width:100%;
-margin-top:20px;
 padding:16px;
 border:none;
 border-radius:16px;
@@ -320,6 +338,8 @@ background:red;
 color:white;
 font-size:16px;
 font-weight:bold;
+margin-top:20px;
+cursor:pointer;
 }
 
 .bottom-bar{
@@ -355,7 +375,7 @@ margin-bottom:5px;
 .empty{
 text-align:center;
 padding:40px;
-color:#888;
+color:#777;
 }
 
 </style>
@@ -412,7 +432,7 @@ placeholder="ابحث عن متجر">
 <div class="filters">
 
 <button
-class="active filter-btn"
+class="filter-btn active"
 data-category="all">
 
 الكل
@@ -618,25 +638,25 @@ from
 const firebaseConfig = {
 
 apiKey:
-"YOUR_API_KEY",
+"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
 authDomain:
-"YOUR_AUTH_DOMAIN",
+"fast-937c9.firebaseapp.com",
 
 projectId:
-"YOUR_PROJECT_ID",
+"fast-937c9",
 
 storageBucket:
-"YOUR_STORAGE_BUCKET",
+"fast-937c9.firebasestorage.app",
 
 messagingSenderId:
-"YOUR_MESSAGING_ID",
+"221388561840",
 
 appId:
-"YOUR_APP_ID",
+"1:221388561840:web:ec9d75183ddd7d44be0a75",
 
 databaseURL:
-"YOUR_DATABASE_URL"
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
@@ -715,6 +735,12 @@ let allStores = [];
 
 async function loadStores(){
 
+storesContainer.innerHTML =
+
+`<div class="empty">
+جاري تحميل المتاجر...
+</div>`;
+
 const snapshot =
 await get(
 child(ref(database),"stores")
@@ -742,6 +768,14 @@ allStores.push(store);
 
 renderStores(allStores);
 
+}else{
+
+storesContainer.innerHTML =
+
+`<div class="empty">
+لا توجد متاجر
+</div>`;
+
 }
 
 }
@@ -751,18 +785,6 @@ loadStores();
 function renderStores(stores){
 
 storesContainer.innerHTML = "";
-
-if(stores.length === 0){
-
-storesContainer.innerHTML =
-
-`<div class="empty">
-لا توجد متاجر
-</div>`;
-
-return;
-
-}
 
 stores.forEach((store,index)=>{
 
@@ -790,7 +812,13 @@ ${store.store_name}
 
 <p>
 
-${store.category}
+🏪 ${store.category}
+
+</p>
+
+<p>
+
+📞 ${store.phone}
 
 </p>
 
@@ -804,10 +832,10 @@ style="display:none;"
 class="products">
 
 ${
-
 store.products ?
 
-Object.values(store.products).map((product,pIndex)=>`
+Object.values(store.products)
+.map((product,pIndex)=>`
 
 <div class="product">
 
@@ -890,7 +918,6 @@ window.toggleProducts =
 function(index){
 
 let products =
-
 document.getElementById(
 `products_${index}`
 );
@@ -985,7 +1012,8 @@ price:Number(product.price),
 
 qty:qty,
 
-image:product.image || "product.png"
+image:
+product.image || "product.png"
 
 });
 
@@ -1110,7 +1138,7 @@ let delivery = 3000;
 
 let tip = Number(
 document.getElementById("tipInput")
-?.value || 0
+.value || 0
 );
 
 document.getElementById("itemsTotal")
@@ -1195,7 +1223,7 @@ localStorage.removeItem("cart");
 
 loadCart();
 
-alert("تم ارسال الطلب بنجاح 🚀");
+alert("تم ارسال الطلب 🚀");
 
 };
 
