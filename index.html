@@ -1,7 +1,3 @@
-<!-- ========================= -->
-<!-- index.html -->
-<!-- ========================= -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -16,6 +12,22 @@ content="width=device-width, initial-scale=1.0">
 
 <link rel="icon" href="Logo.png">
 
+<link rel="apple-touch-icon" href="Logo.png">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
 <link rel="stylesheet"
 href="style.css">
 
@@ -27,16 +39,13 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-rel="stylesheet">
-
 </head>
 
 <body>
 
 <div class="container">
 
-<!-- LOGIN -->
+<!-- تسجيل الدخول -->
 
 <div id="loginSection"
 class="card section active">
@@ -46,6 +55,12 @@ class="card section active">
 <img src="Logo.png">
 
 </div>
+
+<p class="app-text">
+
+نوصلك طلبك بأقل من ساعة 🚀
+
+</p>
 
 <h2 class="title">
 
@@ -89,7 +104,7 @@ onclick="togglePassword('login_password',this)">
 
 </div>
 
-<!-- REGISTER -->
+<!-- إنشاء حساب -->
 
 <div id="registerSection"
 class="card section">
@@ -136,7 +151,7 @@ onchange="changeRegisterForm()">
 
 </select>
 
-<!-- CUSTOMER -->
+<!-- الزبون -->
 
 <div id="customerForm"
 style="display:none;">
@@ -151,7 +166,7 @@ placeholder="رقم الهاتف">
 
 <input type="text"
 id="customer_address"
-placeholder="العنوان">
+placeholder="العنوان الكامل">
 
 <input type="text"
 id="customer_nearpoint"
@@ -171,7 +186,7 @@ onclick="togglePassword('customer_password',this)">
 
 <p class="map-title">
 
-حدد موقعك
+حدد موقعك على الخريطة
 
 </p>
 
@@ -180,14 +195,14 @@ class="map-box"></div>
 
 </div>
 
-<!-- STORE -->
+<!-- المتجر -->
 
 <div id="storeForm"
 style="display:none;">
 
 <input type="text"
 id="store_owner"
-placeholder="اسم صاحب المتجر">
+placeholder="الاسم الكامل">
 
 <input type="text"
 id="store_phone"
@@ -199,13 +214,17 @@ placeholder="اسم المتجر">
 
 <select id="store_category">
 
-<option value="">
-نوع المتجر
-</option>
+<option value="">اختر نوع المتجر</option>
 
 <option>مطعم</option>
+<option>مخبز</option>
 <option>ماركت</option>
+<option>خضروات</option>
+<option>مواد انشائية</option>
+<option>أدوات احتياطية</option>
+<option>ملابس</option>
 <option>صيدلية</option>
+<option>الكترونيات</option>
 
 </select>
 
@@ -221,9 +240,39 @@ onclick="togglePassword('store_password',this)">
 
 </div>
 
+<p class="upload-title">
+
+صورة المتجر
+
+</p>
+
+<input type="file"
+id="store_image">
+
+<p class="upload-title">
+
+صورة البطاقة الموحدة
+
+</p>
+
+<input type="file"
+id="store_card">
+
+<div class="work-times">
+
+<h3>
+
+أوقات عمل المتجر
+
+</h3>
+
+<div id="daysContainer"></div>
+
+</div>
+
 <p class="map-title">
 
-حدد موقع المتجر
+حدد موقع المتجر على الخريطة
 
 </p>
 
@@ -232,7 +281,7 @@ class="map-box"></div>
 
 </div>
 
-<!-- DRIVER -->
+<!-- الدليفري -->
 
 <div id="driverForm"
 style="display:none;">
@@ -248,7 +297,6 @@ placeholder="رقم الهاتف">
 <select id="driver_vehicle">
 
 <option>دراجة</option>
-
 <option>سيارة</option>
 
 </select>
@@ -265,6 +313,24 @@ onclick="togglePassword('driver_password',this)">
 
 </div>
 
+<p class="upload-title">
+
+صورة الهوية
+
+</p>
+
+<input type="file"
+id="driver_card">
+
+<p class="upload-title">
+
+صورة السيارة او الدراجة
+
+</p>
+
+<input type="file"
+id="driver_vehicle_image">
+
 </div>
 
 <button onclick="registerAccount()">
@@ -277,7 +343,7 @@ onclick="togglePassword('driver_password',this)">
 
 <a onclick="showSection('loginSection')">
 
-تسجيل الدخول
+العودة لتسجيل الدخول
 
 </a>
 
@@ -285,7 +351,7 @@ onclick="togglePassword('driver_password',this)">
 
 </div>
 
-<!-- PENDING -->
+<!-- الانتظار -->
 
 <div id="pendingSection"
 class="card section">
@@ -293,6 +359,12 @@ class="card section">
 <div class="logo">
 
 <img src="Logo.png">
+
+</div>
+
+<div class="pending-icon">
+
+<i class="fa-solid fa-clock"></i>
 
 </div>
 
@@ -304,7 +376,8 @@ class="card section">
 
 <p class="pending-text">
 
-انتظر موافقة الادمن
+انتظر ريثما يتم مراجعة حسابك
+وسوف نتواصل معك خلال أقل من 24 ساعة
 
 </p>
 
@@ -314,43 +387,24 @@ class="card section">
 
 <script type="module">
 
-// ==========================
-// FIREBASE IMPORTS
-// ==========================
-
 import { initializeApp }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-import {
+import { getAnalytics }
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
 
+import {
 getDatabase,
 ref,
 set,
 get,
 child,
 update
-
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
-
-import {
-
-getAuth,
-RecaptchaVerifier,
-signInWithPhoneNumber,
-signOut
-
-}
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
-
-
-
-// ==========================
-// FIREBASE CONFIG
-// ==========================
 
 const firebaseConfig = {
 
@@ -373,64 +427,159 @@ databaseURL:
 
 };
 
+const app = initializeApp(firebaseConfig);
 
+const analytics = getAnalytics(app);
 
-// ==========================
-// START FIREBASE
-// ==========================
-
-const app =
-initializeApp(firebaseConfig);
-
-const database =
-getDatabase(app);
-
-const auth =
-getAuth(app);
+const database = getDatabase(app);
 
 
 
-// ==========================
-// SAVE SESSION
-// ==========================
+// ========================
+// تسجيل دخول تلقائي
+// ========================
 
-function saveSession(userData){
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
 
-localStorage.setItem(
-"user",
-JSON.stringify(userData)
-);
+if(currentUser){
+
+if(currentUser.type==="customer"){
+
+window.location.href="home.html";
+
+}
+
+if(currentUser.type==="store"){
+
+window.location.href="store.html";
+
+}
+
+if(currentUser.type==="driver"){
+
+window.location.href="driver.html";
+
+}
+
+if(currentUser.type==="admin"){
+
+window.location.href="admin.html";
+
+}
 
 }
 
 
 
-// ==========================
-// LOGOUT
-// ==========================
+// ========================
+// ايام الاسبوع
+// ========================
 
-window.logout =
-async function(){
+const days = [
 
-localStorage.removeItem(
-"user"
-);
+"الأحد",
+"الاثنين",
+"الثلاثاء",
+"الأربعاء",
+"الخميس",
+"الجمعة",
+"السبت"
 
-await signOut(auth);
-
-window.location.href =
-"index.html";
-
-};
+];
 
 
 
-// ==========================
-// PASSWORD SHOW
-// ==========================
+// ========================
+// ساعات الدوام
+// ========================
 
-window.togglePassword =
-function(id,icon){
+const hours = [
+
+"مغلق",
+"6 صباحاً",
+"7 صباحاً",
+"8 صباحاً",
+"9 صباحاً",
+"10 صباحاً",
+"11 صباحاً",
+"12 ظهراً",
+"1 ظهراً",
+"2 ظهراً",
+"3 عصراً",
+"4 عصراً",
+"5 عصراً",
+"6 مساءً",
+"7 مساءً",
+"8 مساءً",
+"9 مساءً",
+"10 مساءً",
+"11 مساءً"
+
+];
+
+
+
+// ========================
+// الخرائط
+// ========================
+
+let map;
+let marker;
+let latitude="";
+let longitude="";
+
+let storeMap;
+let storeMarker;
+let store_latitude="";
+let store_longitude="";
+
+
+
+// ========================
+// جدول الدوام
+// ========================
+
+const daysContainer =
+document.getElementById("daysContainer");
+
+days.forEach((day,index)=>{
+
+daysContainer.innerHTML += `
+
+<div class="day-row">
+
+<label>${day}</label>
+
+<div class="time-selects">
+
+<select id="from_${index}">
+
+${hours.map(h=>`<option>${h}</option>`).join("")}
+
+</select>
+
+<select id="to_${index}">
+
+${hours.map(h=>`<option>${h}</option>`).join("")}
+
+</select>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+
+// ========================
+// اظهار كلمة السر
+// ========================
+
+window.togglePassword = function(id,icon){
 
 let input =
 document.getElementById(id);
@@ -459,15 +608,13 @@ icon.classList.replace(
 
 
 
-// ==========================
-// SHOW SECTION
-// ==========================
+// ========================
+// تغيير الصفحات
+// ========================
 
-window.showSection =
-function(sectionId){
+window.showSection = function(sectionId){
 
-document
-.querySelectorAll(".section")
+document.querySelectorAll(".section")
 .forEach(section=>{
 
 section.classList.remove("active");
@@ -482,35 +629,28 @@ document
 
 
 
-// ==========================
-// CHANGE FORM
-// ==========================
+// ========================
+// تغيير نوع الحساب
+// ========================
 
-window.changeRegisterForm =
-function(){
+window.changeRegisterForm = function(){
 
 let type =
-document.getElementById(
-"account_type"
-).value;
+document.getElementById("account_type").value;
 
-document.getElementById(
-"customerForm"
-).style.display="none";
+document.getElementById("customerForm")
+.style.display="none";
 
-document.getElementById(
-"storeForm"
-).style.display="none";
+document.getElementById("storeForm")
+.style.display="none";
 
-document.getElementById(
-"driverForm"
-).style.display="none";
+document.getElementById("driverForm")
+.style.display="none";
 
 if(type==="customer"){
 
-document.getElementById(
-"customerForm"
-).style.display="block";
+document.getElementById("customerForm")
+.style.display="block";
 
 setTimeout(loadMap,300);
 
@@ -518,9 +658,8 @@ setTimeout(loadMap,300);
 
 if(type==="store"){
 
-document.getElementById(
-"storeForm"
-).style.display="block";
+document.getElementById("storeForm")
+.style.display="block";
 
 setTimeout(loadStoreMap,300);
 
@@ -528,9 +667,8 @@ setTimeout(loadStoreMap,300);
 
 if(type==="driver"){
 
-document.getElementById(
-"driverForm"
-).style.display="block";
+document.getElementById("driverForm")
+.style.display="block";
 
 }
 
@@ -538,25 +676,9 @@ document.getElementById(
 
 
 
-// ==========================
-// MAPS
-// ==========================
-
-let map;
-let marker;
-let latitude="";
-let longitude="";
-
-let storeMap;
-let storeMarker;
-let store_latitude="";
-let store_longitude="";
-
-
-
-// ==========================
-// CUSTOMER MAP
-// ==========================
+// ========================
+// خريطة الزبون
+// ========================
 
 function loadMap(){
 
@@ -567,11 +689,19 @@ map.remove();
 }
 
 map = L.map('map')
-.setView([33.3152,44.3661],13);
+.setView([35.4893,43.2275],13);
 
 L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+maxZoom:19,
+minZoom:6
+}
 ).addTo(map);
+
+setTimeout(()=>{
+map.invalidateSize();
+},300);
 
 map.on('click',function(e){
 
@@ -585,8 +715,7 @@ map.removeLayer(marker);
 
 }
 
-marker =
-L.marker([
+marker = L.marker([
 latitude,
 longitude
 ]).addTo(map);
@@ -597,9 +726,9 @@ longitude
 
 
 
-// ==========================
-// STORE MAP
-// ==========================
+// ========================
+// خريطة المتجر
+// ========================
 
 function loadStoreMap(){
 
@@ -610,11 +739,19 @@ storeMap.remove();
 }
 
 storeMap = L.map('storeMap')
-.setView([33.3152,44.3661],13);
+.setView([35.4893,43.2275],13);
 
 L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+maxZoom:19,
+minZoom:6
+}
 ).addTo(storeMap);
+
+setTimeout(()=>{
+storeMap.invalidateSize();
+},300);
 
 storeMap.on('click',function(e){
 
@@ -628,8 +765,7 @@ storeMap.removeLayer(storeMarker);
 
 }
 
-storeMarker =
-L.marker([
+storeMarker = L.marker([
 store_latitude,
 store_longitude
 ]).addTo(storeMap);
@@ -640,43 +776,189 @@ store_longitude
 
 
 
-// ==========================
-// RECAPTCHA
-// ==========================
+// ========================
+// حفظ الجلسة
+// ========================
 
-window.recaptchaVerifier =
-new RecaptchaVerifier(
+function saveSession(userData){
 
-auth,
-
-"loginSection",
-
-{
-
-size:"invisible"
+localStorage.setItem(
+"user",
+JSON.stringify(userData)
+);
 
 }
 
+
+
+// ========================
+// إنشاء حساب
+// ========================
+
+window.registerAccount =
+async function(){
+
+let type =
+document.getElementById("account_type").value;
+
+
+
+// زبون
+
+if(type==="customer"){
+
+let id = "CUS"+Date.now();
+
+let customerData = {
+
+id:id,
+
+type:"customer",
+
+status:"active",
+
+name:
+document.getElementById("customer_name").value,
+
+phone:
+document.getElementById("customer_phone").value,
+
+password:
+document.getElementById("customer_password").value,
+
+address:
+document.getElementById("customer_address").value,
+
+nearpoint:
+document.getElementById("customer_nearpoint").value,
+
+latitude:latitude,
+
+longitude:longitude,
+
+createdAt:Date.now()
+
+};
+
+await set(
+ref(database,
+"customers/"+id),
+customerData
 );
 
+saveSession(customerData);
+
+window.location.href="home.html";
+
+}
 
 
-// ==========================
-// LOGIN
-// ==========================
+
+// متجر
+
+if(type==="store"){
+
+let id = "STORE"+Date.now();
+
+let storeData = {
+
+id:id,
+
+type:"store",
+
+status:"pending",
+
+owner:
+document.getElementById("store_owner").value,
+
+phone:
+document.getElementById("store_phone").value,
+
+store_name:
+document.getElementById("store_name").value,
+
+category:
+document.getElementById("store_category").value,
+
+password:
+document.getElementById("store_password").value,
+
+latitude:store_latitude,
+
+longitude:store_longitude,
+
+createdAt:Date.now()
+
+};
+
+await set(
+ref(database,
+"stores/"+id),
+storeData
+);
+
+showSection("pendingSection");
+
+}
+
+
+
+// سائق
+
+if(type==="driver"){
+
+let id = "DRV"+Date.now();
+
+let driverData = {
+
+id:id,
+
+type:"driver",
+
+status:"pending",
+
+name:
+document.getElementById("driver_name").value,
+
+phone:
+document.getElementById("driver_phone").value,
+
+vehicle:
+document.getElementById("driver_vehicle").value,
+
+password:
+document.getElementById("driver_password").value,
+
+createdAt:Date.now()
+
+};
+
+await set(
+ref(database,
+"drivers/"+id),
+driverData
+);
+
+showSection("pendingSection");
+
+}
+
+};
+
+
+
+// ========================
+// تسجيل الدخول
+// ========================
 
 window.login =
 async function(){
 
 let phone =
-document.getElementById(
-"login_phone"
-).value.trim();
+document.getElementById("login_phone").value;
 
 let password =
-document.getElementById(
-"login_password"
-).value.trim();
+document.getElementById("login_password").value;
 
 if(phone==="" || password===""){
 
@@ -686,60 +968,26 @@ return;
 
 }
 
-if(!phone.startsWith("+964")){
-
-phone =
-"+964"+phone.replace(/^0/,"");
-
-}
-
-try{
-
-const confirmationResult =
-await signInWithPhoneNumber(
-
-auth,
-phone,
-window.recaptchaVerifier
-
-);
-
-let code =
-prompt("ادخل رمز التحقق");
-
-if(!code){
-
-return;
-
-}
-
-const result =
-await confirmationResult.confirm(code);
-
-const user =
-result.user;
 
 
+// ادمن
 
-// ADMIN
-
-if(user.phoneNumber ===
-"+9647700000000"){
+if(
+phone==="admin" &&
+password==="admin123"
+){
 
 let adminData = {
 
-name:"Admin",
+type:"admin",
 
-phone:user.phoneNumber,
-
-type:"admin"
+name:"Admin"
 
 };
 
 saveSession(adminData);
 
-window.location.href =
-"add.html";
+window.location.href="admin.html";
 
 return;
 
@@ -747,32 +995,34 @@ return;
 
 
 
-// CUSTOMERS
+try{
+
+// زبائن
 
 let customers =
 await get(
-child(ref(database),
-"customers")
+child(
+ref(database),
+"customers"
+)
 );
 
 if(customers.exists()){
 
-let data =
-customers.val();
+let data = customers.val();
 
 for(let key in data){
 
+let user = data[key];
+
 if(
-
-data[key].phone===phone &&
-data[key].password===password
-
+user.phone===phone &&
+user.password===password
 ){
 
-saveSession(data[key]);
+saveSession(user);
 
-window.location.href =
-"home.html";
+window.location.href="home.html";
 
 return;
 
@@ -784,42 +1034,42 @@ return;
 
 
 
-// STORES
+// متاجر
 
 let stores =
 await get(
-child(ref(database),
-"stores")
+child(
+ref(database),
+"stores"
+)
 );
 
 if(stores.exists()){
 
-let data =
-stores.val();
+let data = stores.val();
 
 for(let key in data){
 
+let user = data[key];
+
 if(
-
-data[key].phone===phone &&
-data[key].password===password
-
+user.phone===phone &&
+user.password===password
 ){
 
-if(data[key].status!=="active"){
+if(user.status==="pending"){
 
 alert(
-"حساب المتجر بانتظار الموافقة"
+"انتظر ريثما يتم الموافقة على طلب اضافة حسابك"
 );
 
 return;
 
 }
 
-saveSession(data[key]);
+saveSession(user);
 
-window.location.href =
-"sala.html";
+window.location.href="store.html";
 
 return;
 
@@ -831,42 +1081,42 @@ return;
 
 
 
-// DRIVERS
+// سائقين
 
 let drivers =
 await get(
-child(ref(database),
-"drivers")
+child(
+ref(database),
+"drivers"
+)
 );
 
 if(drivers.exists()){
 
-let data =
-drivers.val();
+let data = drivers.val();
 
 for(let key in data){
 
+let user = data[key];
+
 if(
-
-data[key].phone===phone &&
-data[key].password===password
-
+user.phone===phone &&
+user.password===password
 ){
 
-if(data[key].status!=="active"){
+if(user.status==="pending"){
 
 alert(
-"حساب السائق بانتظار الموافقة"
+"انتظر ريثما يتم الموافقة على طلب اضافة حسابك"
 );
 
 return;
 
 }
 
-saveSession(data[key]);
+saveSession(user);
 
-window.location.href =
-"drive.html";
+window.location.href="driver.html";
 
 return;
 
@@ -876,13 +1126,13 @@ return;
 
 }
 
-alert("الحساب غير موجود");
+alert("بيانات تسجيل الدخول غير صحيحة");
 
 }catch(error){
 
 console.log(error);
 
-alert(error.message);
+alert("حدث خطأ");
 
 }
 
@@ -890,233 +1140,19 @@ alert(error.message);
 
 
 
-// ==========================
-// REGISTER
-// ==========================
+// ========================
+// تسجيل خروج
+// ========================
 
-window.registerAccount =
-async function(){
+window.logout = function(){
 
-let type =
-document.getElementById(
-"account_type"
-).value;
+localStorage.removeItem("user");
 
-
-
-// CUSTOMER
-
-if(type==="customer"){
-
-let id =
-"CUS"+Date.now();
-
-let customerData = {
-
-id:id,
-
-name:
-document.getElementById(
-"customer_name"
-).value,
-
-phone:
-"+964"+
-document.getElementById(
-"customer_phone"
-).value.replace(/^0/,""),
-
-address:
-document.getElementById(
-"customer_address"
-).value,
-
-nearpoint:
-document.getElementById(
-"customer_nearpoint"
-).value,
-
-password:
-document.getElementById(
-"customer_password"
-).value,
-
-latitude:latitude,
-
-longitude:longitude,
-
-type:"customer",
-
-status:"active",
-
-createdAt:Date.now()
-
-};
-
-await set(
-ref(database,
-'customers/'+id),
-customerData
-);
-
-saveSession(customerData);
-
-window.location.href =
-"home.html";
-
-}
-
-
-
-// STORE
-
-if(type==="store"){
-
-let id =
-"STORE"+Date.now();
-
-let storeData = {
-
-id:id,
-
-owner:
-document.getElementById(
-"store_owner"
-).value,
-
-phone:
-"+964"+
-document.getElementById(
-"store_phone"
-).value.replace(/^0/,""),
-
-store_name:
-document.getElementById(
-"store_name"
-).value,
-
-category:
-document.getElementById(
-"store_category"
-).value,
-
-password:
-document.getElementById(
-"store_password"
-).value,
-
-latitude:store_latitude,
-
-longitude:store_longitude,
-
-type:"store",
-
-status:"pending",
-
-createdAt:Date.now()
-
-};
-
-await set(
-ref(database,
-'stores/'+id),
-storeData
-);
-
-showSection(
-"pendingSection"
-);
-
-}
-
-
-
-// DRIVER
-
-if(type==="driver"){
-
-let id =
-"DRV"+Date.now();
-
-let driverData = {
-
-id:id,
-
-name:
-document.getElementById(
-"driver_name"
-).value,
-
-phone:
-"+964"+
-document.getElementById(
-"driver_phone"
-).value.replace(/^0/,""),
-
-vehicle:
-document.getElementById(
-"driver_vehicle"
-).value,
-
-password:
-document.getElementById(
-"driver_password"
-).value,
-
-type:"driver",
-
-status:"pending",
-
-createdAt:Date.now()
-
-};
-
-await set(
-ref(database,
-'drivers/'+id),
-driverData
-);
-
-showSection(
-"pendingSection"
-);
-
-}
-
-};
-
-
-
-// ==========================
-// UPDATE DRIVER LOCATION
-// ==========================
-
-window.updateDriverLocation =
-async function(driverId,lat,lng){
-
-await update(
-
-ref(
-database,
-"driversLocations/"+driverId
-),
-
-{
-
-latitude:lat,
-
-longitude:lng,
-
-updatedAt:Date.now()
-
-}
-
-);
+window.location.href="index.html";
 
 };
 
 </script>
 
 </body>
-
 </html>
