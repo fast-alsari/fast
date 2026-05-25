@@ -1,3 +1,7 @@
+<!-- ========================= -->
+<!-- index.html -->
+<!-- ========================= -->
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -12,22 +16,6 @@ content="width=device-width, initial-scale=1.0">
 
 <link rel="icon" href="Logo.png">
 
-<link rel="apple-touch-icon" href="Logo.png">
-
-<meta name="apple-mobile-web-app-capable" content="yes">
-
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-rel="stylesheet">
-
 <link rel="stylesheet"
 href="style.css">
 
@@ -39,13 +27,16 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
 </head>
 
 <body>
 
 <div class="container">
 
-<!-- تسجيل الدخول -->
+<!-- LOGIN -->
 
 <div id="loginSection"
 class="card section active">
@@ -55,12 +46,6 @@ class="card section active">
 <img src="Logo.png">
 
 </div>
-
-<p class="app-text">
-
-نوصلك طلبك بأقل من ساعة 🚀
-
-</p>
 
 <h2 class="title">
 
@@ -104,7 +89,7 @@ onclick="togglePassword('login_password',this)">
 
 </div>
 
-<!-- إنشاء حساب -->
+<!-- REGISTER -->
 
 <div id="registerSection"
 class="card section">
@@ -151,7 +136,7 @@ onchange="changeRegisterForm()">
 
 </select>
 
-<!-- الزبون -->
+<!-- CUSTOMER -->
 
 <div id="customerForm"
 style="display:none;">
@@ -166,7 +151,7 @@ placeholder="رقم الهاتف">
 
 <input type="text"
 id="customer_address"
-placeholder="العنوان الكامل">
+placeholder="العنوان">
 
 <input type="text"
 id="customer_nearpoint"
@@ -186,7 +171,7 @@ onclick="togglePassword('customer_password',this)">
 
 <p class="map-title">
 
-حدد موقعك على الخريطة
+حدد موقعك
 
 </p>
 
@@ -195,14 +180,14 @@ class="map-box"></div>
 
 </div>
 
-<!-- المتجر -->
+<!-- STORE -->
 
 <div id="storeForm"
 style="display:none;">
 
 <input type="text"
 id="store_owner"
-placeholder="الاسم الكامل">
+placeholder="اسم صاحب المتجر">
 
 <input type="text"
 id="store_phone"
@@ -215,20 +200,12 @@ placeholder="اسم المتجر">
 <select id="store_category">
 
 <option value="">
-
-اختر نوع المتجر
-
+نوع المتجر
 </option>
 
 <option>مطعم</option>
-<option>مخبز</option>
 <option>ماركت</option>
-<option>خضروات</option>
-<option>مواد انشائية</option>
-<option>أدوات احتياطية</option>
-<option>ملابس</option>
 <option>صيدلية</option>
-<option>الكترونيات</option>
 
 </select>
 
@@ -244,39 +221,9 @@ onclick="togglePassword('store_password',this)">
 
 </div>
 
-<p class="upload-title">
-
-صورة المتجر
-
-</p>
-
-<input type="file"
-id="store_image">
-
-<p class="upload-title">
-
-صورة البطاقة الموحدة
-
-</p>
-
-<input type="file"
-id="store_card">
-
-<div class="work-times">
-
-<h3>
-
-أوقات عمل المتجر
-
-</h3>
-
-<div id="daysContainer"></div>
-
-</div>
-
 <p class="map-title">
 
-حدد موقع المتجر على الخريطة
+حدد موقع المتجر
 
 </p>
 
@@ -285,7 +232,7 @@ class="map-box"></div>
 
 </div>
 
-<!-- الدليفري -->
+<!-- DRIVER -->
 
 <div id="driverForm"
 style="display:none;">
@@ -301,6 +248,7 @@ placeholder="رقم الهاتف">
 <select id="driver_vehicle">
 
 <option>دراجة</option>
+
 <option>سيارة</option>
 
 </select>
@@ -317,24 +265,6 @@ onclick="togglePassword('driver_password',this)">
 
 </div>
 
-<p class="upload-title">
-
-صورة الهوية
-
-</p>
-
-<input type="file"
-id="driver_card">
-
-<p class="upload-title">
-
-صورة السيارة او الدراجة
-
-</p>
-
-<input type="file"
-id="driver_vehicle_image">
-
 </div>
 
 <button onclick="registerAccount()">
@@ -347,7 +277,7 @@ id="driver_vehicle_image">
 
 <a onclick="showSection('loginSection')">
 
-العودة لتسجيل الدخول
+تسجيل الدخول
 
 </a>
 
@@ -355,7 +285,7 @@ id="driver_vehicle_image">
 
 </div>
 
-<!-- الانتظار -->
+<!-- PENDING -->
 
 <div id="pendingSection"
 class="card section">
@@ -363,12 +293,6 @@ class="card section">
 <div class="logo">
 
 <img src="Logo.png">
-
-</div>
-
-<div class="pending-icon">
-
-<i class="fa-solid fa-clock"></i>
 
 </div>
 
@@ -380,8 +304,7 @@ class="card section">
 
 <p class="pending-text">
 
-انتظر ريثما يتم مراجعة حسابك
-وسوف نتواصل معك خلال أقل من 24 ساعة
+انتظر موافقة الادمن
 
 </p>
 
@@ -392,32 +315,41 @@ class="card section">
 <script type="module">
 
 // ==========================
-// Firebase
+// FIREBASE IMPORTS
 // ==========================
 
 import { initializeApp }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
-import { getAnalytics }
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
-
 import {
+
 getDatabase,
 ref,
 set,
 get,
 child,
 update
+
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
+import {
+
+getAuth,
+RecaptchaVerifier,
+signInWithPhoneNumber,
+signOut
+
+}
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-auth.js";
+
 
 
 // ==========================
-// Firebase Config
+// FIREBASE CONFIG
 // ==========================
 
 const firebaseConfig = {
@@ -444,131 +376,61 @@ databaseURL:
 
 
 // ==========================
-// تشغيل Firebase
+// START FIREBASE
 // ==========================
 
-const app = initializeApp(firebaseConfig);
+const app =
+initializeApp(firebaseConfig);
 
-const analytics = getAnalytics(app);
+const database =
+getDatabase(app);
 
-const database = getDatabase(app);
-
-console.log("Realtime Database Connected");
-
-
-
-// ==========================
-// ايام الاسبوع
-// ==========================
-
-const days = [
-
-"الأحد",
-"الاثنين",
-"الثلاثاء",
-"الأربعاء",
-"الخميس",
-"الجمعة",
-"السبت"
-
-];
+const auth =
+getAuth(app);
 
 
 
 // ==========================
-// ساعات العمل
+// SAVE SESSION
 // ==========================
 
-const hours = [
+function saveSession(userData){
 
-"مغلق",
-"6 صباحاً",
-"7 صباحاً",
-"8 صباحاً",
-"9 صباحاً",
-"10 صباحاً",
-"11 صباحاً",
-"12 ظهراً",
-"1 ظهراً",
-"2 ظهراً",
-"3 عصراً",
-"4 عصراً",
-"5 عصراً",
-"6 مساءً",
-"7 مساءً",
-"8 مساءً",
-"9 مساءً",
-"10 مساءً",
-"11 مساءً"
-
-];
-
-
-
-// ==========================
-// الخرائط
-// ==========================
-
-let map;
-let marker;
-let latitude="";
-let longitude="";
-
-let storeMap;
-let storeMarker;
-let store_latitude="";
-let store_longitude="";
-
-
-
-// ==========================
-// جدول الدوام
-// ==========================
-
-const daysContainer =
-document.getElementById("daysContainer");
-
-if(daysContainer){
-
-days.forEach((day,index)=>{
-
-daysContainer.innerHTML += `
-
-<div class="day-row">
-
-<label>${day}</label>
-
-<div class="time-selects">
-
-<select id="from_${index}">
-
-${hours.map(h=>`<option>${h}</option>`).join("")}
-
-</select>
-
-<select id="to_${index}">
-
-${hours.map(h=>`<option>${h}</option>`).join("")}
-
-</select>
-
-</div>
-
-</div>
-
-`;
-
-});
+localStorage.setItem(
+"user",
+JSON.stringify(userData)
+);
 
 }
 
 
 
 // ==========================
-// اظهار كلمة السر
+// LOGOUT
 // ==========================
 
-window.togglePassword = function(id,icon){
+window.logout =
+async function(){
+
+localStorage.removeItem(
+"user"
+);
+
+await signOut(auth);
+
+window.location.href =
+"index.html";
+
+};
+
+
+
+// ==========================
+// PASSWORD SHOW
+// ==========================
+
+window.togglePassword =
+function(id,icon){
 
 let input =
 document.getElementById(id);
@@ -598,10 +460,11 @@ icon.classList.replace(
 
 
 // ==========================
-// تغيير الصفحات
+// SHOW SECTION
 // ==========================
 
-window.showSection = function(sectionId){
+window.showSection =
+function(sectionId){
 
 document
 .querySelectorAll(".section")
@@ -620,27 +483,34 @@ document
 
 
 // ==========================
-// تغيير نوع الحساب
+// CHANGE FORM
 // ==========================
 
-window.changeRegisterForm = function(){
+window.changeRegisterForm =
+function(){
 
 let type =
-document.getElementById("account_type").value;
+document.getElementById(
+"account_type"
+).value;
 
-document.getElementById("customerForm")
-.style.display="none";
+document.getElementById(
+"customerForm"
+).style.display="none";
 
-document.getElementById("storeForm")
-.style.display="none";
+document.getElementById(
+"storeForm"
+).style.display="none";
 
-document.getElementById("driverForm")
-.style.display="none";
+document.getElementById(
+"driverForm"
+).style.display="none";
 
 if(type==="customer"){
 
-document.getElementById("customerForm")
-.style.display="block";
+document.getElementById(
+"customerForm"
+).style.display="block";
 
 setTimeout(loadMap,300);
 
@@ -648,8 +518,9 @@ setTimeout(loadMap,300);
 
 if(type==="store"){
 
-document.getElementById("storeForm")
-.style.display="block";
+document.getElementById(
+"storeForm"
+).style.display="block";
 
 setTimeout(loadStoreMap,300);
 
@@ -657,8 +528,9 @@ setTimeout(loadStoreMap,300);
 
 if(type==="driver"){
 
-document.getElementById("driverForm")
-.style.display="block";
+document.getElementById(
+"driverForm"
+).style.display="block";
 
 }
 
@@ -667,7 +539,23 @@ document.getElementById("driverForm")
 
 
 // ==========================
-// خريطة الزبون
+// MAPS
+// ==========================
+
+let map;
+let marker;
+let latitude="";
+let longitude="";
+
+let storeMap;
+let storeMarker;
+let store_latitude="";
+let store_longitude="";
+
+
+
+// ==========================
+// CUSTOMER MAP
 // ==========================
 
 function loadMap(){
@@ -679,19 +567,11 @@ map.remove();
 }
 
 map = L.map('map')
-.setView([35.4893,43.2275],13);
+.setView([33.3152,44.3661],13);
 
 L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-{
-maxZoom:19,
-minZoom:6
-}
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 ).addTo(map);
-
-setTimeout(()=>{
-map.invalidateSize();
-},300);
 
 map.on('click',function(e){
 
@@ -705,7 +585,8 @@ map.removeLayer(marker);
 
 }
 
-marker = L.marker([
+marker =
+L.marker([
 latitude,
 longitude
 ]).addTo(map);
@@ -717,7 +598,7 @@ longitude
 
 
 // ==========================
-// خريطة المتجر
+// STORE MAP
 // ==========================
 
 function loadStoreMap(){
@@ -729,19 +610,11 @@ storeMap.remove();
 }
 
 storeMap = L.map('storeMap')
-.setView([35.4893,43.2275],13);
+.setView([33.3152,44.3661],13);
 
 L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-{
-maxZoom:19,
-minZoom:6
-}
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 ).addTo(storeMap);
-
-setTimeout(()=>{
-storeMap.invalidateSize();
-},300);
 
 storeMap.on('click',function(e){
 
@@ -755,7 +628,8 @@ storeMap.removeLayer(storeMarker);
 
 }
 
-storeMarker = L.marker([
+storeMarker =
+L.marker([
 store_latitude,
 store_longitude
 ]).addTo(storeMap);
@@ -767,31 +641,42 @@ store_longitude
 
 
 // ==========================
-// حفظ الجلسة
+// RECAPTCHA
 // ==========================
 
-function saveSession(userData){
+window.recaptchaVerifier =
+new RecaptchaVerifier(
 
-localStorage.setItem(
-"user",
-JSON.stringify(userData)
-);
+auth,
+
+"loginSection",
+
+{
+
+size:"invisible"
 
 }
 
+);
+
 
 
 // ==========================
-// تسجيل الدخول
+// LOGIN
 // ==========================
 
-window.login = async function(){
+window.login =
+async function(){
 
 let phone =
-document.getElementById("login_phone").value;
+document.getElementById(
+"login_phone"
+).value.trim();
 
 let password =
-document.getElementById("login_password").value;
+document.getElementById(
+"login_password"
+).value.trim();
 
 if(phone==="" || password===""){
 
@@ -801,27 +686,93 @@ return;
 
 }
 
+if(!phone.startsWith("+964")){
+
+phone =
+"+964"+phone.replace(/^0/,"");
+
+}
+
 try{
 
-// الزبائن
+const confirmationResult =
+await signInWithPhoneNumber(
+
+auth,
+phone,
+window.recaptchaVerifier
+
+);
+
+let code =
+prompt("ادخل رمز التحقق");
+
+if(!code){
+
+return;
+
+}
+
+const result =
+await confirmationResult.confirm(code);
+
+const user =
+result.user;
+
+
+
+// ADMIN
+
+if(user.phoneNumber ===
+"+9647700000000"){
+
+let adminData = {
+
+name:"Admin",
+
+phone:user.phoneNumber,
+
+type:"admin"
+
+};
+
+saveSession(adminData);
+
+window.location.href =
+"add.html";
+
+return;
+
+}
+
+
+
+// CUSTOMERS
 
 let customers =
-await get(child(ref(database),"customers"));
+await get(
+child(ref(database),
+"customers")
+);
 
 if(customers.exists()){
 
-let data = customers.val();
+let data =
+customers.val();
 
 for(let key in data){
 
 if(
+
 data[key].phone===phone &&
 data[key].password===password
+
 ){
 
 saveSession(data[key]);
 
-window.location.href="home.html";
+window.location.href =
+"home.html";
 
 return;
 
@@ -833,25 +784,33 @@ return;
 
 
 
-// المتاجر
+// STORES
 
 let stores =
-await get(child(ref(database),"stores"));
+await get(
+child(ref(database),
+"stores")
+);
 
 if(stores.exists()){
 
-let data = stores.val();
+let data =
+stores.val();
 
 for(let key in data){
 
 if(
+
 data[key].phone===phone &&
 data[key].password===password
+
 ){
 
 if(data[key].status!=="active"){
 
-alert("الحساب بانتظار موافقة الادمن");
+alert(
+"حساب المتجر بانتظار الموافقة"
+);
 
 return;
 
@@ -859,7 +818,8 @@ return;
 
 saveSession(data[key]);
 
-window.location.href="store.html";
+window.location.href =
+"sala.html";
 
 return;
 
@@ -871,25 +831,33 @@ return;
 
 
 
-// السائقين
+// DRIVERS
 
 let drivers =
-await get(child(ref(database),"drivers"));
+await get(
+child(ref(database),
+"drivers")
+);
 
 if(drivers.exists()){
 
-let data = drivers.val();
+let data =
+drivers.val();
 
 for(let key in data){
 
 if(
+
 data[key].phone===phone &&
 data[key].password===password
+
 ){
 
 if(data[key].status!=="active"){
 
-alert("الحساب بانتظار موافقة الادمن");
+alert(
+"حساب السائق بانتظار الموافقة"
+);
 
 return;
 
@@ -897,7 +865,8 @@ return;
 
 saveSession(data[key]);
 
-window.location.href="driver.html";
+window.location.href =
+"drive.html";
 
 return;
 
@@ -907,13 +876,13 @@ return;
 
 }
 
-alert("بيانات تسجيل الدخول غير صحيحة");
+alert("الحساب غير موجود");
 
 }catch(error){
 
 console.log(error);
 
-alert("حدث خطأ");
+alert(error.message);
 
 }
 
@@ -922,42 +891,55 @@ alert("حدث خطأ");
 
 
 // ==========================
-// إنشاء الحساب
+// REGISTER
 // ==========================
 
-window.registerAccount = async function(){
+window.registerAccount =
+async function(){
 
 let type =
-document.getElementById("account_type").value;
+document.getElementById(
+"account_type"
+).value;
 
 
 
-// ====================
-// الزبون
-// ====================
+// CUSTOMER
 
 if(type==="customer"){
 
-let id = "CUS"+Date.now();
+let id =
+"CUS"+Date.now();
 
 let customerData = {
 
 id:id,
 
 name:
-document.getElementById("customer_name").value,
+document.getElementById(
+"customer_name"
+).value,
 
 phone:
-document.getElementById("customer_phone").value,
+"+964"+
+document.getElementById(
+"customer_phone"
+).value.replace(/^0/,""),
 
 address:
-document.getElementById("customer_address").value,
+document.getElementById(
+"customer_address"
+).value,
 
 nearpoint:
-document.getElementById("customer_nearpoint").value,
+document.getElementById(
+"customer_nearpoint"
+).value,
 
 password:
-document.getElementById("customer_password").value,
+document.getElementById(
+"customer_password"
+).value,
 
 latitude:latitude,
 
@@ -972,68 +954,60 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,'customers/'+id),
+ref(database,
+'customers/'+id),
 customerData
 );
 
 saveSession(customerData);
 
-alert("تم إنشاء حساب الزبون");
-
-window.location.href="home.html";
+window.location.href =
+"home.html";
 
 }
 
 
 
-// ====================
-// المتجر
-// ====================
+// STORE
 
 if(type==="store"){
 
-let id = "STORE"+Date.now();
-
-let workTimes = {};
-
-days.forEach((day,index)=>{
-
-workTimes[day]={
-
-from:
-document.getElementById(`from_${index}`).value,
-
-to:
-document.getElementById(`to_${index}`).value
-
-};
-
-});
+let id =
+"STORE"+Date.now();
 
 let storeData = {
 
 id:id,
 
 owner:
-document.getElementById("store_owner").value,
+document.getElementById(
+"store_owner"
+).value,
 
 phone:
-document.getElementById("store_phone").value,
+"+964"+
+document.getElementById(
+"store_phone"
+).value.replace(/^0/,""),
 
 store_name:
-document.getElementById("store_name").value,
+document.getElementById(
+"store_name"
+).value,
 
 category:
-document.getElementById("store_category").value,
+document.getElementById(
+"store_category"
+).value,
 
 password:
-document.getElementById("store_password").value,
+document.getElementById(
+"store_password"
+).value,
 
 latitude:store_latitude,
 
 longitude:store_longitude,
-
-workTimes:workTimes,
 
 type:"store",
 
@@ -1044,41 +1018,50 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,'stores/'+id),
+ref(database,
+'stores/'+id),
 storeData
 );
 
-saveSession(storeData);
-
-showSection("pendingSection");
+showSection(
+"pendingSection"
+);
 
 }
 
 
 
-// ====================
-// الدليفري
-// ====================
+// DRIVER
 
 if(type==="driver"){
 
-let id = "DRV"+Date.now();
+let id =
+"DRV"+Date.now();
 
 let driverData = {
 
 id:id,
 
 name:
-document.getElementById("driver_name").value,
+document.getElementById(
+"driver_name"
+).value,
 
 phone:
-document.getElementById("driver_phone").value,
+"+964"+
+document.getElementById(
+"driver_phone"
+).value.replace(/^0/,""),
 
 vehicle:
-document.getElementById("driver_vehicle").value,
+document.getElementById(
+"driver_vehicle"
+).value,
 
 password:
-document.getElementById("driver_password").value,
+document.getElementById(
+"driver_password"
+).value,
 
 type:"driver",
 
@@ -1089,13 +1072,14 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,'drivers/'+id),
+ref(database,
+'drivers/'+id),
 driverData
 );
 
-saveSession(driverData);
-
-showSection("pendingSection");
+showSection(
+"pendingSection"
+);
 
 }
 
@@ -1104,15 +1088,19 @@ showSection("pendingSection");
 
 
 // ==========================
-// تحديث موقع السائق
+// UPDATE DRIVER LOCATION
 // ==========================
 
 window.updateDriverLocation =
 async function(driverId,lat,lng){
 
 await update(
-ref(database,
-"driversLocations/"+driverId),
+
+ref(
+database,
+"driversLocations/"+driverId
+),
+
 {
 
 latitude:lat,
@@ -1122,21 +1110,8 @@ longitude:lng,
 updatedAt:Date.now()
 
 }
+
 );
-
-};
-
-
-
-// ==========================
-// تسجيل الخروج
-// ==========================
-
-window.logout = function(){
-
-localStorage.removeItem("user");
-
-window.location.href="index.html";
 
 };
 
