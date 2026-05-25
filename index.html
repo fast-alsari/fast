@@ -14,9 +14,11 @@ content="width=device-width, initial-scale=1.0">
 
 <link rel="apple-touch-icon" href="Logo.png">
 
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable"
+content="yes">
 
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-status-bar-style"
+content="default">
 
 <link rel="preconnect"
 href="https://fonts.googleapis.com">
@@ -214,7 +216,11 @@ placeholder="اسم المتجر">
 
 <select id="store_category">
 
-<option value="">اختر نوع المتجر</option>
+<option value="">
+
+اختر نوع المتجر
+
+</option>
 
 <option>مطعم</option>
 <option>مخبز</option>
@@ -351,7 +357,7 @@ id="driver_vehicle_image">
 
 </div>
 
-<!-- الانتظار -->
+<!-- صفحة الانتظار -->
 
 <div id="pendingSection"
 class="card section">
@@ -387,21 +393,20 @@ class="card section">
 
 <script type="module">
 
+// =========================
+// Firebase
+// =========================
+
 import { initializeApp }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-
-import { getAnalytics }
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-analytics.js";
 
 import {
 getDatabase,
 ref,
 set,
 get,
-child,
-update
+child
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -429,15 +434,13 @@ databaseURL:
 
 const app = initializeApp(firebaseConfig);
 
-const analytics = getAnalytics(app);
-
 const database = getDatabase(app);
 
 
 
-// ========================
+// =========================
 // تسجيل دخول تلقائي
-// ========================
+// =========================
 
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
@@ -472,9 +475,9 @@ window.location.href="admin.html";
 
 
 
-// ========================
+// =========================
 // ايام الاسبوع
-// ========================
+// =========================
 
 const days = [
 
@@ -490,9 +493,9 @@ const days = [
 
 
 
-// ========================
+// =========================
 // ساعات الدوام
-// ========================
+// =========================
 
 const hours = [
 
@@ -520,9 +523,9 @@ const hours = [
 
 
 
-// ========================
-// الخرائط
-// ========================
+// =========================
+// متغيرات الخرائط
+// =========================
 
 let map;
 let marker;
@@ -536,12 +539,14 @@ let store_longitude="";
 
 
 
-// ========================
+// =========================
 // جدول الدوام
-// ========================
+// =========================
 
 const daysContainer =
 document.getElementById("daysContainer");
+
+if(daysContainer){
 
 days.forEach((day,index)=>{
 
@@ -554,15 +559,11 @@ daysContainer.innerHTML += `
 <div class="time-selects">
 
 <select id="from_${index}">
-
 ${hours.map(h=>`<option>${h}</option>`).join("")}
-
 </select>
 
 <select id="to_${index}">
-
 ${hours.map(h=>`<option>${h}</option>`).join("")}
-
 </select>
 
 </div>
@@ -573,11 +574,13 @@ ${hours.map(h=>`<option>${h}</option>`).join("")}
 
 });
 
+}
 
 
-// ========================
+
+// =========================
 // اظهار كلمة السر
-// ========================
+// =========================
 
 window.togglePassword = function(id,icon){
 
@@ -608,9 +611,9 @@ icon.classList.replace(
 
 
 
-// ========================
-// تغيير الصفحات
-// ========================
+// =========================
+// اظهار الصفحات
+// =========================
 
 window.showSection = function(sectionId){
 
@@ -629,9 +632,9 @@ document
 
 
 
-// ========================
+// =========================
 // تغيير نوع الحساب
-// ========================
+// =========================
 
 window.changeRegisterForm = function(){
 
@@ -676,9 +679,9 @@ document.getElementById("driverForm")
 
 
 
-// ========================
+// =========================
 // خريطة الزبون
-// ========================
+// =========================
 
 function loadMap(){
 
@@ -706,7 +709,6 @@ map.invalidateSize();
 map.on('click',function(e){
 
 latitude=e.latlng.lat;
-
 longitude=e.latlng.lng;
 
 if(marker){
@@ -726,9 +728,9 @@ longitude
 
 
 
-// ========================
+// =========================
 // خريطة المتجر
-// ========================
+// =========================
 
 function loadStoreMap(){
 
@@ -756,7 +758,6 @@ storeMap.invalidateSize();
 storeMap.on('click',function(e){
 
 store_latitude=e.latlng.lat;
-
 store_longitude=e.latlng.lng;
 
 if(storeMarker){
@@ -776,9 +777,9 @@ store_longitude
 
 
 
-// ========================
+// =========================
 // حفظ الجلسة
-// ========================
+// =========================
 
 function saveSession(userData){
 
@@ -791,9 +792,9 @@ JSON.stringify(userData)
 
 
 
-// ========================
-// إنشاء حساب
-// ========================
+// =========================
+// إنشاء الحساب
+// =========================
 
 window.registerAccount =
 async function(){
@@ -841,8 +842,7 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,
-"customers/"+id),
+ref(database,"customers/"+id),
 customerData
 );
 
@@ -892,8 +892,7 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,
-"stores/"+id),
+ref(database,"stores/"+id),
 storeData
 );
 
@@ -934,8 +933,7 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,
-"drivers/"+id),
+ref(database,"drivers/"+id),
 driverData
 );
 
@@ -947,9 +945,9 @@ showSection("pendingSection");
 
 
 
-// ========================
+// =========================
 // تسجيل الدخول
-// ========================
+// =========================
 
 window.login =
 async function(){
@@ -980,7 +978,6 @@ password==="admin123"
 let adminData = {
 
 type:"admin",
-
 name:"Admin"
 
 };
@@ -1001,10 +998,7 @@ try{
 
 let customers =
 await get(
-child(
-ref(database),
-"customers"
-)
+child(ref(database),"customers")
 );
 
 if(customers.exists()){
@@ -1038,10 +1032,7 @@ return;
 
 let stores =
 await get(
-child(
-ref(database),
-"stores"
-)
+child(ref(database),"stores")
 );
 
 if(stores.exists()){
@@ -1057,7 +1048,7 @@ user.phone===phone &&
 user.password===password
 ){
 
-if(user.status==="pending"){
+if(user.status!=="active"){
 
 alert(
 "انتظر ريثما يتم الموافقة على طلب اضافة حسابك"
@@ -1085,10 +1076,7 @@ return;
 
 let drivers =
 await get(
-child(
-ref(database),
-"drivers"
-)
+child(ref(database),"drivers")
 );
 
 if(drivers.exists()){
@@ -1104,7 +1092,7 @@ user.phone===phone &&
 user.password===password
 ){
 
-if(user.status==="pending"){
+if(user.status!=="active"){
 
 alert(
 "انتظر ريثما يتم الموافقة على طلب اضافة حسابك"
@@ -1140,9 +1128,9 @@ alert("حدث خطأ");
 
 
 
-// ========================
+// =========================
 // تسجيل خروج
-// ========================
+// =========================
 
 window.logout = function(){
 
