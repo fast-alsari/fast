@@ -1,4 +1,3 @@
- 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -6,18 +5,13 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
-لوحة تحكم الادمن
-</title>
+<title>لوحة تحكم الادمن</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
 
@@ -219,113 +213,66 @@ margin-top:10px;
 <div class="header">
 
 <div>
-
-<h1>
-لوحة تحكم الادمن
-</h1>
-
-<p>
-إدارة التطبيق بالكامل
-</p>
-
+<h1>لوحة تحكم الادمن</h1>
+<p>إدارة التطبيق بالكامل</p>
 </div>
 
-<button
-class="logout-btn"
-onclick="logout()">
-
+<button class="logout-btn" onclick="logout()">
 تسجيل الخروج
-
 </button>
 
 </div>
 
 <div class="cards">
 
-<button
-class="stats-btn"
-onclick="showSection('customersSection',document.querySelectorAll('.tab-btn')[0])">
+<button class="stats-btn" onclick="showSection('customersSection',document.querySelectorAll('.tab-btn')[0])">
 
 <div class="stats-icon">
 <i class="fa-solid fa-users"></i>
 </div>
 
 <div class="stats-info">
-
-<h2 id="customersCount">
-0
-</h2>
-
-<p>
-الزبائن
-</p>
-
+<h2 id="customersCount">0</h2>
+<p>الزبائن</p>
 </div>
 
 </button>
 
-<button
-class="stats-btn"
-onclick="showSection('storesSection',document.querySelectorAll('.tab-btn')[1])">
+<button class="stats-btn" onclick="showSection('storesSection',document.querySelectorAll('.tab-btn')[1])">
 
 <div class="stats-icon">
 <i class="fa-solid fa-store"></i>
 </div>
 
 <div class="stats-info">
-
-<h2 id="storesCount">
-0
-</h2>
-
-<p>
-المتاجر
-</p>
-
+<h2 id="storesCount">0</h2>
+<p>المتاجر</p>
 </div>
 
 </button>
 
-<button
-class="stats-btn"
-onclick="showSection('driversSection',document.querySelectorAll('.tab-btn')[2])">
+<button class="stats-btn" onclick="showSection('driversSection',document.querySelectorAll('.tab-btn')[2])">
 
 <div class="stats-icon">
 <i class="fa-solid fa-motorcycle"></i>
 </div>
 
 <div class="stats-info">
-
-<h2 id="driversCount">
-0
-</h2>
-
-<p>
-سائقين التوصيل
-</p>
-
+<h2 id="driversCount">0</h2>
+<p>سائقين التوصيل</p>
 </div>
 
 </button>
 
-<button
-class="stats-btn"
-onclick="showSection('taxiSection',document.querySelectorAll('.tab-btn')[3])">
+<button class="stats-btn" onclick="showSection('taxiSection',document.querySelectorAll('.tab-btn')[3])">
 
 <div class="stats-icon">
 <i class="fa-solid fa-car"></i>
 </div>
 
 <div class="stats-info">
-
-<h2 id="taxiCount">
-0
-</h2>
-
-<p>
-سائقين التكسي
-</p>
-
+<h2 id="taxiCount">0</h2>
+<p>سائقين التكسي</p>
 </div>
 
 </button>
@@ -334,119 +281,56 @@ onclick="showSection('taxiSection',document.querySelectorAll('.tab-btn')[3])">
 
 <div class="tabs">
 
-<button
-class="tab-btn active"
-onclick="showSection('customersSection',this)">
-
+<button class="tab-btn active" onclick="showSection('customersSection',this)">
 الزبائن
-
 </button>
 
-<button
-class="tab-btn"
-onclick="showSection('storesSection',this)">
-
+<button class="tab-btn" onclick="showSection('storesSection',this)">
 المتاجر
-
 </button>
 
-<button
-class="tab-btn"
-onclick="showSection('driversSection',this)">
-
+<button class="tab-btn" onclick="showSection('driversSection',this)">
 السواق
-
 </button>
-<button
-class="tab-btn"
-onclick="showSection('taxiSection',this)">
 
+<button class="tab-btn" onclick="showSection('taxiSection',this)">
 التكسي
-
 </button>
 
-<button
-class="tab-btn"
-onclick="showSection('productsSection',this)">
-
+<button class="tab-btn" onclick="showSection('productsSection',this)">
 المنتجات
-
 </button>
 
 </div>
 
-<!-- الزبائن -->
-
-<div
-id="customersSection"
-class="section active-section">
-
-<h2 class="section-title">
-المستخدمين
-</h2>
-
+<div id="customersSection" class="section active-section">
+<h2 class="section-title">المستخدمين</h2>
 <div id="customersContainer"></div>
-
 </div>
 
-<!-- المتاجر -->
-
-<div
-id="storesSection"
-class="section">
-
-<h2 class="section-title">
-المتاجر
-</h2>
-
+<div id="storesSection" class="section">
+<h2 class="section-title">المتاجر</h2>
 <div id="storesContainer"></div>
-
 </div>
 
-<!-- السواق -->
-
-<div
-id="driversSection"
-class="section">
-
-<h2 class="section-title">
-السواق
-</h2>
-
+<div id="driversSection" class="section">
+<h2 class="section-title">السواق</h2>
 <div id="driversContainer"></div>
-
 </div>
-<div
-id="taxiSection"
-class="section">
 
-<h2 class="section-title">
-سائقين التكسي
-</h2>
-
+<div id="taxiSection" class="section">
+<h2 class="section-title">سائقين التكسي</h2>
 <div id="taxiContainer"></div>
-
 </div>
 
-<!-- المنتجات -->
-
-<div
-id="productsSection"
-class="section">
-
-<h2 class="section-title">
-المنتجات
-</h2>
-
+<div id="productsSection" class="section">
+<h2 class="section-title">المنتجات</h2>
 <div id="productsContainer"></div>
-
 </div>
 
 <script type="module">
 
-import { initializeApp }
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 getDatabase,
@@ -455,8 +339,7 @@ onValue,
 update,
 remove
 }
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
 
@@ -474,138 +357,72 @@ appId:"1:221388561840:web:ec9d75183ddd7d44be0a75",
 
 measurementId:"G-CEKHEPNR9X",
 
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+databaseURL:"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
-const app =
-initializeApp(firebaseConfig);
+const app = initializeApp(firebaseConfig);
 
-const database =
-getDatabase(app);
+const database = getDatabase(app);
 
-const currentUser =
-JSON.parse(localStorage.getItem("user"));
+const currentUser = JSON.parse(localStorage.getItem("user"));
 
 if(!currentUser || currentUser.type !== "admin"){
-
-window.location.href =
-"index.html";
-
+window.location.href = "index.html";
 }
 
-// تسجيل خروج
-
 window.logout = function(){
-
 localStorage.removeItem("user");
-
-window.location.href =
-"index.html";
-
+window.location.href = "index.html";
 };
 
-// تغيير الاقسام
+window.showSection = function(id,button){
 
-window.showSection =
-function(id,button){
-
-document.querySelectorAll(".section")
-.forEach(section=>{
-
+document.querySelectorAll(".section").forEach(section=>{
 section.classList.remove("active-section");
-
 });
 
-document.getElementById(id)
-.classList.add("active-section");
+document.getElementById(id).classList.add("active-section");
 
-document.querySelectorAll(".tab-btn")
-.forEach(btn=>{
-
+document.querySelectorAll(".tab-btn").forEach(btn=>{
 btn.classList.remove("active");
-
 });
 
 button.classList.add("active");
 
 };
 
-// تحميل البيانات
-
 function loadDashboard(){
 
-// الزبائن
-
-const customersContainer =
-document.getElementById("customersContainer");
-
+// العملاء
 onValue(ref(database,"customers"),(snapshot)=>{
 
-customersContainer.innerHTML = "";
+const container = document.getElementById("customersContainer");
+
+container.innerHTML = "";
 
 if(snapshot.exists()){
 
-let customers = snapshot.val();
+const customers = snapshot.val();
 
-
-
-document.getElementById("customersCount")
-.innerText =
+document.getElementById("customersCount").innerText =
 Object.keys(customers).length;
 
 for(let id in customers){
 
 let user = customers[id];
 
-customersContainer.innerHTML += `
+container.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${user.name}</p>
+<p><strong>الاسم:</strong> ${user.name || "-"}</p>
 
-<p><strong>الهاتف:</strong> ${user.phone}</p>
+<p><strong>الهاتف:</strong> ${user.phone || "-"}</p>
 
 <p><strong>العنوان:</strong> ${user.address || "-"}</p>
 
-<p><strong>الحالة:</strong> ${user.status}</p>
-
-<div class="actions">
-
-<button
-class="ban"
-onclick="banCustomer('${id}')">
-
-حظر
-
-</button>
-
-<button
-class="accept"
-onclick="unbanCustomer('${id}')">
-
-فك الحظر
-
-</button>
-
-<button
-class="reject"
-onclick="deleteCustomer('${id}')">
-
-حذف
-
-</button>
-
-<button
-class="location"
-onclick="openLocation('${user.latitude}','${user.longitude}')">
-
-الموقع
-
-</button>
-
-</div>
+<p><strong>الحالة:</strong> ${user.status || "-"}</p>
 
 </div>
 
@@ -617,178 +434,38 @@ onclick="openLocation('${user.latitude}','${user.longitude}')">
 
 });
 
- // المتاجر
-const storesContainer =
-document.getElementById("storesContainer");
+// المتاجر
+onValue(ref(database,"stores"),(snapshot)=>{
 
-onValue(ref(database,"stores"),async(snapshot)=>{
+const container = document.getElementById("storesContainer");
 
-storesContainer.innerHTML = "";
+container.innerHTML = "";
 
 if(snapshot.exists()){
 
-let stores =
-snapshot.val();
+const stores = snapshot.val();
 
-document.getElementById("storesCount")
-.innerText =
+document.getElementById("storesCount").innerText =
 Object.keys(stores).length;
-
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
 
 for(let id in stores){
 
 let store = stores[id];
 
-// انتهاء VIP
-
-// انتهاء VIP
-
-if(
-store.accountType === "vip" &&
-store.vipExpireDate &&
-store.vipExpireDate < today
-){
-
-await update(
-ref(database,"stores/"+id),
-{
-accountType:"normal",
-vipExpireDate:""
-}
-);
-
-store.accountType = "normal";
-
-}
-
-// انتهاء الاشتراك
-
-if(
-store.expireDate &&
-store.expireDate < today
-){
-
-await update(
-ref(database,"stores/"+id),
-{
-status:"disabled"
-}
-);
-
-store.status = "disabled";
-
-}
-
-
-
-storesContainer.innerHTML += `
+container.innerHTML += `
 
 <div class="item">
 
-<p><strong>اسم المتجر:</strong> ${store.store_name}</p>
-<p><strong>صورة المتجر:</strong></p>
+<p><strong>اسم المتجر:</strong> ${store.store_name || "-"}</p>
+
+<p><strong>المالك:</strong> ${store.owner || "-"}</p>
+
+<p><strong>الهاتف:</strong> ${store.phone || "-"}</p>
+
+<p><strong>الحالة:</strong> ${store.status || "-"}</p>
 
 <img src="${store.storeImage || 'https://via.placeholder.com/100'}">
 
-<p><strong>صورة الهوية:</strong></p>
-
-<img src="${store.idImage || 'https://via.placeholder.com/100'}">
-<p><strong>المالك:</strong> ${store.owner}</p>
-
-<p><strong>الهاتف:</strong> ${store.phone}</p>
-
-<p><strong>النوع:</strong> ${store.category}</p>
-
-<p><strong>الحالة:</strong> ${store.status}</p>
-
-<p><strong>عدد الطلبات:</strong> ${store.orders || 0}</p>
-
-<p><strong>مبلغ البيع:</strong> ${store.sales || 0} د.ع</p>
-
-<p><strong>تاريخ الانتهاء:</strong> ${store.expireDate || "غير محدد"}</p>
-
-<p><strong>حالة VIP:</strong>
-
-${
-store.accountType === "vip"
-?
-"VIP 🔥"
-:
-"عادي"
-}
-
-</p>
-
-<p><strong>انتهاء VIP:</strong>
-
-${store.vipExpireDate || "غير محدد"}
-
-</p>
-
-<div class="actions">
-
-<button
-class="accept"
-onclick="activateStore('${id}')">
-
-تفعيل
-
-</button>
-
-<button
-class="ban"
-onclick="disableStore('${id}')">
-
-إيقاف
-
-</button>
-
-<button
-class="reject"
-onclick="deleteStore('${id}')">
-
-حذف
-
-</button>
-
-<button
-class="expire"
-onclick="setExpireDate('stores','${id}')">
-
-تحديد انتهاء
-
-</button>
-
-<button
-class="vip"
-onclick="makeVip('${id}')">
-
-VIP
-
-</button>
-
-<button
-class="reject"
-onclick="removeVip('${id}')">
-
-إزالة VIP
-
-</button>
-
-<button
-class="location"
-onclick="openLocation('${store.latitude}','${store.longitude}')">
-
-الموقع
-
-</button>
-
-</div>
-
 </div>
 
 `;
@@ -799,103 +476,35 @@ onclick="openLocation('${store.latitude}','${store.longitude}')">
 
 });
 
- // السواق
-onValue(ref(database,"drivers"),async(snapshot)=>{
+// السواق
+onValue(ref(database,"drivers"),(snapshot)=>{
 
-let driversContainer =
-document.getElementById("driversContainer");
+const container = document.getElementById("driversContainer");
 
-driversContainer.innerHTML = "";
+container.innerHTML = "";
 
 if(snapshot.exists()){
 
-let drivers =
-snapshot.val();
+const drivers = snapshot.val();
 
-document.getElementById("driversCount")
-.innerText =
+document.getElementById("driversCount").innerText =
 Object.keys(drivers).length;
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
+
 for(let id in drivers){
 
 let driver = drivers[id];
-if(
-driver.expireDate &&
-driver.expireDate < today
-){
 
-await update(
-ref(database,"drivers/"+id),
-{
-status:"disabled"
-}
-);
-
-driver.status = "disabled";
-
-}
-driversContainer.innerHTML += `
+container.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${driver.name}</p>
-<p><strong>صورة الهوية:</strong></p>
+<p><strong>الاسم:</strong> ${driver.name || "-"}</p>
 
-<img src="${driver.idImage || 'https://via.placeholder.com/100'}">
+<p><strong>الهاتف:</strong> ${driver.phone || "-"}</p>
 
-<p><strong>صورة المركبة:</strong></p>
+<p><strong>الحالة:</strong> ${driver.status || "-"}</p>
 
 <img src="${driver.vehicleImage || 'https://via.placeholder.com/100'}">
-<p><strong>الهاتف:</strong> ${driver.phone}</p>
-
-<p><strong>المركبة:</strong> ${driver.vehicle}</p>
-
-<p><strong>الحالة:</strong> ${driver.status}</p>
-
-<p><strong>عدد الطلبات:</strong> ${driver.orders || 0}</p>
-
-<p><strong>الارباح:</strong> ${driver.earnings || 0} د.ع</p>
-
-<p><strong>تاريخ الانتهاء:</strong> ${driver.expireDate || "غير محدد"}</p>
-
-<div class="actions">
-
-<button
-class="accept"
-onclick="activateDriver('${id}')">
-
-تفعيل
-
-</button>
-
-<button
-class="ban"
-onclick="disableDriver('${id}')">
-
-إيقاف
-
-</button>
-
-<button
-class="reject"
-onclick="deleteDriver('${id}')">
-
-حذف
-
-</button>
-
-<button
-class="expire"
-onclick="setExpireDate('drivers','${id}')">
-
-تحديد انتهاء
-
-</button>
-
-</div>
 
 </div>
 
@@ -907,150 +516,78 @@ onclick="setExpireDate('drivers','${id}')">
 
 });
 
- // التكسي
+// التكسي
 onValue(ref(database,"taxi_drivers"),(snapshot)=>{
 
-let taxiContainer =
-document.getElementById("taxiContainer");
+const container = document.getElementById("taxiContainer");
 
-taxiContainer.innerHTML = "";
+container.innerHTML = "";
 
 if(snapshot.exists()){
 
-let taxis =
-snapshot.val();
+const taxis = snapshot.val();
 
-document.getElementById("taxiCount")
-.innerText =
+document.getElementById("taxiCount").innerText =
 Object.keys(taxis).length;
 
 for(let id in taxis){
 
 let taxi = taxis[id];
 
-taxiContainer.innerHTML += `
+container.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${taxi.name}</p>
-<p><strong>صورة السيارة:</strong></p>
+<p><strong>الاسم:</strong> ${taxi.name || "-"}</p>
 
-<img src="${taxi.carImage || 'https://via.placeholder.com/100'}">
-<p><strong>الهاتف:</strong> ${taxi.phone}</p>
+<p><strong>الهاتف:</strong> ${taxi.phone || "-"}</p>
 
 <p><strong>نوع السيارة:</strong> ${taxi.carType || "-"}</p>
 
-<p><strong>الحالة:</strong> ${taxi.status}</p>
-
-<div class="actions">
-
-<button
-class="accept"
-onclick="activateTaxi('${id}')">
-
-تفعيل
-
-</button>
-
-<button
-class="ban"
-onclick="disableTaxi('${id}')">
-
-إيقاف
-
-</button>
-
-<button
-class="reject"
-onclick="deleteTaxi('${id}')">
-
-حذف
-
-</button>
-
-</div>
+<img src="${taxi.carImage || 'https://via.placeholder.com/100'}">
 
 </div>
 
 `;
 
 }
+
 }
 
 });
 
- // المنتجات
+// المنتجات
 onValue(ref(database,"store_products"),(snapshot)=>{
 
-let productsContainer =
-document.getElementById("productsContainer");
+const container = document.getElementById("productsContainer");
 
-productsContainer.innerHTML = "";
-
-let totalProducts = 0;
+container.innerHTML = "";
 
 if(snapshot.exists()){
 
-let storesProducts =
-snapshot.val();
+const storesProducts = snapshot.val();
 
 for(let storeId in storesProducts){
 
-let products =
-storesProducts[storeId];
+let products = storesProducts[storeId];
 
 for(let productId in products){
 
-totalProducts++;
+let product = products[productId];
 
-let product =
-products[productId];
-
-productsContainer.innerHTML += `
+container.innerHTML += `
 
 <div class="item">
 
-<p><strong>اسم المنتج:</strong> ${product.name}</p>
+<p><strong>اسم المنتج:</strong> ${product.name || "-"}</p>
 
-<p><strong>المتجر:</strong> ${product.storeName}</p>
+<p><strong>المتجر:</strong> ${product.storeName || "-"}</p>
 
-<p><strong>السعر:</strong> ${product.price} د.ع</p>
+<p><strong>السعر:</strong> ${product.price || 0} د.ع</p>
 
-<p><strong>الوصف:</strong> ${product.description}</p>
+<p><strong>الحالة:</strong> ${product.status || "-"}</p>
 
-<p><strong>الحالة:</strong> ${product.status}</p>
-
-<img src="${product.image}">
-
-<div class="actions">
-
-<button
-class="accept"
-onclick="
-approveProduct(
-'${storeId}',
-'${productId}'
-)
-">
-
-قبول
-
-</button>
-
-<button
-class="reject"
-onclick="
-rejectProduct(
-'${storeId}',
-'${productId}'
-)
-">
-
-رفض
-
-</button>
-
-</div>
+<img src="${product.image || 'https://via.placeholder.com/100'}">
 
 </div>
 
@@ -1063,306 +600,12 @@ rejectProduct(
 }
 
 });
-
-
-
-}
-
-
-
-// المنتجات
-
-window.approveProduct =
-async function(storeId,productId){
-
-await update(
-ref(
-database,
-`store_products/${storeId}/${productId}`
-),
-{
-status:"active"
-}
-);
-
-
-
-};
-
-window.rejectProduct =
-async function(storeId,productId){
-
-await update(
-ref(
-database,
-`store_products/${storeId}/${productId}`
-),
-{
-status:"rejected"
-}
-);
-
-
-
-};
-
-// VIP
-
-window.makeVip =
-async function(id){
-
-let vipDate =
-prompt(
-"ادخل تاريخ انتهاء VIP مثال 2026-12-31"
-);
-
-if(!vipDate) return;
-
-await update(
-ref(database,"stores/"+id),
-{
-accountType:"vip",
-vipExpireDate:vipDate
-}
-);
-
-alert("تم تفعيل VIP");
-
-
-
-};
-
-window.removeVip =
-async function(id){
-
-await update(
-ref(database,"stores/"+id),
-{
-accountType:"normal",
-vipExpireDate:""
-}
-);
-
-alert("تم إزالة VIP");
-
-
-
-};
-
-
-// المتاجر
-
-window.activateStore =
-async function(id){
-
-await update(
-ref(database,"stores/"+id),
-{
-status:"active"
-}
-);
-
-
-
-};
-
-window.disableStore =
-async function(id){
-
-await update(
-ref(database,"stores/"+id),
-{
-status:"disabled"
-}
-);
-
-
-
-};
-
-window.deleteStore =
-async function(id){
-
-if(!confirm("حذف المتجر ؟")) return;
-
-await remove(
-ref(database,"stores/"+id)
-);
-
-
-
-};
-
-// السواق
-
-window.activateDriver =
-async function(id){
-
-await update(
-ref(database,"drivers/"+id),
-{
-status:"active"
-}
-);
-
-
-
-};
-
-window.disableDriver =
-async function(id){
-
-await update(
-ref(database,"drivers/"+id),
-{
-status:"disabled"
-}
-);
-
-
-
-};
-
-window.deleteDriver =
-async function(id){
-
-if(!confirm("حذف السائق ؟")) return;
-
-await remove(
-ref(database,"drivers/"+id)
-);
-
-
-
-};
-
-// الزبائن
-
-window.banCustomer =
-async function(id){
-
-await update(
-ref(database,"customers/"+id),
-{
-status:"banned"
-}
-);
-
-
-
-};
-
-window.unbanCustomer =
-async function(id){
-
-await update(
-ref(database,"customers/"+id),
-{
-status:"active"
-}
-);
-
-
-
-};
-
-window.deleteCustomer =
-async function(id){
-
-if(!confirm("حذف المستخدم ؟")) return;
-
-await remove(
-ref(database,"customers/"+id)
-);
-
-
-
-};
-
-// انتهاء
-
-window.setExpireDate =
-async function(type,id){
-
-let date =
-prompt("ادخل تاريخ الانتهاء");
-
-if(!date) return;
-
-await update(
-ref(database,`${type}/${id}`),
-{
-expireDate:date
-}
-);
-
-
-
-};
-
-// الموقع
-
-window.openLocation =
-function(lat,lng){
-
-if(!lat || !lng){
-
-alert("لا يوجد موقع");
-
-return;
-
-}
-
-window.open(
-`https://maps.google.com/?q=${lat},${lng}`
-);
-
-};
-// التكسي
-
-window.activateTaxi =
-async function(id){
-
-await update(
-ref(database,"taxi_drivers/"+id),
-{
-status:"active"
-}
-);
-
-
-
-};
-
-window.disableTaxi =
-async function(id){
-
-await update(
-ref(database,"taxi_drivers/"+id),
-{
-status:"disabled"
-}
-);
-
-
-
-};
-
-window.deleteTaxi =
-async function(id){
-
-if(!confirm("حذف السائق ؟")) return;
-
-await remove(
-ref(database,"taxi_drivers/"+id)
-);
-
-};
 
 }
 
 loadDashboard();
 
 </script>
+
 </body>
 </html>
