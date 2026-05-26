@@ -771,82 +771,22 @@ onclick="openMap(
 جدول الدوام الأسبوعي
 </h3>
 
+${
+store.workingHours
+? store.workingHours.map(hour => `
 <div class="schedule-item">
-<span>السبت</span>
+<span>${hour.day || "-"}</span>
 <span>
-فتح:
-${store.schedule?.saturday?.open || "--:--"}
+من:
+${hour.from || "-"}
 |
-غلق:
-${store.schedule?.saturday?.close || "--:--"}
+الى:
+${hour.to || "-"}
 </span>
 </div>
-
-<div class="schedule-item">
-<span>الأحد</span>
-<span>
-فتح:
-${store.schedule?.sunday?.open || "--:--"}
-|
-غلق:
-${store.schedule?.sunday?.close || "--:--"}
-</span>
-</div>
-
-<div class="schedule-item">
-<span>الإثنين</span>
-<span>
-فتح:
-${store.schedule?.monday?.open || "--:--"}
-|
-غلق:
-${store.schedule?.monday?.close || "--:--"}
-</span>
-</div>
-
-<div class="schedule-item">
-<span>الثلاثاء</span>
-<span>
-فتح:
-${store.schedule?.tuesday?.open || "--:--"}
-|
-غلق:
-${store.schedule?.tuesday?.close || "--:--"}
-</span>
-</div>
-
-<div class="schedule-item">
-<span>الأربعاء</span>
-<span>
-فتح:
-${store.schedule?.wednesday?.open || "--:--"}
-|
-غلق:
-${store.schedule?.wednesday?.close || "--:--"}
-</span>
-</div>
-
-<div class="schedule-item">
-<span>الخميس</span>
-<span>
-فتح:
-${store.schedule?.thursday?.open || "--:--"}
-|
-غلق:
-${store.schedule?.thursday?.close || "--:--"}
-</span>
-</div>
-
-<div class="schedule-item">
-<span>الجمعة</span>
-<span>
-فتح:
-${store.schedule?.friday?.open || "--:--"}
-|
-غلق:
-${store.schedule?.friday?.close || "--:--"}
-</span>
-</div>
+`).join("")
+: "<p>لا يوجد جدول دوام</p>"
+}
 
 </div>
 
