@@ -1,4 +1,4 @@
-ك 
+ 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -61,18 +61,52 @@ gap:15px;
 margin-bottom:20px;
 }
 
-.card{
-background:#fff;
-padding:20px;
-border-radius:18px;
-box-shadow:0 4px 10px rgba(0,0,0,0.08);
-text-align:center;
+.stats-btn{
+border:none;
+background:linear-gradient(135deg,#ffffff,#f3f6ff);
+padding:22px;
+border-radius:24px;
+display:flex;
+align-items:center;
+gap:15px;
+cursor:pointer;
+transition:0.3s;
+box-shadow:0 8px 20px rgba(0,0,0,0.08);
+text-align:right;
+width:100%;
 }
 
-.card h2{
-font-size:35px;
-margin-bottom:10px;
+.stats-btn:hover{
+transform:translateY(-5px);
+}
+
+.stats-icon{
+width:70px;
+height:70px;
+border-radius:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:28px;
+color:white;
+background:linear-gradient(45deg,#ff7b00,#0066ff);
+flex-shrink:0;
+}
+
+.stats-info{
+flex:1;
+}
+
+.stats-info h2{
+font-size:34px;
 color:#0066ff;
+margin-bottom:5px;
+}
+
+.stats-info p{
+font-size:16px;
+font-weight:bold;
+color:#444;
 }
 
 .tabs{
@@ -208,19 +242,37 @@ onclick="logout()">
 
 <div class="cards">
 
-<div class="card">
+<button
+class="stats-btn"
+onclick="showSection('customersSection',document.querySelectorAll('.tab-btn')[0])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-users"></i>
+</div>
+
+<div class="stats-info">
 
 <h2 id="customersCount">
 0
 </h2>
 
 <p>
-المستخدمين
+الزبائن
 </p>
 
 </div>
 
-<div class="card">
+</button>
+
+<button
+class="stats-btn"
+onclick="showSection('storesSection',document.querySelectorAll('.tab-btn')[1])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-store"></i>
+</div>
+
+<div class="stats-info">
 
 <h2 id="storesCount">
 0
@@ -232,29 +284,51 @@ onclick="logout()">
 
 </div>
 
-<div class="card">
+</button>
+
+<button
+class="stats-btn"
+onclick="showSection('driversSection',document.querySelectorAll('.tab-btn')[2])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-motorcycle"></i>
+</div>
+
+<div class="stats-info">
 
 <h2 id="driversCount">
 0
 </h2>
 
 <p>
-السواق
+سائقين التوصيل
 </p>
 
 </div>
 
-<div class="card">
+</button>
 
-<h2 id="productsCount">
+<button
+class="stats-btn"
+onclick="showSection('taxiSection',document.querySelectorAll('.tab-btn')[3])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-car"></i>
+</div>
+
+<div class="stats-info">
+
+<h2 id="taxiCount">
 0
 </h2>
 
 <p>
-المنتجات
+سائقين التكسي
 </p>
 
 </div>
+
+</button>
 
 </div>
 
@@ -281,6 +355,13 @@ class="tab-btn"
 onclick="showSection('driversSection',this)">
 
 السواق
+
+</button>
+<button
+class="tab-btn"
+onclick="showSection('taxiSection',this)">
+
+التكسي
 
 </button>
 
@@ -335,6 +416,17 @@ class="section">
 <div id="driversContainer"></div>
 
 </div>
+<div
+id="taxiSection"
+class="section">
+
+<h2 class="section-title">
+سائقين التكسي
+</h2>
+
+<div id="taxiContainer"></div>
+
+</div>
 
 <!-- المنتجات -->
 
@@ -359,7 +451,7 @@ from
 import {
 getDatabase,
 ref,
-get,
+onValue,
 update,
 remove
 }
@@ -442,22 +534,22 @@ button.classList.add("active");
 
 // تحميل البيانات
 
-async function loadDashboard(){
+function loadDashboard(){
 
 // الزبائن
 
-let customersSnapshot =
-await get(ref(database,"customers"));
-
-let customersContainer =
+const customersContainer =
 document.getElementById("customersContainer");
+
+onValue(ref(database,"customers"),(snapshot)=>{
 
 customersContainer.innerHTML = "";
 
-if(customersSnapshot.exists()){
+if(snapshot.exists()){
 
-let customers =
-customersSnapshot.val();
+let customers = snapshot.val();
+
+
 
 document.getElementById("customersCount")
 .innerText =
@@ -523,20 +615,20 @@ onclick="openLocation('${user.latitude}','${user.longitude}')">
 
 }
 
-// المتاجر
+});
 
-let storesSnapshot =
-await get(ref(database,"stores"));
-
-let storesContainer =
+ // المتاجر
+const storesContainer =
 document.getElementById("storesContainer");
+
+onValue(ref(database,"stores"),async(snapshot)=>{
 
 storesContainer.innerHTML = "";
 
-if(storesSnapshot.exists()){
+if(snapshot.exists()){
 
 let stores =
-storesSnapshot.val();
+snapshot.val();
 
 document.getElementById("storesCount")
 .innerText =
@@ -550,6 +642,8 @@ new Date()
 for(let id in stores){
 
 let store = stores[id];
+
+// انتهاء VIP
 
 // انتهاء VIP
 
@@ -571,12 +665,38 @@ store.accountType = "normal";
 
 }
 
+// انتهاء الاشتراك
+
+if(
+store.expireDate &&
+store.expireDate < today
+){
+
+await update(
+ref(database,"stores/"+id),
+{
+status:"disabled"
+}
+);
+
+store.status = "disabled";
+
+}
+
+
+
 storesContainer.innerHTML += `
 
 <div class="item">
 
 <p><strong>اسم المتجر:</strong> ${store.store_name}</p>
+<p><strong>صورة المتجر:</strong></p>
 
+<img src="${store.storeImage || 'https://via.placeholder.com/100'}">
+
+<p><strong>صورة الهوية:</strong></p>
+
+<img src="${store.idImage || 'https://via.placeholder.com/100'}">
 <p><strong>المالك:</strong> ${store.owner}</p>
 
 <p><strong>الهاتف:</strong> ${store.phone}</p>
@@ -677,35 +797,58 @@ onclick="openLocation('${store.latitude}','${store.longitude}')">
 
 }
 
-// السواق
+});
 
-let driversSnapshot =
-await get(ref(database,"drivers"));
+ // السواق
+onValue(ref(database,"drivers"),async(snapshot)=>{
 
 let driversContainer =
 document.getElementById("driversContainer");
 
 driversContainer.innerHTML = "";
 
-if(driversSnapshot.exists()){
+if(snapshot.exists()){
 
 let drivers =
-driversSnapshot.val();
+snapshot.val();
 
 document.getElementById("driversCount")
 .innerText =
 Object.keys(drivers).length;
-
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
 for(let id in drivers){
 
 let driver = drivers[id];
+if(
+driver.expireDate &&
+driver.expireDate < today
+){
 
+await update(
+ref(database,"drivers/"+id),
+{
+status:"disabled"
+}
+);
+
+driver.status = "disabled";
+
+}
 driversContainer.innerHTML += `
 
 <div class="item">
 
 <p><strong>الاسم:</strong> ${driver.name}</p>
+<p><strong>صورة الهوية:</strong></p>
 
+<img src="${driver.idImage || 'https://via.placeholder.com/100'}">
+
+<p><strong>صورة المركبة:</strong></p>
+
+<img src="${driver.vehicleImage || 'https://via.placeholder.com/100'}">
 <p><strong>الهاتف:</strong> ${driver.phone}</p>
 
 <p><strong>المركبة:</strong> ${driver.vehicle}</p>
@@ -762,10 +905,82 @@ onclick="setExpireDate('drivers','${id}')">
 
 }
 
-// المنتجات
+});
 
-let productsSnapshot =
-await get(ref(database,"store_products"));
+ // التكسي
+onValue(ref(database,"taxi_drivers"),(snapshot)=>{
+
+let taxiContainer =
+document.getElementById("taxiContainer");
+
+taxiContainer.innerHTML = "";
+
+if(snapshot.exists()){
+
+let taxis =
+snapshot.val();
+
+document.getElementById("taxiCount")
+.innerText =
+Object.keys(taxis).length;
+
+for(let id in taxis){
+
+let taxi = taxis[id];
+
+taxiContainer.innerHTML += `
+
+<div class="item">
+
+<p><strong>الاسم:</strong> ${taxi.name}</p>
+<p><strong>صورة السيارة:</strong></p>
+
+<img src="${taxi.carImage || 'https://via.placeholder.com/100'}">
+<p><strong>الهاتف:</strong> ${taxi.phone}</p>
+
+<p><strong>نوع السيارة:</strong> ${taxi.carType || "-"}</p>
+
+<p><strong>الحالة:</strong> ${taxi.status}</p>
+
+<div class="actions">
+
+<button
+class="accept"
+onclick="activateTaxi('${id}')">
+
+تفعيل
+
+</button>
+
+<button
+class="ban"
+onclick="disableTaxi('${id}')">
+
+إيقاف
+
+</button>
+
+<button
+class="reject"
+onclick="deleteTaxi('${id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+}
+
+});
+
+ // المنتجات
+onValue(ref(database,"store_products"),(snapshot)=>{
 
 let productsContainer =
 document.getElementById("productsContainer");
@@ -774,10 +989,10 @@ productsContainer.innerHTML = "";
 
 let totalProducts = 0;
 
-if(productsSnapshot.exists()){
+if(snapshot.exists()){
 
 let storesProducts =
-productsSnapshot.val();
+snapshot.val();
 
 for(let storeId in storesProducts){
 
@@ -847,12 +1062,13 @@ rejectProduct(
 
 }
 
-document.getElementById("productsCount")
-.innerText = totalProducts;
+});
+
+
 
 }
 
-loadDashboard();
+
 
 // المنتجات
 
@@ -869,7 +1085,7 @@ status:"active"
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -886,7 +1102,7 @@ status:"rejected"
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -912,7 +1128,7 @@ vipExpireDate:vipDate
 
 alert("تم تفعيل VIP");
 
-loadDashboard();
+
 
 };
 
@@ -929,9 +1145,10 @@ vipExpireDate:""
 
 alert("تم إزالة VIP");
 
-loadDashboard();
+
 
 };
+
 
 // المتاجر
 
@@ -945,7 +1162,7 @@ status:"active"
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -959,7 +1176,7 @@ status:"disabled"
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -972,7 +1189,7 @@ await remove(
 ref(database,"stores/"+id)
 );
 
-loadDashboard();
+
 
 };
 
@@ -988,7 +1205,7 @@ status:"active"
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -1002,7 +1219,7 @@ status:"disabled"
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -1015,7 +1232,7 @@ await remove(
 ref(database,"drivers/"+id)
 );
 
-loadDashboard();
+
 
 };
 
@@ -1031,7 +1248,7 @@ status:"banned"
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -1045,7 +1262,7 @@ status:"active"
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -1058,7 +1275,7 @@ await remove(
 ref(database,"customers/"+id)
 );
 
-loadDashboard();
+
 
 };
 
@@ -1079,7 +1296,7 @@ expireDate:date
 }
 );
 
-loadDashboard();
+
 
 };
 
@@ -1101,8 +1318,51 @@ window.open(
 );
 
 };
+// التكسي
+
+window.activateTaxi =
+async function(id){
+
+await update(
+ref(database,"taxi_drivers/"+id),
+{
+status:"active"
+}
+);
+
+
+
+};
+
+window.disableTaxi =
+async function(id){
+
+await update(
+ref(database,"taxi_drivers/"+id),
+{
+status:"disabled"
+}
+);
+
+
+
+};
+
+window.deleteTaxi =
+async function(id){
+
+if(!confirm("حذف السائق ؟")) return;
+
+await remove(
+ref(database,"taxi_drivers/"+id)
+);
+
+};
+
+}
+
+loadDashboard();
 
 </script>
-
 </body>
 </html>
