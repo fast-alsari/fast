@@ -532,67 +532,127 @@ currentUser = null;
 }
 if(currentUser){
 
-if(
-currentUser.status==="banned" ||
-currentUser.status==="disabled" ||
-currentUser.status==="expired" ||
-currentUser.status==="pending"
-){
+// الزبون
+if(currentUser.type==="customer"){
 
-showSection("pendingSection");
+window.location.href="home.html";
+
+}
+
+// الادمن
+else if(currentUser.type==="admin"){
+
+window.location.href="add.html";
+
+}
+
+// المتجر + التكسي + السائق
+else{
 
 if(currentUser.status==="pending"){
 
-document.getElementById("pendingMessage")
-.innerHTML =
-"انتظر الموافقة على حسابك";
-
-}
-
-if(currentUser.status==="banned"){
+showSection("pendingSection");
 
 document.getElementById("pendingMessage")
-.innerHTML =
-"حسابك محظور";
+.innerHTML = `
+
+انتظر ريثما يتم تفعيل حسابك <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة عبر واتساب للدفع والتفعيل
+
+</a>
+
+`;
 
 }
 
-if(currentUser.status==="disabled"){
+else if(currentUser.status==="banned"){
+
+showSection("pendingSection");
 
 document.getElementById("pendingMessage")
-.innerHTML =
-"حسابك غير فعال";
+.innerHTML = `
+
+حسابك محظور <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة
+
+</a>
+
+`;
 
 }
 
-if(currentUser.status==="expired"){
+else if(currentUser.status==="disabled"){
+
+showSection("pendingSection");
 
 document.getElementById("pendingMessage")
-.innerHTML =
-"انتهت صلاحية حسابك";
+.innerHTML = `
+
+حسابك غير فعال <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة
+
+</a>
+
+`;
 
 }
 
-}else{
+else if(currentUser.status==="expired"){
 
-if(currentUser.type==="customer"){
-window.location.href="home.html";
+showSection("pendingSection");
+
+document.getElementById("pendingMessage")
+.innerHTML = `
+
+انتهت صلاحية حسابك <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة لتجديد الاشتراك
+
+</a>
+
+`;
+
 }
+
+else if(currentUser.status==="active"){
 
 if(currentUser.type==="store"){
+
 window.location.href="store.html";
+
 }
 
 if(currentUser.type==="driver"){
+
 window.location.href="drive.html";
+
 }
 
 if(currentUser.type==="taxi"){
+
 window.location.href="tixe.html";
+
 }
 
-if(currentUser.type==="admin"){
-window.location.href="add.html";
 }
 
 }
@@ -1146,7 +1206,24 @@ ref(database,"stores/"+storeData.phone),
 storeData
 );
 
+saveSession(storeData);
+
 showSection("pendingSection");
+
+document.getElementById("pendingMessage")
+.innerHTML = `
+
+انتظر ريثما يتم تفعيل حسابك <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة عبر واتساب للدفع والتفعيل
+
+</a>
+
+`;
 
 }
 //تكسي
@@ -1218,7 +1295,24 @@ ref(database,"taxis/"+taxiData.phone),
 taxiData
 );
 
+saveSession(taxiData);
+
 showSection("pendingSection");
+
+document.getElementById("pendingMessage")
+.innerHTML = `
+
+انتظر ريثما يتم تفعيل حسابك <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة عبر واتساب للدفع والتفعيل
+
+</a>
+
+`;
 
 }
 // سائق
@@ -1284,7 +1378,24 @@ ref(database,"drivers/"+driverData.phone),
 driverData
 );
 
+saveSession(driverData);
+
 showSection("pendingSection");
+
+document.getElementById("pendingMessage")
+.innerHTML = `
+
+انتظر ريثما يتم تفعيل حسابك <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة عبر واتساب للدفع والتفعيل
+
+</a>
+
+`;
 
 }
 
