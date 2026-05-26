@@ -849,21 +849,19 @@ ${store.schedule?.friday?.close || "--:--"}
 </div>
 
 </div>
+
+
 <p><strong>صورة المتجر:</strong></p>
 
 <img class="big-image"
-src="${
-store["store-image"] ||
-'https://via.placeholder.com/120'
-}">
+src="${store['store-image'] ? store['store-image'] : 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
 
 <p><strong>هوية صاحب المتجر:</strong></p>
 
 <img class="big-image"
-src="${
-store["store-card"] ||
-'https://via.placeholder.com/120'
-}">
+src="${store['store-card'] ? store['store-card'] : 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
 
 </div>
 
