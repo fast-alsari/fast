@@ -933,18 +933,21 @@ JSON.stringify(userData)
 
 function checkAccountStatus(user){
 
+// pending
 if(user.status==="pending"){
+
+saveSession(user);
 
 document.getElementById("pendingMessage")
 .innerHTML = `
 
-انتظر الموافقة على حسابك <br><br>
+انتظر ريثما يتم تفعيل حسابك <br><br>
 
 <a
 href="https://wa.me/9647851521585"
 target="_blank">
 
-تواصل معنا عبر واتساب
+تواصل مع الإدارة عبر واتساب للدفع والتفعيل
 
 </a>
 
@@ -952,19 +955,29 @@ target="_blank">
 
 showSection("pendingSection");
 
-alert(
-"انتظر الموافقة على حسابك"
-);
-
 return false;
 
 }
 
+// banned
 if(user.status==="banned"){
 
+saveSession(user);
+
 document.getElementById("pendingMessage")
-.innerHTML =
-"حسابك محظور";
+.innerHTML = `
+
+حسابك محظور <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة
+
+</a>
+
+`;
 
 showSection("pendingSection");
 
@@ -972,11 +985,25 @@ return false;
 
 }
 
+// expired
 if(user.status==="expired"){
 
+saveSession(user);
+
 document.getElementById("pendingMessage")
-.innerHTML =
-"انتهت صلاحية حسابك";
+.innerHTML = `
+
+انتهت صلاحية حسابك <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة لتجديد الاشتراك
+
+</a>
+
+`;
 
 showSection("pendingSection");
 
@@ -984,11 +1011,25 @@ return false;
 
 }
 
+// disabled
 if(user.status==="disabled"){
 
+saveSession(user);
+
 document.getElementById("pendingMessage")
-.innerHTML =
-"حسابك متوقف";
+.innerHTML = `
+
+حسابك غير فعال <br><br>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank">
+
+تواصل مع الإدارة
+
+</a>
+
+`;
 
 showSection("pendingSection");
 
@@ -999,7 +1040,6 @@ return false;
 return true;
 
 }
-
 // =========================
 // إنشاء الحساب
 // =========================
@@ -1494,7 +1534,7 @@ saveSession(user);
 
 if(user.status === "active"){
 
-window.location.href = "store.html";
+window.location.href = "home.html";
 
 }else{
 
@@ -1615,9 +1655,9 @@ window.location.href = "tixe.html";
 
 }else{
 
-showSection("pendingSection");
-
 saveSession(user);
+
+checkAccountStatus(user);
 
 }
 
