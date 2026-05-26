@@ -518,6 +518,8 @@ return data.data.url;
 // تسجيل دخول تلقائي
 // =========================
 
+async function autoLogin(){
+
 let currentUser = null;
 
 try{
@@ -533,7 +535,9 @@ currentUser = null;
 
 }
 
-if(currentUser){
+if(!currentUser){
+return;
+}
 
 let tableName = "";
 
@@ -557,6 +561,8 @@ if(currentUser.type === "admin"){
 tableName = "admins";
 }
 
+try{
+
 const snapshot = await get(
 child(
 ref(database),
@@ -564,27 +570,20 @@ tableName + "/" + currentUser.phone
 )
 );
 
-if(snapshot.exists()){
+if(!snapshot.exists()){
+
+localStorage.removeItem("user");
+sessionStorage.removeItem("user");
+
+return;
+
+}
 
 currentUser = snapshot.val();
 
 saveSession(currentUser);
 
-}else{
-
-localStorage.removeItem("user");
-
-sessionStorage.removeItem("user");
-
-currentUser = null;
-
-}
-
-}
-
-if(currentUser){
-
-// اذا الحساب معلق
+// الحسابات المعلقة
 if(
 currentUser.status === "pending" ||
 currentUser.status === "banned" ||
@@ -616,13 +615,7 @@ if(currentUser.status === "banned"){
 
 document.getElementById("pendingMessage").innerHTML = `
 
-حسابك محظور <br><br>
-
-<a href="https://wa.me/9647851521585" target="_blank">
-
-تواصل مع الإدارة
-
-</a>
+حسابك محظور
 
 `;
 
@@ -633,13 +626,7 @@ if(currentUser.status === "disabled"){
 
 document.getElementById("pendingMessage").innerHTML = `
 
-حسابك غير فعال <br><br>
-
-<a href="https://wa.me/9647851521585" target="_blank">
-
-تواصل مع الإدارة
-
-</a>
+حسابك غير فعال
 
 `;
 
@@ -650,56 +637,52 @@ if(currentUser.status === "expired"){
 
 document.getElementById("pendingMessage").innerHTML = `
 
-انتهت صلاحية حسابك <br><br>
-
-<a href="https://wa.me/9647851521585" target="_blank">
-
-تواصل مع الإدارة لتجديد الاشتراك
-
-</a>
+انتهت صلاحية حسابك
 
 `;
 
 }
 
+return;
+
 }
 
 // الحسابات المفعلة
-else if(currentUser.status === "active"){
+if(currentUser.status === "active"){
 
-if(currentUser.type==="customer"){
-
+if(currentUser.type === "customer"){
 window.location.replace("home.html");
-
 }
 
-if(currentUser.type==="admin"){
-
+if(currentUser.type === "admin"){
 window.location.replace("add.html");
-
 }
 
-if(currentUser.type==="store"){
-
+if(currentUser.type === "store"){
 window.location.replace("store.html");
-
 }
 
-if(currentUser.type==="driver"){
-
+if(currentUser.type === "driver"){
 window.location.replace("drive.html");
-
 }
 
-if(currentUser.type==="taxi"){
-
+if(currentUser.type === "taxi"){
 window.location.replace("tixe.html");
+}
+
+}
+
+}catch(error){
+
+console.log(error);
 
 }
 
 }
 
-}
+autoLogin();
+
+
 
 // =========================
 // ايام الاسبوع
