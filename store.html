@@ -11,9 +11,7 @@
 content="width=device-width, initial-scale=1.0">
 
 <title>
-
 لوحة تحكم المتجر
-
 </title>
 
 <link rel="preconnect"
@@ -67,6 +65,7 @@ height:85px;
 border-radius:20px;
 object-fit:cover;
 border:3px solid white;
+background:white;
 }
 
 .logout-btn{
@@ -84,6 +83,7 @@ background:white;
 padding:20px;
 border-radius:30px;
 margin-bottom:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
 .section-title{
@@ -140,6 +140,7 @@ gap:15px;
 background:white;
 padding:15px;
 border-radius:25px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
 display:flex;
 gap:15px;
 align-items:center;
@@ -151,10 +152,22 @@ height:110px;
 border-radius:20px;
 object-fit:cover;
 background:#eee;
+border:1px solid #ddd;
 }
 
 .product-info{
 flex:1;
+}
+
+.product-info h3{
+margin-bottom:8px;
+font-size:20px;
+}
+
+.product-info p{
+font-size:14px;
+color:#666;
+margin-bottom:6px;
 }
 
 .status{
@@ -164,21 +177,8 @@ display:inline-block;
 font-size:13px;
 font-weight:bold;
 margin-top:8px;
-}
-
-.pending{
-background:#fff3cd;
-color:#856404;
-}
-
-.active{
 background:#d4edda;
 color:#155724;
-}
-
-.rejected{
-background:#f8d7da;
-color:#721c24;
 }
 
 .empty{
@@ -325,6 +325,10 @@ class="products-container">
 
 <script type="module">
 
+// =========================
+// Firebase
+// =========================
+
 import { initializeApp }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -372,6 +376,8 @@ const IMGBB_API_KEY =
 
 async function uploadImage(file){
 
+try{
+
 const formData = new FormData();
 
 formData.append("image",file);
@@ -393,9 +399,22 @@ console.log(data);
 
 if(data.success){
 
-return data.data.display_url;
+// رابط الصورة الحقيقي
+return data.data.image.url;
 
 }else{
+
+alert("فشل رفع الصورة");
+
+return "product.png";
+
+}
+
+}catch(error){
+
+console.log(error);
+
+alert("حدث خطأ أثناء رفع الصورة");
 
 return "product.png";
 
@@ -421,14 +440,18 @@ window.location.href =
 
 }
 
+
+
+// =========================
+// معلومات المتجر
+// =========================
+
 document.getElementById("storeName")
 .innerHTML =
-
 currentUser.store_name;
 
 document.getElementById("ownerName")
 .innerHTML =
-
 `صاحب المتجر : ${currentUser.owner}`;
 
 if(currentUser.store_image){
@@ -537,18 +560,18 @@ productData
 // =========================
 
 document.getElementById("productName")
-.value="";
+.value = "";
 
 document.getElementById("productPrice")
-.value="";
+.value = "";
 
 document.getElementById("productDescription")
-.value="";
+.value = "";
 
 document.getElementById("productImage")
-.value="";
+.value = "";
 
-alert("تم رفع المنتج");
+alert("تم رفع المنتج بنجاح");
 
 loadProducts();
 
@@ -592,6 +615,8 @@ container.innerHTML += `
 <img
 src="${product.image}"
 class="product-image"
+referrerpolicy="no-referrer"
+crossorigin="anonymous"
 onerror="this.src='product.png'">
 
 <div class="product-info">
@@ -614,7 +639,7 @@ ${product.name}
 
 </p>
 
-<div class="status active">
+<div class="status">
 
 تمت الموافقة
 
