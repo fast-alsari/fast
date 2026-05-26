@@ -813,6 +813,8 @@ if(type === ""){
 
 alert("اختر نوع الحساب");
 
+
+
 return;
 
 }
@@ -1090,6 +1092,19 @@ return false;
 window.registerAccount =
 async function(){
 
+const registerBtn = document.querySelector(
+'button[onclick="registerAccount()"]'
+);
+
+registerBtn.disabled = true;
+registerBtn.innerText = "جاري إنشاء الحساب...";
+function resetRegisterButton(){
+
+registerBtn.disabled = false;
+
+registerBtn.innerText = "إنشاء الحساب";
+
+}
 try{
 
 let type =
@@ -1122,6 +1137,8 @@ if(name.length < 3 || password.length < 4){
 
 alert("املأ جميع الحقول");
 
+resetRegisterButton();
+
 return;
 
 }
@@ -1129,18 +1146,22 @@ if(phone === ""){
 
 showToast("ادخل رقم الهاتف");
 
+resetRegisterButton();
+
 return;
 
 }
+
 
 if(await phoneExists(phone)){
 
 showToast("رقم الهاتف مستخدم مسبقاً");
 
+resetRegisterButton();
+
 return;
 
 }
-
 let id = "CUS"+Date.now();
 
 let customerData = {
@@ -1183,6 +1204,8 @@ if(type==="store"){
 
 alert("حدد موقع المتجر على الخريطة");
 
+resetRegisterButton();
+
 return;
 
 }
@@ -1192,8 +1215,9 @@ document.getElementById("store_phone").value
 
 alert("رقم الهاتف مستخدم مسبقاً");
 
-return;
+resetRegisterButton();
 
+return;
 }
 let id = "STORE"+Date.now();
 
@@ -1206,8 +1230,9 @@ if(!storeImageFile || !storeCardFile){
 
 alert("ارفع صور المتجر و وجه البطاقة الموحدة ");
 
-return;
+resetRegisterButton();
 
+return;
 }
 const storeImageUrl =
 await uploadImage(storeImageFile);
@@ -1254,6 +1279,10 @@ storeData
 
 saveSession(storeData);
 
+registerBtn.disabled = false;
+
+registerBtn.innerText = "إنشاء الحساب";
+
 showSection("pendingSection");
 
 document.getElementById("pendingMessage")
@@ -1285,6 +1314,8 @@ document.getElementById("taxi_vehicle_image").files[0];
 if(!cardFile || !vehicleFile){
 
 alert("ارفع صور الهوية والسيارة");
+
+resetRegisterButton();
 
 return;
 
@@ -1332,8 +1363,9 @@ if(await phoneExists(taxiData.phone)){
 
 alert("رقم الهاتف مستخدم مسبقاً");
 
-return;
+resetRegisterButton();
 
+return;
 }
 
 await set(
@@ -1342,6 +1374,10 @@ taxiData
 );
 
 saveSession(taxiData);
+
+registerBtn.disabled = false;
+
+registerBtn.innerText = "إنشاء الحساب";
 
 showSection("pendingSection");
 
@@ -1370,8 +1406,9 @@ document.getElementById("driver_phone").value
 
 alert("رقم الهاتف مستخدم مسبقاً");
 
-return;
+resetRegisterButton();
 
+return;
 }
 let id = "DRV"+Date.now();
 
@@ -1383,6 +1420,8 @@ document.getElementById("driver_vehicle_image").files[0];
 if(!driverCardFile || !vehicleImageFile){
 
 alert("ارفع صور الهوية والمركبة");
+
+resetRegisterButton();
 
 return;
 
@@ -1426,6 +1465,10 @@ driverData
 
 saveSession(driverData);
 
+registerBtn.disabled = false;
+
+registerBtn.innerText = "إنشاء الحساب";
+
 showSection("pendingSection");
 
 document.getElementById("pendingMessage")
@@ -1448,11 +1491,14 @@ target="_blank">
 
 }catch(error){
 
-console.log(error);
+console.error(error);
 
-alert("حدث خطأ أثناء إنشاء الحساب");
+resetRegisterButton();
+
+alert(error.message);
 
 }
+
 };
 
 // =========================
