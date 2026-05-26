@@ -5,8 +5,7 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>عالسريع</title>
 
@@ -20,26 +19,210 @@ content="width=device-width, initial-scale=1.0">
 
 <meta name="mobile-web-app-capable" content="yes">
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
 
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet"
-href="indx.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<style>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
 
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+body{
+background:#f5f7fb;
+min-height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:20px;
+}
+
+.container{
+width:100%;
+max-width:430px;
+}
+
+.card{
+background:#fff;
+border-radius:24px;
+padding:25px;
+box-shadow:0 5px 20px rgba(0,0,0,0.08);
+display:none;
+}
+
+.section.active{
+display:block;
+animation:fade .3s ease;
+}
+
+@keyframes fade{
+
+from{
+opacity:0;
+transform:translateY(10px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+.logo{
+text-align:center;
+margin-bottom:15px;
+}
+
+.logo img{
+width:110px;
+height:110px;
+object-fit:contain;
+}
+
+.title{
+text-align:center;
+font-size:26px;
+font-weight:700;
+margin-bottom:20px;
+color:#111;
+}
+
+.app-text{
+text-align:center;
+margin-bottom:20px;
+font-size:15px;
+color:#666;
+}
+
+input,
+select{
+width:100%;
+height:52px;
+border:none;
+outline:none;
+background:#f0f2f5;
+border-radius:14px;
+padding:0 15px;
+margin-bottom:15px;
+font-size:15px;
+}
+
+.password-box{
+position:relative;
+}
+
+.password-box i{
+position:absolute;
+left:15px;
+top:18px;
+cursor:pointer;
+color:#666;
+}
+
+button{
+width:100%;
+height:52px;
+border:none;
+border-radius:14px;
+background:#000;
+color:#fff;
+font-size:16px;
+font-weight:700;
+cursor:pointer;
+transition:.2s;
+}
+
+button:hover{
+opacity:.9;
+}
+
+.link{
+text-align:center;
+margin-top:18px;
+}
+
+.link a{
+cursor:pointer;
+font-weight:700;
+text-decoration:none;
+color:#000;
+}
+
+.upload-title{
+font-size:14px;
+font-weight:700;
+margin-bottom:10px;
+color:#222;
+}
+
+input[type="file"]{
+background:#fff;
+padding:10px;
+border:2px dashed #ddd;
+height:auto;
+}
+
+.pending-icon{
+width:90px;
+height:90px;
+border-radius:50%;
+background:#f5f5f5;
+display:flex;
+justify-content:center;
+align-items:center;
+margin:20px auto;
+font-size:40px;
+color:#000;
+}
+
+.pending-text{
+text-align:center;
+line-height:2;
+font-size:15px;
+color:#555;
+}
+
+.support-btn{
+display:block;
+width:100%;
+text-align:center;
+background:#25D366;
+color:#fff;
+padding:14px;
+border-radius:14px;
+margin-top:15px;
+text-decoration:none;
+font-weight:700;
+}
+
+@media(max-width:480px){
+
+.card{
+padding:18px;
+border-radius:18px;
+}
+
+.logo img{
+width:90px;
+height:90px;
+}
+
+.title{
+font-size:22px;
+}
+
+}
+
+</style>
 
 </head>
 
@@ -49,8 +232,7 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <!-- تسجيل الدخول -->
 
-<div id="loginSection"
-class="card section active">
+<div id="loginSection" class="card section active">
 
 <div class="logo">
 <img src="Logo.png">
@@ -98,8 +280,7 @@ onclick="togglePassword('login_password',this)">
 
 <!-- إنشاء حساب -->
 
-<div id="registerSection"
-class="card section">
+<div id="registerSection" class="card section">
 
 <div class="logo">
 <img src="Logo.png">
@@ -137,8 +318,7 @@ onchange="changeRegisterForm()">
 
 <!-- الزبون -->
 
-<div id="customerForm"
-style="display:none;">
+<div id="customerForm" style="display:none;">
 
 <input
 type="text"
@@ -167,8 +347,7 @@ onclick="togglePassword('customer_password',this)">
 
 <!-- المتجر -->
 
-<div id="storeForm"
-style="display:none;">
+<div id="storeForm" style="display:none;">
 
 <input
 type="text"
@@ -236,10 +415,9 @@ accept="image/*">
 
 </div>
 
-<!-- سائق التوصيل -->
+<!-- الدليفري -->
 
-<div id="driverForm"
-style="display:none;">
+<div id="driverForm" style="display:none;">
 
 <input
 type="text"
@@ -291,8 +469,7 @@ accept="image/*">
 
 <!-- التكسي -->
 
-<div id="taxiForm"
-style="display:none;">
+<div id="taxiForm" style="display:none;">
 
 <input
 type="text"
@@ -385,8 +562,7 @@ accept="image/*">
 
 <!-- صفحة الانتظار -->
 
-<div id="pendingSection"
-class="card section">
+<div id="pendingSection" class="card section">
 
 <div class="logo">
 <img src="Logo.png">
@@ -404,6 +580,15 @@ class="card section">
 انتظر ريثما يتم مراجعة حسابك
 وسوف يتم تفعيل الحساب قريباً
 </p>
+
+<a
+href="https://wa.me/9647851521585"
+target="_blank"
+class="support-btn">
+
+التواصل مع الدعم
+
+</a>
 
 </div>
 
@@ -452,6 +637,29 @@ const database = getDatabase(app);
 
 const IMGBB_API_KEY =
 "fa7d8e3e0c7fbc7686b65048fff45913";
+
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
+
+if(currentUser){
+
+if(currentUser.type==="customer"){
+window.location.href="home.html";
+}
+
+if(currentUser.type==="store"){
+window.location.href="store.html";
+}
+
+if(currentUser.type==="driver"){
+window.location.href="drive.html";
+}
+
+if(currentUser.type==="taxi"){
+window.location.href="taxi.html";
+}
+
+}
 
 window.togglePassword = function(id,icon){
 
@@ -513,31 +721,19 @@ document.getElementById("taxiForm")
 .style.display="none";
 
 if(type==="customer"){
-
-document.getElementById("customerForm")
-.style.display="block";
-
+document.getElementById("customerForm").style.display="block";
 }
 
 if(type==="store"){
-
-document.getElementById("storeForm")
-.style.display="block";
-
+document.getElementById("storeForm").style.display="block";
 }
 
 if(type==="driver"){
-
-document.getElementById("driverForm")
-.style.display="block";
-
+document.getElementById("driverForm").style.display="block";
 }
 
 if(type==="taxi"){
-
-document.getElementById("taxiForm")
-.style.display="block";
-
+document.getElementById("taxiForm").style.display="block";
 }
 
 };
