@@ -236,7 +236,24 @@ gap:10px;
 .schedule-item:last-child{
 border-bottom:none;
 }
+.vip-status{
+background:linear-gradient(45deg,#ff8800,#ff0000);
+color:white;
+padding:6px 12px;
+border-radius:10px;
+font-size:13px;
+font-weight:bold;
+display:inline-block;
+margin-top:8px;
+}
 
+.vip-btn{
+background:#ff8800 !important;
+}
+
+.remove-vip-btn{
+background:#555 !important;
+}
 </style>
 
 </head>
@@ -542,7 +559,7 @@ ${user.completedOrders || 0}</p>
 
 // المتاجر
 
-onValue(ref(database,"stores"),(snapshot)=>{
+onValue(ref(database,"stores"),async(snapshot)=>{
 
 const container =
 document.getElementById("storesContainer");
@@ -564,7 +581,34 @@ let inactiveCount = 0;
 for(let id in stores){
 
 let store = stores[id];
+if(store.accountType === "vip"){
 
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+if(
+store.vipExpireDate &&
+today > store.vipExpireDate
+){
+
+await update(
+ref(database,"stores/"+id),
+{
+
+accountType:"normal",
+vipExpireDate:""
+
+}
+);
+
+store.accountType = "normal";
+store.vipExpireDate = "";
+
+}
+
+}
 if(store.status === "active"){
 activeCount++;
 }else{
@@ -605,6 +649,34 @@ for(let id in drivers){
 
 let driver = drivers[id];
 
+if(driver.accountType === "vip"){
+
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+if(
+driver.vipExpireDate &&
+today > driver.vipExpireDate
+){
+
+update(
+ref(database,"drivers/"+id),
+{
+
+accountType:"normal",
+vipExpireDate:""
+
+}
+);
+
+driver.accountType = "normal";
+driver.vipExpireDate = "";
+}
+
+}
+
 container.innerHTML += `
 
 <div class="item">
@@ -620,7 +692,52 @@ ${driver.completedOrders || 0}</p>
 
 <p><strong>مبلغ التوصيل الكلي:</strong>
 ${driver.totalDeliveryAmount || 0} د.ع</p>
+<p>
+<strong>الحساب:</strong>
 
+${
+driver.accountType === "vip"
+
+?
+
+`<span class="vip-status">
+🔥 VIP
+</span>`
+
+:
+
+"عادي"
+
+}
+
+</p>
+
+<p>
+<strong>انتهاء VIP:</strong>
+
+${driver.vipExpireDate || "-"}
+
+</p>
+
+<div class="actions">
+
+<button
+class="vip-btn"
+onclick="activateVipDriver('${id}')">
+
+تفعيل VIP
+
+</button>
+
+<button
+class="remove-vip-btn"
+onclick="removeVipDriver('${id}')">
+
+إلغاء VIP
+
+</button>
+
+</div>
 <p><strong>صورة الهوية:</strong></p>
 
 <img class="big-image"
@@ -666,7 +783,33 @@ Object.keys(taxis).length;
 for(let id in taxis){
 
 let taxi = taxis[id];
+if(taxi.accountType === "vip"){
 
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+if(
+taxi.vipExpireDate &&
+today > taxi.vipExpireDate
+){
+
+update(
+ref(database,"taxi_drivers/"+id),
+{
+
+accountType:"normal",
+vipExpireDate:""
+
+}
+);
+taxi.accountType = "normal";
+taxi.vipExpireDate = "";
+
+}
+
+}
 container.innerHTML += `
 
 <div class="item">
@@ -685,7 +828,52 @@ ${taxi.carColor || "-"}</p>
 
 <p><strong>رقم السيارة:</strong>
 ${taxi.carNumber || "-"}</p>
+<p>
+<strong>الحساب:</strong>
 
+${
+taxi.accountType === "vip"
+
+?
+
+`<span class="vip-status">
+🔥 VIP
+</span>`
+
+:
+
+"عادي"
+
+}
+
+</p>
+
+<p>
+<strong>انتهاء VIP:</strong>
+
+${taxi.vipExpireDate || "-"}
+
+</p>
+
+<div class="actions">
+
+<button
+class="vip-btn"
+onclick="activateVipTaxi('${id}')">
+
+تفعيل VIP
+
+</button>
+
+<button
+class="remove-vip-btn"
+onclick="removeVipTaxi('${id}')">
+
+إلغاء VIP
+
+</button>
+
+</div>
 <p><strong>صورة السيارة:</strong></p>
 
 <img class="big-image"
@@ -734,9 +922,30 @@ ${store.status || "-"}
 
 </p>
 
-<p><strong>VPN:</strong>
-${store.vpn || "غير مفعل"}</p>
+<p>
+<strong>نوع الحساب:</strong>
 
+${
+store.accountType === "vip"
+
+?
+
+`<span class="vip-status">
+🔥 VIP
+</span>`
+
+:
+
+"عادي"
+
+}
+
+</p>
+
+<p>
+<strong>انتهاء VIP:</strong>
+${store.vipExpireDate || "-"}
+</p>
 <p><strong>تاريخ انتهاء الاشتراك:</strong>
 ${store.expireDate || "-"}</p>
 
@@ -753,6 +962,21 @@ onclick="activateStore('${id}')">
 <button class="reject"
 onclick="deactivateStore('${id}')">
 الغاء التفعيل
+</button>
+<button
+class="vip-btn"
+onclick="activateVipStore('${id}')">
+
+تفعيل VIP
+
+</button>
+
+<button
+class="remove-vip-btn"
+onclick="removeVipStore('${id}')">
+
+إلغاء VIP
+
 </button>
 
 <button class="map-btn"
@@ -917,7 +1141,136 @@ window.open(
 );
 
 };
+window.activateVipStore = async function(id){
 
+const nextMonth = new Date();
+
+nextMonth.setMonth(
+nextMonth.getMonth()+1
+);
+
+await update(
+ref(database,"stores/"+id),
+{
+
+accountType:"vip",
+
+vipExpireDate:
+nextMonth
+.toISOString()
+.split("T")[0]
+
+}
+);
+
+alert("تم تفعيل VIP");
+
+};
+
+window.removeVipStore = async function(id){
+
+await update(
+ref(database,"stores/"+id),
+{
+
+accountType:"normal",
+
+vipExpireDate:""
+
+}
+);
+
+alert("تم إلغاء VIP");
+
+};
+/* VIP للتكسي */
+
+window.activateVipTaxi = async function(id){
+
+const nextMonth = new Date();
+
+nextMonth.setMonth(
+nextMonth.getMonth()+1
+);
+
+await update(
+ref(database,"taxi_drivers/"+id),
+{
+
+accountType:"vip",
+
+vipExpireDate:
+nextMonth
+.toISOString()
+.split("T")[0]
+
+}
+);
+
+alert("تم تفعيل VIP للتكسي");
+
+};
+
+window.removeVipTaxi = async function(id){
+
+await update(
+ref(database,"taxi_drivers/"+id),
+{
+
+accountType:"normal",
+
+vipExpireDate:""
+
+}
+);
+
+alert("تم إلغاء VIP");
+
+};
+/* VIP للسواق */
+
+window.activateVipDriver = async function(id){
+
+const nextMonth = new Date();
+
+nextMonth.setMonth(
+nextMonth.getMonth()+1
+);
+
+await update(
+ref(database,"drivers/"+id),
+{
+
+accountType:"vip",
+
+vipExpireDate:
+nextMonth
+.toISOString()
+.split("T")[0]
+
+}
+);
+
+alert("تم تفعيل VIP للسائق");
+
+};
+
+window.removeVipDriver = async function(id){
+
+await update(
+ref(database,"drivers/"+id),
+{
+
+accountType:"normal",
+
+vipExpireDate:""
+
+}
+);
+
+alert("تم إلغاء VIP");
+
+};
 loadDashboard();
 
 </script>
