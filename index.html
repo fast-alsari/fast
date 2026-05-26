@@ -1187,23 +1187,79 @@ return;
 }
 let id = "CUS"+Date.now();
 
-let customerData = {
+let storeData = {
 
 id:id,
-type:"customer",
-status:"active",
+type:"store",
+status:"pending",
 
-name:
-document.getElementById("customer_name")
-.value
-.trim(),
+owner:
+document.getElementById("store_owner").value,
 
-phone:phone,
+phone:
+document.getElementById("store_phone").value,
+
+store_name:
+document.getElementById("store_name").value,
+
+category:
+document.getElementById("store_category").value,
 
 password:
-document.getElementById("customer_password")
-.value
-.trim(),
+document.getElementById("store_password").value,
+
+latitude:store_latitude,
+longitude:store_longitude,
+
+store_image:storeImageUrl,
+
+store_card:storeCardUrl,
+
+workingHours:[
+
+{
+day:"الأحد",
+from:document.getElementById("from_0").value,
+to:document.getElementById("to_0").value
+},
+
+{
+day:"الاثنين",
+from:document.getElementById("from_1").value,
+to:document.getElementById("to_1").value
+},
+
+{
+day:"الثلاثاء",
+from:document.getElementById("from_2").value,
+to:document.getElementById("to_2").value
+},
+
+{
+day:"الأربعاء",
+from:document.getElementById("from_3").value,
+to:document.getElementById("to_3").value
+},
+
+{
+day:"الخميس",
+from:document.getElementById("from_4").value,
+to:document.getElementById("to_4").value
+},
+
+{
+day:"الجمعة",
+from:document.getElementById("from_5").value,
+to:document.getElementById("to_5").value
+},
+
+{
+day:"السبت",
+from:document.getElementById("from_6").value,
+to:document.getElementById("to_6").value
+}
+
+],
 
 createdAt:Date.now()
 
