@@ -5,13 +5,18 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
 
-<title>لوحة تحكم الادمن</title>
+<title>
+لوحة تحكم الادمن
+</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap"
+rel="stylesheet">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
 
@@ -50,24 +55,23 @@ font-weight:bold;
 
 .cards{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 gap:15px;
 margin-bottom:20px;
 }
 
 .stats-btn{
 border:none;
-background:linear-gradient(135deg,#ffffff,#f3f6ff);
+background:#fff;
 padding:22px;
 border-radius:24px;
 display:flex;
 align-items:center;
 gap:15px;
 cursor:pointer;
-transition:0.3s;
-box-shadow:0 8px 20px rgba(0,0,0,0.08);
+transition:.3s;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
 text-align:right;
-width:100%;
 }
 
 .stats-btn:hover{
@@ -82,19 +86,13 @@ display:flex;
 justify-content:center;
 align-items:center;
 font-size:28px;
-color:white;
+color:#fff;
 background:linear-gradient(45deg,#ff7b00,#0066ff);
-flex-shrink:0;
-}
-
-.stats-info{
-flex:1;
 }
 
 .stats-info h2{
 font-size:34px;
 color:#0066ff;
-margin-bottom:5px;
 }
 
 .stats-info p{
@@ -121,7 +119,7 @@ font-weight:bold;
 
 .tab-btn.active{
 background:#ff7b00;
-color:white;
+color:#fff;
 }
 
 .section{
@@ -130,7 +128,7 @@ background:#fff;
 padding:20px;
 border-radius:20px;
 margin-bottom:20px;
-box-shadow:0 4px 10px rgba(0,0,0,0.08);
+box-shadow:0 4px 10px rgba(0,0,0,.08);
 }
 
 .active-section{
@@ -156,9 +154,9 @@ margin-bottom:8px;
 
 .actions{
 display:flex;
-flex-wrap:wrap;
 gap:10px;
-margin-top:10px;
+flex-wrap:wrap;
+margin-top:15px;
 }
 
 .actions button{
@@ -178,30 +176,65 @@ background:#00b894;
 background:#d63031;
 }
 
-.ban{
-background:#e17055;
-}
-
-.location{
+.map-btn{
 background:#0984e3;
 }
 
-.expire{
-background:#6c5ce7;
-}
-
-.vip{
-background:#111;
-color:#ff8800 !important;
-border:2px solid #ff8800 !important;
-}
-
-img{
-max-width:100px;
-max-height:100px;
+.big-image{
+width:120px;
+height:120px;
 object-fit:cover;
 border-radius:15px;
 margin-top:10px;
+border:2px solid #eee;
+}
+
+.filter-buttons{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
+}
+
+.filter-buttons button{
+border:none;
+padding:10px 18px;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+background:#0066ff;
+color:#fff;
+}
+
+.status-active{
+color:#00b894;
+font-weight:bold;
+}
+
+.status-inactive{
+color:#d63031;
+font-weight:bold;
+}
+
+.schedule-box{
+margin-top:15px;
+padding:15px;
+border-radius:15px;
+background:#f7f9ff;
+border:1px solid #e2e8ff;
+}
+
+.schedule-item{
+display:flex;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid #eee;
+font-size:14px;
+gap:10px;
+}
+
+.schedule-item:last-child{
+border-bottom:none;
 }
 
 </style>
@@ -217,7 +250,8 @@ margin-top:10px;
 <p>إدارة التطبيق بالكامل</p>
 </div>
 
-<button class="logout-btn" onclick="logout()">
+<button class="logout-btn"
+onclick="logout()">
 تسجيل الخروج
 </button>
 
@@ -225,7 +259,8 @@ margin-top:10px;
 
 <div class="cards">
 
-<button class="stats-btn" onclick="showSection('customersSection',document.querySelectorAll('.tab-btn')[0])">
+<button class="stats-btn"
+onclick="showSection('customersSection',document.querySelectorAll('.tab-btn')[0])">
 
 <div class="stats-icon">
 <i class="fa-solid fa-users"></i>
@@ -233,12 +268,13 @@ margin-top:10px;
 
 <div class="stats-info">
 <h2 id="customersCount">0</h2>
-<p>الزبائن</p>
+<p>المستخدمين</p>
 </div>
 
 </button>
 
-<button class="stats-btn" onclick="showSection('storesSection',document.querySelectorAll('.tab-btn')[1])">
+<button class="stats-btn"
+onclick="showSection('storesSection',document.querySelectorAll('.tab-btn')[1])">
 
 <div class="stats-icon">
 <i class="fa-solid fa-store"></i>
@@ -251,7 +287,8 @@ margin-top:10px;
 
 </button>
 
-<button class="stats-btn" onclick="showSection('driversSection',document.querySelectorAll('.tab-btn')[2])">
+<button class="stats-btn"
+onclick="showSection('driversSection',document.querySelectorAll('.tab-btn')[2])">
 
 <div class="stats-icon">
 <i class="fa-solid fa-motorcycle"></i>
@@ -259,12 +296,13 @@ margin-top:10px;
 
 <div class="stats-info">
 <h2 id="driversCount">0</h2>
-<p>سائقين التوصيل</p>
+<p>سواق التوصيل</p>
 </div>
 
 </button>
 
-<button class="stats-btn" onclick="showSection('taxiSection',document.querySelectorAll('.tab-btn')[3])">
+<button class="stats-btn"
+onclick="showSection('taxiSection',document.querySelectorAll('.tab-btn')[3])">
 
 <div class="stats-icon">
 <i class="fa-solid fa-car"></i>
@@ -272,7 +310,7 @@ margin-top:10px;
 
 <div class="stats-info">
 <h2 id="taxiCount">0</h2>
-<p>سائقين التكسي</p>
+<p>سواق التكسي</p>
 </div>
 
 </button>
@@ -281,63 +319,104 @@ margin-top:10px;
 
 <div class="tabs">
 
-<button class="tab-btn active" onclick="showSection('customersSection',this)">
-الزبائن
+<button class="tab-btn active"
+onclick="showSection('customersSection',this)">
+المستخدمين
 </button>
 
-<button class="tab-btn" onclick="showSection('storesSection',this)">
+<button class="tab-btn"
+onclick="showSection('storesSection',this)">
 المتاجر
 </button>
 
-<button class="tab-btn" onclick="showSection('driversSection',this)">
-السواق
+<button class="tab-btn"
+onclick="showSection('driversSection',this)">
+سواق التوصيل
 </button>
 
-<button class="tab-btn" onclick="showSection('taxiSection',this)">
-التكسي
-</button>
-
-<button class="tab-btn" onclick="showSection('productsSection',this)">
-المنتجات
+<button class="tab-btn"
+onclick="showSection('taxiSection',this)">
+سواق التكسي
 </button>
 
 </div>
 
-<div id="customersSection" class="section active-section">
-<h2 class="section-title">المستخدمين</h2>
+<div id="customersSection"
+class="section active-section">
+
+<h2 class="section-title">
+المستخدمين
+</h2>
+
 <div id="customersContainer"></div>
+
 </div>
 
-<div id="storesSection" class="section">
-<h2 class="section-title">المتاجر</h2>
+<div id="storesSection"
+class="section">
+
+<h2 class="section-title">
+المتاجر
+</h2>
+
+<div class="filter-buttons">
+
+<button onclick="showActiveStores()">
+المتاجر المفعلة
+(<span id="activeStoresCount">0</span>)
+</button>
+
+<button onclick="showInactiveStores()">
+المتاجر الغير مفعلة
+(<span id="inactiveStoresCount">0</span>)
+</button>
+
+<button onclick="activateAllStores()">
+تفعيل الكل
+</button>
+
+<button onclick="deactivateAllStores()">
+الغاء تفعيل الكل
+</button>
+
+</div>
+
 <div id="storesContainer"></div>
+
 </div>
 
-<div id="driversSection" class="section">
-<h2 class="section-title">السواق</h2>
+<div id="driversSection"
+class="section">
+
+<h2 class="section-title">
+سواق التوصيل
+</h2>
+
 <div id="driversContainer"></div>
+
 </div>
 
-<div id="taxiSection" class="section">
-<h2 class="section-title">سائقين التكسي</h2>
+<div id="taxiSection"
+class="section">
+
+<h2 class="section-title">
+سواق التكسي
+</h2>
+
 <div id="taxiContainer"></div>
-</div>
 
-<div id="productsSection" class="section">
-<h2 class="section-title">المنتجات</h2>
-<div id="productsContainer"></div>
 </div>
 
 <script type="module">
 
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 getDatabase,
 ref,
 onValue,
-update,
-remove
+update
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
@@ -365,26 +444,33 @@ const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
 
-const currentUser = JSON.parse(localStorage.getItem("user"));
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
 
 if(!currentUser || currentUser.type !== "admin"){
 window.location.href = "index.html";
 }
 
 window.logout = function(){
+
 localStorage.removeItem("user");
+
 window.location.href = "index.html";
+
 };
 
 window.showSection = function(id,button){
 
-document.querySelectorAll(".section").forEach(section=>{
+document.querySelectorAll(".section")
+.forEach(section=>{
 section.classList.remove("active-section");
 });
 
-document.getElementById(id).classList.add("active-section");
+document.getElementById(id)
+.classList.add("active-section");
 
-document.querySelectorAll(".tab-btn").forEach(btn=>{
+document.querySelectorAll(".tab-btn")
+.forEach(btn=>{
 btn.classList.remove("active");
 });
 
@@ -392,12 +478,16 @@ button.classList.add("active");
 
 };
 
+let allStoresData = {};
+
 function loadDashboard(){
 
-// العملاء
+// المستخدمين
+
 onValue(ref(database,"customers"),(snapshot)=>{
 
-const container = document.getElementById("customersContainer");
+const container =
+document.getElementById("customersContainer");
 
 container.innerHTML = "";
 
@@ -416,13 +506,29 @@ container.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${user.name || "-"}</p>
+<p><strong>الاسم:</strong>
+${user.name || "-"}</p>
 
-<p><strong>الهاتف:</strong> ${user.phone || "-"}</p>
+<p><strong>الرقم:</strong>
+${user.phone || "-"}</p>
 
-<p><strong>العنوان:</strong> ${user.address || "-"}</p>
+<p><strong>عدد الطلبات:</strong>
+${user.ordersCount || 0}</p>
 
-<p><strong>الحالة:</strong> ${user.status || "-"}</p>
+<p><strong>السعر الكلي:</strong>
+${user.totalPrice || 0} د.ع</p>
+
+<p><strong>عدد التوصيلات:</strong>
+${user.deliveryCount || 0}</p>
+
+<p><strong>السعر الكلي للتوصيل:</strong>
+${user.deliveryTotal || 0} د.ع</p>
+
+<p><strong>الطلبات الملغية:</strong>
+${user.cancelledOrders || 0}</p>
+
+<p><strong>الطلبات المكتملة:</strong>
+${user.completedOrders || 0}</p>
 
 </div>
 
@@ -435,9 +541,11 @@ container.innerHTML += `
 });
 
 // المتاجر
+
 onValue(ref(database,"stores"),(snapshot)=>{
 
-const container = document.getElementById("storesContainer");
+const container =
+document.getElementById("storesContainer");
 
 container.innerHTML = "";
 
@@ -445,41 +553,44 @@ if(snapshot.exists()){
 
 const stores = snapshot.val();
 
+allStoresData = stores;
+
 document.getElementById("storesCount").innerText =
 Object.keys(stores).length;
+
+let activeCount = 0;
+let inactiveCount = 0;
 
 for(let id in stores){
 
 let store = stores[id];
 
-container.innerHTML += `
+if(store.status === "active"){
+activeCount++;
+}else{
+inactiveCount++;
+}
 
-<div class="item">
-
-<p><strong>اسم المتجر:</strong> ${store.store_name || "-"}</p>
-
-<p><strong>المالك:</strong> ${store.owner || "-"}</p>
-
-<p><strong>الهاتف:</strong> ${store.phone || "-"}</p>
-
-<p><strong>الحالة:</strong> ${store.status || "-"}</p>
-
-<img src="${store.storeImage || 'https://via.placeholder.com/100'}">
-
-</div>
-
-`;
+renderStore(id,store);
 
 }
+
+document.getElementById("activeStoresCount").innerText =
+activeCount;
+
+document.getElementById("inactiveStoresCount").innerText =
+inactiveCount;
 
 }
 
 });
 
-// السواق
+// سواق التوصيل
+
 onValue(ref(database,"drivers"),(snapshot)=>{
 
-const container = document.getElementById("driversContainer");
+const container =
+document.getElementById("driversContainer");
 
 container.innerHTML = "";
 
@@ -498,13 +609,33 @@ container.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${driver.name || "-"}</p>
+<p><strong>الاسم:</strong>
+${driver.name || "-"}</p>
 
-<p><strong>الهاتف:</strong> ${driver.phone || "-"}</p>
+<p><strong>الرقم:</strong>
+${driver.phone || "-"}</p>
 
-<p><strong>الحالة:</strong> ${driver.status || "-"}</p>
+<p><strong>عدد الطلبات:</strong>
+${driver.completedOrders || 0}</p>
 
-<img src="${driver.vehicleImage || 'https://via.placeholder.com/100'}">
+<p><strong>مبلغ التوصيل الكلي:</strong>
+${driver.totalDeliveryAmount || 0} د.ع</p>
+
+<p><strong>صورة الهوية:</strong></p>
+
+<img class="big-image"
+src="${
+driver.idImage ||
+'https://via.placeholder.com/120'
+}">
+
+<p><strong>صورة الدراجة / السيارة:</strong></p>
+
+<img class="big-image"
+src="${
+driver.vehicleImage ||
+'https://via.placeholder.com/120'
+}">
 
 </div>
 
@@ -517,9 +648,11 @@ container.innerHTML += `
 });
 
 // التكسي
+
 onValue(ref(database,"taxi_drivers"),(snapshot)=>{
 
-const container = document.getElementById("taxiContainer");
+const container =
+document.getElementById("taxiContainer");
 
 container.innerHTML = "";
 
@@ -538,13 +671,28 @@ container.innerHTML += `
 
 <div class="item">
 
-<p><strong>الاسم:</strong> ${taxi.name || "-"}</p>
+<p><strong>الاسم:</strong>
+${taxi.name || "-"}</p>
 
-<p><strong>الهاتف:</strong> ${taxi.phone || "-"}</p>
+<p><strong>الرقم:</strong>
+${taxi.phone || "-"}</p>
 
-<p><strong>نوع السيارة:</strong> ${taxi.carType || "-"}</p>
+<p><strong>نوع السيارة:</strong>
+${taxi.carType || "-"}</p>
 
-<img src="${taxi.carImage || 'https://via.placeholder.com/100'}">
+<p><strong>لون السيارة:</strong>
+${taxi.carColor || "-"}</p>
+
+<p><strong>رقم السيارة:</strong>
+${taxi.carNumber || "-"}</p>
+
+<p><strong>صورة السيارة:</strong></p>
+
+<img class="big-image"
+src="${
+taxi.carImage ||
+'https://via.placeholder.com/120'
+}">
 
 </div>
 
@@ -556,38 +704,167 @@ container.innerHTML += `
 
 });
 
-// المنتجات
-onValue(ref(database,"store_products"),(snapshot)=>{
+}
 
-const container = document.getElementById("productsContainer");
+function renderStore(id,store){
 
-container.innerHTML = "";
-
-if(snapshot.exists()){
-
-const storesProducts = snapshot.val();
-
-for(let storeId in storesProducts){
-
-let products = storesProducts[storeId];
-
-for(let productId in products){
-
-let product = products[productId];
+const container =
+document.getElementById("storesContainer");
 
 container.innerHTML += `
 
 <div class="item">
 
-<p><strong>اسم المنتج:</strong> ${product.name || "-"}</p>
+<p><strong>اسم المتجر:</strong>
+${store.store_name || "-"}</p>
 
-<p><strong>المتجر:</strong> ${product.storeName || "-"}</p>
+<p><strong>اسم صاحب المتجر:</strong>
+${store.owner || "-"}</p>
 
-<p><strong>السعر:</strong> ${product.price || 0} د.ع</p>
+<p>
+<strong>الحالة:</strong>
 
-<p><strong>الحالة:</strong> ${product.status || "-"}</p>
+<span class="${
+store.status === "active"
+? "status-active"
+: "status-inactive"
+}">
+${store.status || "-"}
+</span>
 
-<img src="${product.image || 'https://via.placeholder.com/100'}">
+</p>
+
+<p><strong>VPN:</strong>
+${store.vpn || "غير مفعل"}</p>
+
+<p><strong>تاريخ انتهاء الاشتراك:</strong>
+${store.expireDate || "-"}</p>
+
+<p><strong>تاريخ التجديد:</strong>
+${store.renewDate || "-"}</p>
+
+<div class="actions">
+
+<button class="accept"
+onclick="activateStore('${id}')">
+تفعيل شهر
+</button>
+
+<button class="reject"
+onclick="deactivateStore('${id}')">
+الغاء التفعيل
+</button>
+
+<button class="map-btn"
+onclick="openMap(
+'${store.latitude || ""}',
+'${store.longitude || ""}'
+)">
+عرض الموقع
+</button>
+
+</div>
+
+<div class="schedule-box">
+
+<h3 style="margin-bottom:10px;">
+جدول الدوام الأسبوعي
+</h3>
+
+<div class="schedule-item">
+<span>السبت</span>
+<span>
+فتح:
+${store.schedule?.saturday?.open || "--:--"}
+|
+غلق:
+${store.schedule?.saturday?.close || "--:--"}
+</span>
+</div>
+
+<div class="schedule-item">
+<span>الأحد</span>
+<span>
+فتح:
+${store.schedule?.sunday?.open || "--:--"}
+|
+غلق:
+${store.schedule?.sunday?.close || "--:--"}
+</span>
+</div>
+
+<div class="schedule-item">
+<span>الإثنين</span>
+<span>
+فتح:
+${store.schedule?.monday?.open || "--:--"}
+|
+غلق:
+${store.schedule?.monday?.close || "--:--"}
+</span>
+</div>
+
+<div class="schedule-item">
+<span>الثلاثاء</span>
+<span>
+فتح:
+${store.schedule?.tuesday?.open || "--:--"}
+|
+غلق:
+${store.schedule?.tuesday?.close || "--:--"}
+</span>
+</div>
+
+<div class="schedule-item">
+<span>الأربعاء</span>
+<span>
+فتح:
+${store.schedule?.wednesday?.open || "--:--"}
+|
+غلق:
+${store.schedule?.wednesday?.close || "--:--"}
+</span>
+</div>
+
+<div class="schedule-item">
+<span>الخميس</span>
+<span>
+فتح:
+${store.schedule?.thursday?.open || "--:--"}
+|
+غلق:
+${store.schedule?.thursday?.close || "--:--"}
+</span>
+</div>
+
+<div class="schedule-item">
+<span>الجمعة</span>
+<span>
+فتح:
+${store.schedule?.friday?.open || "--:--"}
+|
+غلق:
+${store.schedule?.friday?.close || "--:--"}
+</span>
+</div>
+
+</div>
+
+<p><strong>صورة المتجر:</strong></p>
+
+<img class="big-image"
+src="${
+store.storeImage ||
+'https://via.placeholder.com/120'
+}">
+
+<p><strong>هوية صاحب المتجر:</strong></p>
+
+<img class="big-image"
+src="${
+store.ownerIdImage ||
+'https://via.placeholder.com/120'
+}">
 
 </div>
 
@@ -595,13 +872,114 @@ container.innerHTML += `
 
 }
 
-}
+window.activateStore = async function(id){
 
-}
+const today = new Date();
+
+const nextMonth = new Date();
+
+nextMonth.setMonth(nextMonth.getMonth()+1);
+
+await update(ref(database,"stores/"+id),{
+
+status:"active",
+
+renewDate:today.toLocaleDateString(),
+
+expireDate:nextMonth.toLocaleDateString()
 
 });
 
+};
+
+window.deactivateStore = async function(id){
+
+await update(ref(database,"stores/"+id),{
+
+status:"inactive"
+
+});
+
+};
+
+window.activateAllStores = async function(){
+
+for(let id in allStoresData){
+
+await update(ref(database,"stores/"+id),{
+status:"active"
+});
+
 }
+
+};
+
+window.deactivateAllStores = async function(){
+
+for(let id in allStoresData){
+
+await update(ref(database,"stores/"+id),{
+status:"inactive"
+});
+
+}
+
+};
+
+window.showActiveStores = function(){
+
+const container =
+document.getElementById("storesContainer");
+
+container.innerHTML = "";
+
+for(let id in allStoresData){
+
+if(allStoresData[id].status === "active"){
+
+renderStore(id,allStoresData[id]);
+
+}
+
+}
+
+};
+
+window.showInactiveStores = function(){
+
+const container =
+document.getElementById("storesContainer");
+
+container.innerHTML = "";
+
+for(let id in allStoresData){
+
+if(allStoresData[id].status !== "active"){
+
+renderStore(id,allStoresData[id]);
+
+}
+
+}
+
+};
+
+window.openMap = function(lat,lng){
+
+if(!lat || !lng){
+
+alert("لا يوجد موقع لهذا المتجر");
+
+return;
+
+}
+
+window.open(
+`https://www.google.com/maps?q=${lat},${lng}`,
+"_blank"
+);
+
+};
 
 loadDashboard();
 
