@@ -5,7 +5,13 @@
 
 <meta charset="UTF-8">
 
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta name="theme-color" content="#ffffff">
+
+<meta name="mobile-web-app-capable" content="yes">
 
 <title>عالسريع</title>
 
@@ -13,11 +19,9 @@
 
 <link rel="apple-touch-icon" href="Logo.png">
 
-<meta name="theme-color" content="#000000">
-
 <meta name="apple-mobile-web-app-capable" content="yes">
 
-<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
@@ -25,7 +29,10 @@
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
 
@@ -37,49 +44,30 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f5f7fb;
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
+background:#f5f5f5;
 padding:20px;
 }
 
 .container{
-width:100%;
-max-width:430px;
+max-width:450px;
+margin:auto;
 }
 
 .card{
 background:#fff;
-border-radius:24px;
 padding:25px;
+border-radius:20px;
 box-shadow:0 5px 20px rgba(0,0,0,0.08);
 display:none;
 }
 
 .section.active{
 display:block;
-animation:fade .3s ease;
-}
-
-@keyframes fade{
-
-from{
-opacity:0;
-transform:translateY(10px);
-}
-
-to{
-opacity:1;
-transform:translateY(0);
-}
-
 }
 
 .logo{
 text-align:center;
-margin-bottom:15px;
+margin-bottom:20px;
 }
 
 .logo img{
@@ -90,16 +78,14 @@ object-fit:contain;
 
 .title{
 text-align:center;
-font-size:26px;
-font-weight:700;
 margin-bottom:20px;
-color:#111;
+font-size:24px;
+font-weight:700;
 }
 
 .app-text{
 text-align:center;
 margin-bottom:20px;
-font-size:15px;
 color:#666;
 }
 
@@ -108,12 +94,12 @@ select{
 width:100%;
 height:52px;
 border:none;
-outline:none;
-background:#f0f2f5;
+background:#f2f2f2;
 border-radius:14px;
 padding:0 15px;
 margin-bottom:15px;
 font-size:15px;
+outline:none;
 }
 
 .password-box{
@@ -138,88 +124,70 @@ color:#fff;
 font-size:16px;
 font-weight:700;
 cursor:pointer;
-transition:.2s;
+transition:0.3s;
 }
 
 button:hover{
-opacity:.9;
+opacity:0.9;
 }
 
 .link{
 text-align:center;
-margin-top:18px;
+margin-top:15px;
 }
 
 .link a{
 cursor:pointer;
-font-weight:700;
-text-decoration:none;
 color:#000;
+font-weight:700;
 }
 
 .upload-title{
-font-size:14px;
-font-weight:700;
 margin-bottom:10px;
-color:#222;
-}
-
-input[type="file"]{
-background:#fff;
-padding:10px;
-border:2px dashed #ddd;
-height:auto;
+font-weight:700;
 }
 
 .pending-icon{
-width:90px;
-height:90px;
-border-radius:50%;
-background:#f5f5f5;
-display:flex;
-justify-content:center;
-align-items:center;
-margin:20px auto;
-font-size:40px;
-color:#000;
+font-size:70px;
+text-align:center;
+margin-bottom:20px;
+color:#ff9800;
 }
 
 .pending-text{
 text-align:center;
 line-height:2;
-font-size:15px;
 color:#555;
 }
 
-.support-btn{
+.whatsapp-link{
 display:block;
-width:100%;
+margin-top:20px;
 text-align:center;
 background:#25D366;
 color:#fff;
 padding:14px;
-border-radius:14px;
-margin-top:15px;
+border-radius:12px;
 text-decoration:none;
 font-weight:700;
 }
 
-@media(max-width:480px){
-
-.card{
-padding:18px;
-border-radius:18px;
+#toast{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#000;
+color:#fff;
+padding:14px 20px;
+border-radius:12px;
+opacity:0;
+pointer-events:none;
+transition:0.3s;
+z-index:9999;
 }
 
-.logo img{
-width:90px;
-height:90px;
-}
-
-.title{
-font-size:22px;
-}
-
+#toast.show{
+opacity:1;
 }
 
 </style>
@@ -247,9 +215,9 @@ font-size:22px;
 </h2>
 
 <input
-type="text"
+type="tel"
 id="login_phone"
-placeholder="رقم الهاتف واتساب">
+placeholder="رقم الهاتف">
 
 <div class="password-box">
 
@@ -326,7 +294,7 @@ id="customer_name"
 placeholder="الاسم الكامل">
 
 <input
-type="text"
+type="tel"
 id="customer_phone"
 placeholder="رقم الهاتف واتساب">
 
@@ -355,7 +323,7 @@ id="store_owner"
 placeholder="الاسم الكامل">
 
 <input
-type="text"
+type="tel"
 id="store_phone"
 placeholder="رقم الهاتف واتساب">
 
@@ -367,18 +335,14 @@ placeholder="اسم المتجر">
 <select id="store_category">
 
 <option value="">
-اختر نوع المتجر
+نوع المتجر
 </option>
 
 <option>مطعم</option>
-<option>مخبز</option>
 <option>ماركت</option>
-<option>خضروات</option>
-<option>مواد انشائية</option>
-<option>أدوات احتياطية</option>
-<option>ملابس</option>
 <option>صيدلية</option>
 <option>الكترونيات</option>
+<option>ملابس</option>
 
 </select>
 
@@ -415,7 +379,7 @@ accept="image/*">
 
 </div>
 
-<!-- الدليفري -->
+<!-- سائق التوصيل -->
 
 <div id="driverForm" style="display:none;">
 
@@ -425,14 +389,21 @@ id="driver_name"
 placeholder="الاسم الكامل">
 
 <input
-type="text"
+type="tel"
 id="driver_phone"
 placeholder="رقم الهاتف واتساب">
 
-<input
-type="text"
-id="driver_vehicle"
-placeholder="نوع المركبة">
+<select id="driver_vehicle">
+
+<option>
+دراجة
+</option>
+
+<option>
+سيارة
+</option>
+
+</select>
 
 <div class="password-box">
 
@@ -476,20 +447,21 @@ type="text"
 id="taxi_name"
 placeholder="اسم السائق الكامل">
 
-<input
-type="text"
-id="taxi_phone"
-placeholder="رقم الهاتف واتساب">
+<select id="taxi_vehicle">
 
-<input
-type="text"
-id="taxi_vehicle_type"
-placeholder="نوع المركبة">
+<option value="">
+نوع المركبة
+</option>
 
-<input
-type="text"
-id="taxi_vehicle_brand"
-placeholder="ماركة السيارة">
+<option>
+سيارة
+</option>
+
+<option>
+دراجة
+</option>
+
+</select>
 
 <input
 type="text"
@@ -502,16 +474,19 @@ placeholder="رقم المركبة الكامل">
 لون المركبة
 </option>
 
-<option>أبيض</option>
-<option>أسود</option>
-<option>أحمر</option>
-<option>أزرق</option>
+<option>ابيض</option>
+<option>اسود</option>
+<option>احمر</option>
+<option>ازرق</option>
 <option>فضي</option>
 <option>رمادي</option>
-<option>أصفر</option>
-<option>أخضر</option>
 
 </select>
+
+<input
+type="tel"
+id="taxi_phone"
+placeholder="رقم الهاتف واتساب">
 
 <div class="password-box">
 
@@ -536,7 +511,7 @@ id="taxi_card"
 accept="image/*">
 
 <p class="upload-title">
-صورة المركبة من الأمام
+صورة السيارة من الأمام
 </p>
 
 <input
@@ -573,26 +548,30 @@ accept="image/*">
 </div>
 
 <h2 class="title">
-تم استلام طلبك
+حالة الحساب
 </h2>
 
-<p class="pending-text">
-انتظر ريثما يتم مراجعة حسابك
-وسوف يتم تفعيل الحساب قريباً
+<p
+class="pending-text"
+id="pendingMessage">
+
+انتظر الموافقة على الحساب
+
 </p>
 
 <a
 href="https://wa.me/9647851521585"
-target="_blank"
-class="support-btn">
+class="whatsapp-link">
 
-التواصل مع الدعم
+تواصل معنا عبر واتساب
 
 </a>
 
 </div>
 
 </div>
+
+<div id="toast"></div>
 
 <script type="module">
 
@@ -612,22 +591,19 @@ from
 
 const firebaseConfig = {
 
-apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+apiKey: "YOUR_API_KEY",
 
-authDomain: "fast-937c9.firebaseapp.com",
+authDomain: "YOUR_AUTH_DOMAIN",
 
-projectId: "fast-937c9",
+projectId: "YOUR_PROJECT_ID",
 
-storageBucket: "fast-937c9.firebasestorage.app",
+storageBucket: "YOUR_STORAGE_BUCKET",
 
-messagingSenderId: "221388561840",
+messagingSenderId: "YOUR_MESSAGING_ID",
 
-appId: "1:221388561840:web:ec9d75183ddd7d44be0a75",
+appId: "YOUR_APP_ID",
 
-measurementId: "G-CEKHEPNR9X",
-
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+databaseURL: "YOUR_DATABASE_URL"
 
 };
 
@@ -636,7 +612,84 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 const IMGBB_API_KEY =
-"fa7d8e3e0c7fbc7686b65048fff45913";
+"YOUR_IMGBB_API_KEY";
+
+function showToast(message){
+
+const toast =
+document.getElementById("toast");
+
+toast.innerText = message;
+
+toast.classList.add("show");
+
+setTimeout(()=>{
+
+toast.classList.remove("show");
+
+},3000);
+
+}
+
+async function uploadImage(file){
+
+try{
+
+if(!file){
+
+return "";
+
+}
+
+const formData = new FormData();
+
+formData.append("image",file);
+
+const response = await fetch(
+
+`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+
+{
+method:"POST",
+body:formData
+}
+
+);
+
+const data = await response.json();
+
+if(data.success){
+
+return data.data.url;
+
+}else{
+
+showToast("فشل رفع الصورة");
+
+return "";
+
+}
+
+}catch(error){
+
+console.log(error);
+
+showToast("حدث خطأ أثناء رفع الصورة");
+
+return "";
+
+}
+
+}
+
+function saveSession(userData){
+
+localStorage.setItem(
+"user",
+JSON.stringify(userData)
+);
+
+}
 
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
@@ -656,10 +709,29 @@ window.location.href="drive.html";
 }
 
 if(currentUser.type==="taxi"){
-window.location.href="taxi.html";
+window.location.href="tixe.html";
+}
+
+if(currentUser.type==="admin"){
+window.location.href="add.html";
 }
 
 }
+
+window.showSection = function(id){
+
+document.querySelectorAll(".section")
+.forEach(section=>{
+
+section.classList.remove("active");
+
+});
+
+document
+.getElementById(id)
+.classList.add("active");
+
+};
 
 window.togglePassword = function(id,icon){
 
@@ -688,25 +760,7 @@ icon.classList.replace(
 
 };
 
-window.showSection = function(sectionId){
-
-document.querySelectorAll(".section")
-.forEach(section=>{
-
-section.classList.remove("active");
-
-});
-
-document
-.getElementById(sectionId)
-.classList.add("active");
-
-};
-
 window.changeRegisterForm = function(){
-
-let type =
-document.getElementById("account_type").value;
 
 document.getElementById("customerForm")
 .style.display="none";
@@ -720,82 +774,54 @@ document.getElementById("driverForm")
 document.getElementById("taxiForm")
 .style.display="none";
 
+let type =
+document.getElementById("account_type").value;
+
 if(type==="customer"){
-document.getElementById("customerForm").style.display="block";
+
+document.getElementById("customerForm")
+.style.display="block";
+
 }
 
 if(type==="store"){
-document.getElementById("storeForm").style.display="block";
+
+document.getElementById("storeForm")
+.style.display="block";
+
 }
 
 if(type==="driver"){
-document.getElementById("driverForm").style.display="block";
+
+document.getElementById("driverForm")
+.style.display="block";
+
 }
 
 if(type==="taxi"){
-document.getElementById("taxiForm").style.display="block";
+
+document.getElementById("taxiForm")
+.style.display="block";
+
 }
 
 };
 
-function saveSession(userData){
+async function phoneExists(phone){
 
-localStorage.setItem(
-"user",
-JSON.stringify(userData)
+const tables = [
+"customers",
+"stores",
+"drivers",
+"taxis",
+"admins"
+];
+
+for(let table of tables){
+
+const snapshot = await get(
+child(ref(database),table)
 );
-
-}
-
-async function uploadImage(file){
-
-if(!file){
-return "";
-}
-
-try{
-
-const formData = new FormData();
-
-formData.append("image",file);
-
-const response = await fetch(
-`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
-{
-method:"POST",
-body:formData,
-headers:{
-"Accept":"application/json"
-}
-}
-);
-
-const data = await response.json();
-
-if(data.success){
-
-return data.data.url;
-
-}else{
-
-return "";
-
-}
-
-}catch(error){
-
-console.log(error);
-
-return "";
-
-}
-
-}
-
-async function phoneExists(path,phone){
-
-const snapshot =
-await get(child(ref(database),path));
 
 if(snapshot.exists()){
 
@@ -813,7 +839,63 @@ return true;
 
 }
 
+}
+
 return false;
+
+}
+
+function checkAccountStatus(user){
+
+if(user.status==="pending"){
+
+document.getElementById("pendingMessage")
+.innerHTML =
+"انتظر الموافقة على طلبك";
+
+showSection("pendingSection");
+
+return false;
+
+}
+
+if(user.status==="expired"){
+
+document.getElementById("pendingMessage")
+.innerHTML =
+"انتهت صلاحية حسابك";
+
+showSection("pendingSection");
+
+return false;
+
+}
+
+if(user.status==="banned"){
+
+document.getElementById("pendingMessage")
+.innerHTML =
+"حسابك محظور";
+
+showSection("pendingSection");
+
+return false;
+
+}
+
+if(user.status==="disabled"){
+
+document.getElementById("pendingMessage")
+.innerHTML =
+"حسابك متوقف";
+
+showSection("pendingSection");
+
+return false;
+
+}
+
+return true;
 
 }
 
@@ -828,22 +910,17 @@ if(type==="customer"){
 let phone =
 document.getElementById("customer_phone").value;
 
-let exists =
-await phoneExists("customers",phone);
+if(await phoneExists(phone)){
 
-if(exists){
-
-alert("رقم الهاتف مستخدم مسبقاً");
+showToast("رقم الهاتف مستخدم مسبقاً");
 
 return;
 
 }
 
-let id = "CUS"+Date.now();
+let user = {
 
-let customerData = {
-
-id:id,
+id:phone,
 type:"customer",
 status:"active",
 
@@ -860,15 +937,280 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,"customers/"+id),
-customerData
+ref(database,"customers/"+phone),
+user
 );
 
-saveSession(customerData);
+saveSession(user);
 
 window.location.href="home.html";
 
 }
+
+if(type==="store"){
+
+let phone =
+document.getElementById("store_phone").value;
+
+if(await phoneExists(phone)){
+
+showToast("رقم الهاتف مستخدم مسبقاً");
+
+return;
+
+}
+
+const image =
+await uploadImage(
+document.getElementById("store_image").files[0]
+);
+
+const card =
+await uploadImage(
+document.getElementById("store_card").files[0]
+);
+
+let user = {
+
+id:phone,
+type:"store",
+status:"pending",
+
+owner:
+document.getElementById("store_owner").value,
+
+phone:phone,
+
+store_name:
+document.getElementById("store_name").value,
+
+category:
+document.getElementById("store_category").value,
+
+password:
+document.getElementById("store_password").value,
+
+image:image,
+card:card,
+
+createdAt:Date.now()
+
+};
+
+await set(
+ref(database,"stores/"+phone),
+user
+);
+
+saveSession(user);
+
+showSection("pendingSection");
+
+}
+
+if(type==="driver"){
+
+let phone =
+document.getElementById("driver_phone").value;
+
+if(await phoneExists(phone)){
+
+showToast("رقم الهاتف مستخدم مسبقاً");
+
+return;
+
+}
+
+const card =
+await uploadImage(
+document.getElementById("driver_card").files[0]
+);
+
+const vehicle =
+await uploadImage(
+document.getElementById("driver_vehicle_image").files[0]
+);
+
+let user = {
+
+id:phone,
+type:"driver",
+status:"pending",
+
+name:
+document.getElementById("driver_name").value,
+
+phone:phone,
+
+vehicle:
+document.getElementById("driver_vehicle").value,
+
+password:
+document.getElementById("driver_password").value,
+
+card:card,
+vehicle_image:vehicle,
+
+createdAt:Date.now()
+
+};
+
+await set(
+ref(database,"drivers/"+phone),
+user
+);
+
+saveSession(user);
+
+showSection("pendingSection");
+
+}
+
+if(type==="taxi"){
+
+let phone =
+document.getElementById("taxi_phone").value;
+
+if(await phoneExists(phone)){
+
+showToast("رقم الهاتف مستخدم مسبقاً");
+
+return;
+
+}
+
+const card =
+await uploadImage(
+document.getElementById("taxi_card").files[0]
+);
+
+const vehicle =
+await uploadImage(
+document.getElementById("taxi_vehicle_image").files[0]
+);
+
+let user = {
+
+id:phone,
+type:"taxi",
+status:"pending",
+
+name:
+document.getElementById("taxi_name").value,
+
+vehicle:
+document.getElementById("taxi_vehicle").value,
+
+plate:
+document.getElementById("taxi_plate").value,
+
+color:
+document.getElementById("taxi_color").value,
+
+phone:phone,
+
+password:
+document.getElementById("taxi_password").value,
+
+card:card,
+
+vehicle_image:vehicle,
+
+createdAt:Date.now()
+
+};
+
+await set(
+ref(database,"taxis/"+phone),
+user
+);
+
+saveSession(user);
+
+showSection("pendingSection");
+
+}
+
+};
+
+window.login =
+async function(){
+
+let phone =
+document.getElementById("login_phone").value;
+
+let password =
+document.getElementById("login_password").value;
+
+const tables = [
+
+{
+name:"admins",
+page:"add.html"
+},
+
+{
+name:"customers",
+page:"home.html"
+},
+
+{
+name:"stores",
+page:"store.html"
+},
+
+{
+name:"drivers",
+page:"drive.html"
+},
+
+{
+name:"taxis",
+page:"tixe.html"
+}
+
+];
+
+for(let table of tables){
+
+const snapshot =
+await get(
+ref(database,
+`${table.name}/${phone}`)
+);
+
+if(snapshot.exists()){
+
+let user = snapshot.val();
+
+if(user.password === password){
+
+if(!checkAccountStatus(user)){
+return;
+}
+
+saveSession(user);
+
+window.location.href =
+table.page;
+
+return;
+
+}
+
+}
+
+}
+
+showToast("بيانات تسجيل الدخول غير صحيحة");
+
+};
+
+window.logout = function(){
+
+localStorage.removeItem("user");
+
+window.location.href="index.html";
 
 };
 
