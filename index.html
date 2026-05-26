@@ -1568,13 +1568,39 @@ user.phone === phone &&
 user.password === password
 ){
 
+let stores =
+await get(
+child(ref(database),"stores")
+);
+
+if(stores.exists()){
+
+let data = stores.val();
+
+for(let key in data){
+
+let user = data[key];
+
+if(
+user.phone === phone &&
+user.password === password
+){
+
+saveSession(user);
+
 if(!checkAccountStatus(user)){
 return;
 }
 
-saveSession(user);
-
 window.location.href = "store.html";
+
+return;
+
+}
+
+}
+
+}
 
 return;
 
@@ -1602,15 +1628,39 @@ user.phone === phone &&
 user.password === password
 ){
 
+let drivers =
+await get(
+child(ref(database),"drivers")
+);
+
+if(drivers.exists()){
+
+let data = drivers.val();
+
+for(let key in data){
+
+let user = data[key];
+
+if(
+user.phone === phone &&
+user.password === password
+){
+
+saveSession(user);
+
 if(!checkAccountStatus(user)){
 return;
 }
 
-saveSession(user);
-
-if(user.status === "active"){
-
 window.location.href = "drive.html";
+
+return;
+
+}
+
+}
+
+}
 
 }else{
 
@@ -1643,15 +1693,39 @@ user.phone === phone &&
 user.password === password
 ){
 
+let taxis =
+await get(
+child(ref(database),"taxis")
+);
+
+if(taxis.exists()){
+
+let data = taxis.val();
+
+for(let key in data){
+
+let user = data[key];
+
+if(
+user.phone === phone &&
+user.password === password
+){
+
+saveSession(user);
+
 if(!checkAccountStatus(user)){
 return;
 }
 
-saveSession(user);
-
-if(user.status === "active"){
-
 window.location.href = "tixe.html";
+
+return;
+
+}
+
+}
+
+}
 
 }else{
 
