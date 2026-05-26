@@ -849,12 +849,11 @@ ${store.schedule?.friday?.close || "--:--"}
 </div>
 
 </div>
-
 <p><strong>صورة المتجر:</strong></p>
 
 <img class="big-image"
 src="${
-store.storeImage ||
+store["store-image"] ||
 'https://via.placeholder.com/120'
 }">
 
@@ -862,7 +861,7 @@ store.storeImage ||
 
 <img class="big-image"
 src="${
-store.ownerIdImage ||
+store["store-card"] ||
 'https://via.placeholder.com/120'
 }">
 
