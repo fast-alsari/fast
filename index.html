@@ -521,16 +521,67 @@ return data.data.url;
 let currentUser = null;
 
 try{
-currentUser =
-JSON.parse(
+
+currentUser = JSON.parse(
 localStorage.getItem("user") ||
 sessionStorage.getItem("user")
 );
+
 }catch{
 
 currentUser = null;
 
 }
+
+if(currentUser){
+
+let tableName = "";
+
+if(currentUser.type === "customer"){
+tableName = "customers";
+}
+
+if(currentUser.type === "store"){
+tableName = "stores";
+}
+
+if(currentUser.type === "driver"){
+tableName = "drivers";
+}
+
+if(currentUser.type === "taxi"){
+tableName = "taxis";
+}
+
+if(currentUser.type === "admin"){
+tableName = "admins";
+}
+
+const snapshot = await get(
+child(
+ref(database),
+tableName + "/" + currentUser.phone
+)
+);
+
+if(snapshot.exists()){
+
+currentUser = snapshot.val();
+
+saveSession(currentUser);
+
+}else{
+
+localStorage.removeItem("user");
+
+sessionStorage.removeItem("user");
+
+currentUser = null;
+
+}
+
+}
+
 if(currentUser){
 
 // اذا الحساب معلق
