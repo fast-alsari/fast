@@ -401,8 +401,8 @@ accept="image/*">
 class="pending-text"
 id="pendingMessage">
 
-انتظر ريثما يتم مراجعة حسابك
-وسوف نتواصل معك خلال أقل من 24 ساعة
+حالة الحساب:
+انتظر ريثما يتم تفعيل حسابك
 
 </p>
 
@@ -521,10 +521,11 @@ return data.data.url;
 let currentUser = null;
 
 try{
-
 currentUser =
-JSON.parse(localStorage.getItem("user"));
-
+JSON.parse(
+localStorage.getItem("user") ||
+sessionStorage.getItem("user")
+);
 }catch{
 
 currentUser = null;
@@ -921,6 +922,11 @@ store_longitude
 function saveSession(userData){
 
 localStorage.setItem(
+"user",
+JSON.stringify(userData)
+);
+
+sessionStorage.setItem(
 "user",
 JSON.stringify(userData)
 );
