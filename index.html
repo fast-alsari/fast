@@ -1492,7 +1492,15 @@ return;
 }
 saveSession(user);
 
-window.location.href = "home.html";
+if(user.status === "active"){
+
+window.location.href = "store.html";
+
+}else{
+
+showSection("pendingSection");
+
+}
 
 return;
 
@@ -1560,8 +1568,15 @@ return;
 
 saveSession(user);
 
+if(user.status === "active"){
+
 window.location.href = "drive.html";
 
+}else{
+
+showSection("pendingSection");
+
+}
 
 return;
 
@@ -1594,7 +1609,17 @@ return;
 
 saveSession(user);
 
+if(user.status === "active"){
+
 window.location.href = "tixe.html";
+
+}else{
+
+showSection("pendingSection");
+
+saveSession(user);
+
+}
 
 return;
 
