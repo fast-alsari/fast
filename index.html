@@ -209,13 +209,19 @@ onclick="togglePassword('store_password',this)">
 صورة المتجر
 </p>
 
-<input type="file" id="store_image">
+<input
+type="file"
+id="store_image"
+accept="image/*">
 
 <p class="upload-title">
 صورة البطاقة الموحدة
 </p>
 
-<input type="file" id="store_card">
+<input
+type="file"
+id="store_card"
+accept="image/*">
 
 <div class="work-times">
 
@@ -270,13 +276,19 @@ onclick="togglePassword('driver_password',this)">
 صورة الهوية
 </p>
 
-<input type="file" id="driver_card">
+<input
+type="file"
+id="driver_card"
+accept="image/*">
 
 <p class="upload-title">
 صورة السيارة او الدراجة
 </p>
 
-<input type="file" id="driver_vehicle_image">
+<input
+type="file"
+id="driver_vehicle_image"
+accept="image/*">
 
 </div>
 
@@ -363,6 +375,58 @@ databaseURL:
 const app = initializeApp(firebaseConfig);
 
 const database = getDatabase(app);
+
+
+
+// =========================
+// ImgBB
+// =========================
+
+const IMGBB_API_KEY =
+"fa7d8e3e0c7fbc7686b65048fff45913";
+
+async function uploadImage(file){
+
+if(!file){
+return "";
+}
+
+if(!file.type.startsWith("image/")){
+
+alert("اختر صورة فقط");
+
+return "";
+
+}
+
+if(file.size > 5 * 1024 * 1024){
+
+alert("حجم الصورة أكبر من 5MB");
+
+return "";
+
+}
+
+const formData = new FormData();
+
+formData.append("image",file);
+
+const response = await fetch(
+
+`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+
+{
+method:"POST",
+body:formData
+}
+
+);
+
+const data = await response.json();
+
+return data.data.url;
+
+}
 
 
 
@@ -769,6 +833,18 @@ if(type==="store"){
 
 let id = "STORE"+Date.now();
 
+const storeImageFile =
+document.getElementById("store_image").files[0];
+
+const storeCardFile =
+document.getElementById("store_card").files[0];
+
+const storeImageUrl =
+await uploadImage(storeImageFile);
+
+const storeCardUrl =
+await uploadImage(storeCardFile);
+
 let storeData = {
 
 id:id,
@@ -793,6 +869,10 @@ document.getElementById("store_password").value,
 latitude:store_latitude,
 longitude:store_longitude,
 
+store_image:storeImageUrl,
+
+store_card:storeCardUrl,
+
 createdAt:Date.now()
 
 };
@@ -814,6 +894,18 @@ if(type==="driver"){
 
 let id = "DRV"+Date.now();
 
+const driverCardFile =
+document.getElementById("driver_card").files[0];
+
+const vehicleImageFile =
+document.getElementById("driver_vehicle_image").files[0];
+
+const driverCardUrl =
+await uploadImage(driverCardFile);
+
+const vehicleImageUrl =
+await uploadImage(vehicleImageFile);
+
 let driverData = {
 
 id:id,
@@ -831,6 +923,10 @@ document.getElementById("driver_vehicle").value,
 
 password:
 document.getElementById("driver_password").value,
+
+driver_card:driverCardUrl,
+
+vehicle_image:vehicleImageUrl,
 
 createdAt:Date.now()
 
@@ -872,10 +968,6 @@ return;
 
 try{
 
-// =========================
-// الادمن
-// =========================
-
 let admins =
 await get(
 child(ref(database),"admins")
@@ -914,12 +1006,6 @@ return;
 
 }
 
-
-
-// =========================
-// زبائن
-// =========================
-
 let customers =
 await get(
 child(ref(database),"customers")
@@ -949,12 +1035,6 @@ return;
 }
 
 }
-
-
-
-// =========================
-// متاجر
-// =========================
 
 let stores =
 await get(
@@ -995,12 +1075,6 @@ return;
 }
 
 }
-
-
-
-// =========================
-// سائقين
-// =========================
 
 let drivers =
 await get(
