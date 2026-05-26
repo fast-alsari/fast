@@ -188,6 +188,7 @@ width:110px;
 height:110px;
 border-radius:20px;
 object-fit:cover;
+background:#eee;
 }
 
 .product-info{
@@ -409,6 +410,10 @@ class="products-container">
 
 <script type="module">
 
+// =========================
+// Firebase
+// =========================
+
 import { initializeApp }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
@@ -469,21 +474,7 @@ if(!file){
 return "product.png";
 }
 
-if(!file.type.startsWith("image/")){
-
-alert("اختر صورة فقط");
-
-return "product.png";
-
-}
-
-if(file.size > 5 * 1024 * 1024){
-
-alert("حجم الصورة أكبر من 5MB");
-
-return "product.png";
-
-}
+try{
 
 const formData = new FormData();
 
@@ -502,7 +493,29 @@ body:formData
 
 const data = await response.json();
 
-return data.data.url;
+console.log(data);
+
+if(data.success){
+
+return data.data.display_url;
+
+}else{
+
+alert("فشل رفع الصورة");
+
+return "product.png";
+
+}
+
+}catch(error){
+
+console.log(error);
+
+alert("حدث خطأ أثناء رفع الصورة");
+
+return "product.png";
+
+}
 
 }
 
@@ -632,15 +645,15 @@ async function(){
 
 const name =
 document.getElementById("productName")
-.value;
+.value.trim();
 
 const price =
 document.getElementById("productPrice")
-.value;
+.value.trim();
 
 const description =
 document.getElementById("productDescription")
-.value;
+.value.trim();
 
 const imageFile =
 document.getElementById("productImage")
@@ -664,13 +677,13 @@ return;
 // رفع الصورة
 // =========================
 
-let imageUrl =
+const imageUrl =
 await uploadImage(imageFile);
 
 
 
 // =========================
-// بيانات المنتج
+// انشاء المنتج
 // =========================
 
 let productId =
@@ -736,7 +749,7 @@ document.getElementById("productImage")
 .value = "";
 
 alert(
-"تم رفع طلب المنتج وبانتظار موافقة الادمن"
+"تم رفع طلب المنتج بنجاح"
 );
 
 loadProducts();
@@ -803,8 +816,9 @@ container.innerHTML += `
 <div class="product-card">
 
 <img
-src="${product.image}"
-class="product-image">
+src="${product.image || 'product.png'}"
+class="product-image"
+onerror="this.src='product.png'">
 
 <div class="product-info">
 
