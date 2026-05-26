@@ -1714,16 +1714,19 @@ alert("حدث خطأ");
 }
 
 };
-
 // =========================
 // تسجيل خروج
 // =========================
 
 window.logout = function(){
 
-localStorage.removeItem("user");
+// حذف كل الجلسات
+localStorage.clear();
 
-window.location.href="index.html";
+sessionStorage.clear();
+
+// اظهار صفحة تسجيل الدخول
+window.location.href = "index.html";
 
 };
 
