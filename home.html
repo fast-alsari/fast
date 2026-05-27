@@ -1177,22 +1177,28 @@ renderStores(filtered);
 
 });
 
-window.openStore =
-async function(storeId){
+window.openStore = async function(storeId){
 
 const store =
-allStores.find(s=>s.id === storeId);
+allStores.find(s => String(s.id) === String(storeId));
+
+if(!store){
+
+alert("المتجر غير موجود");
+return;
+
+}
 
 document.getElementById("singleStorePage")
 .style.display = "block";
 
 document.getElementById("singleStoreName")
 .innerHTML =
-store.store_name;
+store.store_name || "متجر";
 
 document.getElementById("singleStoreCategory")
 .innerHTML =
-store.category;
+store.category || "";
 
 document.getElementById("singleStoreImage")
 .src =
@@ -1201,35 +1207,67 @@ store.store_image || store.image || "store.png";
 const container =
 document.getElementById("singleProductsContainer");
 
-container.innerHTML = "";
+container.innerHTML = `
+<div class="empty">
+جاري تحميل المنتجات...
+</div>
+`;
+
+try{
 
 const snapshot =
 await get(
-child(
-ref(database),
-"store_products/"+store.id
-)
+ref(database,"store_products/" + store.id)
 );
 
-if(snapshot.exists()){
+container.innerHTML = "";
 
-const products =
-snapshot.val();
+if(!snapshot.exists()){
+
+container.innerHTML = `
+<div class="empty">
+لا توجد منتجات
+</div>
+`;
+
+return;
+
+}
+
+const products = snapshot.val();
+
+let found = false;
 
 for(let key in products){
 
-const product =
-products[key];
+const product = products[key];
 
 product.id = key;
+
+const productStoreId =
+String(product.storeId || "").trim();
+
+const currentStoreId =
+String(store.id || "").trim();
+
+console.log("STORE =>", currentStoreId);
+console.log("PRODUCT =>", productStoreId);
+
+if(
+product.status === "approved"
+||
+product.status === "active"
+)
+
+{
+
+found = true;
 
 product.storeId =
 store.id;
 
 product.storeName =
 store.store_name;
-
-if(product.status === "active"){
 
 container.innerHTML += `
 
@@ -1238,18 +1276,16 @@ container.innerHTML += `
 <img
 src="${product.image || "product.png"}"
 class="product-image"
-referrerpolicy="no-referrer"
-crossorigin="anonymous"
 onerror="this.src='product.png'">
 
 <div class="product-content">
 
 <div class="product-name">
-${product.name}
+${product.name || ""}
 </div>
 
 <div class="product-price">
-${product.price} د.ع
+${product.price || 0} د.ع
 </div>
 
 <div class="product-note">
@@ -1305,11 +1341,23 @@ onclick='addToCart(${JSON.stringify(product)})'>
 
 }
 
-}else{
+if(!found){
 
 container.innerHTML = `
 <div class="empty">
-لا توجد منتجات حالياً
+لا توجد منتجات لهذا المتجر
+</div>
+`;
+
+}
+
+}catch(error){
+
+console.log(error);
+
+container.innerHTML = `
+<div class="empty">
+حدث خطأ اثناء تحميل المنتجات
 </div>
 `;
 
