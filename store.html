@@ -1049,10 +1049,13 @@ alert("تم حذف المنتج");
 };
 window.logout = function(){
 
-localStorage.removeItem("user");
+// حذف بيانات المستخدم
 
-window.location.href =
-"index.html";
+localStorage.clear();
+
+// منع الرجوع للصفحة
+
+window.location.replace("index.html");
 
 };
 
