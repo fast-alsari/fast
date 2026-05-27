@@ -37,7 +37,15 @@ background:#f7f7f7;
 padding:20px;
 padding-bottom:120px;
 }
-
+.input-group select{
+width:100%;
+padding:15px;
+border-radius:15px;
+border:1px solid #ddd;
+outline:none;
+font-size:15px;
+background:white;
+}
 .header{
 background:linear-gradient(135deg,#ff8800,#ff5500);
 padding:20px;
@@ -296,7 +304,24 @@ let targetMarker;
 
 let totalDistance = 0;
 let totalPrice = 0;
+userLat =
+Number(localStorage.getItem("userLat"));
 
+userLng =
+Number(localStorage.getItem("userLng"));
+
+if(!userLat || !userLng){
+
+alert("لم يتم العثور على الموقع");
+
+window.location.href =
+"home.html";
+
+}else{
+
+startMap();
+
+}
 
 function startMap(){
 
@@ -358,9 +383,16 @@ map.removeLayer(targetMarker);
 
 }
 
+if(targetMarker){
+
+map.removeLayer(targetMarker);
+
+}
+
 targetMarker = L.marker([targetLat,targetLng])
 .addTo(map)
 .bindPopup("مكان الوصول");
+
 
 routeLine = L.polyline(
 coordinates,
@@ -425,7 +457,9 @@ document.getElementById("tipInput").value || 0
 );
 
 const personsCount =
-document.getElementById("personsCount").value;
+Number(
+document.getElementById("personsCount").value
+);
 
 const orderId =
 "TAXI"+Date.now();
@@ -434,12 +468,14 @@ const targetLocation =
 `${targetLat},${targetLng}`;
 
 const orderData = {
-targetLocation:targetLocation,
+
+id:orderId,
+
+targetLocation:
+targetLocation,
 
 googleMapsLink:
 `https://www.google.com/maps?q=${targetLat},${targetLng}`,
-
-id:orderId,
 
 customerId:
 currentUser.id,
@@ -450,29 +486,38 @@ currentUser.name,
 customerPhone:
 currentUser.phone,
 
-personsCount:personsCount,
+personsCount:
+personsCount,
 
-customerPhone:
-currentUser.phone,
+customerLat:
+userLat,
 
-customerLat:userLat,
-customerLng:userLng,
+customerLng:
+userLng,
 
-targetLat:targetLat,
-targetLng:targetLng,
+targetLat:
+targetLat,
 
-distance:totalDistance,
+targetLng:
+targetLng,
 
-price:totalPrice,
+distance:
+totalDistance,
 
-tip:tip,
+price:
+totalPrice,
+
+tip:
+tip,
 
 finalPrice:
 totalPrice + tip,
 
-status:"pending",
+status:
+"pending",
 
-createdAt:Date.now()
+createdAt:
+Date.now()
 
 };
 
