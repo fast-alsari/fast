@@ -1501,13 +1501,24 @@ return;
 
 }
 
-const mapUrl =
-`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+document.getElementById("mapModal")
+.style.display = "flex";
 
-window.open(mapUrl,"_blank");
+document.getElementById("mapFrame")
+.src =
+`https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
 
 };
 
+window.closeMap = function(){
+
+document.getElementById("mapModal")
+.style.display = "none";
+
+document.getElementById("mapFrame")
+.src = "";
+
+};
 
 window.logout =
 function(){
@@ -1520,6 +1531,70 @@ window.location.href =
 };
 
 </script>
+
+<!-- نافذة الخريطة -->
+
+<div
+id="mapModal"
+style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,.55);
+z-index:99999;
+justify-content:center;
+align-items:center;
+padding:20px;
+">
+
+<div
+style="
+width:100%;
+max-width:500px;
+height:420px;
+background:white;
+border-radius:24px;
+overflow:hidden;
+position:relative;
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+">
+
+<button
+onclick="closeMap()"
+style="
+position:absolute;
+top:12px;
+left:12px;
+width:38px;
+height:38px;
+border:none;
+border-radius:50%;
+background:red;
+color:white;
+font-size:18px;
+font-weight:bold;
+z-index:10;
+cursor:pointer;
+">
+
+✕
+
+</button>
+
+<iframe
+id="mapFrame"
+width="100%"
+height="100%"
+style="border:none;"
+loading="lazy">
+</iframe>
+
+</div>
+
+</div>
 
 </body>
 
