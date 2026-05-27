@@ -737,7 +737,7 @@ child,
 get,
 onValue
 }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -762,29 +762,79 @@ getDatabase(app);
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
-if(!currentUser){
+if(!currentUser || !currentUser.id){
 
-window.location.href =
-"index.html";
+window.location.href = "index.html";
 
 }
 
+
+
+async function loadCurrentUser(){
+
+let tableName = "";
+
+if(currentUser.type === "customer"){
+tableName = "customers";
+}
+
+if(currentUser.type === "store"){
+tableName = "stores";
+}
+
+if(currentUser.type === "driver"){
+tableName = "drivers";
+}
+
+if(currentUser.type === "taxi"){
+tableName = "taxis";
+}
+
+const snapshot = await get(
+ref(database, tableName + "/" + currentUser.id)
+);
+
+if(!snapshot.exists()){
+
+localStorage.clear();
+
+sessionStorage.clear();
+
+window.location.href = "index.html";
+
+return;
+
+}
+
+const userData = snapshot.val();
+
+userData.id =
+userData.id || currentUser.id;
+
+localStorage.setItem(
+"user",
+JSON.stringify(userData)
+);
+
 document.getElementById("welcomeText")
 .innerHTML =
-`اهلاً ${currentUser.name}`;
+`اهلاً ${userData.name || "مستخدم"}`;
 
 document.getElementById("accountName")
 .innerHTML =
-currentUser.name || "مستخدم";
+userData.name || "مستخدم";
 
 document.getElementById("accountPhone")
 .innerHTML =
-currentUser.phone || "";
+userData.phone || "";
 
 document.getElementById("accountAddress")
 .innerHTML =
-currentUser.address || "";
+userData.address || "";
 
+}
+
+loadCurrentUser();
 let allStores = [];
 let userLatitude = null;
 let userLongitude = null;
@@ -1620,7 +1670,8 @@ document.getElementById("mapFrame")
 window.logout =
 function(){
 
-localStorage.removeItem("user");
+localStorage.clear();
+sessionStorage.clear();
 
 window.location.href =
 "index.html";
