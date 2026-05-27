@@ -189,6 +189,41 @@ onclick="goBack()">
 <div class="input-group">
 
 <label>
+عدد الاشخاص
+</label>
+
+<select
+id="personsCount"
+style="
+width:100%;
+padding:15px;
+border-radius:15px;
+border:1px solid #ddd;
+outline:none;
+font-size:15px;
+background:white;
+">
+
+<option value="0">0 اشخاص</option>
+<option value="1">1 شخص</option>
+<option value="2">2 اشخاص</option>
+<option value="3">3 اشخاص</option>
+<option value="4">4 اشخاص</option>
+<option value="5">5 اشخاص</option>
+<option value="6">6 اشخاص</option>
+<option value="7">7 اشخاص</option>
+<option value="8">8 اشخاص</option>
+<option value="9">9 اشخاص</option>
+<option value="10">10 اشخاص</option>
+<option value="11">11 شخص</option>
+
+</select>
+
+</div>
+
+<div class="input-group">
+
+<label>
 اكرامية لصاحب التكسي
 </label>
 
@@ -255,7 +290,9 @@ let userLat;
 let userLng;
 let targetLat;
 let targetLng;
+
 let routeLine;
+let targetMarker;
 
 let totalDistance = 0;
 let totalPrice = 0;
@@ -336,7 +373,13 @@ coord[0]
 
 ]);
 
-L.marker([targetLat,targetLng])
+if(targetMarker){
+
+map.removeLayer(targetMarker);
+
+}
+
+targetMarker = L.marker([targetLat,targetLng])
 .addTo(map)
 .bindPopup("مكان الوصول");
 
@@ -402,10 +445,20 @@ Number(
 document.getElementById("tipInput").value || 0
 );
 
+const personsCount =
+document.getElementById("personsCount").value;
+
 const orderId =
 "TAXI"+Date.now();
 
+const targetLocation =
+`${targetLat},${targetLng}`;
+
 const orderData = {
+targetLocation:targetLocation,
+
+googleMapsLink:
+`https://www.google.com/maps?q=${targetLat},${targetLng}`,
 
 id:orderId,
 
@@ -414,6 +467,11 @@ currentUser.id,
 
 customerName:
 currentUser.name,
+
+customerPhone:
+currentUser.phone,
+
+personsCount:personsCount,
 
 customerPhone:
 currentUser.phone,
