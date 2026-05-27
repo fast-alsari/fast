@@ -666,7 +666,7 @@ class="cart-container"></div>
 
 <div class="bill-line">
 <span>التوصيل</span>
-<span>2000 د.ع</span>
+<span id="deliveryPriceText">1000 د.ع</span>
 </div>
 
 <input
@@ -1483,18 +1483,7 @@ document.getElementById(
 ).value
 );
 
-if(
-cart.length > 0 &&
-cart[0].storeId !== product.storeId
-){
 
-alert(
-"يمكنك الطلب من متجر واحد فقط"
-);
-
-return;
-
-}
 
 cart.push({
 
@@ -1513,7 +1502,7 @@ updateCart();
 alert("تمت الاضافة");
 
 };
-
+let deliveryPrice = 1000;
 function updateCart(){
 
 const cartContainer =
@@ -1610,12 +1599,80 @@ Number(
 document.getElementById("tipInput").value || 0
 );
 
+// حساب اجور التوصيل
+ deliveryPrice = 1000;
+
+// متجر واحد
+if(cart.length > 0){
+
+const firstStore =
+allStores.find(
+s => s.id === cart[0].storeId
+);
+
+if(firstStore){
+
+const distance =
+calculateDistance(
+
+userLatitude,
+userLongitude,
+
+Number(firstStore.latitude),
+Number(firstStore.longitude)
+
+);
+
+// الحساب حسب المسافة
+deliveryPrice =
+Math.round(distance * 250);
+
+// اقل توصيل
+if(deliveryPrice < 1000){
+deliveryPrice = 1000;
+}
+
+// اعلى توصيل
+if(deliveryPrice > 5000){
+deliveryPrice = 5000;
+}
+
+}
+
+}
+
+// اذا اكثر من متجر
+let uniqueStores =
+[...new Set(cart.map(item => item.storeId))];
+
+if(uniqueStores.length >= 2){
+
+deliveryPrice += 1000;
+
+}
+
+if(uniqueStores.length >= 3){
+
+deliveryPrice += 1000;
+
+}
+
+// حد اقصى
+if(deliveryPrice > 6000){
+
+deliveryPrice = 6000;
+
+}
+
+// تحديث النص
+document.getElementById("deliveryPriceText")
+.innerHTML =
+deliveryPrice + " د.ع";
 itemsTotal.innerHTML =
 `${total} د.ع`;
 
 finalTotal.innerHTML =
-`${total + 2000 + tip} د.ع`;
-
+`${total + deliveryPrice + tip} د.ع`;
 }
 
 updateCart();
@@ -1694,14 +1751,14 @@ cart[0].storeId || "",
 storeName:
 cart[0].storeName || "",
 
-deliveryPrice:2000,
+deliveryPrice:deliveryPrice,
 
 tip:tip,
 
 productsPrice:total,
 
 totalPrice:
-total + 2000 + tip,
+total + deliveryPrice + tip,
 
 status:"pending",
 
