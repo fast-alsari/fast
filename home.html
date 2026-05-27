@@ -1012,6 +1012,9 @@ ref(database,"stores"),
 allStores = [];
 
 if(snapshot.exists()){
+    if(userLatitude === null || userLongitude === null){
+return;
+}
 
 const stores = snapshot.val();
 
