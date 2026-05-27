@@ -754,7 +754,7 @@ document.getElementById("productsContainer");
 container.innerHTML = "";
 
 onValue(ref(database,"products"),(snapshot)=>{
-
+container.innerHTML = "";
 if(snapshot.exists()){
 
 const products =
@@ -771,11 +771,12 @@ products[key];
 
 if(product.deleted) continue;
 
+if(products[key].storeId !== currentUser.id) continue;
+
 totalProducts++;
 
 totalSales +=
 Number(product.price || 0);
-if(products[key].storeId !== currentUser.id) continue;
 
 container.innerHTML += `
 
@@ -810,6 +811,14 @@ ${product.name}
 
 <div class="status ${product.status}">
 
+${
+product.status === "approved"
+? "تمت الموافقة"
+: "قيد المراجعة"
+}
+
+</div>
+
 <div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
 
 <button
@@ -843,14 +852,6 @@ font-weight:bold;
 حذف
 
 </button>
-
-</div>
-
-${
-product.status === "approved"
-? "تمت الموافقة"
-: "قيد المراجعة"
-}
 
 </div>
 </div>
