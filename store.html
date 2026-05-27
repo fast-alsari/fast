@@ -808,21 +808,25 @@ loadProducts();
 // تحميل المنتجات
 // =========================
 
+// =========================
+// تحميل المنتجات
+// =========================
+
 async function loadProducts(){
 
 const container =
 document.getElementById("productsContainer");
 
+onValue(ref(database,"products"),(snapshot)=>{
+
 container.innerHTML = "";
 
-onValue(ref(database,"products"),(snapshot)=>{
-container.innerHTML = "";
 if(snapshot.exists()){
+
+let totalProducts = 0;
 
 const products =
 snapshot.val();
-
-
 
 for(let key in products){
 
@@ -831,12 +835,9 @@ products[key];
 
 if(product.deleted) continue;
 
-if(products[key].storeId !== currentUser.id) continue;
+if(product.storeId !== currentUser.id) continue;
 
 totalProducts++;
-
-totalSales +=
-Number(product.price || 0);
 
 container.innerHTML += `
 
@@ -852,21 +853,15 @@ onerror="this.src='product.png'">
 <div class="product-info">
 
 <h3>
-
 ${product.name}
-
 </h3>
 
 <p>
-
 💰 ${product.price} د.ع
-
 </p>
 
 <p>
-
 📝 ${product.description}
-
 </p>
 
 <div class="status ${product.status}">
@@ -879,7 +874,12 @@ product.status === "approved"
 
 </div>
 
-<div style="display:flex;gap:10px;margin-top:12px;flex-wrap:wrap;">
+<div style="
+display:flex;
+gap:10px;
+margin-top:12px;
+flex-wrap:wrap;
+">
 
 <button
 onclick="editProduct('${product.id}')"
@@ -914,6 +914,7 @@ font-weight:bold;
 </button>
 
 </div>
+
 </div>
 
 </div>
@@ -921,9 +922,26 @@ font-weight:bold;
 `;
 
 }
+
 document.getElementById("productsTotal")
 .innerHTML =
 totalProducts;
+
+}else{
+
+container.innerHTML =
+
+`<div class="empty">
+لا توجد منتجات حالياً
+</div>`;
+
+}
+
+});
+
+}
+
+loadProducts();
 
 // =========================
 // عرض مبلغ المبيعات الحقيقي
@@ -931,30 +949,24 @@ totalProducts;
 
 onValue(
 ref(database,"stores/"+currentUser.id),
-(snapshot)=>{
+async(snapshot)=>{
 
 if(snapshot.exists()){
 
 const storeData =
 snapshot.val();
 
-
-
-// رقم الشهر الحالي
-
 const currentMonth =
 new Date().getMonth() + 1;
 
-
-
-// اذا تغير الشهر
+// تصفير تلقائي عند بداية شهر جديد
 
 if(
 storeData.salesMonth &&
 storeData.salesMonth !== currentMonth
 ){
 
-update(
+await update(
 ref(database,"stores/"+currentUser.id),
 {
 
@@ -970,8 +982,6 @@ salesMonth:currentMonth
 
 }
 
-
-
 // عرض المبيعات الحالية
 
 document.getElementById("salesTotal")
@@ -982,23 +992,6 @@ document.getElementById("salesTotal")
 }
 
 });
-}else{
-
-container.innerHTML =
-
-`<div class="empty">
-
-لا توجد منتجات حالياً
-
-</div>`;
-
-}
-});
-}
-
-loadProducts();
-
-
 
 // =========================
 // تسجيل خروج
