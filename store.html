@@ -177,8 +177,15 @@ display:inline-block;
 font-size:13px;
 font-weight:bold;
 margin-top:8px;
-background:#d4edda;
-color:#155724;
+color:white;
+}
+
+.status.pending{
+background:#ff9800;
+}
+
+.status.approved{
+background:#28a745;
 }
 
 .empty{
@@ -187,6 +194,77 @@ padding:40px;
 border-radius:25px;
 text-align:center;
 color:#666;
+}
+.top-store-box{
+background:white;
+padding:20px;
+border-radius:30px;
+margin-bottom:20px;
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.top-store-right{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.top-store-image{
+width:90px;
+height:90px;
+border-radius:22px;
+object-fit:cover;
+border:3px solid #ff8800;
+}
+
+.top-store-info h2{
+font-size:24px;
+display:flex;
+align-items:center;
+gap:8px;
+margin-bottom:8px;
+}
+
+.verify-icon{
+width:22px;
+height:22px;
+}
+
+.top-store-info p{
+font-size:15px;
+color:#666;
+margin-bottom:5px;
+}
+
+.top-store-stats{
+display:flex;
+gap:15px;
+flex-wrap:wrap;
+}
+
+.store-stat{
+background:#f8f8f8;
+padding:12px 18px;
+border-radius:18px;
+text-align:center;
+min-width:120px;
+}
+
+.store-stat h3{
+font-size:20px;
+color:#ff8800;
+margin-bottom:5px;
+}
+
+.store-stat span{
+font-size:13px;
+color:#666;
+font-weight:bold;
 }
 
 </style>
@@ -231,7 +309,73 @@ onclick="logout()">
 </button>
 
 </div>
+<div class="top-store-box">
 
+<div class="top-store-right">
+
+<img
+id="topStoreImage"
+class="top-store-image"
+src="store.png">
+
+<div class="top-store-info">
+
+<h2>
+
+<span id="topStoreName">
+اسم المتجر
+</span>
+
+<img
+src="ok.png"
+class="verify-icon">
+
+</h2>
+
+<p id="topOwnerName">
+صاحب المتجر
+</p>
+
+<p>
+تاريخ انتهاء الاشتراك:
+<span id="expireDate">
+--
+</span>
+</p>
+
+</div>
+
+</div>
+
+<div class="top-store-stats">
+
+<div class="store-stat">
+
+<h3 id="productsTotal">
+0
+</h3>
+
+<span>
+عدد المنتجات
+</span>
+
+</div>
+
+<div class="store-stat">
+
+<h3 id="salesTotal">
+0
+</h3>
+
+<span>
+مبلغ البيع
+</span>
+
+</div>
+
+</div>
+
+</div>
 <div class="add-product-box">
 
 <div class="section-title">
@@ -462,6 +606,25 @@ currentUser.store_image;
 
 }
 
+document.getElementById("topStoreName")
+.innerHTML =
+currentUser.store_name || "-";
+
+document.getElementById("topOwnerName")
+.innerHTML =
+`صاحب المتجر : ${currentUser.owner || "-"}`;
+
+document.getElementById("expireDate")
+.innerHTML =
+currentUser.expireDate || "-";
+
+if(currentUser.store_image){
+
+document.getElementById("topStoreImage")
+.src =
+currentUser.store_image;
+
+}
 
 
 // =========================
@@ -536,7 +699,8 @@ description:description,
 
 image:imageUrl,
 
-status:"active",
+status:"pending",
+deleted:false,
 
 createdAt:Date.now()
 
@@ -546,7 +710,7 @@ await set(
 
 ref(
 database,
-"store_products/"+currentUser.id+"/"+productId
+"products/"+productId
 ),
 
 productData
@@ -594,7 +758,7 @@ const snapshot =
 await get(
 child(
 ref(database),
-"store_products/"+currentUser.id
+"products"
 )
 );
 
@@ -603,10 +767,19 @@ if(snapshot.exists()){
 const products =
 snapshot.val();
 
+let totalProducts = 0;
+
+let totalSales = 0;
+
 for(let key in products){
 
 const product =
 products[key];
+totalProducts++;
+
+totalSales +=
+Number(product.price || 0);
+if(products[key].storeId !== currentUser.id) continue;
 
 container.innerHTML += `
 
@@ -639,12 +812,15 @@ ${product.name}
 
 </p>
 
-<div class="status">
+<div class="status ${product.status}">
 
-تمت الموافقة
+${
+product.status === "approved"
+? "تمت الموافقة"
+: "قيد المراجعة"
+}
 
 </div>
-
 </div>
 
 </div>
@@ -652,7 +828,13 @@ ${product.name}
 `;
 
 }
+document.getElementById("productsTotal")
+.innerHTML =
+totalProducts;
 
+document.getElementById("salesTotal")
+.innerHTML =
+totalSales + " د.ع";
 }else{
 
 container.innerHTML =
