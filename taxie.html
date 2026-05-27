@@ -310,16 +310,14 @@ Number(localStorage.getItem("userLat"));
 userLng =
 Number(localStorage.getItem("userLng"));
 
-if(!userLat || !userLng){
+if(userLat && userLng){
 
-alert("لم يتم العثور على الموقع");
-
-window.location.href =
-"home.html";
+startMap();
 
 }else{
 
-startMap();
+window.location.href =
+"home.html";
 
 }
 
@@ -383,11 +381,7 @@ map.removeLayer(targetMarker);
 
 }
 
-if(targetMarker){
 
-map.removeLayer(targetMarker);
-
-}
 
 targetMarker = L.marker([targetLat,targetLng])
 .addTo(map)
