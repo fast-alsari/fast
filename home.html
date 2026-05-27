@@ -896,6 +896,21 @@ position.coords.latitude;
 userLongitude =
 position.coords.longitude;
 
+// تحديث موقع المستخدم داخل Firebase
+
+set(
+ref(database,
+"customers/" + currentUser.id + "/userLat"
+),
+userLatitude
+);
+
+set(
+ref(database,
+"customers/" + currentUser.id + "/userLng"
+),
+userLongitude
+);
 // حفظ الموقع للتاكسي
 localStorage.setItem(
 "userLat",
