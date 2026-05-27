@@ -1,3 +1,4 @@
+ عندي  
 <!-- home.html -->
 
 <!DOCTYPE html>
@@ -811,10 +812,7 @@ for(let key in stores){
 
 let store = stores[key];
 
-store.firebaseKey = key;
-
-store.id =
-store.id || key;
+store.id = key;
 
 if(store.status === "active"){
 
@@ -1061,7 +1059,7 @@ const snapshot =
 await get(
 child(
 ref(database),
-"products"
+"store_products/"+store.id
 )
 );
 
@@ -1077,17 +1075,13 @@ products[key];
 
 product.id = key;
 
-
+product.storeId =
+store.id;
 
 product.storeName =
-store.store_name;;
+store.store_name;
 
-
-if(product.deleted) continue;
-
-if(product.storeId !== store.id) continue;
-
-if(product.status !== "approved") continue;
+if(product.status === "active"){
 
 container.innerHTML += `
 
@@ -1473,6 +1467,11 @@ alert("تم ارسال الطلب 🚀");
 window.showPage =
 function(pageId,element){
 
+// اخفاء صفحة المتجر المفتوح
+document.getElementById("singleStorePage")
+.style.display = "none";
+
+// تبديل الصفحات
 document.querySelectorAll(".page")
 .forEach(page=>{
 
@@ -1491,14 +1490,6 @@ item.classList.remove("active");
 });
 
 element.classList.add("active");
-
-// اذا الصفحة مو الرئيسية اغلق صفحة المتجر
-if(pageId !== "homePage"){
-
-document.getElementById("singleStorePage")
-.style.display = "none";
-
-}
 
 };
 
