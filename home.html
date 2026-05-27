@@ -493,24 +493,40 @@ align-items:center;
 box-shadow:0 -5px 18px rgba(0,0,0,.08);
 z-index:1000;
 }
-
-.taxi-btn{
-border:none;
-background:white;
-color:#ff8800;
-padding:14px 18px;
-border-radius:18px;
+.taxi-btn-box{
 display:flex;
+flex-direction:column;
 align-items:center;
-gap:8px;
-font-size:15px;
-font-weight:bold;
+justify-content:center;
 cursor:pointer;
-box-shadow:0 4px 12px rgba(0,0,0,.12);
+gap:6px;
 }
 
-.taxi-btn i{
-font-size:20px;
+.taxi-circle{
+width:65px;
+height:65px;
+border-radius:50%;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+transition:.3s;
+}
+
+.taxi-circle:hover{
+transform:scale(1.05);
+}
+
+.taxi-circle i{
+font-size:28px;
+color:#ff8800;
+}
+
+.taxi-btn-box span{
+font-size:13px;
+font-weight:bold;
+color:white;
 }
 
 .nav-item{
@@ -561,18 +577,21 @@ class="page active-page">
 
 </div>
 
-<img
-<button
-class="taxi-btn"
+<div
+class="taxi-btn-box"
 onclick="openTaxiPage()">
+
+<div class="taxi-circle">
 
 <i class="fa-solid fa-taxi"></i>
 
+</div>
+
 <span>
-طلب تكسي
+اطلب تكسي
 </span>
 
-</button>
+</div>
 
 </div>
 
