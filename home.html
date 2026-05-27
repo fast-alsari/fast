@@ -1074,8 +1074,10 @@ products[key];
 
 product.id = key;
 
-product.storeId =
-store.id;
+
+
+product.storeName =
+store.store_name;;
 
 product.storeName =
 store.store_name;
@@ -1470,11 +1472,6 @@ alert("تم ارسال الطلب 🚀");
 window.showPage =
 function(pageId,element){
 
-// اخفاء صفحة المتجر المفتوح
-document.getElementById("singleStorePage")
-.style.display = "none";
-
-// تبديل الصفحات
 document.querySelectorAll(".page")
 .forEach(page=>{
 
@@ -1493,6 +1490,14 @@ item.classList.remove("active");
 });
 
 element.classList.add("active");
+
+// اذا الصفحة مو الرئيسية اغلق صفحة المتجر
+if(pageId !== "homePage"){
+
+document.getElementById("singleStorePage")
+.style.display = "none";
+
+}
 
 };
 
