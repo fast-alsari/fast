@@ -1033,7 +1033,8 @@ async function(storeId){
 
 const store =
 allStores.find(s=>s.id === storeId);
-
+const realStoreId =
+store.storeId || store.id;
 document.getElementById("singleStorePage")
 .style.display = "block";
 
@@ -1079,12 +1080,10 @@ product.id = key;
 product.storeName =
 store.store_name;;
 
-product.storeName =
-store.store_name;
 
 if(product.deleted) continue;
 
-if(product.storeId !== store.id) continue;
+if(product.storeId !== realStoreId) continue;
 
 if(product.status !== "approved") continue;
 
