@@ -760,7 +760,7 @@ description:description,
 
 image:imageUrl,
 
-status:"active",
+status:"pending",
 
 createdAt:Date.now()
 
@@ -865,12 +865,14 @@ ${product.name}
 📝 ${product.description}
 </p>
 
-<div class="status ${product.status}">
+<div class="status ${
+product.status === "approved"
+? "approved"
+: "pending"
+}">
 
 ${
 product.status === "approved"
-||
-product.status === "active"
 
 ?
 
@@ -1050,19 +1052,19 @@ alert("تم تعديل المنتج");
 window.deleteProduct = async function(productId){
 
 const confirmDelete =
-confirm("هل تريد حذف المنتج؟");
+confirm("هل تريد حذف المنتج نهائياً؟");
 
 if(!confirmDelete) return;
 
 await set(
 ref(
 database,
-"store_products/" + currentUser.id + "/" + productId + "/deleted"
+"store_products/" + currentUser.id + "/" + productId
 ),
-true
+null
 );
 
-alert("تم حذف المنتج");
+alert("تم حذف المنتج نهائياً");
 
 };
 window.logout = function(){
