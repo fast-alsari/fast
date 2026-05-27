@@ -481,7 +481,8 @@ import {
 getDatabase,
 ref,
 set,
-onValue
+onValue,
+update
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -582,7 +583,68 @@ window.location.href =
 "index.html";
 
 }
+// =========================
+// انشاء بيانات المبيعات تلقائياً
+// =========================
 
+onValue(
+ref(database,"stores/"+currentUser.id),
+async(snapshot)=>{
+
+if(snapshot.exists()){
+
+const storeData =
+snapshot.val();
+
+let updateData = {};
+
+
+
+// اذا ما موجود totalSales
+
+if(storeData.totalSales === undefined){
+
+updateData.totalSales = 0;
+
+}
+
+
+
+// اذا ما موجود lastMonthSales
+
+if(storeData.lastMonthSales === undefined){
+
+updateData.lastMonthSales = 0;
+
+}
+
+
+
+// اذا ما موجود salesMonth
+
+if(storeData.salesMonth === undefined){
+
+updateData.salesMonth =
+new Date().getMonth() + 1;
+
+}
+
+
+
+// اذا توجد بيانات ناقصة
+
+if(Object.keys(updateData).length > 0){
+
+await update(
+ref(database,"stores/"+currentUser.id),
+updateData
+);
+
+}
+
+}
+
+});
 
 
 // =========================
@@ -760,9 +822,7 @@ if(snapshot.exists()){
 const products =
 snapshot.val();
 
-let totalProducts = 0;
 
-let totalSales = 0;
 
 for(let key in products){
 
@@ -865,9 +925,63 @@ document.getElementById("productsTotal")
 .innerHTML =
 totalProducts;
 
+// =========================
+// عرض مبلغ المبيعات الحقيقي
+// =========================
+
+onValue(
+ref(database,"stores/"+currentUser.id),
+(snapshot)=>{
+
+if(snapshot.exists()){
+
+const storeData =
+snapshot.val();
+
+
+
+// رقم الشهر الحالي
+
+const currentMonth =
+new Date().getMonth() + 1;
+
+
+
+// اذا تغير الشهر
+
+if(
+storeData.salesMonth &&
+storeData.salesMonth !== currentMonth
+){
+
+update(
+ref(database,"stores/"+currentUser.id),
+{
+
+lastMonthSales:
+storeData.totalSales || 0,
+
+totalSales:0,
+
+salesMonth:currentMonth
+
+}
+);
+
+}
+
+
+
+// عرض المبيعات الحالية
+
 document.getElementById("salesTotal")
 .innerHTML =
-totalSales + " د.ع";
+(storeData.totalSales || 0)
++ " د.ع";
+
+}
+
+});
 }else{
 
 container.innerHTML =
