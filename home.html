@@ -973,9 +973,23 @@ class="ok-icon">
 🏪 ${store.category}
 </p>
 
-<p>
-📞 ${store.phone}
-</p>
+<button
+onclick="openMap(event,'${store.lat}','${store.lng}')"
+style="
+margin-top:8px;
+padding:8px 14px;
+border:none;
+border-radius:12px;
+background:#ff8800;
+color:white;
+font-size:12px;
+font-weight:bold;
+cursor:pointer;
+">
+
+📍 موقع المتجر
+
+</button>
 
 </div>
 
@@ -1472,6 +1486,26 @@ item.classList.remove("active");
 element.classList.add("active");
 
 };
+
+window.openMap = function(event,lat,lng){
+
+event.stopPropagation();
+
+if(!lat || !lng){
+
+alert("لا يوجد موقع للمتجر");
+
+return;
+
+}
+
+window.open(
+`https://www.google.com/maps?q=${lat},${lng}`,
+"_blank"
+);
+
+};
+
 
 window.logout =
 function(){
