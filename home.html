@@ -811,7 +811,10 @@ for(let key in stores){
 
 let store = stores[key];
 
-store.id = key;
+store.firebaseKey = key;
+
+store.id =
+store.id || key;
 
 if(store.status === "active"){
 
