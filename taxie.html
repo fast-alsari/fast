@@ -304,10 +304,12 @@ let targetMarker;
 
 let totalDistance = 0;
 let totalPrice = 0;
-userLat =
+
+// قراءة بيانات اليوزر المحفوظة
 const savedUser =
 JSON.parse(localStorage.getItem("user")) || {};
 
+// قراءة الموقع
 userLat =
 savedUser.userLat ||
 Number(localStorage.getItem("userLat"));
@@ -316,18 +318,18 @@ userLng =
 savedUser.userLng ||
 Number(localStorage.getItem("userLng"));
 
+// التأكد من وجود الموقع
 if(userLat && userLng){
 
 startMap();
 
 }else{
 
-alert("لم يتم العثور على موقعك ");
+alert("لم يتم العثور على موقعك");
 
 window.location.href =
 "home.html";
 
-}
 }
 
 function startMap(){
