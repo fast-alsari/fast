@@ -1606,7 +1606,7 @@ width:max-content;
 
 <button
 class="qty-btn"
-onclick="decreaseCartQty('${item.id}')">
+onclick="decreaseCartQty('${item.id}','${item.storeId}')"">
 
 -
 
@@ -1620,7 +1620,7 @@ class="qty-input">
 
 <button
 class="qty-btn"
-onclick="increaseCartQty('${item.id}')">
+onclick="increaseCartQty('${item.id}','${item.storeId}')"">
 
 +
 
@@ -1632,7 +1632,7 @@ onclick="increaseCartQty('${item.id}')">
 
 <button
 class="delete-btn"
-onclick="removeCartItem('${item.id}')">
+onclick="removeCartItem('${item.id}','${item.storeId}')">
 
 حذف
 
@@ -1729,10 +1729,13 @@ finalTotal.innerHTML =
 updateCart();
 
 window.increaseCartQty =
-function(productId){
+function(productId,storeId){
 
 let item =
-cart.find(item => item.id === productId);
+cart.find(item =>
+item.id === productId &&
+item.storeId === storeId
+);
 
 if(item){
 item.qty += 1;
@@ -1748,10 +1751,13 @@ updateCart();
 };
 
 window.decreaseCartQty =
-function(productId){
+function(productId,storeId){
 
 let item =
-cart.find(item => item.id === productId);
+cart.find(item =>
+item.id === productId &&
+item.storeId === storeId
+);
 
 if(item && item.qty > 1){
 
@@ -1769,10 +1775,13 @@ updateCart();
 };
 
 window.removeCartItem =
-function(productId){
+function(productId,storeId){
 
 cart =
-cart.filter(item => item.id !== productId);
+cart.filter(item => !(
+item.id === productId &&
+item.storeId === storeId
+));
 
 localStorage.setItem(
 "cart",
