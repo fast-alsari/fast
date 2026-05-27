@@ -566,7 +566,7 @@ try{
 const snapshot = await get(
 child(
 ref(database),
-tableName + "/" + currentUser.phone
+tableName + "/" + currentUser.id
 )
 );
 
@@ -1202,8 +1202,11 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,"customers/"+phone),
+
+ref(database,"customers/"+customerData.id),
+
 customerData
+
 );
 
 saveSession(customerData);
@@ -1332,7 +1335,7 @@ createdAt:Date.now()
 // =========================
 
 await set(
-ref(database,"stores/"+storeData.phone),
+ref(database,"stores/"+storeData.id),
 storeData
 );
 
@@ -1428,7 +1431,7 @@ return;
 }
 
 await set(
-ref(database,"taxis/"+taxiData.phone),
+ref(database,"taxis/"+taxiData.id),
 taxiData
 );
 
@@ -1518,7 +1521,7 @@ createdAt:Date.now()
 };
 
 await set(
-ref(database,"drivers/"+driverData.phone),
+ref(database,"drivers/"+driverData.id),
 driverData
 );
 
@@ -1594,6 +1597,7 @@ let data = admins.val();
 for(let key in data){
 
 let admin = data[key];
+admin.id = key;
 
 if(
 admin.phone === phone &&
@@ -1632,7 +1636,7 @@ let data = customers.val();
 for(let key in data){
 
 let user = data[key];
-
+user.id = key;
 if(
 user.phone === phone &&
 user.password === password
@@ -1672,7 +1676,7 @@ let data = stores.val();
 for(let key in data){
 
 let user = data[key];
-
+user.id = key;
 if(
 user.phone === phone &&
 user.password === password
@@ -1706,7 +1710,7 @@ let data = drivers.val();
 for(let key in data){
 
 let user = data[key];
-
+user.id = key;
 if(
 user.phone === phone &&
 user.password === password
@@ -1740,7 +1744,7 @@ let data = taxis.val();
 for(let key in data){
 
 let user = data[key];
-
+user.id = key;
 if(
 user.phone === phone &&
 user.password === password
