@@ -760,21 +760,15 @@ description:description,
 
 image:imageUrl,
 
-status:"pending",
-deleted:false,
+status:"active",
 
 createdAt:Date.now()
 
 };
 
-// حفظ داخل products
-await set(
-ref(database,"products/"+productId),
-productData
-);
-
 // حفظ داخل store_products
 await set(
+
 ref(
 database,
 "store_products/"
@@ -782,10 +776,10 @@ database,
 "/" +
 productId
 ),
+
 productData
+
 );
-
-
 
 // =========================
 // تنظيف الحقول
