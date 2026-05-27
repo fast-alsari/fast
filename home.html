@@ -896,6 +896,36 @@ position.coords.latitude;
 userLongitude =
 position.coords.longitude;
 
+// حفظ الموقع للتاكسي
+localStorage.setItem(
+"userLat",
+userLatitude
+);
+
+localStorage.setItem(
+"userLng",
+userLongitude
+);
+
+// حفظ داخل بيانات اليوزر
+let savedUser =
+JSON.parse(localStorage.getItem("user"));
+
+if(savedUser){
+
+savedUser.userLat =
+userLatitude;
+
+savedUser.userLng =
+userLongitude;
+
+localStorage.setItem(
+"user",
+JSON.stringify(savedUser)
+);
+
+}
+
 startLiveStores();
 
 },
