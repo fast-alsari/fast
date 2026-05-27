@@ -799,7 +799,7 @@ document.getElementById("productImage")
 
 alert("تم رفع المنتج بنجاح");
 
-loadProducts();
+//loadProducts();
 
 };
 
@@ -818,7 +818,9 @@ async function loadProducts(){
 const container =
 document.getElementById("productsContainer");
 
-onValue(ref(database,"products"),(snapshot)=>{
+onValue(
+ref(database,"store_products/" + currentUser.id),
+(snapshot)=>{
 
 container.innerHTML = "";
 
@@ -835,8 +837,6 @@ const product =
 products[key];
 
 if(product.deleted) continue;
-
-if(product.storeId !== currentUser.id) continue;
 
 totalProducts++;
 
@@ -869,8 +869,16 @@ ${product.name}
 
 ${
 product.status === "approved"
-? "تمت الموافقة"
-: "قيد المراجعة"
+||
+product.status === "active"
+
+?
+
+"تمت الموافقة"
+
+:
+
+"قيد المراجعة"
 }
 
 </div>
@@ -1004,23 +1012,43 @@ document.getElementById("salesTotal")
 window.editProduct = async function(productId){
 
 const newPrice =
+
 prompt("ادخل السعر الجديد");
 
 if(newPrice === null) return;
 
 const newDescription =
+
 prompt("ادخل شرح المنتج الجديد");
 
 if(newDescription === null) return;
 
 await set(
-ref(database,"products/"+productId+"/price"),
+
+ref(
+
+database,
+
+"store_products/"+currentUser.id+"/"+productId+"/price"
+
+),
+
 newPrice
+
 );
 
 await set(
-ref(database,"products/"+productId+"/description"),
+
+ref(
+
+database,
+
+"store_products/"+currentUser.id+"/"+productId+"/description"
+
+),
+
 newDescription
+
 );
 
 alert("تم تعديل المنتج");
@@ -1041,7 +1069,10 @@ confirm("هل تريد حذف المنتج؟");
 if(!confirmDelete) return;
 
 await set(
-ref(database,"products/"+productId+"/deleted"),
+ref(
+database,
+"store_products/"+currentUser.id+"/"+productId+"/deleted"
+),
 true
 );
 
