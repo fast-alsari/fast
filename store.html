@@ -481,8 +481,7 @@ import {
 getDatabase,
 ref,
 set,
-get,
-child
+onValue
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -754,13 +753,7 @@ document.getElementById("productsContainer");
 
 container.innerHTML = "";
 
-const snapshot =
-await get(
-child(
-ref(database),
-"products"
-)
-);
+onValue(ref(database,"products"),(snapshot)=>{
 
 if(snapshot.exists()){
 
@@ -846,7 +839,7 @@ container.innerHTML =
 </div>`;
 
 }
-
+});
 }
 
 loadProducts();
