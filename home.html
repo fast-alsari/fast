@@ -971,7 +971,7 @@ class="ok-icon">
 
 <p>
 <button
-onclick="openMap(event,'${store.lat}','${store.lng}')"
+onclick="openMap(event,'${store.latitude}','${store.longitude}')"
 style="
 margin-top:8px;
 padding:8px 14px;
@@ -1486,13 +1486,13 @@ item.classList.remove("active");
 element.classList.add("active");
 
 };
-window.openMap = function(event,lat,lng){
+window.openMap = function(event,latitude,longitude){
 
 event.preventDefault();
 
 event.stopPropagation();
 
-if(!lat || !lng){
+if(!latitude || !longitude){
 
 alert("لا يوجد موقع للمتجر");
 
@@ -1505,7 +1505,7 @@ document.getElementById("mapModal")
 
 document.getElementById("mapFrame")
 .src =
-`https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
+`https://maps.google.com/maps?q=${latitude},${longitude}&z=16&output=embed`;
 
 };
 
