@@ -1012,43 +1012,29 @@ document.getElementById("salesTotal")
 window.editProduct = async function(productId){
 
 const newPrice =
-
 prompt("ادخل السعر الجديد");
 
 if(newPrice === null) return;
 
 const newDescription =
-
 prompt("ادخل شرح المنتج الجديد");
 
 if(newDescription === null) return;
 
 await set(
-
 ref(
-
 database,
-
-"store_products/"+currentUser.id+"/"+productId+"/price"
-
+"store_products/" + currentUser.id + "/" + productId + "/price"
 ),
-
 newPrice
-
 );
 
 await set(
-
 ref(
-
 database,
-
-"store_products/"+currentUser.id+"/"+productId+"/description"
-
+"store_products/" + currentUser.id + "/" + productId + "/description"
 ),
-
 newDescription
-
 );
 
 alert("تم تعديل المنتج");
@@ -1071,7 +1057,7 @@ if(!confirmDelete) return;
 await set(
 ref(
 database,
-"store_products/"+currentUser.id+"/"+productId+"/deleted"
+"store_products/" + currentUser.id + "/" + productId + "/deleted"
 ),
 true
 );
