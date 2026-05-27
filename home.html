@@ -1489,6 +1489,8 @@ element.classList.add("active");
 
 window.openMap = function(event,lat,lng){
 
+event.preventDefault();
+
 event.stopPropagation();
 
 if(!lat || !lng){
@@ -1499,10 +1501,10 @@ return;
 
 }
 
-window.open(
-`https://www.google.com/maps?q=${lat},${lng}`,
-"_blank"
-);
+const mapUrl =
+`https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
+
+window.open(mapUrl,"_blank");
 
 };
 
