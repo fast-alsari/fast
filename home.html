@@ -1058,7 +1058,7 @@ const snapshot =
 await get(
 child(
 ref(database),
-"store_products/"+store.id
+"products"
 )
 );
 
@@ -1080,7 +1080,11 @@ store.id;
 product.storeName =
 store.store_name;
 
-if(product.status === "active"){
+if(product.deleted) continue;
+
+if(product.storeId !== store.id) continue;
+
+if(product.status !== "approved") continue;
 
 container.innerHTML += `
 
@@ -1471,27 +1475,6 @@ document.getElementById("singleStorePage")
 .style.display = "none";
 
 // تبديل الصفحات
-document.querySelectorAll(".page")
-.forEach(page=>{
-
-page.classList.remove("active-page");
-
-});
-
-document.getElementById(pageId)
-.classList.add("active-page");
-
-// تفعيل البار السفلي
-document.querySelectorAll(".nav-item")
-.forEach(item=>{
-
-item.classList.remove("active");
-
-});
-
-element.classList.add("active");
-
-};
 document.querySelectorAll(".page")
 .forEach(page=>{
 
