@@ -1,4 +1,5 @@
- عندي  
+هذا الكود شعدل بيه شنو اشيل و بمكان شنو و شنو اضيف اسفل او فوق شنو 
+اكتب العليمات كلها كاملة على شكل نقاط 
 <!-- home.html -->
 
 <!DOCTYPE html>
@@ -1472,6 +1473,27 @@ document.getElementById("singleStorePage")
 .style.display = "none";
 
 // تبديل الصفحات
+document.querySelectorAll(".page")
+.forEach(page=>{
+
+page.classList.remove("active-page");
+
+});
+
+document.getElementById(pageId)
+.classList.add("active-page");
+
+// تفعيل البار السفلي
+document.querySelectorAll(".nav-item")
+.forEach(item=>{
+
+item.classList.remove("active");
+
+});
+
+element.classList.add("active");
+
+};
 document.querySelectorAll(".page")
 .forEach(page=>{
 
