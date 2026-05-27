@@ -297,27 +297,6 @@ let targetMarker;
 let totalDistance = 0;
 let totalPrice = 0;
 
-navigator.geolocation.getCurrentPosition(
-
-(position)=>{
-
-userLat =
-position.coords.latitude;
-
-userLng =
-position.coords.longitude;
-
-startMap();
-
-},
-
-()=>{
-
-alert("يرجى تشغيل GPS");
-
-}
-
-);
 
 function startMap(){
 
