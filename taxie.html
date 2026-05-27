@@ -301,71 +301,55 @@ map.on("click",function(e){
 targetLat = e.latlng.lat;
 targetLng = e.latlng.lng;
 
+drawRoute();
+
+});
+
+}
+async function drawRoute(){
+
 if(routeLine){
 
 map.removeLayer(routeLine);
 
 }
 
+const url =
+`https://router.project-osrm.org/route/v1/driving/${userLng},${userLat};${targetLng},${targetLat}?overview=full&geometries=geojson`;
+
+const response =
+await fetch(url);
+
+const data =
+await response.json();
+
+if(data.routes.length > 0){
+
+const route =
+data.routes[0];
+
+const coordinates =
+route.geometry.coordinates.map(coord => [
+
+coord[1],
+coord[0]
+
+]);
+
 routeLine = L.polyline(
-[
-[userLat,userLng],
-[targetLat,targetLng]
-],
+coordinates,
 {
-color:"orange",
-weight:5
+color:"#ff8800",
+weight:6
 }
 ).addTo(map);
 
-calculateDistance();
-
-});
-
-}
-
-function calculateDistance(){
-
-const R = 6371;
-
-const dLat =
-(targetLat-userLat) *
-Math.PI/180;
-
-const dLng =
-(targetLng-userLng) *
-Math.PI/180;
-
-const a =
-
-Math.sin(dLat/2) *
-Math.sin(dLat/2)
-
-+
-
-Math.cos(userLat*Math.PI/180)
-
-*
-
-Math.cos(targetLat*Math.PI/180)
-
-*
-
-Math.sin(dLng/2)
-
-*
-
-Math.sin(dLng/2);
-
-const c =
-2 *
-Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a)
+map.fitBounds(
+routeLine.getBounds()
 );
 
 totalDistance =
-(R*c).toFixed(2);
+(route.distance / 1000).toFixed(2);
 
 totalPrice =
 Math.ceil(totalDistance / 2.5) * 2000;
@@ -377,6 +361,8 @@ totalDistance;
 document.getElementById("priceText")
 .innerHTML =
 totalPrice;
+
+}
 
 }
 
