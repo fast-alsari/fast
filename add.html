@@ -1311,32 +1311,51 @@ vipExpireDate:""
 alert("تم إلغاء VIP");
 
 };
-
+// =========================
 // المنتجات
+// =========================
 
 let allProductsData = {};
 
-onValue(ref(database,"products"),(snapshot)=>{
+onValue(ref(database,"store_products"),(snapshot)=>{
 
 const container =
 document.getElementById("productsContainer");
 
 container.innerHTML = "";
 
+allProductsData = {};
+
+let totalProducts = 0;
+
 if(snapshot.exists()){
 
-const products = snapshot.val();
+const storesProducts =
+snapshot.val();
 
-allProductsData = products;
+for(let storeId in storesProducts){
 
-document.getElementById("productsCount").innerText =
-Object.keys(products).length;
+const products =
+storesProducts[storeId];
 
-for(let id in products){
+for(let productId in products){
 
-let product = products[id];
+const product =
+products[productId];
 
-if(product.status !== "approved" && !product.deleted){
+product.id = productId;
+
+product.storeId = storeId;
+
+allProductsData[productId] = product;
+
+if(product.deleted) continue;
+
+totalProducts++;
+
+if(
+product.status !== "approved"
+){
 
 container.innerHTML += `
 
@@ -1354,20 +1373,23 @@ ${product.storeName || "-"}</p>
 <p><strong>الوصف:</strong>
 ${product.description || "-"}</p>
 
-<img class="big-image"
+<img
+class="big-image"
 src="${product.image || 'https://via.placeholder.com/120'}">
 
 <div class="actions">
 
-<button class="accept"
-onclick="approveProduct('${id}')">
+<button
+class="accept"
+onclick="approveProduct('${storeId}','${productId}')">
 
 قبول
 
 </button>
 
-<button class="reject"
-onclick="deleteProduct('${id}')">
+<button
+class="reject"
+onclick="deleteProduct('${storeId}','${productId}')">
 
 حذف
 
@@ -1385,28 +1407,62 @@ onclick="deleteProduct('${id}')">
 
 }
 
+}
+
+document.getElementById("productsCount")
+.innerText =
+totalProducts;
+
 });
-window.approveProduct = async function(id){
 
-await update(ref(database,"products/"+id),{
+// =========================
+// قبول المنتج
+// =========================
 
+window.approveProduct =
+async function(storeId,productId){
+
+await update(
+ref(
+database,
+"store_products/"+storeId+"/"+productId
+),
+{
 status:"approved"
-
-});
+}
+);
 
 alert("تم قبول المنتج");
 
 };
 
-window.deleteProduct = async function(id){
+// =========================
+// حذف المنتج
+// =========================
 
-await remove(ref(database,"products/"+id));
+window.deleteProduct =
+async function(storeId,productId){
+
+await update(
+ref(
+database,
+"store_products/"+storeId+"/"+productId
+),
+{
+deleted:true
+}
+);
 
 alert("تم حذف المنتج");
 
 };
 
-window.showPendingProducts = function(){
+// =========================
+// المنتجات قيد المراجعة
+// =========================
+
+window.showPendingProducts =
+function(){
 
 const container =
 document.getElementById("productsContainer");
@@ -1415,9 +1471,14 @@ container.innerHTML = "";
 
 for(let id in allProductsData){
 
-let product = allProductsData[id];
+let product =
+allProductsData[id];
 
-if(product.status !== "approved" && !product.deleted){
+if(
+product.status !== "approved"
+&&
+!product.deleted
+){
 
 container.innerHTML += `
 
@@ -1429,20 +1490,26 @@ ${product.name || "-"}</p>
 <p><strong>السعر:</strong>
 ${product.price || 0} د.ع</p>
 
-<img class="big-image"
+<p><strong>اسم المتجر:</strong>
+${product.storeName || "-"}</p>
+
+<img
+class="big-image"
 src="${product.image || 'https://via.placeholder.com/120'}">
 
 <div class="actions">
 
-<button class="accept"
-onclick="approveProduct('${id}')">
+<button
+class="accept"
+onclick="approveProduct('${product.storeId}','${product.id}')">
 
 قبول
 
 </button>
 
-<button class="reject"
-onclick="deleteProduct('${id}')">
+<button
+class="reject"
+onclick="deleteProduct('${product.storeId}','${product.id}')">
 
 حذف
 
@@ -1460,6 +1527,67 @@ onclick="deleteProduct('${id}')">
 
 };
 
+// =========================
+// المنتجات المقبولة
+// =========================
+
+window.showApprovedProducts =
+function(){
+
+const container =
+document.getElementById("productsContainer");
+
+container.innerHTML = "";
+
+for(let id in allProductsData){
+
+let product =
+allProductsData[id];
+
+if(
+product.status === "approved"
+&&
+!product.deleted
+){
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>اسم المنتج:</strong>
+${product.name || "-"}</p>
+
+<p><strong>السعر:</strong>
+${product.price || 0} د.ع</p>
+
+<p><strong>اسم المتجر:</strong>
+${product.storeName || "-"}</p>
+
+<img
+class="big-image"
+src="${product.image || 'https://via.placeholder.com/120'}">
+
+<div class="actions">
+
+<button
+class="reject"
+onclick="deleteProduct('${product.storeId}','${product.id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+};
 window.showApprovedProducts = function(){
 
 const container =
