@@ -494,6 +494,25 @@ box-shadow:0 -5px 18px rgba(0,0,0,.08);
 z-index:1000;
 }
 
+.taxi-btn{
+border:none;
+background:white;
+color:#ff8800;
+padding:14px 18px;
+border-radius:18px;
+display:flex;
+align-items:center;
+gap:8px;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+box-shadow:0 4px 12px rgba(0,0,0,.12);
+}
+
+.taxi-btn i{
+font-size:20px;
+}
+
 .nav-item{
 display:flex;
 flex-direction:column;
@@ -543,8 +562,17 @@ class="page active-page">
 </div>
 
 <img
-src="user.png"
-class="user-image">
+<button
+class="taxi-btn"
+onclick="openTaxiPage()">
+
+<i class="fa-solid fa-taxi"></i>
+
+<span>
+طلب تكسي
+</span>
+
+</button>
 
 </div>
 
@@ -1701,6 +1729,22 @@ document.getElementById("mapModal")
 
 document.getElementById("mapFrame")
 .src = "";
+
+};
+window.openTaxiPage = function(){
+
+window.location.href = "taxie.html";
+
+};
+
+window.logout =
+function(){
+
+localStorage.clear();
+sessionStorage.clear();
+
+window.location.href =
+"index.html";
 
 };
 window.logout =
