@@ -941,7 +941,9 @@ JSON.stringify(savedUser)
 
 }
 
+if(allStores.length === 0){
 startLiveStores();
+}
 
 },
 
@@ -1332,6 +1334,9 @@ const product = products[key];
 
 product.id = key;
 
+product.storeId = store.id;
+product.storeName = store.store_name;
+
 if(
 product.deleted !== true
 &&
@@ -1483,14 +1488,28 @@ document.getElementById(
 ).value
 );
 
+let existingProduct =
+cart.find(item =>
+item.id === product.id &&
+item.storeId === product.storeId
+);
 
+if(existingProduct){
+
+existingProduct.qty += qty;
+
+}else{
 
 cart.push({
 
 ...product,
-qty:qty
+qty:qty,
+storeId: product.storeId || "",
+storeName: product.storeName || ""
 
 });
+
+}
 
 localStorage.setItem(
 "cart",
@@ -1536,7 +1555,9 @@ return;
 
 let total = 0;
 
-cart.forEach((item,index)=>{
+
+
+cart.forEach((item)=>{
 
 let itemTotal =
 Number(item.price) *
@@ -1566,11 +1587,6 @@ ${item.name}
 </p>
 
 <p>
-📦 الكمية :
-${item.qty}
-</p>
-
-<p>
 💰 ${itemTotal} د.ع
 </p>
 
@@ -1578,11 +1594,42 @@ ${item.qty}
 📝 ${item.description || "لا توجد ملاحظات"}
 </div>
 
+<div
+class="qty-controller"
+style="
+margin-top:10px;
+width:max-content;
+">
+
+<button
+class="qty-btn"
+onclick="decreaseCartQty('${item.id}')">
+
+-
+
+</button>
+
+<input
+type="text"
+readonly
+value="${item.qty}"
+class="qty-input">
+
+<button
+class="qty-btn"
+onclick="increaseCartQty('${item.id}')">
+
++
+
+</button>
+
+</div>
+
 </div>
 
 <button
 class="delete-btn"
-onclick="deleteCartItem(${index})">
+onclick="removeCartItem('${item.id}')">
 
 حذف
 
@@ -1593,6 +1640,7 @@ onclick="deleteCartItem(${index})">
 `;
 
 });
+
 
 let tip =
 Number(
@@ -1677,10 +1725,51 @@ finalTotal.innerHTML =
 
 updateCart();
 
-window.deleteCartItem =
-function(index){
+window.increaseCartQty =
+function(productId){
 
-cart.splice(index,1);
+let item =
+cart.find(item => item.id === productId);
+
+if(item){
+item.qty += 1;
+}
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+updateCart();
+
+};
+
+window.decreaseCartQty =
+function(productId){
+
+let item =
+cart.find(item => item.id === productId);
+
+if(item && item.qty > 1){
+
+item.qty -= 1;
+
+}
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+updateCart();
+
+};
+
+window.removeCartItem =
+function(productId){
+
+cart =
+cart.filter(item => item.id !== productId);
 
 localStorage.setItem(
 "cart",
