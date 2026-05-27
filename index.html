@@ -564,10 +564,7 @@ tableName = "admins";
 try{
 
 const snapshot = await get(
-child(
-ref(database),
-tableName + "/" + currentUser.id
-)
+ref(database, tableName + "/" + currentUser.id)
 );
 
 if(!snapshot.exists()){
@@ -580,6 +577,9 @@ return;
 }
 
 currentUser = snapshot.val();
+
+currentUser.id =
+currentUser.id || snapshot.key;
 
 saveSession(currentUser);
 
@@ -1597,7 +1597,9 @@ let data = admins.val();
 for(let key in data){
 
 let admin = data[key];
-admin.id = key;
+
+admin.id =
+admin.id || key;
 
 if(
 admin.phone === phone &&
@@ -1636,7 +1638,7 @@ let data = customers.val();
 for(let key in data){
 
 let user = data[key];
-user.id = key;
+user.id = user.id || key;
 if(
 user.phone === phone &&
 user.password === password
@@ -1676,7 +1678,7 @@ let data = stores.val();
 for(let key in data){
 
 let user = data[key];
-user.id = key;
+user.id = user.id || key;
 if(
 user.phone === phone &&
 user.password === password
@@ -1710,7 +1712,7 @@ let data = drivers.val();
 for(let key in data){
 
 let user = data[key];
-user.id = key;
+user.id = user.id || key;
 if(
 user.phone === phone &&
 user.password === password
@@ -1744,7 +1746,7 @@ let data = taxis.val();
 for(let key in data){
 
 let user = data[key];
-user.id = key;
+user.id = user.id || key;
 if(
 user.phone === phone &&
 user.password === password
