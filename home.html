@@ -1180,7 +1180,7 @@ renderStores(filtered);
 window.openStore = async function(storeId){
 
 const store =
-allStores.find(s => String(s.id) === String(storeId));
+allStores.find(s => s.id === storeId);
 
 if(!store){
 
@@ -1215,9 +1215,11 @@ container.innerHTML = `
 
 try{
 
-const snapshot =
-await get(
-ref(database,"store_products/" + store.id)
+const snapshot = await get(
+ref(
+database,
+"store_products/" + storeId
+)
 );
 
 container.innerHTML = "";
@@ -1244,30 +1246,17 @@ const product = products[key];
 
 product.id = key;
 
-const productStoreId =
-String(product.storeId || "").trim();
-
-const currentStoreId =
-String(store.id || "").trim();
-
-console.log("STORE =>", currentStoreId);
-console.log("PRODUCT =>", productStoreId);
-
 if(
-product.status === "approved"
-||
+product.deleted !== true
+&&
+(
 product.status === "active"
+||
+product.status === "approved"
 )
-
-{
+){
 
 found = true;
-
-product.storeId =
-store.id;
-
-product.storeName =
-store.store_name;
 
 container.innerHTML += `
 
@@ -1345,7 +1334,7 @@ if(!found){
 
 container.innerHTML = `
 <div class="empty">
-لا توجد منتجات لهذا المتجر
+لا توجد منتجات حالياً
 </div>
 `;
 
@@ -1357,14 +1346,13 @@ console.log(error);
 
 container.innerHTML = `
 <div class="empty">
-حدث خطأ اثناء تحميل المنتجات
+حدث خطأ أثناء تحميل المنتجات
 </div>
 `;
 
 }
 
 };
-
 window.backHome =
 function(){
 
