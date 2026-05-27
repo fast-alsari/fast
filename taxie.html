@@ -305,9 +305,15 @@ let targetMarker;
 let totalDistance = 0;
 let totalPrice = 0;
 userLat =
+const savedUser =
+JSON.parse(localStorage.getItem("user")) || {};
+
+userLat =
+savedUser.userLat ||
 Number(localStorage.getItem("userLat"));
 
 userLng =
+savedUser.userLng ||
 Number(localStorage.getItem("userLng"));
 
 if(userLat && userLng){
@@ -316,9 +322,12 @@ startMap();
 
 }else{
 
+alert("لم يتم العثور على موقعك ");
+
 window.location.href =
 "home.html";
 
+}
 }
 
 function startMap(){
