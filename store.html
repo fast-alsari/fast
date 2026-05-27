@@ -767,15 +767,22 @@ createdAt:Date.now()
 
 };
 
+// حفظ داخل products
 await set(
+ref(database,"products/"+productId),
+productData
+);
 
+// حفظ داخل store_products
+await set(
 ref(
 database,
-"products/"+productId
+"store_products/"
++ currentUser.id +
+"/" +
+productId
 ),
-
 productData
-
 );
 
 
