@@ -331,7 +331,19 @@ onclick="showSection('taxiSection',document.querySelectorAll('.tab-btn')[3])">
 </div>
 
 </button>
+<button class="stats-btn"
+onclick="showSection('productsSection',document.querySelectorAll('.tab-btn')[4])">
 
+<div class="stats-icon">
+<i class="fa-solid fa-box"></i>
+</div>
+
+<div class="stats-info">
+<h2 id="productsCount">0</h2>
+<p>المنتجات</p>
+</div>
+
+</button>
 </div>
 
 <div class="tabs">
@@ -352,11 +364,16 @@ onclick="showSection('driversSection',this)">
 </button>
 
 <button class="tab-btn"
+onclick="showSection('productsSection',this)">
+المنتجات
+</button>
+
+<button class="tab-btn"
 onclick="showSection('taxiSection',this)">
 سواق التكسي
 </button>
-
 </div>
+
 
 <div id="customersSection"
 class="section active-section">
@@ -424,6 +441,29 @@ class="section">
 
 </div>
 
+<div id="productsSection"
+class="section">
+
+<h2 class="section-title">
+المنتجات
+</h2>
+
+<div class="filter-buttons">
+
+<button onclick="showPendingProducts()">
+قيد المراجعة
+</button>
+
+<button onclick="showApprovedProducts()">
+المقبولة
+</button>
+
+</div>
+
+<div id="productsContainer"></div>
+
+</div>
+
 <script type="module">
 
 import { initializeApp }
@@ -433,10 +473,10 @@ import {
 getDatabase,
 ref,
 onValue,
-update
+update,
+remove
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
-
 const firebaseConfig = {
 
 apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
@@ -1271,6 +1311,202 @@ vipExpireDate:""
 alert("تم إلغاء VIP");
 
 };
+
+// المنتجات
+
+let allProductsData = {};
+
+onValue(ref(database,"products"),(snapshot)=>{
+
+const container =
+document.getElementById("productsContainer");
+
+container.innerHTML = "";
+
+if(snapshot.exists()){
+
+const products = snapshot.val();
+
+allProductsData = products;
+
+document.getElementById("productsCount").innerText =
+Object.keys(products).length;
+
+for(let id in products){
+
+let product = products[id];
+
+if(product.status !== "approved" && !product.deleted){
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>اسم المنتج:</strong>
+${product.name || "-"}</p>
+
+<p><strong>السعر:</strong>
+${product.price || 0} د.ع</p>
+
+<p><strong>اسم المتجر:</strong>
+${product.storeName || "-"}</p>
+
+<p><strong>الوصف:</strong>
+${product.description || "-"}</p>
+
+<img class="big-image"
+src="${product.image || 'https://via.placeholder.com/120'}">
+
+<div class="actions">
+
+<button class="accept"
+onclick="approveProduct('${id}')">
+
+قبول
+
+</button>
+
+<button class="reject"
+onclick="deleteProduct('${id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+}
+
+});
+window.approveProduct = async function(id){
+
+await update(ref(database,"products/"+id),{
+
+status:"approved"
+
+});
+
+alert("تم قبول المنتج");
+
+};
+
+window.deleteProduct = async function(id){
+
+await remove(ref(database,"products/"+id));
+
+alert("تم حذف المنتج");
+
+};
+
+window.showPendingProducts = function(){
+
+const container =
+document.getElementById("productsContainer");
+
+container.innerHTML = "";
+
+for(let id in allProductsData){
+
+let product = allProductsData[id];
+
+if(product.status !== "approved" && !product.deleted){
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>اسم المنتج:</strong>
+${product.name || "-"}</p>
+
+<p><strong>السعر:</strong>
+${product.price || 0} د.ع</p>
+
+<img class="big-image"
+src="${product.image || 'https://via.placeholder.com/120'}">
+
+<div class="actions">
+
+<button class="accept"
+onclick="approveProduct('${id}')">
+
+قبول
+
+</button>
+
+<button class="reject"
+onclick="deleteProduct('${id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+};
+
+window.showApprovedProducts = function(){
+
+const container =
+document.getElementById("productsContainer");
+
+container.innerHTML = "";
+
+for(let id in allProductsData){
+
+let product = allProductsData[id];
+
+if(product.status === "approved" && !product.deleted){
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>اسم المنتج:</strong>
+${product.name || "-"}</p>
+
+<p><strong>السعر:</strong>
+${product.price || 0} د.ع</p>
+
+<img class="big-image"
+src="${product.image || 'https://via.placeholder.com/120'}">
+
+<div class="actions">
+
+<button class="reject"
+onclick="deleteProduct('${id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+};
+
 loadDashboard();
 
 </script>
