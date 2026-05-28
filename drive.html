@@ -192,12 +192,38 @@ flex-direction:column;
 gap:18px;
 }
 
+@keyframes shakeCard{
+
+0%{
+transform:translateX(0);
+}
+
+25%{
+transform:translateX(2px);
+}
+
+50%{
+transform:translateX(-2px);
+}
+
+75%{
+transform:translateX(2px);
+}
+
+100%{
+transform:translateX(0);
+}
+
+}
+
 .order-card{
 background:white;
 padding:20px;
 border-radius:25px;
 box-shadow:0 5px 20px rgba(0,0,0,.08);
+animation:shakeCard 1.5s infinite;
 }
+
 
 .order-card h3{
 font-size:22px;
@@ -307,11 +333,39 @@ id="driverName">
 
 <div class="driver-top-info">
 
+<div class="driver-badge">
+
+الطلبات المكتملة:
+<span id="completedCount">
+0
+</span>
+
+</div>
+
+<div class="driver-badge">
+
+ارباح الشهر:
+<span id="monthProfit">
+0
+</span>
+د.ع
+
+</div>
+
 <div
 class="driver-badge"
 id="driverAccountType">
 
 عادي
+
+</div>
+
+<div class="driver-badge">
+
+الطلبات الحالية:
+<span id="currentOrdersCount">
+0
+</span>
 
 </div>
 
@@ -387,7 +441,23 @@ id="deliveryPage">
 <p id="customerName"></p>
 
 <p id="customerPhone"></p>
+<button
+id="whatsappCustomer"
+style="
+width:100%;
+padding:14px;
+margin-top:10px;
+border:none;
+border-radius:14px;
+background:#25D366;
+color:white;
+font-weight:bold;
+cursor:pointer;
+">
 
+واتساب الزبون
+
+</button>
 <p id="customerAddress"></p>
 
 <p id="nearestPoint"></p>
@@ -407,15 +477,18 @@ id="deliveryPage">
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
+
 import {
 
 getDatabase,
 ref,
 onValue,
 update,
-get
+get,
+set
 
 }
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 /* FIREBASE */
@@ -463,7 +536,51 @@ window.location.replace(
 );
 
 }
+// =========================
+// اعادة تفعيل الحساب تلقائياً
+// =========================
 
+async function checkDriverReactivation(){
+
+if(
+currentDriver.status === "inactive"
+&&
+currentDriver.reactiveAt
+){
+
+if(
+Date.now() >= currentDriver.reactiveAt
+){
+
+await update(
+ref(
+db,
+"drivers/" + currentDriver.id
+),
+{
+
+status:"active",
+
+reactiveAt:null
+
+}
+);
+
+currentDriver.status =
+"active";
+
+localStorage.setItem(
+"user",
+JSON.stringify(currentDriver)
+);
+
+}
+
+}
+
+}
+
+checkDriverReactivation();
 /* اظهار بيانات السائق */
 
 document.getElementById(
@@ -486,6 +603,64 @@ currentDriver.expireDate ||
 );
 
 let currentOrderId = null;
+let currentOrders = 0;
+
+let driverLat = null;
+let driverLng = null;
+
+navigator.geolocation.watchPosition(
+
+(position)=>{
+
+driverLat =
+position.coords.latitude;
+
+driverLng =
+position.coords.longitude;
+
+set(
+ref(
+db,
+"drivers/" + currentDriver.id + "/latitude"
+),
+driverLat
+);
+
+set(
+ref(
+db,
+"drivers/" + currentDriver.id + "/longitude"
+),
+driverLng
+);
+
+}
+
+);
+
+onValue(
+ref(db,"drivers/" + currentDriver.id),
+(snapshot)=>{
+
+if(snapshot.exists()){
+
+const driverData =
+snapshot.val();
+
+document.getElementById(
+"completedCount"
+).innerHTML =
+driverData.completedOrders || 0;
+
+document.getElementById(
+"monthProfit"
+).innerHTML =
+driverData.monthProfit || 0;
+
+}
+
+});
+
 
 /* تأخير حسب نوع الاشتراك */
 
@@ -501,11 +676,53 @@ if(type === "vip"){
 return 0;
 }
 
-return 10000;
+// الحساب العادي
+return 600000;
 
 }
 
 /* الطلبات */
+
+function calculateDistance(lat1, lon1, lat2, lon2){
+
+const R = 6371;
+
+const dLat =
+(lat2-lat1) * Math.PI / 180;
+
+const dLon =
+(lon2-lon1) * Math.PI / 180;
+
+const a =
+
+Math.sin(dLat/2) *
+Math.sin(dLat/2)
+
++
+
+Math.cos(lat1 * Math.PI / 180)
+
+*
+
+Math.cos(lat2 * Math.PI / 180)
+
+*
+
+Math.sin(dLon/2)
+
+*
+
+Math.sin(dLon/2);
+
+const c =
+2 * Math.atan2(
+Math.sqrt(a),
+Math.sqrt(1-a)
+);
+
+return R * c;
+
+}
 
 onValue(
 ref(db,"orders"),
@@ -536,12 +753,49 @@ const orders =
 snapshot.val();
 
 let found = false;
+currentOrders = 0;
 
 Object.keys(orders)
 .forEach((key)=>{
+    
 
 const order =
 orders[key];
+if(
+order.rejectedBy &&
+order.rejectedBy[currentDriver.id]
+){
+return;
+}
+if(
+!order.customerLat ||
+!order.customerLng
+){
+return;
+}
+
+if(
+driverLat === null ||
+driverLng === null
+){
+return;
+}
+
+const customerDistance =
+calculateDistance(
+
+driverLat,
+driverLng,
+
+Number(order.customerLat),
+Number(order.customerLng)
+
+);
+
+if(customerDistance > 25){
+return;
+}
+
 
 if(
 order.status !== "waiting_driver"
@@ -553,6 +807,8 @@ return;
 
 found = true;
 
+currentOrders++;
+
 setTimeout(()=>{
 
 container.innerHTML += `
@@ -562,6 +818,36 @@ container.innerHTML += `
 <h3>
 ${order.customerName}
 </h3>
+<div style="
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:10px;
+">
+
+<img
+src="${order.storeImage || 'store.png'}"
+style="
+width:55px;
+height:55px;
+border-radius:14px;
+object-fit:cover;
+">
+
+<div>
+
+<div style="
+font-weight:bold;
+font-size:16px;
+">
+
+${order.storeName || "متجر"}
+
+</div>
+
+</div>
+
+</div>
 
 <p>
 📞 ${order.customerPhone}
@@ -571,10 +857,56 @@ ${order.customerName}
 📍 ${order.customerAddress}
 </p>
 
+<div style="
+margin-top:15px;
+padding:12px;
+background:#fafafa;
+border-radius:16px;
+">
+
+${order.items.map(item => `
+
+<div style="
+margin-bottom:10px;
+padding-bottom:10px;
+border-bottom:1px solid #eee;
+">
+
+🍔 ${item.name}
+
+<br>
+
+الكمية:
+${item.qty}
+
+<br>
+
+السعر:
+${item.price} د.ع
+
+</div>
+
+`).join("")}
+
+</div>
+
 <div class="price-box">
+
 
 سعر التوصيل:
 ${order.deliveryPrice}
+د.ع
+
+<br><br>
+
+سعر الطلب:
+${order.productsPrice || 0}
+د.ع
+
+<br><br>
+
+المجموع:
+${order.totalPrice || 0}
 د.ع
 
 </div>
@@ -590,7 +922,14 @@ onclick="acceptOrder('${key}')">
 </button>
 
 </div>
+<button
+class="accept-btn"
+style="background:red;"
+onclick="rejectOrder('${key}')">
 
+رفض الطلب
+
+</button>
 </div>
 
 `;
@@ -601,7 +940,10 @@ radarBox.style.display =
 },getDelay());
 
 });
-
+document.getElementById(
+"currentOrdersCount"
+).innerHTML =
+currentOrders;
 if(!found){
 
 radarBox.style.display =
@@ -612,6 +954,24 @@ radarBox.style.display =
 });
 
 /* قبول الطلب */
+window.rejectOrder =
+async function(id){
+
+await update(
+ref(
+db,
+"orders/" + id + "/rejectedBy"
+),
+{
+
+[currentDriver.id]:true
+
+}
+);
+
+alert("تم رفض الطلب");
+
+};
 
 window.acceptOrder =
 async function(id){
@@ -633,15 +993,13 @@ return;
 const order =
 snapshot.val();
 
-if(order.status !== "waiting_driver"){
 
-alert("تم قبول الطلب من سائق آخر");
 
-return;
 
-}
 
 await update(orderRef,{
+
+driverAccepted:true,
 
 status:"accepted",
 
@@ -655,6 +1013,52 @@ acceptedAt:
 Date.now()
 
 });
+
+// مراقبة التأخير
+
+setTimeout(async()=>{
+
+const checkOrder =
+await get(
+ref(db,"orders/" + id)
+);
+
+if(checkOrder.exists()){
+
+const orderData =
+checkOrder.val();
+
+// اذا بعده accepted يعني ما وصل
+
+if(orderData.status === "accepted"){
+
+await update(
+ref(
+db,
+"drivers/" + currentDriver.id
+),
+{
+
+status:"inactive",
+
+reactiveAt:
+Date.now() +
+(3 * 24 * 60 * 60 * 1000)
+
+}
+);
+
+alert(
+"تم تعطيل حسابك 3 ايام بسبب التأخير"
+);
+
+}
+
+}
+
+},1800000);
+
+
 
 currentOrderId = id;
 
@@ -684,6 +1088,15 @@ document.getElementById(
 ).innerHTML =
 "📞 " +
 order.customerPhone;
+document.getElementById(
+"whatsappCustomer"
+).onclick = function(){
+
+window.open(
+`https://wa.me/${order.customerPhone}`
+);
+
+};
 
 document.getElementById(
 "customerAddress"
@@ -708,7 +1121,13 @@ position.coords.latitude;
 const driverLng =
 position.coords.longitude;
 
-const map =
+let map;
+let driverMarker;
+let customerMarker;
+let storeMarker;
+let line;
+
+map =
 L.map("map")
 .setView(
 [
@@ -722,6 +1141,7 @@ L.tileLayer(
 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 ).addTo(map);
 
+driverMarker =
 L.marker(
 [
 driverLat,
@@ -729,16 +1149,25 @@ driverLng
 ]
 )
 .addTo(map)
-.bindPopup(
-"موقعك"
+.bindPopup("موقعك");
+
+if(order.storeLat && order.storeLng){
+
+storeMarker =
+L.marker(
+[
+order.storeLat,
+order.storeLng
+]
 )
-.openPopup();
+.addTo(map)
+.bindPopup("المتجر");
 
-if(
-order.customerLat &&
-order.customerLng
-){
+}
 
+if(order.customerLat && order.customerLng){
+
+customerMarker =
 L.marker(
 [
 order.customerLat,
@@ -746,10 +1175,9 @@ order.customerLng
 ]
 )
 .addTo(map)
-.bindPopup(
-"موقع الزبون"
-);
+.bindPopup("الزبون");
 
+line =
 L.polyline(
 [
 [
@@ -757,17 +1185,43 @@ driverLat,
 driverLng
 ],
 [
+order.storeLat,
+order.storeLng
+],
+[
 order.customerLat,
 order.customerLng
 ]
 ],
 {
-color:"blue"
+color:"blue",
+weight:5
 }
 ).addTo(map);
 
 }
+navigator.geolocation.watchPosition(
 
+(position)=>{
+
+const newLat =
+position.coords.latitude;
+
+const newLng =
+position.coords.longitude;
+
+driverMarker.setLatLng(
+[newLat,newLng]
+);
+
+map.setView(
+[newLat,newLng],
+map.getZoom()
+);
+
+}
+
+);
 });
 
 };
