@@ -416,69 +416,123 @@ totalDistance =
 let distanceKm =
 Number(totalDistance);
 
-// سعر البداية// سعر البداية// سعر البداية
-let basePrice = 2000;
 
-// سعر كل كيلو
-let pricePerKm = 500;
+
 
 // قراءة عدد الاشخاص
+
 const personsCount =
 Number(
 document.getElementById("personsCount").value || 0
 );
 
-// السعر الطبيعي القديم
-let normalPrice =
+// السعر الذكي حسب المسافة
 
-basePrice +
+let totalBasePrice = 0;
 
-(distanceKm * pricePerKm);
+// من 0 الى 1 كيلو
 
-// نسبة التخفيض التدريجية
+if(distanceKm <= 1){
 
-let discountFactor = 1;
-
-// اذا اقل من او يساوي 10 كيلو
-// يصير نصف السعر
-
-if(distanceKm <= 10){
-
-discountFactor = 0.5;
+totalBasePrice = 500;
 
 }
 
-// اذا بين 10 و 25
-// يزيد تدريجياً الى السعر الكامل
+// من 1 الى 2 كيلو
 
-else if(distanceKm > 10 && distanceKm < 25){
+else if(distanceKm <= 2){
 
-discountFactor =
-
-0.5 +
-
-(
-(distanceKm - 10) / 15
-) * 0.5;
+totalBasePrice = 1000;
 
 }
 
-// اذا 25 او اكثر
-// يبقى السعر الكامل
+// من 2 الى 3 كيلو
+
+else if(distanceKm <= 3){
+
+totalBasePrice = 1500;
+
+}
+
+// من 3 الى 4 كيلو
+
+else if(distanceKm <= 4){
+
+totalBasePrice = 2000;
+
+}
+
+// من 4 الى 5 كيلو
+
+else if(distanceKm <= 5){
+
+totalBasePrice = 2500;
+
+}
+
+// من 5 الى 7 كيلو
+
+else if(distanceKm <= 7){
+
+totalBasePrice = 3500;
+
+}
+
+// من 7 الى 10 كيلو
+
+else if(distanceKm <= 10){
+
+totalBasePrice = 5000;
+
+}
+
+// من 10 الى 15 كيلو
+
+else if(distanceKm <= 15){
+
+totalBasePrice = 8000;
+
+}
+
+// من 15 الى 20 كيلو
+
+else if(distanceKm <= 20){
+
+totalBasePrice = 12000;
+
+}
+
+// من 20 الى 30 كيلو
+
+else if(distanceKm <= 30){
+
+totalBasePrice = 18000;
+
+}
+
+// من 30 الى 40 كيلو
+
+else if(distanceKm <= 40){
+
+totalBasePrice = 25000;
+
+}
+
+// اكثر من 40 كيلو
 
 else{
 
-discountFactor = 1;
+totalBasePrice =
+
+25000 +
+
+(
+(distanceKm - 40) * 1000
+);
 
 }
 
-// السعر بعد التخفيض
-
-let discountedPrice =
-
-normalPrice * discountFactor;
-
-// زيادة عدد الاشخاص 30% لكل شخص
+// زيادة 30% لكل شخص
 
 let extraPersonsPrice = 0;
 
@@ -486,7 +540,7 @@ if(personsCount > 0){
 
 extraPersonsPrice =
 
-discountedPrice *
+totalBasePrice *
 
 (personsCount * 0.30);
 
@@ -497,17 +551,15 @@ discountedPrice *
 totalPrice =
 
 Math.round(
-
-discountedPrice +
-
+totalBasePrice +
 extraPersonsPrice
-
 );
 
 // تقريب السعر
 
 totalPrice =
 Math.ceil(totalPrice / 250) * 250;
+
 
 document.getElementById("distanceText")
 .innerHTML =
