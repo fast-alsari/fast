@@ -501,12 +501,11 @@ else if(distanceKm <= 20){
 totalBasePrice = 12000;
 
 }
-
 // من 20 الى 30 كيلو
 
 else if(distanceKm <= 30){
 
-totalBasePrice = 18000;
+totalBasePrice = 16000;
 
 }
 
@@ -514,22 +513,87 @@ totalBasePrice = 18000;
 
 else if(distanceKm <= 40){
 
-totalBasePrice = 25000;
+totalBasePrice = 20000;
 
 }
 
-// اكثر من 40 كيلو
+// من 40 الى 50 كيلو
+
+else if(distanceKm <= 50){
+
+totalBasePrice = 24000;
+
+}
+
+// من 50 الى 75 كيلو
+
+else if(distanceKm <= 75){
+
+totalBasePrice =
+
+24000 +
+
+(
+(distanceKm - 50) * 500
+);
+
+}
+
+// من 75 الى 100 كيلو
+
+else if(distanceKm <= 100){
+
+totalBasePrice =
+
+36500 +
+
+(
+(distanceKm - 75) * 400
+);
+
+}
+
+// من 100 الى 150 كيلو
+
+else if(distanceKm <= 150){
+
+totalBasePrice =
+
+46500 +
+
+(
+(distanceKm - 100) * 300
+);
+
+}
+
+// من 150 الى 200 كيلو
+
+else if(distanceKm <= 200){
+
+totalBasePrice =
+
+61500 +
+
+(
+(distanceKm - 150) * 250
+);
+
+}
+
+// اكثر من 200 كيلو
 
 else{
 
 totalBasePrice =
 
-25000 +
+74000 +
 
 (
-(distanceKm - 40) * 1000
+(distanceKm - 200) * 200
 );
 
+}
 }
 
 // زيادة 30% لكل شخص
