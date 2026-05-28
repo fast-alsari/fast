@@ -139,6 +139,10 @@ flex-direction:column;
 align-items:center;
 justify-content:center;
 padding:80px 20px;
+width:100%;
+position:relative;
+z-index:1;
+transition:.3s;
 }
 
 .radar{
@@ -190,6 +194,8 @@ padding:15px;
 display:flex;
 flex-direction:column;
 gap:18px;
+position:relative;
+z-index:2;
 }
 
 @keyframes shakeCard{
@@ -807,12 +813,22 @@ return;
 
 found = true;
 
+found = true;
+
 currentOrders++;
+
+// اخفاء الرادار مباشرة
+radarBox.style.opacity = "0";
+
+setTimeout(()=>{
+
+radarBox.style.display = "none";
+
+},300);
 
 setTimeout(()=>{
 
 container.innerHTML += `
-
 <div class="order-card">
 
 <h3>
