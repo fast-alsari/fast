@@ -304,6 +304,20 @@ let targetMarker;
 
 let totalDistance = 0;
 let totalPrice = 0;
+document
+.getElementById("personsCount")
+.addEventListener(
+"change",
+function(){
+
+if(targetLat && targetLng){
+
+drawRoute();
+
+}
+
+}
+);
 
 // قراءة بيانات اليوزر المحفوظة
 const savedUser =
