@@ -410,6 +410,8 @@ routeWhileDragging:true,
 
 showAlternatives:true,
 
+selectRoute:true,
+
 altLineOptions:{
 
 styles:[
@@ -467,8 +469,32 @@ e.routes;
 
 if(routes.length > 0){
 
-const route =
+let selectedRoute =
 routes[0];
+
+// اختيار المسار عند الضغط عليه
+
+routingControl.on(
+'routeselected',
+function(event){
+
+selectedRoute =
+event.route;
+
+const selectedDistance =
+(
+selectedRoute.summary.totalDistance / 1000
+).toFixed(2);
+
+updateTaxiPrice(
+Number(selectedDistance)
+);
+
+}
+);
+
+const route =
+selectedRoute;
 
 totalDistance =
 (
@@ -477,6 +503,8 @@ route.summary.totalDistance / 1000
 
 let distanceKm =
 Number(totalDistance);
+
+updateTaxiPrice(distanceKm);
 
 const personsCount =
 Number(
@@ -691,6 +719,165 @@ totalPrice;
 );
 
 }
+
+
+function updateTaxiPrice(distanceKm){
+
+const personsCount =
+Number(
+document.getElementById("personsCount").value || 0
+);
+
+let totalBasePrice = 0;
+
+// من 0 الى 1 كيلو
+
+if(distanceKm <= 1){
+
+totalBasePrice = 500;
+
+}
+
+// من 1 الى 2 كيلو
+
+else if(distanceKm <= 2){
+
+totalBasePrice = 1000;
+
+}
+
+// من 2 الى 3 كيلو
+
+else if(distanceKm <= 3){
+
+totalBasePrice = 1500;
+
+}
+
+// من 3 الى 4 كيلو
+
+else if(distanceKm <= 4){
+
+totalBasePrice = 2000;
+
+}
+
+// من 4 الى 5 كيلو
+
+else if(distanceKm <= 5){
+
+totalBasePrice = 2500;
+
+}
+
+// من 5 الى 7 كيلو
+
+else if(distanceKm <= 7){
+
+totalBasePrice = 3500;
+
+}
+
+// من 7 الى 10 كيلو
+
+else if(distanceKm <= 10){
+
+totalBasePrice = 5000;
+
+}
+
+// من 10 الى 15 كيلو
+
+else if(distanceKm <= 15){
+
+totalBasePrice = 8000;
+
+}
+
+// من 15 الى 20 كيلو
+
+else if(distanceKm <= 20){
+
+totalBasePrice = 12000;
+
+}
+
+// من 20 الى 30 كيلو
+
+else if(distanceKm <= 30){
+
+totalBasePrice = 16000;
+
+}
+
+// من 30 الى 40 كيلو
+
+else if(distanceKm <= 40){
+
+totalBasePrice = 20000;
+
+}
+
+// من 40 الى 50 كيلو
+
+else if(distanceKm <= 50){
+
+totalBasePrice = 24000;
+
+}
+
+// اكثر من 50 كيلو
+
+else{
+
+totalBasePrice =
+
+24000 +
+
+(
+(distanceKm - 50) * 400
+);
+
+}
+
+// زيادة الاشخاص
+
+let extraPersonsPrice = 0;
+
+if(personsCount > 0){
+
+extraPersonsPrice =
+
+totalBasePrice *
+
+(personsCount * 0.10);
+
+}
+
+totalPrice =
+
+Math.round(
+totalBasePrice +
+extraPersonsPrice
+);
+
+totalPrice =
+Math.ceil(totalPrice / 250) * 250;
+
+document.getElementById(
+"distanceText"
+).innerHTML =
+distanceKm.toFixed(2);
+
+document.getElementById(
+"priceText"
+).innerHTML =
+totalPrice;
+
+}
+
+
+
 
 window.sendTaxiOrder =
 async function(){
