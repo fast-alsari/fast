@@ -1,5 +1,3 @@
-<!-- drive.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -7,25 +5,33 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0"
+/>
 
 <title>
 طلبات التوصيل
 </title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap"
-rel="stylesheet">
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap"
+rel="stylesheet"
+/>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"
+/>
 
 <script
 src="https://unpkg.com/leaflet/dist/leaflet.js">
 </script>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
 
 <style>
 
@@ -37,33 +43,36 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f5f5f5;
-padding-bottom:40px;
+background:#f4f6f9;
 overflow-x:hidden;
+padding-bottom:50px;
 }
 
-/* HEADER */
+/* ================= HEADER ================= */
 
 .header{
+
 background:
 linear-gradient(
 135deg,
-#ff8800,
-#ff5500
+#ff8a00,
+#ff4d00
 );
 
-padding:15px;
-border-bottom-left-radius:30px;
-border-bottom-right-radius:30px;
+padding:18px;
 
 display:flex;
 justify-content:space-between;
 align-items:center;
 
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+
 color:white;
 
 box-shadow:
-0 5px 20px rgba(0,0,0,.12);
+0 10px 25px rgba(0,0,0,.12);
+
 }
 
 .driver-info{
@@ -73,33 +82,23 @@ gap:10px;
 }
 
 .driver-name{
-font-size:22px;
-font-weight:bold;
+font-size:24px;
+font-weight:800;
 }
 
-.driver-top-info{
+.driver-badges{
 display:flex;
-flex-direction:column;
-gap:8px;
-margin-top:10px;
+flex-wrap:wrap;
+gap:10px;
 }
 
-.driver-badge{
+.badge{
 background:white;
-color:#ff6600;
-padding:6px 12px;
-border-radius:12px;
-font-size:13px;
-font-weight:bold;
-width:fit-content;
-}
-
-.expire-box{
-background:rgba(255,255,255,.2);
+color:#ff5b00;
 padding:8px 14px;
 border-radius:14px;
-font-size:14px;
-width:fit-content;
+font-size:13px;
+font-weight:700;
 }
 
 .header-left{
@@ -108,167 +107,136 @@ align-items:center;
 gap:12px;
 }
 
-.logout-btn{
-width:50px;
-height:50px;
-border:none;
-border-radius:16px;
-background:white;
-color:#ff5500;
-font-size:20px;
-cursor:pointer;
-
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
 .driver-image{
-width:65px;
-height:65px;
+width:70px;
+height:70px;
 border-radius:50%;
 border:3px solid white;
 object-fit:cover;
 }
 
-/* RADAR */
+.logout-btn{
 
-.radar-box{
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-padding:40px 20px;
-width:100%;
-transition:.3s;
-}
+width:50px;
+height:50px;
 
-.radar{
-width:170px;
-height:170px;
-border-radius:50%;
-border:5px solid #ff8800;
-animation:radarPulse 2s infinite;
-position:relative;
-}
+border:none;
+border-radius:15px;
 
-.radar::before{
-content:"";
-position:absolute;
-top:50%;
-left:50%;
-width:20px;
-height:20px;
-background:#ff8800;
-border-radius:50%;
-transform:translate(-50%,-50%);
-}
+background:white;
+color:#ff5b00;
 
-@keyframes radarPulse{
-
-0%{
-box-shadow:
-0 0 0 0 rgba(255,136,0,.5);
-}
-
-100%{
-box-shadow:
-0 0 0 50px rgba(255,136,0,0);
-}
+font-size:18px;
+cursor:pointer;
 
 }
 
-.radar-text{
-margin-top:25px;
-font-size:20px;
-font-weight:bold;
-color:#777;
-}
-
-/* ORDERS */
+/* ================= ORDERS ================= */
 
 .orders-container{
 padding:15px;
 display:flex;
 flex-direction:column;
 gap:18px;
-
-}
-
-@keyframes shakeCard{
-
-0%{
-transform:translateX(0);
-}
-
-25%{
-transform:translateX(2px);
-}
-
-50%{
-transform:translateX(-2px);
-}
-
-75%{
-transform:translateX(2px);
-}
-
-100%{
-transform:translateX(0);
-}
-
 }
 
 .order-card{
+
 background:white;
-padding:15px;
+
 border-radius:25px;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
-animation:shakeCard 1.5s infinite;
+padding:18px;
+
+box-shadow:
+0 5px 20px rgba(0,0,0,.08);
+
 }
 
-
-.order-card h3{
-font-size:22px;
+.order-header{
+display:flex;
+align-items:center;
+gap:12px;
 margin-bottom:15px;
 }
 
-.order-card p{
-margin-bottom:10px;
+.store-image{
+width:60px;
+height:60px;
+border-radius:16px;
+object-fit:cover;
+}
+
+.order-title{
+font-size:21px;
+font-weight:800;
+}
+
+.order-store{
+font-size:15px;
+color:#777;
+margin-top:3px;
+}
+
+.order-details{
+margin-top:12px;
+line-height:2;
 color:#555;
 font-size:15px;
 }
 
 .price-box{
+
 margin-top:15px;
-padding:15px;
-border-radius:16px;
-background:#fff4e8;
-font-size:20px;
-font-weight:bold;
-color:#ff6600;
+
+padding:18px;
+
+background:#fff4eb;
+
+border-radius:18px;
+
+font-size:23px;
+font-weight:800;
+
+color:#ff5b00;
+
 text-align:center;
+line-height:2;
+
 }
 
 .order-buttons{
 display:flex;
-gap:10px;
+gap:12px;
 margin-top:18px;
 }
 
-.accept-btn{
+.btn{
+
 flex:1;
-padding:15px;
+
+padding:16px;
+
 border:none;
-border-radius:16px;
-background:#00b894;
-color:white;
-font-size:16px;
-font-weight:bold;
+border-radius:18px;
+
+font-size:17px;
+font-weight:700;
+
 cursor:pointer;
+
 }
 
-/* DELIVERY */
+.accept-btn{
+background:#00b894;
+color:white;
+}
+
+.reject-btn{
+background:#ff3b30;
+color:white;
+}
+
+/* ================= DELIVERY PAGE ================= */
 
 .delivery-page{
 display:none;
@@ -279,36 +247,144 @@ width:100%;
 height:55vh;
 }
 
-.delivery-info{
-background:white;
-margin:15px;
+.map-controls{
 padding:15px;
-border-radius:25px;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
+display:flex;
+gap:10px;
 }
 
-.delivery-info h3{
-margin-bottom:15px;
-font-size:22px;
-}
+.map-btn{
 
-.delivery-info p{
-margin-bottom:12px;
-font-size:16px;
-color:#555;
-}
+flex:1;
 
-#deliveredBtn{
-width:calc(100% - 30px);
-margin:0 15px;
-padding:18px;
+padding:14px;
+
 border:none;
+border-radius:15px;
+
+background:#ff7b00;
+color:white;
+
+font-size:16px;
+font-weight:700;
+
+cursor:pointer;
+
+}
+
+.delivery-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.box{
+
+background:white;
+
+padding:18px;
+
+border-radius:25px;
+
+box-shadow:
+0 5px 20px rgba(0,0,0,.08);
+
+}
+
+.status-box{
+
+background:#fff6e9;
+
+color:#ff6a00;
+
+font-size:20px;
+font-weight:800;
+
+text-align:center;
+
+}
+
+.timer-title{
+font-size:18px;
+font-weight:700;
+margin-bottom:10px;
+}
+
+.timer-count{
+font-size:40px;
+font-weight:800;
+color:red;
+text-align:center;
+}
+
+.items-box{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:15px;
+}
+
+.item-card{
+
+padding:14px;
+
 border-radius:18px;
+
+background:#fafafa;
+
+border:1px solid #eee;
+
+}
+
+.item-name{
+font-size:18px;
+font-weight:800;
+margin-bottom:8px;
+}
+
+.item-description{
+color:#777;
+margin-bottom:8px;
+}
+
+.item-price{
+font-size:17px;
+font-weight:800;
+color:#ff5b00;
+}
+
+.action-btn{
+
+width:100%;
+
+padding:18px;
+
+border:none;
+border-radius:20px;
+
+font-size:18px;
+font-weight:800;
+
+cursor:pointer;
+
+margin-top:15px;
+
+}
+
+.arrived-btn{
 background:#00b894;
 color:white;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
+}
+
+.delivered-btn{
+background:#0984e3;
+color:white;
+}
+
+.extend-btn{
+background:#ff8a00;
+color:white;
 }
 
 </style>
@@ -317,67 +393,46 @@ cursor:pointer;
 
 <body>
 
-<!-- HEADER -->
-
 <header class="header">
 
 <div class="driver-info">
 
-<h2 class="driver-name"
+<h2
+class="driver-name"
 id="driverName">
 
 السائق
 
 </h2>
 
-<p>
-طلبات التوصيل الحالية
-</p>
+<div class="driver-badges">
 
-<div class="driver-top-info">
+<div class="badge">
 
-<div class="driver-badge">
-
-الطلبات المكتملة:
+المكتملة:
 <span id="completedCount">
 0
 </span>
 
 </div>
 
-<div class="driver-badge">
+<div class="badge">
 
-ارباح الشهر:
+الارباح:
 <span id="monthProfit">
 0
 </span>
+
 د.ع
 
 </div>
 
-<div
-class="driver-badge"
-id="driverAccountType">
+<div class="badge">
 
+الحساب:
+<span id="accountType">
 عادي
-
-</div>
-
-<div class="driver-badge">
-
-الطلبات الحالية:
-<span id="currentOrdersCount">
-0
 </span>
-
-</div>
-
-<div
-class="expire-box"
-id="expireDate">
-
-ينتهي:
-غير محدد
 
 </div>
 
@@ -397,43 +452,18 @@ id="logoutBtn">
 
 <img
 src="driver.png"
-class="driver-image">
+class="driver-image"
+/>
 
 </div>
 
 </header>
 
-<!-- RADAR -->
-
-
-
-
-
-<!-- ORDERS -->
-
-<!-- ORDERS -->
-
 <div
 class="orders-container"
 id="ordersContainer">
 
-<div
-class="radar-box"
-id="radarBox">
-
-<div class="radar"></div>
-
-<div class="radar-text">
-
-جاري البحث عن طلبات...
-
 </div>
-
-</div>
-
-</div>
-
-<!-- DELIVERY -->
 
 <div
 class="delivery-page"
@@ -441,43 +471,147 @@ id="deliveryPage">
 
 <div id="map"></div>
 
-<div class="delivery-info">
+<div class="map-controls">
 
-<h3>
-معلومات الزبون
-</h3>
-
-<p id="customerName"></p>
-
-<p id="customerPhone"></p>
 <button
-id="whatsappCustomer"
-style="
-width:100%;
-padding:14px;
-margin-top:10px;
-border:none;
-border-radius:14px;
-background:#25D366;
-color:white;
-font-weight:bold;
-cursor:pointer;
-">
+class="map-btn"
+id="zoomInBtn">
 
-واتساب الزبون
+تكبير +
 
 </button>
-<p id="customerAddress"></p>
 
-<p id="nearestPoint"></p>
+<button
+class="map-btn"
+id="zoomOutBtn">
+
+تصغير -
+
+</button>
+
+<button
+class="map-btn"
+id="stopTrackingBtn">
+
+ايقاف التتبع
+
+</button>
 
 </div>
 
-<button id="deliveredBtn">
+<div class="delivery-container">
 
-تم الايصال
+<div
+class="box status-box"
+id="deliveryStatus">
+
+التوجه نحو المتجر
+
+</div>
+
+<div class="box">
+
+<h2 id="customerName"></h2>
+
+<p
+style="margin-top:10px;"
+id="storeName"></p>
+
+<div class="price-box">
+
+سعر الطلب:
+<span id="productsPrice"></span>
+
+د.ع
+
+<br>
+
+اجرة التوصيل:
+<span id="deliveryPrice"></span>
+
+د.ع
+
+</div>
+
+</div>
+
+<div class="box">
+
+<div
+class="timer-title"
+id="timerTitle">
+
+الوقت المتبقي للوصول للمتجر
+
+</div>
+
+<div
+class="timer-count"
+id="timerCount">
+
+15:00
+
+</div>
+
+<button
+class="action-btn extend-btn"
+id="extendTimeBtn">
+
+طلب زيادة الوقت +10 دقائق
 
 </button>
+
+</div>
+
+<div class="box">
+
+<h3>
+
+تفاصيل الطلب
+
+</h3>
+
+<div
+class="items-box"
+id="itemsBox">
+
+</div>
+
+</div>
+
+<div class="box">
+
+<p id="customerPhone"></p>
+
+<p
+style="margin-top:10px;"
+id="customerAddress"></p>
+
+<p
+style="margin-top:10px;"
+id="nearestPoint"></p>
+
+</div>
+
+<button
+class="action-btn arrived-btn"
+id="arrivedStoreBtn"
+style="display:none;">
+
+وصلت الى المتجر
+
+</button>
+
+<button
+class="action-btn delivered-btn"
+id="deliveredBtn"
+style="display:none;">
+
+تم ايصال الطلب
+
+</button>
+
+</div>
 
 </div>
 
@@ -485,7 +619,6 @@ cursor:pointer;
 
 import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-
 
 import {
 
@@ -500,26 +633,23 @@ set
 
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-/* FIREBASE */
+/* ================= FIREBASE ================= */
 
 const firebaseConfig = {
 
-apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+apiKey:"YOUR_API_KEY",
 
-authDomain:"fast-937c9.firebaseapp.com",
+authDomain:"YOUR_DOMAIN",
 
-projectId:"fast-937c9",
+databaseURL:"YOUR_DATABASE_URL",
 
-storageBucket:"fast-937c9.firebasestorage.app",
+projectId:"YOUR_PROJECT_ID",
 
-messagingSenderId:"221388561840",
+storageBucket:"YOUR_BUCKET",
 
-appId:"1:221388561840:web:ec9d75183ddd7d44be0a75",
+messagingSenderId:"YOUR_SENDER_ID",
 
-measurementId:"G-CEKHEPNR9X",
-
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+appId:"YOUR_APP_ID"
 
 };
 
@@ -529,68 +659,19 @@ initializeApp(firebaseConfig);
 const db =
 getDatabase(app);
 
-/* بيانات السائق */
+/* ================= DRIVER ================= */
 
 const currentDriver =
 JSON.parse(
 localStorage.getItem("user")
 );
 
-/* اذا ماكو جلسة */
-
 if(!currentDriver){
 
-window.location.replace(
-"index.html"
-);
+window.location.href =
+"index.html";
 
 }
-// =========================
-// اعادة تفعيل الحساب تلقائياً
-// =========================
-
-async function checkDriverReactivation(){
-
-if(
-currentDriver.status === "inactive"
-&&
-currentDriver.reactiveAt
-){
-
-if(
-Date.now() >= currentDriver.reactiveAt
-){
-
-await update(
-ref(
-db,
-"drivers/" + currentDriver.id
-),
-{
-
-status:"active",
-
-reactiveAt:null
-
-}
-);
-
-currentDriver.status =
-"active";
-
-localStorage.setItem(
-"user",
-JSON.stringify(currentDriver)
-);
-
-}
-
-}
-
-}
-
-checkDriverReactivation();
-/* اظهار بيانات السائق */
 
 document.getElementById(
 "driverName"
@@ -598,109 +679,46 @@ document.getElementById(
 currentDriver.name || "سائق";
 
 document.getElementById(
-"driverAccountType"
+"accountType"
 ).innerHTML =
 currentDriver.subscription || "عادي";
 
-document.getElementById(
-"expireDate"
-).innerHTML =
-"ينتهي الاشتراك: " +
-(
-currentDriver.expireDate ||
-"غير محدد"
-);
+/* ================= VARIABLES ================= */
 
 let currentOrderId = null;
-let currentOrders = 0;
 
-let driverLat = null;
-let driverLng = null;
+let currentOrderData = null;
 
-navigator.geolocation.watchPosition(
+let map = null;
 
-(position)=>{
+let driverMarker = null;
 
-driverLat =
-position.coords.latitude;
+let trackingWatcher = null;
 
-driverLng =
-position.coords.longitude;
+let currentStage = "store";
 
-set(
-ref(
-db,
-"drivers/" + currentDriver.id + "/latitude"
-),
-driverLat
-);
+let timerInterval = null;
 
-set(
-ref(
-db,
-"drivers/" + currentDriver.id + "/longitude"
-),
-driverLng
-);
+let remainingSeconds = 900;
 
-}
+/* ================= DISTANCE ================= */
 
-);
-
-onValue(
-ref(db,"drivers/" + currentDriver.id),
-(snapshot)=>{
-
-if(snapshot.exists()){
-
-const driverData =
-snapshot.val();
-
-document.getElementById(
-"completedCount"
-).innerHTML =
-driverData.completedOrders || 0;
-
-document.getElementById(
-"monthProfit"
-).innerHTML =
-driverData.monthProfit || 0;
-
-}
-
-});
-
-
-/* تأخير حسب نوع الاشتراك */
-
-function getDelay(){
-
-const type =
-(
-currentDriver.subscription ||
-"normal"
-).toLowerCase();
-
-if(type === "vip"){
-return 0;
-}
-
-// الحساب العادي
-return 19;
-
-}
-
-/* الطلبات */
-
-function calculateDistance(lat1, lon1, lat2, lon2){
+function calculateDistance(
+lat1,
+lon1,
+lat2,
+lon2
+){
 
 const R = 6371;
 
 const dLat =
-(lat2-lat1) * Math.PI / 180;
+(lat2-lat1) *
+Math.PI / 180;
 
 const dLon =
-(lon2-lon1) * Math.PI / 180;
+(lon2-lon1) *
+Math.PI / 180;
 
 const a =
 
@@ -709,22 +727,20 @@ Math.sin(dLat/2)
 
 +
 
-Math.cos(lat1 * Math.PI / 180)
+Math.cos(lat1 * Math.PI/180)
 
 *
 
-Math.cos(lat2 * Math.PI / 180)
+Math.cos(lat2 * Math.PI/180)
 
 *
 
-Math.sin(dLon/2)
-
-*
-
+Math.sin(dLon/2) *
 Math.sin(dLon/2);
 
 const c =
-2 * Math.atan2(
+2 *
+Math.atan2(
 Math.sqrt(a),
 Math.sqrt(1-a)
 );
@@ -733,148 +749,64 @@ return R * c;
 
 }
 
+/* ================= LOAD ORDERS ================= */
+
 onValue(
 ref(db,"orders"),
 (snapshot)=>{
-
-const radarBox =
-document.getElementById(
-"radarBox"
-);
 
 const container =
 document.getElementById(
 "ordersContainer"
 );
 
-container.innerHTML = `
-
-<div
-class="radar-box"
-id="radarBox">
-
-<div class="radar"></div>
-
-<div class="radar-text">
-
-جاري البحث عن طلبات...
-
-</div>
-
-</div>
-
-`;
-
+container.innerHTML = "";
 
 if(!snapshot.exists()){
-
-radarBox.style.display =
-"flex";
-
 return;
-
 }
 
 const orders =
 snapshot.val();
 
-let found = false;
-currentOrders = 0;
-
-radarBox.style.opacity = "1";
-radarBox.style.display = "flex";
-
 Object.keys(orders)
-.forEach((key)=>{
-    
+.forEach((orderId)=>{
 
 const order =
-orders[key];
+orders[orderId];
+
 if(
-order.rejectedBy &&
-order.rejectedBy[currentDriver.id]
+order.status !==
+"waiting_driver"
 ){
 return;
 }
-if(
-!order.customerLat ||
-!order.customerLng
-){
-return;
-}
-
-if(
-driverLat === null ||
-driverLng === null
-){
-return;
-}
-
-const customerDistance =
-calculateDistance(
-
-driverLat,
-driverLng,
-
-Number(order.customerLat),
-Number(order.customerLng)
-
-);
-
-if(customerDistance > 25){
-return;
-}
-
-
-if(
-order.status !== "waiting_driver"
-){
-
-return;
-
-}
-
-
-
-found = true;
-
-currentOrders++;
-
-// اخفاء الرادار مباشرة
-radarBox.style.display = "none";
-
-setTimeout(()=>{
 
 container.innerHTML += `
+
 <div class="order-card">
 
-<h3>
-${order.customerName}
-</h3>
-<div style="
-display:flex;
-align-items:center;
-gap:10px;
-margin-bottom:10px;
-">
+<div class="order-header">
 
 <img
-src="${order.storeImage || 'store.png'}"
-style="
-width:55px;
-height:55px;
-border-radius:14px;
-object-fit:cover;
-">
+src="${
+order.storeImage ||
+'store.png'
+}"
+class="store-image"
+/>
 
 <div>
 
-<div style="
-font-weight:bold;
-font-size:16px;
-">
+<div class="order-title">
 
-${order.storeName || "متجر"}
+${order.customerName}
+
+</div>
+
+<div class="order-store">
+
+${order.storeName}
 
 </div>
 
@@ -882,64 +814,28 @@ ${order.storeName || "متجر"}
 
 </div>
 
-<p>
+<div class="order-details">
+
 📞 ${order.customerPhone}
-</p>
 
-<p>
+<br>
+
 📍 ${order.customerAddress}
-</p>
-
-<div style="
-margin-top:15px;
-padding:12px;
-background:#fafafa;
-border-radius:16px;
-">
-
-${order.items.map(item => `
-
-<div style="
-margin-bottom:10px;
-padding-bottom:10px;
-border-bottom:1px solid #eee;
-">
-
-🍔 ${item.name}
-
-<br>
-
-الكمية:
-${item.qty}
-
-<br>
-
-السعر:
-${item.price} د.ع
-
-</div>
-
-`).join("")}
 
 </div>
 
 <div class="price-box">
 
-
-سعر التوصيل:
-${order.deliveryPrice}
-د.ع
-
-<br><br>
-
 سعر الطلب:
 ${order.productsPrice || 0}
+
 د.ع
 
-<br><br>
+<br>
 
-المجموع:
-${order.totalPrice || 0}
+اجرة التوصيل:
+${order.deliveryPrice || 0}
+
 د.ع
 
 </div>
@@ -947,77 +843,69 @@ ${order.totalPrice || 0}
 <div class="order-buttons">
 
 <button
-class="accept-btn"
-onclick="acceptOrder('${key}')">
+class="btn accept-btn"
+onclick="acceptOrder('${orderId}')">
 
-قبول الطلب
+قبول
+
+</button>
+
+<button
+class="btn reject-btn"
+onclick="rejectOrder('${orderId}')">
+
+رفض
 
 </button>
 
 </div>
-<button
-class="accept-btn"
-style="background:red;"
-onclick="rejectOrder('${key}')">
 
-رفض الطلب
-
-</button>
 </div>
 
 `;
 
-radarBox.style.display =
-"none";
-
-},getDelay());
-
 });
-document.getElementById(
-"currentOrdersCount"
-).innerHTML =
-currentOrders;
-if(!found){
-
-radarBox.style.display =
-"flex";
-
-}
 
 });
 
-/* قبول الطلب */
+/* ================= REJECT ORDER ================= */
+
 window.rejectOrder =
-async function(id){
+async function(orderId){
 
 await update(
 ref(
 db,
-"orders/" + id + "/rejectedBy"
+"orders/" + orderId
 ),
 {
 
-[currentDriver.id]:true
+status:"rejected"
 
 }
 );
 
-alert("تم رفض الطلب");
-
 };
 
-window.acceptOrder =
-async function(id){
+/* ================= ACCEPT ORDER ================= */
 
-const orderRef =
-ref(db,"orders/"+id);
+window.acceptOrder =
+async function(orderId){
+
+currentOrderId =
+orderId;
 
 const snapshot =
-await get(orderRef);
+await get(
+ref(
+db,
+"orders/" + orderId
+)
+);
 
 if(!snapshot.exists()){
 
-alert("تم حذف الطلب");
+alert("الطلب غير موجود");
 
 return;
 
@@ -1026,82 +914,32 @@ return;
 const order =
 snapshot.val();
 
-
-
-
-
-await update(orderRef,{
-
-driverAccepted:true,
-
-status:"accepted",
-
-acceptedDriver:
-currentDriver.name,
-
-driverId:
-currentDriver.id,
-
-acceptedAt:
-Date.now()
-
-});
-
-// مراقبة التأخير
-
-setTimeout(async()=>{
-
-const checkOrder =
-await get(
-ref(db,"orders/" + id)
-);
-
-if(checkOrder.exists()){
-
-const orderData =
-checkOrder.val();
-
-// اذا بعده accepted يعني ما وصل
-
-if(orderData.status === "accepted"){
+currentOrderData =
+order;
 
 await update(
 ref(
 db,
-"drivers/" + currentDriver.id
+"orders/" + orderId
 ),
 {
 
-status:"inactive",
+status:"accepted",
 
-reactiveAt:
-Date.now() +
-(3 * 24 * 60 * 60 * 1000)
+driverId:
+currentDriver.id,
+
+acceptedDriver:
+currentDriver.name,
+
+acceptedAt:
+Date.now()
 
 }
 );
-
-alert(
-"تم تعطيل حسابك 3 ايام بسبب التأخير"
-);
-
-}
-
-}
-
-},1800000);
-
-
-
-currentOrderId = id;
 
 document.getElementById(
 "ordersContainer"
-).style.display =
-"none";
-
-document.getElementById(
-"radarBox"
 ).style.display =
 "none";
 
@@ -1110,26 +948,44 @@ document.getElementById(
 ).style.display =
 "block";
 
+fillOrderData(order);
+
+initializeMap(order);
+
+startTimer(900);
+
+};
+
+/* ================= FILL DATA ================= */
+
+function fillOrderData(order){
+
 document.getElementById(
 "customerName"
 ).innerHTML =
-"👤 " +
 order.customerName;
+
+document.getElementById(
+"storeName"
+).innerHTML =
+"المتجر: " +
+order.storeName;
+
+document.getElementById(
+"productsPrice"
+).innerHTML =
+order.productsPrice || 0;
+
+document.getElementById(
+"deliveryPrice"
+).innerHTML =
+order.deliveryPrice || 0;
 
 document.getElementById(
 "customerPhone"
 ).innerHTML =
 "📞 " +
 order.customerPhone;
-document.getElementById(
-"whatsappCustomer"
-).onclick = function(){
-
-window.open(
-`https://wa.me/${order.customerPhone}`
-);
-
-};
 
 document.getElementById(
 "customerAddress"
@@ -1141,24 +997,74 @@ document.getElementById(
 "nearestPoint"
 ).innerHTML =
 "📌 " +
-(order.nearestPoint || "لا يوجد");
+(
+order.nearestPoint ||
+"لا يوجد"
+);
 
-/* MAP */
+const itemsBox =
+document.getElementById(
+"itemsBox"
+);
 
-navigator.geolocation
-.getCurrentPosition((position)=>{
+itemsBox.innerHTML = "";
+
+(order.items || [])
+.forEach((item)=>{
+
+itemsBox.innerHTML += `
+
+<div class="item-card">
+
+<div class="item-name">
+
+${item.name}
+
+</div>
+
+<div class="item-description">
+
+${item.description || "لا يوجد وصف"}
+
+</div>
+
+<div>
+
+الكمية:
+${item.qty}
+
+</div>
+
+<div class="item-price">
+
+السعر الكلي:
+${item.qty * item.price}
+
+د.ع
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* ================= MAP ================= */
+
+function initializeMap(order){
+
+navigator.geolocation.getCurrentPosition(
+
+(position)=>{
 
 const driverLat =
 position.coords.latitude;
 
 const driverLng =
 position.coords.longitude;
-
-let map;
-let driverMarker;
-let customerMarker;
-let storeMarker;
-let line;
 
 map =
 L.map("map")
@@ -1167,7 +1073,7 @@ L.map("map")
 driverLat,
 driverLng
 ],
-13
+14
 );
 
 L.tileLayer(
@@ -1181,36 +1087,24 @@ driverLat,
 driverLng
 ]
 )
-.addTo(map)
-.bindPopup("موقعك");
+.addTo(map);
 
-if(order.storeLat && order.storeLng){
-
-storeMarker =
 L.marker(
 [
 order.storeLat,
 order.storeLng
 ]
 )
-.addTo(map)
-.bindPopup("المتجر");
+.addTo(map);
 
-}
-
-if(order.customerLat && order.customerLng){
-
-customerMarker =
 L.marker(
 [
 order.customerLat,
 order.customerLng
 ]
 )
-.addTo(map)
-.bindPopup("الزبون");
+.addTo(map);
 
-line =
 L.polyline(
 [
 [
@@ -1228,54 +1122,263 @@ order.customerLng
 ],
 {
 color:"blue",
-weight:5
+weight:6
 }
 ).addTo(map);
 
-}
+trackingWatcher =
 navigator.geolocation.watchPosition(
 
 (position)=>{
 
-const newLat =
+const lat =
 position.coords.latitude;
 
-const newLng =
+const lng =
 position.coords.longitude;
 
 driverMarker.setLatLng(
-[newLat,newLng]
+[
+lat,
+lng
+]
 );
 
-map.setView(
-[newLat,newLng],
-map.getZoom()
+map.panTo(
+[
+lat,
+lng
+]
+);
+
+set(
+ref(
+db,
+`drivers/${currentDriver.id}/latitude`
+),
+lat
+);
+
+set(
+ref(
+db,
+`drivers/${currentDriver.id}/longitude`
+),
+lng
+);
+
+checkArrival(
+lat,
+lng
 );
 
 }
 
 );
-});
 
-};
+}
 
-/* تم التوصيل */
+);
+
+}
+
+/* ================= CHECK ARRIVAL ================= */
+
+function checkArrival(lat,lng){
+
+if(!currentOrderData){
+return;
+}
+
+if(currentStage === "store"){
+
+const distance =
+calculateDistance(
+lat,
+lng,
+currentOrderData.storeLat,
+currentOrderData.storeLng
+);
+
+if(distance <= 0.1){
+
+document.getElementById(
+"arrivedStoreBtn"
+).style.display =
+"block";
+
+}
+
+}
+
+if(currentStage === "customer"){
+
+const distance =
+calculateDistance(
+lat,
+lng,
+currentOrderData.customerLat,
+currentOrderData.customerLng
+);
+
+if(distance <= 0.1){
 
 document.getElementById(
 "deliveredBtn"
-).addEventListener(
-"click",
-async()=>{
+).style.display =
+"block";
 
-if(!currentOrderId){
-return;
 }
+
+}
+
+}
+
+/* ================= TIMER ================= */
+
+function startTimer(seconds){
+
+remainingSeconds =
+seconds;
+
+clearInterval(timerInterval);
+
+timerInterval =
+setInterval(async()=>{
+
+remainingSeconds--;
+
+const minutes =
+Math.floor(
+remainingSeconds / 60
+);
+
+const sec =
+remainingSeconds % 60;
+
+document.getElementById(
+"timerCount"
+).innerHTML =
+
+`${minutes}:${
+sec < 10 ?
+"0" + sec
+:
+sec
+}`;
+
+if(remainingSeconds <= 0){
+
+clearInterval(
+timerInterval
+);
 
 await update(
 ref(
 db,
-"orders/" +
-currentOrderId
+`drivers/${currentDriver.id}`
+),
+{
+
+status:"inactive",
+
+reactiveAt:
+Date.now() +
+(3 * 24 * 60 * 60 * 1000)
+
+}
+);
+
+await update(
+ref(
+db,
+`orders/${currentOrderId}`
+),
+{
+
+status:"not_completed"
+
+}
+);
+
+alert(
+"تم تعطيل الحساب لمدة 3 ايام بسبب التأخير"
+);
+
+window.location.reload();
+
+}
+
+},1000);
+
+}
+
+/* ================= EXTEND TIME ================= */
+
+document.getElementById(
+"extendTimeBtn"
+).onclick = ()=>{
+
+remainingSeconds += 600;
+
+alert(
+"تمت اضافة 10 دقائق"
+);
+
+};
+
+/* ================= ARRIVED STORE ================= */
+
+document.getElementById(
+"arrivedStoreBtn"
+).onclick =
+async()=>{
+
+currentStage =
+"customer";
+
+document.getElementById(
+"deliveryStatus"
+).innerHTML =
+"التوجه نحو الزبون";
+
+document.getElementById(
+"timerTitle"
+).innerHTML =
+"الوقت المتبقي لايصال الطلب";
+
+document.getElementById(
+"arrivedStoreBtn"
+).style.display =
+"none";
+
+await update(
+ref(
+db,
+`orders/${currentOrderId}`
+),
+{
+
+status:"picked_up"
+
+}
+);
+
+startTimer(2700);
+
+};
+
+/* ================= DELIVERED ================= */
+
+document.getElementById(
+"deliveredBtn"
+).onclick =
+async()=>{
+
+await update(
+ref(
+db,
+`orders/${currentOrderId}`
 ),
 {
 
@@ -1288,30 +1391,67 @@ Date.now()
 );
 
 alert(
-"تم توصيل الطلب"
+"تم ايصال الطلب بنجاح"
 );
 
 window.location.reload();
 
-});
+};
 
-/* تسجيل خروج */
+/* ================= MAP CONTROLS ================= */
+
+document.getElementById(
+"zoomInBtn"
+).onclick = ()=>{
+
+if(map){
+map.zoomIn();
+}
+
+};
+
+document.getElementById(
+"zoomOutBtn"
+).onclick = ()=>{
+
+if(map){
+map.zoomOut();
+}
+
+};
+
+document.getElementById(
+"stopTrackingBtn"
+).onclick = ()=>{
+
+if(trackingWatcher){
+
+navigator.geolocation.clearWatch(
+trackingWatcher
+);
+
+alert(
+"تم ايقاف التتبع"
+);
+
+}
+
+};
+
+/* ================= LOGOUT ================= */
 
 document.getElementById(
 "logoutBtn"
-).addEventListener(
-"click",
-function(){
+).onclick = ()=>{
 
 localStorage.removeItem(
 "user"
 );
 
-window.location.replace(
-"index.html"
-);
+window.location.href =
+"index.html";
 
-});
+};
 
 </script>
 
