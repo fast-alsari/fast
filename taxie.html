@@ -416,18 +416,67 @@ totalDistance =
 let distanceKm =
 Number(totalDistance);
 
-// سعر البداية
+// سعر البداية// سعر البداية
 let basePrice = 2000;
 
 // سعر كل كيلو
 let pricePerKm = 500;
 
-// الحسبة النهائية
-totalPrice =
-Math.round(
-basePrice +
-(distanceKm * pricePerKm)
+// قراءة عدد الاشخاص
+const personsCount =
+Number(
+document.getElementById("personsCount").value || 0
 );
+
+// السعر الاساسي
+let normalPrice =
+
+basePrice +
+
+(distanceKm * pricePerKm);
+
+// زيادة 30% لكل شخص
+let extraPersonsPrice = 0;
+
+if(personsCount > 0){
+
+extraPersonsPrice =
+
+normalPrice *
+
+(personsCount * 0.30);
+
+}
+
+// السعر النهائي قبل التخفيض
+let finalCalculatedPrice =
+
+normalPrice +
+
+extraPersonsPrice;
+
+// اذا المسافة اقل من 25 كيلو
+// ينحسب نصف السعر
+
+if(distanceKm < 25){
+
+totalPrice =
+
+Math.round(
+finalCalculatedPrice / 2
+);
+
+}else{
+
+// اذا اكثر من 25 يبقى كامل
+
+totalPrice =
+
+Math.round(
+finalCalculatedPrice
+);
+
+}
 
 // تقريب السعر
 totalPrice =
