@@ -417,28 +417,33 @@ altLineOptions:{
 styles:[
 
 {
-color:'#666',
-weight:5,
+color:'#0066ff',
+weight:6,
 opacity:0.7
 },
 
 {
-color:'#999',
-weight:4,
-opacity:0.5
+color:'#00aa55',
+weight:6,
+opacity:0.7
+},
+
+{
+color:'#999999',
+weight:6,
+opacity:0.7
 }
 
 ]
 
 },
-
 lineOptions:{
 
 styles:[
 
 {
-color:'#ff8800',
-weight:7,
+color:'#ff5500',
+weight:8,
 opacity:1
 }
 
@@ -477,6 +482,16 @@ routes[0];
 routingControl.on(
 'routeselected',
 function(event){
+
+document.querySelectorAll(
+'.leaflet-routing-alt'
+).forEach(item=>{
+
+item.style.borderRadius = '15px';
+item.style.marginBottom = '10px';
+item.style.cursor = 'pointer';
+
+});
 
 selectedRoute =
 event.route;
