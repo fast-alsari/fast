@@ -285,7 +285,113 @@ font-weight:bold;
 color:#666;
 }
 
+.action-buttons{
+display:flex;
+gap:10px;
+margin-top:14px;
+flex-wrap:wrap;
+}
 
+.edit-btn{
+background:linear-gradient(135deg,#ff9800,#ff6a00);
+color:white;
+border:none;
+padding:11px 18px;
+border-radius:14px;
+cursor:pointer;
+font-weight:bold;
+font-size:14px;
+transition:.3s;
+}
+
+.delete-btn{
+background:linear-gradient(135deg,#ff3d3d,#d50000);
+color:white;
+border:none;
+padding:11px 18px;
+border-radius:14px;
+cursor:pointer;
+font-weight:bold;
+font-size:14px;
+transition:.3s;
+}
+
+.edit-btn:hover,
+.delete-btn:hover{
+transform:scale(1.05);
+}
+
+.product-card{
+transition:.3s;
+}
+
+.product-card:hover{
+transform:translateY(-4px);
+box-shadow:0 15px 35px rgba(0,0,0,.12);
+}
+
+.stat-card{
+position:relative;
+overflow:hidden;
+}
+
+.stat-card::before{
+content:"";
+position:absolute;
+top:0;
+right:0;
+width:100%;
+height:5px;
+background:linear-gradient(135deg,#ff8800,#ff5500);
+}
+
+.add-product-box{
+position:relative;
+overflow:hidden;
+}
+
+.add-product-box::before{
+content:"";
+position:absolute;
+top:0;
+right:0;
+width:100%;
+height:6px;
+background:linear-gradient(135deg,#ff8800,#ff5500);
+}
+
+.product-image{
+width:120px;
+height:120px;
+border-radius:22px;
+}
+
+@media(max-width:700px){
+
+.product-card{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.product-image{
+width:100%;
+height:220px;
+}
+
+.dashboard-header{
+flex-direction:column;
+align-items:flex-start;
+}
+
+.dashboard-user{
+width:100%;
+}
+
+.logout-btn{
+width:100%;
+}
+
+}
 
 
 
@@ -864,6 +970,10 @@ products[key];
 
 if(product.deleted) continue;
 
+if(!product.image){
+product.image = "product.png";
+}
+
 totalProducts++;
 
 container.innerHTML += `
@@ -911,41 +1021,22 @@ product.status === "approved"
 
 </div>
 
-<div style="
-display:flex;
-gap:10px;
-margin-top:12px;
-flex-wrap:wrap;
-">
+<div class="action-buttons">
 
 <button
-onclick="editProduct('${product.id}')"
-style="
-background:#ff8800;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:12px;
-cursor:pointer;
-font-weight:bold;
-">
+class="edit-btn"
+onclick="editProduct('${product.id}')">
 
+<i class="fa-solid fa-pen"></i>
 تعديل
 
 </button>
 
 <button
-onclick="deleteProduct('${product.id}')"
-style="
-background:#e53935;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:12px;
-cursor:pointer;
-font-weight:bold;
-">
+class="delete-btn"
+onclick="deleteProduct('${product.id}')">
 
+<i class="fa-solid fa-trash"></i>
 حذف
 
 </button>
