@@ -22,6 +22,10 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <style>
 
@@ -370,35 +374,15 @@ drawRoute();
 });
 
 }
+let routingControl;
+
 async function drawRoute(){
 
-if(routeLine){
+if(routingControl){
 
-map.removeLayer(routeLine);
+map.removeControl(routingControl);
 
 }
-
-const url =
-`https://router.project-osrm.org/route/v1/driving/${userLng},${userLat};${targetLng},${targetLat}?overview=full&geometries=geojson`;
-
-const response =
-await fetch(url);
-
-const data =
-await response.json();
-
-if(data.routes && data.routes.length > 0){
-
-const route =
-data.routes[0];
-
-const coordinates =
-route.geometry.coordinates.map(coord => [
-
-coord[1],
-coord[0]
-
-]);
 
 if(targetMarker){
 
@@ -406,41 +390,98 @@ map.removeLayer(targetMarker);
 
 }
 
-
-
-targetMarker = L.marker([targetLat,targetLng])
+targetMarker =
+L.marker([targetLat,targetLng])
 .addTo(map)
 .bindPopup("مكان الوصول");
 
+routingControl =
+L.Routing.control({
 
-routeLine = L.polyline(
-coordinates,
+waypoints:[
+
+L.latLng(userLat,userLng),
+
+L.latLng(targetLat,targetLng)
+
+],
+
+routeWhileDragging:true,
+
+showAlternatives:true,
+
+altLineOptions:{
+
+styles:[
+
 {
-color:"#ff8800",
-weight:6
+color:'#666',
+weight:5,
+opacity:0.7
+},
+
+{
+color:'#999',
+weight:4,
+opacity:0.5
 }
-).addTo(map);
-map.fitBounds(
-routeLine.getBounds()
-);
+
+]
+
+},
+
+lineOptions:{
+
+styles:[
+
+{
+color:'#ff8800',
+weight:7,
+opacity:1
+}
+
+]
+
+},
+
+createMarker:function(){
+
+return null;
+
+},
+
+addWaypoints:false,
+
+fitSelectedRoutes:true,
+
+show:false
+
+}).addTo(map);
+
+routingControl.on(
+'routesfound',
+function(e){
+
+const routes =
+e.routes;
+
+if(routes.length > 0){
+
+const route =
+routes[0];
 
 totalDistance =
-(route.distance / 1000).toFixed(2);
+(
+route.summary.totalDistance / 1000
+).toFixed(2);
 
 let distanceKm =
 Number(totalDistance);
-
-
-
-
-// قراءة عدد الاشخاص
 
 const personsCount =
 Number(
 document.getElementById("personsCount").value || 0
 );
-
-// السعر الذكي حسب المسافة
 
 let totalBasePrice = 0;
 
@@ -515,6 +556,7 @@ else if(distanceKm <= 20){
 totalBasePrice = 12000;
 
 }
+
 // من 20 الى 30 كيلو
 
 else if(distanceKm <= 30){
@@ -609,8 +651,7 @@ totalBasePrice =
 
 }
 
-
-// زيادة 30% لكل شخص
+// زيادة الاشخاص
 
 let extraPersonsPrice = 0;
 
@@ -624,8 +665,6 @@ totalBasePrice *
 
 }
 
-// السعر النهائي
-
 totalPrice =
 
 Math.round(
@@ -633,21 +672,23 @@ totalBasePrice +
 extraPersonsPrice
 );
 
-// تقريب السعر
-
 totalPrice =
 Math.ceil(totalPrice / 250) * 250;
 
-
-document.getElementById("distanceText")
-.innerHTML =
+document.getElementById(
+"distanceText"
+).innerHTML =
 totalDistance;
 
-document.getElementById("priceText")
-.innerHTML =
+document.getElementById(
+"priceText"
+).innerHTML =
 totalPrice;
 
 }
+
+}
+);
 
 }
 
