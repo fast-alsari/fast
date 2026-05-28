@@ -138,10 +138,8 @@ display:flex;
 flex-direction:column;
 align-items:center;
 justify-content:center;
-padding:80px 20px;
+padding:40px 20px;
 width:100%;
-position:relative;
-z-index:1;
 transition:.3s;
 }
 
@@ -194,8 +192,7 @@ padding:15px;
 display:flex;
 flex-direction:column;
 gap:18px;
-position:relative;
-z-index:2;
+
 }
 
 @keyframes shakeCard{
@@ -408,6 +405,18 @@ class="driver-image">
 
 <!-- RADAR -->
 
+
+
+
+
+<!-- ORDERS -->
+
+<!-- ORDERS -->
+
+<div
+class="orders-container"
+id="ordersContainer">
+
 <div
 class="radar-box"
 id="radarBox">
@@ -421,12 +430,6 @@ id="radarBox">
 </div>
 
 </div>
-
-<!-- ORDERS -->
-
-<div
-class="orders-container"
-id="ordersContainer">
 
 </div>
 
@@ -744,7 +747,24 @@ document.getElementById(
 "ordersContainer"
 );
 
-container.innerHTML = "";
+container.innerHTML = `
+
+<div
+class="radar-box"
+id="radarBox">
+
+<div class="radar"></div>
+
+<div class="radar-text">
+
+جاري البحث عن طلبات...
+
+</div>
+
+</div>
+
+`;
+
 
 if(!snapshot.exists()){
 
@@ -760,6 +780,9 @@ snapshot.val();
 
 let found = false;
 currentOrders = 0;
+
+radarBox.style.opacity = "1";
+radarBox.style.display = "flex";
 
 Object.keys(orders)
 .forEach((key)=>{
@@ -811,20 +834,14 @@ return;
 
 }
 
-found = true;
+
 
 found = true;
 
 currentOrders++;
 
 // اخفاء الرادار مباشرة
-radarBox.style.opacity = "0";
-
-setTimeout(()=>{
-
 radarBox.style.display = "none";
-
-},300);
 
 setTimeout(()=>{
 
