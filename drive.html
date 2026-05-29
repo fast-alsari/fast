@@ -17,6 +17,13 @@
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"/>
+
+<script
+src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js">
+</script>
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
@@ -434,6 +441,8 @@ VIP
 وصلت الزبون
 </button>
 
+<div id="finishButtons" style="display:none;">
+
 <button id="deliveredBtn" class="action-btn done-btn">
 تم التوصيل
 </button>
@@ -441,7 +450,7 @@ VIP
 <button id="failedBtn" class="action-btn problem-btn">
 مشكلة بالتوصيل
 </button>
-
+</div>
 </div>
 </div>
 
@@ -483,12 +492,88 @@ let driverLng = null;
 let currentOrderId = null;
 let map = null;
 let driverMarker = null;
+let routeControl = null;
 
-const bikeIcon = L.icon({
-iconUrl:"motorbike.png",
-iconSize:[50,50],
-iconAnchor:[25,25]
+const customerIcon = L.divIcon({
+
+html:`
+<div style="
+font-size:38px;
+filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
+">
+🚩
+</div>
+`,
+
+className:"",
+iconSize:[40,40],
+iconAnchor:[20,35]
+
 });
+
+function createStoreIcon(store){
+
+return L.divIcon({
+
+html:`
+
+<div style="
+display:flex;
+flex-direction:column;
+align-items:center;
+">
+
+<div style="
+font-size:34px;
+filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
+">
+🏪
+</div>
+
+<div style="
+background:white;
+padding:4px 10px;
+border-radius:12px;
+font-size:12px;
+font-weight:bold;
+margin-top:3px;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+white-space:nowrap;
+">
+
+${store.storeName || "متجر"}
+
+</div>
+
+</div>
+
+`,
+
+className:"",
+iconSize:[40,40],
+iconAnchor:[20,40]
+
+});
+
+}
+const bikeIcon = L.divIcon({
+
+html:`
+<div style="
+font-size:38px;
+transform:rotate(-15deg);
+filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
+">
+🛵
+</div>
+`,
+
+className:"",
+iconSize:[40,40],
+iconAnchor:[20,20]
+
+});
+
 
 navigator.geolocation.watchPosition(
 async(position)=>{
@@ -518,6 +603,9 @@ driverLng:driverLng
 
 if(driverMarker){
 driverMarker.setLatLng([driverLat,driverLng]);
+}
+if(map){
+map.panTo([driverLat,driverLng]);
 }
 
 }
@@ -783,12 +871,54 @@ document.getElementById("ordersContainer").style.display = "none";
 document.getElementById("deliveryPage").style.display = "block";
 
 document.getElementById("customerName").innerHTML = "👤 " + order.customerName;
-document.getElementById("customerPhone").innerHTML = "📞 " + order.customerPhone;
+let customerPhone =
+String(order.customerPhone || "");
+
+if(!customerPhone.startsWith("0")){
+customerPhone = "0" + customerPhone;
+}
+
+document.getElementById("customerPhone").innerHTML =
+"📞 " + customerPhone;
 document.getElementById("customerAddress").innerHTML = "📍 " + order.customerAddress;
 
-document.getElementById("whatsappCustomer").onclick = function(){
-window.open(`https://wa.me/${order.customerPhone}`);
+(order.storesData || []).forEach(store=>{
+
+if(store.storePhone){
+
+let phone =
+String(store.storePhone);
+
+if(!phone.startsWith("0")){
+phone = "0" + phone;
+}
+
+const btn =
+document.createElement("button");
+
+btn.className =
+"action-btn";
+
+btn.style.background =
+"#222";
+
+btn.innerHTML =
+"واتساب المتجر - " + store.storeName;
+
+btn.onclick = function(){
+
+window.open(
+`https://wa.me/964${phone.substring(1)}`
+);
+
 };
+
+document.querySelector(".delivery-info")
+.appendChild(btn);
+
+}
+
+});
 
 if(map){
 map.remove();
@@ -797,7 +927,7 @@ map.remove();
 map = L.map("map").setView([
 driverLat,
 driverLng
-],13);
+],15);
 
 L.tileLayer(
 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
@@ -808,19 +938,111 @@ driverMarker = L.marker(
 {icon:bikeIcon}
 ).addTo(map);
 
-L.marker([
-Number(order.customerLat),
-Number(order.customerLng)
-]).addTo(map);
+let stores = [...(order.storesData || [])];
 
-(order.storesData || []).forEach(store=>{
+stores.sort((a,b)=>{
 
-L.marker([
-Number(store.storeLat),
-Number(store.storeLng)
-]).addTo(map);
+const distanceA =
+calculateDistance(
+driverLat,
+driverLng,
+Number(a.storeLat),
+Number(a.storeLng)
+);
+
+const distanceB =
+calculateDistance(
+driverLat,
+driverLng,
+Number(b.storeLat),
+Number(b.storeLng)
+);
+
+return distanceA - distanceB;
 
 });
+
+L.marker(
+[
+Number(order.customerLat),
+Number(order.customerLng)
+],
+{
+icon:customerIcon
+}
+).addTo(map);
+
+stores.forEach(store=>{
+
+L.marker(
+[
+Number(store.storeLat),
+Number(store.storeLng)
+],
+{
+icon:createStoreIcon(store)
+}
+).addTo(map);
+
+});
+
+let waypoints = [];
+
+stores.forEach(store=>{
+
+waypoints.push(
+L.latLng(
+Number(store.storeLat),
+Number(store.storeLng)
+)
+);
+
+});
+
+waypoints.push(
+L.latLng(
+Number(order.customerLat),
+Number(order.customerLng)
+)
+);
+
+routeControl =
+L.Routing.control({
+
+waypoints:[
+
+L.latLng(driverLat,driverLng),
+
+...waypoints
+
+],
+
+routeWhileDragging:false,
+
+router:L.Routing.osrmv1({
+serviceUrl:
+'https://router.project-osrm.org/route/v1'
+}),
+
+addWaypoints:false,
+draggableWaypoints:false,
+fitSelectedRoutes:true,
+show:false,
+
+lineOptions:{
+styles:[
+{
+color:"#ff8800",
+weight:7,
+opacity:.9
+}
+]
+},
+
+createMarker:()=>null
+
+}).addTo(map);
+
 
 };
 
@@ -833,8 +1055,8 @@ return;
 await update(
 ref(db,"orders/" + currentOrderId),
 {
-status:"picked_up",
-statusText:"تم استلام الطلب من المتجر"
+status:"on_the_way",
+statusText:"السائق في طريقه إلى الزبون"
 }
 );
 
@@ -855,6 +1077,8 @@ status:"arrived",
 statusText:"السائق وصل إلى الزبون"
 }
 );
+document.getElementById("finishButtons")
+.style.display = "block";
 
 alert("تم تحديث الحالة");
 
@@ -864,6 +1088,43 @@ document.getElementById("deliveredBtn").onclick = async function(){
 
 if(!currentOrderId){
 return;
+}
+if(routeControl){
+
+map.removeControl(routeControl);
+
+routeControl =
+L.Routing.control({
+
+waypoints:
+routeControl.getWaypoints(),
+
+routeWhileDragging:false,
+
+router:L.Routing.osrmv1({
+serviceUrl:
+'https://router.project-osrm.org/route/v1'
+}),
+
+addWaypoints:false,
+draggableWaypoints:false,
+fitSelectedRoutes:true,
+show:false,
+
+lineOptions:{
+styles:[
+{
+color:"#0984e3",
+weight:7,
+opacity:.9
+}
+]
+},
+
+createMarker:()=>null
+
+}).addTo(map);
+
 }
 
 await update(
