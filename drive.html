@@ -384,7 +384,30 @@ background:#00b894;
 .problem-btn{
 background:red;
 }
+.custom-store-icon{
+background:transparent;
+border:none;
+}
 
+.customer-flag{
+background:transparent;
+border:none;
+}
+
+.driver-live-box{
+background:white;
+padding:12px;
+border-radius:18px;
+margin-top:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+}
+
+.driver-live-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:10px;
+color:#ff6600;
+}
 </style>
 
 </head>
@@ -599,6 +622,33 @@ currentDriver.subscription || "عادي";
 let driverLat = null;
 let driverLng = null;
 let currentOrderId = null;
+
+let map;
+let driverMarker;
+let customerMarker;
+let routeLines = [];
+let storeMarkers = [];
+
+const bikeIcon = L.icon({
+
+iconUrl:"motorbike.png",
+
+iconSize:[50,50],
+
+iconAnchor:[25,25]
+
+});
+
+const customerIcon = L.icon({
+
+iconUrl:
+"https://cdn-icons-png.flaticon.com/512/684/684908.png",
+
+iconSize:[45,45],
+
+iconAnchor:[22,45]
+
+});
 
 navigator.geolocation.watchPosition(
 
@@ -872,16 +922,9 @@ ${order.totalPrice} د.ع
 
 </div>
 
-<div class="map-box">
-
-<iframe
-width="100%"
-height="100%"
-style="border:none;"
-loading="lazy"
-src="https://maps.google.com/maps?q=${order.customerLat},${order.customerLng}&z=14&output=embed">
-</iframe>
-
+<div
+class="map-box"
+id="miniMap_${key}">
 </div>
 
 <div class="order-buttons">
@@ -908,8 +951,147 @@ onclick="rejectOrder('${key}')">
 
 `;
 
+setTimeout(()=>{
+
+const miniMap =
+L.map(`miniMap_${key}`,{
+
+zoomControl:false,
+attributionControl:false
+
+})
+
+.setView(
+
+[
+Number(order.customerLat),
+Number(order.customerLng)
+],
+
+12
+
+);
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+).addTo(miniMap);
+
+L.marker(
+
+[
+driverLat,
+driverLng
+],
+
+{
+
+icon:bikeIcon
+
+}
+
+)
+
+.addTo(miniMap);
+
+L.marker(
+
+[
+Number(order.customerLat),
+Number(order.customerLng)
+],
+
+{
+
+icon:customerIcon
+
+}
+
+)
+
+.addTo(miniMap);
+
+if(order.storesData){
+
+order.storesData.forEach(store=>{
+
+L.marker(
+
+[
+Number(store.storeLat),
+Number(store.storeLng)
+],
+
+{
+
+icon:createStoreIcon(store)
+
+}
+
+)
+
+.addTo(miniMap);
+
 });
 
+}
+
+if(order.storesData){
+
+order.storesData.forEach(store=>{
+
+L.polyline(
+
+[
+[
+driverLat,
+driverLng
+],
+[
+Number(store.storeLat),
+Number(store.storeLng)
+]
+],
+
+{
+
+color:"#ff8800",
+weight:5
+
+}
+
+)
+
+.addTo(miniMap);
+
+});
+
+}
+
+L.polyline(
+
+[
+[
+driverLat,
+driverLng
+],
+[
+Number(order.customerLat),
+Number(order.customerLng)
+]
+],
+
+{
+
+color:"green",
+weight:5
+
+}
+
+)
+
+.addTo(miniMap);
+
+},500);
 });
 
 window.rejectOrder =
