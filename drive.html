@@ -1,3 +1,4 @@
+
 <!-- drive.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -314,22 +315,18 @@ display:none;
 
 #map{
 width:100%;
-height:72vh;
+height:60vh;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
 overflow:hidden;
-position:relative;
-z-index:1;
 }
 
 .delivery-info{
 background:white;
-margin:-20px 15px 15px;
+margin:15px;
 padding:15px;
-border-radius:30px;
+border-radius:25px;
 box-shadow:0 5px 20px rgba(0,0,0,.08);
-position:relative;
-z-index:5;
 }
 
 .delivery-info h3{
@@ -444,10 +441,12 @@ VIP
 واتساب الزبون
 </button>
 
+<button id="arrivedStoreBtn" class="action-btn arrive-store">
+وصلت المتجر
+</button>
 
-
-<button id="pickedUpBtn" class="action-btn arrive-customer" style="display:none;">
-استلمت الطلب
+<button id="arrivedCustomerBtn" class="action-btn arrive-customer">
+وصلت الزبون
 </button>
 
 <div id="finishButtons">
@@ -457,7 +456,7 @@ VIP
 </button>
 
 <button id="failedBtn" class="action-btn problem-btn">
-الزبون لم يستلم الطلب 
+مشكلة بالتوصيل
 </button>
 </div>
 </div>
@@ -583,7 +582,6 @@ iconAnchor:[20,20]
 
 });
 
-
 navigator.geolocation.watchPosition(
 async(position)=>{
 
@@ -628,86 +626,10 @@ currentWaypoints.map(w=>w.latLng)
 
 }
 
-
 if(map){
-
-const currentCenter =
-map.getCenter();
-
-const distance =
-calculateDistance(
-currentCenter.lat,
-currentCenter.lng,
-driverLat,
-driverLng
-);
-
-if(distance > 0.03){
-
-map.panTo(
-[driverLat,driverLng],
-{
-animate:true,
-duration:1
-}
-);
-
+map.panTo([driverLat,driverLng]);
 }
 
-}
-
-const currentOrderSnap =
-await get(
-ref(db,"orders/" + currentOrderId)
-);
-
-if(currentOrderSnap.exists()){
-
-const currentOrder =
-currentOrderSnap.val();
-
-if(currentOrder.storesData){
-
-let nearestStore = null;
-let nearestDistance = 999999;
-
-currentOrder.storesData.forEach(store=>{
-
-const distance =
-calculateDistance(
-driverLat,
-driverLng,
-Number(store.storeLat),
-Number(store.storeLng)
-);
-
-if(distance < nearestDistance){
-
-nearestDistance = distance;
-nearestStore = store;
-
-}
-
-});
-
-if(nearestDistance <= 0.1){
-
-document.getElementById("pickedUpBtn")
-.style.display = "block";
-
-await update(
-ref(db,"orders/" + currentOrderId),
-{
-status:"arrived_store",
-statusText:"السائق وصل إلى المتجر"
-}
-);
-
-}
-
-}
-
-}
 }
 
 },
@@ -1154,14 +1076,28 @@ createMarker:()=>null
 
 }).addTo(map);
 
+};
+
+document.getElementById("arrivedStoreBtn").onclick = async function(){
+
+if(!currentOrderId){
+return;
+}
+
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"on_the_way",
+statusText:"السائق في طريقه إلى الزبون"
+}
+);
+
+alert("تم تحديث الحالة");
 
 };
 
+document.getElementById("arrivedCustomerBtn").onclick = async function(){
 
-
-
-
-document.getElementById("pickedUpBtn").onclick = async function(){
 if(!currentOrderId){
 return;
 }
@@ -1207,14 +1143,15 @@ createMarker:()=>null
 await update(
 ref(db,"orders/" + currentOrderId),
 {
-status:"on_the_way",
-statusText:"السائق في طريقه إلى الزبون"
+status:"arrived",
+statusText:"السائق وصل إلى الزبون"
+}
 );
-
-
-alert("تم تحديث الحالة");
 document.getElementById("finishButtons")
 .style.display = "block";
+
+alert("تم تحديث الحالة");
+
 };
 
 document.getElementById("deliveredBtn").onclick = async function(){
@@ -1284,7 +1221,7 @@ await update(
 ref(db,"orders/" + currentOrderId),
 {
 status:"delivery_problem",
-statusText:"الزبون لم يستلم الطلب"
+statusText:"حدثت مشكلة بالتوصيل"
 }
 );
 
