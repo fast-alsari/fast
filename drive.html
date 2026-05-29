@@ -878,6 +878,71 @@ window.open(`https://wa.me/${order.customerPhone}`);
 if(map){
 map.remove();
 }
+
+let stores = [...(order.storesData || [])];
+
+stores.sort((a,b)=>{
+
+const distanceA =
+calculateDistance(
+driverLat,
+driverLng,
+Number(a.storeLat),
+Number(a.storeLng)
+);
+
+const distanceB =
+calculateDistance(
+driverLat,
+driverLng,
+Number(b.storeLat),
+Number(b.storeLng)
+);
+
+return distanceA - distanceB;
+
+});
+
+map = L.map("map").setView([
+driverLat,
+driverLng
+],13);
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+).addTo(map);
+
+driverMarker = L.marker(
+[driverLat,driverLng],
+{
+icon:bikeIcon
+}
+).addTo(map);
+
+L.marker(
+[
+Number(order.customerLat),
+Number(order.customerLng)
+],
+{
+icon:customerIcon
+}
+).addTo(map);
+
+stores.forEach(store=>{
+
+L.marker(
+[
+Number(store.storeLat),
+Number(store.storeLng)
+],
+{
+icon:createStoreIcon(store)
+}
+).addTo(map);
+
+});
+
 let waypoints = [];
 
 stores.forEach(store=>{
@@ -898,7 +963,8 @@ Number(order.customerLng)
 )
 );
 
-routeControl = L.Routing.control({
+let routeControl =
+L.Routing.control({
 
 waypoints:[
 
@@ -910,12 +976,14 @@ L.latLng(driverLat,driverLng),
 
 routeWhileDragging:false,
 
+router:L.Routing.osrmv1({
+serviceUrl:
+'https://router.project-osrm.org/route/v1'
+}),
+
 addWaypoints:false,
-
 draggableWaypoints:false,
-
 fitSelectedRoutes:true,
-
 show:false,
 
 lineOptions:{
@@ -940,7 +1008,7 @@ L.tileLayer(
 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 ).addTo(map);
 
-let waypoints = [];
+
 
 stores.forEach(store=>{
 
