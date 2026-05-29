@@ -818,6 +818,54 @@ window.location.href = "index.html";
 
 }
 
+window.addEventListener(
+"pageshow",
+async function(){
+
+const currentOrderId =
+localStorage.getItem("currentOrderId");
+
+if(currentOrderId){
+
+const snapshot =
+await get(
+ref(database,"orders/" + currentOrderId)
+);
+
+if(snapshot.exists()){
+
+const order =
+snapshot.val();
+
+const blockedStatuses = [
+
+"waiting_driver",
+"accepted",
+"going_to_store",
+"picked_up",
+"on_the_way",
+"arrived"
+
+];
+
+if(
+blockedStatuses.includes(order.status)
+){
+
+window.location.replace(
+"talab.html?orderId=" +
+currentOrderId
+);
+
+}
+
+}
+
+}
+
+}
+);
+
 const currentOrderId =
 localStorage.getItem("currentOrderId");
 
@@ -2158,7 +2206,29 @@ window.location.href =
 "index.html";
 
 };
+history.pushState(null,null,location.href);
 
+window.onpopstate = function(){
+
+const currentOrderId =
+localStorage.getItem("currentOrderId");
+
+if(currentOrderId){
+
+window.location.replace(
+"talab.html?orderId=" +
+currentOrderId
+);
+
+history.pushState(
+null,
+null,
+location.href
+);
+
+}
+
+};
 </script>
 <!-- نافذة الخريطة -->
 
