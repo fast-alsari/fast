@@ -780,27 +780,17 @@ setInterval(updateTimer,1000);
 
 function initMap(order){
 
-if(map){
+mapDiv.style.display = "block";
 
-return;
+if(!map){
 
-}
-
-mapDiv.style.display =
-
-"block";
-
-map =
-
-L.map("map")
-
-.setView(
+map = L.map("map").setView(
 
 [
 
-order.customerLat,
+Number(order.customerLat),
 
-order.customerLng
+Number(order.customerLng)
 
 ],
 
@@ -810,19 +800,23 @@ order.customerLng
 
 L.tileLayer(
 
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
+{
+
+maxZoom:19
+
+}
 
 ).addTo(map);
 
-customerMarker =
-
-L.marker(
+customerMarker = L.marker(
 
 [
 
-order.customerLat,
+Number(order.customerLat),
 
-order.customerLng
+Number(order.customerLng)
 
 ]
 
@@ -834,15 +828,13 @@ order.customerLng
 
 if(order.storeLat && order.storeLng){
 
-storeMarker =
-
-L.marker(
+storeMarker = L.marker(
 
 [
 
-order.storeLat,
+Number(order.storeLat),
 
-order.storeLng
+Number(order.storeLng)
 
 ]
 
@@ -856,9 +848,19 @@ order.storeLng
 
 }
 
+setTimeout(()=>{
+
+map.invalidateSize();
+
+},500);
+
+}
+
 
 
 function updateDriverLocation(order){
+
+initMap(order);
 
 if(
 
@@ -872,33 +874,17 @@ return;
 
 }
 
-if(!map){
-
-initMap(order);
-
-}
-
 const driverLat =
-
 Number(order.driverLat);
 
 const driverLng =
-
 Number(order.driverLng);
 
 if(!driverMarker){
 
-driverMarker =
+driverMarker = L.marker(
 
-L.marker(
-
-[
-
-driverLat,
-
-driverLng
-
-],
+[driverLat,driverLng],
 
 {
 
@@ -916,13 +902,7 @@ icon:bikeIcon
 
 driverMarker.setLatLng(
 
-[
-
-driverLat,
-
-driverLng
-
-]
+[driverLat,driverLng]
 
 );
 
@@ -934,37 +914,55 @@ map.removeLayer(routeLine);
 
 }
 
-routeLine =
+let routePoints = [];
 
-L.polyline(
+if(order.status === "accepted"){
 
-[
+routePoints = [
 
-[
-
-driverLat,
-
-driverLng
-
-],
+[driverLat,driverLng],
 
 [
 
-order.storeLat,
+Number(order.storeLat),
 
-order.storeLng
-
-],
-
-[
-
-order.customerLat,
-
-order.customerLng
+Number(order.storeLng)
 
 ]
 
-],
+];
+
+}
+
+if(
+
+order.status === "picked_up"
+
+||
+
+order.status === "arrived"
+
+){
+
+routePoints = [
+
+[driverLat,driverLng],
+
+[
+
+Number(order.customerLat),
+
+Number(order.customerLng)
+
+]
+
+];
+
+}
+
+routeLine = L.polyline(
+
+routePoints,
 
 {
 
@@ -1028,6 +1026,8 @@ liveStatus.innerHTML =
 
 if(order.status === "accepted"){
 
+initMap(order);
+
 searchingBox.style.display =
 
 "none";
@@ -1073,7 +1073,7 @@ updateDriverLocation(order);
 }
 
 if(order.status === "picked_up"){
-
+initMap(order);
 orderStatus.innerHTML =
 
 "تم استلام الطلب من المتجر";
@@ -1087,7 +1087,7 @@ updateDriverLocation(order);
 }
 
 if(order.status === "arrived"){
-
+initMap(order);
 orderStatus.innerHTML =
 
 "وصل السائق إلى موقعك";
