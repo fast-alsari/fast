@@ -732,6 +732,52 @@ return `${hours}:${minutes}:${seconds}`;
 
 }
 
+// ======================
+// عداد الوقت المباشر
+// ======================
+
+let timerStarted = false;
+
+function startLiveTimer(createdAt){
+
+if(timerStarted){
+return;
+}
+
+timerStarted = true;
+
+function updateTimer(){
+
+const remaining =
+
+(60 * 60 * 1000)
+
+-
+
+(Date.now() - createdAt);
+
+timerBox.innerHTML =
+formatTime(remaining);
+
+if(remaining <= 0){
+
+clearInterval(timerInterval);
+
+timerBox.innerHTML =
+"00:00:00";
+
+}
+
+}
+
+updateTimer();
+
+const timerInterval =
+setInterval(updateTimer,1000);
+
+}
+
+
 function initMap(order){
 
 if(map){
@@ -809,6 +855,8 @@ order.storeLng
 }
 
 }
+
+
 
 function updateDriverLocation(order){
 
@@ -962,51 +1010,9 @@ const order =
 
 snapshot.val();
 
-// ======================
-// عداد الوقت المباشر
-// ======================
+startLiveTimer(order.createdAt);
 
-let timerStarted = false;
 
-function startLiveTimer(createdAt){
-
-if(timerStarted){
-return;
-}
-
-timerStarted = true;
-
-function updateTimer(){
-
-const remaining =
-
-(60 * 60 * 1000)
-
--
-
-(Date.now() - createdAt);
-
-timerBox.innerHTML =
-formatTime(remaining);
-
-// انتهى الوقت
-if(remaining <= 0){
-
-clearInterval(timerInterval);
-
-timerBox.innerHTML =
-"00:00:00";
-
-}
-
-}
-
-updateTimer();
-
-const timerInterval =
-setInterval(updateTimer,1000);
-
-}
 
 if(order.status === "waiting_driver"){
 
@@ -1143,6 +1149,7 @@ window.location.replace(
 }
 
 });
+
 
 completeBtn.onclick =
 
