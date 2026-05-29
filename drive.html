@@ -763,34 +763,25 @@ class="store-image">
 
 </div>
 
-${order.items
-.filter(item => item.storeId === store.storeId)
-.map(item => `
+<div style="
+background:#fff4e8;
+padding:20px;
+border-radius:18px;
+text-align:center;
+font-size:16px;
+font-weight:bold;
+color:#ff6600;
+line-height:2;
+">
 
-<div class="product-box">
+🔒 تفاصيل الطلب مخفية
 
-<div class="product-top">
-
-<img
-src="${item.image || 'product.png'}"
-class="product-image">
-
-<div class="product-info">
-
-<div class="product-name">
-🍔 ${item.name}
-</div>
-
-<div class="product-details">
-📦 الكمية: ${item.qty}
 <br>
-💰 السعر: ${item.price} د.ع
-<br>
-🧾 المجموع: ${item.totalPrice} د.ع
-</div>
+
+تظهر بعد قبول الطلب
 
 </div>
-</div>
+
 </div>
 
 `).join("")}
@@ -906,6 +897,88 @@ customerPhone = "0" + customerPhone;
 document.getElementById("customerPhone").innerHTML =
 "📞 " + customerPhone;
 document.getElementById("customerAddress").innerHTML = "📍 " + order.customerAddress;
+
+const deliveryInfo =
+document.querySelector(".delivery-info");
+
+const productsContainer =
+document.createElement("div");
+
+productsContainer.style.marginTop = "20px";
+
+productsContainer.innerHTML = `
+
+<h3 style="
+margin-bottom:15px;
+font-size:22px;
+">
+تفاصيل الطلب
+</h3>
+
+${(order.storesData || []).map(store => `
+
+<div class="store-box">
+
+<div class="store-header">
+
+<img
+src="${store.storeImage || 'store.png'}"
+class="store-image">
+
+<div class="store-name">
+🏪 ${store.storeName}
+</div>
+
+</div>
+
+${order.items
+.filter(item => item.storeId === store.storeId)
+.map(item => `
+
+<div class="product-box">
+
+<div class="product-top">
+
+<img
+src="${item.image || 'product.png'}"
+class="product-image">
+
+<div class="product-info">
+
+<div class="product-name">
+📋 ${item.name}
+</div>
+
+<div class="product-details">
+📦 الكمية: ${item.qty}
+<br>
+💰 السعر: ${item.price} د.ع
+<br>
+🧾 المجموع: ${item.totalPrice} د.ع
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`).join("")}
+
+<div class="total-box">
+💰 المنتجات: ${order.productsPrice} د.ع
+<br>
+🚚 التوصيل: ${order.deliveryPrice} د.ع
+<br>
+🧾 الكلي: ${order.totalPrice} د.ع
+</div>
+`;
+
+deliveryInfo.appendChild(productsContainer);
 
 document.getElementById("whatsappCustomer").onclick = function(){
 
