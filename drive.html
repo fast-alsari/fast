@@ -440,12 +440,10 @@ VIP
 واتساب الزبون
 </button>
 
-<button id="arrivedStoreBtn" class="action-btn arrive-store">
-وصلت المتجر
-</button>
 
-<button id="arrivedCustomerBtn" class="action-btn arrive-customer">
-وصلت الزبون
+
+<button id="pickedUpBtn" class="action-btn arrive-customer" style="display:none;">
+استلمت الطلب
 </button>
 
 <div id="finishButtons">
@@ -455,7 +453,7 @@ VIP
 </button>
 
 <button id="failedBtn" class="action-btn problem-btn">
-مشكلة بالتوصيل
+الزبون لم يستلم الطلب 
 </button>
 </div>
 </div>
@@ -629,7 +627,58 @@ currentWaypoints.map(w=>w.latLng)
 if(map){
 map.panTo([driverLat,driverLng]);
 }
+const currentOrderSnap =
+await get(
+ref(db,"orders/" + currentOrderId)
+);
 
+if(currentOrderSnap.exists()){
+
+const currentOrder =
+currentOrderSnap.val();
+
+if(currentOrder.storesData){
+
+let nearestStore = null;
+let nearestDistance = 999999;
+
+currentOrder.storesData.forEach(store=>{
+
+const distance =
+calculateDistance(
+driverLat,
+driverLng,
+Number(store.storeLat),
+Number(store.storeLng)
+);
+
+if(distance < nearestDistance){
+
+nearestDistance = distance;
+nearestStore = store;
+
+}
+
+});
+
+if(nearestDistance <= 0.1){
+
+document.getElementById("pickedUpBtn")
+.style.display = "block";
+
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"arrived_store",
+statusText:"السائق وصل إلى المتجر"
+}
+);
+
+}
+
+}
+
+}
 }
 
 },
@@ -1079,28 +1128,11 @@ createMarker:()=>null
 
 };
 
-document.getElementById("arrivedStoreBtn").onclick = async function(){
-
-if(!currentOrderId){
-return;
-}
-
-await update(
-ref(db,"orders/" + currentOrderId),
-{
-status:"on_the_way",
-statusText:"السائق في طريقه إلى الزبون"
-}
-);
-
-alert("تم تحديث الحالة");
-
-};
 
 
 
-document.getElementById("arrivedCustomerBtn").onclick = async function(){
 
+document.getElementById("pickedUpBtn").onclick = async function(){
 if(!currentOrderId){
 return;
 }
@@ -1146,15 +1178,14 @@ createMarker:()=>null
 await update(
 ref(db,"orders/" + currentOrderId),
 {
-status:"arrived",
-statusText:"السائق وصل إلى الزبون"
-}
+status:"on_the_way",
+statusText:"السائق في طريقه إلى الزبون"
 );
-document.getElementById("finishButtons")
-.style.display = "block";
+
 
 alert("تم تحديث الحالة");
-
+document.getElementById("finishButtons")
+.style.display = "block";
 };
 
 document.getElementById("deliveredBtn").onclick = async function(){
@@ -1224,7 +1255,7 @@ await update(
 ref(db,"orders/" + currentOrderId),
 {
 status:"delivery_problem",
-statusText:"حدثت مشكلة بالتوصيل"
+statusText:"الزبون لم يستلم الطلب"
 }
 );
 
