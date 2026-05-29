@@ -848,12 +848,11 @@ return;
 }
 
 if(
-!driverLat ||
-!driverLng
+driverLat === null ||
+driverLng === null
 ){
 return;
 }
-
 const distance =
 calculateDistance(
 
@@ -1203,6 +1202,9 @@ await update(orderRef,{
 
 status:"accepted",
 
+statusText:
+"السائق متجه إلى المتجر",
+
 acceptedDriver:
 currentDriver.name,
 
@@ -1211,6 +1213,15 @@ currentDriver.id,
 
 driverPhone:
 currentDriver.phone || "",
+
+driverVehicle:
+currentDriver.vehicle || "",
+
+driverImage:
+currentDriver.vehicle_image || "",
+
+driverLat:driverLat,
+driverLng:driverLng,
 
 acceptedAt:
 Date.now()
@@ -1369,7 +1380,10 @@ db,
 ),
 {
 
-status:"picked_up"
+status:"picked_up",
+
+statusText:
+"تم استلام الطلب من المتجر"
 
 }
 );
@@ -1394,7 +1408,10 @@ db,
 ),
 {
 
-status:"arrived"
+status:"arrived",
+
+statusText:
+"السائق وصل إلى الزبون"
 
 }
 );
@@ -1420,6 +1437,9 @@ db,
 {
 
 status:"delivered",
+
+statusText:
+"تم تسليم الطلب",
 
 deliveredAt:
 Date.now()
