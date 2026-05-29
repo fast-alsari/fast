@@ -818,6 +818,51 @@ window.location.href = "index.html";
 
 }
 
+const currentOrderId =
+localStorage.getItem("currentOrderId");
+
+if(currentOrderId){
+
+const activeOrderSnapshot =
+await get(
+ref(database,"orders/" + currentOrderId)
+);
+
+if(activeOrderSnapshot.exists()){
+
+const activeOrder =
+activeOrderSnapshot.val();
+
+const blockedStatuses = [
+
+"waiting_driver",
+"accepted",
+"going_to_store",
+"picked_up",
+"on_the_way",
+"arrived"
+
+];
+
+if(
+blockedStatuses.includes(activeOrder.status)
+){
+
+window.location.href =
+"talab.html?orderId=" +
+currentOrderId;
+
+}
+
+}else{
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+}
+
+}
 
 
 async function loadCurrentUser(){
