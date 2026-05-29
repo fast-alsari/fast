@@ -1,7 +1,6 @@
 <!-- talab.html -->
 
 <!DOCTYPE html>
-
 <html lang="ar" dir="rtl">
 
 <head>
@@ -9,411 +8,243 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
-
 الطلب
-
 </title>
 
 <link rel="stylesheet"
-
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <link rel="stylesheet"
-
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <script
-
 src="https://unpkg.com/leaflet/dist/leaflet.js">
-
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-
 rel="stylesheet">
 
 <style>
 
 *{
-
 margin:0;
-
 padding:0;
-
 box-sizing:border-box;
-
 font-family:'Cairo',sans-serif;
-
 }
 
 body{
-
 background:#f5f5f5;
-
 overflow:hidden;
-
 }
 
 .page{
-
 position:fixed;
-
 top:0;
-
 left:0;
-
 right:0;
-
 bottom:0;
-
 overflow-y:auto;
-
 background:#f5f5f5;
-
 }
 
 .top-header{
-
 background:
-
 linear-gradient(
-
 135deg,
-
 #ff8800,
-
 #ff5500
-
 );
-
 padding:25px 20px;
-
 color:white;
-
 border-bottom-left-radius:30px;
-
 border-bottom-right-radius:30px;
-
 box-shadow:
-
 0 8px 25px rgba(0,0,0,.12);
-
 }
 
 .order-title{
-
 font-size:26px;
-
 font-weight:bold;
-
 margin-bottom:10px;
-
 }
 
 .order-status{
-
 font-size:17px;
-
 line-height:1.8;
-
 opacity:.96;
-
 }
 
 .timer-box{
-
 margin-top:18px;
-
 padding:15px;
-
 border-radius:18px;
-
 background:rgba(255,255,255,.15);
-
 backdrop-filter:blur(10px);
-
 text-align:center;
-
 font-size:22px;
-
 font-weight:bold;
-
 }
 
 .searching-box{
-
 padding:40px 20px;
-
 display:flex;
-
 flex-direction:column;
-
 align-items:center;
-
 justify-content:center;
-
 }
 
 .radar{
-
 width:170px;
-
 height:170px;
-
 border-radius:50%;
-
 border:5px solid #ff8800;
-
 animation:radarPulse 2s infinite;
-
 position:relative;
-
 }
 
 .radar::before{
-
 content:"";
-
 position:absolute;
-
 top:50%;
-
 left:50%;
-
 width:22px;
-
 height:22px;
-
 background:#ff8800;
-
 border-radius:50%;
-
 transform:translate(-50%,-50%);
-
 }
 
 @keyframes radarPulse{
 
 0%{
-
 box-shadow:
-
 0 0 0 0 rgba(255,136,0,.5);
-
 }
 
 100%{
-
 box-shadow:
-
 0 0 0 55px rgba(255,136,0,0);
-
 }
 
 }
 
 .search-text{
-
 margin-top:28px;
-
 font-size:22px;
-
 font-weight:bold;
-
 color:#777;
-
 text-align:center;
-
 line-height:2;
-
 }
 
 .driver-card{
-
 background:white;
-
 margin:15px;
-
 padding:15px;
-
 border-radius:25px;
-
 box-shadow:0 5px 20px rgba(0,0,0,.08);
-
 display:none;
-
 }
 
 .driver-top{
-
 display:flex;
-
 align-items:center;
-
 gap:12px;
-
 }
 
 .driver-image{
-
 width:80px;
-
 height:80px;
-
 border-radius:20px;
-
 object-fit:cover;
-
 background:#eee;
-
 }
 
 .driver-info{
-
 flex:1;
-
 }
 
 .driver-name{
-
 font-size:22px;
-
 font-weight:bold;
-
 margin-bottom:8px;
-
 }
 
 .driver-phone{
-
 font-size:15px;
-
 color:#666;
-
 }
 
 .whatsapp-btn{
-
 width:100%;
-
 margin-top:15px;
-
 padding:16px;
-
 border:none;
-
 border-radius:18px;
-
 background:#25D366;
-
 color:white;
-
 font-size:17px;
-
 font-weight:bold;
-
 cursor:pointer;
-
 }
 
 #map{
-
 width:100%;
-
 height:45vh;
-
 margin-top:10px;
-
 display:none;
-
+z-index:1;
 }
 
 .bottom-box{
-
 background:white;
-
 margin:15px;
-
 padding:20px;
-
 border-radius:25px;
-
 box-shadow:0 5px 20px rgba(0,0,0,.08);
-
 }
 
 .bottom-box h3{
-
 font-size:22px;
-
 margin-bottom:18px;
-
 }
 
 .live-status{
-
 font-size:17px;
-
 line-height:2;
-
 color:#555;
-
 }
 
 .complete-btn{
-
 width:100%;
-
 padding:18px;
-
 border:none;
-
 border-radius:18px;
-
 background:#00b894;
-
 color:white;
-
 font-size:18px;
-
 font-weight:bold;
-
 cursor:pointer;
-
 margin-top:20px;
-
 display:none;
-
 }
 
 .reject-btn{
-
 width:100%;
-
 padding:18px;
-
 border:none;
-
 border-radius:18px;
-
 background:red;
-
 color:white;
-
 font-size:18px;
-
 font-weight:bold;
-
 cursor:pointer;
-
 margin-top:15px;
-
 display:none;
-
 }
 
 </style>
@@ -427,15 +258,11 @@ display:none;
 <div class="top-header">
 
 <div class="order-title">
-
 طلبك قيد التوصيل 🚀
-
 </div>
 
 <div
-
 class="order-status"
-
 id="orderStatus">
 
 جاري البحث عن سائق توصيل لإيصال طلبك
@@ -443,9 +270,7 @@ id="orderStatus">
 </div>
 
 <div
-
 class="timer-box"
-
 id="timerBox">
 
 00:00:00
@@ -455,43 +280,31 @@ id="timerBox">
 </div>
 
 <div
-
 class="searching-box"
-
 id="searchingBox">
 
 <div class="radar"></div>
 
 <div class="search-text">
-
 جاري البحث عن سائق توصيل مناسب
-
 </div>
 
 </div>
 
 <div
-
 class="driver-card"
-
 id="driverCard">
 
 <div class="driver-top">
 
 <img
-
 src="driver.png"
-
-class="driver-image"
-
-id="driverImage">
+class="driver-image">
 
 <div class="driver-info">
 
 <div
-
 class="driver-name"
-
 id="driverName">
 
 السائق
@@ -499,9 +312,7 @@ id="driverName">
 </div>
 
 <div
-
 class="driver-phone"
-
 id="driverPhone">
 
 رقم الهاتف
@@ -513,9 +324,7 @@ id="driverPhone">
 </div>
 
 <button
-
 class="whatsapp-btn"
-
 id="whatsappBtn">
 
 مراسلة السائق عبر واتساب
@@ -529,15 +338,11 @@ id="whatsappBtn">
 <div class="bottom-box">
 
 <h3>
-
 حالة الطلب
-
 </h3>
 
 <div
-
 class="live-status"
-
 id="liveStatus">
 
 بانتظار قبول سائق...
@@ -545,9 +350,7 @@ id="liveStatus">
 </div>
 
 <button
-
 class="complete-btn"
-
 id="completeBtn">
 
 استلام الطلب
@@ -555,9 +358,7 @@ id="completeBtn">
 </button>
 
 <button
-
 class="reject-btn"
-
 id="rejectBtn">
 
 لم أستلم الطلب
@@ -571,14 +372,12 @@ id="rejectBtn">
 <script type="module">
 
 import { initializeApp }
-
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 
 getDatabase,
 ref,
-get,
 update,
 onValue,
 remove
@@ -586,6 +385,7 @@ remove
 }
 
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
 const firebaseConfig = {
 
 apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
@@ -595,21 +395,17 @@ authDomain:"fast-937c9.firebaseapp.com",
 projectId:"fast-937c9",
 
 databaseURL:
-
 "https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
 const app =
-
 initializeApp(firebaseConfig);
 
 const db =
-
 getDatabase(app);
 
 const currentUser =
-
 JSON.parse(localStorage.getItem("user"));
 
 if(!currentUser){
@@ -619,11 +415,9 @@ window.location.replace("index.html");
 }
 
 const params =
-
 new URLSearchParams(location.search);
 
 const orderId =
-
 params.get("orderId");
 
 if(!orderId){
@@ -633,57 +427,43 @@ window.location.replace("home.html");
 }
 
 const orderRef =
-
 ref(db,"orders/" + orderId);
 
 const timerBox =
-
 document.getElementById("timerBox");
 
 const orderStatus =
-
 document.getElementById("orderStatus");
 
 const liveStatus =
-
 document.getElementById("liveStatus");
 
 const driverCard =
-
 document.getElementById("driverCard");
 
 const searchingBox =
-
 document.getElementById("searchingBox");
 
 const mapDiv =
-
 document.getElementById("map");
 
 const completeBtn =
-
 document.getElementById("completeBtn");
 
 const rejectBtn =
-
 document.getElementById("rejectBtn");
 
 let map;
-
 let driverMarker;
-
 let customerMarker;
-
 let storeMarker;
-
 let routeLine;
+let timerStarted = false;
 
 const bikeIcon =
-
 L.icon({
 
 iconUrl:
-
 "https://cdn-icons-png.flaticon.com/512/2972/2972185.png",
 
 iconSize:[45,45]
@@ -693,46 +473,29 @@ iconSize:[45,45]
 function formatTime(ms){
 
 if(ms <= 0){
-
 return "00:00:00";
-
 }
 
 let totalSeconds =
-
 Math.floor(ms / 1000);
 
 let hours =
-
 String(
-
 Math.floor(totalSeconds / 3600)
-
 ).padStart(2,"0");
 
 let minutes =
-
 String(
-
 Math.floor((totalSeconds % 3600)/60)
-
 ).padStart(2,"0");
 
 let seconds =
-
 String(totalSeconds % 60)
-
 .padStart(2,"0");
 
 return `${hours}:${minutes}:${seconds}`;
 
 }
-
-// ======================
-// عداد الوقت المباشر
-// ======================
-
-let timerStarted = false;
 
 function startLiveTimer(createdAt){
 
@@ -742,7 +505,8 @@ return;
 
 timerStarted = true;
 
-function updateTimer(){
+const timerInterval =
+setInterval(async()=>{
 
 const remaining =
 
@@ -759,33 +523,29 @@ if(remaining <= 0){
 
 clearInterval(timerInterval);
 
-timerBox.innerHTML =
-"00:00:00";
+try{
 
-// حذف الطلب من فايربيس
 await remove(orderRef);
 
-// حذف التخزين المحلي
+}catch(error){
+
+console.log(error);
+
+}
+
 localStorage.removeItem(
 "currentOrderId"
 );
 
-// تحويل لصفحة إعادة الطلب
 window.location.replace(
 "retry-order.html"
 );
 
 }
 
-}
-
-updateTimer();
-
-const timerInterval =
-setInterval(updateTimer,1000);
+},1000);
 
 }
-
 
 function initMap(order){
 
@@ -793,14 +553,12 @@ mapDiv.style.display = "block";
 
 if(!map){
 
-map = L.map("map").setView(
+map =
+L.map("map").setView(
 
 [
-
 Number(order.customerLat),
-
 Number(order.customerLng)
-
 ],
 
 13
@@ -812,21 +570,17 @@ L.tileLayer(
 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 
 {
-
 maxZoom:19
-
 }
 
 ).addTo(map);
 
-customerMarker = L.marker(
+customerMarker =
+L.marker(
 
 [
-
 Number(order.customerLat),
-
 Number(order.customerLng)
-
 ]
 
 )
@@ -837,14 +591,12 @@ Number(order.customerLng)
 
 if(order.storeLat && order.storeLng){
 
-storeMarker = L.marker(
+storeMarker =
+L.marker(
 
 [
-
 Number(order.storeLat),
-
 Number(order.storeLng)
-
 ]
 
 )
@@ -865,22 +617,15 @@ map.invalidateSize();
 
 }
 
-
-
 function updateDriverLocation(order){
 
 initMap(order);
 
 if(
-
 !order.driverLat ||
-
 !order.driverLng
-
 ){
-
 return;
-
 }
 
 const driverLat =
@@ -891,14 +636,13 @@ Number(order.driverLng);
 
 if(!driverMarker){
 
-driverMarker = L.marker(
+driverMarker =
+L.marker(
 
 [driverLat,driverLng],
 
 {
-
 icon:bikeIcon
-
 }
 
 )
@@ -910,9 +654,7 @@ icon:bikeIcon
 }else{
 
 driverMarker.setLatLng(
-
 [driverLat,driverLng]
-
 );
 
 }
@@ -932,11 +674,8 @@ routePoints = [
 [driverLat,driverLng],
 
 [
-
 Number(order.storeLat),
-
 Number(order.storeLng)
-
 ]
 
 ];
@@ -944,13 +683,9 @@ Number(order.storeLng)
 }
 
 if(
-
 order.status === "picked_up"
-
 ||
-
 order.status === "arrived"
-
 ){
 
 routePoints = [
@@ -958,27 +693,22 @@ routePoints = [
 [driverLat,driverLng],
 
 [
-
 Number(order.customerLat),
-
 Number(order.customerLng)
-
 ]
 
 ];
 
 }
 
-routeLine = L.polyline(
+routeLine =
+L.polyline(
 
 routePoints,
 
 {
-
 color:"blue",
-
 weight:6
-
 }
 
 ).addTo(map);
@@ -988,25 +718,23 @@ map.fitBounds(
 routeLine.getBounds(),
 
 {
-
 padding:[40,40]
-
 }
 
 );
 
 }
 
-onValue(orderRef,async(snapshot)=>{
+onValue(orderRef,(snapshot)=>{
 
 if(!snapshot.exists()){
 
-alert("تم حذف الطلب");
+localStorage.removeItem(
+"currentOrderId"
+);
 
 window.location.replace(
-
 "home.html"
-
 );
 
 return;
@@ -1014,67 +742,49 @@ return;
 }
 
 const order =
-
 snapshot.val();
 
 startLiveTimer(order.createdAt);
 
-
-
 if(order.status === "waiting_driver"){
 
 orderStatus.innerHTML =
-
-"جاري البحث عن سائق توصيل لإيصال طلبك";
+"جاري البحث عن سائق توصيل";
 
 liveStatus.innerHTML =
-
 "بانتظار قبول سائق...";
 
 }
 
 if(order.status === "accepted"){
 
-initMap(order);
-
 searchingBox.style.display =
-
 "none";
 
 driverCard.style.display =
-
 "block";
 
 document.getElementById("driverName")
-
 .innerHTML =
-
 order.acceptedDriver || "السائق";
 
 document.getElementById("driverPhone")
-
 .innerHTML =
-
 order.driverPhone || "";
 
 document.getElementById("whatsappBtn")
-
 .onclick = function(){
 
 window.open(
-
 `https://wa.me/${order.driverPhone}`
-
 );
 
 };
 
 orderStatus.innerHTML =
-
-"تم قبول الطلب من قبل السائق";
+"تم قبول الطلب";
 
 liveStatus.innerHTML =
-
 "السائق متجه إلى المتجر";
 
 updateDriverLocation(order);
@@ -1082,13 +792,11 @@ updateDriverLocation(order);
 }
 
 if(order.status === "picked_up"){
-initMap(order);
-orderStatus.innerHTML =
 
+orderStatus.innerHTML =
 "تم استلام الطلب من المتجر";
 
 liveStatus.innerHTML =
-
 "السائق في الطريق إليك";
 
 updateDriverLocation(order);
@@ -1096,21 +804,17 @@ updateDriverLocation(order);
 }
 
 if(order.status === "arrived"){
-initMap(order);
-orderStatus.innerHTML =
 
-"وصل السائق إلى موقعك";
+orderStatus.innerHTML =
+"وصل السائق";
 
 liveStatus.innerHTML =
-
-"السائق وصل إليك اضغط استلام الطلب";
+"اضغط استلام الطلب";
 
 completeBtn.style.display =
-
 "block";
 
 rejectBtn.style.display =
-
 "block";
 
 updateDriverLocation(order);
@@ -1119,49 +823,33 @@ updateDriverLocation(order);
 
 if(order.status === "delivered"){
 
-alert("تم تسليم الطلب");
-
 localStorage.removeItem(
-
 "currentOrderId"
-
 );
 
+alert("تم تسليم الطلب");
+
 window.location.replace(
-
 "home.html"
-
 );
 
 }
 
 if(order.status === "failed_no_driver"){
 
-alert(
-
-"تم رفض الطلب بسبب عدم توفر سائق"
-
-);
-
 localStorage.removeItem(
-
 "currentOrderId"
-
 );
 
 window.location.replace(
-
-"home.html"
-
+"retry-order.html"
 );
 
 }
 
 });
 
-
 completeBtn.onclick =
-
 async function(){
 
 await update(orderRef,{
@@ -1173,23 +861,16 @@ completedAt:Date.now()
 });
 
 localStorage.removeItem(
-
 "currentOrderId"
-
 );
 
-alert("شكراً لك");
-
 window.location.replace(
-
 "home.html"
-
 );
 
 };
 
 rejectBtn.onclick =
-
 async function(){
 
 await update(orderRef,{
@@ -1201,60 +882,31 @@ rejectedAt:Date.now()
 });
 
 localStorage.removeItem(
-
 "currentOrderId"
-
 );
 
-alert("تم تسجيل المشكلة");
-
 window.location.replace(
-
 "home.html"
-
 );
 
 };
 
 history.pushState(
-
 null,
-
 null,
-
 location.href
-
 );
 
 window.onpopstate =
-
 function(){
 
 history.pushState(
-
 null,
-
 null,
-
 location.href
-
 );
 
 };
-
-window.addEventListener(
-
-"beforeunload",
-
-function(e){
-
-e.preventDefault();
-
-e.returnValue = "";
-
-}
-
-);
 
 </script>
 
