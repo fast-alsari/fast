@@ -24,6 +24,13 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 src="https://unpkg.com/leaflet/dist/leaflet.js">
 </script>
 
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"/>
+
+<script
+src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js">
+</script>
+
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
 
@@ -456,19 +463,92 @@ document.getElementById("rejectBtn");
 let map;
 let driverMarker;
 let customerMarker;
-let storeMarker;
-let routeLine;
+let storeMarkers = [];
+let routeControl;
 let timerStarted = false;
 
 const bikeIcon =
-L.icon({
+L.divIcon({
 
-iconUrl:
-"https://cdn-icons-png.flaticon.com/512/2972/2972185.png",
+html:`
+<div style="
+font-size:38px;
+transform:rotate(-15deg);
+filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
+">
+🛵
+</div>
+`,
 
-iconSize:[45,45]
+className:"",
+iconSize:[40,40],
+iconAnchor:[20,20]
 
 });
+
+const customerIcon =
+L.divIcon({
+
+html:`
+<div style="
+font-size:40px;
+filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
+">
+🚩
+</div>
+`,
+
+className:"",
+iconSize:[40,40],
+iconAnchor:[20,35]
+
+});
+
+function createStoreIcon(storeName){
+
+return L.divIcon({
+
+html:`
+
+<div style="
+display:flex;
+flex-direction:column;
+align-items:center;
+">
+
+<div style="
+font-size:35px;
+filter:drop-shadow(0 2px 5px rgba(0,0,0,.25));
+">
+🏪
+</div>
+
+<div style="
+background:white;
+padding:5px 12px;
+border-radius:12px;
+font-size:12px;
+font-weight:bold;
+margin-top:4px;
+box-shadow:0 2px 10px rgba(0,0,0,.15);
+white-space:nowrap;
+">
+
+${storeName || "متجر"}
+
+</div>
+
+</div>
+
+`,
+
+className:"",
+iconSize:[40,40],
+iconAnchor:[20,40]
+
+});
+
+}
 
 function formatTime(ms){
 
@@ -561,7 +641,7 @@ Number(order.customerLat),
 Number(order.customerLng)
 ],
 
-13
+15
 
 );
 
@@ -581,29 +661,43 @@ L.marker(
 [
 Number(order.customerLat),
 Number(order.customerLng)
-]
+],
+
+{
+icon:customerIcon
+}
 
 )
 
 .addTo(map)
 
-.bindPopup("موقعك");
+.bindPopup("موقع الزبون");
 
-if(order.storeLat && order.storeLng){
+if(order.storesData){
 
-storeMarker =
+order.storesData.forEach(store=>{
+
+const marker =
 L.marker(
 
 [
-Number(order.storeLat),
-Number(order.storeLng)
-]
+Number(store.storeLat),
+Number(store.storeLng)
+],
+
+{
+icon:createStoreIcon(store.storeName)
+}
 
 )
 
 .addTo(map)
 
-.bindPopup("المتجر");
+.bindPopup(store.storeName);
+
+storeMarkers.push(marker);
+
+});
 
 }
 
@@ -659,26 +753,20 @@ driverMarker.setLatLng(
 
 }
 
-if(routeLine){
-
-map.removeLayer(routeLine);
-
-}
-
-let routePoints = [];
+let targetLat;
+let targetLng;
 
 if(order.status === "accepted"){
 
-routePoints = [
+if(order.storesData && order.storesData.length > 0){
 
-[driverLat,driverLng],
+targetLat =
+Number(order.storesData[0].storeLat);
 
-[
-Number(order.storeLat),
-Number(order.storeLng)
-]
+targetLng =
+Number(order.storesData[0].storeLng);
 
-];
+}
 
 }
 
@@ -688,39 +776,66 @@ order.status === "picked_up"
 order.status === "arrived"
 ){
 
-routePoints = [
+targetLat =
+Number(order.customerLat);
 
-[driverLat,driverLng],
+targetLng =
+Number(order.customerLng);
 
-[
-Number(order.customerLat),
-Number(order.customerLng)
+}
+
+if(routeControl){
+
+map.removeControl(routeControl);
+
+}
+
+routeControl =
+L.Routing.control({
+
+waypoints:[
+
+L.latLng(driverLat,driverLng),
+
+L.latLng(targetLat,targetLng)
+
+],
+
+routeWhileDragging:false,
+
+router:
+L.Routing.osrmv1({
+
+serviceUrl:
+'https://router.project-osrm.org/route/v1'
+
+}),
+
+addWaypoints:false,
+draggableWaypoints:false,
+fitSelectedRoutes:true,
+show:false,
+
+lineOptions:{
+styles:[
+{
+color:"#ff8800",
+weight:7,
+opacity:.9
+}
 ]
+},
 
-];
+createMarker:()=>null
 
-}
+}).addTo(map);
 
-routeLine =
-L.polyline(
+map.panTo(
+[driverLat,driverLng]
+);
 
-routePoints,
-
-{
-color:"blue",
-weight:6
-}
-
-).addTo(map);
-
-map.fitBounds(
-
-routeLine.getBounds(),
-
-{
-padding:[40,40]
-}
-
+map.panTo(
+[driverLat,driverLng]
 );
 
 }
