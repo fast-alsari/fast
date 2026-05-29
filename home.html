@@ -782,6 +782,7 @@ import {
 getDatabase,
 ref,
 set,
+update,
 child,
 get,
 onValue
@@ -1986,33 +1987,40 @@ checkOrder.val();
 
 if(order.status === "waiting_driver"){
 
-await set(
-ref(database,"orders/"+orderId+"/status"),
-"failed"
-);
+await update(
+ref(database,"orders/" + orderId),
+{
 
-await set(
-ref(database,"orders/"+orderId+"/statusText"),
-"فشل العثور على سائق"
-);
+status:"failed_no_driver",
 
-await set(
-ref(database,"orders/"+orderId+"/failedDriverSearch"),
-true
+statusText:
+"تم رفض الطلب بسبب عدم توفر سائق",
+
+failedDriverSearch:true,
+
+closedAt:Date.now()
+
+}
 );
 
 }
 
 }
 
-},60000);
+},3600000);
 cart = [];
 
 localStorage.removeItem("cart");
 
 updateCart();
 
-alert("تم ارسال الطلب 🚀");
+localStorage.setItem(
+"currentOrderId",
+orderId
+);
+
+window.location.href =
+"talab.html?orderId=" + orderId;
 
 }
 
