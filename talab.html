@@ -577,19 +577,15 @@ from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 import {
 
 getDatabase,
-
 ref,
-
 get,
-
 update,
-
-onValue
+onValue,
+remove
 
 }
 
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
-
 const firebaseConfig = {
 
 apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
@@ -765,6 +761,19 @@ clearInterval(timerInterval);
 
 timerBox.innerHTML =
 "00:00:00";
+
+// حذف الطلب من فايربيس
+await remove(orderRef);
+
+// حذف التخزين المحلي
+localStorage.removeItem(
+"currentOrderId"
+);
+
+// تحويل لصفحة إعادة الطلب
+window.location.replace(
+"retry-order.html"
+);
 
 }
 
