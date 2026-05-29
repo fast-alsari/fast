@@ -2003,6 +2003,9 @@ store?.id || "",
 storeName:
 store?.store_name || "",
 
+storeImage:
+store?.store_image || store?.image || "store.png",
+
 storeLat:
 store?.latitude || "",
 
@@ -2010,9 +2013,14 @@ storeLng:
 store?.longitude || "",
 
 storePhone:
-store?.phone || ""
+store?.phone || "",
+
+storeCategory:
+store?.category || ""
 
 };
+
+}),
 
 }),
 
