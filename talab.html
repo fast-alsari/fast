@@ -1,296 +1,1213 @@
-﻿<!DOCTYPE html>
-<html lang="ar">
+<!-- talab.html -->
+
+<!DOCTYPE html>
+
+<html lang="ar" dir="rtl">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>نظام استعلام عن الطالب</title>
+
+<meta name="viewport"
+
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>
+
+الطلب
+
+</title>
+
+<link rel="stylesheet"
+
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link rel="stylesheet"
+
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script
+
+src="https://unpkg.com/leaflet/dist/leaflet.js">
+
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+
+rel="stylesheet">
+
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
 
-body {
-  font-family: 'Cairo', sans-serif;
-  direction: rtl;
-  margin: 0;
-  padding: 0;
-  background: linear-gradient(to bottom, #e0f0ff, #ffffff);
-  overflow-x: hidden;
-}
+*{
 
-header {
-  background: #007bff;
-  color: #fff;
-  text-align: center;
-  padding: 25px 10px;
-  font-size: 24px;
-  font-weight: bold;
+margin:0;
+
+padding:0;
+
+box-sizing:border-box;
+
+font-family:'Cairo',sans-serif;
+
 }
 
-header span {
-  display: block;
-  font-size: 16px;
-  font-weight: normal;
-  margin-top: 5px;
-  opacity: 0.8;
+body{
+
+background:#f5f5f5;
+
+overflow:hidden;
+
 }
 
-.input-group {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin: 20px 0;
+.page{
+
+position:fixed;
+
+top:0;
+
+left:0;
+
+right:0;
+
+bottom:0;
+
+overflow-y:auto;
+
+background:#f5f5f5;
+
 }
 
-.input-group input {
-  flex: 0 0 160px;
-  padding: 10px;
-  font-size: 14px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+.top-header{
+
+background:
+
+linear-gradient(
+
+135deg,
+
+#ff8800,
+
+#ff5500
+
+);
+
+padding:25px 20px;
+
+color:white;
+
+border-bottom-left-radius:30px;
+
+border-bottom-right-radius:30px;
+
+box-shadow:
+
+0 8px 25px rgba(0,0,0,.12);
+
 }
 
-.input-group input:focus {
-  outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 8px rgba(0,123,255,0.3);
+.order-title{
+
+font-size:26px;
+
+font-weight:bold;
+
+margin-bottom:10px;
+
 }
 
-button {
-  padding: 10px 25px;
-  font-size: 14px;
-  border: none;
-  border-radius: 8px;
-  background: #28a745;
-  color: #fff;
-  cursor: pointer;
+.order-status{
+
+font-size:17px;
+
+line-height:1.8;
+
+opacity:.96;
+
 }
 
-button:hover {
-  background: #218838;
-  transform: scale(1.05);
+.timer-box{
+
+margin-top:18px;
+
+padding:15px;
+
+border-radius:18px;
+
+background:rgba(255,255,255,.15);
+
+backdrop-filter:blur(10px);
+
+text-align:center;
+
+font-size:22px;
+
+font-weight:bold;
+
 }
 
-.year-label {
-  text-align: center;
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 20px;
-  opacity: 0.8;
+.searching-box{
+
+padding:40px 20px;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
 }
 
-.container {
-  max-width: 1200px;
-  margin: 0 auto 30px auto;
-  padding: 10px;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 20px;
-  justify-items: center;
+.radar{
+
+width:170px;
+
+height:170px;
+
+border-radius:50%;
+
+border:5px solid #ff8800;
+
+animation:radarPulse 2s infinite;
+
+position:relative;
+
 }
 
-.section {
-  width: 100%;
-  min-height: 350px;
-  background: #fff;
-  border-radius: 15px;
-  padding: 15px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-  font-family: 'Cairo', sans-serif;
-  font-size: 14px;
-  overflow-x: auto;
+.radar::before{
+
+content:"";
+
+position:absolute;
+
+top:50%;
+
+left:50%;
+
+width:22px;
+
+height:22px;
+
+background:#ff8800;
+
+border-radius:50%;
+
+transform:translate(-50%,-50%);
+
 }
 
-.section h3 {
-  text-align: center;
-  color: #fff;
-  font-size: 18px;
-  border-radius: 10px;
-  padding: 10px 0;
-  margin-bottom: 15px;
+@keyframes radarPulse{
+
+0%{
+
+box-shadow:
+
+0 0 0 0 rgba(255,136,0,.5);
+
 }
 
-.info { background: #007bff; }
-.finance { background: #28a745; }
-.notes { background: #dc3545; }
-.governance {
-  margin-top: 20px;
-  background: #343a40;
-  color: #fff;
-  padding: 20px;
-  border-radius: 15px;
-  text-align: center;
+100%{
+
+box-shadow:
+
+0 0 0 55px rgba(255,136,0,0);
+
 }
 
-.version {
-  text-align: center;
-  margin-top: 10px;
-  font-size: 12px;
-  color: #555;
 }
 
-/* قسم الدرجات */
-.grades {
-  background: #ffc107;
-  color: #000;
-  font-size: 13px;
-}
-.grades h3 {
-  font-size: 14px; /* حجم صغير للعنوان */
-  padding: 5px 0;
-  margin-bottom: 10px;
-  border-radius: 5px;
-  color: #000;
-  background: #ffc107;
-}
-.grades table th, .grades table td {
-  font-size: 11px; /* حجم أصغر لخلايا الجدول */
-  padding: 3px 2px;
+.search-text{
+
+margin-top:28px;
+
+font-size:22px;
+
+font-weight:bold;
+
+color:#777;
+
+text-align:center;
+
+line-height:2;
+
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
+.driver-card{
+
+background:white;
+
+margin:15px;
+
+padding:15px;
+
+border-radius:25px;
+
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+display:none;
+
 }
 
-th, td {
-  padding: 6px 4px;
-  text-align: right;
-  border: 1px solid #ddd;
-  word-wrap: break-word;
+.driver-top{
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
 }
 
-tr:hover { background-color: rgba(0,123,255,0.1); }
+.driver-image{
 
-@media (max-width: 768px) {
-  .input-group input { flex: 0 0 140px; }
-  th, td { font-size: 10px; padding:2px; }
-  .container { grid-template-columns: 1fr; }
-  .section { min-height: auto; }
+width:80px;
+
+height:80px;
+
+border-radius:20px;
+
+object-fit:cover;
+
+background:#eee;
+
 }
+
+.driver-info{
+
+flex:1;
+
+}
+
+.driver-name{
+
+font-size:22px;
+
+font-weight:bold;
+
+margin-bottom:8px;
+
+}
+
+.driver-phone{
+
+font-size:15px;
+
+color:#666;
+
+}
+
+.whatsapp-btn{
+
+width:100%;
+
+margin-top:15px;
+
+padding:16px;
+
+border:none;
+
+border-radius:18px;
+
+background:#25D366;
+
+color:white;
+
+font-size:17px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+#map{
+
+width:100%;
+
+height:45vh;
+
+margin-top:10px;
+
+display:none;
+
+}
+
+.bottom-box{
+
+background:white;
+
+margin:15px;
+
+padding:20px;
+
+border-radius:25px;
+
+box-shadow:0 5px 20px rgba(0,0,0,.08);
+
+}
+
+.bottom-box h3{
+
+font-size:22px;
+
+margin-bottom:18px;
+
+}
+
+.live-status{
+
+font-size:17px;
+
+line-height:2;
+
+color:#555;
+
+}
+
+.complete-btn{
+
+width:100%;
+
+padding:18px;
+
+border:none;
+
+border-radius:18px;
+
+background:#00b894;
+
+color:white;
+
+font-size:18px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+margin-top:20px;
+
+display:none;
+
+}
+
+.reject-btn{
+
+width:100%;
+
+padding:18px;
+
+border:none;
+
+border-radius:18px;
+
+background:red;
+
+color:white;
+
+font-size:18px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+margin-top:15px;
+
+display:none;
+
+}
+
 </style>
+
 </head>
+
 <body>
 
-<header>
-  🎓 ثانوية التحدي الأهلية
-  <span>العام الدراسي 2025-2026</span>
-</header>
+<div class="page">
 
-<div class="input-group">
-  <input id="parentNumber" placeholder="أدخل رقم ولي الأمر">
-  <input id="studentCode" placeholder="أدخل كود الطالب">
-  <button onclick="searchStudent()">بحث</button>
+<div class="top-header">
+
+<div class="order-title">
+
+طلبك قيد التوصيل 🚀
+
 </div>
 
-<div class="year-label">العام الدراسي 2025-2026</div>
-<div class="container" id="output"></div>
-<div class="version">الإصدار V0.1.2</div>
-<div class="governance">
-  قسم الحوكمة: جميع الحقوق محفوظة © ثانوية التحدي الأهلية
+<div
+
+class="order-status"
+
+id="orderStatus">
+
+جاري البحث عن سائق توصيل لإيصال طلبك
+
 </div>
 
-<script>
-async function searchStudent(saveToStorage=true){
-  let code = document.getElementById("studentCode").value.trim();
-  let parent = document.getElementById("parentNumber").value.trim();
-  if(parent.startsWith("0")) parent = parent.substring(1);
-  if(code.startsWith("0")) code = code.substring(1);
+<div
 
-  const output = document.getElementById("output");
-  if(!parent || !code){
-    output.innerHTML = "<p style='color:#dc3545; text-align:center;'>⚠️ الرجاء إدخال رقم ولي الأمر وكود الطالب لعرض النتائج.</p>";
-    return;
-  }
+class="timer-box"
 
-  if(saveToStorage){
-    localStorage.setItem("studentCode", code);
-    localStorage.setItem("parentNumber", parent);
-  }
+id="timerBox">
 
-  output.innerHTML = "<p style='text-align:center;'>⏳ جاري البحث...</p>";
+00:00:00
 
-  const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vReghaYoMk3f8ffSBLRHIwZieEWCfk5Yx8W6c843TXkC6wpA78Z0X5nw21RRpxMdQ/pub?gid=1229272896&single=true&output=csv";
+</div>
 
-  try{
-    const resp = await fetch(sheetURL);
-    if(!resp.ok) throw new Error("فشل في جلب البيانات");
-    const text = await resp.text();
-    const rows = text.split("\n").map(r=>r.split(","));
-    const header = rows[0].map(h=>h.trim());
-    const dataRows = rows.slice(1);
-    const objects = dataRows.map(r=>{
-      const obj={};
-      for(let i=0;i<header.length;i++) obj[header[i]]=(r[i]||"").trim();
-      return obj;
-    });
+</div>
 
-    const student = objects.find(o=>o["كود الطالب"]===code && o["رقم ولي الامر"]===parent);
-    if(!student){ output.innerHTML="<p style='color:#dc3545; text-align:center;'>❌ لم أجد بيانات تطابق البحث.</p>"; return; }
+<div
 
-    let html="";
+class="searching-box"
 
-    // المعلومات العامة
-    html+=`<div class="section info"><h3>المعلومات العامة</h3><table>`;
-    const studentFields=["id","رقم الطالب","اسم الطالب","الجنس","الصف","القاعة","رقم ولي الامر","رقم الخط","الملاحظات"];
-    for(let f of studentFields){ if(header.includes(f)) html+=`<tr><th>${f}</th><td>${student[f]}</td></tr>`; }
-    html+="</table></div>";
+id="searchingBox">
 
-    // المعلومات المالية
-    html+=`<div class="section finance"><h3>المعلومات المالية</h3><table>`;
-    const financeFields=["القسط 1","تاريخ 1","القسط 2","تاريخ 2","القسط 3","تاريخ 3","القسط 4","تاريخ 4","القسط 5","تاريخ 5","القسط 6","تاريخ 6","القسط 7","تاريخ 7","القسط 8","تاريخ 8","الباقي الكلي","المبلغ الكلي","الواصل الكلي","الكفالة","مبلغ الكفالة"];
-    for(let f of financeFields){ if(header.includes(f)) html+=`<tr><th>${f}</th><td>${student[f]||""}</td></tr>`; }
-    html+="</table></div>";
+<div class="radar"></div>
 
-    // الدرجات التفصيلية لكل مادة مع الأعمدة الشهرية والفصلية
-    const subjectsColumns = {
-      "الاسلامية": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "عربي": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الانكليزي": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الرياضيات": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الكيمياء": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الفيزياء": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "الاحياء": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "اجتماعيات": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "حاسوب": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "رياضة": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "فنية": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"],
-      "السلوك": ["شهر 1","شهر 2","فصل 1","نصف سنة","شهر 3","شهر 4","فصل 2","الامتحان النهائي","السعي","التقدير"]
-    };
+<div class="search-text">
 
-    for(let subject in subjectsColumns){
-      html+=`<div class="section grades"><h3>الدرجات - ${subject}</h3><table><tr>`;
-      subjectsColumns[subject].forEach(colName=>{ html+=`<th>${colName}</th>`; });
-      html+="</tr><tr>";
-      subjectsColumns[subject].forEach(colName=>{ html+=`<td>${student[colName]||""}</td>`; });
-      html+="</tr></table></div>";
-    }
+جاري البحث عن سائق توصيل مناسب
 
-    // الملاحظات
-    html+=`<div class="section notes"><h3>ملاحظات وغياب</h3><table>`;
-    const noteFields=["ملاحظات كرت","ملاحظات النتيجة","الغياب","اختلاق مشاكل داخل المدرسة"];
-    for(let f of noteFields){ if(header.includes(f)) html+=`<tr><th>${f}</th><td>${student[f]||""}</td></tr>`; }
-    html+="</table></div>";
+</div>
 
-    output.innerHTML = html;
+</div>
 
-  }catch(err){
-    console.error(err);
-    output.innerHTML = "<p style='color:#dc3545; text-align:center;'>❌ حدث خطأ أثناء جلب البيانات.</p>";
-  }
+<div
+
+class="driver-card"
+
+id="driverCard">
+
+<div class="driver-top">
+
+<img
+
+src="driver.png"
+
+class="driver-image"
+
+id="driverImage">
+
+<div class="driver-info">
+
+<div
+
+class="driver-name"
+
+id="driverName">
+
+السائق
+
+</div>
+
+<div
+
+class="driver-phone"
+
+id="driverPhone">
+
+رقم الهاتف
+
+</div>
+
+</div>
+
+</div>
+
+<button
+
+class="whatsapp-btn"
+
+id="whatsappBtn">
+
+مراسلة السائق عبر واتساب
+
+</button>
+
+</div>
+
+<div id="map"></div>
+
+<div class="bottom-box">
+
+<h3>
+
+حالة الطلب
+
+</h3>
+
+<div
+
+class="live-status"
+
+id="liveStatus">
+
+بانتظار قبول سائق...
+
+</div>
+
+<button
+
+class="complete-btn"
+
+id="completeBtn">
+
+استلام الطلب
+
+</button>
+
+<button
+
+class="reject-btn"
+
+id="rejectBtn">
+
+لم أستلم الطلب
+
+</button>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+
+getDatabase,
+
+ref,
+
+get,
+
+update,
+
+onValue
+
 }
 
-// الاحتفاظ بالبيانات عند إعادة فتح الموقع
-window.addEventListener("DOMContentLoaded", ()=>{
-  const savedCode = localStorage.getItem("studentCode");
-  const savedParent = localStorage.getItem("parentNumber");
-  if(savedCode && savedParent){
-    document.getElementById("studentCode").value = savedCode;
-    document.getElementById("parentNumber").value = savedParent;
-    searchStudent(false);
-  }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+
+authDomain:"fast-937c9.firebaseapp.com",
+
+projectId:"fast-937c9",
+
+databaseURL:
+
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+
+};
+
+const app =
+
+initializeApp(firebaseConfig);
+
+const db =
+
+getDatabase(app);
+
+const currentUser =
+
+JSON.parse(localStorage.getItem("user"));
+
+if(!currentUser){
+
+window.location.replace("index.html");
+
+}
+
+const params =
+
+new URLSearchParams(location.search);
+
+const orderId =
+
+params.get("orderId");
+
+if(!orderId){
+
+window.location.replace("home.html");
+
+}
+
+const orderRef =
+
+ref(db,"orders/" + orderId);
+
+const timerBox =
+
+document.getElementById("timerBox");
+
+const orderStatus =
+
+document.getElementById("orderStatus");
+
+const liveStatus =
+
+document.getElementById("liveStatus");
+
+const driverCard =
+
+document.getElementById("driverCard");
+
+const searchingBox =
+
+document.getElementById("searchingBox");
+
+const mapDiv =
+
+document.getElementById("map");
+
+const completeBtn =
+
+document.getElementById("completeBtn");
+
+const rejectBtn =
+
+document.getElementById("rejectBtn");
+
+let map;
+
+let driverMarker;
+
+let customerMarker;
+
+let storeMarker;
+
+let routeLine;
+
+const bikeIcon =
+
+L.icon({
+
+iconUrl:
+
+"https://cdn-icons-png.flaticon.com/512/2972/2972185.png",
+
+iconSize:[45,45]
+
 });
+
+function formatTime(ms){
+
+if(ms <= 0){
+
+return "00:00:00";
+
+}
+
+let totalSeconds =
+
+Math.floor(ms / 1000);
+
+let hours =
+
+String(
+
+Math.floor(totalSeconds / 3600)
+
+).padStart(2,"0");
+
+let minutes =
+
+String(
+
+Math.floor((totalSeconds % 3600)/60)
+
+).padStart(2,"0");
+
+let seconds =
+
+String(totalSeconds % 60)
+
+.padStart(2,"0");
+
+return `${hours}:${minutes}:${seconds}`;
+
+}
+
+function initMap(order){
+
+if(map){
+
+return;
+
+}
+
+mapDiv.style.display =
+
+"block";
+
+map =
+
+L.map("map")
+
+.setView(
+
+[
+
+order.customerLat,
+
+order.customerLng
+
+],
+
+13
+
+);
+
+L.tileLayer(
+
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+
+).addTo(map);
+
+customerMarker =
+
+L.marker(
+
+[
+
+order.customerLat,
+
+order.customerLng
+
+]
+
+)
+
+.addTo(map)
+
+.bindPopup("موقعك");
+
+if(order.storeLat && order.storeLng){
+
+storeMarker =
+
+L.marker(
+
+[
+
+order.storeLat,
+
+order.storeLng
+
+]
+
+)
+
+.addTo(map)
+
+.bindPopup("المتجر");
+
+}
+
+}
+
+function updateDriverLocation(order){
+
+if(
+
+!order.driverLat ||
+
+!order.driverLng
+
+){
+
+return;
+
+}
+
+if(!map){
+
+initMap(order);
+
+}
+
+const driverLat =
+
+Number(order.driverLat);
+
+const driverLng =
+
+Number(order.driverLng);
+
+if(!driverMarker){
+
+driverMarker =
+
+L.marker(
+
+[
+
+driverLat,
+
+driverLng
+
+],
+
+{
+
+icon:bikeIcon
+
+}
+
+)
+
+.addTo(map)
+
+.bindPopup("سائق التوصيل");
+
+}else{
+
+driverMarker.setLatLng(
+
+[
+
+driverLat,
+
+driverLng
+
+]
+
+);
+
+}
+
+if(routeLine){
+
+map.removeLayer(routeLine);
+
+}
+
+routeLine =
+
+L.polyline(
+
+[
+
+[
+
+driverLat,
+
+driverLng
+
+],
+
+[
+
+order.storeLat,
+
+order.storeLng
+
+],
+
+[
+
+order.customerLat,
+
+order.customerLng
+
+]
+
+],
+
+{
+
+color:"blue",
+
+weight:6
+
+}
+
+).addTo(map);
+
+map.fitBounds(
+
+routeLine.getBounds(),
+
+{
+
+padding:[40,40]
+
+}
+
+);
+
+}
+
+onValue(orderRef,async(snapshot)=>{
+
+if(!snapshot.exists()){
+
+alert("تم حذف الطلب");
+
+window.location.replace(
+
+"home.html"
+
+);
+
+return;
+
+}
+
+const order =
+
+snapshot.val();
+
+const remaining =
+
+(60 * 60 * 1000)
+
+-
+
+(Date.now() - order.createdAt);
+
+timerBox.innerHTML =
+
+formatTime(remaining);
+
+if(order.status === "waiting_driver"){
+
+orderStatus.innerHTML =
+
+"جاري البحث عن سائق توصيل لإيصال طلبك";
+
+liveStatus.innerHTML =
+
+"بانتظار قبول سائق...";
+
+}
+
+if(order.status === "accepted"){
+
+searchingBox.style.display =
+
+"none";
+
+driverCard.style.display =
+
+"block";
+
+document.getElementById("driverName")
+
+.innerHTML =
+
+order.acceptedDriver || "السائق";
+
+document.getElementById("driverPhone")
+
+.innerHTML =
+
+order.driverPhone || "";
+
+document.getElementById("whatsappBtn")
+
+.onclick = function(){
+
+window.open(
+
+`https://wa.me/${order.driverPhone}`
+
+);
+
+};
+
+orderStatus.innerHTML =
+
+"تم قبول الطلب من قبل السائق";
+
+liveStatus.innerHTML =
+
+"السائق متجه إلى المتجر";
+
+updateDriverLocation(order);
+
+}
+
+if(order.status === "picked_up"){
+
+orderStatus.innerHTML =
+
+"تم استلام الطلب من المتجر";
+
+liveStatus.innerHTML =
+
+"السائق في الطريق إليك";
+
+updateDriverLocation(order);
+
+}
+
+if(order.status === "arrived"){
+
+orderStatus.innerHTML =
+
+"وصل السائق إلى موقعك";
+
+liveStatus.innerHTML =
+
+"السائق وصل إليك اضغط استلام الطلب";
+
+completeBtn.style.display =
+
+"block";
+
+rejectBtn.style.display =
+
+"block";
+
+updateDriverLocation(order);
+
+}
+
+if(order.status === "delivered"){
+
+alert("تم تسليم الطلب");
+
+localStorage.removeItem(
+
+"currentOrderId"
+
+);
+
+window.location.replace(
+
+"home.html"
+
+);
+
+}
+
+if(order.status === "failed_no_driver"){
+
+alert(
+
+"تم رفض الطلب بسبب عدم توفر سائق"
+
+);
+
+localStorage.removeItem(
+
+"currentOrderId"
+
+);
+
+window.location.replace(
+
+"home.html"
+
+);
+
+}
+
+});
+
+completeBtn.onclick =
+
+async function(){
+
+await update(orderRef,{
+
+status:"completed_by_customer",
+
+completedAt:Date.now()
+
+});
+
+localStorage.removeItem(
+
+"currentOrderId"
+
+);
+
+alert("شكراً لك");
+
+window.location.replace(
+
+"home.html"
+
+);
+
+};
+
+rejectBtn.onclick =
+
+async function(){
+
+await update(orderRef,{
+
+status:"rejected_by_customer",
+
+rejectedAt:Date.now()
+
+});
+
+localStorage.removeItem(
+
+"currentOrderId"
+
+);
+
+alert("تم تسجيل المشكلة");
+
+window.location.replace(
+
+"home.html"
+
+);
+
+};
+
+history.pushState(
+
+null,
+
+null,
+
+location.href
+
+);
+
+window.onpopstate =
+
+function(){
+
+history.pushState(
+
+null,
+
+null,
+
+location.href
+
+);
+
+};
+
+window.addEventListener(
+
+"beforeunload",
+
+function(e){
+
+e.preventDefault();
+
+e.returnValue = "";
+
+}
+
+);
+
 </script>
 
 </body>
+
 </html>
