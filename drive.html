@@ -978,16 +978,18 @@ class="product-image">
 
 
 
+deliveryInfo.insertBefore(
+productsContainer,
+document.getElementById("whatsappCustomer")
+);
+
 document.getElementById("whatsappCustomer").onclick = function(){
-
-
 
 window.open(
 `https://wa.me/964${customerPhone.substring(1)}`
 );
 
 };
-deliveryInfo.appendChild(productsContainer);
 
 (order.storesData || []).forEach(store=>{
 
