@@ -641,6 +641,7 @@ iconAnchor:[25,25]
 
 const customerIcon = L.icon({
 
+
 iconUrl:
 "https://cdn-icons-png.flaticon.com/512/684/684908.png",
 
@@ -650,6 +651,57 @@ iconAnchor:[22,45]
 
 });
 
+function createStoreIcon(store){
+
+return L.divIcon({
+
+className:"custom-store-icon",
+
+html:`
+
+<div style="
+display:flex;
+flex-direction:column;
+align-items:center;
+">
+
+<img
+src="${store.storeImage || 'store.png'}"
+style="
+width:45px;
+height:45px;
+border-radius:50%;
+border:3px solid white;
+object-fit:cover;
+background:white;
+box-shadow:0 3px 10px rgba(0,0,0,.2);
+">
+
+<div style="
+background:white;
+padding:4px 8px;
+border-radius:10px;
+margin-top:4px;
+font-size:11px;
+font-weight:bold;
+white-space:nowrap;
+box-shadow:0 2px 8px rgba(0,0,0,.15);
+">
+
+${store.storeName}
+
+</div>
+
+</div>
+
+`,
+
+iconSize:[60,60],
+iconAnchor:[30,30]
+
+});
+
+}
 navigator.geolocation.watchPosition(
 
 (position)=>{
@@ -1183,7 +1235,7 @@ window.open(
 
 };
 
-let map =
+ map =
 L.map("map").setView(
 [
 driverLat,
@@ -1196,21 +1248,85 @@ L.tileLayer(
 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 ).addTo(map);
 
-L.marker(
-[
-order.customerLat,
-order.customerLng
-]
-)
-.addTo(map);
-
+driverMarker =
 L.marker(
 [
 driverLat,
 driverLng
-]
+],
+{
+icon:bikeIcon
+}
 )
 .addTo(map);
+
+customerMarker =
+L.marker(
+[
+Number(order.customerLat),
+Number(order.customerLng)
+],
+{
+icon:customerIcon
+}
+)
+.addTo(map);
+
+if(order.storesData){
+
+order.storesData.forEach(store=>{
+
+const marker =
+L.marker(
+[
+Number(store.storeLat),
+Number(store.storeLng)
+],
+{
+icon:createStoreIcon(store)
+}
+)
+.addTo(map);
+
+storeMarkers.push(marker);
+
+L.polyline(
+[
+[
+driverLat,
+driverLng
+],
+[
+Number(store.storeLat),
+Number(store.storeLng)
+]
+],
+{
+color:"#ff8800",
+weight:5
+}
+).addTo(map);
+
+});
+
+}
+
+L.polyline(
+[
+[
+driverLat,
+driverLng
+],
+[
+Number(order.customerLat),
+Number(order.customerLng)
+]
+],
+{
+color:"green",
+weight:5
+}
+).addTo(map);
 
 };
 
