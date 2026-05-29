@@ -980,12 +980,12 @@ class="product-image">
 
 document.getElementById("whatsappCustomer").onclick = function(){
 
-deliveryInfo.appendChild(productsContainer);
+
 
 window.open(
 `https://wa.me/964${customerPhone.substring(1)}`
 );
-
+deliveryInfo.appendChild(productsContainer);
 };
 
 (order.storesData || []).forEach(store=>{
