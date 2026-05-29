@@ -620,20 +620,21 @@ routeControl.getWaypoints();
 currentWaypoints[0].latLng =
 L.latLng(driverLat,driverLng);
 
-routeControl.setWaypoints(
-currentWaypoints.map(w=>w.latLng)
+routeControl.spliceWaypoints(
+0,
+1,
+L.latLng(driverLat,driverLng)
 );
 
 }
 
 if(map){
 
-map.flyTo(
+map.panTo(
 [driverLat,driverLng],
-map.getZoom(),
 {
 animate:true,
-duration:1.5
+duration:1
 }
 );
 
