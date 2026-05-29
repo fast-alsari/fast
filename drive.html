@@ -724,6 +724,22 @@ longitude:driverLng
 
 }
 );
+if(currentOrderId){
+
+update(
+ref(
+db,
+"orders/" + currentOrderId
+),
+{
+
+driverLat:driverLat,
+driverLng:driverLng
+
+}
+);
+
+}
 
 }
 );
@@ -888,7 +904,7 @@ ${order.storesData?.length || 1}
 
 </div>
 
-${order.storesData?.map(store => `
+${(order.storesData || []).map(store => `
 
 <div class="store-box">
 
@@ -1146,6 +1162,9 @@ weight:5
 },500);
 });
 
+});
+});
+
 window.rejectOrder =
 async function(id){
 
@@ -1235,7 +1254,11 @@ window.open(
 
 };
 
- map =
+if(map){
+map.remove();
+}
+
+map =
 L.map("map").setView(
 [
 driverLat,
