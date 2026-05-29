@@ -1184,7 +1184,8 @@ createMarker:()=>null
 
 };
 
-let orderPickedUp = false;
+let arrivedToStore = false;
+let leftStore = false;
 let customerArrived = false;
 
 async function autoUpdateOrderStatus(order){
@@ -1199,28 +1200,35 @@ return;
 
 const firstStore = order.storesData[0];
 
+const storeLat =
+Number(firstStore.storeLat);
+
+const storeLng =
+Number(firstStore.storeLng);
+
+const customerLat =
+Number(order.customerLat);
+
+const customerLng =
+Number(order.customerLng);
+
 const distanceToStore =
 calculateDistance(
 driverLat,
 driverLng,
-Number(firstStore.storeLat),
-Number(firstStore.storeLng)
+storeLat,
+storeLng
 );
 
 const distanceToCustomer =
 calculateDistance(
 driverLat,
 driverLng,
-Number(order.customerLat),
-Number(order.customerLng)
+customerLat,
+customerLng
 );
 
-if(
-order.status === "accepted" &&
-!orderPickedUp
-){
-
-orderPickedUp = true;
+if(order.status === "accepted"){
 
 await update(
 ref(db,"orders/" + currentOrderId),
@@ -1233,10 +1241,25 @@ statusText:"السائق متجه إلى المتجر"
 }
 
 if(
-distanceToStore > 0.15 &&
-orderPickedUp &&
-!customerArrived
+distanceToStore <= 0.1 &&
+!arrivedToStore
 ){
+
+arrivedToStore = true;
+
+console.log(
+"وصل السائق للمتجر"
+);
+
+}
+
+if(
+arrivedToStore &&
+distanceToStore > 0.15 &&
+!leftStore
+){
+
+leftStore = true;
 
 await update(
 ref(db,"orders/" + currentOrderId),
@@ -1263,46 +1286,9 @@ statusText:"السائق وصل استلم الطلب"
 }
 );
 
-document.getElementById("finishButtons")
-.style.display = "block";
-
-if(routeControl){
-
-map.removeControl(routeControl);
-
-routeControl =
-L.Routing.control({
-
-waypoints:
-routeControl.getWaypoints(),
-
-routeWhileDragging:false,
-
-router:L.Routing.osrmv1({
-serviceUrl:
-'https://router.project-osrm.org/route/v1'
-}),
-
-addWaypoints:false,
-draggableWaypoints:false,
-fitSelectedRoutes:false,
-show:false,
-
-lineOptions:{
-styles:[
-{
-color:"#0984e3",
-weight:7,
-opacity:.9
-}
-]
-},
-
-createMarker:()=>null
-
-}).addTo(map);
-
-}
+document.getElementById(
+"finishButtons"
+).style.display = "block";
 
 }
 
