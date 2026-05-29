@@ -314,18 +314,22 @@ display:none;
 
 #map{
 width:100%;
-height:60vh;
+height:72vh;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
 overflow:hidden;
+position:relative;
+z-index:1;
 }
 
 .delivery-info{
 background:white;
-margin:15px;
+margin:-20px 15px 15px;
 padding:15px;
-border-radius:25px;
+border-radius:30px;
 box-shadow:0 5px 20px rgba(0,0,0,.08);
+position:relative;
+z-index:5;
 }
 
 .delivery-info h3{
@@ -624,9 +628,34 @@ currentWaypoints.map(w=>w.latLng)
 
 }
 
+
 if(map){
-map.panTo([driverLat,driverLng]);
+
+const currentCenter =
+map.getCenter();
+
+const distance =
+calculateDistance(
+currentCenter.lat,
+currentCenter.lng,
+driverLat,
+driverLng
+);
+
+if(distance > 0.03){
+
+map.panTo(
+[driverLat,driverLng],
+{
+animate:true,
+duration:1
 }
+);
+
+}
+
+}
+
 const currentOrderSnap =
 await get(
 ref(db,"orders/" + currentOrderId)
