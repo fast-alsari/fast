@@ -17,13 +17,6 @@
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"/>
-
-<script
-src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js">
-</script>
-
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
@@ -491,83 +484,11 @@ let currentOrderId = null;
 let map = null;
 let driverMarker = null;
 
-const bikeIcon = L.divIcon({
-
-html:`
-<div style="
-font-size:38px;
-transform:rotate(-15deg);
-">
-🛵
-</div>
-`,
-
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,20]
-
+const bikeIcon = L.icon({
+iconUrl:"motorbike.png",
+iconSize:[50,50],
+iconAnchor:[25,25]
 });
-
-const customerIcon = L.divIcon({
-
-html:`
-<div style="
-font-size:38px;
-">
-🚩
-</div>
-`,
-
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,35]
-
-});
-
-function createStoreIcon(store){
-
-return L.divIcon({
-
-html:`
-
-<div style="
-display:flex;
-flex-direction:column;
-align-items:center;
-">
-
-<div style="
-font-size:34px;
-">
-📍
-</div>
-
-<div style="
-background:white;
-padding:4px 10px;
-border-radius:12px;
-font-size:12px;
-font-weight:bold;
-margin-top:3px;
-box-shadow:0 2px 10px rgba(0,0,0,.15);
-white-space:nowrap;
-">
-
-${store.storeName || "متجر"}
-
-</div>
-
-</div>
-
-`,
-
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,40]
-
-});
-
-}
 
 navigator.geolocation.watchPosition(
 async(position)=>{
@@ -597,12 +518,6 @@ driverLng:driverLng
 
 if(driverMarker){
 driverMarker.setLatLng([driverLat,driverLng]);
-}
-
-if(map){
-map.panTo(
-[driverLat,driverLng]
-);
 }
 
 }
@@ -879,30 +794,6 @@ if(map){
 map.remove();
 }
 
-let stores = [...(order.storesData || [])];
-
-stores.sort((a,b)=>{
-
-const distanceA =
-calculateDistance(
-driverLat,
-driverLng,
-Number(a.storeLat),
-Number(a.storeLng)
-);
-
-const distanceB =
-calculateDistance(
-driverLat,
-driverLng,
-Number(b.storeLat),
-Number(b.storeLng)
-);
-
-return distanceA - distanceB;
-
-});
-
 map = L.map("map").setView([
 driverLat,
 driverLng
@@ -914,200 +805,20 @@ L.tileLayer(
 
 driverMarker = L.marker(
 [driverLat,driverLng],
-{
-icon:bikeIcon
-}
+{icon:bikeIcon}
 ).addTo(map);
 
-L.marker(
-[
+L.marker([
 Number(order.customerLat),
 Number(order.customerLng)
-],
-{
-icon:customerIcon
-}
-).addTo(map);
+]).addTo(map);
 
-stores.forEach(store=>{
+(order.storesData || []).forEach(store=>{
 
-L.marker(
-[
+L.marker([
 Number(store.storeLat),
 Number(store.storeLng)
-],
-{
-icon:createStoreIcon(store)
-}
-).addTo(map);
-
-});
-
-let waypoints = [];
-
-stores.forEach(store=>{
-
-waypoints.push(
-L.latLng(
-Number(store.storeLat),
-Number(store.storeLng)
-)
-);
-
-});
-
-waypoints.push(
-L.latLng(
-Number(order.customerLat),
-Number(order.customerLng)
-)
-);
-
-let routeControl =
-L.Routing.control({
-
-waypoints:[
-
-L.latLng(driverLat,driverLng),
-
-...waypoints
-
-],
-
-routeWhileDragging:false,
-
-router:L.Routing.osrmv1({
-serviceUrl:
-'https://router.project-osrm.org/route/v1'
-}),
-
-addWaypoints:false,
-draggableWaypoints:false,
-fitSelectedRoutes:true,
-show:false,
-
-lineOptions:{
-styles:[
-{
-color:"#ff8800",
-weight:6
-}
-]
-},
-
-createMarker:()=>null
-
-}).addTo(map);
-
-map = L.map("map").setView([
-driverLat,
-driverLng
-],13);
-
-L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-).addTo(map);
-
-
-
-stores.forEach(store=>{
-
-waypoints.push(
-L.latLng(
-Number(store.storeLat),
-Number(store.storeLng)
-)
-);
-
-});
-
-waypoints.push(
-L.latLng(
-Number(order.customerLat),
-Number(order.customerLng)
-)
-);
-
-routeControl = L.Routing.control({
-
-waypoints:[
-
-L.latLng(driverLat,driverLng),
-
-...waypoints
-
-],
-
-routeWhileDragging:false,
-router: L.Routing.osrmv1({
-serviceUrl:
-'https://router.project-osrm.org/route/v1'
-}),
-addWaypoints:false,
-
-draggableWaypoints:false,
-
-fitSelectedRoutes:true,
-
-show:false,
-
-lineOptions:{
-styles:[
-{
-color:"#ff8800",
-weight:6
-}
-]
-},
-
-createMarker:()=>null
-
-}).addTo(map);
-L.marker(
-[
-Number(order.customerLat),
-Number(order.customerLng)
-],
-{
-icon:customerIcon
-}
-).addTo(map);
-
-let stores = [...(order.storesData || [])];
-
-stores.sort((a,b)=>{
-
-const distanceA =
-calculateDistance(
-driverLat,
-driverLng,
-Number(a.storeLat),
-Number(a.storeLng)
-);
-
-const distanceB =
-calculateDistance(
-driverLat,
-driverLng,
-Number(b.storeLat),
-Number(b.storeLng)
-);
-
-return distanceA - distanceB;
-
-});
-
-stores.forEach(store=>{
-
-L.marker(
-[
-Number(store.storeLat),
-Number(store.storeLng)
-],
-{
-icon:createStoreIcon(store)
-}
-).addTo(map);
+]).addTo(map);
 
 });
 
@@ -1141,7 +852,6 @@ await update(
 ref(db,"orders/" + currentOrderId),
 {
 status:"arrived",
-routeColor:"blue",
 statusText:"السائق وصل إلى الزبون"
 }
 );
