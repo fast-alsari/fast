@@ -622,8 +622,8 @@ function updateDriverLocation(order){
 initMap(order);
 
 if(
-!order.driverLat ||
-!order.driverLng
+order.driverLat == null ||
+order.driverLng == null
 ){
 return;
 }
@@ -763,6 +763,8 @@ searchingBox.style.display =
 
 driverCard.style.display =
 "block";
+
+console.log(order);
 
 document.getElementById("driverName")
 .innerHTML =
