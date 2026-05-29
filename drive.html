@@ -80,6 +80,10 @@ font-weight:bold;
 width:fit-content;
 }
 
+#finishButtons{
+display:none;
+}
+
 .header-left{
 display:flex;
 flex-direction:column;
@@ -310,7 +314,10 @@ display:none;
 
 #map{
 width:100%;
-height:55vh;
+height:60vh;
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+overflow:hidden;
 }
 
 .delivery-info{
@@ -441,7 +448,7 @@ VIP
 وصلت الزبون
 </button>
 
-<div id="finishButtons" style="display:none;">
+<div id="finishButtons">
 
 <button id="deliveredBtn" class="action-btn done-btn">
 تم التوصيل
@@ -604,6 +611,21 @@ driverLng:driverLng
 if(driverMarker){
 driverMarker.setLatLng([driverLat,driverLng]);
 }
+
+if(routeControl){
+
+const currentWaypoints =
+routeControl.getWaypoints();
+
+currentWaypoints[0].latLng =
+L.latLng(driverLat,driverLng);
+
+routeControl.setWaypoints(
+currentWaypoints.map(w=>w.latLng)
+);
+
+}
+
 if(map){
 map.panTo([driverLat,driverLng]);
 }
@@ -867,6 +889,9 @@ acceptedAt:Date.now()
 
 currentOrderId = id;
 
+document.querySelectorAll(".store-whatsapp-btn")
+.forEach(btn=>btn.remove());
+
 document.getElementById("ordersContainer").style.display = "none";
 document.getElementById("deliveryPage").style.display = "block";
 
@@ -881,6 +906,14 @@ customerPhone = "0" + customerPhone;
 document.getElementById("customerPhone").innerHTML =
 "📞 " + customerPhone;
 document.getElementById("customerAddress").innerHTML = "📍 " + order.customerAddress;
+
+document.getElementById("whatsappCustomer").onclick = function(){
+
+window.open(
+`https://wa.me/964${customerPhone.substring(1)}`
+);
+
+};
 
 (order.storesData || []).forEach(store=>{
 
@@ -897,7 +930,7 @@ const btn =
 document.createElement("button");
 
 btn.className =
-"action-btn";
+"action-btn store-whatsapp-btn";
 
 btn.style.background =
 "#222";
@@ -1064,10 +1097,50 @@ alert("تم تحديث الحالة");
 
 };
 
+
+
 document.getElementById("arrivedCustomerBtn").onclick = async function(){
 
 if(!currentOrderId){
 return;
+}
+
+if(routeControl){
+
+map.removeControl(routeControl);
+
+routeControl =
+L.Routing.control({
+
+waypoints:
+routeControl.getWaypoints(),
+
+routeWhileDragging:false,
+
+router:L.Routing.osrmv1({
+serviceUrl:
+'https://router.project-osrm.org/route/v1'
+}),
+
+addWaypoints:false,
+draggableWaypoints:false,
+fitSelectedRoutes:true,
+show:false,
+
+lineOptions:{
+styles:[
+{
+color:"#0984e3",
+weight:7,
+opacity:.9
+}
+]
+},
+
+createMarker:()=>null
+
+}).addTo(map);
+
 }
 
 await update(
