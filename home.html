@@ -58,8 +58,6 @@ justify-content:space-between;
 align-items:center;
 }
 
-
-
 .search-box{
 margin-top:18px;
 background:white;
@@ -131,8 +129,6 @@ cursor:pointer;
 overflow:hidden;
 border:3px solid transparent;
 }
-
-
 
 .vip-store{
 background:
@@ -912,7 +908,6 @@ localStorage.removeItem(
 
 }
 
-
 async function loadCurrentUser(){
 
 let tableName = "";
@@ -1331,8 +1326,6 @@ cursor:pointer;
 </button>
 </p>
 
-
-
 </div>
 
 </div>
@@ -1660,8 +1653,6 @@ return;
 
 let total = 0;
 
-
-
 cart.forEach((item)=>{
 
 let itemTotal =
@@ -1745,7 +1736,6 @@ onclick="removeCartItem('${item.id}','${item.storeId}')">
 `;
 
 });
-
 
 let tip =
 Number(
@@ -2028,7 +2018,6 @@ storeLng:
 allStores.find(
 s => s.id === cart[0].storeId
 )?.longitude || "",
-
 
 deliveryPrice:deliveryPrice,
 
