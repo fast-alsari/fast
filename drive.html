@@ -627,9 +627,17 @@ currentWaypoints.map(w=>w.latLng)
 }
 
 if(map){
-map.panTo([driverLat,driverLng]);
-}
 
+map.flyTo(
+[driverLat,driverLng],
+map.getZoom(),
+{
+animate:true,
+duration:1.5
+}
+);
+
+}
 }
 
 },
@@ -1033,7 +1041,9 @@ if(map){
 map.remove();
 }
 
-map = L.map("map").setView([
+map = L.map("map",{
+zoomControl:true
+}).setView([
 driverLat,
 driverLng
 ],15);
@@ -1135,7 +1145,7 @@ serviceUrl:
 
 addWaypoints:false,
 draggableWaypoints:false,
-fitSelectedRoutes:true,
+fitSelectedRoutes:false,
 show:false,
 
 lineOptions:{
@@ -1189,6 +1199,7 @@ waypoints:
 routeControl.getWaypoints(),
 
 routeWhileDragging:false,
+autoRoute:true,
 
 router:L.Routing.osrmv1({
 serviceUrl:
@@ -1197,7 +1208,7 @@ serviceUrl:
 
 addWaypoints:false,
 draggableWaypoints:false,
-fitSelectedRoutes:true,
+fitSelectedRoutes:false,
 show:false,
 
 lineOptions:{
@@ -1254,7 +1265,7 @@ serviceUrl:
 
 addWaypoints:false,
 draggableWaypoints:false,
-fitSelectedRoutes:true,
+fitSelectedRoutes:false,
 show:false,
 
 lineOptions:{
