@@ -15,6 +15,13 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 </title>
 
 <link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script
+src="https://unpkg.com/leaflet/dist/leaflet.js">
+</script>
+
+<link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <link rel="stylesheet"
@@ -830,12 +837,13 @@ createMarker:()=>null
 
 }).addTo(map);
 
-map.panTo(
-[driverLat,driverLng]
-);
-
-map.panTo(
-[driverLat,driverLng]
+map.flyTo(
+[driverLat,driverLng],
+map.getZoom(),
+{
+animate:true,
+duration:1.5
+}
 );
 
 }
