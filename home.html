@@ -1152,15 +1152,34 @@ allStores.push(store);
 
 }
 
-allStores.sort((a,b)=>
-(b.vip === true) - (a.vip === true)
-);
+allStores.sort((a,b)=>{
 
-generateFilters();
+const aOpen = isStoreOpen(a);
+const bOpen = isStoreOpen(b);
 
-renderStores(allStores);
-
+// VIP أولاً
+if(a.vip && !b.vip){
+return -1;
 }
+
+if(!a.vip && b.vip){
+return 1;
+}
+
+// المفتوح بعد VIP
+if(aOpen && !bOpen){
+return -1;
+}
+
+if(!aOpen && bOpen){
+return 1;
+}
+
+// الأقرب أولاً
+return a.distance - b.distance;
+
+});
+``
 
 }
 
