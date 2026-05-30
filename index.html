@@ -529,7 +529,7 @@ return data.data.url;
 }
 
 // =========================
-// تسجيل دخول تلقائي محمي
+// تسجيل دخول تلقائي
 // =========================
 
 async function autoLogin(){
@@ -583,10 +583,8 @@ ref(database, tableName + "/" + currentUser.id)
 
 if(!snapshot.exists()){
 
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.replace("index.html");
+localStorage.removeItem("user");
+sessionStorage.removeItem("user");
 
 return;
 
@@ -597,13 +595,9 @@ currentUser = snapshot.val();
 currentUser.id =
 currentUser.id || snapshot.key;
 
-// تحديث الجلسة
 saveSession(currentUser);
 
-// =========================
-// الحسابات غير المفعلة
-// =========================
-
+// الحسابات المعلقة
 if(
 currentUser.status === "pending" ||
 currentUser.status === "banned" ||
@@ -612,26 +606,17 @@ currentUser.status === "expired"
 ){
 
 showSection("pendingSection");
-history.pushState(null,null,location.href);
 
-window.onpopstate = function(){
-
-history.pushState(null,null,location.href);
-
-};
 // pending
 if(currentUser.status === "pending"){
 
-document.getElementById("pendingMessage")
-.innerHTML = `
+document.getElementById("pendingMessage").innerHTML = `
 
 انتظر ريثما يتم تفعيل حسابك <br><br>
 
-<a
-href="https://wa.me/9647851521585"
-target="_blank">
+<a href="https://wa.me/9647851521585" target="_blank">
 
-تواصل مع الإدارة عبر واتساب للتفعيل
+تواصل مع الإدارة عبر واتساب للدفع والتفعيل
 
 </a>
 
@@ -642,18 +627,9 @@ target="_blank">
 // banned
 if(currentUser.status === "banned"){
 
-document.getElementById("pendingMessage")
-.innerHTML = `
+document.getElementById("pendingMessage").innerHTML = `
 
-حسابك محظور <br><br>
-
-<a
-href="https://wa.me/9647851521585"
-target="_blank">
-
-تواصل مع الإدارة
-
-</a>
+حسابك محظور
 
 `;
 
@@ -662,18 +638,9 @@ target="_blank">
 // disabled
 if(currentUser.status === "disabled"){
 
-document.getElementById("pendingMessage")
-.innerHTML = `
+document.getElementById("pendingMessage").innerHTML = `
 
-حسابك متوقف <br><br>
-
-<a
-href="https://wa.me/9647851521585"
-target="_blank">
-
-تواصل مع الإدارة
-
-</a>
+حسابك غير فعال
 
 `;
 
@@ -682,79 +649,27 @@ target="_blank">
 // expired
 if(currentUser.status === "expired"){
 
-document.getElementById("pendingMessage")
-.innerHTML = `
+document.getElementById("pendingMessage").innerHTML = `
 
-انتهت صلاحية حسابك <br><br>
-
-<a
-href="https://wa.me/9647851521585"
-target="_blank">
-
-تواصل مع الإدارة لتجديد الاشتراك
-
-</a>
+انتهت صلاحية حسابك
 
 `;
 
 }
 
-setInterval(async()=>{
-
-const checkSnapshot = await get(
-ref(database, tableName + "/" + currentUser.id)
-);
-
-if(checkSnapshot.exists()){
-
-let updatedUser =
-checkSnapshot.val();
-
-updatedUser.id =
-updatedUser.id || currentUser.id;
-
-saveSession(updatedUser);
-
-if(updatedUser.status === "active"){
-
-if(updatedUser.type === "customer"){
-window.location.replace("home.html");
-}
-
-if(updatedUser.type === "store"){
-window.location.replace("store.html");
-}
-
-if(updatedUser.type === "driver"){
-window.location.replace("drive.html");
-}
-
-if(updatedUser.type === "taxi"){
-window.location.replace("tixe.html");
-}
-
-if(updatedUser.type === "admin"){
-window.location.replace("add.html");
-}
-
-}
-
-}
-
-},5000);
-
 return;
 
 }
 
-// =========================
 // الحسابات المفعلة
-// =========================
-
 if(currentUser.status === "active"){
 
 if(currentUser.type === "customer"){
 window.location.replace("home.html");
+}
+
+if(currentUser.type === "admin"){
+window.location.replace("add.html");
 }
 
 if(currentUser.type === "store"){
@@ -769,51 +684,17 @@ if(currentUser.type === "taxi"){
 window.location.replace("tixe.html");
 }
 
-if(currentUser.type === "admin"){
-window.location.replace("add.html");
-}
-
 }
 
 }catch(error){
 
 console.log(error);
 
-localStorage.clear();
-sessionStorage.clear();
-
 }
 
 }
-
-// منع فتح الصفحة بعد تسجيل الدخول بحساب غير مفعل
-
-
-
-
 
 autoLogin();
-
-document.addEventListener(
-"contextmenu",
-event => event.preventDefault()
-);
-
-document.onkeydown = function(e){
-
-if(
-e.keyCode == 123 ||
-(e.ctrlKey && e.shiftKey && e.keyCode == 73) ||
-(e.ctrlKey && e.shiftKey && e.keyCode == 74) ||
-(e.ctrlKey && e.keyCode == 85)
-){
-
-return false;
-
-}
-
-};
-
 
 // =========================
 // ايام الاسبوع
