@@ -1377,22 +1377,30 @@ if(!time){
 return 0;
 }
 
-const parts =
-time.split(" ");
+const parts = time.trim().split(" ");
+
+const hourMinute = parts[0];
+const period = parts[1];
 
 let hour =
-parseInt(parts[0]);
+parseInt(hourMinute.split(":")[0]);
 
-const period =
-parts[1];
+let minute =
+hourMinute.includes(":")
+? parseInt(hourMinute.split(":")[1])
+: 0;
 
+// AM
 if(period === "AM"){
 
 if(hour === 12){
 hour = 0;
 }
 
-}else if(period === "PM"){
+}
+
+// PM
+else if(period === "PM"){
 
 if(hour !== 12){
 hour += 12;
@@ -1400,7 +1408,7 @@ hour += 12;
 
 }
 
-return hour;
+return hour + (minute / 60);
 
 }
 
