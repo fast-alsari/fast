@@ -139,36 +139,44 @@ margin-bottom:12px;
 }
 
 .closed-store{
+opacity:.55;
 filter:grayscale(100%);
-opacity:.65;
-background:#d6d6d6 !important;
+background:#dcdcdc !important;
 }
 
-.closed-badge{
-position:absolute;
-bottom:12px;
-left:12px;
-background:#555;
-color:white;
-padding:6px 14px;
-border-radius:14px;
-font-size:12px;
+.store-status{
+margin-top:8px;
+display:flex;
+align-items:center;
+gap:6px;
+font-size:13px;
 font-weight:bold;
-z-index:10;
 }
 
-.open-badge{
-position:absolute;
-bottom:12px;
-left:12px;
-background:#00b894;
-color:white;
-padding:6px 14px;
-border-radius:14px;
-font-size:12px;
-font-weight:bold;
-z-index:10;
+.status-dot{
+width:10px;
+height:10px;
+border-radius:50%;
 }
+
+.open-dot{
+background:#00c853;
+box-shadow:0 0 8px #00c853;
+}
+
+.closed-dot{
+background:red;
+box-shadow:0 0 8px red;
+}
+
+.open-text{
+color:#00a844;
+}
+
+.closed-text{
+color:#c40000;
+}
+
 
 .day-name{
 display:block;
