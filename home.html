@@ -1673,7 +1673,7 @@ ${product.name || ""}
 </div>
 
 <div class="product-price">
-${product.price || 0} د.ع
+${Number(product.price || 0).toLocaleString()} د.ع
 </div>
 
 <div class="product-note">
@@ -1855,8 +1855,7 @@ itemsTotal.innerHTML =
 "0 د.ع";
 
 finalTotal.innerHTML =
-"0 د.ع";
-
+`${Number(total + deliveryPrice + tip).toLocaleString()} د.ع`;
 return;
 
 }
@@ -1893,7 +1892,7 @@ ${item.name}
 </p>
 
 <p>
-💰 ${itemTotal} د.ع
+💰 ${Number(itemTotal).toLocaleString()} د.ع
 </p>
 
 <div class="cart-note">
@@ -2102,9 +2101,9 @@ deliveryPrice = 12000;
 // تحديث النص
 document.getElementById("deliveryPriceText")
 .innerHTML =
-deliveryPrice + " د.ع";
+Number(deliveryPrice).toLocaleString() + " د.ع";
 itemsTotal.innerHTML =
-`${total} د.ع`;
+`${Number(total).toLocaleString()} د.ع`;
 
 finalTotal.innerHTML =
 `${total + deliveryPrice + tip} د.ع`;
