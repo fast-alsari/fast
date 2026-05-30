@@ -716,29 +716,21 @@ const days = [
 // ساعات الدوام
 // =========================
 
-const hours = [
+const hours = [];
 
-"مغلق",
-"6 صباحاً",
-"7 صباحاً",
-"8 صباحاً",
-"9 صباحاً",
-"10 صباحاً",
-"11 صباحاً",
-"12 ظهراً",
-"1 ظهراً",
-"2 ظهراً",
-"3 عصراً",
-"4 عصراً",
-"5 عصراً",
-"6 مساءً",
-"7 مساءً",
-"8 مساءً",
-"9 مساءً",
-"10 مساءً",
-"11 مساءً"
+hours.push("مغلق");
 
-];
+for(let i = 1; i <= 12; i++){
+
+hours.push(i + " AM");
+
+}
+
+for(let i = 1; i <= 12; i++){
+
+hours.push(i + " PM");
+
+}
 
 // =========================
 // متغيرات الخرائط
@@ -764,16 +756,46 @@ daysContainer.innerHTML += `
 
 <div class="day-row">
 
-<label>${day}</label>
+<label class="day-name">
+${day}
+</label>
 
 <div class="time-selects">
 
 <select id="from_${index}">
-${hours.map(h=>`<option>${h}</option>`).join("")}
+
+<option value="">
+من
+</option>
+
+${hours.map(hour => `
+
+<option value="${hour}">
+${hour}
+</option>
+
+`).join("")}
+
 </select>
 
+<span class="time-separator">
+إلى
+</span>
+
 <select id="to_${index}">
-${hours.map(h=>`<option>${h}</option>`).join("")}
+
+<option value="">
+إلى
+</option>
+
+${hours.map(hour => `
+
+<option value="${hour}">
+${hour}
+</option>
+
+`).join("")}
+
 </select>
 
 </div>
