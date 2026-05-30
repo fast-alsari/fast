@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
 الحساب الشخصي
@@ -16,11 +16,6 @@ content="width=device-width, initial-scale=1.0">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
@@ -42,14 +37,46 @@ overflow-x:hidden;
 
 .header{
 background:linear-gradient(135deg,#ff8800,#ff5500);
-padding:30px 20px;
+padding:25px 20px;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
 color:white;
 box-shadow:0 8px 25px rgba(0,0,0,.12);
+text-align:center;
 }
 
-.content{
+.logo-box{
+width:90px;
+height:90px;
+background:white;
+border-radius:50%;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 5px 20px rgba(0,0,0,.15);
+}
+
+.logo-box img{
+width:60px;
+height:60px;
+object-fit:contain;
+}
+
+.app-name{
+font-size:28px;
+font-weight:bold;
+margin-top:15px;
+}
+
+.app-desc{
+font-size:15px;
+margin-top:8px;
+opacity:.95;
+line-height:1.8;
+}
+
+.page-content{
 padding:15px;
 display:flex;
 flex-direction:column;
@@ -66,77 +93,40 @@ box-shadow:0 5px 18px rgba(0,0,0,.06);
 .card-title{
 font-size:18px;
 font-weight:bold;
-margin-bottom:15px;
+margin-bottom:18px;
 color:#ff6600;
+display:flex;
+align-items:center;
+gap:8px;
 }
 
 .info-line{
-display:flex;
-justify-content:space-between;
-margin-bottom:14px;
-font-size:15px;
-gap:10px;
+background:#f7f7f7;
+padding:14px;
+border-radius:16px;
+margin-bottom:12px;
+}
+
+.info-label{
+font-size:13px;
+color:#777;
+margin-bottom:5px;
 }
 
 .info-value{
-font-weight:bold;
-color:#444;
-word-break:break-all;
-}
-
-.copy-btn{
-margin-top:12px;
-width:100%;
-padding:14px;
-border:none;
-border-radius:15px;
-background:#ff8800;
-color:white;
-font-size:15px;
-font-weight:bold;
-cursor:pointer;
-}
-
-.invite-input{
-width:100%;
-padding:14px;
-border-radius:15px;
-border:2px solid #eee;
-outline:none;
-margin-top:12px;
 font-size:16px;
-background:white;
-transition:.3s;
--webkit-user-select:text;
-user-select:text;
-}
-
-.invite-input:focus{
-border-color:#ff8800;
-box-shadow:0 0 0 4px rgba(255,136,0,.15);
-}
-
-.use-btn{
-margin-top:12px;
-width:100%;
-padding:14px;
-border:none;
-border-radius:15px;
-background:#00b894;
-color:white;
-font-size:15px;
 font-weight:bold;
-cursor:pointer;
+word-break:break-word;
 }
 
 .stats-grid{
 display:grid;
-grid-template-columns:repeat(2,1fr);
+grid-template-columns:1fr 1fr;
 gap:12px;
 }
 
 .stat-box{
-background:#fff4e8;
+background:#fff7ef;
 padding:18px;
 border-radius:18px;
 text-align:center;
@@ -146,52 +136,90 @@ text-align:center;
 font-size:24px;
 font-weight:bold;
 color:#ff6600;
-margin-bottom:5px;
+margin-bottom:6px;
 }
 
-.stat-title{
-font-size:14px;
-color:#555;
+.stat-text{
+font-size:13px;
+color:#666;
 }
 
-#map{
+.location-box{
+overflow:hidden;
+border-radius:20px;
+margin-top:12px;
+border:2px solid #eee;
+}
+
+.location-box iframe{
 width:100%;
 height:220px;
-border-radius:22px;
-margin-top:10px;
+border:none;
 }
 
 .location-note{
 margin-top:12px;
-font-size:13px;
-color:#777;
-line-height:1.8;
-text-align:center;
-}
-
-.order-card{
-background:#fafafa;
+background:#fff7ef;
 padding:14px;
-border-radius:18px;
-margin-bottom:12px;
-border:1px solid #eee;
+border-radius:16px;
+font-size:13px;
+line-height:1.9;
+color:#555;
 }
 
-.order-card p{
-margin-bottom:8px;
-font-size:14px;
+.code-box{
+display:flex;
+gap:10px;
+margin-top:15px;
 }
 
-.logout-btn{
+.code-input{
+flex:1;
+height:55px;
+border:none;
+background:#f5f5f5;
+border-radius:16px;
+padding:0 15px;
+font-size:18px;
+font-weight:bold;
+outline:none;
+direction:ltr;
+}
+
+.copy-btn{
+width:60px;
+border:none;
+border-radius:16px;
+background:#ff8800;
+color:white;
+font-size:20px;
+cursor:pointer;
+}
+
+.use-btn{
 width:100%;
-padding:16px;
+height:55px;
 border:none;
 border-radius:18px;
-background:red;
+background:#00b894;
 color:white;
 font-size:16px;
 font-weight:bold;
 cursor:pointer;
+margin-top:14px;
+}
+
+.logout-btn{
+width:100%;
+height:58px;
+border:none;
+border-radius:20px;
+background:red;
+color:white;
+font-size:17px;
+font-weight:bold;
+cursor:pointer;
+margin-top:10px;
 }
 
 .bottom-bar{
@@ -233,102 +261,81 @@ margin-bottom:5px;
 
 <div class="header">
 
-<div style="
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-text-align:center;
-">
+<div class="logo-box">
 
-<img
-src="ok.png"
-style="
-width:95px;
-height:95px;
-object-fit:contain;
-margin-bottom:12px;
-filter:drop-shadow(0 4px 10px rgba(0,0,0,.2));
-">
+<img src="ok.png">
 
-<h2 style="
-font-size:28px;
-font-weight:bold;
-margin-bottom:8px;
-">
+</div>
 
+<div class="app-name">
 عالسريع
+</div>
 
-</h2>
-
-<p style="
-font-size:15px;
-line-height:1.9;
-opacity:.95;
-">
-
+<div class="app-desc">
 نوصلك طلبك بأقل من ساعة 🚀
-
-</p>
-
 </div>
 
 </div>
 
-<div class="content">
+<div class="page-content">
 
 <div class="card">
 
 <div class="card-title">
-معلومات الحساب
+<i class="fa-solid fa-user"></i>
+بيانات الحساب
 </div>
 
 <div class="info-line">
-<span>
-الاسم
-</span>
 
-<span
-class="info-value"
-id="accountName">
--
-</span>
+<div class="info-label">
+اسم المستخدم
+</div>
+
+<div class="info-value"
+id="userName">
+...
+</div>
+
 </div>
 
 <div class="info-line">
-<span>
+
+<div class="info-label">
 رقم الهاتف
-</span>
+</div>
 
-<span
-class="info-value"
-id="accountPhone">
--
-</span>
+<div class="info-value"
+id="userPhone">
+...
+</div>
+
 </div>
 
 <div class="info-line">
-<span>
-كلمة السر
-</span>
 
-<span
-class="info-value"
-id="accountPassword">
--
-</span>
+<div class="info-label">
+كلمة المرور
+</div>
+
+<div class="info-value"
+id="userPassword">
+...
+</div>
+
 </div>
 
 <div class="info-line">
-<span>
+
+<div class="info-label">
 ID الحساب
-</span>
+</div>
 
-<span
-class="info-value"
-id="accountId">
--
-</span>
+<div class="info-value"
+id="userId">
+...
+</div>
+
 </div>
 
 </div>
@@ -336,15 +343,88 @@ id="accountId">
 <div class="card">
 
 <div class="card-title">
-موقعك الحالي
+<i class="fa-solid fa-chart-column"></i>
+الإحصائيات
 </div>
 
-<div id="map"></div>
+<div class="stats-grid">
+
+<div class="stat-box">
+
+<div class="stat-number"
+id="allOrders">
+0
+</div>
+
+<div class="stat-text">
+كل الطلبات
+</div>
+
+</div>
+
+<div class="stat-box">
+
+<div class="stat-number"
+id="acceptedOrders">
+0
+</div>
+
+<div class="stat-text">
+الطلبات المقبولة
+</div>
+
+</div>
+
+<div class="stat-box">
+
+<div class="stat-number"
+id="rejectedOrders">
+0
+</div>
+
+<div class="stat-text">
+الطلبات المرفوضة
+</div>
+
+</div>
+
+<div class="stat-box">
+
+<div class="stat-number"
+id="deliveredOrders">
+0
+</div>
+
+<div class="stat-text">
+تم التوصيل
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+<i class="fa-solid fa-location-dot"></i>
+موقعك
+</div>
+
+<div class="location-box">
+
+<iframe
+id="mapFrame"
+loading="lazy">
+</iframe>
+
+</div>
 
 <div class="location-note">
 
-هذا الموقع لا يمكن لأحد رؤيته،
-ويستخدم فقط عند إرسال الطلبات باسمك.
+هذا الموقع لا يمكن لأحد مشاهدته،
+ويظهر فقط عند إرسال طلب باسمك.
 
 </div>
 
@@ -353,41 +433,42 @@ id="accountId">
 <div class="card">
 
 <div class="card-title">
-كود الدعوة
+<i class="fa-solid fa-gift"></i>
+توصيلة مجانية
 </div>
 
 <div class="info-line">
 
-<span>
+<div class="info-label">
 رمز الدعوة الخاص بك
-</span>
+</div>
 
-<span
-class="info-value"
+<div class="info-value"
 id="inviteCode">
--
-</span>
+...
+</div>
 
 </div>
 
-<button
-class="copy-btn"
-onclick="copyInviteCode()">
-
-نسخ الكود
-
-</button>
+<div class="code-box">
 
 <input
 type="text"
-id="inviteInput"
-class="invite-input"
-placeholder="ألصق كود الدعوة هنا"
-autocomplete="off"
-autocorrect="off"
-autocapitalize="off"
-spellcheck="false"
-inputmode="text">
+id="giftCode"
+class="code-input"
+placeholder="الصق الكود هنا"
+inputmode="text"
+autocomplete="off">
+
+<button
+class="copy-btn"
+onclick="pasteCode()">
+
+<i class="fa-solid fa-paste"></i>
+
+</button>
+
+</div>
 
 <button
 class="use-btn"
@@ -396,98 +477,6 @@ onclick="useInviteCode()">
 استخدام الكود
 
 </button>
-
-</div>
-
-<div class="card">
-
-<div class="card-title">
-إحصائيات الطلبات
-</div>
-
-<div class="stats-grid">
-
-<div class="stat-box">
-
-<div
-class="stat-number"
-id="allOrders">
-0
-</div>
-
-<div class="stat-title">
-كل الطلبات
-</div>
-
-</div>
-
-<div class="stat-box">
-
-<div
-class="stat-number"
-id="acceptedOrders">
-0
-</div>
-
-<div class="stat-title">
-المقبولة
-</div>
-
-</div>
-
-<div class="stat-box">
-
-<div
-class="stat-number"
-id="rejectedOrders">
-0
-</div>
-
-<div class="stat-title">
-المرفوضة
-</div>
-
-</div>
-
-<div class="stat-box">
-
-<div
-class="stat-number"
-id="completedOrders">
-0
-</div>
-
-<div class="stat-title">
-المكتملة
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-title">
-الطلبات المقبولة
-</div>
-
-<div id="acceptedContainer">
-
-</div>
-
-</div>
-
-<div class="card">
-
-<div class="card-title">
-الطلبات المرفوضة
-</div>
-
-<div id="rejectedContainer">
-
-</div>
 
 </div>
 
@@ -551,12 +540,11 @@ get,
 update,
 onValue
 }
-
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
 
-apiKey:"AIzaSy",
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
 authDomain:"fast-937c9.firebaseapp.com",
 
@@ -583,19 +571,19 @@ window.location.href =
 
 }
 
-document.getElementById("accountName")
+document.getElementById("userName")
 .innerHTML =
 currentUser.name || "";
 
-document.getElementById("accountPhone")
+document.getElementById("userPhone")
 .innerHTML =
 currentUser.phone || "";
 
-document.getElementById("accountPassword")
+document.getElementById("userPassword")
 .innerHTML =
 currentUser.password || "";
 
-document.getElementById("accountId")
+document.getElementById("userId")
 .innerHTML =
 currentUser.id || "";
 
@@ -603,246 +591,76 @@ document.getElementById("inviteCode")
 .innerHTML =
 currentUser.id || "";
 
-navigator.geolocation.getCurrentPosition(
+let userLat =
+currentUser.userLat || "";
 
-(position)=>{
+let userLng =
+currentUser.userLng || "";
 
-const lat =
-position.coords.latitude;
+if(userLat && userLng){
 
-const lng =
-position.coords.longitude;
-
-const map =
-L.map('map')
-.setView([lat,lng],15);
-
-L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-).addTo(map);
-
-L.marker([lat,lng])
-.addTo(map);
+document.getElementById("mapFrame")
+.src =
+`https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
 
 }
-
-);
-
-const inviteInput =
-document.getElementById("inviteInput");
-
-inviteInput.addEventListener(
-"touchstart",
-function(){
-this.focus();
-}
-);
-
-window.copyInviteCode =
-function(){
-
-navigator.clipboard.writeText(
-currentUser.id
-);
-
-alert("تم نسخ الكود");
-
-};
-
-window.useInviteCode =
-async function(){
-
-const inviteCode =
-document.getElementById("inviteInput")
-.value.trim();
-
-if(!inviteCode){
-
-alert("أدخل الكود");
-
-return;
-
-}
-
-if(inviteCode === currentUser.id){
-
-alert("لا يمكنك استخدام كودك");
-
-return;
-
-}
-
-const userRef =
-ref(db,"customers/" + currentUser.id);
-
-const snapshot =
-await get(userRef);
-
-if(!snapshot.exists()) return;
-
-const userData =
-snapshot.val();
-
-if(userData.inviteUsed === true){
-
-alert("لقد استخدمت الدعوة مسبقاً");
-
-return;
-
-}
-
-if(userData.freeDeliveryUsed === true){
-
-alert("لقد استخدمت التوصيلة المجانية مسبقاً");
-
-return;
-
-}
-
-const invitedUser =
-await get(
-ref(db,"customers/" + inviteCode)
-);
-
-if(!invitedUser.exists()){
-
-alert("الكود غير صحيح");
-
-return;
-
-}
-
-await update(userRef,{
-
-inviteUsed:true,
-
-freeDelivery:true,
-
-invitedBy:inviteCode
-
-});
-
-await update(
-ref(db,"customers/" + inviteCode),
-{
-
-freeDelivery:true
-
-});
-
-alert("تم الحصول على توصيلة مجانية 🎉");
-
-};
 
 onValue(
 ref(db,"orders"),
 (snapshot)=>{
 
-if(!snapshot.exists()) return;
+let all = 0;
+let accepted = 0;
+let rejected = 0;
+let delivered = 0;
+
+if(snapshot.exists()){
 
 const orders =
 snapshot.val();
 
-let all = 0;
-let accepted = 0;
-let rejected = 0;
-let completed = 0;
+Object.values(orders)
+.forEach(order=>{
 
-const acceptedContainer =
-document.getElementById("acceptedContainer");
-
-const rejectedContainer =
-document.getElementById("rejectedContainer");
-
-acceptedContainer.innerHTML = "";
-rejectedContainer.innerHTML = "";
-
-Object.keys(orders).forEach((key)=>{
-
-const order =
-orders[key];
-
-if(order.customerId !== currentUser.id){
-return;
-}
+if(
+order.customerId === currentUser.id
+){
 
 all++;
 
 if(
-order.status === "accepted"
-||
-order.status === "on_the_way"
-||
-order.status === "arrived"
+[
+"accepted",
+"on_the_way",
+"arrived"
+]
+.includes(order.status)
 ){
-
 accepted++;
-
-acceptedContainer.innerHTML += `
-
-<div class="order-card">
-
-<p>
-🧾 رقم الطلب:
-${order.id}
-</p>
-
-<p>
-💰 السعر:
-${order.totalPrice} د.ع
-</p>
-
-<p>
-📦 الحالة:
-${order.statusText}
-</p>
-
-</div>
-
-`;
-
 }
 
 if(
-order.status === "failed_no_driver"
-||
-order.status === "delivery_problem"
+[
+"failed_no_driver",
+"delivery_problem",
+"cancelled"
+]
+.includes(order.status)
 ){
-
 rejected++;
-
-rejectedContainer.innerHTML += `
-
-<div class="order-card">
-
-<p>
-🧾 رقم الطلب:
-${order.id}
-</p>
-
-<p>
-💰 السعر:
-${order.totalPrice} د.ع
-</p>
-
-<p>
-❌ الحالة:
-${order.statusText}
-</p>
-
-</div>
-
-`;
-
 }
 
-if(order.status === "delivered"){
-
-completed++;
+if(
+order.status === "delivered"
+){
+delivered++;
+}
 
 }
 
 });
+
+}
 
 document.getElementById("allOrders")
 .innerHTML = all;
@@ -853,10 +671,148 @@ document.getElementById("acceptedOrders")
 document.getElementById("rejectedOrders")
 .innerHTML = rejected;
 
-document.getElementById("completedOrders")
-.innerHTML = completed;
+document.getElementById("deliveredOrders")
+.innerHTML = delivered;
 
-});
+}
+);
+
+window.pasteCode =
+async function(){
+
+try{
+
+const text =
+await navigator.clipboard.readText();
+
+document.getElementById("giftCode")
+.value = text;
+
+}catch{
+
+alert("فشل لصق الكود");
+
+}
+
+};
+
+window.useInviteCode =
+async function(){
+
+const code =
+document.getElementById("giftCode")
+.value
+.trim();
+
+if(!code){
+
+alert("الصق الكود");
+
+return;
+
+}
+
+if(code === currentUser.id){
+
+alert("لا يمكنك استخدام كودك");
+
+return;
+
+}
+
+const myRef =
+ref(
+db,
+"customers/" + currentUser.id
+);
+
+const myData =
+await get(myRef);
+
+if(!myData.exists()){
+return;
+}
+
+const myUser =
+myData.val();
+
+if(
+myUser.usedFreeDelivery === true
+){
+
+alert(
+"لقد استخدمت التوصيلة المجانية مسبقاً"
+);
+
+return;
+
+}
+
+if(
+myUser.invitedBy
+){
+
+alert(
+"لا يمكنك استخدام أكثر من كود"
+);
+
+return;
+
+}
+
+const inviterRef =
+ref(
+db,
+"customers/" + code
+);
+
+const inviterData =
+await get(inviterRef);
+
+if(!inviterData.exists()){
+
+alert("الكود غير صحيح");
+
+return;
+
+}
+
+await update(
+myRef,
+{
+
+freeDelivery:true,
+
+usedFreeDelivery:true,
+
+invitedBy:code,
+
+freeDeliveryUsed:false
+
+}
+);
+
+alert(
+"تم الحصول على توصيلة مجانية 🎉"
+);
+
+document.getElementById("giftCode")
+.value = "";
+
+};
+
+window.goToCart =
+function(){
+
+localStorage.setItem(
+"openCartPage",
+"true"
+);
+
+window.location.href =
+"home.html";
+
+};
 
 window.logout =
 function(){
@@ -867,20 +823,6 @@ sessionStorage.clear();
 
 window.location.href =
 "index.html";
-
-};
-
-</script>
-<script>
-
-window.goToCart = function(){
-
-localStorage.setItem(
-"openCartPage",
-"true"
-);
-
-window.location.href = "home.html";
 
 };
 
