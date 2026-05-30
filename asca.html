@@ -1,1 +1,858 @@
+<!-- asca.html -->
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+الحساب الشخصي
+</title>
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f7f7f7;
+padding-bottom:120px;
+overflow-x:hidden;
+}
+
+.header{
+background:linear-gradient(135deg,#ff8800,#ff5500);
+padding:25px 20px;
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+color:white;
+box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+.profile-box{
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.profile-image{
+width:85px;
+height:85px;
+border-radius:50%;
+border:4px solid white;
+object-fit:cover;
+background:white;
+}
+
+.profile-info h2{
+font-size:23px;
+margin-bottom:6px;
+}
+
+.profile-info p{
+font-size:14px;
+opacity:.95;
+}
+
+.content{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:15px;
+}
+
+.card{
+background:white;
+padding:18px;
+border-radius:24px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.card-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:15px;
+color:#ff6600;
+}
+
+.info-line{
+display:flex;
+justify-content:space-between;
+margin-bottom:14px;
+font-size:15px;
+gap:10px;
+}
+
+.info-value{
+font-weight:bold;
+color:#444;
+word-break:break-all;
+}
+
+.copy-btn{
+margin-top:12px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:15px;
+background:#ff8800;
+color:white;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.invite-input{
+width:100%;
+padding:14px;
+border-radius:15px;
+border:1px solid #ddd;
+outline:none;
+margin-top:12px;
+font-size:15px;
+}
+
+.use-btn{
+margin-top:12px;
+width:100%;
+padding:14px;
+border:none;
+border-radius:15px;
+background:#00b894;
+color:white;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px;
+}
+
+.stat-box{
+background:#fff4e8;
+padding:18px;
+border-radius:18px;
+text-align:center;
+}
+
+.stat-number{
+font-size:24px;
+font-weight:bold;
+color:#ff6600;
+margin-bottom:5px;
+}
+
+.stat-title{
+font-size:14px;
+color:#555;
+}
+
+#map{
+width:100%;
+height:220px;
+border-radius:22px;
+margin-top:10px;
+}
+
+.location-note{
+margin-top:12px;
+font-size:13px;
+color:#777;
+line-height:1.8;
+text-align:center;
+}
+
+.order-card{
+background:#fafafa;
+padding:14px;
+border-radius:18px;
+margin-bottom:12px;
+border:1px solid #eee;
+}
+
+.order-card p{
+margin-bottom:8px;
+font-size:14px;
+}
+
+.logout-btn{
+width:100%;
+padding:16px;
+border:none;
+border-radius:18px;
+background:red;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:82px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+box-shadow:0 -5px 18px rgba(0,0,0,.08);
+z-index:1000;
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+color:#888;
+cursor:pointer;
+}
+
+.nav-item.active{
+color:#ff8800;
+}
+
+.nav-item i{
+font-size:21px;
+margin-bottom:5px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<div class="profile-box">
+
+<img
+src="user.png"
+class="profile-image">
+
+<div class="profile-info">
+
+<h2 id="userName">
+مستخدم
+</h2>
+
+<p id="userPhone">
+0000000000
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="content">
+
+<div class="card">
+
+<div class="card-title">
+معلومات الحساب
+</div>
+
+<div class="info-line">
+<span>
+الاسم
+</span>
+
+<span
+class="info-value"
+id="accountName">
+-
+</span>
+</div>
+
+<div class="info-line">
+<span>
+رقم الهاتف
+</span>
+
+<span
+class="info-value"
+id="accountPhone">
+-
+</span>
+</div>
+
+<div class="info-line">
+<span>
+كلمة السر
+</span>
+
+<span
+class="info-value"
+id="accountPassword">
+-
+</span>
+</div>
+
+<div class="info-line">
+<span>
+ID الحساب
+</span>
+
+<span
+class="info-value"
+id="accountId">
+-
+</span>
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+موقعك الحالي
+</div>
+
+<div id="map"></div>
+
+<div class="location-note">
+
+هذا الموقع لا يمكن لأحد رؤيته،
+ويستخدم فقط عند إرسال الطلبات باسمك.
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+كود الدعوة
+</div>
+
+<div class="info-line">
+
+<span>
+رمز الدعوة الخاص بك
+</span>
+
+<span
+class="info-value"
+id="inviteCode">
+-
+</span>
+
+</div>
+
+<button
+class="copy-btn"
+onclick="copyInviteCode()">
+
+نسخ الكود
+
+</button>
+
+<input
+type="text"
+id="inviteInput"
+class="invite-input"
+placeholder="أدخل كود الدعوة">
+
+<button
+class="use-btn"
+onclick="useInviteCode()">
+
+استخدام الكود
+
+</button>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+إحصائيات الطلبات
+</div>
+
+<div class="stats-grid">
+
+<div class="stat-box">
+
+<div
+class="stat-number"
+id="allOrders">
+0
+</div>
+
+<div class="stat-title">
+كل الطلبات
+</div>
+
+</div>
+
+<div class="stat-box">
+
+<div
+class="stat-number"
+id="acceptedOrders">
+0
+</div>
+
+<div class="stat-title">
+المقبولة
+</div>
+
+</div>
+
+<div class="stat-box">
+
+<div
+class="stat-number"
+id="rejectedOrders">
+0
+</div>
+
+<div class="stat-title">
+المرفوضة
+</div>
+
+</div>
+
+<div class="stat-box">
+
+<div
+class="stat-number"
+id="completedOrders">
+0
+</div>
+
+<div class="stat-title">
+المكتملة
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+الطلبات المقبولة
+</div>
+
+<div id="acceptedContainer">
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+الطلبات المرفوضة
+</div>
+
+<div id="rejectedContainer">
+
+</div>
+
+</div>
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+تسجيل الخروج
+
+</button>
+
+</div>
+
+<div class="bottom-bar">
+
+<div
+class="nav-item"
+onclick="window.location.href='home.html'">
+
+<i class="fa-solid fa-house"></i>
+
+<span>
+الرئيسية
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='home.html#cart'">
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+<span>
+السلة
+</span>
+
+</div>
+
+<div class="nav-item active">
+
+<i class="fa-solid fa-user"></i>
+
+<span>
+الحساب
+</span>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+getDatabase,
+ref,
+get,
+update,
+onValue
+}
+
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const firebaseConfig = {
+
+apiKey:"AIzaSy",
+
+authDomain:"fast-937c9.firebaseapp.com",
+
+projectId:"fast-937c9",
+
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getDatabase(app);
+
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
+
+if(!currentUser){
+
+window.location.href =
+"index.html";
+
+}
+
+document.getElementById("userName")
+.innerHTML =
+currentUser.name || "مستخدم";
+
+document.getElementById("userPhone")
+.innerHTML =
+currentUser.phone || "";
+
+document.getElementById("accountName")
+.innerHTML =
+currentUser.name || "";
+
+document.getElementById("accountPhone")
+.innerHTML =
+currentUser.phone || "";
+
+document.getElementById("accountPassword")
+.innerHTML =
+currentUser.password || "";
+
+document.getElementById("accountId")
+.innerHTML =
+currentUser.id || "";
+
+document.getElementById("inviteCode")
+.innerHTML =
+currentUser.id || "";
+
+navigator.geolocation.getCurrentPosition(
+
+(position)=>{
+
+const lat =
+position.coords.latitude;
+
+const lng =
+position.coords.longitude;
+
+const map =
+L.map('map')
+.setView([lat,lng],15);
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+).addTo(map);
+
+L.marker([lat,lng])
+.addTo(map);
+
+}
+
+);
+
+window.copyInviteCode =
+function(){
+
+navigator.clipboard.writeText(
+currentUser.id
+);
+
+alert("تم نسخ الكود");
+
+};
+
+window.useInviteCode =
+async function(){
+
+const inviteCode =
+document.getElementById("inviteInput")
+.value.trim();
+
+if(!inviteCode){
+
+alert("أدخل الكود");
+
+return;
+
+}
+
+if(inviteCode === currentUser.id){
+
+alert("لا يمكنك استخدام كودك");
+
+return;
+
+}
+
+const userRef =
+ref(db,"customers/" + currentUser.id);
+
+const snapshot =
+await get(userRef);
+
+if(!snapshot.exists()) return;
+
+const userData =
+snapshot.val();
+
+if(userData.inviteUsed === true){
+
+alert("لقد استخدمت الدعوة مسبقاً");
+
+return;
+
+}
+
+const invitedUser =
+await get(
+ref(db,"customers/" + inviteCode)
+);
+
+if(!invitedUser.exists()){
+
+alert("الكود غير صحيح");
+
+return;
+
+}
+
+await update(userRef,{
+
+inviteUsed:true,
+
+freeDelivery:true,
+
+invitedBy:inviteCode
+
+});
+
+await update(
+ref(db,"customers/" + inviteCode),
+{
+
+freeDelivery:true
+
+});
+
+alert("تم الحصول على توصيلة مجانية");
+
+};
+
+onValue(
+ref(db,"orders"),
+(snapshot)=>{
+
+if(!snapshot.exists()) return;
+
+const orders =
+snapshot.val();
+
+let all = 0;
+let accepted = 0;
+let rejected = 0;
+let completed = 0;
+
+const acceptedContainer =
+document.getElementById("acceptedContainer");
+
+const rejectedContainer =
+document.getElementById("rejectedContainer");
+
+acceptedContainer.innerHTML = "";
+rejectedContainer.innerHTML = "";
+
+Object.keys(orders).forEach((key)=>{
+
+const order =
+orders[key];
+
+if(order.customerId !== currentUser.id){
+return;
+}
+
+all++;
+
+if(
+order.status === "accepted"
+||
+order.status === "on_the_way"
+||
+order.status === "arrived"
+){
+
+accepted++;
+
+acceptedContainer.innerHTML += `
+
+<div class="order-card">
+
+<p>
+🧾 رقم الطلب:
+${order.id}
+</p>
+
+<p>
+💰 السعر:
+${order.totalPrice} د.ع
+</p>
+
+<p>
+📦 الحالة:
+${order.statusText}
+</p>
+
+</div>
+
+`;
+
+}
+
+if(
+order.status === "failed_no_driver"
+||
+order.status === "delivery_problem"
+){
+
+rejected++;
+
+rejectedContainer.innerHTML += `
+
+<div class="order-card">
+
+<p>
+🧾 رقم الطلب:
+${order.id}
+</p>
+
+<p>
+💰 السعر:
+${order.totalPrice} د.ع
+</p>
+
+<p>
+❌ الحالة:
+${order.statusText}
+</p>
+
+</div>
+
+`;
+
+}
+
+if(order.status === "delivered"){
+
+completed++;
+
+}
+
+});
+
+document.getElementById("allOrders")
+.innerHTML = all;
+
+document.getElementById("acceptedOrders")
+.innerHTML = accepted;
+
+document.getElementById("rejectedOrders")
+.innerHTML = rejected;
+
+document.getElementById("completedOrders")
+.innerHTML = completed;
+
+});
+
+window.logout =
+function(){
+
+localStorage.clear();
+
+sessionStorage.clear();
+
+window.location.href =
+"index.html";
+
+};
+
+</script>
+
+</body>
+
+</html>
