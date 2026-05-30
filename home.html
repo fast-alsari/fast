@@ -1851,11 +1851,13 @@ cartContainer.innerHTML = `
 </div>
 `;
 
-itemsTotal.innerHTML =
-"0 د.ع";
+itemsTotal.innerHTML = "0 د.ع";
 
-finalTotal.innerHTML =
-`${Number(total + deliveryPrice + tip).toLocaleString()} د.ع`;
+document.getElementById("deliveryPriceText")
+.innerHTML = "0 د.ع";
+
+finalTotal.innerHTML = "0 د.ع";
+
 return;
 
 }
