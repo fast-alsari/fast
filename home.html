@@ -1246,6 +1246,91 @@ renderStores(filtered);
 
 }
 
+function isStoreOpen(store){
+
+if(!store.workingHours){
+return false;
+}
+
+const now = new Date();
+
+const currentDay =
+[
+"الأحد",
+"الاثنين",
+"الثلاثاء",
+"الأربعاء",
+"الخميس",
+"الجمعة",
+"السبت"
+][now.getDay()];
+
+let currentHour = now.getHours();
+
+let currentMinute = now.getMinutes();
+
+let currentTime =
+currentHour + (currentMinute / 60);
+
+const todaySchedule =
+store.workingHours.find(
+day => day.day === currentDay
+);
+
+if(!todaySchedule){
+return false;
+}
+
+if(
+todaySchedule.from === "مغلق" ||
+todaySchedule.to === "مغلق"
+){
+return false;
+}
+
+function convertTo24(timeText){
+
+if(!timeText){
+return 0;
+}
+
+let parts = timeText.split(" ");
+
+let hour = parseInt(parts[0]);
+
+let period = parts[1];
+
+if(period === "AM"){
+
+if(hour === 12){
+hour = 0;
+}
+
+}else if(period === "PM"){
+
+if(hour !== 12){
+hour += 12;
+}
+
+}
+
+return hour;
+
+}
+
+const fromHour =
+convertTo24(todaySchedule.from);
+
+const toHour =
+convertTo24(todaySchedule.to);
+
+return (
+currentTime >= fromHour &&
+currentTime < toHour
+);
+
+}
+
 function renderStores(stores){
 
 storesContainer.innerHTML = "";
@@ -1264,15 +1349,30 @@ return;
 
 stores.forEach((store)=>{
 
+const isOpen =
+isStoreOpen(store);
+
 storesContainer.innerHTML += `
 
 <div
-class="store-card ${store.vip ? "vip-store" : ""}"
-onclick="openStore('${store.id}')">
+class="
+store-card
+${store.vip ? "vip-store" : ""}
+${!isOpen ? "closed-store" : ""}
+"
+onclick="
+${isOpen ? `openStore('${store.id}')` : ""}
+">
 
 ${store.vip ? `
 <div class="vip-badge">
 🔥 VIP
+</div>
+` : ""}
+
+${!isOpen ? `
+<div class="closed-badge">
+مغلق حالياً
 </div>
 ` : ""}
 
@@ -1308,6 +1408,11 @@ class="ok-icon">
 </div>
 
 <p>
+${store.category || ""}
+</p>
+
+<p>
+
 <button
 onclick="openMap(event,'${store.latitude}','${store.longitude}')"
 style="
@@ -1325,6 +1430,7 @@ cursor:pointer;
 📍 موقع المتجر
 
 </button>
+
 </p>
 
 </div>
@@ -1334,6 +1440,10 @@ cursor:pointer;
 </div>
 
 `;
+
+});
+
+}
 
 });
 
