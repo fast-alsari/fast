@@ -1951,7 +1951,7 @@ Number(
 document.getElementById("tipInput").value || 0
 );
 
-// حساب اجور التوصيل// =========================
+// حساب اجور التوصيل// =========================// =========================
 // نظام تسعيرة ذكي للتوصيل
 // =========================
 
@@ -1967,7 +1967,6 @@ deliveryPrice = 0;
 
 }else{
 
-// اول متجر
 const firstStore =
 allStores.find(
 s => s.id === uniqueStores[0]
@@ -1987,49 +1986,49 @@ Number(firstStore.longitude)
 );
 
 // =========================
-// التسعيرة الاساسية
+// التسعيرة الاساسية الجديدة
 // =========================
 
 // اول 2 كم
 if(distance <= 2){
 
-deliveryPrice = 1500;
+deliveryPrice = 2000;
 
 }
 
 // من 2 الى 5
 else if(distance <= 5){
 
-deliveryPrice = 2000;
+deliveryPrice = 3000;
 
 }
 
 // من 5 الى 8
 else if(distance <= 8){
 
-deliveryPrice = 3000;
+deliveryPrice = 4000;
 
 }
 
 // من 8 الى 12
 else if(distance <= 12){
 
-deliveryPrice = 4000;
+deliveryPrice = 5000;
 
 }
 
-// فوق 12
+// فوق 12 كم
 else{
 
 deliveryPrice =
-4000 + Math.round((distance - 12) * 250);
+5000 + Math.round((distance - 12) * 350);
 
 }
 
 // حد اعلى
-if(deliveryPrice > 7000){
+if(deliveryPrice > 9000){
 
-deliveryPrice = 7000;
+deliveryPrice = 9000;
 
 }
 
@@ -2043,7 +2042,7 @@ deliveryPrice = 7000;
 if(uniqueStores.length === 2){
 
 deliveryPrice =
-Math.round(deliveryPrice * 1.5);
+Math.round(deliveryPrice * 1.6);
 
 }
 
@@ -2051,7 +2050,7 @@ Math.round(deliveryPrice * 1.5);
 else if(uniqueStores.length === 3){
 
 deliveryPrice =
-Math.round(deliveryPrice * 1.8);
+Math.round(deliveryPrice * 2);
 
 }
 
@@ -2059,7 +2058,7 @@ Math.round(deliveryPrice * 1.8);
 else if(uniqueStores.length >= 4){
 
 deliveryPrice =
-Math.round(deliveryPrice * 2.2);
+Math.round(deliveryPrice * 2.5);
 
 }
 
@@ -2070,11 +2069,20 @@ Math.round(deliveryPrice * 2.2);
 // طلبات كبيرة
 if(total >= 50000){
 
-deliveryPrice += 500;
+deliveryPrice += 1000;
 
 }
 
 if(total >= 100000){
+
+deliveryPrice += 2000;
+
+}
+
+// وقت الليل
+const hour = new Date().getHours();
+
+if(hour >= 12 || hour <= 6){
 
 deliveryPrice += 1000;
 
@@ -2084,15 +2092,15 @@ deliveryPrice += 1000;
 // حد ادنى وحد اعلى
 // =========================
 
-if(deliveryPrice < 1500){
+if(deliveryPrice < 2000){
 
-deliveryPrice = 1500;
+deliveryPrice = 2000;
 
 }
 
-if(deliveryPrice > 12000){
+if(deliveryPrice > 15000){
 
-deliveryPrice = 12000;
+deliveryPrice = 15000;
 
 }
 
@@ -2106,7 +2114,7 @@ itemsTotal.innerHTML =
 `${Number(total).toLocaleString()} د.ع`;
 
 finalTotal.innerHTML =
-`${total + deliveryPrice + tip} د.ع`;
+`${Number(total + deliveryPrice + tip).toLocaleString()} د.ع`;
 }
 
 updateCart();
