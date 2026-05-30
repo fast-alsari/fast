@@ -1418,12 +1418,28 @@ convertTo24(todaySchedule.from);
 const toHour =
 convertTo24(todaySchedule.to);
 
-// مقارنة الوقت الحالي
+// مقارنة الوقت الحالي// 24 ساعة
+if(fromHour === toHour){
+
+return true;
+
+}
+
+// دوام طبيعي
+if(fromHour < toHour){
+
 return (
 currentTime >= fromHour &&
 currentTime < toHour
 );
 
+}
+
+// دوام يعبر منتصف الليل
+return (
+currentTime >= fromHour ||
+currentTime < toHour
+);
 }
 
 function renderStores(stores){
