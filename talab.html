@@ -472,7 +472,61 @@ let driverMarker;
 let customerMarker;
 let storeMarkers = [];
 let routeControl;
-let timerStarted = false;
+
+
+let orderTimerInterval = null;
+
+function startOrderMainTimer(createdAt){
+
+clearInterval(orderTimerInterval);
+
+orderTimerInterval = setInterval(async()=>{
+
+const remaining = Math.max(
+0,
+(60 * 60 * 1000) -
+(Date.now() - createdAt)
+);
+
+const hours =
+String(
+Math.floor(remaining / 1000 / 60 / 60)
+).padStart(2,"0");
+
+const minutes =
+String(
+Math.floor((remaining / 1000 / 60) % 60)
+).padStart(2,"0");
+
+const seconds =
+String(
+Math.floor((remaining / 1000) % 60)
+).padStart(2,"0");
+
+timerBox.innerHTML =
+`${hours}:${minutes}:${seconds}`;
+
+if(remaining <= 0){
+
+clearInterval(orderTimerInterval);
+
+await remove(orderRef);
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+alert("انتهى وقت الطلب");
+
+window.location.replace(
+"retry-order.html"
+);
+
+}
+
+},1000);
+
+}
 
 const bikeIcon =
 L.divIcon({
@@ -584,55 +638,7 @@ return `${hours}:${minutes}:${seconds}`;
 
 }
 
-function startLiveTimer(createdAt){
 
-if(timerStarted){
-return;
-}
-
-timerStarted = true;
-
-const timerInterval =
-setInterval(async()=>{
-
-const remaining =
-
-(60 * 60 * 1000)
-
--
-
-(Date.now() - createdAt);
-
-timerBox.innerHTML =
-formatTime(remaining);
-
-if(remaining <= 0){
-
-clearInterval(timerInterval);
-
-try{
-
-await remove(orderRef);
-
-}catch(error){
-
-console.log(error);
-
-}
-
-localStorage.removeItem(
-"currentOrderId"
-);
-
-window.location.replace(
-"retry-order.html"
-);
-
-}
-
-},1000);
-
-}
 
 function initMap(order){
 
@@ -778,10 +784,12 @@ Number(order.storesData[0].storeLng);
 }
 
 if(
-order.status === "picked_up"
+order.status === "on_the_way"
 ||
 order.status === "arrived"
-){
+)
+
+{
 
 targetLat =
 Number(order.customerLat);
@@ -867,7 +875,7 @@ return;
 const order =
 snapshot.val();
 
-startLiveTimer(order.createdAt);
+startOrderMainTimer(order.createdAt);
 
 if(order.status === "waiting_driver"){
 
@@ -880,6 +888,9 @@ liveStatus.innerHTML =
 }
 
 if(order.status === "accepted"){
+
+liveStatus.innerHTML =
+order.statusText || "السائق متجه";
 
 searchingBox.style.display =
 "none";
@@ -914,13 +925,26 @@ updateDriverLocation(order);
 
 }
 
-if(order.status === "picked_up"){
+if(order.status === "preparing_order"){
 
 orderStatus.innerHTML =
-"تم استلام الطلب من المتجر";
+"جاري تجهيز الطلب";
 
 liveStatus.innerHTML =
+"المتجر يقوم بتجهيز الطلب";
+
+updateDriverLocation(order);
+
+}
+
+if(order.status === "on_the_way"){
+
+orderStatus.innerHTML =
 "السائق في الطريق إليك";
+
+liveStatus.innerHTML =
+order.statusText ||
+"السائق متجه إليك";
 
 updateDriverLocation(order);
 
@@ -941,6 +965,22 @@ rejectBtn.style.display =
 "block";
 
 updateDriverLocation(order);
+
+}
+
+if(order.status === "driver_timeout"){
+
+alert(
+"تم إلغاء الطلب بسبب تجاوز السائق للوقت"
+);
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+window.location.replace(
+"home.html"
+);
 
 }
 
@@ -969,7 +1009,19 @@ window.location.replace(
 );
 
 }
+if(order.status === "cancelled_by_customer"){
 
+localStorage.removeItem(
+"currentOrderId"
+);
+
+alert("تم إلغاء الطلب");
+
+window.location.replace(
+"home.html"
+);
+
+}
 });
 
 completeBtn.onclick =
