@@ -612,7 +612,13 @@ currentUser.status === "expired"
 ){
 
 showSection("pendingSection");
+history.pushState(null,null,location.href);
 
+window.onpopstate = function(){
+
+history.pushState(null,null,location.href);
+
+};
 // pending
 if(currentUser.status === "pending"){
 
@@ -692,14 +698,7 @@ target="_blank">
 `;
 
 }
-// منع الرجوع
-history.pushState(null,null,location.href);
 
-window.onpopstate = function(){
-
-history.pushState(null,null,location.href);
-
-};
 setInterval(async()=>{
 
 const checkSnapshot = await get(
