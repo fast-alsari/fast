@@ -445,6 +445,66 @@ class="driver-image">
 معلومات الزبون
 </h3>
 
+   
+    <div id="timeManagerBox" style="
+background:#fff4e8;
+padding:18px;
+border-radius:20px;
+margin-bottom:18px;
+text-align:center;
+">
+
+<div id="timeStageTitle" style="
+font-size:18px;
+font-weight:bold;
+color:#ff6600;
+margin-bottom:10px;
+">
+
+الوقت المتبقي للوصول للمتجر
+
+</div>
+
+<div id="timeCounter" style="
+font-size:32px;
+font-weight:bold;
+color:#222;
+">
+
+00:15:00
+
+</div>
+
+<button
+id="extraTimeBtn"
+class="action-btn"
+style="
+background:#ff8800;
+margin-top:15px;
+display:none;
+">
+
+طلب زيادة وقت +15 دقيقة
+
+</button>
+
+<button
+id="cancelByCustomerBtn"
+class="action-btn"
+style="
+background:red;
+color:white;
+margin-top:12px;
+">
+
+الطلب ألغي من قبل الزبون
+
+</button>
+
+</div>
+    
+    
+     
 <p id="customerName"></p>
 <p id="customerPhone"></p>
 <p id="customerAddress"></p>
@@ -927,7 +987,18 @@ acceptedAt:Date.now()
 });
 
 currentOrderId = id;
+stageStartTime = Date.now();
 
+currentStage = "store";
+
+stageDuration = 15 * 60 * 1000;
+
+document.getElementById(
+"timeStageTitle"
+).innerHTML =
+"الوقت المتبقي للوصول إلى المتجر";
+
+startStageTimer();
 document.querySelectorAll(".store-whatsapp-btn")
 .forEach(btn=>btn.remove());
 
@@ -1205,8 +1276,103 @@ createMarker:()=>null
 };
 
 let arrivedToStore = false;
+
+let preparingOrder = false;
+
 let leftStore = false;
+
 let customerArrived = false;
+
+let extraTimeUsed = false;
+
+let stageStartTime = null;
+
+let currentStage = "store";
+
+let stageDuration = 15 * 60 * 1000;
+
+let timerInterval = null;
+
+function startStageTimer(){
+
+clearInterval(timerInterval);
+
+timerInterval = setInterval(async()=>{
+
+const now = Date.now();
+
+const elapsed =
+now - stageStartTime;
+
+const remaining =
+Math.max(
+0,
+stageDuration - elapsed
+);
+const minutes =
+String(
+Math.floor((remaining / 1000 / 60) % 60)
+).padStart(2,"0");
+
+const seconds =
+String(
+Math.floor((remaining / 1000) % 60)
+).padStart(2,"0");
+
+document.getElementById(
+"timeCounter"
+).innerHTML = `00:${minutes}:${seconds}`;
+
+if(remaining <= 300000 && !extraTimeUsed){
+
+document.getElementById(
+"extraTimeBtn"
+).style.display = "block";
+
+}else{
+
+document.getElementById(
+"extraTimeBtn"
+).style.display = "none";
+
+}
+
+if(remaining <= 0){
+
+clearInterval(timerInterval);
+
+await update(
+ref(db,"drivers/" + currentDriver.id),
+{
+status:"banned",
+banUntil:
+Date.now() +
+(3 * 24 * 60 * 60 * 1000)
+}
+);
+
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"driver_timeout",
+statusText:"تم حظر السائق بسبب تجاوز الوقت"
+}
+);
+
+alert(
+"تم حظرك لمدة 3 أيام بسبب تجاوز الوقت"
+);
+
+localStorage.clear();
+
+window.location.href =
+"index.html";
+
+}
+
+},1000);
+
+}
 
 async function autoUpdateOrderStatus(order){
 
@@ -1264,6 +1430,29 @@ if(
 distanceToStore <= 0.1 &&
 !arrivedToStore
 ){
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"preparing_order",
+statusText:"جاري تجهيز الطلب",
+arrivedStoreAt:Date.now()
+}
+);
+
+preparingOrder = true;
+
+stageStartTime = Date.now();
+
+currentStage = "prepare";
+
+stageDuration = 15 * 60 * 1000;
+
+document.getElementById(
+"timeStageTitle"
+).innerHTML =
+"الوقت المتبقي لتجهيز الطلب";
+
+startStageTimer();
 
 arrivedToStore = true;
 
@@ -1274,7 +1463,7 @@ console.log(
 }
 
 if(
-arrivedToStore &&
+preparingOrder &&
 distanceToStore > 0.15 &&
 !leftStore
 ){
@@ -1285,9 +1474,23 @@ await update(
 ref(db,"orders/" + currentOrderId),
 {
 status:"on_the_way",
-statusText:"تم استلام الطلب والسائق في طريقه إليك"
+statusText:"السائق في الطريق للزبون",
+leftStoreAt:Date.now()
 }
 );
+
+stageStartTime = Date.now();
+
+currentStage = "customer";
+
+stageDuration = 15 * 60 * 1000;
+
+document.getElementById(
+"timeStageTitle"
+).innerHTML =
+"الوقت المتبقي للوصول للزبون";
+
+startStageTimer();
 
 }
 
@@ -1386,6 +1589,78 @@ statusText:"حدثت مشكلة بالتوصيل"
 );
 
 alert("تم تسجيل المشكلة");
+
+window.location.reload();
+
+};
+
+document.getElementById(
+"extraTimeBtn"
+).onclick = function(){
+
+if(extraTimeUsed){
+return;
+}
+
+extraTimeUsed = true;
+
+stageDuration += 15 * 60 * 1000;
+
+this.style.display = "none";
+
+alert("تمت إضافة 15 دقيقة");
+
+};
+
+document.getElementById(
+"cancelByCustomerBtn"
+).onclick = async function(){
+
+if(!currentOrderId){
+return;
+}
+
+const orderSnapshot =
+await get(
+ref(db,"orders/" + currentOrderId)
+);
+
+if(orderSnapshot.exists()){
+
+const order =
+orderSnapshot.val();
+
+const customerRef =
+ref(db,"customers/" + order.customerId);
+
+const customerSnapshot =
+await get(customerRef);
+
+if(customerSnapshot.exists()){
+
+const customer =
+customerSnapshot.val();
+
+await update(customerRef,{
+cancelledOrders:
+(customer.cancelledOrders || 0) + 1
+});
+
+}
+
+}
+
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"cancelled_by_customer",
+statusText:"الطلب ألغي من قبل الزبون",
+cancelledAt:Date.now()
+}
+);
+
+alert("تم إلغاء الطلب");
+
 window.location.reload();
 
 };
