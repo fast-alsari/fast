@@ -140,21 +140,34 @@ margin-bottom:12px;
 
 .closed-store{
 filter:grayscale(100%);
-opacity:.6;
-background:#dcdcdc !important;
+opacity:.65;
+background:#d6d6d6 !important;
 }
 
 .closed-badge{
 position:absolute;
-top:12px;
-right:12px;
+bottom:12px;
+left:12px;
 background:#555;
 color:white;
-padding:7px 14px;
+padding:6px 14px;
 border-radius:14px;
 font-size:12px;
 font-weight:bold;
-z-index:5;
+z-index:10;
+}
+
+.open-badge{
+position:absolute;
+bottom:12px;
+left:12px;
+background:#00b894;
+color:white;
+padding:6px 14px;
+border-radius:14px;
+font-size:12px;
+font-weight:bold;
+z-index:10;
 }
 
 .day-name{
