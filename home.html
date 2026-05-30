@@ -1252,10 +1252,7 @@ if(!store.workingHours){
 return false;
 }
 
-const now = new Date();
-
-const currentDay =
-[
+const days = [
 "الأحد",
 "الاثنين",
 "الثلاثاء",
@@ -1263,24 +1260,41 @@ const currentDay =
 "الخميس",
 "الجمعة",
 "السبت"
-][now.getDay()];
+];
 
-let currentHour = now.getHours();
+const now = new Date();
 
-let currentMinute = now.getMinutes();
+const currentDay =
+days[now.getDay()];
 
-let currentTime =
+const currentHour =
+now.getHours();
+
+const currentMinute =
+now.getMinutes();
+
+const currentTime =
 currentHour + (currentMinute / 60);
 
-const todaySchedule =
-store.workingHours.find(
-day => day.day === currentDay
-);
+// البحث عن اليوم الحالي
+let todaySchedule = null;
+
+Object.values(store.workingHours)
+.forEach(item=>{
+
+if(item.day === currentDay){
+
+todaySchedule = item;
+
+}
+
+});
 
 if(!todaySchedule){
 return false;
 }
 
+// اذا مغلق
 if(
 todaySchedule.from === "مغلق" ||
 todaySchedule.to === "مغلق"
@@ -1288,17 +1302,21 @@ todaySchedule.to === "مغلق"
 return false;
 }
 
-function convertTo24(timeText){
+// تحويل الوقت
+function convertTo24(time){
 
-if(!timeText){
+if(!time){
 return 0;
 }
 
-let parts = timeText.split(" ");
+const parts =
+time.split(" ");
 
-let hour = parseInt(parts[0]);
+let hour =
+parseInt(parts[0]);
 
-let period = parts[1];
+const period =
+parts[1];
 
 if(period === "AM"){
 
@@ -1324,6 +1342,7 @@ convertTo24(todaySchedule.from);
 const toHour =
 convertTo24(todaySchedule.to);
 
+// مقارنة الوقت الحالي
 return (
 currentTime >= fromHour &&
 currentTime < toHour
@@ -1370,19 +1389,21 @@ ${store.vip ? `
 </div>
 ` : ""}
 
-${!isOpen ? `
+${isOpen ? `
+<div class="open-badge">
+متوفر
+</div>
+` : `
 <div class="closed-badge">
 مغلق حالياً
 </div>
-` : ""}
+`}
 
 <div class="store-header">
 
 <img
 src="${store.store_image || store.image || "store.png"}"
 class="store-image"
-referrerpolicy="no-referrer"
-crossorigin="anonymous"
 onerror="this.src='store.png'">
 
 <div class="store-info">
