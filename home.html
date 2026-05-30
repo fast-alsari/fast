@@ -1952,15 +1952,26 @@ Number(
 document.getElementById("tipInput").value || 0
 );
 
-// حساب اجور التوصيل
- deliveryPrice = 1000;
+// حساب اجور التوصيل// =========================
+// نظام تسعيرة ذكي للتوصيل
+// =========================
 
-// متجر واحد
-if(cart.length > 0){
+deliveryPrice = 0;
 
+let uniqueStores =
+[...new Set(cart.map(item => item.storeId))];
+
+// اذا ماكو منتجات
+if(uniqueStores.length === 0){
+
+deliveryPrice = 0;
+
+}else{
+
+// اول متجر
 const firstStore =
 allStores.find(
-s => s.id === cart[0].storeId
+s => s.id === uniqueStores[0]
 );
 
 if(firstStore){
@@ -1976,44 +1987,115 @@ Number(firstStore.longitude)
 
 );
 
-// الحساب حسب المسافة
+// =========================
+// التسعيرة الاساسية
+// =========================
+
+// اول 2 كم
+if(distance <= 2){
+
+deliveryPrice = 1500;
+
+}
+
+// من 2 الى 5
+else if(distance <= 5){
+
+deliveryPrice = 2000;
+
+}
+
+// من 5 الى 8
+else if(distance <= 8){
+
+deliveryPrice = 3000;
+
+}
+
+// من 8 الى 12
+else if(distance <= 12){
+
+deliveryPrice = 4000;
+
+}
+
+// فوق 12
+else{
+
 deliveryPrice =
-Math.round(distance * 250);
+4000 + Math.round((distance - 12) * 250);
 
-// اقل توصيل
-if(deliveryPrice < 1000){
-deliveryPrice = 1000;
 }
 
-// اعلى توصيل
-if(deliveryPrice > 5000){
-deliveryPrice = 5000;
-}
+// حد اعلى
+if(deliveryPrice > 7000){
+
+deliveryPrice = 7000;
 
 }
 
 }
 
-// اذا اكثر من متجر
-let uniqueStores =
-[...new Set(cart.map(item => item.storeId))];
+// =========================
+// زيادة المتاجر المتعددة
+// =========================
 
-if(uniqueStores.length >= 2){
+// متجرين
+if(uniqueStores.length === 2){
+
+deliveryPrice =
+Math.round(deliveryPrice * 1.5);
+
+}
+
+// 3 متاجر
+else if(uniqueStores.length === 3){
+
+deliveryPrice =
+Math.round(deliveryPrice * 1.8);
+
+}
+
+// 4 متاجر واكثر
+else if(uniqueStores.length >= 4){
+
+deliveryPrice =
+Math.round(deliveryPrice * 2.2);
+
+}
+
+// =========================
+// حماية السائق
+// =========================
+
+// طلبات كبيرة
+if(total >= 50000){
+
+deliveryPrice += 500;
+
+}
+
+if(total >= 100000){
 
 deliveryPrice += 1000;
 
 }
 
-if(uniqueStores.length >= 3){
+// =========================
+// حد ادنى وحد اعلى
+// =========================
 
-deliveryPrice += 1000;
+if(deliveryPrice < 1500){
+
+deliveryPrice = 1500;
 
 }
 
-// حد اقصى
-if(deliveryPrice > 6000){
+if(deliveryPrice > 12000){
 
-deliveryPrice = 6000;
+deliveryPrice = 12000;
+
+}
 
 }
 
