@@ -671,268 +671,74 @@ inactiveCount;
 
 // سواق التوصيل
 
-onValue(ref(database,"drivers"),(snapshot)=>{
+window.activateDriver = async function(id){
 
-const container =
-document.getElementById("driversContainer");
+const today = new Date();
 
-container.innerHTML = "";
+const nextMonth = new Date();
 
-if(snapshot.exists()){
+nextMonth.setMonth(nextMonth.getMonth()+1);
 
-const drivers = snapshot.val();
+await update(ref(database,"drivers/"+id),{
 
-document.getElementById("driversCount").innerText =
-Object.keys(drivers).length;
+status:"active",
 
-for(let id in drivers){
+renewDate:today.toLocaleDateString(),
 
-let driver = drivers[id];
-
-if(driver.accountType === "vip"){
-
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
-
-if(
-driver.vipExpireDate &&
-today > driver.vipExpireDate
-){
-
-update(
-ref(database,"drivers/"+id),
-{
-
-accountType:"normal",
-vipExpireDate:""
-
-}
-);
-
-driver.accountType = "normal";
-driver.vipExpireDate = "";
-}
-
-}
-
-container.innerHTML += `
-
-<div class="item">
-
-<p><strong>الاسم:</strong>
-${driver.name || "-"}</p>
-
-<p><strong>الرقم:</strong>
-${driver.phone || "-"}</p>
-
-<p><strong>عدد الطلبات:</strong>
-${driver.completedOrders || 0}</p>
-
-<p><strong>مبلغ التوصيل الكلي:</strong>
-${driver.totalDeliveryAmount || 0} د.ع</p>
-<p>
-<strong>الحساب:</strong>
-
-${
-driver.accountType === "vip"
-
-?
-
-`<span class="vip-status">
-🔥 VIP
-</span>`
-
-:
-
-"عادي"
-
-}
-
-</p>
-
-<p>
-<strong>انتهاء VIP:</strong>
-
-${driver.vipExpireDate || "-"}
-
-</p>
-
-<div class="actions">
-
-<button
-class="vip-btn"
-onclick="activateVipDriver('${id}')">
-
-تفعيل VIP
-
-</button>
-
-<button
-class="remove-vip-btn"
-onclick="removeVipDriver('${id}')">
-
-إلغاء VIP
-
-</button>
-
-</div>
-<p><strong>صورة الهوية:</strong></p>
-
-<img class="big-image"
-src="${
-driver.idImage ||
-'https://via.placeholder.com/120'
-}">
-
-<p><strong>صورة الدراجة / السيارة:</strong></p>
-
-<img class="big-image"
-src="${
-driver.vehicleImage ||
-'https://via.placeholder.com/120'
-}">
-
-</div>
-
-`;
-
-}
-
-}
+expireDate:nextMonth.toLocaleDateString()
 
 });
 
+alert("تم تفعيل السائق");
+
+};
+
+window.deactivateDriver = async function(id){
+
+await update(ref(database,"drivers/"+id),{
+
+status:"inactive"
+
+});
+
+alert("تم إلغاء التفعيل");
+
+};
 // التكسي
 
-onValue(ref(database,"taxi_drivers"),(snapshot)=>{
+window.activateTaxi = async function(id){
 
-const container =
-document.getElementById("taxiContainer");
+const today = new Date();
 
-container.innerHTML = "";
+const nextMonth = new Date();
 
-if(snapshot.exists()){
+nextMonth.setMonth(nextMonth.getMonth()+1);
 
-const taxis = snapshot.val();
+await update(ref(database,"taxi_drivers/"+id),{
 
-document.getElementById("taxiCount").innerText =
-Object.keys(taxis).length;
+status:"active",
 
-for(let id in taxis){
+renewDate:today.toLocaleDateString(),
 
-let taxi = taxis[id];
-if(taxi.accountType === "vip"){
-
-let today =
-new Date()
-.toISOString()
-.split("T")[0];
-
-if(
-taxi.vipExpireDate &&
-today > taxi.vipExpireDate
-){
-
-update(
-ref(database,"taxi_drivers/"+id),
-{
-
-accountType:"normal",
-vipExpireDate:""
-
-}
-);
-taxi.accountType = "normal";
-taxi.vipExpireDate = "";
-
-}
-
-}
-container.innerHTML += `
-
-<div class="item">
-
-<p><strong>الاسم:</strong>
-${taxi.name || "-"}</p>
-
-<p><strong>الرقم:</strong>
-${taxi.phone || "-"}</p>
-
-<p><strong>نوع السيارة:</strong>
-${taxi.carType || "-"}</p>
-
-<p><strong>لون السيارة:</strong>
-${taxi.carColor || "-"}</p>
-
-<p><strong>رقم السيارة:</strong>
-${taxi.carNumber || "-"}</p>
-<p>
-<strong>الحساب:</strong>
-
-${
-taxi.accountType === "vip"
-
-?
-
-`<span class="vip-status">
-🔥 VIP
-</span>`
-
-:
-
-"عادي"
-
-}
-
-</p>
-
-<p>
-<strong>انتهاء VIP:</strong>
-
-${taxi.vipExpireDate || "-"}
-
-</p>
-
-<div class="actions">
-
-<button
-class="vip-btn"
-onclick="activateVipTaxi('${id}')">
-
-تفعيل VIP
-
-</button>
-
-<button
-class="remove-vip-btn"
-onclick="removeVipTaxi('${id}')">
-
-إلغاء VIP
-
-</button>
-
-</div>
-<p><strong>صورة السيارة:</strong></p>
-
-<img class="big-image"
-src="${
-taxi.carImage ||
-'https://via.placeholder.com/120'
-}">
-
-</div>
-
-`;
-
-}
-
-}
+expireDate:nextMonth.toLocaleDateString()
 
 });
 
-}
+alert("تم تفعيل التكسي");
+
+};
+
+window.deactivateTaxi = async function(id){
+
+await update(ref(database,"taxi_drivers/"+id),{
+
+status:"inactive"
+
+});
+
+alert("تم إلغاء التفعيل");
+
+};
 
 function renderStore(id,store){
 
@@ -1037,9 +843,17 @@ onclick="openMap(
 
 ${
 store.workingHours
-? store.workingHours.map(hour => `
+?
+
+Object.values(store.workingHours)
+.map(hour => `
+
 <div class="schedule-item">
-<span>${hour.day || "-"}</span>
+
+<span>
+${hour.day || "-"}
+</span>
+
 <span>
 من:
 ${hour.from || "-"}
@@ -1047,8 +861,12 @@ ${hour.from || "-"}
 الى:
 ${hour.to || "-"}
 </span>
+
 </div>
-`).join("")
+
+`)
+.join("")
+
 : "<p>لا يوجد جدول دوام</p>"
 }
 
@@ -1223,6 +1041,287 @@ vipExpireDate:""
 alert("تم إلغاء VIP");
 
 };
+
+}
+
+// =========================
+// سواق التوصيل
+// =========================
+
+onValue(ref(database,"drivers"),(snapshot)=>{
+
+const container =
+document.getElementById("driversContainer");
+
+container.innerHTML = "";
+
+if(snapshot.exists()){
+
+const drivers = snapshot.val();
+
+document.getElementById("driversCount").innerText =
+Object.keys(drivers).length;
+
+for(let id in drivers){
+
+let driver = drivers[id];
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>الاسم:</strong>
+${driver.name || "-"}</p>
+
+<p><strong>الرقم:</strong>
+${driver.phone || "-"}</p>
+
+<p><strong>الحالة:</strong>
+
+<span class="${
+driver.status === "active"
+? "status-active"
+: "status-inactive"
+}">
+${driver.status || "inactive"}
+</span>
+
+</p>
+
+<p><strong>تاريخ الاشتراك:</strong>
+${driver.renewDate || "-"}</p>
+
+<p><strong>تاريخ الانتهاء:</strong>
+${driver.expireDate || "-"}</p>
+
+<p>
+<strong>الحساب:</strong>
+
+${
+taxi.accountType === "vip"
+
+?
+
+`<span class="vip-status">
+🔥 VIP
+</span>`
+
+:
+
+"عادي"
+
+}
+
+</p>
+
+<p>
+<strong>انتهاء VIP:</strong>
+${taxi.vipExpireDate || "-"}
+</p>
+
+<p><strong>عدد الطلبات:</strong>
+${driver.completedOrders || 0}</p>
+
+<p><strong>مبلغ التوصيل:</strong>
+${driver.totalDeliveryAmount || 0} د.ع</p>
+
+<div class="actions">
+
+<button
+class="accept"
+onclick="activateDriver('${id}')">
+
+تفعيل
+
+</button>
+
+<button
+class="reject"
+onclick="deactivateDriver('${id}')">
+
+إلغاء
+
+</button>
+
+<button
+class="vip-btn"
+onclick="activateVipDriver('${id}')">
+
+VIP
+
+</button>
+
+<button
+class="remove-vip-btn"
+onclick="removeVipDriver('${id}')">
+
+إلغاء VIP
+
+</button>
+
+</div>
+
+<p><strong>صورة الهوية:</strong></p>
+
+<img
+class="big-image"
+src="${driver.idImage || 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+
+<p><strong>صورة المركبة:</strong></p>
+
+<img
+class="big-image"
+src="${driver.vehicleImage || 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+
+</div>
+
+`;
+
+}
+
+}
+
+});
+
+// =========================
+// التكسي
+// =========================
+
+onValue(ref(database,"taxi_drivers"),(snapshot)=>{
+
+const container =
+document.getElementById("taxiContainer");
+
+container.innerHTML = "";
+
+if(snapshot.exists()){
+
+const taxis = snapshot.val();
+
+document.getElementById("taxiCount").innerText =
+Object.keys(taxis).length;
+
+for(let id in taxis){
+
+let taxi = taxis[id];
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>الاسم:</strong>
+${taxi.name || "-"}</p>
+
+<p><strong>الرقم:</strong>
+${taxi.phone || "-"}</p>
+
+<p><strong>نوع السيارة:</strong>
+${taxi.carType || "-"}</p>
+
+<p><strong>لون السيارة:</strong>
+${taxi.carColor || "-"}</p>
+
+<p><strong>رقم السيارة:</strong>
+${taxi.carNumber || "-"}</p>
+
+<p><strong>الحالة:</strong>
+
+<span class="${
+taxi.status === "active"
+? "status-active"
+: "status-inactive"
+}">
+${taxi.status || "inactive"}
+</span>
+
+</p>
+
+<p><strong>تاريخ الاشتراك:</strong>
+${taxi.renewDate || "-"}</p>
+
+<p><strong>تاريخ الانتهاء:</strong>
+${taxi.expireDate || "-"}</p>
+
+<div class="actions">
+<p>
+<p>
+<strong>الحساب:</strong>
+
+${
+driver.accountType === "vip"
+
+?
+
+`<span class="vip-status">
+🔥 VIP
+</span>`
+
+:
+
+"عادي"
+
+}
+
+</p>
+
+<p>
+<strong>انتهاء VIP:</strong>
+${driver.vipExpireDate || "-"}
+</p>
+<button
+class="accept"
+onclick="activateTaxi('${id}')">
+
+تفعيل
+
+</button>
+
+<button
+class="reject"
+onclick="deactivateTaxi('${id}')">
+
+إلغاء
+
+</button>
+
+<button
+class="vip-btn"
+onclick="activateVipTaxi('${id}')">
+
+VIP
+
+</button>
+
+<button
+class="remove-vip-btn"
+onclick="removeVipTaxi('${id}')">
+
+إلغاء VIP
+
+</button>
+
+</div>
+
+<p><strong>صورة السيارة:</strong></p>
+
+<img
+class="big-image"
+src="${taxi.carImage || 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+
+</div>
+
+`;
+
+}
+
+}
+
+});
+
+
 /* VIP للتكسي */
 
 window.activateVipTaxi = async function(id){
@@ -1440,20 +1539,26 @@ alert("تم قبول المنتج");
 // حذف المنتج
 // =========================
 
-window.deleteProduct =
-async function(storeId,productId){
+window.deleteProduct = async function(storeId,productId){
 
-await update(
+try{
+
+await remove(
 ref(
 database,
 "store_products/"+storeId+"/"+productId
-),
-{
-deleted:true
-}
+)
 );
 
-alert("تم حذف المنتج");
+alert("تم حذف المنتج بنجاح");
+
+}catch(error){
+
+console.error(error);
+
+alert("فشل حذف المنتج");
+
+}
 
 };
 
@@ -1495,8 +1600,8 @@ ${product.storeName || "-"}</p>
 
 <img
 class="big-image"
-src="${product.image || 'https://via.placeholder.com/120'}">
-
+src="${product.image || 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
 <div class="actions">
 
 <button
@@ -1588,52 +1693,7 @@ onclick="deleteProduct('${product.storeId}','${product.id}')">
 }
 
 };
-window.showApprovedProducts = function(){
 
-const container =
-document.getElementById("productsContainer");
-
-container.innerHTML = "";
-
-for(let id in allProductsData){
-
-let product = allProductsData[id];
-
-if(product.status === "approved" && !product.deleted){
-
-container.innerHTML += `
-
-<div class="item">
-
-<p><strong>اسم المنتج:</strong>
-${product.name || "-"}</p>
-
-<p><strong>السعر:</strong>
-${product.price || 0} د.ع</p>
-
-<img class="big-image"
-src="${product.image || 'https://via.placeholder.com/120'}">
-
-<div class="actions">
-
-<button class="reject"
-onclick="deleteProduct('${id}')">
-
-حذف
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}
-
-}
-
-};
 
 loadDashboard();
 
