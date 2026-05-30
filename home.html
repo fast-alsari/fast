@@ -550,7 +550,49 @@ text-align:center;
 padding:35px;
 color:#777;
 }
+.closed-store{
+opacity:.55;
+filter:grayscale(100%);
+background:#dcdcdc !important;
+pointer-events:none;
+}
 
+.store-status{
+margin-top:10px;
+display:flex;
+align-items:center;
+gap:7px;
+font-size:13px;
+font-weight:bold;
+width:max-content;
+padding:5px 10px;
+border-radius:12px;
+background:#f3f3f3;
+}
+
+.status-dot{
+width:10px;
+height:10px;
+border-radius:50%;
+}
+
+.open-dot{
+background:#00c853;
+box-shadow:0 0 8px #00c853;
+}
+
+.closed-dot{
+background:red;
+box-shadow:0 0 8px red;
+}
+
+.open-text{
+color:#00a844;
+}
+
+.closed-text{
+color:#c40000;
+}
 </style>
 
 </head>
@@ -1110,7 +1152,8 @@ ref(database,"stores"),
 allStores = [];
 
 if(snapshot.exists()){
-    if(userLatitude === null || userLongitude === null){
+
+if(userLatitude === null || userLongitude === null){
 return;
 }
 
@@ -1152,6 +1195,7 @@ allStores.push(store);
 
 }
 
+// ترتيب المتاجر
 allStores.sort((a,b)=>{
 
 const aOpen = isStoreOpen(a);
@@ -1179,7 +1223,12 @@ return 1;
 return a.distance - b.distance;
 
 });
-``
+
+generateFilters();
+
+renderStores(allStores);
+
+}
 
 }
 
@@ -1408,15 +1457,27 @@ ${store.vip ? `
 </div>
 ` : ""}
 
+<div class="store-status">
+
 ${isOpen ? `
-<div class="open-badge">
-متوفر
-</div>
+
+<div class="status-dot open-dot"></div>
+
+<span class="open-text">
+مفتوح حالياً
+</span>
+
 ` : `
-<div class="closed-badge">
+
+<div class="status-dot closed-dot"></div>
+
+<span class="closed-text">
 مغلق حالياً
-</div>
+</span>
+
 `}
+
+</div>
 
 <div class="store-header">
 
