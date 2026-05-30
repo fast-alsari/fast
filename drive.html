@@ -407,7 +407,10 @@ VIP
 <i class="fa-solid fa-right-from-bracket"></i>
 </button>
 
-<img src="motorbike.png" class="driver-image">
+<img
+id="driverProfileImage"
+src="user.png"
+class="driver-image">
 
 </div>
 </header>
@@ -498,6 +501,14 @@ window.location.replace("index.html");
 
 document.getElementById("driverName").innerHTML = currentDriver.name || "سائق";
 document.getElementById("driverAccountType").innerHTML = currentDriver.accountType || "عادي";
+
+document.getElementById(
+"driverProfileImage"
+).src =
+
+currentDriver.vehicle_image ||
+
+"user.png";
 
 let driverLat = null;
 let driverLng = null;
