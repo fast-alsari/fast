@@ -605,60 +605,15 @@ currentUser.status === "disabled" ||
 currentUser.status === "expired"
 ){
 
-showSection("pendingSection");
 
-// pending
-if(currentUser.status === "pending"){
+localStorage.clear();
+sessionStorage.clear();
 
-document.getElementById("pendingMessage").innerHTML = `
-
-انتظر ريثما يتم تفعيل حسابك <br><br>
-
-<a href="https://wa.me/9647851521585" target="_blank">
-
-تواصل مع الإدارة عبر واتساب للدفع والتفعيل
-
-</a>
-
-`;
-
-}
-
-// banned
-if(currentUser.status === "banned"){
-
-document.getElementById("pendingMessage").innerHTML = `
-
-حسابك محظور
-
-`;
-
-}
-
-// disabled
-if(currentUser.status === "disabled"){
-
-document.getElementById("pendingMessage").innerHTML = `
-
-حسابك غير فعال
-
-`;
-
-}
-
-// expired
-if(currentUser.status === "expired"){
-
-document.getElementById("pendingMessage").innerHTML = `
-
-انتهت صلاحية حسابك
-
-`;
-
-}
+window.location.replace("index.html");
 
 return;
 
+}
 }
 
 // الحسابات المفعلة
