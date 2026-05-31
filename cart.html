@@ -18,7 +18,7 @@ rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
 rel="stylesheet">
 
 <style>
@@ -32,7 +32,8 @@ font-family:'Cairo',sans-serif;
 
 body{
 background:#f5f6fa;
-padding-bottom:120px;
+padding-bottom:130px;
+overflow-x:hidden;
 }
 
 .header{
@@ -42,14 +43,37 @@ linear-gradient(
 #ff8800,
 #ff5500
 );
+
 padding:22px;
 color:white;
+
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
+
+display:flex;
+align-items:center;
+gap:15px;
+}
+
+.back-btn{
+width:48px;
+height:48px;
+border:none;
+border-radius:50%;
+background:white;
+color:#ff6600;
+font-size:18px;
+cursor:pointer;
 }
 
 .header h2{
-font-size:26px;
+font-size:24px;
+margin-bottom:5px;
+}
+
+.header p{
+font-size:14px;
+opacity:.95;
 }
 
 .cart-container{
@@ -63,13 +87,15 @@ gap:15px;
 background:white;
 padding:15px;
 border-radius:24px;
+
 display:flex;
-gap:12px;
+gap:14px;
+
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
 }
 
-.cart-image{
+.item-image{
 width:95px;
 height:95px;
 border-radius:18px;
@@ -77,28 +103,33 @@ object-fit:cover;
 background:#eee;
 }
 
-.cart-content{
+.item-content{
 flex:1;
 }
 
-.cart-name{
+.item-name{
 font-size:18px;
 font-weight:bold;
 margin-bottom:6px;
 }
 
-.cart-price{
-font-size:17px;
-color:#ff8800;
-font-weight:bold;
+.item-store{
+font-size:13px;
+color:#666;
 margin-bottom:8px;
+}
+
+.item-price{
+font-size:18px;
+font-weight:bold;
+color:#ff6600;
+margin-bottom:12px;
 }
 
 .qty-box{
 display:flex;
 align-items:center;
 gap:10px;
-margin-top:10px;
 }
 
 .qty-btn{
@@ -112,53 +143,75 @@ font-size:18px;
 cursor:pointer;
 }
 
-.qty-text{
-font-size:16px;
+.qty-number{
+width:45px;
+height:34px;
+border-radius:10px;
+background:#f3f3f3;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
 font-weight:bold;
 }
 
-.remove-btn{
-margin-top:10px;
-background:red;
-color:white;
+.delete-btn{
+margin-top:14px;
+width:100%;
+height:45px;
 border:none;
-padding:10px 15px;
-border-radius:12px;
-cursor:pointer;
-font-size:13px;
+border-radius:14px;
+background:#ffebee;
+color:#e53935;
+font-size:14px;
 font-weight:bold;
+cursor:pointer;
 }
 
-.summary{
+.summary-box{
 position:fixed;
 bottom:0;
 left:0;
 right:0;
+
 background:white;
 padding:18px;
+
+border-top-left-radius:28px;
+border-top-right-radius:28px;
+
 box-shadow:
-0 -5px 18px rgba(0,0,0,.08);
+0 -5px 20px rgba(0,0,0,.08);
 }
 
-.total{
+.summary-row{
 display:flex;
 justify-content:space-between;
-font-size:20px;
+margin-bottom:12px;
+
+font-size:16px;
+}
+
+.summary-total{
+font-size:22px;
 font-weight:bold;
-margin-bottom:15px;
+color:#00b894;
 }
 
 .order-btn{
 width:100%;
-height:56px;
+height:58px;
 border:none;
 border-radius:18px;
+
 background:
 linear-gradient(
 135deg,
 #00b894,
 #00a383
 );
+
 color:white;
 font-size:17px;
 font-weight:bold;
@@ -166,10 +219,15 @@ cursor:pointer;
 }
 
 .empty{
-padding:60px 20px;
+padding:90px 20px;
 text-align:center;
-font-size:17px;
 color:#777;
+}
+
+.empty i{
+font-size:70px;
+margin-bottom:20px;
+color:#ddd;
 }
 
 </style>
@@ -180,9 +238,25 @@ color:#777;
 
 <div class="header">
 
+<button
+class="back-btn"
+onclick="window.location.href='home.html'">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</button>
+
+<div>
+
 <h2>
 السلة 🛒
 </h2>
+
+<p>
+راجع طلباتك قبل الإرسال
+</p>
+
+</div>
 
 </div>
 
@@ -190,25 +264,55 @@ color:#777;
 class="cart-container"
 id="cartContainer"></div>
 
-<div class="summary">
+<div
+class="summary-box"
+id="summaryBox">
 
-<div class="total">
+<div class="summary-row">
 
 <span>
-المجموع
+مجموع المنتجات
 </span>
 
-<span id="totalPrice">
+<b id="productsTotal">
 0 د.ع
+</b>
+
+</div>
+
+<div class="summary-row">
+
+<span>
+أجور التوصيل
 </span>
+
+<b id="deliveryPrice">
+0 د.ع
+</b>
+
+</div>
+
+<div class="summary-row">
+
+<span>
+المجموع الكلي
+</span>
+
+<b
+class="summary-total"
+id="finalTotal">
+
+0 د.ع
+
+</b>
 
 </div>
 
 <button
 class="order-btn"
-onclick="goCheckout()">
+onclick="sendOrder()">
 
-إتمام الطلب
+إرسال الطلب 🚀
 
 </button>
 
@@ -216,77 +320,100 @@ onclick="goCheckout()">
 
 <script type="module">
 
+import { db }
+from "./firebase.js";
+
 import {
-formatPrice
+
+ref,
+set
+
 }
-from "./utils.js";
+
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const currentUser =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+if(!currentUser){
+
+window.location.replace(
+"index.html"
+);
+
+}
 
 let cart =
 JSON.parse(
 localStorage.getItem("cart")
 ) || [];
 
-const container =
+const cartContainer =
 document.getElementById(
 "cartContainer"
 );
 
 function renderCart(){
 
-container.innerHTML = "";
+cartContainer.innerHTML = "";
 
 if(cart.length === 0){
 
-container.innerHTML = `
+cartContainer.innerHTML = `
+
 <div class="empty">
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+<h2>
 السلة فارغة
+</h2>
+
 </div>
+
 `;
 
 document.getElementById(
-"totalPrice"
-).innerHTML =
-"0 د.ع";
+"summaryBox"
+).style.display = "none";
 
 return;
 
 }
 
-let total = 0;
+let productsTotal = 0;
 
 cart.forEach((item,index)=>{
 
 const itemTotal =
-Number(item.price)
-*
+Number(item.price) *
 Number(item.qty);
 
-total += itemTotal;
+productsTotal += itemTotal;
 
-container.innerHTML += `
+cartContainer.innerHTML += `
 
 <div class="cart-item">
 
 <img
-src="${item.image || "product.png"}"
-class="cart-image">
+src="${item.image || 'product.png'}"
+class="item-image">
 
-<div class="cart-content">
+<div class="item-content">
 
-<div class="cart-name">
+<div class="item-name">
 ${item.name}
 </div>
 
-<div class="cart-price">
-
-${formatPrice(item.price)}
-
+<div class="item-store">
+${item.storeName}
 </div>
 
-<div>
+<div class="item-price">
 
-الكمية:
-${item.qty}
+${itemTotal.toLocaleString()} د.ع
 
 </div>
 
@@ -294,19 +421,19 @@ ${item.qty}
 
 <button
 class="qty-btn"
-onclick="changeQty(${index},-1)">
+onclick="decreaseQty(${index})">
 
 -
 
 </button>
 
-<div class="qty-text">
+<div class="qty-number">
 ${item.qty}
 </div>
 
 <button
 class="qty-btn"
-onclick="changeQty(${index},1)">
+onclick="increaseQty(${index})">
 
 +
 
@@ -315,10 +442,10 @@ onclick="changeQty(${index},1)">
 </div>
 
 <button
-class="remove-btn"
-onclick="removeItem(${index})">
+class="delete-btn"
+onclick="deleteItem(${index})">
 
-حذف
+حذف المنتج
 
 </button>
 
@@ -330,38 +457,71 @@ onclick="removeItem(${index})">
 
 });
 
+const deliveryPrice =
+3000;
+
+const finalTotal =
+productsTotal + deliveryPrice;
+
 document.getElementById(
-"totalPrice"
+"productsTotal"
 ).innerHTML =
-formatPrice(total);
+
+productsTotal.toLocaleString()
++
+" د.ع";
+
+document.getElementById(
+"deliveryPrice"
+).innerHTML =
+
+deliveryPrice.toLocaleString()
++
+" د.ع";
+
+document.getElementById(
+"finalTotal"
+).innerHTML =
+
+finalTotal.toLocaleString()
++
+" د.ع";
 
 }
 
-window.changeQty =
-function(index,type){
+window.increaseQty =
+function(index){
 
-cart[index].qty += type;
+cart[index].qty++;
 
-if(cart[index].qty <= 0){
-
-cart.splice(index,1);
-
-}
-
-localStorage.setItem(
-"cart",
-JSON.stringify(cart)
-);
-
-renderCart();
+saveCart();
 
 };
 
-window.removeItem =
+window.decreaseQty =
+function(index){
+
+if(cart[index].qty > 1){
+
+cart[index].qty--;
+
+saveCart();
+
+}
+
+};
+
+window.deleteItem =
 function(index){
 
 cart.splice(index,1);
 
+saveCart();
+
+};
+
+function saveCart(){
+
 localStorage.setItem(
 "cart",
 JSON.stringify(cart)
@@ -369,10 +529,10 @@ JSON.stringify(cart)
 
 renderCart();
 
-};
+}
 
-window.goCheckout =
-function(){
+window.sendOrder =
+async function(){
 
 if(cart.length === 0){
 
@@ -382,8 +542,136 @@ return;
 
 }
 
+navigator.geolocation.getCurrentPosition(
+
+async(position)=>{
+
+const customerLat =
+position.coords.latitude;
+
+const customerLng =
+position.coords.longitude;
+
+const orderId =
+"ORDER_" + Date.now();
+
+const storesData = [];
+
+cart.forEach(item=>{
+
+if(
+!storesData.find(
+s => s.storeId === item.storeId
+)
+){
+
+storesData.push({
+
+storeId:
+item.storeId,
+
+storeName:
+item.storeName
+
+});
+
+}
+
+});
+
+let productsTotal = 0;
+
+cart.forEach(item=>{
+
+productsTotal +=
+Number(item.price) *
+Number(item.qty);
+
+});
+
+const deliveryPrice =
+3000;
+
+const finalTotal =
+productsTotal + deliveryPrice;
+
+const orderData = {
+
+id:orderId,
+
+type:"delivery",
+
+status:"waiting_driver",
+
+customerId:
+currentUser.id,
+
+customerName:
+currentUser.name || "",
+
+customerPhone:
+currentUser.phone || "",
+
+customerAddress:
+currentUser.address || "",
+
+customerLat:
+customerLat,
+
+customerLng:
+customerLng,
+
+products:
+cart,
+
+storesData:
+storesData,
+
+productsTotal:
+productsTotal,
+
+deliveryPrice:
+deliveryPrice,
+
+finalTotal:
+finalTotal,
+
+createdAt:
+Date.now()
+
+};
+
+await set(
+ref(
+db,
+"orders/" + orderId
+),
+orderData
+);
+
+localStorage.removeItem(
+"cart"
+);
+
+localStorage.setItem(
+"currentOrderId",
+orderId
+);
+
+alert("تم إرسال الطلب");
+
 window.location.href =
-"checkout.html";
+`talab.html?orderId=${orderId}`;
+
+},
+
+()=>{
+
+alert("يرجى تشغيل GPS");
+
+}
+
+);
 
 };
 
