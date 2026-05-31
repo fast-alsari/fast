@@ -1,20 +1,22 @@
+ 
+<!-- retry-order.html -->
+
 <!DOCTYPE html>
+
 <html lang="ar" dir="rtl">
 
 <head>
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
+<meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
 إعادة الطلب
 </title>
 
-<link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
 
 <style>
@@ -27,45 +29,70 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-height:100vh;
-display:flex;
-align-items:center;
-justify-content:center;
-padding:20px;
 
 background:
 linear-gradient(
 135deg,
 #fff5ee,
-#ffffff
+#fff
 );
-}
-
-.box{
-width:100%;
-max-width:420px;
-background:white;
-padding:35px 25px;
-border-radius:30px;
-text-align:center;
-
-box-shadow:
-0 10px 35px rgba(0,0,0,.08);
-}
-
-.icon{
-width:120px;
-height:120px;
-border-radius:50%;
-
-margin:auto auto 20px;
 
 display:flex;
 align-items:center;
 justify-content:center;
 
-font-size:55px;
-color:white;
+height:100vh;
+padding:20px;
+overflow:hidden;
+
+}
+
+.box{
+
+width:100%;
+max-width:420px;
+
+background:white;
+
+padding:35px 25px;
+
+border-radius:30px;
+
+box-shadow:
+0 10px 30px rgba(0,0,0,.08);
+
+text-align:center;
+
+animation:showBox .4s ease;
+
+}
+
+@keyframes showBox{
+
+from{
+
+opacity:0;
+transform:translateY(20px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+.icon{
+
+width:110px;
+height:110px;
+
+margin:0 auto 20px;
+
+border-radius:50%;
 
 background:
 linear-gradient(
@@ -73,27 +100,48 @@ linear-gradient(
 #ff8800,
 #ff5500
 );
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+font-size:50px;
+color:white;
+
+box-shadow:
+0 10px 25px rgba(255,136,0,.25);
+
 }
 
 .title{
+
 font-size:30px;
 font-weight:bold;
 color:#ff5500;
+
 margin-bottom:15px;
+
 }
 
 .text{
-font-size:17px;
+
+font-size:18px;
 line-height:2;
 color:#666;
+
 margin-bottom:30px;
+
 }
 
 .btn{
+
 width:100%;
-height:58px;
+
+padding:18px;
+
 border:none;
-border-radius:18px;
+
+border-radius:20px;
 
 background:
 linear-gradient(
@@ -103,15 +151,32 @@ linear-gradient(
 );
 
 color:white;
-font-size:17px;
+
+font-size:18px;
 font-weight:bold;
+
 cursor:pointer;
+
+transition:.3s;
+
+box-shadow:
+0 5px 20px rgba(255,136,0,.3);
+
 }
 
-.note{
+.btn:hover{
+
+transform:translateY(-2px);
+
+}
+
+.small{
+
 margin-top:20px;
+
 font-size:14px;
 color:#999;
+
 }
 
 </style>
@@ -132,9 +197,9 @@ color:#999;
 
 <div class="text">
 
-لم يتم العثور على سائق خلال الوقت المحدد
+لم يتم العثور على سائق توصيل خلال الوقت المحدد
 
-يمكنك إعادة المحاولة الآن
+يمكنك إعادة الطلب مرة أخرى
 
 </div>
 
@@ -142,11 +207,11 @@ color:#999;
 class="btn"
 onclick="retryOrder()">
 
-إعادة الطلب 🚀
+طلب مجدداً 🚀
 
 </button>
 
-<div class="note">
+<div class="small">
 
 شكراً لاستخدامك تطبيق عالسريع
 
@@ -167,6 +232,23 @@ window.location.replace(
 );
 
 }
+
+history.pushState(
+null,
+null,
+location.href
+);
+
+window.onpopstate =
+function(){
+
+history.pushState(
+null,
+null,
+location.href
+);
+
+};
 
 </script>
 
