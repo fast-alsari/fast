@@ -1,1 +1,750 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+حساب المتجر
+</title>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f5f6fa;
+padding:15px;
+padding-bottom:120px;
+overflow-x:hidden;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:28px 20px;
+border-radius:30px;
+color:white;
+text-align:center;
+
+margin-bottom:20px;
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.12);
+}
+
+.store-image{
+width:110px;
+height:110px;
+border-radius:24px;
+object-fit:cover;
+background:white;
+padding:4px;
+margin:auto auto 15px;
+display:block;
+}
+
+.store-name{
+font-size:28px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.store-category{
+font-size:15px;
+opacity:.95;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+margin-bottom:20px;
+}
+
+.stat-card{
+background:white;
+padding:22px;
+border-radius:24px;
+text-align:center;
+
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+}
+
+.stat-card h2{
+font-size:28px;
+color:#ff6600;
+margin-bottom:8px;
+}
+
+.stat-card p{
+font-size:14px;
+font-weight:bold;
+color:#666;
+}
+
+.section{
+background:white;
+padding:18px;
+border-radius:24px;
+margin-bottom:18px;
+
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+}
+
+.section-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:15px;
+color:#ff6600;
+}
+
+.info-line{
+background:#fafafa;
+padding:15px;
+border-radius:18px;
+margin-bottom:12px;
+}
+
+.info-label{
+font-size:13px;
+color:#777;
+margin-bottom:6px;
+}
+
+.info-value{
+font-size:16px;
+font-weight:bold;
+word-break:break-word;
+}
+
+.status-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+padding:16px;
+border-radius:18px;
+
+background:#fff7ef;
+margin-top:15px;
+}
+
+.switch{
+position:relative;
+width:60px;
+height:32px;
+}
+
+.switch input{
+display:none;
+}
+
+.slider{
+position:absolute;
+inset:0;
+background:#ccc;
+border-radius:30px;
+cursor:pointer;
+transition:.3s;
+}
+
+.slider::before{
+content:"";
+position:absolute;
+width:24px;
+height:24px;
+left:4px;
+top:4px;
+background:white;
+border-radius:50%;
+transition:.3s;
+}
+
+input:checked + .slider{
+background:#00b894;
+}
+
+input:checked + .slider::before{
+transform:translateX(28px);
+}
+
+.logout-btn{
+width:100%;
+height:58px;
+border:none;
+border-radius:20px;
+background:#e53935;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:82px;
+
+background:white;
+
+display:flex;
+justify-content:space-around;
+align-items:center;
+
+box-shadow:
+0 -5px 18px rgba(0,0,0,.08);
+
+z-index:9999;
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:5px;
+
+font-size:13px;
+font-weight:bold;
+
+color:#888;
+cursor:pointer;
+}
+
+.nav-item.active{
+color:#ff8800;
+}
+
+.nav-item i{
+font-size:22px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<img
+src="store.png"
+id="storeImage"
+class="store-image">
+
+<div
+class="store-name"
+id="storeName">
+
+المتجر
+
+</div>
+
+<div
+class="store-category"
+id="storeCategory">
+
+القسم
+
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-card">
+
+<h2 id="ordersCount">
+0
+</h2>
+
+<p>
+عدد الطلبات
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="productsCount">
+0
+</h2>
+
+<p>
+عدد المنتجات
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="todayOrders">
+0
+</h2>
+
+<p>
+طلبات اليوم
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="totalProfit">
+0
+</h2>
+
+<p>
+المبيعات
+</p>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+بيانات المتجر
+</div>
+
+<div class="info-line">
+
+<div class="info-label">
+اسم المتجر
+</div>
+
+<div
+class="info-value"
+id="infoStoreName">
+
+-
+
+</div>
+
+</div>
+
+<div class="info-line">
+
+<div class="info-label">
+رقم الهاتف
+</div>
+
+<div
+class="info-value"
+id="infoPhone">
+
+-
+
+</div>
+
+</div>
+
+<div class="info-line">
+
+<div class="info-label">
+العنوان
+</div>
+
+<div
+class="info-value"
+id="infoAddress">
+
+-
+
+</div>
+
+</div>
+
+<div class="info-line">
+
+<div class="info-label">
+نوع النشاط
+</div>
+
+<div
+class="info-value"
+id="infoCategory">
+
+-
+
+</div>
+
+</div>
+
+<div class="status-box">
+
+<div>
+
+<b>
+حالة المتجر
+</b>
+
+<br>
+
+<span id="statusText">
+مفتوح الآن
+</span>
+
+</div>
+
+<label class="switch">
+
+<input
+type="checkbox"
+id="statusSwitch"
+checked>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+</div>
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+تسجيل الخروج
+
+</button>
+
+<div class="bottom-bar">
+
+<div
+class="nav-item"
+onclick="window.location.href='store-orders.html'">
+
+<i class="fa-solid fa-bag-shopping"></i>
+
+<span>
+الطلبات
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='store-products.html'">
+
+<i class="fa-solid fa-box"></i>
+
+<span>
+المنتجات
+</span>
+
+</div>
+
+<div class="nav-item active">
+
+<i class="fa-solid fa-store"></i>
+
+<span>
+الحساب
+</span>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { db }
+from "./firebase.js";
+
+import {
+
+ref,
+get,
+update,
+onValue
+
+}
+
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const currentUser =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+if(
+!currentUser ||
+currentUser.type !== "store"
+){
+
+window.location.replace(
+"index.html"
+);
+
+}
+
+const storeRef =
+ref(
+db,
+"stores/" + currentUser.id
+);
+
+const snapshot =
+await get(storeRef);
+
+if(!snapshot.exists()){
+
+window.location.replace(
+"index.html"
+);
+
+}
+
+const store =
+snapshot.val();
+
+// =====================
+// عرض البيانات
+// =====================
+
+document.getElementById(
+"storeImage"
+).src =
+
+store.storeImage ||
+store.image ||
+"store.png";
+
+document.getElementById(
+"storeName"
+).innerHTML =
+
+store.storeName || "";
+
+document.getElementById(
+"storeCategory"
+).innerHTML =
+
+store.category || "";
+
+document.getElementById(
+"infoStoreName"
+).innerHTML =
+
+store.storeName || "";
+
+document.getElementById(
+"infoPhone"
+).innerHTML =
+
+store.phone || "";
+
+document.getElementById(
+"infoAddress"
+).innerHTML =
+
+store.address || "";
+
+document.getElementById(
+"infoCategory"
+).innerHTML =
+
+store.category || "";
+
+document.getElementById(
+"totalProfit"
+).innerHTML =
+
+Number(
+store.totalProfit || 0
+).toLocaleString();
+
+// =====================
+// حالة المتجر
+// =====================
+
+const statusSwitch =
+document.getElementById(
+"statusSwitch"
+);
+
+statusSwitch.checked =
+store.isOpen !== false;
+
+document.getElementById(
+"statusText"
+).innerHTML =
+
+statusSwitch.checked
+?
+"مفتوح الآن"
+:
+"مغلق";
+
+statusSwitch.addEventListener(
+"change",
+async()=>{
+
+const value =
+statusSwitch.checked;
+
+await update(
+storeRef,
+{
+
+isOpen:value,
+
+lastUpdate:
+Date.now()
+
+}
+);
+
+document.getElementById(
+"statusText"
+).innerHTML =
+
+value
+?
+"مفتوح الآن"
+:
+"مغلق";
+
+}
+);
+
+// =====================
+// الاحصائيات
+// =====================
+
+onValue(
+ref(db,"orders"),
+(snapshot)=>{
+
+let allOrders = 0;
+let todayOrders = 0;
+
+const today =
+new Date()
+.toLocaleDateString("ar-EG");
+
+if(snapshot.exists()){
+
+const orders =
+snapshot.val();
+
+Object.values(orders)
+.forEach(order=>{
+
+if(
+order.storeId === currentUser.id
+){
+
+allOrders++;
+
+if(
+order.createdDate === today
+){
+
+todayOrders++;
+
+}
+
+}
+
+});
+
+}
+
+document.getElementById(
+"ordersCount"
+).innerHTML =
+allOrders;
+
+document.getElementById(
+"todayOrders"
+).innerHTML =
+todayOrders;
+
+}
+);
+
+// =====================
+// عدد المنتجات
+// =====================
+
+onValue(
+ref(
+db,
+"store_products/" + currentUser.id
+),
+(snapshot)=>{
+
+let total = 0;
+
+if(snapshot.exists()){
+
+const products =
+snapshot.val();
+
+total =
+Object.keys(products).length;
+
+}
+
+document.getElementById(
+"productsCount"
+).innerHTML =
+total;
+
+}
+);
+
+// =====================
+// تسجيل خروج
+// =====================
+
+window.logout =
+function(){
+
+localStorage.clear();
+
+sessionStorage.clear();
+
+window.location.replace(
+"index.html"
+);
+
+};
+
+</script>
+
+</body>
+
+</html>
