@@ -1,3 +1,5 @@
+هذا الاندكس 
+
  
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -439,8 +441,7 @@ getDatabase,
 ref,
 set,
 get,
-child,
-update
+child
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -471,25 +472,9 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 function showToast(message){
 
-if(!document.getElementById("toast")){
-return;
-}
-
-const toast =
-document.getElementById("toast");
-
-toast.innerText = message;
-
-toast.style.display = "block";
-
-setTimeout(()=>{
-
-toast.style.display = "none";
-
-},3000);
+alert(message);
 
 }
-
 // =========================
 // ImgBB
 // =========================
@@ -504,7 +489,7 @@ return "";
 
 if(!file.type.startsWith("image/")){
 
-showToast("اختر صورة فقط");
+alert("اختر صورة فقط");
 
 return "";
 
@@ -512,7 +497,7 @@ return "";
 
 if(file.size > 5 * 1024 * 1024){
 
-showToast("حجم الصورة أكبر من 5MB");
+alert("حجم الصورة أكبر من 5MB");
 
 return "";
 
@@ -521,8 +506,6 @@ return "";
 const formData = new FormData();
 
 formData.append("image",file);
-
-try{
 
 const response = await fetch(
 
@@ -536,26 +519,17 @@ body:formData
 );
 
 const data = await response.json();
-
 if(!data.success){
 
-showToast("فشل رفع الصورة");
+alert("فشل رفع الصورة");
 
 return "";
 
 }
-
-return data.data.image.url;
-
-}catch(error){
-
-showToast("فشل الاتصال بالسيرفر");
-
-return "";
+return data.data.url;
 
 }
 
-}
 // =========================
 // تسجيل دخول تلقائي
 // =========================
@@ -567,8 +541,10 @@ let currentUser = null;
 try{
 
 currentUser = JSON.parse(
-localStorage.getItem("user")
+localStorage.getItem("user") ||
+sessionStorage.getItem("user")
 );
+
 }catch{
 
 currentUser = null;
@@ -610,39 +586,31 @@ ref(database, tableName + "/" + currentUser.id)
 if(!snapshot.exists()){
 
 localStorage.removeItem("user");
-
 sessionStorage.removeItem("user");
 
 return;
 
 }
+
 currentUser = snapshot.val();
 
 currentUser.id =
 currentUser.id || snapshot.key;
 
-currentUser.isOnline = true;
-currentUser.lastSeen = Date.now();
-
-await update(
-ref(database, tableName + "/" + currentUser.id),
-{
-isOnline:true,
-lastSeen:Date.now()
-}
-);
-
 saveSession(currentUser);
+
 // الحسابات المعلقة
 if(
 currentUser.status === "pending" ||
-currentUser.status === "inactive" ||
 currentUser.status === "banned" ||
+currentUser.status === "disabled" ||
 currentUser.status === "expired"
 ){
 
+
 localStorage.clear();
 sessionStorage.clear();
+
 window.location.replace("index.html");
 
 return;
@@ -670,7 +638,7 @@ window.location.replace("drive.html");
 }
 
 if(currentUser.type === "taxi"){
-window.location.replace("taxie.html");
+window.location.replace("tixe.html");
 }
 
 }
@@ -863,7 +831,6 @@ alert("اختر نوع الحساب");
 return;
 
 }
- 
 document.getElementById("customerForm")
 .style.display="none";
 
@@ -923,13 +890,7 @@ document.getElementById("taxiForm")
 function loadStoreMap(){
 
 if(storeMap){
-
-storeMap.off();
-
 storeMap.remove();
-
-storeMap = null;
-
 }
 
 storeMap = L.map('storeMap')
@@ -976,6 +937,11 @@ localStorage.setItem(
 JSON.stringify(userData)
 );
 
+sessionStorage.setItem(
+"user",
+JSON.stringify(userData)
+);
+
 }
 
 // =========================
@@ -987,7 +953,7 @@ function checkAccountStatus(user){
 // pending
 if(user.status==="pending"){
 
-
+saveSession(user);
 
 document.getElementById("pendingMessage")
 .innerHTML = `
@@ -1006,8 +972,6 @@ target="_blank">
 
 showSection("pendingSection");
 
-
-
 return false;
 
 }
@@ -1015,7 +979,7 @@ return false;
 // banned
 if(user.status==="banned"){
 
-
+saveSession(user);
 
 document.getElementById("pendingMessage")
 .innerHTML = `
@@ -1041,7 +1005,7 @@ return false;
 // expired
 if(user.status==="expired"){
 
-
+saveSession(user);
 
 document.getElementById("pendingMessage")
 .innerHTML = `
@@ -1059,14 +1023,15 @@ target="_blank">
 `;
 
 showSection("pendingSection");
+
 return false;
 
 }
 
 // disabled
-if(user.status==="inactive"){
+if(user.status==="disabled"){
 
-
+saveSession(user);
 
 document.getElementById("pendingMessage")
 .innerHTML = `
@@ -1084,6 +1049,7 @@ target="_blank">
 `;
 
 showSection("pendingSection");
+
 return false;
 
 }
@@ -1132,33 +1098,22 @@ return false;
 
 }
 
-let registerBtn = null;
+window.registerAccount =
+async function(){
 
+const registerBtn = document.querySelector(
+'button[onclick="registerAccount()"]'
+);
+
+registerBtn.disabled = true;
+registerBtn.innerText = "جاري إنشاء الحساب...";
 function resetRegisterButton(){
-
-if(!registerBtn){
-return;
-}
 
 registerBtn.disabled = false;
 
 registerBtn.innerText = "إنشاء الحساب";
 
 }
-
-window.registerAccount =
-async function(){
-
-
-registerBtn = document.querySelector(
-'button[onclick="registerAccount()"]'
-);
-
-registerBtn.disabled = true;
-registerBtn.innerText = "جاري إنشاء الحساب...";
-
-
-
 try{
 
 let type =
@@ -1166,7 +1121,7 @@ document.getElementById("account_type").value;
 if(type === ""){
 
 alert("اختر نوع الحساب");
-resetRegisterButton();
+
 return;
 
 }
@@ -1220,35 +1175,20 @@ let id = "CUS"+Date.now();
 let customerData = {
 
 id:id,
-
 type:"customer",
-
-isOnline:false,
-lastSeen:Date.now(),
-
 status:"active",
 
 name:
-document.getElementById("customer_name").value.trim(),
+document.getElementById("customer_name")
+.value
+.trim(),
 
-phone:
-document.getElementById("customer_phone").value.trim(),
+phone:phone,
 
 password:
-document.getElementById("customer_password").value.trim(),
-
-userLat:"",
-
-userLng:"",
-
-
-totalOrders:0,
-completedOrders:0,
-cancelledOrders:0,
-
-totalSpent:0,
-
-
+document.getElementById("customer_password")
+.value
+.trim(),
 
 createdAt:Date.now()
 
@@ -1263,6 +1203,7 @@ customerData
 );
 
 saveSession(customerData);
+
 window.location.replace("home.html");
 
 }
@@ -1345,48 +1286,28 @@ document.getElementById(`to_${index}`).value
 // بيانات المتجر
 // =========================
 
-if(
-document.getElementById("store_owner").value.trim() === "" ||
-document.getElementById("store_name").value.trim() === "" ||
-document.getElementById("store_category").value === "" ||
-document.getElementById("store_password").value.trim() === ""
-){
-
-alert("املأ جميع الحقول");
-
-resetRegisterButton();
-
-return;
-
-}
-
 let storeData = {
 
 id:id,
 
 type:"store",
 
-isOnline:false,
-lastSeen:Date.now(),
-
 status:"pending",
 
-accountType:"normal",
-
 owner:
-document.getElementById("store_owner").value.trim(),
+document.getElementById("store_owner").value,
 
 phone:
-document.getElementById("store_phone").value.trim(),
+document.getElementById("store_phone").value,
 
 store_name:
-document.getElementById("store_name").value.trim(),
+document.getElementById("store_name").value,
 
 category:
 document.getElementById("store_category").value,
 
 password:
-document.getElementById("store_password").value.trim(),
+document.getElementById("store_password").value,
 
 latitude:store_latitude,
 
@@ -1398,26 +1319,7 @@ store_card:storeCardUrl,
 
 workingHours:workingHours,
 
-totalSales:0,
-
-lastMonthSales:0,
-
-
-totalOrders:0,
-completedOrders:0,
-
-cancelledOrders:0,
-
-pendingOrders:0,
-
-accountBalance:0,
-
-renewDate:"",
-expireDate:"",
-vipExpireDate:"",
-
 createdAt:Date.now()
-
 
 };
 
@@ -1437,7 +1339,7 @@ registerBtn.disabled = false;
 registerBtn.innerText = "إنشاء الحساب";
 
 showSection("pendingSection");
-resetRegisterButton();
+
 document.getElementById("pendingMessage")
 .innerHTML = `
 
@@ -1479,68 +1381,34 @@ await uploadImage(cardFile);
 const vehicleUrl =
 await uploadImage(vehicleFile);
 
-if(
-document.getElementById("taxi_name").value.trim() === "" ||
-document.getElementById("taxi_phone").value.trim() === "" ||
-document.getElementById("taxi_password").value.trim() === "" ||
-document.getElementById("taxi_vehicle").value === "" ||
-document.getElementById("taxi_color").value === ""
-){
-
-alert("املأ جميع الحقول");
-
-resetRegisterButton();
-
-return;
-
-}
-
 let taxiData = {
 
 id:id,
-
 type:"taxi",
-
-isOnline:false,
-lastSeen:Date.now(),
 
 status:"pending",
 
-accountType:"normal",
-
 name:
-document.getElementById("taxi_name").value.trim(),
+document.getElementById("taxi_name").value,
 
-vehicleType:
+vehicle:
 document.getElementById("taxi_vehicle").value,
 
-vehicleNumber:
-document.getElementById("taxi_plate").value.trim(),
+plate:
+document.getElementById("taxi_plate").value,
 
-vehicleColor:
+color:
 document.getElementById("taxi_color").value,
 
 phone:
-document.getElementById("taxi_phone").value.trim(),
+document.getElementById("taxi_phone").value,
 
 password:
-document.getElementById("taxi_password").value.trim(),
+document.getElementById("taxi_password").value,
 
-idImage:cardUrl,
+card:cardUrl,
 
-vehicleImage:vehicleUrl,
-
-totalOrders:0,
-completedTrips:0,
-
-cancelledTrips:0,
-
-totalProfit:0,
-accountBalance:0,
-
-renewDate:"",
-expireDate:"",
-vipExpireDate:"",
+vehicle_image:vehicleUrl,
 
 createdAt:Date.now()
 
@@ -1567,7 +1435,7 @@ registerBtn.disabled = false;
 registerBtn.innerText = "إنشاء الحساب";
 
 showSection("pendingSection");
-resetRegisterButton();
+
 document.getElementById("pendingMessage")
 .innerHTML = `
 
@@ -1584,26 +1452,19 @@ target="_blank">
 `;
 
 }
-
-
+// سائق
 
 if(type==="driver"){
+if(await phoneExists(
+document.getElementById("driver_phone").value
+)){
 
-if(
-document.getElementById("driver_name").value.trim() === "" ||
-document.getElementById("driver_phone").value.trim() === "" ||
-document.getElementById("driver_password").value.trim() === "" ||
-document.getElementById("driver_vehicle").value === ""
-){
-
-alert("املأ جميع الحقول");
+alert("رقم الهاتف مستخدم مسبقاً");
 
 resetRegisterButton();
 
 return;
-
 }
-
 let id = "DRV"+Date.now();
 
 const driverCardFile =
@@ -1611,7 +1472,6 @@ document.getElementById("driver_card").files[0];
 
 const vehicleImageFile =
 document.getElementById("driver_vehicle_image").files[0];
-
 if(!driverCardFile || !vehicleImageFile){
 
 alert("ارفع صور الهوية والمركبة");
@@ -1627,49 +1487,27 @@ await uploadImage(driverCardFile);
 const vehicleImageUrl =
 await uploadImage(vehicleImageFile);
 
-
-
 let driverData = {
 
 id:id,
-
 type:"driver",
-
-isOnline:false,
-lastSeen:Date.now(),
-
 status:"pending",
 
-accountType:"normal",
-
 name:
-document.getElementById("driver_name").value.trim(),
+document.getElementById("driver_name").value,
 
 phone:
-document.getElementById("driver_phone").value.trim(),
+document.getElementById("driver_phone").value,
 
-vehicleType:
+vehicle:
 document.getElementById("driver_vehicle").value,
 
 password:
-document.getElementById("driver_password").value.trim(),
+document.getElementById("driver_password").value,
 
-idImage:driverCardUrl,
+driver_card:driverCardUrl,
 
-vehicleImage:vehicleImageUrl,
-
-
-totalOrders:0,
-completedOrders:0,
-
-cancelledOrders:0,
-
-totalDeliveryAmount:0,
-accountBalance:0,
-
-renewDate:"",
-expireDate:"",
-vipExpireDate:"",
+vehicle_image:vehicleImageUrl,
 
 createdAt:Date.now()
 
@@ -1687,7 +1525,7 @@ registerBtn.disabled = false;
 registerBtn.innerText = "إنشاء الحساب";
 
 showSection("pendingSection");
-resetRegisterButton();
+
 document.getElementById("pendingMessage")
 .innerHTML = `
 
@@ -1704,7 +1542,7 @@ target="_blank">
 `;
 
 }
-}
+
 }catch(error){
 
 console.error(error);
@@ -1724,16 +1562,6 @@ alert(error.message);
 window.login =
 async function(){
 
-const loginBtn =
-document.querySelector(
-'button[onclick="login()"]'
-);
-
-loginBtn.disabled = true;
-
-loginBtn.innerText =
-"جاري تسجيل الدخول...";
-
 let phone =
 document.getElementById("login_phone").value.trim();
 
@@ -1742,12 +1570,7 @@ document.getElementById("login_password").value.trim();
 
 if(phone === "" || password === ""){
 
-showToast("املأ جميع الحقول");
-
-loginBtn.disabled = false;
-
-loginBtn.innerText =
-"تسجيل الدخول";
+alert("املأ جميع الحقول");
 
 return;
 
@@ -1813,16 +1636,12 @@ if(
 user.phone === phone &&
 user.password === password
 ){
-
-saveSession(user);
-
 if(!checkAccountStatus(user)){
 return;
 }
- 
-if(user.status === "active"){
-
 saveSession(user);
+
+if(user.status === "active"){
 
 window.location.replace("home.html");
 
@@ -1831,6 +1650,7 @@ window.location.replace("home.html");
 showSection("pendingSection");
 
 }
+
 return;
 
 }
@@ -1857,11 +1677,12 @@ user.phone === phone &&
 user.password === password
 ){
 
-
 saveSession(user);
+
 if(!checkAccountStatus(user)){
 return;
 }
+
 window.location.replace("store.html");
 
 return;
@@ -1890,11 +1711,12 @@ user.phone === phone &&
 user.password === password
 ){
 
-
 saveSession(user);
+
 if(!checkAccountStatus(user)){
 return;
 }
+
 window.location.replace("drive.html");
 
 return;
@@ -1923,12 +1745,13 @@ user.phone === phone &&
 user.password === password
 ){
 
-
 saveSession(user);
+
 if(!checkAccountStatus(user)){
 return;
 }
-window.location.replace("taxie.html");
+
+window.location.replace("tixe.html");
 
 return;
 
@@ -1939,17 +1762,10 @@ return;
 }
 
 alert("بيانات تسجيل الدخول غير صحيحة");
- loginBtn.disabled = false;
-
-loginBtn.innerText =
-"تسجيل الدخول";
 }catch(error){
 
 console.log(error);
-loginBtn.disabled = false;
 
-loginBtn.innerText =
-"تسجيل الدخول";
 alert("حدث خطأ");
 
 }
@@ -1972,23 +1788,6 @@ window.location.replace("index.html");
 };
 
 </script>
-<div id="toast"></div>
+
 </body>
-<style>
-
-#toast{
-position:fixed;
-bottom:20px;
-right:20px;
-background:#222;
-color:#fff;
-padding:14px 20px;
-border-radius:12px;
-display:none;
-z-index:999999;
-font-size:14px;
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-}
-
-</style> 
 </html> 
