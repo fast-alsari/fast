@@ -1,170 +1,133 @@
-
-<!-- drive.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
-طلبات التوصيل
+سائق التوصيل
 </title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"/>
-
-<script
-src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js">
-</script>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <style>
+
 *{
 margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#f5f5f5;
-padding-bottom:40px;
+background:#f5f6fa;
+padding-bottom:120px;
 overflow-x:hidden;
 }
 
 .header{
-background:linear-gradient(135deg,#ff8800,#ff5500);
-padding:15px;
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+padding:22px;
+color:white;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
+box-shadow:
+0 8px 25px rgba(0,0,0,.10);
+}
+
+.driver-box{
 display:flex;
-justify-content:space-between;
-align-items:flex-start;
-color:white;
-box-shadow:0 5px 20px rgba(0,0,0,.12);
+align-items:center;
+gap:14px;
 }
 
-.driver-info{
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-.driver-name{
-font-size:22px;
-font-weight:bold;
-}
-
-.driver-top-info{
-display:flex;
-flex-direction:column;
-gap:8px;
-margin-top:10px;
-}
-
-.driver-badge{
+.driver-image{
+width:78px;
+height:78px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid white;
 background:white;
-color:#ff6600;
-padding:7px 12px;
-border-radius:14px;
+}
+
+.driver-info h2{
+font-size:24px;
+margin-bottom:5px;
+}
+
+.driver-info p{
+font-size:14px;
+opacity:.9;
+}
+
+.online-btn{
+margin-top:20px;
+width:100%;
+height:55px;
+border:none;
+border-radius:20px;
+background:white;
+color:#00b894;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:12px;
+padding:15px;
+}
+
+.stat-card{
+background:white;
+padding:18px;
+border-radius:25px;
+text-align:center;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+}
+
+.stat-card h2{
+font-size:28px;
+color:#ff8800;
+margin-bottom:6px;
+}
+
+.stat-card p{
 font-size:13px;
 font-weight:bold;
-width:fit-content;
-}
-
-#finishButtons{
-display:none;
-}
-
-.header-left{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:12px;
-}
-
-.logout-btn{
-width:48px;
-height:48px;
-border:none;
-border-radius:15px;
-background:white;
-color:#ff5500;
-font-size:20px;
-cursor:pointer;
-display:flex;
-align-items:center;
-justify-content:center;
-}
-
-.driver-image{
-width:55px;
-height:55px;
-object-fit:contain;
-}
-
-.driver-image{
-width:55px;
-height:55px;
-object-fit:cover;
-border-radius:50%;
-border:2px solid white;
-background:white;
-}
-
-.radar-box{
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-padding:25px 20px;
-width:100%;
-}
-
-.radar{
-width:130px;
-height:130px;
-border-radius:50%;
-border:5px solid #ff8800;
-animation:radarPulse 2s infinite;
-position:relative;
-}
-
-.radar::before{
-content:"";
-position:absolute;
-top:50%;
-left:50%;
-width:18px;
-height:18px;
-background:#ff8800;
-border-radius:50%;
-transform:translate(-50%,-50%);
-}
-
-@keyframes radarPulse{
-0%{
-box-shadow:0 0 0 0 rgba(255,136,0,.5);
-}
-100%{
-box-shadow:0 0 0 40px rgba(255,136,0,0);
-}
-}
-
-.radar-text{
-margin-top:20px;
-font-size:18px;
-font-weight:bold;
-color:#777;
+color:#666;
 }
 
 .orders-container{
@@ -176,375 +139,332 @@ gap:18px;
 
 .order-card{
 background:white;
-padding:16px;
-border-radius:25px;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
+padding:18px;
+border-radius:28px;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
 }
 
-.order-title{
+.order-top{
 display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:15px;
+gap:10px;
 }
 
-.customer-name{
-font-size:21px;
+.order-price{
+font-size:28px;
 font-weight:bold;
+color:#00b894;
 }
 
-.delivery-price{
-background:#fff4e8;
-padding:10px 15px;
+.order-status{
+padding:8px 14px;
 border-radius:14px;
-font-weight:bold;
+background:#fff3e0;
 color:#ff6600;
-}
-
-.store-box{
-background:#fafafa;
-padding:14px;
-border-radius:20px;
-margin-bottom:14px;
-border:1px solid #eee;
-}
-
-.store-header{
-display:flex;
-align-items:center;
-gap:12px;
-margin-bottom:12px;
-}
-
-.store-image{
-width:60px;
-height:60px;
-border-radius:16px;
-object-fit:cover;
-background:#eee;
-}
-
-.store-name{
-font-size:17px;
-font-weight:bold;
-}
-
-.product-box{
-background:white;
-padding:12px;
-border-radius:18px;
-margin-bottom:10px;
-border:1px solid #eee;
-}
-
-.product-top{
-display:flex;
-align-items:center;
-gap:12px;
-}
-
-.product-image{
-width:58px;
-height:58px;
-border-radius:14px;
-object-fit:cover;
-background:#eee;
-}
-
-.product-info{
-flex:1;
-}
-
-.product-name{
-font-size:15px;
-font-weight:bold;
-margin-bottom:5px;
-}
-
-.product-details{
 font-size:13px;
-color:#666;
-line-height:1.8;
+font-weight:bold;
 }
 
-.total-box{
-background:#fff4e8;
+.customer-box{
+background:#f8f8f8;
 padding:15px;
-border-radius:18px;
-text-align:center;
-font-size:18px;
-font-weight:bold;
-color:#ff6600;
-margin-top:15px;
-line-height:2;
+border-radius:20px;
+margin-bottom:15px;
+}
+
+.customer-box h3{
+margin-bottom:6px;
+font-size:19px;
+}
+
+.customer-box p{
+font-size:14px;
+color:#666;
+margin-bottom:6px;
 }
 
 .map-box{
 width:100%;
-height:220px;
+height:320px;
 border-radius:22px;
 overflow:hidden;
-margin-top:15px;
-border:2px solid #eee;
+margin-bottom:15px;
 }
 
-.order-buttons{
+.order-info{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:15px;
+}
+
+.info-card{
+background:#f8f8f8;
+padding:15px;
+border-radius:18px;
+text-align:center;
+}
+
+.info-card h4{
+font-size:13px;
+margin-bottom:8px;
+color:#777;
+}
+
+.info-card p{
+font-size:16px;
+font-weight:bold;
+}
+
+.actions{
 display:flex;
+flex-wrap:wrap;
 gap:10px;
-margin-top:18px;
+}
+
+.actions button,
+.actions a{
+flex:1;
+height:52px;
+border:none;
+border-radius:18px;
+font-size:14px;
+font-weight:bold;
+cursor:pointer;
+text-decoration:none;
+display:flex;
+align-items:center;
+justify-content:center;
+color:white;
 }
 
 .accept-btn{
-flex:1;
-padding:16px;
-border:none;
-border-radius:16px;
 background:#00b894;
-color:white;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
 }
 
 .reject-btn{
-flex:1;
-padding:16px;
-border:none;
-border-radius:16px;
-background:red;
-color:white;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
+background:#ff3b30;
 }
 
-.delivery-page{
-display:none;
+.whatsapp-btn{
+background:#25D366;
 }
 
-#map{
-width:100%;
-height:60vh;
-border-bottom-left-radius:30px;
-border-bottom-right-radius:30px;
-overflow:hidden;
+.arrive-btn{
+background:#2563eb;
 }
 
-.delivery-info{
-background:white;
-margin:15px;
-padding:15px;
-border-radius:25px;
-box-shadow:0 5px 20px rgba(0,0,0,.08);
-}
-
-.delivery-info h3{
-margin-bottom:15px;
-font-size:22px;
-}
-
-.delivery-info p{
-margin-bottom:12px;
-font-size:16px;
-color:#555;
-}
-
-.action-btn{
-width:100%;
-padding:18px;
-border:none;
-border-radius:18px;
-color:white;
-font-size:17px;
-font-weight:bold;
-cursor:pointer;
-margin-top:12px;
-}
-
-.arrive-store{
+.finish-btn{
 background:#ff8800;
 }
 
-.arrive-customer{
-background:#0984e3;
+.empty{
+padding:70px 20px;
+text-align:center;
+font-size:16px;
+color:#777;
 }
 
-.done-btn{
-background:#00b894;
+.loading{
+position:fixed;
+inset:0;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:999999;
 }
 
-.problem-btn{
-background:red;
+.spinner{
+width:70px;
+height:70px;
+border-radius:50%;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+animation:spin .8s linear infinite;
 }
+
+@keyframes spin{
+
+100%{
+transform:rotate(360deg);
+}
+
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:84px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+box-shadow:
+0 -5px 18px rgba(0,0,0,.08);
+z-index:99999;
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:5px;
+font-size:13px;
+font-weight:bold;
+cursor:pointer;
+color:#888;
+}
+
+.nav-item.active{
+color:#ff8800;
+}
+
+.nav-item i{
+font-size:22px;
+}
+
+@media(max-width:700px){
+
+.stats{
+grid-template-columns:1fr;
+}
+
+.order-info{
+grid-template-columns:1fr;
+}
+
+}
+
 </style>
 
 </head>
 
 <body>
 
-<header class="header">
+<div
+class="loading"
+id="loading">
+
+<div class="spinner"></div>
+
+</div>
+
+<div class="header">
+
+<div class="driver-box">
+
+<img
+src="user.png"
+id="driverImage"
+class="driver-image">
 
 <div class="driver-info">
 
-<div class="driver-name" id="driverName">
+<h2 id="driverName">
 السائق
-</div>
+</h2>
 
-<div class="driver-top-info">
-
-<div class="driver-badge">
-الطلبات المنجزة:
-<span id="completedCount">0</span>
-</div>
-
-<div class="driver-badge">
-الأرباح الشهرية:
-<span id="monthProfit">0</span>
-د.ع
-</div>
-
-<div class="driver-badge" id="driverAccountType">
-VIP
-</div>
+<p id="driverPhone">
+0000000000
+</p>
 
 </div>
-</div>
-
-<div class="header-left">
-
-<button class="logout-btn" id="logoutBtn">
-<i class="fa-solid fa-right-from-bracket"></i>
-</button>
-
-<img
-id="driverProfileImage"
-src="user.png"
-class="driver-image">
-
-</div>
-</header>
-
-<div class="orders-container" id="ordersContainer">
-
-<div class="radar-box">
-<div class="radar"></div>
-<div class="radar-text">
-جاري البحث عن طلبات...
-</div>
-</div>
-
-</div>
-
-<div class="delivery-page" id="deliveryPage">
-
-<div id="map"></div>
-
-<div class="delivery-info">
-
-<h3>
-معلومات الزبون
-</h3>
-
-   
-    <div id="timeManagerBox" style="
-background:#fff4e8;
-padding:18px;
-border-radius:20px;
-margin-bottom:18px;
-text-align:center;
-">
-
-<div id="timeStageTitle" style="
-font-size:18px;
-font-weight:bold;
-color:#ff6600;
-margin-bottom:10px;
-">
-
-الوقت المتبقي للوصول للمتجر
-
-</div>
-
-<div id="timeCounter" style="
-font-size:32px;
-font-weight:bold;
-color:#222;
-">
-
-00:15:00
 
 </div>
 
 <button
-id="extraTimeBtn"
-class="action-btn"
-style="
-background:#ff8800;
-margin-top:15px;
-display:none;
-">
+class="online-btn"
+id="onlineBtn"
+onclick="toggleOnline()">
 
-طلب زيادة وقت +15 دقيقة
-
-</button>
-
-<button
-id="cancelByCustomerBtn"
-class="action-btn"
-style="
-background:red;
-color:white;
-margin-top:12px;
-">
-
-الطلب ألغي من قبل الزبون
+متصل الآن
 
 </button>
 
 </div>
-    
-    
-     
-<p id="customerName"></p>
-<p id="customerPhone"></p>
-<p id="customerAddress"></p>
 
-<button id="whatsappCustomer" class="action-btn" style="background:#25D366;">
-واتساب الزبون
-</button>
+<div class="stats">
 
-<div style="display:none;">
+<div class="stat-card">
 
-<button id="arrivedStoreBtn" class="action-btn arrive-store">
-وصلت المتجر
-</button>
+<h2 id="completedOrders">
+0
+</h2>
 
-<button id="arrivedCustomerBtn" class="action-btn arrive-customer">
-وصلت الزبون
-</button>
+<p>
+الطلبات المكتملة
+</p>
 
 </div>
 
-<div id="finishButtons">
+<div class="stat-card">
 
-<button id="deliveredBtn" class="action-btn done-btn">
-تم التوصيل
-</button>
+<h2 id="totalProfit">
+0
+</h2>
 
-<button id="failedBtn" class="action-btn problem-btn">
-مشكلة بالتوصيل
-</button>
+<p>
+الأرباح
+</p>
+
 </div>
+
+<div class="stat-card">
+
+<h2 id="cancelledOrders">
+0
+</h2>
+
+<p>
+الطلبات الملغية
+</p>
+
 </div>
+
+</div>
+
+<div
+class="orders-container"
+id="ordersContainer"></div>
+
+<div class="bottom-bar">
+
+<div class="nav-item active">
+
+<i class="fa-solid fa-motorcycle"></i>
+
+<span>
+الطلبات
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='asca.html'">
+
+<i class="fa-solid fa-user"></i>
+
+<span>
+الحساب
+</span>
+
+</div>
+
 </div>
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { db }
+from "./firebase.js";
 
 import {
-getDatabase,
 ref,
 onValue,
 update,
@@ -552,718 +472,407 @@ get
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-const firebaseConfig = {
-apiKey:"AIzaSy",
-authDomain:"fast-937c9.firebaseapp.com",
-projectId:"fast-937c9",
-databaseURL:"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
-};
+import {
+calculateDistance,
+formatPrice
+}
+from "./utils.js";
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+const currentUser =
+JSON.parse(
+localStorage.getItem("user")
+);
 
-const currentDriver = JSON.parse(localStorage.getItem("user"));
+if(
+!currentUser ||
+currentUser.type !== "driver"
+){
 
-if(!currentDriver){
-window.location.replace("index.html");
+window.location.replace(
+"index.html"
+);
+
 }
 
-document.getElementById("driverName").innerHTML = currentDriver.name || "سائق";
-document.getElementById("driverAccountType").innerHTML = currentDriver.accountType || "عادي";
+let isOnline = true;
+
+let driverLat = 0;
+let driverLng = 0;
 
 document.getElementById(
-"driverProfileImage"
+"driverName"
+).innerHTML =
+currentUser.name || "";
+
+document.getElementById(
+"driverPhone"
+).innerHTML =
+currentUser.phone || "";
+
+document.getElementById(
+"driverImage"
 ).src =
+currentUser.image || "user.png";
 
-currentDriver.vehicle_image ||
+document.getElementById(
+"completedOrders"
+).innerHTML =
+currentUser.completedOrders || 0;
 
-"user.png";
+document.getElementById(
+"cancelledOrders"
+).innerHTML =
+currentUser.cancelledOrders || 0;
 
-let driverLat = null;
-let driverLng = null;
-let currentOrderId = null;
-let map = null;
-let driverMarker = null;
-let routeControl = null;
-
-const customerIcon = L.divIcon({
-
-html:`
-<div style="
-font-size:38px;
-filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
-">
-🚩
-</div>
-`,
-
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,35]
-
-});
-
-function createStoreIcon(store){
-
-return L.divIcon({
-
-html:`
-
-<div style="
-display:flex;
-flex-direction:column;
-align-items:center;
-">
-
-<div style="
-font-size:34px;
-filter:drop-shadow(0 2px 4px rgba(0,0,0,.25));
-">
-🏪
-</div>
-
-<div style="
-background:white;
-padding:4px 10px;
-border-radius:12px;
-font-size:12px;
-font-weight:bold;
-margin-top:3px;
-box-shadow:0 2px 10px rgba(0,0,0,.15);
-white-space:nowrap;
-">
-
-${store.storeName || "متجر"}
-
-</div>
-
-</div>
-
-`,
-
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,40]
-
-});
-
-}
-const bikeIcon = L.divIcon({
-
-html:`
-<div style="
-font-size:38px;
-transform:rotate(-15deg);
-filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
-">
-🛵
-</div>
-`,
-
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,20]
-
-});
+document.getElementById(
+"totalProfit"
+).innerHTML =
+Number(
+currentUser.totalProfit || 0
+).toLocaleString();
 
 navigator.geolocation.watchPosition(
+
 async(position)=>{
 
-driverLat = position.coords.latitude;
-driverLng = position.coords.longitude;
+driverLat =
+position.coords.latitude;
+
+driverLng =
+position.coords.longitude;
 
 await update(
-ref(db,"drivers/" + currentDriver.id),
+ref(db,"users/" + currentUser.id),
 {
+
 latitude:driverLat,
 longitude:driverLng,
-status:"active",
-lastUpdate:Date.now()
+lastSeen:Date.now()
+
 }
 );
-
-if(currentOrderId){
-
-await update(
-ref(db,"orders/" + currentOrderId),
-{
-driverLat:driverLat,
-driverLng:driverLng
-}
-);
-
-if(driverMarker){
-driverMarker.setLatLng([driverLat,driverLng]);
-}
-
-if(routeControl){
-
-const currentWaypoints =
-routeControl.getWaypoints();
-
-currentWaypoints[0].latLng =
-L.latLng(driverLat,driverLng);
-
-routeControl.spliceWaypoints(
-0,
-1,
-L.latLng(driverLat,driverLng)
-);
-
-}
-
-if(map){
-
-map.panTo(
-[driverLat,driverLng],
-{
-animate:true,
-duration:1
-}
-);
-
-}
-
-if(currentOrderId){
-
-const orderSnapshot =
-await get(
-ref(db,"orders/" + currentOrderId)
-);
-
-if(orderSnapshot.exists()){
-
-autoUpdateOrderStatus(
-orderSnapshot.val()
-);
-
-}
-
-}
-
-}
 
 },
-(error)=>{
-alert("يجب تشغيل GPS");
-},
+
+()=>{},
+
 {
 enableHighAccuracy:true,
-maximumAge:0,
+maximumAge:3000,
 timeout:10000
+}
+
+);
+
+window.toggleOnline =
+async function(){
+
+isOnline = !isOnline;
+
+const btn =
+document.getElementById(
+"onlineBtn"
+);
+
+btn.innerHTML =
+
+isOnline
+?
+"متصل الآن"
+:
+"متوقف";
+
+btn.style.color =
+
+isOnline
+?
+"#00b894"
+:
+"#ff3b30";
+
+await update(
+ref(db,"users/" + currentUser.id),
+{
+
+isOnline:isOnline
+
 }
 );
 
-function calculateDistance(lat1, lon1, lat2, lon2){
+};
 
-const R = 6371;
+const ordersContainer =
+document.getElementById(
+"ordersContainer"
+);
 
-const dLat = (lat2-lat1) * Math.PI / 180;
-const dLon = (lon2-lon1) * Math.PI / 180;
+onValue(
+ref(db,"orders"),
+(snapshot)=>{
 
-const a =
-Math.sin(dLat/2) * Math.sin(dLat/2) +
-Math.cos(lat1 * Math.PI / 180) *
-Math.cos(lat2 * Math.PI / 180) *
-Math.sin(dLon/2) *
-Math.sin(dLon/2);
-
-const c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
-
-return R * c;
-}
-
-onValue(ref(db,"orders"),(snapshot)=>{
-
-const container = document.getElementById("ordersContainer");
-container.innerHTML = "";
+ordersContainer.innerHTML = "";
 
 if(!snapshot.exists()){
 
-container.innerHTML = `
-<div class="radar-box">
-<div class="radar"></div>
-<div class="radar-text">
-جاري البحث عن طلبات...
-</div>
+ordersContainer.innerHTML = `
+<div class="empty">
+لا توجد طلبات
 </div>
 `;
 
+hideLoading();
+
 return;
+
 }
 
-const orders = snapshot.val();
-let foundOrders = false;
+const orders =
+snapshot.val();
 
-Object.keys(orders).forEach((key)=>{
+let found = false;
 
-const order = orders[key];
+for(let key in orders){
 
-if(order.status !== "waiting_driver"){
-return;
-}
+const order =
+orders[key];
 
 if(
-order.rejectedBy &&
-order.rejectedBy[currentDriver.id]
+order.status !== "waiting_driver"
+&&
+order.driverId !== currentUser.id
 ){
-
-const rejectTime = order.rejectedBy[currentDriver.id];
-
-if(Date.now() - rejectTime < 3600000){
-return;
+continue;
 }
 
-}
+found = true;
 
-if(driverLat === null || driverLng === null){
-return;
-}
-
-const distance = calculateDistance(
-driverLat,
-driverLng,
-Number(order.customerLat),
-Number(order.customerLng)
-);
-
-if(distance > 1000){
-return;
-}
-
-foundOrders = true;
-
-container.innerHTML += `
+ordersContainer.innerHTML += `
 
 <div class="order-card">
 
-<div class="order-title">
+<div class="order-top">
 
-<div>
+<div class="order-status">
 
-<div class="customer-name">
-👤 ${order.customerName}
-</div>
-
-<div style="font-size:13px;color:#777;margin-top:5px;">
-🏪 عدد المتاجر:
-${order.storesData?.length || 1}
-</div>
+${getStatusText(order.status)}
 
 </div>
 
-<div class="delivery-price">
-🚚 ${order.deliveryPrice} د.ع
-</div>
+<div class="order-price">
 
-</div>
-
-${(order.storesData || []).map(store => `
-
-<div class="store-box">
-
-<div class="store-header">
-
-<img
-src="${store.storeImage || 'store.png'}"
-class="store-image">
-
-<div class="store-name">
-🏪 ${store.storeName}
-</div>
-
-</div>
-
-<div style="
-background:#fff4e8;
-padding:20px;
-border-radius:18px;
-text-align:center;
-font-size:16px;
-font-weight:bold;
-color:#ff6600;
-line-height:2;
-">
-
-🔒 تفاصيل الطلب مخفية
-
-<br>
-
-تظهر بعد قبول الطلب
+${formatPrice(order.deliveryPrice)}
 
 </div>
 
 </div>
 
-`).join("")}
+<div class="customer-box">
 
-<div class="total-box">
-💰 المنتجات: ${order.productsPrice} د.ع
-<br>
-🚚 التوصيل: ${order.deliveryPrice} د.ع
-<br>
-🧾 الكلي: ${order.totalPrice} د.ع
+<h3>
+
+${order.customerName || ""}
+
+</h3>
+
+<p>
+
+📞 ${order.customerPhone || ""}
+
+</p>
+
+<p>
+
+📍 ${order.customerAddress || ""}
+
+</p>
+
 </div>
 
-<div class="map-box">
-<iframe
-width="100%"
-height="100%"
-style="border:none;"
-loading="lazy"
-src="https://maps.google.com/maps?q=${order.customerLat},${order.customerLng}&z=14&output=embed">
-</iframe>
+<div
+class="map-box"
+id="map_${order.id}"></div>
+
+<div class="order-info">
+
+<div class="info-card">
+
+<h4>
+المجموع
+</h4>
+
+<p>
+
+${formatPrice(order.finalTotal)}
+
+</p>
+
 </div>
 
-<div class="order-buttons">
+<div class="info-card">
+
+<h4>
+الحالة
+</h4>
+
+<p>
+
+${getStatusText(order.status)}
+
+</p>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+${order.status === "waiting_driver"
+
+?
+
+`
 
 <button
 class="accept-btn"
-onclick="acceptOrder('${key}')">
+onclick="acceptOrder('${order.id}')">
+
 قبول الطلب
+
 </button>
 
 <button
 class="reject-btn"
-onclick="rejectOrder('${key}')">
-رفض الطلب
+onclick="rejectOrder('${order.id}')">
+
+رفض
+
 </button>
 
+`
+
+:
+
+`
+
+<a
+href="https://wa.me/${order.customerPhone}"
+target="_blank"
+class="whatsapp-btn">
+
+واتساب
+
+</a>
+
+<button
+class="arrive-btn"
+onclick="arriveOrder('${order.id}')">
+
+وصلت
+
+</button>
+
+<button
+class="finish-btn"
+onclick="finishOrder('${order.id}')">
+
+تم التوصيل
+
+</button>
+
+`
+
+}
+
 </div>
+
 </div>
+
 `;
 
-});
+setTimeout(()=>{
 
-if(!foundOrders){
+createMap(order);
 
-container.innerHTML = `
-<div class="radar-box">
-<div class="radar"></div>
-<div class="radar-text">
+},100);
+
+}
+
+if(!found){
+
+ordersContainer.innerHTML = `
+<div class="empty">
 لا توجد طلبات حالياً
 </div>
-</div>
 `;
 
 }
 
-});
+hideLoading();
 
-window.rejectOrder = async function(id){
-
-await update(
-ref(db,"orders/" + id + "/rejectedBy"),
-{
-[currentDriver.id]:Date.now()
 }
 );
 
-};
+function createMap(order){
 
-window.acceptOrder = async function(id){
-
-const orderRef = ref(db,"orders/" + id);
-const snapshot = await get(orderRef);
-
-if(!snapshot.exists()){
-return;
-}
-
-const order = snapshot.val();
-
-await update(orderRef,{
-status:"accepted",
-statusText:"السائق متجه إلى المتجر",
-acceptedDriver:currentDriver.name,
-driverId:currentDriver.id,
-driverPhone:currentDriver.phone || "",
-driverVehicle:currentDriver.vehicle || "",
-driverImage:currentDriver.vehicle_image || "",
-driverLat:driverLat,
-driverLng:driverLng,
-acceptedAt:Date.now()
-});
-
-currentOrderId = id;
-stageStartTime = Date.now();
-
-currentStage = "store";
-
-stageDuration = 15 * 60 * 1000;
-
-document.getElementById(
-"timeStageTitle"
-).innerHTML =
-"الوقت المتبقي للوصول إلى المتجر";
-
-startStageTimer();
-document.querySelectorAll(".store-whatsapp-btn")
-.forEach(btn=>btn.remove());
-
-document.getElementById("ordersContainer").style.display = "none";
-document.getElementById("deliveryPage").style.display = "block";
-
-document.getElementById("customerName").innerHTML = "👤 " + order.customerName;
-let customerPhone =
-String(order.customerPhone || "");
-
-if(!customerPhone.startsWith("0")){
-customerPhone = "0" + customerPhone;
-}
-
-document.getElementById("customerPhone").innerHTML =
-"📞 " + customerPhone;
-document.getElementById("customerAddress").innerHTML = "📍 " + order.customerAddress;
-
-const deliveryInfo =
-document.querySelector(".delivery-info");
-
-const productsContainer =
-document.createElement("div");
-
-productsContainer.style.marginTop = "20px";
-
-productsContainer.innerHTML = `
-
-<h3 style="
-margin-bottom:15px;
-font-size:22px;
-">
-تفاصيل الطلب
-</h3>
-
-${(order.storesData || []).map(store => `
-
-<div class="store-box">
-
-<div class="store-header">
-
-<img
-src="${store.storeImage || 'store.png'}"
-class="store-image">
-
-<div class="store-name">
-🏪 ${store.storeName}
-</div>
-
-</div>
-
-${order.items
-.filter(item => item.storeId === store.storeId)
-.map(item => `
-
-<div class="product-box">
-
-<div class="product-top">
-
-<img
-src="${item.image || 'product.png'}"
-class="product-image">
-
-<div class="product-info">
-
-<div class="product-name">
-📋 ${item.name}
-</div>
-
-<div class="product-details">
-📦 الكمية: ${item.qty}
-<br>
-💰 السعر: ${item.price} د.ع
-<br>
-🧾 المجموع: ${item.totalPrice} د.ع
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`).join("")}
-
-</div>
-
-`).join("")}
-
-<div class="total-box">
-💰 المنتجات: ${order.productsPrice} د.ع
-<br>
-🚚 التوصيل: ${order.deliveryPrice} د.ع
-<br>
-🧾 الكلي: ${order.totalPrice} د.ع
-</div>
-`;
-
-deliveryInfo.insertBefore(
-productsContainer,
-deliveryInfo.firstChild
+const map =
+L.map(
+`map_${order.id}`
+).setView(
+[
+order.customerLat,
+order.customerLng
+],
+13
 );
-
-document.getElementById("whatsappCustomer").onclick = function(){
-
-window.open(
-`https://wa.me/964${customerPhone.substring(1)}`
-);
-
-};
-
-(order.storesData || []).forEach(store=>{
-
-if(store.storePhone){
-
-let phone =
-String(store.storePhone);
-
-if(!phone.startsWith("0")){
-phone = "0" + phone;
-}
-
-const btn =
-document.createElement("button");
-
-btn.className =
-"action-btn store-whatsapp-btn";
-
-btn.style.background =
-"#222";
-
-btn.innerHTML =
-"واتساب المتجر - " + store.storeName;
-
-btn.onclick = function(){
-
-window.open(
-`https://wa.me/964${phone.substring(1)}`
-);
-
-};
-
-document.querySelector(".delivery-info")
-.appendChild(btn);
-
-}
-
-});
-
-if(map){
-map.remove();
-}
-
-map = L.map("map",{
-zoomControl:true
-}).setView([
-driverLat,
-driverLng
-],15);
 
 L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-).addTo(map);
-
-driverMarker = L.marker(
-[driverLat,driverLng],
-{icon:bikeIcon}
-).addTo(map);
-
-let stores = [...(order.storesData || [])];
-
-stores.sort((a,b)=>{
-
-const distanceA =
-calculateDistance(
-driverLat,
-driverLng,
-Number(a.storeLat),
-Number(a.storeLng)
-);
-
-const distanceB =
-calculateDistance(
-driverLat,
-driverLng,
-Number(b.storeLat),
-Number(b.storeLng)
-);
-
-return distanceA - distanceB;
-
-});
-
-L.marker(
-[
-Number(order.customerLat),
-Number(order.customerLng)
-],
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 {
-icon:customerIcon
+maxZoom:19
 }
 ).addTo(map);
 
-stores.forEach(store=>{
+L.marker(
+[
+driverLat,
+driverLng
+]
+).addTo(map);
 
 L.marker(
 [
-Number(store.storeLat),
-Number(store.storeLng)
-],
-{
-icon:createStoreIcon(store)
-}
+order.customerLat,
+order.customerLng
+]
 ).addTo(map);
 
-});
-
-let waypoints = [];
-
-stores.forEach(store=>{
-
-waypoints.push(
-L.latLng(
-Number(store.storeLat),
-Number(store.storeLng)
-)
-);
-
-});
-
-waypoints.push(
-L.latLng(
-Number(order.customerLat),
-Number(order.customerLng)
-)
-);
-
-routeControl =
 L.Routing.control({
 
 waypoints:[
 
-L.latLng(driverLat,driverLng),
+L.latLng(
+driverLat,
+driverLng
+),
 
-...waypoints
+L.latLng(
+order.customerLat,
+order.customerLng
+)
 
 ],
 
 routeWhileDragging:false,
-
-router:L.Routing.osrmv1({
-serviceUrl:
-'https://router.project-osrm.org/route/v1'
-}),
-
 addWaypoints:false,
 draggableWaypoints:false,
-fitSelectedRoutes:false,
+fitSelectedRoutes:true,
 show:false,
 
 lineOptions:{
 styles:[
 {
-color:"#ff8800",
-weight:7,
-opacity:.9
+color:"#2563eb",
+weight:6
 }
 ]
 },
@@ -1272,356 +881,78 @@ createMarker:()=>null
 
 }).addTo(map);
 
-};
-
-let arrivedToStore = false;
-
-let preparingOrder = false;
-
-let leftStore = false;
-
-let customerArrived = false;
-
-let extraTimeUsed = false;
-
-let stageStartTime = null;
-
-let currentStage = "store";
-
-let stageDuration = 15 * 60 * 1000;
-
-let timerInterval = null;
-
-function startStageTimer(){
-
-clearInterval(timerInterval);
-
-timerInterval = setInterval(async()=>{
-
-const now = Date.now();
-
-const elapsed =
-now - stageStartTime;
-
-const remaining =
-Math.max(
-0,
-stageDuration - elapsed
-);
-const minutes =
-String(
-Math.floor((remaining / 1000 / 60) % 60)
-).padStart(2,"0");
-
-const seconds =
-String(
-Math.floor((remaining / 1000) % 60)
-).padStart(2,"0");
-
-document.getElementById(
-"timeCounter"
-).innerHTML = `00:${minutes}:${seconds}`;
-
-if(remaining <= 300000 && !extraTimeUsed){
-
-document.getElementById(
-"extraTimeBtn"
-).style.display = "block";
-
-}else{
-
-document.getElementById(
-"extraTimeBtn"
-).style.display = "none";
-
 }
 
-if(remaining <= 0){
-
-clearInterval(timerInterval);
+window.acceptOrder =
+async function(orderId){
 
 await update(
-ref(db,"drivers/" + currentDriver.id),
+ref(db,"orders/" + orderId),
 {
-status:"banned",
-banUntil:
-Date.now() +
-(3 * 24 * 60 * 60 * 1000)
-}
-);
 
-await update(
-ref(db,"orders/" + currentOrderId),
-{
-status:"driver_timeout",
-statusText:"تم حظر السائق بسبب تجاوز الوقت"
-}
-);
-
-alert(
-"تم حظرك لمدة 3 أيام بسبب تجاوز الوقت"
-);
-
-localStorage.clear();
-
-window.location.href =
-"index.html";
-
-}
-
-},1000);
-
-}
-
-async function autoUpdateOrderStatus(order){
-
-if(!driverLat || !driverLng){
-return;
-}
-
-if(!order.storesData || !order.storesData.length){
-return;
-}
-
-const firstStore = order.storesData[0];
-
-const storeLat =
-Number(firstStore.storeLat);
-
-const storeLng =
-Number(firstStore.storeLng);
-
-const customerLat =
-Number(order.customerLat);
-
-const customerLng =
-Number(order.customerLng);
-
-const distanceToStore =
-calculateDistance(
-driverLat,
-driverLng,
-storeLat,
-storeLng
-);
-
-const distanceToCustomer =
-calculateDistance(
-driverLat,
-driverLng,
-customerLat,
-customerLng
-);
-
-if(order.status === "accepted"){
-
-await update(
-ref(db,"orders/" + currentOrderId),
-{
 status:"accepted",
-statusText:"السائق متجه إلى المتجر"
+
+driverId:
+currentUser.id,
+
+driverName:
+currentUser.name,
+
+driverPhone:
+currentUser.phone,
+
+driverImage:
+currentUser.image || "",
+
+driverLat:
+driverLat,
+
+driverLng:
+driverLng
+
 }
 );
 
-}
+};
 
-if(
-distanceToStore <= 0.1 &&
-!arrivedToStore
-){
-await update(
-ref(db,"orders/" + currentOrderId),
-{
-status:"preparing_order",
-statusText:"جاري تجهيز الطلب",
-arrivedStoreAt:Date.now()
-}
-);
-
-preparingOrder = true;
-
-stageStartTime = Date.now();
-
-currentStage = "prepare";
-
-stageDuration = 15 * 60 * 1000;
-
-document.getElementById(
-"timeStageTitle"
-).innerHTML =
-"الوقت المتبقي لتجهيز الطلب";
-
-startStageTimer();
-
-arrivedToStore = true;
-
-console.log(
-"وصل السائق للمتجر"
-);
-
-}
-
-if(
-preparingOrder &&
-distanceToStore > 0.15 &&
-!leftStore
-){
-
-leftStore = true;
+window.rejectOrder =
+async function(orderId){
 
 await update(
-ref(db,"orders/" + currentOrderId),
+ref(db,"orders/" + orderId),
 {
-status:"on_the_way",
-statusText:"السائق في الطريق للزبون",
-leftStoreAt:Date.now()
+
+status:"waiting_driver"
+
 }
 );
 
-stageStartTime = Date.now();
+};
 
-currentStage = "customer";
-
-stageDuration = 15 * 60 * 1000;
-
-document.getElementById(
-"timeStageTitle"
-).innerHTML =
-"الوقت المتبقي للوصول للزبون";
-
-startStageTimer();
-
-}
-
-if(
-distanceToCustomer <= 0.1 &&
-!customerArrived
-){
-
-customerArrived = true;
+window.arriveOrder =
+async function(orderId){
 
 await update(
-ref(db,"orders/" + currentOrderId),
+ref(db,"orders/" + orderId),
 {
+
 status:"arrived",
-statusText:"السائق وصل استلم الطلب"
+
+arrivedAt:Date.now()
+
 }
 );
 
-document.getElementById(
-"finishButtons"
-).style.display = "block";
-
-}
-
-}
-
-document.getElementById("deliveredBtn").onclick = async function(){
-
-if(!currentOrderId){
-return;
-}
-if(routeControl){
-
-map.removeControl(routeControl);
-
-routeControl =
-L.Routing.control({
-
-waypoints:
-routeControl.getWaypoints(),
-
-routeWhileDragging:false,
-
-router:L.Routing.osrmv1({
-serviceUrl:
-'https://router.project-osrm.org/route/v1'
-}),
-
-addWaypoints:false,
-draggableWaypoints:false,
-fitSelectedRoutes:false,
-show:false,
-
-lineOptions:{
-styles:[
-{
-color:"#0984e3",
-weight:7,
-opacity:.9
-}
-]
-},
-
-createMarker:()=>null
-
-}).addTo(map);
-
-}
-
-await update(
-ref(db,"orders/" + currentOrderId),
-{
-status:"delivered",
-statusText:"تم تسليم الطلب",
-deliveredAt:Date.now()
-}
-);
-
-alert("تم توصيل الطلب");
-window.location.reload();
+alert("تم الوصول");
 
 };
 
-document.getElementById("failedBtn").onclick = async function(){
-
-if(!currentOrderId){
-return;
-}
-
-await update(
-ref(db,"orders/" + currentOrderId),
-{
-status:"delivery_problem",
-statusText:"حدثت مشكلة بالتوصيل"
-}
-);
-
-alert("تم تسجيل المشكلة");
-
-window.location.reload();
-
-};
-
-document.getElementById(
-"extraTimeBtn"
-).onclick = function(){
-
-if(extraTimeUsed){
-return;
-}
-
-extraTimeUsed = true;
-
-stageDuration += 15 * 60 * 1000;
-
-this.style.display = "none";
-
-alert("تمت إضافة 15 دقيقة");
-
-};
-
-document.getElementById(
-"cancelByCustomerBtn"
-).onclick = async function(){
-
-if(!currentOrderId){
-return;
-}
+window.finishOrder =
+async function(orderId){
 
 const orderSnapshot =
 await get(
-ref(db,"orders/" + currentOrderId)
+ref(db,"orders/" + orderId)
 );
 
 if(orderSnapshot.exists()){
@@ -1629,56 +960,78 @@ if(orderSnapshot.exists()){
 const order =
 orderSnapshot.val();
 
-const customerRef =
-ref(db,"customers/" + order.customerId);
+await update(
+ref(db,"users/" + currentUser.id),
+{
 
-const customerSnapshot =
-await get(customerRef);
+completedOrders:
+Number(
+currentUser.completedOrders || 0
+) + 1,
 
-if(customerSnapshot.exists()){
-
-const customer =
-customerSnapshot.val();
-
-await update(customerRef,{
-cancelledOrders:
-(customer.cancelledOrders || 0) + 1
-});
+totalProfit:
+Number(
+currentUser.totalProfit || 0
+)
++
+Number(order.deliveryPrice || 0)
 
 }
+);
 
 }
 
 await update(
-ref(db,"orders/" + currentOrderId),
+ref(db,"orders/" + orderId),
 {
-status:"cancelled_by_customer",
-statusText:"الطلب ألغي من قبل الزبون",
-cancelledAt:Date.now()
+
+status:"delivered",
+
+deliveredAt:Date.now()
+
 }
 );
 
-alert("تم إلغاء الطلب");
-
-window.location.reload();
+alert("تم توصيل الطلب");
 
 };
 
-document.getElementById("logoutBtn").onclick = function(){
+function getStatusText(status){
 
-localStorage.clear();
+if(status === "waiting_driver"){
+return "بانتظار سائق";
+}
 
-sessionStorage.clear();
+if(status === "accepted"){
+return "تم قبول الطلب";
+}
 
-setTimeout(()=>{
+if(status === "arrived"){
+return "وصل السائق";
+}
 
-window.location.href = "index.html";
+if(status === "delivered"){
+return "تم التوصيل";
+}
 
-},300);
+if(status === "cancelled"){
+return "ملغي";
+}
 
-};
+return status;
+
+}
+
+function hideLoading(){
+
+document.getElementById(
+"loading"
+).style.display = "none";
+
+}
 
 </script>
 
 </body>
+
 </html>
