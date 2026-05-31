@@ -33,6 +33,7 @@ font-family:'Cairo',sans-serif;
 body{
 background:#f5f6fa;
 padding-bottom:120px;
+overflow-x:hidden;
 }
 
 .header{
@@ -43,19 +44,20 @@ linear-gradient(
 #1f2937
 );
 
-padding:24px;
+padding:25px;
 color:white;
 
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
 }
 
-.header h2{
+.header h1{
 font-size:28px;
-margin-bottom:6px;
+margin-bottom:8px;
 }
 
 .header p{
+font-size:14px;
 opacity:.9;
 }
 
@@ -70,15 +72,16 @@ padding:15px;
 background:white;
 padding:20px;
 border-radius:24px;
+text-align:center;
+
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
-text-align:center;
 }
 
-.stat-card h3{
+.stat-card h2{
 font-size:32px;
 margin-bottom:8px;
-color:#ff8800;
+color:#ff6600;
 }
 
 .stat-card p{
@@ -88,13 +91,14 @@ color:#666;
 }
 
 .section{
-padding:15px;
+padding:0 15px 15px;
 }
 
 .section-title{
-font-size:22px;
+font-size:20px;
 font-weight:bold;
 margin-bottom:15px;
+color:#222;
 }
 
 .card{
@@ -102,34 +106,49 @@ background:white;
 padding:18px;
 border-radius:24px;
 margin-bottom:15px;
+
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
 }
 
-.store-top{
+.card-top{
 display:flex;
+justify-content:space-between;
 align-items:center;
-gap:12px;
-margin-bottom:12px;
+margin-bottom:15px;
 }
 
-.store-image{
-width:70px;
-height:70px;
-border-radius:18px;
-object-fit:cover;
-background:#eee;
-}
-
-.store-name{
-font-size:19px;
+.badge{
+padding:7px 14px;
+border-radius:14px;
+font-size:12px;
 font-weight:bold;
-margin-bottom:4px;
 }
 
-.store-category{
-font-size:13px;
+.active{
+background:#dcfce7;
+color:#15803d;
+}
+
+.pending{
+background:#fff7ed;
+color:#ea580c;
+}
+
+.blocked{
+background:#fee2e2;
+color:#dc2626;
+}
+
+.card h3{
+font-size:18px;
+margin-bottom:8px;
+}
+
+.card p{
+font-size:14px;
 color:#666;
+margin-bottom:5px;
 }
 
 .actions{
@@ -142,7 +161,7 @@ margin-top:15px;
 flex:1;
 height:48px;
 border:none;
-border-radius:14px;
+border-radius:16px;
 font-size:14px;
 font-weight:bold;
 cursor:pointer;
@@ -157,14 +176,8 @@ background:#00b894;
 background:#e53935;
 }
 
-.block-btn{
-background:#ff8800;
-}
-
-.empty{
-padding:50px 20px;
-text-align:center;
-color:#777;
+.delete-btn{
+background:#111827;
 }
 
 .bottom-bar{
@@ -173,10 +186,13 @@ bottom:0;
 left:0;
 right:0;
 height:82px;
+
 background:white;
+
 display:flex;
 justify-content:space-around;
 align-items:center;
+
 box-shadow:
 0 -5px 18px rgba(0,0,0,.08);
 }
@@ -186,8 +202,10 @@ display:flex;
 flex-direction:column;
 align-items:center;
 gap:5px;
+
 font-size:13px;
 font-weight:bold;
+
 color:#888;
 cursor:pointer;
 }
@@ -200,20 +218,64 @@ color:#ff8800;
 font-size:22px;
 }
 
+.loading{
+position:fixed;
+inset:0;
+background:white;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+z-index:9999;
+}
+
+.spinner{
+width:70px;
+height:70px;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+border-radius:50%;
+
+animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
+}
+
+@media(max-width:700px){
+
+.stats{
+grid-template-columns:1fr;
+}
+
+}
+
 </style>
 
 </head>
 
 <body>
 
+<div
+class="loading"
+id="loading">
+
+<div class="spinner"></div>
+
+</div>
+
 <div class="header">
 
-<h2>
-لوحة الإدارة 👑
-</h2>
+<h1>
+لوحة الإدارة ⚙️
+</h1>
 
 <p>
-إدارة التطبيق والمتاجر والطلبات
+إدارة التطبيق والمتاجر والسائقين
 </p>
 
 </div>
@@ -222,9 +284,9 @@ font-size:22px;
 
 <div class="stat-card">
 
-<h3 id="storesCount">
+<h2 id="storesCount">
 0
-</h3>
+</h2>
 
 <p>
 المتاجر
@@ -234,21 +296,9 @@ font-size:22px;
 
 <div class="stat-card">
 
-<h3 id="ordersCount">
+<h2 id="driversCount">
 0
-</h3>
-
-<p>
-الطلبات
-</p>
-
-</div>
-
-<div class="stat-card">
-
-<h3 id="driversCount">
-0
-</h3>
+</h2>
 
 <p>
 السائقين
@@ -258,9 +308,21 @@ font-size:22px;
 
 <div class="stat-card">
 
-<h3 id="usersCount">
+<h2 id="ordersCount">
 0
-</h3>
+</h2>
+
+<p>
+الطلبات
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="usersCount">
+0
+</h2>
 
 <p>
 المستخدمين
@@ -280,6 +342,16 @@ font-size:22px;
 
 </div>
 
+<div class="section">
+
+<div class="section-title">
+طلبات السائقين
+</div>
+
+<div id="driversContainer"></div>
+
+</div>
+
 <div class="bottom-bar">
 
 <div class="nav-item active">
@@ -294,12 +366,12 @@ font-size:22px;
 
 <div
 class="nav-item"
-onclick="window.location.href='home.html'">
+onclick="logout()">
 
-<i class="fa-solid fa-house"></i>
+<i class="fa-solid fa-right-from-bracket"></i>
 
 <span>
-الرئيسية
+خروج
 </span>
 
 </div>
@@ -312,10 +384,14 @@ import { db }
 from "./firebase.js";
 
 import {
+
 ref,
 onValue,
-update
+update,
+remove
+
 }
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const currentUser =
@@ -334,82 +410,67 @@ window.location.replace(
 
 }
 
-const storesContainer =
-document.getElementById(
-"storesContainer"
-);
+// ====================
+// المتاجر
+// ====================
 
 onValue(
 ref(db,"stores"),
 (snapshot)=>{
 
-storesContainer.innerHTML = "";
+const container =
+document.getElementById(
+"storesContainer"
+);
 
-if(!snapshot.exists()){
+container.innerHTML = "";
 
-storesContainer.innerHTML = `
-<div class="empty">
-لا توجد متاجر
-</div>
-`;
+let total = 0;
 
-return;
-
-}
+if(snapshot.exists()){
 
 const stores =
 snapshot.val();
-
-let count = 0;
 
 for(let key in stores){
 
 const store =
 stores[key];
 
-count++;
+total++;
 
-storesContainer.innerHTML += `
+container.innerHTML += `
 
 <div class="card">
 
-<div class="store-top">
+<div class="card-top">
 
-<img
-src="${store.store_image || "store.png"}"
-class="store-image">
-
-<div>
-
-<div class="store-name">
-${store.store_name || ""}
-</div>
-
-<div class="store-category">
-${store.category || ""}
-</div>
-
-</div>
-
-</div>
-
-<div>
-
-📞
-${store.phone || ""}
-
-</div>
-
-<div style="
-margin-top:10px;
+<div class="
+badge
+${store.status === "active"
+? "active"
+: "pending"}
 ">
 
-الحالة:
-<b>
-${store.status || "pending"}
-</b>
+${store.status === "active"
+? "نشط"
+: "بانتظار"}
 
 </div>
+
+</div>
+
+<h3>
+${store.store_name || ""}
+</h3>
+
+<p>
+📞 ${store.phone || ""}
+</p>
+
+<p>
+🏪 ${store.category || ""}
+</p>
 
 <div class="actions">
 
@@ -423,17 +484,17 @@ onclick="approveStore('${key}')">
 
 <button
 class="reject-btn"
-onclick="rejectStore('${key}')">
+onclick="blockStore('${key}')">
 
-رفض
+حظر
 
 </button>
 
 <button
-class="block-btn"
-onclick="blockStore('${key}')">
+class="delete-btn"
+onclick="deleteStore('${key}')">
 
-حظر
+حذف
 
 </button>
 
@@ -445,22 +506,135 @@ onclick="blockStore('${key}')">
 
 }
 
+}
+
 document.getElementById(
 "storesCount"
-).innerHTML = count;
+).innerHTML = total;
+
+hideLoading();
 
 }
 );
+
+// ====================
+// السائقين
+// ====================
+
+onValue(
+ref(db,"drivers"),
+(snapshot)=>{
+
+const container =
+document.getElementById(
+"driversContainer"
+);
+
+container.innerHTML = "";
+
+let total = 0;
+
+if(snapshot.exists()){
+
+const drivers =
+snapshot.val();
+
+for(let key in drivers){
+
+const driver =
+drivers[key];
+
+total++;
+
+container.innerHTML += `
+
+<div class="card">
+
+<div class="card-top">
+
+<div class="
+badge
+${driver.status === "active"
+? "active"
+: "pending"}
+">
+
+${driver.status === "active"
+? "نشط"
+: "بانتظار"}
+
+</div>
+
+</div>
+
+<h3>
+${driver.name || ""}
+</h3>
+
+<p>
+📞 ${driver.phone || ""}
+</p>
+
+<p>
+🚗 ${driver.vehicleType || ""}
+</p>
+
+<div class="actions">
+
+<button
+class="accept-btn"
+onclick="approveDriver('${key}')">
+
+قبول
+
+</button>
+
+<button
+class="reject-btn"
+onclick="blockDriver('${key}')">
+
+حظر
+
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteDriver('${key}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+document.getElementById(
+"driversCount"
+).innerHTML = total;
+
+}
+);
+
+// ====================
+// الطلبات
+// ====================
 
 onValue(
 ref(db,"orders"),
 (snapshot)=>{
 
-let count = 0;
+let total = 0;
 
 if(snapshot.exists()){
 
-count =
+total =
 Object.keys(
 snapshot.val()
 ).length;
@@ -469,42 +643,24 @@ snapshot.val()
 
 document.getElementById(
 "ordersCount"
-).innerHTML = count;
+).innerHTML = total;
 
 }
 );
 
-onValue(
-ref(db,"drivers"),
-(snapshot)=>{
-
-let count = 0;
-
-if(snapshot.exists()){
-
-count =
-Object.keys(
-snapshot.val()
-).length;
-
-}
-
-document.getElementById(
-"driversCount"
-).innerHTML = count;
-
-}
-);
+// ====================
+// المستخدمين
+// ====================
 
 onValue(
 ref(db,"customers"),
 (snapshot)=>{
 
-let count = 0;
+let total = 0;
 
 if(snapshot.exists()){
 
-count =
+total =
 Object.keys(
 snapshot.val()
 ).length;
@@ -513,16 +669,23 @@ snapshot.val()
 
 document.getElementById(
 "usersCount"
-).innerHTML = count;
+).innerHTML = total;
 
 }
 );
+
+// ====================
+// قبول متجر
+// ====================
 
 window.approveStore =
 async function(storeId){
 
 await update(
-ref(db,"stores/" + storeId),
+ref(
+db,
+"stores/" + storeId
+),
 {
 
 status:"active"
@@ -534,27 +697,18 @@ alert("تم قبول المتجر");
 
 };
 
-window.rejectStore =
-async function(storeId){
-
-await update(
-ref(db,"stores/" + storeId),
-{
-
-status:"rejected"
-
-}
-);
-
-alert("تم رفض المتجر");
-
-};
+// ====================
+// حظر متجر
+// ====================
 
 window.blockStore =
 async function(storeId){
 
 await update(
-ref(db,"stores/" + storeId),
+ref(
+db,
+"stores/" + storeId
+),
 {
 
 status:"blocked"
@@ -565,6 +719,123 @@ status:"blocked"
 alert("تم حظر المتجر");
 
 };
+
+// ====================
+// حذف متجر
+// ====================
+
+window.deleteStore =
+async function(storeId){
+
+if(
+!confirm("حذف المتجر ؟")
+){
+return;
+}
+
+await remove(
+ref(
+db,
+"stores/" + storeId
+)
+);
+
+};
+
+// ====================
+// قبول سائق
+// ====================
+
+window.approveDriver =
+async function(driverId){
+
+await update(
+ref(
+db,
+"drivers/" + driverId
+),
+{
+
+status:"active"
+
+}
+);
+
+alert("تم قبول السائق");
+
+};
+
+// ====================
+// حظر سائق
+// ====================
+
+window.blockDriver =
+async function(driverId){
+
+await update(
+ref(
+db,
+"drivers/" + driverId
+),
+{
+
+status:"blocked"
+
+}
+);
+
+alert("تم حظر السائق");
+
+};
+
+// ====================
+// حذف سائق
+// ====================
+
+window.deleteDriver =
+async function(driverId){
+
+if(
+!confirm("حذف السائق ؟")
+){
+return;
+}
+
+await remove(
+ref(
+db,
+"drivers/" + driverId
+)
+);
+
+};
+
+// ====================
+// تسجيل خروج
+// ====================
+
+window.logout =
+function(){
+
+localStorage.clear();
+
+window.location.replace(
+"index.html"
+);
+
+};
+
+// ====================
+// loading
+// ====================
+
+function hideLoading(){
+
+document.getElementById(
+"loading"
+).style.display = "none";
+
+}
 
 </script>
 
