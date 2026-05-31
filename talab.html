@@ -1,5 +1,3 @@
-<!-- talab.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -7,28 +5,33 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
-الطلب
+تتبع الطلب
 </title>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link
+rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"/>
+<link
+rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
-
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-rel="stylesheet">
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <style>
 
@@ -37,119 +40,80 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#f5f5f5;
-overflow:hidden;
+background:#f5f6fa;
+overflow-x:hidden;
+padding-bottom:120px;
 }
 
-.page{
-position:fixed;
-top:0;
-left:0;
-right:0;
-bottom:0;
-overflow-y:auto;
-background:#f5f5f5;
-}
-
-.top-header{
-background:linear-gradient(135deg,#ff8800,#ff5500);
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
 padding:25px 20px;
 color:white;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
+box-shadow:
+0 8px 25px rgba(0,0,0,.10);
 }
 
-.order-title{
-font-size:26px;
+.header h2{
+font-size:28px;
+margin-bottom:10px;
+}
+
+.header p{
+font-size:15px;
+line-height:1.9;
+opacity:.95;
+}
+
+.status-box{
+margin-top:20px;
+background:rgba(255,255,255,.15);
+padding:18px;
+border-radius:22px;
+backdrop-filter:blur(10px);
+}
+
+.status-text{
+font-size:18px;
 font-weight:bold;
 margin-bottom:10px;
 }
 
-.order-status{
-font-size:17px;
-line-height:1.8;
-}
-
-.timer-box{
-margin-top:18px;
-padding:15px;
-border-radius:18px;
-background:rgba(255,255,255,.15);
-text-align:center;
-font-size:22px;
+.timer{
+font-size:28px;
 font-weight:bold;
-}
-
-.searching-box{
-padding:40px 20px;
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-}
-
-.radar{
-width:170px;
-height:170px;
-border-radius:50%;
-border:5px solid #ff8800;
-animation:radarPulse 2s infinite;
-position:relative;
-}
-
-.radar::before{
-content:"";
-position:absolute;
-top:50%;
-left:50%;
-width:22px;
-height:22px;
-background:#ff8800;
-border-radius:50%;
-transform:translate(-50%,-50%);
-}
-
-@keyframes radarPulse{
-
-0%{
-box-shadow:0 0 0 0 rgba(255,136,0,.5);
-}
-
-100%{
-box-shadow:0 0 0 55px rgba(255,136,0,0);
-}
-
-}
-
-.search-text{
-margin-top:28px;
-font-size:22px;
-font-weight:bold;
-color:#777;
-text-align:center;
 }
 
 .driver-card{
 background:white;
 margin:15px;
-padding:15px;
-border-radius:25px;
+padding:18px;
+border-radius:28px;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
 display:none;
 }
 
 .driver-top{
 display:flex;
 align-items:center;
-gap:12px;
+gap:14px;
 }
 
 .driver-image{
-width:80px;
-height:80px;
-border-radius:20px;
+width:85px;
+height:85px;
+border-radius:50%;
 object-fit:cover;
 background:#eee;
 }
@@ -161,7 +125,7 @@ flex:1;
 .driver-name{
 font-size:22px;
 font-weight:bold;
-margin-bottom:8px;
+margin-bottom:6px;
 }
 
 .driver-phone{
@@ -171,62 +135,132 @@ color:#666;
 
 .whatsapp-btn{
 width:100%;
-margin-top:15px;
-padding:16px;
+height:55px;
 border:none;
 border-radius:18px;
 background:#25D366;
 color:white;
-font-size:17px;
+font-size:16px;
 font-weight:bold;
 cursor:pointer;
+margin-top:16px;
+}
+
+.map-box{
+margin:15px;
+border-radius:28px;
+overflow:hidden;
+height:430px;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+display:none;
 }
 
 #map{
 width:100%;
-height:45vh;
-margin-top:10px;
-display:none;
+height:100%;
 }
 
-.bottom-box{
+.order-box{
 background:white;
 margin:15px;
 padding:20px;
-border-radius:25px;
+border-radius:28px;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
 }
 
-.bottom-box h3{
+.order-title{
 font-size:22px;
+font-weight:bold;
 margin-bottom:18px;
 }
 
-.live-status{
+.order-status{
 font-size:17px;
 line-height:2;
 color:#555;
 }
 
-.complete-btn,
-.reject-btn{
+.actions{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-top:20px;
+}
+
+.action-btn{
 width:100%;
-padding:18px;
+height:56px;
 border:none;
-border-radius:18px;
-color:white;
-font-size:18px;
+border-radius:20px;
+font-size:16px;
 font-weight:bold;
 cursor:pointer;
-margin-top:15px;
-display:none;
+color:white;
 }
 
 .complete-btn{
 background:#00b894;
+display:none;
 }
 
 .reject-btn{
-background:red;
+background:#ff3b30;
+display:none;
+}
+
+.cancel-btn{
+background:#555;
+}
+
+.searching{
+padding:60px 20px;
+text-align:center;
+}
+
+.radar{
+width:170px;
+height:170px;
+margin:auto;
+border-radius:50%;
+border:5px solid #ff8800;
+position:relative;
+animation:radar 2s infinite;
+}
+
+.radar::before{
+content:"";
+position:absolute;
+top:50%;
+left:50%;
+transform:translate(-50%,-50%);
+width:24px;
+height:24px;
+background:#ff8800;
+border-radius:50%;
+}
+
+@keyframes radar{
+
+0%{
+box-shadow:
+0 0 0 0 rgba(255,136,0,.45);
+}
+
+100%{
+box-shadow:
+0 0 0 55px rgba(255,136,0,0);
+}
+
+}
+
+.searching p{
+margin-top:30px;
+font-size:22px;
+font-weight:bold;
+color:#777;
+line-height:2;
 }
 
 </style>
@@ -235,25 +269,31 @@ background:red;
 
 <body>
 
-<div class="page">
+<div class="header">
 
-<div class="top-header">
+<h2>
+تتبع الطلب 🚀
+</h2>
 
-<div class="order-title">
-طلبك قيد التوصيل 🚀
+<p id="headerText">
+
+جاري البحث عن سائق توصيل
+
+</p>
+
+<div class="status-box">
+
+<div
+class="status-text"
+id="statusText">
+
+بانتظار قبول سائق
+
 </div>
 
 <div
-class="order-status"
-id="orderStatus">
-
-جاري البحث عن سائق
-
-</div>
-
-<div
-class="timer-box"
-id="timerBox">
+class="timer"
+id="timer">
 
 00:00:00
 
@@ -261,15 +301,19 @@ id="timerBox">
 
 </div>
 
+</div>
+
 <div
-class="searching-box"
+class="searching"
 id="searchingBox">
 
 <div class="radar"></div>
 
-<div class="search-text">
+<p>
+
 جاري البحث عن سائق مناسب
-</div>
+
+</p>
 
 </div>
 
@@ -280,9 +324,9 @@ id="driverCard">
 <div class="driver-top">
 
 <img
-src="driver.png"
-class="driver-image"
-id="driverImage">
+src="user.png"
+id="driverImage"
+class="driver-image">
 
 <div class="driver-info">
 
@@ -298,7 +342,7 @@ id="driverName">
 class="driver-phone"
 id="driverPhone">
 
-رقم الهاتف
+000000000
 
 </div>
 
@@ -310,30 +354,38 @@ id="driverPhone">
 class="whatsapp-btn"
 id="whatsappBtn">
 
-مراسلة السائق
+تواصل واتساب
 
 </button>
 
 </div>
 
-<div id="map"></div>
-
-<div class="bottom-box">
-
-<h3>
-حالة الطلب
-</h3>
-
 <div
-class="live-status"
-id="liveStatus">
+class="map-box"
+id="mapBox">
 
-بانتظار قبول سائق...
+<div id="map"></div>
 
 </div>
 
+<div class="order-box">
+
+<div class="order-title">
+حالة الطلب
+</div>
+
+<div
+class="order-status"
+id="liveStatus">
+
+بانتظار قبول سائق
+
+</div>
+
+<div class="actions">
+
 <button
-class="complete-btn"
+class="action-btn complete-btn"
 id="completeBtn">
 
 استلام الطلب
@@ -341,10 +393,18 @@ id="completeBtn">
 </button>
 
 <button
-class="reject-btn"
+class="action-btn reject-btn"
 id="rejectBtn">
 
-لم أستلم الطلب
+رفض الطلب
+
+</button>
+
+<button
+class="action-btn cancel-btn"
+id="cancelBtn">
+
+إلغاء الطلب
 
 </button>
 
@@ -354,157 +414,132 @@ id="rejectBtn">
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { db }
+from "./firebase.js";
 
 import {
-
-getDatabase,
 ref,
+onValue,
 update,
-remove,
-onValue
-
+remove
 }
-
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-const firebaseConfig = {
-
-apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
-
-authDomain:"fast-937c9.firebaseapp.com",
-
-projectId:"fast-937c9",
-
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
-
-};
-
-const app =
-initializeApp(firebaseConfig);
-
-const database =
-getDatabase(app);
-
 const currentUser =
-JSON.parse(localStorage.getItem("user"));
+JSON.parse(
+localStorage.getItem("user")
+);
 
-if(!currentUser){
+if(
+!currentUser ||
+currentUser.type !== "customer"
+){
 
-window.location.href =
-"index.html";
+window.location.replace(
+"index.html"
+);
 
 }
 
 const params =
-new URLSearchParams(location.search);
+new URLSearchParams(
+location.search
+);
 
 const orderId =
 params.get("orderId");
 
 if(!orderId){
 
-window.location.href =
-"home.html";
+window.location.replace(
+"home.html"
+);
 
 }
 
 const orderRef =
-ref(database,"orders/" + orderId);
+ref(db,"orders/" + orderId);
 
-const timerBox =
-document.getElementById("timerBox");
-
-const orderStatus =
-document.getElementById("orderStatus");
+const statusText =
+document.getElementById(
+"statusText"
+);
 
 const liveStatus =
-document.getElementById("liveStatus");
+document.getElementById(
+"liveStatus"
+);
+
+const headerText =
+document.getElementById(
+"headerText"
+);
 
 const driverCard =
-document.getElementById("driverCard");
+document.getElementById(
+"driverCard"
+);
 
 const searchingBox =
-document.getElementById("searchingBox");
+document.getElementById(
+"searchingBox"
+);
+
+const mapBox =
+document.getElementById(
+"mapBox"
+);
 
 const completeBtn =
-document.getElementById("completeBtn");
+document.getElementById(
+"completeBtn"
+);
 
 const rejectBtn =
-document.getElementById("rejectBtn");
-
-const mapDiv =
-document.getElementById("map");
+document.getElementById(
+"rejectBtn"
+);
 
 let map;
 let driverMarker;
 let customerMarker;
-let routeControl;
+let routingControl;
 
-function startTimer(createdAt){
+const customerIcon =
+L.icon({
 
-setInterval(async()=>{
+iconUrl:
+"https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
 
-const remain =
-Math.max(
-0,
-(60 * 60 * 1000) -
-(Date.now() - createdAt)
-);
+iconSize:[42,42],
+iconAnchor:[21,42]
 
-const hours =
-String(
-Math.floor(remain / 1000 / 60 / 60)
-).padStart(2,"0");
+});
 
-const minutes =
-String(
-Math.floor((remain / 1000 / 60) % 60)
-).padStart(2,"0");
+const driverIcon =
+L.icon({
 
-const seconds =
-String(
-Math.floor((remain / 1000) % 60)
-).padStart(2,"0");
+iconUrl:
+"https://cdn-icons-png.flaticon.com/512/744/744465.png",
 
-timerBox.innerHTML =
-`${hours}:${minutes}:${seconds}`;
+iconSize:[46,46],
+iconAnchor:[23,46]
 
-if(remain <= 0){
-
-await remove(orderRef);
-
-localStorage.removeItem(
-"currentOrderId"
-);
-
-window.location.href =
-"home.html";
-
-}
-
-},1000);
-
-}
+});
 
 function initMap(order){
 
-mapDiv.style.display = "block";
-
-if(!map){
+if(map){
+return;
+}
 
 map =
 L.map("map").setView(
-
 [
-Number(order.customer.location.latitude),
-Number(order.customer.location.longitude)
+order.customerLat,
+order.customerLng
 ],
-
-15
-
+14
 );
 
 L.tileLayer(
@@ -516,88 +551,92 @@ maxZoom:19
 
 customerMarker =
 L.marker(
-
 [
-Number(order.customer.location.latitude),
-Number(order.customer.location.longitude)
-]
+order.customerLat,
+order.customerLng
+],
+{
+icon:customerIcon
+}
+).addTo(map);
 
-)
+setTimeout(()=>{
 
-.addTo(map)
+map.invalidateSize();
 
-.bindPopup("موقع الزبون");
+},500);
 
 }
 
-}
+function updateMap(order){
 
-function updateDriver(order){
+initMap(order);
 
 if(
-!order.driver ||
-!order.driver.location
+!order.driverLat ||
+!order.driverLng
 ){
 return;
 }
 
-initMap(order);
+if(driverMarker){
 
-const driverLat =
-Number(order.driver.location.latitude);
-
-const driverLng =
-Number(order.driver.location.longitude);
-
-if(!driverMarker){
-
-driverMarker =
-L.marker([driverLat,driverLng])
-
-.addTo(map)
-
-.bindPopup("السائق");
-
-}else{
-
-driverMarker.setLatLng(
-[driverLat,driverLng]
+map.removeLayer(
+driverMarker
 );
 
 }
 
-let targetLat =
-Number(order.customer.location.latitude);
+driverMarker =
+L.marker(
+[
+order.driverLat,
+order.driverLng
+],
+{
+icon:driverIcon
+}
+).addTo(map);
 
-let targetLng =
-Number(order.customer.location.longitude);
+if(routingControl){
 
-if(routeControl){
-
-map.removeControl(routeControl);
+map.removeControl(
+routingControl
+);
 
 }
 
-routeControl =
+routingControl =
 L.Routing.control({
 
 waypoints:[
 
-L.latLng(driverLat,driverLng),
+L.latLng(
+order.driverLat,
+order.driverLng
+),
 
-L.latLng(targetLat,targetLng)
+L.latLng(
+order.customerLat,
+order.customerLng
+)
 
 ],
 
 routeWhileDragging:false,
-
 addWaypoints:false,
-
 draggableWaypoints:false,
-
 fitSelectedRoutes:true,
-
 show:false,
+
+lineOptions:{
+styles:[
+{
+color:"#2563eb",
+weight:7
+}
+]
+},
 
 createMarker:()=>null
 
@@ -605,7 +644,52 @@ createMarker:()=>null
 
 }
 
-onValue(orderRef,(snapshot)=>{
+function startTimer(createdAt){
+
+setInterval(()=>{
+
+const remaining =
+Math.max(
+0,
+(60 * 60 * 1000)
+-
+(Date.now() - createdAt)
+);
+
+const hours =
+String(
+Math.floor(
+remaining / 1000 / 60 / 60
+)
+).padStart(2,"0");
+
+const minutes =
+String(
+Math.floor(
+(remaining / 1000 / 60) % 60
+)
+).padStart(2,"0");
+
+const seconds =
+String(
+Math.floor(
+(remaining / 1000) % 60
+)
+).padStart(2,"0");
+
+document.getElementById(
+"timer"
+).innerHTML =
+
+`${hours}:${minutes}:${seconds}`;
+
+},1000);
+
+}
+
+onValue(
+orderRef,
+(snapshot)=>{
 
 if(!snapshot.exists()){
 
@@ -613,8 +697,9 @@ localStorage.removeItem(
 "currentOrderId"
 );
 
-window.location.href =
-"home.html";
+window.location.replace(
+"home.html"
+);
 
 return;
 
@@ -625,17 +710,21 @@ snapshot.val();
 
 startTimer(order.createdAt);
 
-if(order.status === "waiting_driver"){
+if(
+order.status === "waiting_driver"
+){
 
-orderStatus.innerHTML =
-"جاري البحث عن سائق";
+statusText.innerHTML =
+"بانتظار قبول سائق";
 
 liveStatus.innerHTML =
-"بانتظار قبول سائق";
+"جاري البحث عن سائق";
 
 }
 
-if(order.status === "accepted"){
+if(
+order.status === "accepted"
+){
 
 searchingBox.style.display =
 "none";
@@ -643,68 +732,53 @@ searchingBox.style.display =
 driverCard.style.display =
 "block";
 
-document.getElementById("driverName")
-.innerHTML =
-order.driver.name || "السائق";
+mapBox.style.display =
+"block";
 
-document.getElementById("driverPhone")
-.innerHTML =
-order.driver.phone || "";
+document.getElementById(
+"driverName"
+).innerHTML =
 
-document.getElementById("driverImage")
-.src =
-order.driver.image || "driver.png";
+order.driverName || "السائق";
 
-document.getElementById("whatsappBtn")
-.onclick = ()=>{
+document.getElementById(
+"driverPhone"
+).innerHTML =
+
+order.driverPhone || "";
+
+document.getElementById(
+"driverImage"
+).src =
+
+order.driverImage || "user.png";
+
+document.getElementById(
+"whatsappBtn"
+).onclick = ()=>{
 
 window.open(
-`https://wa.me/${order.driver.phone}`
+`https://wa.me/${order.driverPhone}`
 );
 
 };
 
-orderStatus.innerHTML =
+headerText.innerHTML =
 "تم قبول الطلب";
 
-liveStatus.innerHTML =
-"السائق متجه للمتجر";
-
-updateDriver(order);
-
-}
-
-if(order.status === "preparing_order"){
-
-orderStatus.innerHTML =
-"جاري تجهيز الطلب";
-
-liveStatus.innerHTML =
-"المتجر يقوم بالتجهيز";
-
-updateDriver(order);
-
-}
-
-if(order.status === "on_the_way"){
-
-orderStatus.innerHTML =
-"السائق بالطريق إليك";
-
-liveStatus.innerHTML =
+statusText.innerHTML =
 "السائق متجه إليك";
 
-updateDriver(order);
+liveStatus.innerHTML =
+"السائق في الطريق";
+
+updateMap(order);
 
 }
 
-if(order.status === "arrived"){
-
-orderStatus.innerHTML =
-"وصل السائق";
-
-liveStatus.innerHTML =
-"اضغط استلام الطلب";
+if(
+order.status === "arrived"
+){
 
 completeBtn.style.display =
 "block";
@@ -712,24 +786,35 @@ completeBtn.style.display =
 rejectBtn.style.display =
 "block";
 
-updateDriver(order);
+statusText.innerHTML =
+"وصل السائق";
+
+liveStatus.innerHTML =
+"يرجى استلام الطلب";
+
+updateMap(order);
 
 }
 
-if(order.status === "delivered"){
+if(
+order.status === "delivered"
+){
 
 localStorage.removeItem(
 "currentOrderId"
 );
 
-alert("تم تسليم الطلب");
+alert("تم توصيل الطلب");
 
-window.location.href =
-"home.html";
+window.location.replace(
+"home.html"
+);
 
 }
 
-if(order.status === "cancelled"){
+if(
+order.status === "cancelled"
+){
 
 localStorage.removeItem(
 "currentOrderId"
@@ -737,30 +822,25 @@ localStorage.removeItem(
 
 alert("تم إلغاء الطلب");
 
-window.location.href =
-"home.html";
+window.location.replace(
+"home.html"
+);
 
 }
 
-});
+}
+);
 
 completeBtn.onclick =
 async function(){
 
 await update(orderRef,{
 
-status:"completed",
+status:"delivered",
 
-completedAt:Date.now()
+deliveredAt:Date.now()
 
 });
-
-localStorage.removeItem(
-"currentOrderId"
-);
-
-window.location.href =
-"home.html";
 
 };
 
@@ -769,34 +849,34 @@ async function(){
 
 await update(orderRef,{
 
-status:"rejected",
+status:"rejected_by_customer",
 
 rejectedAt:Date.now()
 
 });
 
+};
+
+document.getElementById(
+"cancelBtn"
+).onclick =
+async function(){
+
+const confirmCancel =
+confirm("إلغاء الطلب؟");
+
+if(!confirmCancel){
+return;
+}
+
+await remove(orderRef);
+
 localStorage.removeItem(
 "currentOrderId"
 );
 
-window.location.href =
-"home.html";
-
-};
-
-history.pushState(
-null,
-null,
-location.href
-);
-
-window.onpopstate =
-function(){
-
-history.pushState(
-null,
-null,
-location.href
+window.location.replace(
+"home.html"
 );
 
 };
