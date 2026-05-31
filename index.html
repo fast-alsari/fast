@@ -471,10 +471,6 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 function showToast(message){
 
-
- 
-
-
 if(!document.getElementById("toast")){
 return;
 }
@@ -1978,4 +1974,21 @@ window.location.replace("index.html");
 </script>
 <div id="toast"></div>
 </body>
+<style>
+
+#toast{
+position:fixed;
+bottom:20px;
+right:20px;
+background:#222;
+color:#fff;
+padding:14px 20px;
+border-radius:12px;
+display:none;
+z-index:999999;
+font-size:14px;
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+}
+
+</style> 
 </html> 
