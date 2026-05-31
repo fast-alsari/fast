@@ -10,7 +10,7 @@ name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
-لوحة السائق
+سائق التوصيل
 </title>
 
 <link
@@ -66,7 +66,7 @@ border-bottom-right-radius:30px;
 .driver-box{
 display:flex;
 align-items:center;
-gap:14px;
+gap:15px;
 }
 
 .driver-image{
@@ -84,13 +84,14 @@ margin-bottom:6px;
 }
 
 .driver-info p{
-opacity:.9;
+font-size:14px;
+opacity:.95;
 }
 
 .online-btn{
 margin-top:18px;
 width:100%;
-height:54px;
+height:55px;
 border:none;
 border-radius:18px;
 background:white;
@@ -102,24 +103,31 @@ cursor:pointer;
 
 .stats{
 display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
+grid-template-columns:1fr 1fr 1fr;
+gap:12px;
 padding:15px;
 }
 
 .stat-card{
 background:white;
-padding:20px;
+padding:18px;
 border-radius:24px;
 text-align:center;
+
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
 }
 
 .stat-card h2{
-font-size:32px;
+font-size:28px;
 color:#ff8800;
-margin-bottom:8px;
+margin-bottom:5px;
+}
+
+.stat-card p{
+font-size:13px;
+font-weight:bold;
+color:#666;
 }
 
 .orders-container{
@@ -133,6 +141,7 @@ gap:18px;
 background:white;
 padding:18px;
 border-radius:28px;
+
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
 }
@@ -145,7 +154,7 @@ margin-bottom:15px;
 }
 
 .order-price{
-font-size:28px;
+font-size:30px;
 font-weight:bold;
 color:#00b894;
 }
@@ -153,7 +162,7 @@ color:#00b894;
 .order-status{
 padding:8px 14px;
 border-radius:14px;
-background:#fff3e0;
+background:#fff5ee;
 color:#ff6600;
 font-size:13px;
 font-weight:bold;
@@ -178,47 +187,54 @@ margin-bottom:5px;
 
 .map-box{
 width:100%;
-height:300px;
+height:320px;
 border-radius:22px;
 overflow:hidden;
 margin-bottom:15px;
 }
 
 .actions{
-display:grid;
-grid-template-columns:1fr 1fr;
+display:flex;
+flex-wrap:wrap;
 gap:10px;
 }
 
 .actions button,
 .actions a{
-height:50px;
+flex:1;
+height:52px;
 border:none;
 border-radius:16px;
+cursor:pointer;
+
 font-size:14px;
 font-weight:bold;
-cursor:pointer;
+color:white;
 text-decoration:none;
+
 display:flex;
 align-items:center;
 justify-content:center;
-color:white;
 }
 
 .accept-btn{
 background:#00b894;
 }
 
-.pickup-btn{
-background:#2563eb;
+.store-btn{
+background:#7c3aed;
 }
 
-.delivery-btn{
-background:#7c3aed;
+.customer-btn{
+background:#2563eb;
 }
 
 .finish-btn{
 background:#ff8800;
+}
+
+.cancel-btn{
+background:#e53935;
 }
 
 .whatsapp-btn{
@@ -226,10 +242,10 @@ background:#25D366;
 }
 
 .empty{
-padding:60px 20px;
+padding:80px 20px;
 text-align:center;
+font-size:18px;
 color:#777;
-font-size:16px;
 }
 
 .bottom-bar{
@@ -239,11 +255,15 @@ left:0;
 right:0;
 height:82px;
 background:white;
+
 display:flex;
 justify-content:space-around;
 align-items:center;
+
 box-shadow:
 0 -5px 18px rgba(0,0,0,.08);
+
+z-index:9999;
 }
 
 .nav-item{
@@ -251,9 +271,12 @@ display:flex;
 flex-direction:column;
 align-items:center;
 gap:5px;
+
 font-size:13px;
 font-weight:bold;
+
 color:#888;
+cursor:pointer;
 }
 
 .nav-item.active{
@@ -286,7 +309,7 @@ class="driver-image">
 </h2>
 
 <p id="driverPhone">
-000000
+0000000000
 </p>
 
 </div>
@@ -320,12 +343,24 @@ onclick="toggleOnline()">
 
 <div class="stat-card">
 
-<h2 id="profits">
+<h2 id="totalProfit">
 0
 </h2>
 
 <p>
 الأرباح
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="cancelledOrders">
+0
+</h2>
+
+<p>
+طلبات ملغية
 </p>
 
 </div>
@@ -374,11 +409,6 @@ update
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-import {
-formatPrice
-}
-from "./utils.js";
-
 const currentUser =
 JSON.parse(
 localStorage.getItem("user")
@@ -395,9 +425,10 @@ window.location.replace(
 
 }
 
+let isOnline = true;
+
 let driverLat = null;
 let driverLng = null;
-let isOnline = true;
 
 document.getElementById(
 "driverName"
@@ -420,11 +451,17 @@ document.getElementById(
 currentUser.completedOrders || 0;
 
 document.getElementById(
-"profits"
+"cancelledOrders"
 ).innerHTML =
-formatPrice(
+currentUser.cancelledOrders || 0;
+
+document.getElementById(
+"totalProfit"
+).innerHTML =
+
+Number(
 currentUser.totalProfit || 0
-);
+).toLocaleString();
 
 navigator.geolocation.watchPosition(
 
@@ -437,27 +474,24 @@ driverLng =
 position.coords.longitude;
 
 await update(
-ref(db,"drivers/" + currentUser.id),
+ref(
+db,
+"drivers/" + currentUser.id
+),
 {
 
-latitude:driverLat,
-longitude:driverLng,
-isOnline:isOnline,
-lastSeen:Date.now()
+latitude:
+driverLat,
+
+longitude:
+driverLng,
+
+lastSeen:
+Date.now()
 
 }
 );
 
-},
-
-(error)=>{
-
-console.log(error);
-
-},
-
-{
-enableHighAccuracy:true
 }
 
 );
@@ -473,6 +507,7 @@ document.getElementById(
 );
 
 btn.innerHTML =
+
 isOnline
 ?
 "متصل الآن"
@@ -480,6 +515,7 @@ isOnline
 "متوقف";
 
 btn.style.color =
+
 isOnline
 ?
 "#00b894"
@@ -487,17 +523,21 @@ isOnline
 "#e53935";
 
 await update(
-ref(db,"drivers/" + currentUser.id),
+ref(
+db,
+"drivers/" + currentUser.id
+),
 {
 
-isOnline:isOnline
+isOnline:
+isOnline
 
 }
 );
 
 };
 
-const container =
+const ordersContainer =
 document.getElementById(
 "ordersContainer"
 );
@@ -506,11 +546,11 @@ onValue(
 ref(db,"orders"),
 (snapshot)=>{
 
-container.innerHTML = "";
+ordersContainer.innerHTML = "";
 
 if(!snapshot.exists()){
 
-container.innerHTML = `
+ordersContainer.innerHTML = `
 <div class="empty">
 لا توجد طلبات
 </div>
@@ -523,24 +563,19 @@ return;
 const orders =
 snapshot.val();
 
-let found = false;
-
-for(let key in orders){
-
-const order =
-orders[key];
+Object.values(orders)
+.reverse()
+.forEach(order=>{
 
 if(
 order.status !== "waiting_driver"
 &&
 order.driverId !== currentUser.id
 ){
-continue;
+return;
 }
 
-found = true;
-
-container.innerHTML += `
+ordersContainer.innerHTML += `
 
 <div class="order-card">
 
@@ -551,7 +586,10 @@ ${getStatus(order.status)}
 </div>
 
 <div class="order-price">
-${formatPrice(order.deliveryPrice)}
+
+${Number(order.deliveryPrice || 0)
+.toLocaleString()} د.ع
+
 </div>
 
 </div>
@@ -608,18 +646,18 @@ class="whatsapp-btn">
 </a>
 
 <button
-class="pickup-btn"
-onclick="pickupOrder('${order.id}')">
+class="store-btn"
+onclick="goStore('${order.id}')">
 
-استلام الطلب
+وصلت للمتجر
 
 </button>
 
 <button
-class="delivery-btn"
-onclick="deliverOrder('${order.id}')">
+class="customer-btn"
+onclick="goCustomer('${order.id}')">
 
-بالطريق
+بالطريق للزبون
 
 </button>
 
@@ -628,6 +666,14 @@ class="finish-btn"
 onclick="finishOrder('${order.id}')">
 
 تم التوصيل
+
+</button>
+
+<button
+class="cancel-btn"
+onclick="cancelOrder('${order.id}')">
+
+إلغاء
 
 </button>
 
@@ -647,24 +693,15 @@ createMap(order);
 
 },100);
 
-}
-
-if(!found){
-
-container.innerHTML = `
-<div class="empty">
-لا توجد طلبات حالياً
-</div>
-`;
-
-}
+});
 
 }
 );
 
 function createMap(order){
 
-const map = L.map(
+const map =
+L.map(
 `map_${order.id}`
 ).setView(
 [
@@ -681,57 +718,39 @@ maxZoom:19
 }
 ).addTo(map);
 
-const customer =
+if(driverLat && driverLng){
+
+L.Routing.control({
+
+waypoints:[
+
+L.latLng(
+driverLat,
+driverLng
+),
+
 L.latLng(
 order.customerLat,
 order.customerLng
-);
+)
 
-const store =
-L.latLng(
-order.products[0]?.storeLat || 0,
-order.products[0]?.storeLng || 0
-);
-
-L.marker(customer)
-.addTo(map);
-
-L.marker(store)
-.addTo(map);
-
-L.polyline(
-[
-store,
-customer
 ],
+
+addWaypoints:false,
+draggableWaypoints:false,
+fitSelectedRoutes:true,
+show:false,
+
+lineOptions:{
+styles:[
 {
 color:"#ff8800",
-weight:6
+weight:7
 }
-).addTo(map);
-
-if(driverLat && driverLng){
-
-L.marker(
-[
-driverLat,
-driverLng
 ]
-).addTo(map);
-
-L.polyline(
-[
-[
-driverLat,
-driverLng
-],
-store
-],
-{
-color:"#2563eb",
-weight:6
 }
-).addTo(map);
+
+}).addTo(map);
 
 }
 
@@ -741,7 +760,10 @@ window.acceptOrder =
 async function(orderId){
 
 await update(
-ref(db,"orders/" + orderId),
+ref(
+db,
+"orders/" + orderId
+),
 {
 
 status:"accepted",
@@ -759,44 +781,41 @@ driverLat:
 driverLat,
 
 driverLng:
-driverLng,
-
-statusText:
-"السائق متجه للمتجر"
+driverLng
 
 }
 );
 
 };
 
-window.pickupOrder =
+window.goStore =
 async function(orderId){
 
 await update(
-ref(db,"orders/" + orderId),
+ref(
+db,
+"orders/" + orderId
+),
 {
 
-status:"picked_up",
-
-statusText:
-"تم استلام الطلب"
+status:"going_to_store"
 
 }
 );
 
 };
 
-window.deliverOrder =
+window.goCustomer =
 async function(orderId){
 
 await update(
-ref(db,"orders/" + orderId),
+ref(
+db,
+"orders/" + orderId
+),
 {
 
-status:"on_the_way",
-
-statusText:
-"السائق بالطريق إليك"
+status:"on_the_way"
 
 }
 );
@@ -807,21 +826,43 @@ window.finishOrder =
 async function(orderId){
 
 await update(
-ref(db,"orders/" + orderId),
+ref(
+db,
+"orders/" + orderId
+),
 {
 
-status:"delivered",
+status:"completed",
 
-statusText:
-"تم توصيل الطلب",
-
-deliveredAt:
+completedAt:
 Date.now()
 
 }
 );
 
-alert("تم التوصيل");
+alert("تم إنهاء الطلب");
+
+};
+
+window.cancelOrder =
+async function(orderId){
+
+await update(
+ref(
+db,
+"orders/" + orderId
+),
+{
+
+status:"cancelled",
+
+cancelledAt:
+Date.now()
+
+}
+);
+
+alert("تم إلغاء الطلب");
 
 };
 
@@ -832,19 +873,23 @@ return "بانتظار سائق";
 }
 
 if(status === "accepted"){
-return "تم القبول";
+return "تم قبول الطلب";
 }
 
-if(status === "picked_up"){
-return "تم الاستلام";
+if(status === "going_to_store"){
+return "متجه للمتجر";
 }
 
 if(status === "on_the_way"){
-return "بالطريق";
+return "بالطريق للزبون";
 }
 
-if(status === "delivered"){
+if(status === "completed"){
 return "تم التوصيل";
+}
+
+if(status === "cancelled"){
+return "ملغي";
 }
 
 return status;
