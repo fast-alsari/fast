@@ -1,1 +1,426 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+طلبات السائق
+</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f5f6fa;
+padding:15px;
+padding-bottom:120px;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:22px;
+border-radius:28px;
+color:white;
+margin-bottom:20px;
+}
+
+.order-card{
+background:white;
+padding:18px;
+border-radius:28px;
+margin-bottom:18px;
+
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+}
+
+.order-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.order-price{
+font-size:24px;
+font-weight:bold;
+color:#00b894;
+}
+
+.customer{
+background:#fafafa;
+padding:15px;
+border-radius:18px;
+margin-bottom:15px;
+}
+
+.customer h3{
+margin-bottom:6px;
+}
+
+.customer p{
+font-size:13px;
+color:#666;
+margin-bottom:5px;
+}
+
+.actions{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+}
+
+.actions button,
+.actions a{
+flex:1;
+height:50px;
+border:none;
+border-radius:16px;
+font-size:14px;
+font-weight:bold;
+cursor:pointer;
+text-decoration:none;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+color:white;
+}
+
+.accept-btn{
+background:#00b894;
+}
+
+.whatsapp-btn{
+background:#25D366;
+}
+
+.finish-btn{
+background:#ff8800;
+}
+
+.reject-btn{
+background:#e53935;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>
+طلبات التوصيل
+</h2>
+
+<p>
+إدارة طلبات السائق
+</p>
+
+</div>
+
+<div id="ordersContainer"></div>
+
+<script type="module">
+
+import { db }
+from "./firebase.js";
+
+import {
+
+ref,
+onValue,
+update,
+get
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const currentUser =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+if(
+!currentUser ||
+currentUser.type !== "driver"
+){
+
+window.location.replace(
+"index.html"
+);
+
+}
+
+const container =
+document.getElementById(
+"ordersContainer"
+);
+
+onValue(
+ref(db,"orders"),
+(snapshot)=>{
+
+container.innerHTML = "";
+
+if(!snapshot.exists()){
+
+container.innerHTML =
+"<h3>لا توجد طلبات</h3>";
+
+return;
+
+}
+
+const orders =
+snapshot.val();
+
+for(let key in orders){
+
+const order =
+orders[key];
+
+if(
+order.status !== "waiting_driver" &&
+order.driverId !== currentUser.id
+){
+continue;
+}
+
+container.innerHTML += `
+
+<div class="order-card">
+
+<div class="order-top">
+
+<div>
+
+<h3>
+${order.customerName || ""}
+</h3>
+
+</div>
+
+<div class="order-price">
+
+${Number(order.deliveryPrice || 0)
+.toLocaleString()} د.ع
+
+</div>
+
+</div>
+
+<div class="customer">
+
+<p>
+📞 ${order.customerPhone || ""}
+</p>
+
+<p>
+📍 ${order.customerAddress || ""}
+</p>
+
+<p>
+🛒 ${order.products?.length || 0} منتج
+</p>
+
+</div>
+
+<div class="actions">
+
+${order.status === "waiting_driver"
+
+?
+
+`
+
+<button
+class="accept-btn"
+onclick="acceptOrder('${order.id}')">
+
+قبول الطلب
+
+</button>
+
+`
+
+:
+
+`
+
+<a
+href="https://wa.me/${order.customerPhone}"
+target="_blank"
+class="whatsapp-btn">
+
+واتساب
+
+</a>
+
+<button
+class="finish-btn"
+onclick="finishOrder('${order.id}')">
+
+تم التوصيل
+
+</button>
+
+<button
+class="reject-btn"
+onclick="cancelOrder('${order.id}')">
+
+الغاء
+
+</button>
+
+`
+
+}
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+);
+
+window.acceptOrder =
+async function(orderId){
+
+await update(
+ref(
+db,
+"orders/" + orderId
+),
+{
+
+status:"accepted",
+
+driverId:
+currentUser.id,
+
+acceptedDriver:
+currentUser.name,
+
+driverPhone:
+currentUser.phone
+
+}
+);
+
+alert("تم قبول الطلب");
+
+};
+
+window.finishOrder =
+async function(orderId){
+
+const snapshot =
+await get(
+ref(
+db,
+"drivers/" + currentUser.id
+)
+);
+
+let completed = 0;
+
+if(snapshot.exists()){
+
+completed =
+Number(
+snapshot.val().completedOrders || 0
+);
+
+}
+
+await update(
+ref(
+db,
+"drivers/" + currentUser.id
+),
+{
+
+completedOrders:
+completed + 1
+
+}
+);
+
+await update(
+ref(
+db,
+"orders/" + orderId
+),
+{
+
+status:"delivered",
+
+deliveredAt:
+Date.now()
+
+}
+);
+
+alert("تم التوصيل");
+
+};
+
+window.cancelOrder =
+async function(orderId){
+
+await update(
+ref(
+db,
+"orders/" + orderId
+),
+{
+
+status:"cancelled"
+
+}
+);
+
+alert("تم الغاء الطلب");
+
+};
+
+</script>
+
+</body>
+
+</html>
