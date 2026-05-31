@@ -1,3 +1,6 @@
+
+<!-- home.html -->
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -5,20 +8,17 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
+<meta name="viewport"
 content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
 عالسريع
 </title>
 
-<link
-rel="stylesheet"
+<link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
 
 <style>
@@ -28,85 +28,63 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
--webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#f5f6fa;
-padding-bottom:120px;
+background:#f7f7f7;
+padding-bottom:110px;
 overflow-x:hidden;
 }
 
+.page{
+display:none;
+}
+
+.active-page{
+display:block;
+}
+
 .header{
-background:
-linear-gradient(
-135deg,
-#ff8800,
-#ff5500
-);
-padding:22px;
-color:white;
+background:linear-gradient(135deg,#ff8800,#ff5500);
+padding:20px;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
-box-shadow:
-0 8px 25px rgba(0,0,0,.10);
+color:white;
+box-shadow:0 8px 25px rgba(0,0,0,.12);
 }
 
 .header-top{
 display:flex;
 justify-content:space-between;
 align-items:center;
-gap:12px;
-}
-
-.welcome h2{
-font-size:24px;
-margin-bottom:5px;
-}
-
-.welcome p{
-font-size:14px;
-opacity:.9;
-}
-
-.taxi-btn{
-width:65px;
-height:65px;
-border-radius:50%;
-background:white;
-display:flex;
-align-items:center;
-justify-content:center;
-font-size:28px;
-color:#ff8800;
-box-shadow:
-0 5px 18px rgba(0,0,0,.15);
-cursor:pointer;
-flex-shrink:0;
 }
 
 .search-box{
-margin-top:20px;
+margin-top:18px;
 background:white;
-height:58px;
-border-radius:18px;
+padding:14px;
+border-radius:16px;
 display:flex;
 align-items:center;
-padding:0 18px;
 }
 
 .search-box i{
 color:#ff8800;
-font-size:16px;
+font-size:18px;
 }
 
 .search-box input{
 border:none;
 outline:none;
 width:100%;
-margin-right:12px;
+margin-right:10px;
 font-size:15px;
-background:none;
+}
+input,
+textarea,
+select{
+font-size:16px !important;
+touch-action:manipulation;
 }
 
 .filters{
@@ -122,15 +100,12 @@ display:none;
 
 .filter-btn{
 border:none;
-padding:11px 18px;
+padding:10px 18px;
 border-radius:14px;
-background:white;
-font-size:14px;
+background:#eee;
 font-weight:bold;
 cursor:pointer;
 white-space:nowrap;
-box-shadow:
-0 3px 10px rgba(0,0,0,.05);
 }
 
 .filter-btn.active{
@@ -142,112 +117,102 @@ color:white;
 padding:15px;
 display:flex;
 flex-direction:column;
-gap:16px;
+gap:14px;
 }
 
 .store-card{
 background:white;
-padding:15px;
-border-radius:28px;
-box-shadow:
-0 5px 18px rgba(0,0,0,.06);
+padding:12px;
+border-radius:22px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+position:relative;
 cursor:pointer;
-transition:.2s;
+overflow:hidden;
+border:3px solid transparent;
 }
 
-.store-card:active{
-transform:scale(.99);
+.vip-store{
+background:
+linear-gradient(#fff,#fff) padding-box,
+linear-gradient(
+135deg,
+#ff0000,
+#ff8800,
+#000000,
+#ff2200
+) border-box;
 }
 
-.closed-store{
-opacity:.55;
-pointer-events:none;
+.vip-badge{
+position:absolute;
+top:10px;
+left:10px;
+background:linear-gradient(135deg,#ff0000,#ff8800);
+padding:6px 12px;
+border-radius:14px;
+color:white;
+font-size:11px;
+font-weight:bold;
 }
 
-.store-top{
+.store-header{
 display:flex;
-gap:14px;
+align-items:center;
+gap:12px;
 }
 
 .store-image{
-width:88px;
-height:88px;
-border-radius:22px;
+width:78px;
+height:78px;
+border-radius:18px;
 object-fit:cover;
 background:#eee;
+border:1px solid #ddd;
 }
 
-.store-content{
+.store-info{
 flex:1;
 }
 
 .store-name{
 display:flex;
-justify-content:space-between;
 align-items:center;
-margin-bottom:6px;
-gap:10px;
+gap:5px;
+margin-bottom:5px;
 }
 
 .store-name h3{
-font-size:18px;
+font-size:17px;
 }
 
-.store-distance{
+.ok-icon{
+width:17px;
+height:17px;
+object-fit:contain;
+}
+
+.store-info p{
 font-size:13px;
-font-weight:bold;
-color:#ff8800;
-}
-
-.store-category{
-font-size:14px;
 color:#666;
-margin-bottom:8px;
+margin-bottom:3px;
 }
 
-.store-status{
-display:inline-flex;
-align-items:center;
-gap:6px;
-padding:6px 12px;
-border-radius:14px;
-background:#f5f5f5;
-font-size:12px;
-font-weight:bold;
-}
-
-.status-dot{
-width:10px;
-height:10px;
-border-radius:50%;
-}
-
-.open-dot{
-background:#00c853;
-}
-
-.closed-dot{
-background:red;
-}
-
-.single-store{
-position:fixed;
-inset:0;
-background:#f5f6fa;
-z-index:9999;
+.single-store-page{
 display:none;
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:#f7f7f7;
+z-index:999;
 overflow-y:auto;
 padding-bottom:120px;
 }
 
-.store-header{
-background:
-linear-gradient(
-135deg,
-#ff8800,
-#ff5500
-);
-padding:20px;
+.store-top-bar{
+background:linear-gradient(135deg,#ff8800,#ff5500);
+padding:18px;
 display:flex;
 align-items:center;
 gap:12px;
@@ -258,39 +223,54 @@ z-index:100;
 }
 
 .back-btn{
-width:45px;
-height:45px;
-border:none;
+width:42px;
+height:42px;
 border-radius:50%;
+border:none;
 background:white;
 color:#ff6600;
 font-size:18px;
 cursor:pointer;
 }
 
-.products{
+.single-store-info{
+display:flex;
+align-items:center;
+gap:10px;
+}
+
+.single-store-image{
+width:65px;
+height:65px;
+border-radius:16px;
+object-fit:cover;
+background:#fff;
+}
+
+.products-container{
 padding:15px;
 display:flex;
 flex-direction:column;
-gap:16px;
+gap:14px;
 }
 
 .product-card{
 background:white;
-padding:14px;
-border-radius:25px;
+padding:12px;
+border-radius:22px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
 display:flex;
-gap:14px;
-box-shadow:
-0 5px 18px rgba(0,0,0,.06);
+gap:12px;
+align-items:center;
 }
 
 .product-image{
-width:100px;
-height:100px;
-border-radius:20px;
+width:95px;
+height:95px;
 object-fit:cover;
+border-radius:18px;
 background:#eee;
+flex-shrink:0;
 }
 
 .product-content{
@@ -304,52 +284,62 @@ margin-bottom:5px;
 }
 
 .product-price{
-font-size:20px;
+font-size:18px;
 font-weight:bold;
 color:#ff8800;
-margin-bottom:8px;
+margin-bottom:5px;
 }
 
-.product-description{
-font-size:13px;
-line-height:1.8;
+.product-note{
+font-size:12px;
 color:#666;
-margin-bottom:12px;
+margin-bottom:10px;
+line-height:1.5;
 }
 
 .qty-box{
 display:flex;
+justify-content:flex-start;
+margin-bottom:10px;
+}
+
+.qty-controller{
+display:flex;
 align-items:center;
 gap:8px;
-margin-bottom:12px;
+background:#f2f2f2;
+padding:5px 8px;
+border-radius:14px;
 }
 
 .qty-btn{
-width:34px;
-height:34px;
+width:32px;
+height:32px;
 border:none;
-border-radius:12px;
+border-radius:10px;
 background:#ff8800;
 color:white;
 font-size:18px;
+font-weight:bold;
 cursor:pointer;
 }
 
 .qty-input{
-width:45px;
-height:34px;
-border:none;
-background:#f3f3f3;
-border-radius:12px;
+width:42px;
+height:32px;
 text-align:center;
+border:none;
+background:white;
+border-radius:10px;
+font-size:15px;
 font-weight:bold;
 }
 
 .add-btn{
 width:100%;
-height:46px;
+padding:13px;
 border:none;
-border-radius:15px;
+border-radius:14px;
 background:#00b894;
 color:white;
 font-size:15px;
@@ -357,30 +347,193 @@ font-weight:bold;
 cursor:pointer;
 }
 
+.cart-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:14px;
+}
+
+.cart-item{
+background:white;
+padding:12px;
+border-radius:20px;
+display:flex;
+gap:12px;
+align-items:center;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.cart-image{
+width:75px;
+height:75px;
+border-radius:16px;
+object-fit:cover;
+background:#eee;
+}
+
+.cart-info{
+flex:1;
+}
+
+.cart-info h3{
+margin-bottom:4px;
+font-size:16px;
+}
+
+.cart-info p{
+margin-bottom:3px;
+color:#666;
+font-size:13px;
+}
+
+.cart-note{
+font-size:12px;
+color:#777;
+line-height:1.5;
+}
+
+.delete-btn{
+background:red;
+border:none;
+padding:10px 13px;
+border-radius:12px;
+color:white;
+cursor:pointer;
+font-weight:bold;
+}
+
+.summary-box{
+background:white;
+margin:15px;
+padding:20px;
+border-radius:24px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.bill-line{
+display:flex;
+justify-content:space-between;
+margin-bottom:12px;
+font-size:15px;
+}
+
+.final-price{
+font-size:22px;
+font-weight:bold;
+color:#ff8800;
+margin-top:10px;
+}
+
+.tip-input{
+width:100%;
+padding:13px;
+border-radius:14px;
+border:1px solid #ddd;
+margin:15px 0;
+font-size:14px;
+outline:none;
+}
+
+.send-order{
+width:100%;
+padding:15px;
+border:none;
+border-radius:15px;
+background:#00b894;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.account-card{
+margin:20px;
+background:white;
+padding:25px;
+border-radius:26px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+text-align:center;
+}
+
+.account-image{
+width:100px;
+height:100px;
+border-radius:50%;
+border:4px solid #ff8800;
+margin:15px auto;
+display:block;
+object-fit:cover;
+}
+
+.logout-btn{
+padding:15px;
+border:none;
+border-radius:15px;
+background:red;
+color:white;
+font-size:15px;
+font-weight:bold;
+cursor:pointer;
+width:100%;
+margin-top:20px;
+}
+
 .bottom-bar{
 position:fixed;
 bottom:0;
 left:0;
 right:0;
-height:84px;
+height:82px;
 background:white;
 display:flex;
 justify-content:space-around;
 align-items:center;
-box-shadow:
-0 -5px 18px rgba(0,0,0,.08);
-z-index:99999;
+box-shadow:0 -5px 18px rgba(0,0,0,.08);
+z-index:1000;
+}
+.taxi-btn-box{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+cursor:pointer;
+gap:6px;
+}
+
+.taxi-circle{
+width:65px;
+height:65px;
+border-radius:50%;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+transition:.3s;
+}
+
+.taxi-circle:hover{
+transform:scale(1.05);
+}
+
+.taxi-circle i{
+font-size:28px;
+color:#ff8800;
+}
+
+.taxi-btn-box span{
+font-size:13px;
+font-weight:bold;
+color:white;
 }
 
 .nav-item{
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:5px;
-font-size:13px;
-font-weight:bold;
-cursor:pointer;
 color:#888;
+cursor:pointer;
 }
 
 .nav-item.active{
@@ -388,27 +541,72 @@ color:#ff8800;
 }
 
 .nav-item i{
-font-size:22px;
+font-size:21px;
+margin-bottom:5px;
 }
 
 .empty{
-padding:70px 20px;
 text-align:center;
-font-size:16px;
+padding:35px;
 color:#777;
 }
+.closed-store{
+opacity:.55;
+filter:grayscale(100%);
+background:#dcdcdc !important;
+pointer-events:none;
+}
 
+.store-status{
+margin-top:10px;
+display:flex;
+align-items:center;
+gap:7px;
+font-size:13px;
+font-weight:bold;
+width:max-content;
+padding:5px 10px;
+border-radius:12px;
+background:#f3f3f3;
+}
+
+.status-dot{
+width:10px;
+height:10px;
+border-radius:50%;
+}
+
+.open-dot{
+background:#00c853;
+box-shadow:0 0 8px #00c853;
+}
+
+.closed-dot{
+background:red;
+box-shadow:0 0 8px red;
+}
+
+.open-text{
+color:#00a844;
+}
+
+.closed-text{
+color:#c40000;
+}
 </style>
 
 </head>
 
 <body>
 
+<div id="homePage"
+class="page active-page">
+
 <div class="header">
 
 <div class="header-top">
 
-<div class="welcome">
+<div>
 
 <h2 id="welcomeText">
 اهلاً بك
@@ -421,10 +619,18 @@ color:#777;
 </div>
 
 <div
-class="taxi-btn"
-onclick="window.location.href='taxie.html'">
+class="taxi-btn-box"
+onclick="openTaxiPage()">
+
+<div class="taxi-circle">
 
 <i class="fa-solid fa-taxi"></i>
+
+</div>
+
+<span>
+اطلب تكسي
+</span>
 
 </div>
 
@@ -437,43 +643,47 @@ onclick="window.location.href='taxie.html'">
 <input
 type="text"
 id="searchInput"
-placeholder="ابحث عن متجر أو منتج">
+placeholder="ابحث عن متجر او منتج">
 
 </div>
 
 </div>
 
-<div
-class="filters"
-id="filters"></div>
+<div class="filters"></div>
 
-<div
-class="stores-container"
-id="storesContainer"></div>
+<div id="storesContainer"
+class="stores-container"></div>
 
-<!-- STORE -->
+</div>
 
-<div
-class="single-store"
-id="singleStore">
+<div id="singleStorePage"
+class="single-store-page">
 
-<div class="store-header">
+<div class="store-top-bar">
 
 <button
 class="back-btn"
-onclick="closeStore()">
+onclick="backHome()">
 
 <i class="fa-solid fa-arrow-right"></i>
 
 </button>
 
+<div class="single-store-info">
+
+<img
+id="singleStoreImage"
+src="store.png"
+class="single-store-image"
+onerror="this.src='store.png'">
+
 <div>
 
-<h2 id="storeTitle">
-المتجر
+<h2 id="singleStoreName">
+اسم المتجر
 </h2>
 
-<p id="storeCategory">
+<p id="singleStoreCategory">
 القسم
 </p>
 
@@ -481,17 +691,92 @@ onclick="closeStore()">
 
 </div>
 
-<div
-class="products"
-id="productsContainer"></div>
+</div>
+
+<div id="singleProductsContainer"
+class="products-container"></div>
 
 </div>
 
-<!-- NAV -->
+<div id="cartPage"
+class="page">
+
+<div id="cartContainer"
+class="cart-container"></div>
+
+<div class="summary-box">
+
+<div class="bill-line">
+<span>مجموع المنتجات</span>
+<span id="itemsTotal">0 د.ع</span>
+</div>
+
+<div class="bill-line">
+<span>التوصيل</span>
+<span id="deliveryPriceText">1000 د.ع</span>
+</div>
+
+<input
+type="number"
+id="tipInput"
+class="tip-input"
+placeholder="اكرامية للسائق">
+
+<div class="bill-line final-price">
+<span>المجموع</span>
+<span id="finalTotal">0 د.ع</span>
+</div>
+
+<button
+class="send-order"
+onclick="sendOrder()">
+
+طلب توصيل 🚀
+
+</button>
+
+</div>
+
+</div>
+
+<div id="accountPage"
+class="page">
+
+<div class="account-card">
+
+<img
+src="user.png"
+class="account-image">
+
+<h2 id="accountName">
+مستخدم
+</h2>
+
+<br>
+
+<p id="accountPhone"></p>
+
+<br>
+
+<p id="accountAddress"></p>
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+تسجيل الخروج
+
+</button>
+
+</div>
+
+</div>
 
 <div class="bottom-bar">
 
-<div class="nav-item active">
+<div
+class="nav-item active"
+onclick="showPage('homePage',this)">
 
 <i class="fa-solid fa-house"></i>
 
@@ -503,7 +788,7 @@ id="productsContainer"></div>
 
 <div
 class="nav-item"
-onclick="window.location.href='cart.html'">
+onclick="showPage('cartPage',this)">
 
 <i class="fa-solid fa-cart-shopping"></i>
 
@@ -529,175 +814,448 @@ onclick="window.location.href='asca.html'">
 
 <script type="module">
 
-import { db }
-from "./firebase.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
+getDatabase,
 ref,
+set,
+update,
+child,
 get,
 onValue
 }
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-import {
-calculateDistance,
-formatPrice
-}
-from "./utils.js";
+const firebaseConfig = {
+
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+
+authDomain:"fast-937c9.firebaseapp.com",
+
+projectId:"fast-937c9",
+
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const database =
+getDatabase(app);
 
 const currentUser =
-JSON.parse(
-localStorage.getItem("user")
+JSON.parse(localStorage.getItem("user"));
+
+if(!currentUser || !currentUser.id){
+
+window.location.href = "index.html";
+
+}
+
+window.addEventListener(
+"pageshow",
+async function(){
+
+const currentOrderId =
+localStorage.getItem("currentOrderId");
+
+if(currentOrderId){
+
+const snapshot =
+await get(
+ref(database,"orders/" + currentOrderId)
 );
 
+if(snapshot.exists()){
+
+const order =
+snapshot.val();
+
+const blockedStatuses = [
+
+"waiting_driver",
+"accepted",
+"going_to_store",
+"picked_up",
+"on_the_way",
+"arrived"
+
+];
+
 if(
-!currentUser ||
-currentUser.type !== "customer"
+blockedStatuses.includes(order.status)
 ){
 
 window.location.replace(
-"index.html"
+"talab.html?orderId=" +
+currentOrderId
 );
 
 }
 
-document.getElementById(
-"welcomeText"
-).innerHTML =
-
-`اهلاً ${currentUser.name || ""}`;
-
-let allStores = [];
-
-let userLat = 0;
-let userLng = 0;
-
-navigator.geolocation.getCurrentPosition(
-
-(position)=>{
-
-userLat =
-position.coords.latitude;
-
-userLng =
-position.coords.longitude;
-
-loadStores();
-
-},
-
-()=>{
-
-alert("يرجى تشغيل GPS");
+}
 
 }
 
+}
 );
 
-function loadStores(){
+const currentOrderId =
+localStorage.getItem("currentOrderId");
 
-onValue(
-ref(db,"users"),
-(snapshot)=>{
+if(currentOrderId){
 
-allStores = [];
+const activeOrderSnapshot =
+await get(
+ref(database,"orders/" + currentOrderId)
+);
+
+if(activeOrderSnapshot.exists()){
+
+const activeOrder =
+activeOrderSnapshot.val();
+
+const blockedStatuses = [
+
+"waiting_driver",
+"accepted",
+"going_to_store",
+"picked_up",
+"on_the_way",
+"arrived"
+
+];
+
+if(
+blockedStatuses.includes(activeOrder.status)
+){
+
+window.location.href =
+"talab.html?orderId=" +
+currentOrderId;
+
+}
+
+}else{
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+}
+
+}
+
+async function loadCurrentUser(){
+
+let tableName = "";
+
+if(currentUser.type === "customer"){
+tableName = "customers";
+}
+
+if(currentUser.type === "store"){
+tableName = "stores";
+}
+
+if(currentUser.type === "driver"){
+tableName = "drivers";
+}
+
+if(currentUser.type === "taxi"){
+tableName = "taxis";
+}
+
+const snapshot = await get(
+ref(database, tableName + "/" + currentUser.id)
+);
 
 if(!snapshot.exists()){
 
-renderStores([]);
+localStorage.clear();
+
+sessionStorage.clear();
+
+window.location.href = "index.html";
 
 return;
 
 }
 
-const users =
-snapshot.val();
+const userData = snapshot.val();
 
-for(let key in users){
+userData.id =
+userData.id || currentUser.id;
 
-const store =
-users[key];
+localStorage.setItem(
+"user",
+JSON.stringify(userData)
+);
 
-if(store.type !== "store"){
-continue;
+document.getElementById("welcomeText")
+.innerHTML =
+`اهلاً ${userData.name || "مستخدم"}`;
+
+document.getElementById("accountName")
+.innerHTML =
+userData.name || "مستخدم";
+
+document.getElementById("accountPhone")
+.innerHTML =
+userData.phone || "";
+
+document.getElementById("accountAddress")
+.innerHTML =
+userData.address || "";
+
 }
 
-if(store.status !== "active"){
-continue;
+loadCurrentUser();
+let allStores = [];
+let userLatitude = null;
+let userLongitude = null;
+let cart =
+JSON.parse(
+localStorage.getItem("cart")
+) || [];
+
+const storesContainer =
+document.getElementById("storesContainer");
+navigator.geolocation.watchPosition(
+
+(position)=>{
+
+userLatitude =
+position.coords.latitude;
+
+userLongitude =
+position.coords.longitude;
+
+// تحديث موقع المستخدم داخل Firebase
+
+set(
+ref(database,
+"customers/" + currentUser.id + "/userLat"
+),
+userLatitude
+);
+
+set(
+ref(database,
+"customers/" + currentUser.id + "/userLng"
+),
+userLongitude
+);
+// حفظ الموقع للتاكسي
+localStorage.setItem(
+"userLat",
+userLatitude
+);
+
+localStorage.setItem(
+"userLng",
+userLongitude
+);
+
+// حفظ داخل بيانات اليوزر
+let savedUser =
+JSON.parse(localStorage.getItem("user"));
+
+if(savedUser){
+
+savedUser.userLat =
+userLatitude;
+
+savedUser.userLng =
+userLongitude;
+
+localStorage.setItem(
+"user",
+JSON.stringify(savedUser)
+);
+
 }
+
+if(allStores.length === 0){
+startLiveStores();
+}
+
+},
+
+(error)=>{
+
+alert("يرجى تشغيل GPS");
+
+},
+
+{
+enableHighAccuracy:true,
+maximumAge:0,
+timeout:10000
+}
+
+);
+function calculateDistance(lat1, lon1, lat2, lon2){
+
+const R = 6371;
+
+const dLat =
+(lat2-lat1) * Math.PI / 180;
+
+const dLon =
+(lon2-lon1) * Math.PI / 180;
+
+const a =
+
+Math.sin(dLat/2) *
+Math.sin(dLat/2)
+
++
+
+Math.cos(lat1 * Math.PI / 180)
+
+*
+
+Math.cos(lat2 * Math.PI / 180)
+
+*
+
+Math.sin(dLon/2)
+
+*
+
+Math.sin(dLon/2);
+
+const c =
+2 * Math.atan2(
+Math.sqrt(a),
+Math.sqrt(1-a)
+);
+
+return R * c;
+
+}
+
+function startLiveStores(){
+
+onValue(
+
+ref(database,"stores"),
+
+(snapshot)=>{
+
+allStores = [];
+
+if(snapshot.exists()){
+
+if(userLatitude === null || userLongitude === null){
+return;
+}
+
+const stores = snapshot.val();
+
+for(let key in stores){
+
+let store = stores[key];
+
+store.id = key;
+
+if(store.status !== "active")
+continue;
+
+if(!store.latitude || !store.longitude)
+continue;
 
 const distance =
 calculateDistance(
 
-userLat,
-userLng,
+userLatitude,
+userLongitude,
 
-Number(store.latitude || 0),
-Number(store.longitude || 0)
+Number(store.latitude),
+Number(store.longitude)
 
 );
 
-allStores.push({
+if(distance > 25)
+continue;
 
-id:store.id,
+store.distance =
+distance.toFixed(1);
 
-name:store.name || "",
+store.vip =
+store.accountType === "vip";
 
-image:
-store.image || "store.png",
-
-category:
-store.category || "عام",
-
-distance:
-distance.toFixed(1),
-
-latitude:
-store.latitude || 0,
-
-longitude:
-store.longitude || 0,
-
-workingHours:
-store.workingHours || []
-
-});
+allStores.push(store);
 
 }
 
-allStores.sort((a,b)=>
-a.distance - b.distance
-);
+// ترتيب المتاجر
+allStores.sort((a,b)=>{
 
-renderFilters();
+const aOpen = isStoreOpen(a);
+const bOpen = isStoreOpen(b);
+
+// VIP أولاً
+if(a.vip && !b.vip){
+return -1;
+}
+
+if(!a.vip && b.vip){
+return 1;
+}
+
+// المفتوح بعد VIP
+if(aOpen && !bOpen){
+return -1;
+}
+
+if(!aOpen && bOpen){
+return 1;
+}
+
+// الأقرب أولاً
+return a.distance - b.distance;
+
+});
+
+generateFilters();
 
 renderStores(allStores);
 
 }
+
+}
+
 );
 
 }
 
-function renderFilters(){
+function generateFilters(){
 
-const filters =
-document.getElementById(
-"filters"
-);
+const filtersContainer =
+document.querySelector(".filters");
 
-filters.innerHTML = `
-<button
-class="filter-btn active"
+filtersContainer.innerHTML = "";
+
+filtersContainer.innerHTML += `
+<button class="filter-btn active"
 data-category="all">
 الكل
 </button>
 `;
 
-const categories = [];
+let categories = [];
 
 allStores.forEach(store=>{
 
 if(
+store.category &&
 !categories.includes(store.category)
 ){
 
@@ -709,9 +1267,8 @@ categories.push(store.category);
 
 categories.forEach(category=>{
 
-filters.innerHTML += `
-<button
-class="filter-btn"
+filtersContainer.innerHTML += `
+<button class="filter-btn"
 data-category="${category}">
 ${category}
 </button>
@@ -719,24 +1276,22 @@ ${category}
 
 });
 
-document
-.querySelectorAll(".filter-btn")
+document.querySelectorAll(".filter-btn")
+.forEach(button=>{
+
+button.addEventListener("click",()=>{
+
+document.querySelectorAll(".filter-btn")
 .forEach(btn=>{
 
-btn.onclick = ()=>{
-
-document
-.querySelectorAll(".filter-btn")
-.forEach(item=>{
-
-item.classList.remove("active");
+btn.classList.remove("active");
 
 });
 
-btn.classList.add("active");
+button.classList.add("active");
 
-const category =
-btn.dataset.category;
+let category =
+button.dataset.category;
 
 if(category === "all"){
 
@@ -744,35 +1299,158 @@ renderStores(allStores);
 
 }else{
 
-renderStores(
-allStores.filter(
-store =>
+let filtered =
+allStores.filter(store=>
 store.category === category
-)
 );
+
+renderStores(filtered);
 
 }
 
-};
+});
 
 });
 
 }
 
-function renderStores(stores){
+function isStoreOpen(store){
 
-const container =
-document.getElementById(
-"storesContainer"
+if(!store.workingHours){
+return false;
+}
+
+const days = [
+"الأحد",
+"الاثنين",
+"الثلاثاء",
+"الأربعاء",
+"الخميس",
+"الجمعة",
+"السبت"
+];
+
+const now = new Date();
+
+const currentDay =
+days[now.getDay()];
+
+const currentHour =
+now.getHours();
+
+const currentMinute =
+now.getMinutes();
+
+const currentTime =
+currentHour + (currentMinute / 60);
+
+// البحث عن اليوم الحالي
+let todaySchedule = null;
+
+Object.values(store.workingHours)
+.forEach(item=>{
+
+if(item.day === currentDay){
+
+todaySchedule = item;
+
+}
+
+});
+
+if(!todaySchedule){
+return false;
+}
+
+// اذا مغلق
+if(
+todaySchedule.from === "مغلق" ||
+todaySchedule.to === "مغلق"
+){
+return false;
+}
+
+// تحويل الوقت
+function convertTo24(time){
+
+if(!time){
+return 0;
+}
+
+const parts = time.trim().split(" ");
+
+const hourMinute = parts[0];
+const period = parts[1];
+
+let hour =
+parseInt(hourMinute.split(":")[0]);
+
+let minute =
+hourMinute.includes(":")
+? parseInt(hourMinute.split(":")[1])
+: 0;
+
+// AM
+if(period === "AM"){
+
+if(hour === 12){
+hour = 0;
+}
+
+}
+
+// PM
+else if(period === "PM"){
+
+if(hour !== 12){
+hour += 12;
+}
+
+}
+
+return hour + (minute / 60);
+
+}
+
+const fromHour =
+convertTo24(todaySchedule.from);
+
+const toHour =
+convertTo24(todaySchedule.to);
+
+// مقارنة الوقت الحالي// 24 ساعة
+if(fromHour === toHour){
+
+return true;
+
+}
+
+// دوام طبيعي
+if(fromHour < toHour){
+
+return (
+currentTime >= fromHour &&
+currentTime < toHour
 );
 
-container.innerHTML = "";
+}
+
+// دوام يعبر منتصف الليل
+return (
+currentTime >= fromHour ||
+currentTime < toHour
+);
+}
+
+function renderStores(stores){
+
+storesContainer.innerHTML = "";
 
 if(stores.length === 0){
 
-container.innerHTML = `
+storesContainer.innerHTML = `
 <div class="empty">
-لا توجد متاجر
+لا توجد نتائج
 </div>
 `;
 
@@ -780,52 +1458,105 @@ return;
 
 }
 
-stores.forEach(store=>{
+stores.forEach((store)=>{
 
-container.innerHTML += `
+const isOpen =
+isStoreOpen(store);
+
+storesContainer.innerHTML += `
 
 <div
-class="store-card"
-onclick="openStore('${store.id}')">
+class="
+store-card
+${store.vip ? "vip-store" : ""}
+${!isOpen ? "closed-store" : ""}
+"
+onclick="
+${isOpen ? `openStore('${store.id}')` : ""}
+">
 
-<div class="store-top">
+${store.vip ? `
+<div class="vip-badge">
+🔥 VIP
+</div>
+` : ""}
+
+<div class="store-status">
+
+${isOpen ? `
+
+<div class="status-dot open-dot"></div>
+
+<span class="open-text">
+مفتوح حالياً
+</span>
+
+` : `
+
+<div class="status-dot closed-dot"></div>
+
+<span class="closed-text">
+مغلق حالياً
+</span>
+
+`}
+
+</div>
+
+<div class="store-header">
 
 <img
-src="${store.image}"
+src="${store.store_image || store.image || "store.png"}"
 class="store-image"
 onerror="this.src='store.png'">
 
-<div class="store-content">
+<div class="store-info">
 
 <div class="store-name">
 
 <h3>
-${store.name}
+${store.store_name}
 </h3>
 
-<div class="store-distance">
-
+<span style="
+font-size:12px;
+color:#ff8800;
+font-weight:bold;
+">
 📍 ${store.distance} كم
-
-</div>
-
-</div>
-
-<div class="store-category">
-
-${store.category}
-
-</div>
-
-<div class="store-status">
-
-<div class="status-dot open-dot"></div>
-
-<span>
-مفتوح الآن
 </span>
 
+<img
+src="ok.png"
+class="ok-icon">
+
 </div>
+
+<p>
+${store.category || ""}
+</p>
+
+<p>
+
+<button
+onclick="openMap(event,'${store.latitude}','${store.longitude}')"
+style="
+margin-top:8px;
+padding:8px 14px;
+border:none;
+border-radius:12px;
+background:#ff8800;
+color:white;
+font-size:12px;
+font-weight:bold;
+cursor:pointer;
+">
+
+📍 موقع المتجر
+
+</button>
+
+</p>
 
 </div>
 
@@ -839,19 +1570,16 @@ ${store.category}
 
 }
 
-document.getElementById(
-"searchInput"
-).addEventListener(
-"input",
-function(){
+document.getElementById("searchInput")
+.addEventListener("input",function(){
 
-const value =
+let value =
 this.value.toLowerCase();
 
-const filtered =
+let filtered =
 allStores.filter(store=>
 
-(store.name || "")
+(store.store_name || "")
 .toLowerCase()
 .includes(value)
 
@@ -865,39 +1593,37 @@ allStores.filter(store=>
 
 renderStores(filtered);
 
-}
-);
+});
 
-window.openStore =
-async function(storeId){
+window.openStore = async function(storeId){
 
 const store =
-allStores.find(
-s => s.id === storeId
-);
+allStores.find(s => s.id === storeId);
 
 if(!store){
+
+alert("المتجر غير موجود");
 return;
+
 }
 
-document.getElementById(
-"singleStore"
-).style.display = "block";
+document.getElementById("singleStorePage")
+.style.display = "block";
 
-document.getElementById(
-"storeTitle"
-).innerHTML =
-store.name;
+document.getElementById("singleStoreName")
+.innerHTML =
+store.store_name || "متجر";
 
-document.getElementById(
-"storeCategory"
-).innerHTML =
-store.category;
+document.getElementById("singleStoreCategory")
+.innerHTML =
+store.category || "";
+
+document.getElementById("singleStoreImage")
+.src =
+store.store_image || store.image || "store.png";
 
 const container =
-document.getElementById(
-"productsContainer"
-);
+document.getElementById("singleProductsContainer");
 
 container.innerHTML = `
 <div class="empty">
@@ -905,9 +1631,13 @@ container.innerHTML = `
 </div>
 `;
 
-const snapshot =
-await get(
-ref(db,"products/" + storeId)
+try{
+
+const snapshot = await get(
+ref(
+database,
+"store_products/" + storeId
+)
 );
 
 container.innerHTML = "";
@@ -924,13 +1654,30 @@ return;
 
 }
 
-const products =
-snapshot.val();
+const products = snapshot.val();
+
+let found = false;
 
 for(let key in products){
 
-const product =
-products[key];
+const product = products[key];
+
+product.id = key;
+
+product.storeId = store.id;
+product.storeName = store.store_name;
+
+if(
+product.deleted !== true
+&&
+(
+product.status === "active"
+||
+product.status === "approved"
+)
+){
+
+found = true;
 
 container.innerHTML += `
 
@@ -944,28 +1691,24 @@ onerror="this.src='product.png'">
 <div class="product-content">
 
 <div class="product-name">
-
 ${product.name || ""}
-
 </div>
 
 <div class="product-price">
-
-${formatPrice(product.price)}
-
+${Number(product.price || 0).toLocaleString()} د.ع
 </div>
 
-<div class="product-description">
-
-${product.description || ""}
-
+<div class="product-note">
+📝 ${product.description || "لا توجد ملاحظات"}
 </div>
 
 <div class="qty-box">
 
+<div class="qty-controller">
+
 <button
 class="qty-btn"
-onclick="decreaseQty('${key}')">
+onclick="decreaseQty('${product.id}')">
 
 -
 
@@ -975,12 +1718,12 @@ onclick="decreaseQty('${key}')">
 type="text"
 readonly
 value="1"
-id="qty_${key}"
+id="qty_${product.id}"
 class="qty-input">
 
 <button
 class="qty-btn"
-onclick="increaseQty('${key}')">
+onclick="increaseQty('${product.id}')">
 
 +
 
@@ -988,15 +1731,13 @@ onclick="increaseQty('${key}')">
 
 </div>
 
+</div>
+
 <button
 class="add-btn"
-onclick='addToCart(
-${JSON.stringify(product)},
-${JSON.stringify(store)},
-"${key}"
-)'>
+onclick='addToCart(${JSON.stringify(product)})'>
 
-اضافة للسلة
+اضافة الى السلة
 
 </button>
 
@@ -1008,14 +1749,36 @@ ${JSON.stringify(store)},
 
 }
 
-};
+}
 
-window.closeStore =
+if(!found){
+
+container.innerHTML = `
+<div class="empty">
+لا توجد منتجات حالياً
+</div>
+`;
+
+}
+
+}catch(error){
+
+console.log(error);
+
+container.innerHTML = `
+<div class="empty">
+حدث خطأ أثناء تحميل المنتجات
+</div>
+`;
+
+}
+
+};
+window.backHome =
 function(){
 
-document.getElementById(
-"singleStore"
-).style.display = "none";
+document.getElementById("singleStorePage")
+.style.display = "none";
 
 };
 
@@ -1023,12 +1786,10 @@ window.increaseQty =
 function(id){
 
 const input =
-document.getElementById(
-`qty_${id}`
-);
+document.getElementById(`qty_${id}`);
 
 input.value =
-Number(input.value) + 1;
+Number(input.value)+1;
 
 };
 
@@ -1036,63 +1797,45 @@ window.decreaseQty =
 function(id){
 
 const input =
-document.getElementById(
-`qty_${id}`
-);
+document.getElementById(`qty_${id}`);
 
-if(Number(input.value) > 1){
+if(Number(input.value)>1){
 
 input.value =
-Number(input.value) - 1;
+Number(input.value)-1;
 
 }
 
 };
 
 window.addToCart =
-function(product,store,id){
+function(product){
 
-const qty =
+let qty =
 Number(
 document.getElementById(
-`qty_${id}`
+`qty_${product.id}`
 ).value
 );
 
-let cart =
-JSON.parse(
-localStorage.getItem("cart")
-) || [];
-
-const exists =
+let existingProduct =
 cart.find(item =>
-item.productId === id
+item.id === product.id &&
+item.storeId === product.storeId
 );
 
-if(exists){
+if(existingProduct){
 
-exists.qty += qty;
+existingProduct.qty += qty;
 
 }else{
 
 cart.push({
 
-productId:id,
-
-storeId:store.id,
-
-storeName:store.name,
-
-name:product.name || "",
-
-price:Number(product.price || 0),
-
-image:product.image || "",
-
-description:
-product.description || "",
-
-qty:qty
+...product,
+qty:qty,
+storeId: product.storeId || "",
+storeName: product.storeName || ""
 
 });
 
@@ -1103,12 +1846,776 @@ localStorage.setItem(
 JSON.stringify(cart)
 );
 
-alert("تمت الإضافة للسلة");
+updateCart();
+
+alert("تمت الاضافة");
+
+};
+let deliveryPrice = 1000;
+function updateCart(){
+
+const cartContainer =
+document.getElementById("cartContainer");
+
+const itemsTotal =
+document.getElementById("itemsTotal");
+
+const finalTotal =
+document.getElementById("finalTotal");
+
+cartContainer.innerHTML = "";
+
+if(cart.length === 0){
+
+cartContainer.innerHTML = `
+<div class="empty">
+السلة فارغة
+</div>
+`;
+
+itemsTotal.innerHTML = "0 د.ع";
+
+document.getElementById("deliveryPriceText")
+.innerHTML = "0 د.ع";
+
+finalTotal.innerHTML = "0 د.ع";
+
+return;
+
+}
+
+let total = 0;
+
+cart.forEach((item)=>{
+
+let itemTotal =
+Number(item.price) *
+Number(item.qty);
+
+total += itemTotal;
+
+cartContainer.innerHTML += `
+
+<div class="cart-item">
+
+<img
+src="${item.image || "product.png"}"
+class="cart-image"
+referrerpolicy="no-referrer"
+crossorigin="anonymous"
+onerror="this.src='product.png'">
+
+<div class="cart-info">
+
+<h3>
+${item.name}
+</h3>
+
+<p>
+🏪 ${item.storeName}
+</p>
+
+<p>
+💰 ${Number(itemTotal).toLocaleString()} د.ع
+</p>
+
+<div class="cart-note">
+📝 ${item.description || "لا توجد ملاحظات"}
+</div>
+
+<div
+class="qty-controller"
+style="
+margin-top:10px;
+width:max-content;
+">
+
+<button
+class="qty-btn"
+onclick="decreaseCartQty('${item.id}','${item.storeId}')">
+
+-
+
+</button>
+
+<input
+type="text"
+readonly
+value="${item.qty}"
+class="qty-input">
+
+<button
+class="qty-btn"
+onclick="increaseCartQty('${item.id}','${item.storeId}')">
+
++
+
+</button>
+
+</div>
+
+</div>
+
+<button
+class="delete-btn"
+onclick="removeCartItem('${item.id}','${item.storeId}')">
+
+حذف
+
+</button>
+
+</div>
+
+`;
+
+});
+
+let tip =
+Number(
+document.getElementById("tipInput").value || 0
+);
+
+// حساب اجور التوصيل// =========================// =========================
+// نظام تسعيرة ذكي للتوصيل
+// =========================
+
+deliveryPrice = 0;
+
+let uniqueStores =
+[...new Set(cart.map(item => item.storeId))];
+
+// اذا ماكو منتجات
+if(uniqueStores.length === 0){
+
+deliveryPrice = 0;
+
+}else{
+
+const firstStore =
+allStores.find(
+s => s.id === uniqueStores[0]
+);
+
+if(firstStore){
+
+const distance =
+calculateDistance(
+
+userLatitude,
+userLongitude,
+
+Number(firstStore.latitude),
+Number(firstStore.longitude)
+
+);
+
+// =========================
+// التسعيرة الاساسية الجديدة
+// =========================
+
+// اول 2 كم
+if(distance <= 2){
+
+deliveryPrice = 2000;
+
+}
+
+// من 2 الى 5
+else if(distance <= 5){
+
+deliveryPrice = 3000;
+
+}
+
+// من 5 الى 8
+else if(distance <= 8){
+
+deliveryPrice = 4000;
+
+}
+
+// من 8 الى 12
+else if(distance <= 12){
+
+deliveryPrice = 5000;
+
+}
+
+// فوق 12 كم
+else{
+
+deliveryPrice =
+5000 + Math.round((distance - 12) * 350);
+
+}
+
+// حد اعلى
+if(deliveryPrice > 9000){
+
+deliveryPrice = 9000;
+
+}
+
+}
+
+// =========================
+// زيادة المتاجر المتعددة
+// =========================
+
+// متجرين
+if(uniqueStores.length === 2){
+
+deliveryPrice =
+Math.round(deliveryPrice * 1.6);
+
+}
+
+// 3 متاجر
+else if(uniqueStores.length === 3){
+
+deliveryPrice =
+Math.round(deliveryPrice * 2);
+
+}
+
+// 4 متاجر واكثر
+else if(uniqueStores.length >= 4){
+
+deliveryPrice =
+Math.round(deliveryPrice * 2.5);
+
+}
+
+// =========================
+// حماية السائق
+// =========================
+
+// طلبات كبيرة
+if(total >= 50000){
+
+deliveryPrice += 1000;
+
+}
+
+if(total >= 100000){
+
+deliveryPrice += 2000;
+
+}
+
+// وقت الليل
+const hour = new Date().getHours();
+
+if(hour >= 12 || hour <= 6){
+
+deliveryPrice += 1000;
+
+}
+
+// =========================
+// حد ادنى وحد اعلى
+// =========================
+
+if(deliveryPrice < 2000){
+
+deliveryPrice = 2000;
+
+}
+
+if(deliveryPrice > 15000){
+
+deliveryPrice = 15000;
+
+}
+
+}
+
+// تحديث النص
+document.getElementById("deliveryPriceText")
+.innerHTML =
+Number(deliveryPrice).toLocaleString() + " د.ع";
+itemsTotal.innerHTML =
+`${Number(total).toLocaleString()} د.ع`;
+
+finalTotal.innerHTML =
+`${Number(total + deliveryPrice + tip).toLocaleString()} د.ع`;
+}
+
+updateCart();
+
+window.increaseCartQty =
+function(productId,storeId){
+
+let item =
+cart.find(item =>
+item.id === productId &&
+item.storeId === storeId
+);
+
+if(item){
+item.qty += 1;
+}
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+updateCart();
 
 };
 
-</script>
+window.decreaseCartQty =
+function(productId,storeId){
 
+let item =
+cart.find(item =>
+item.id === productId &&
+item.storeId === storeId
+);
+
+if(item && item.qty > 1){
+
+item.qty -= 1;
+
+}
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+updateCart();
+
+};
+
+window.removeCartItem =
+function(productId,storeId){
+
+cart =
+cart.filter(item => !(
+item.id === productId &&
+item.storeId === storeId
+));
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+updateCart();
+
+};
+
+document.getElementById("tipInput")
+.addEventListener("input",updateCart);
+
+window.sendOrder =
+async function(){
+
+if(cart.length === 0){
+
+alert("السلة فارغة");
+
+return;
+
+}
+
+navigator.geolocation.getCurrentPosition(
+
+async(position)=>{
+
+let total = 0;
+
+cart.forEach(item=>{
+
+total +=
+Number(item.price) *
+Number(item.qty);
+
+});
+
+let tip =
+Number(
+document.getElementById("tipInput").value || 0
+);
+
+const orderId =
+"ORDER"+Date.now();
+
+const orderData = {
+
+id:orderId,
+
+customerId:
+currentUser.id,
+
+customerName:
+currentUser.name,
+
+customerPhone:
+currentUser.phone,
+
+customerAddress:
+currentUser.address || "",
+
+items: cart.map(item => ({
+
+id: item.id || "",
+
+name: item.name || "",
+
+price: Number(item.price || 0),
+
+qty: Number(item.qty || 1),
+
+totalPrice:
+Number(item.price || 0) *
+Number(item.qty || 1),
+
+image: item.image || "",
+
+description:
+item.description || "",
+
+storeId:
+item.storeId || "",
+
+storeName:
+item.storeName || ""
+
+})),
+
+storeId:
+cart[0].storeId || "",
+
+storeName:
+cart[0].storeName || "",
+
+storeLat:
+allStores.find(
+s => s.id === cart[0].storeId
+)?.latitude || "",
+
+storesData:
+
+[...new Set(cart.map(item => item.storeId))]
+
+.map(storeId => {
+
+const store =
+allStores.find(
+s => s.id === storeId
+);
+
+return {
+
+storeId:
+store?.id || "",
+
+storeName:
+store?.store_name || "",
+
+storeLat:
+store?.latitude || "",
+
+storeLng:
+store?.longitude || "",
+
+storePhone:
+store?.phone || ""
+
+};
+
+}),
+
+storeLng:
+allStores.find(
+s => s.id === cart[0].storeId
+)?.longitude || "",
+
+deliveryPrice:deliveryPrice,
+
+tip:tip,
+
+productsPrice: total,
+
+totalPrice:
+total + deliveryPrice + tip,
+
+status:"waiting_driver",
+
+statusText:"بانتظار قبول سائق",
+
+driverFound:false,
+
+delivered:false,
+
+failedDriverSearch:false,
+
+createdAt:Date.now(),
+
+createdDate:
+new Date().toLocaleDateString("ar-EG"),
+
+createdTime:
+new Date().toLocaleTimeString("ar-EG"),
+
+customerLat:
+position.coords.latitude,
+
+customerLng:
+position.coords.longitude
+
+};
+
+await set(
+ref(database,"orders/"+orderId),
+orderData
+);
+
+// =======================
+// انتظار قبول سائق
+// =======================
+
+setTimeout(async()=>{
+
+const checkOrder =
+await get(
+ref(database,"orders/"+orderId)
+);
+
+if(checkOrder.exists()){
+
+const order =
+checkOrder.val();
+
+if(order.status === "waiting_driver"){
+
+await update(
+ref(database,"orders/" + orderId),
+{
+
+status:"failed_no_driver",
+
+statusText:
+"تم رفض الطلب بسبب عدم توفر سائق",
+
+failedDriverSearch:true,
+
+closedAt:Date.now()
+
+}
+);
+
+}
+
+}
+
+},3600000);
+cart = [];
+
+localStorage.removeItem("cart");
+
+updateCart();
+
+localStorage.setItem(
+"currentOrderId",
+orderId
+);
+
+window.location.href =
+"talab.html?orderId=" + orderId;
+
+}
+
+);
+
+};
+
+window.showPage =
+function(pageId,element){
+
+// اغلاق صفحة المتجر
+document.getElementById("singleStorePage")
+.style.display = "none";
+
+document.querySelectorAll(".page")
+.forEach(page=>{
+
+page.classList.remove("active-page");
+
+});
+
+document.getElementById(pageId)
+.classList.add("active-page");
+
+document.querySelectorAll(".nav-item")
+.forEach(item=>{
+
+item.classList.remove("active");
+
+});
+
+element.classList.add("active");
+
+};
+window.openMap = function(event,latitude,longitude){
+
+event.preventDefault();
+
+event.stopPropagation();
+
+if(!latitude || !longitude){
+
+alert("لا يوجد موقع للمتجر");
+
+return;
+
+}
+
+document.getElementById("mapModal")
+.style.display = "flex";
+
+document.getElementById("mapFrame")
+.src =
+`https://maps.google.com/maps?q=${latitude},${longitude}&z=16&output=embed`;
+
+};
+
+window.closeMap = function(){
+
+document.getElementById("mapModal")
+.style.display = "none";
+
+document.getElementById("mapFrame")
+.src = "";
+
+};
+window.openTaxiPage = function(){
+
+window.location.href = "taxie.html";
+
+};
+
+window.logout =
+function(){
+
+localStorage.clear();
+sessionStorage.clear();
+
+window.location.href =
+"index.html";
+
+};
+window.logout =
+function(){
+
+localStorage.clear();
+sessionStorage.clear();
+
+window.location.href =
+"index.html";
+
+};
+history.pushState(null,null,location.href);
+
+window.onpopstate = function(){
+
+const currentOrderId =
+localStorage.getItem("currentOrderId");
+
+if(currentOrderId){
+
+window.location.replace(
+"talab.html?orderId=" +
+currentOrderId
+);
+
+history.pushState(
+null,
+null,
+location.href
+);
+
+}
+
+};
+</script>
+<!-- نافذة الخريطة -->
+
+<div
+id="mapModal"
+style="
+display:none;
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+background:rgba(0,0,0,.55);
+z-index:99999;
+justify-content:center;
+align-items:center;
+padding:20px;
+">
+
+<div
+style="
+width:100%;
+max-width:500px;
+height:420px;
+background:white;
+border-radius:24px;
+overflow:hidden;
+position:relative;
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+">
+
+<button
+onclick="closeMap()"
+style="
+position:absolute;
+top:12px;
+left:12px;
+width:38px;
+height:38px;
+border:none;
+border-radius:50%;
+background:red;
+color:white;
+font-size:18px;
+font-weight:bold;
+z-index:10;
+cursor:pointer;
+">
+
+✕
+
+</button>
+
+<iframe
+id="mapFrame"
+width="100%"
+height="100%"
+style="border:none;"
+loading="lazy">
+</iframe>
+
+</div>
+
+</div>
+<script>
+
+document.addEventListener('gesturestart', function(e){
+e.preventDefault();
+});
+
+document.addEventListener('dblclick', function(e){
+e.preventDefault();
+}, { passive:false });
+
+</script>
 </body>
 
-</html>
+</html> 
