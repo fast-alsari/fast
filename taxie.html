@@ -30,7 +30,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <style>
 
@@ -57,12 +62,9 @@ linear-gradient(
 );
 
 padding:25px 20px;
-
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
-
 color:white;
-
 box-shadow:0 8px 25px rgba(0,0,0,.12);
 }
 
@@ -607,8 +609,7 @@ getDatabase,
 ref,
 set,
 update,
-onValue,
-get
+onValue
 
 }
 
@@ -649,6 +650,7 @@ window.location.href =
 
 let taxiMap;
 let tripMap;
+let routingControl;
 
 let customerLat = null;
 let customerLng = null;
@@ -691,9 +693,7 @@ iconAnchor:[20,40]
 
 });
 
-// ======================
-// جلب موقع الزبون
-// ======================
+// GPS
 
 navigator.geolocation.getCurrentPosition(
 
@@ -727,9 +727,7 @@ alert("فعل GPS");
 
 );
 
-// ======================
 // خريطة
-// ======================
 
 function initMap(){
 
@@ -743,10 +741,7 @@ customerLng
 );
 
 L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-{
-maxZoom:19
-}
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 ).addTo(taxiMap);
 
 L.marker(
@@ -777,120 +772,79 @@ destinationLat.toFixed(5)
 +
 destinationLng.toFixed(5);
 
-taxiMap.eachLayer((layer)=>{
+if(routingControl){
 
-if(layer instanceof L.Marker){
-
-taxiMap.removeLayer(layer);
-
-}
-
-if(layer instanceof L.Polyline){
-
-taxiMap.removeLayer(layer);
+taxiMap.removeControl(
+routingControl
+);
 
 }
 
-});
+routingControl =
+L.Routing.control({
 
-L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-).addTo(taxiMap);
+waypoints:[
 
-L.marker(
-[
+L.latLng(
 customerLat,
 customerLng
+),
+
+L.latLng(
+destinationLat,
+destinationLng
+)
+
 ],
+
+routeWhileDragging:false,
+addWaypoints:false,
+draggableWaypoints:false,
+fitSelectedRoutes:true,
+show:false,
+
+lineOptions:{
+styles:[
+{
+color:"#ff8800",
+weight:7
+}
+]
+},
+
+createMarker:function(i,waypoint){
+
+if(i === 0){
+
+return L.marker(
+waypoint.latLng,
 {
 icon:customerIcon
 }
-).addTo(taxiMap);
+);
 
-L.marker(
-[
-destinationLat,
-destinationLng
-],
+}
+
+return L.marker(
+waypoint.latLng,
 {
 icon:destinationIcon
 }
-).addTo(taxiMap);
-
-L.polyline([
-[
-customerLat,
-customerLng
-],
-[
-destinationLat,
-destinationLng
-]
-],
-{
-color:"#ff8800",
-weight:6
-}
-).addTo(taxiMap);
-
-calculatePrice();
-
-});
-
-}
-
-// ======================
-// السعر
-// ======================
-
-function calculatePrice(){
-
-const R = 6371;
-
-const dLat =
-(destinationLat-customerLat)
-*
-Math.PI/180;
-
-const dLng =
-(destinationLng-customerLng)
-*
-Math.PI/180;
-
-const a =
-
-Math.sin(dLat/2)
-*
-Math.sin(dLat/2)
-
-+
-
-Math.cos(
-customerLat*Math.PI/180
-)
-
-*
-
-Math.cos(
-destinationLat*Math.PI/180
-)
-
-*
-
-Math.sin(dLng/2)
-
-*
-
-Math.sin(dLng/2);
-
-const c =
-2 *
-Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a)
 );
 
-tripDistance = R * c;
+}
+
+}).addTo(taxiMap);
+
+routingControl.on(
+'routesfound',
+function(e){
+
+const summary =
+e.routes[0].summary;
+
+tripDistance =
+summary.totalDistance / 1000;
 
 if(tripDistance <= 1){
 
@@ -949,413 +903,9 @@ tripPrice.toLocaleString()
 
 }
 
-// ======================
-// ارسال طلب
-// ======================
-
-window.requestTaxi =
-async function(){
-
-if(destinationLat === null){
-
-alert("حدد الوجهة");
-
-return;
-
-}
-
-const tip =
-Number(
-document.getElementById(
-"tipInput"
-).value || 0
 );
-
-const finalPrice =
-tripPrice + tip;
-
-const orderId =
-"TAXI_" + Date.now();
-
-currentOrderId = orderId;
-
-const orderData = {
-
-id:orderId,
-
-type:"taxi",
-
-status:"waiting",
-
-customerId:
-currentUser.id,
-
-customerName:
-currentUser.name || "",
-
-customerPhone:
-currentUser.phone || "",
-
-pickupLat:customerLat,
-pickupLng:customerLng,
-
-destinationLat,
-destinationLng,
-
-distance:
-Number(
-tripDistance.toFixed(1)
-),
-
-price:finalPrice,
-
-tip:tip,
-
-driverId:"",
-driverName:"",
-driverPhone:"",
-driverImage:"",
-vehicleType:"",
-
-createdAt:Date.now()
-
-};
-
-await set(
-ref(database,
-"taxi_orders/" + orderId
-),
-orderData
-);
-
-localStorage.setItem(
-"currentTaxiOrder",
-orderId
-);
-
-document.getElementById(
-"summaryCard"
-).style.display = "none";
-
-document.getElementById(
-"searchBox"
-).style.display = "block";
-
-listenOrder(orderId);
-
-};
-
-// ======================
-// متابعة الطلب
-// ======================
-
-function listenOrder(orderId){
-
-onValue(
-ref(database,
-"taxi_orders/" + orderId
-),
-async(snapshot)=>{
-
-if(!snapshot.exists()){
-return;
-}
-
-const order =
-snapshot.val();
-
-if(order.status === "accepted"){
-
-document.getElementById(
-"searchBox"
-).style.display = "none";
-
-document.getElementById(
-"driverCard"
-).style.display = "block";
-
-document.getElementById(
-"driverName"
-).innerHTML =
-order.driverName || "";
-
-document.getElementById(
-"driverPhone"
-).innerHTML =
-order.driverPhone || "";
-
-document.getElementById(
-"driverCar"
-).innerHTML =
-order.vehicleType || "";
-
-document.getElementById(
-"driverImage"
-).src =
-order.driverImage || "user.png";
-
-document.getElementById(
-"whatsappBtn"
-).href =
-"https://wa.me/" +
-order.driverPhone;
-
-// خريطة السائق
-
-const driverSnapshot =
-await get(
-ref(database,
-"taxis/" + order.driverId
-)
-);
-
-if(driverSnapshot.exists()){
-
-const driver =
-driverSnapshot.val();
-
-drawTripMap(driver);
-
-}
-
-}
-
-if(order.status === "arrived"){
-
-alert("لقد وصلك السائق 🚕");
-
-document.getElementById(
-"tripStatus"
-).innerHTML =
-"لقد وصلك السائق";
-
-}
-
-if(order.status === "started_trip"){
-
-document.getElementById(
-"tripStatus"
-).innerHTML =
-"بدأت الرحلة";
-
-}
-
-if(order.status === "completed"){
-
-alert("تم التوصيل بنجاح");
-
-document.getElementById(
-"tripStatus"
-).innerHTML =
-"تم التوصيل";
-
-}
-
-if(order.status === "cancelled"){
-
-alert("تم الغاء الطلب");
-
-window.location.reload();
-
-}
 
 });
-
-}
-
-// ======================
-// رسم الخريطة
-// ======================
-
-function drawTripMap(driver){
-
-if(tripMap){
-
-tripMap.remove();
-
-}
-
-tripMap = L.map("tripMap")
-.setView(
-[
-customerLat,
-customerLng
-],
-13
-);
-
-L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-).addTo(tripMap);
-
-// التكسي
-
-L.marker(
-[
-driver.latitude,
-driver.longitude
-],
-{
-icon:taxiIcon
-}
-).addTo(tripMap);
-
-// الزبون
-
-L.marker(
-[
-customerLat,
-customerLng
-],
-{
-icon:customerIcon
-}
-).addTo(tripMap);
-
-// الوجهة
-
-L.marker(
-[
-destinationLat,
-destinationLng
-],
-{
-icon:destinationIcon
-}
-).addTo(tripMap);
-
-// خط السائق للزبون
-
-L.polyline([
-[
-driver.latitude,
-driver.longitude
-],
-[
-customerLat,
-customerLng
-]
-],
-{
-color:"#2563eb",
-weight:6
-}
-).addTo(tripMap);
-
-// خط الرحلة
-
-L.polyline([
-[
-customerLat,
-customerLng
-],
-[
-destinationLat,
-destinationLng
-]
-],
-{
-color:"#ff8800",
-weight:6
-}
-).addTo(tripMap);
-
-}
-
-// ======================
-// الغاء الطلب
-// ======================
-
-window.cancelOrder =
-async function(){
-
-if(!currentOrderId){
-return;
-}
-
-await update(
-ref(database,
-"taxi_orders/" + currentOrderId
-),
-{
-
-status:"cancelled",
-
-cancelledBy:"customer"
-
-}
-);
-
-localStorage.removeItem(
-"currentTaxiOrder"
-);
-
-const taxiSnapshot =
-await get(
-ref(database,
-"taxis/" + currentUser.id
-)
-);
-
-if(taxiSnapshot.exists()){
-
-const taxi =
-taxiSnapshot.val();
-
-await update(
-ref(database,
-"taxis/" + currentUser.id
-),
-{
-
-cancelledTrips:
-Number(
-taxi.cancelledTrips || 0
-) + 1
-
-}
-);
-
-}
-
-window.location.reload();
-
-};
-
-// ======================
-// الغاء قبل الارسال
-// ======================
-
-window.cancelCreateOrder =
-function(){
-
-window.location.href =
-"home.html";
-
-};
-
-// ======================
-// استرجاع الطلب
-// ======================
-
-const savedOrder =
-localStorage.getItem(
-"currentTaxiOrder"
-);
-
-if(savedOrder){
-
-currentOrderId = savedOrder;
-
-document.getElementById(
-"summaryCard"
-).style.display = "none";
-
-document.getElementById(
-"searchBox"
-).style.display = "block";
-
-listenOrder(savedOrder);
 
 }
 
