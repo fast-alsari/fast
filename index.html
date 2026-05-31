@@ -854,7 +854,7 @@ document.getElementById("account_type").value;
 if(type === ""){
 
 alert("اختر نوع الحساب");
-
+resetRegisterButton();
 return;
 
 }
@@ -1053,7 +1053,6 @@ target="_blank">
 `;
 
 showSection("pendingSection");
-resetRegisterButton();
 return false;
 
 }
@@ -1079,7 +1078,6 @@ target="_blank">
 `;
 
 showSection("pendingSection");
-resetRegisterButton();
 return false;
 
 }
@@ -1145,16 +1143,7 @@ registerBtn.innerText = "إنشاء الحساب";
 window.registerAccount =
 async function(){
 
-const loginBtn =
-document.querySelector(
-'button[onclick="login()"]'
-);
 
-loginBtn.disabled = true;
-
-loginBtn.innerText =
-"جاري تسجيل الدخول...";
- 
 registerBtn = document.querySelector(
 'button[onclick="registerAccount()"]'
 );
@@ -1171,7 +1160,7 @@ document.getElementById("account_type").value;
 if(type === ""){
 
 alert("اختر نوع الحساب");
-
+resetRegisterButton();
 return;
 
 }
@@ -1268,7 +1257,6 @@ customerData
 );
 
 saveSession(customerData);
-
 window.location.replace("home.html");
 
 }
@@ -1748,7 +1736,12 @@ document.getElementById("login_password").value.trim();
 
 if(phone === "" || password === ""){
 
-alert("املأ جميع الحقول");
+showToast("املأ جميع الحقول");
+
+loginBtn.disabled = false;
+
+loginBtn.innerText =
+"تسجيل الدخول";
 
 return;
 
@@ -1814,12 +1807,16 @@ if(
 user.phone === phone &&
 user.password === password
 ){
+
+saveSession(user);
+
 if(!checkAccountStatus(user)){
 return;
 }
-
-
+ 
 if(user.status === "active"){
+
+saveSession(user);
 
 window.location.replace("home.html");
 
@@ -1828,7 +1825,6 @@ window.location.replace("home.html");
 showSection("pendingSection");
 
 }
-
 return;
 
 }
@@ -1856,11 +1852,10 @@ user.password === password
 ){
 
 
-
+saveSession(user);
 if(!checkAccountStatus(user)){
 return;
 }
-
 window.location.replace("store.html");
 
 return;
@@ -1890,11 +1885,10 @@ user.password === password
 ){
 
 
-
+saveSession(user);
 if(!checkAccountStatus(user)){
 return;
 }
-
 window.location.replace("drive.html");
 
 return;
@@ -1924,11 +1918,10 @@ user.password === password
 ){
 
 
-
+saveSession(user);
 if(!checkAccountStatus(user)){
 return;
 }
-
 window.location.replace("taxie.html");
 
 return;
@@ -1940,6 +1933,10 @@ return;
 }
 
 alert("بيانات تسجيل الدخول غير صحيحة");
+ loginBtn.disabled = false;
+
+loginBtn.innerText =
+"تسجيل الدخول";
 }catch(error){
 
 console.log(error);
