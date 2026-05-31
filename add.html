@@ -140,12 +140,17 @@ font-size:22px;
 margin-bottom:15px;
 color:#ff7b00;
 }
-
 .item{
 border:1px solid #ddd;
 padding:15px;
 border-radius:15px;
 margin-bottom:15px;
+transition:.3s;
+}
+
+.item:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 25px rgba(0,0,0,.1);
 }
 
 .item p{
@@ -157,6 +162,16 @@ display:flex;
 gap:10px;
 flex-wrap:wrap;
 margin-top:15px;
+}
+
+.search-input{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:1px solid #ddd;
+margin-bottom:20px;
+font-size:15px;
+outline:none;
 }
 
 .actions button{
@@ -304,6 +319,9 @@ onclick="showSection('storesSection',document.querySelectorAll('.tab-btn')[1])">
 
 </button>
 
+
+
+
 <button class="stats-btn"
 onclick="showSection('driversSection',document.querySelectorAll('.tab-btn')[2])">
 
@@ -393,6 +411,13 @@ class="section">
 المتاجر
 </h2>
 
+<input
+type="text"
+id="storeSearch"
+placeholder="بحث عن متجر أو رقم هاتف..."
+class="search-input"
+onkeyup="searchStores()">
+
 <div class="filter-buttons">
 
 <button onclick="showActiveStores()">
@@ -403,6 +428,10 @@ class="section">
 <button onclick="showInactiveStores()">
 المتاجر الغير مفعلة
 (<span id="inactiveStoresCount">0</span>)
+</button>
+
+<button onclick="showPendingStores()">
+المتاجر قيد المراجعة
 </button>
 
 <button onclick="activateAllStores()">
@@ -504,8 +533,14 @@ const database = getDatabase(app);
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
-if(!currentUser || currentUser.type !== "admin"){
+if(
+!currentUser ||
+currentUser.type !== "admin" ||
+currentUser.status !== "active"
+){
+
 window.location.href = "index.html";
+
 }
 
 window.logout = function(){
@@ -517,6 +552,7 @@ window.location.href = "index.html";
 };
 
 window.showSection = function(id,button){
+
 
 document.querySelectorAll(".section")
 .forEach(section=>{
@@ -532,7 +568,10 @@ btn.classList.remove("active");
 });
 
 button.classList.add("active");
-
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 };
 
 let allStoresData = {};
@@ -714,7 +753,7 @@ const nextMonth = new Date();
 
 nextMonth.setMonth(nextMonth.getMonth()+1);
 
-await update(ref(database,"taxi_drivers/"+id),{
+await update(ref(database,"taxis/"+id),{
 
 status:"active",
 
@@ -730,7 +769,7 @@ alert("تم تفعيل التكسي");
 
 window.deactivateTaxi = async function(id){
 
-await update(ref(database,"taxi_drivers/"+id),{
+await update(ref(database,"taxis/"+id),{
 
 status:"inactive"
 
@@ -798,6 +837,24 @@ ${store.expireDate || "-"}</p>
 <p><strong>تاريخ التجديد:</strong>
 ${store.renewDate || "-"}</p>
 
+<p>
+<strong>الاتصال:</strong>
+
+${
+store.isOnline
+
+?
+
+'<span class="status-active">متصل الآن</span>'
+
+:
+
+'<span class="status-inactive">غير متصل</span>'
+}
+
+</p>
+
+
 <div class="actions">
 
 <button class="accept"
@@ -808,6 +865,13 @@ onclick="activateStore('${id}')">
 <button class="reject"
 onclick="deactivateStore('${id}')">
 الغاء التفعيل
+</button>
+<button
+class="reject"
+onclick="deleteStore('${id}')">
+
+حذف المتجر
+
 </button>
 <button
 class="vip-btn"
@@ -933,6 +997,31 @@ status:"active"
 
 };
 
+window.deleteStore = async function(id){
+
+let ok =
+confirm("هل تريد حذف المتجر؟");
+
+if(!ok){
+return;
+}
+
+try{
+
+await remove(
+ref(database,"stores/"+id)
+);
+
+alert("تم حذف المتجر");
+
+}catch(error){
+
+alert("فشل حذف المتجر");
+
+}
+
+};
+
 window.deactivateAllStores = async function(){
 
 for(let id in allStoresData){
@@ -974,6 +1063,25 @@ container.innerHTML = "";
 for(let id in allStoresData){
 
 if(allStoresData[id].status !== "active"){
+
+renderStore(id,allStoresData[id]);
+
+}
+
+}
+
+};
+
+window.showPendingStores = function(){
+
+const container =
+document.getElementById("storesContainer");
+
+container.innerHTML = "";
+
+for(let id in allStoresData){
+
+if(allStoresData[id].status === "pending"){
 
 renderStore(id,allStoresData[id]);
 
@@ -1098,7 +1206,7 @@ ${driver.expireDate || "-"}</p>
 <strong>الحساب:</strong>
 
 ${
-taxi.accountType === "vip"
+driver.accountType === "vip"
 
 ?
 
@@ -1116,8 +1224,9 @@ taxi.accountType === "vip"
 
 <p>
 <strong>انتهاء VIP:</strong>
-${taxi.vipExpireDate || "-"}
+${driver.vipExpireDate || "-"}
 </p>
+
 
 <p><strong>عدد الطلبات:</strong>
 ${driver.completedOrders || 0}</p>
@@ -1134,7 +1243,13 @@ onclick="activateDriver('${id}')">
 تفعيل
 
 </button>
+<button
+class="reject"
+onclick="deleteDriver('${id}')">
 
+حذف
+
+</button>
 <button
 class="reject"
 onclick="deactivateDriver('${id}')">
@@ -1156,6 +1271,8 @@ class="remove-vip-btn"
 onclick="removeVipDriver('${id}')">
 
 إلغاء VIP
+
+
 
 </button>
 
@@ -1189,7 +1306,7 @@ onerror="this.src='https://via.placeholder.com/120'">
 // التكسي
 // =========================
 
-onValue(ref(database,"taxi_drivers"),(snapshot)=>{
+onValue(ref(database,"taxis"),(snapshot)=>{
 
 const container =
 document.getElementById("taxiContainer");
@@ -1218,13 +1335,13 @@ ${taxi.name || "-"}</p>
 ${taxi.phone || "-"}</p>
 
 <p><strong>نوع السيارة:</strong>
-${taxi.carType || "-"}</p>
+${taxi.vehicleType || "-"}</p>
 
 <p><strong>لون السيارة:</strong>
-${taxi.carColor || "-"}</p>
+${taxi.vehicleColor || "-"}</p>
 
 <p><strong>رقم السيارة:</strong>
-${taxi.carNumber || "-"}</p>
+${taxi.vehicleNumber || "-"}</p>
 
 <p><strong>الحالة:</strong>
 
@@ -1246,11 +1363,10 @@ ${taxi.expireDate || "-"}</p>
 
 <div class="actions">
 <p>
-<p>
 <strong>الحساب:</strong>
 
 ${
-driver.accountType === "vip"
+taxi.accountType === "vip"
 
 ?
 
@@ -1268,8 +1384,9 @@ driver.accountType === "vip"
 
 <p>
 <strong>انتهاء VIP:</strong>
-${driver.vipExpireDate || "-"}
+${taxi.vipExpireDate || "-"}
 </p>
+
 <button
 class="accept"
 onclick="activateTaxi('${id}')">
@@ -1283,6 +1400,13 @@ class="reject"
 onclick="deactivateTaxi('${id}')">
 
 إلغاء
+
+</button>
+<button
+class="reject"
+onclick="deleteTaxi('${id}')">
+
+حذف
 
 </button>
 
@@ -1308,7 +1432,7 @@ onclick="removeVipTaxi('${id}')">
 
 <img
 class="big-image"
-src="${taxi.carImage || 'https://via.placeholder.com/120'}"
+src="${taxi.vehicleImage || 'https://via.placeholder.com/120'}"
 onerror="this.src='https://via.placeholder.com/120'">
 
 </div>
@@ -1333,7 +1457,7 @@ nextMonth.getMonth()+1
 );
 
 await update(
-ref(database,"taxi_drivers/"+id),
+ref(database,"taxis/"+id),
 {
 
 accountType:"vip",
@@ -1353,7 +1477,7 @@ alert("تم تفعيل VIP للتكسي");
 window.removeVipTaxi = async function(id){
 
 await update(
-ref(database,"taxi_drivers/"+id),
+ref(database,"taxis/"+id),
 {
 
 accountType:"normal",
@@ -1446,7 +1570,7 @@ product.id = productId;
 
 product.storeId = storeId;
 
-allProductsData[productId] = product;
+allProductsData[storeId + "_" + productId] = product;
 
 if(product.deleted) continue;
 
@@ -1682,6 +1806,8 @@ onclick="deleteProduct('${product.storeId}','${product.id}')">
 
 </button>
 
+
+
 </div>
 
 </div>
@@ -1693,10 +1819,91 @@ onclick="deleteProduct('${product.storeId}','${product.id}')">
 }
 
 };
+window.searchStores = function(){
 
+const value =
+document.getElementById("storeSearch")
+.value
+.trim()
+.toLowerCase();
+const container =
+document.getElementById("storesContainer");
+
+container.innerHTML = "";
+
+for(let id in allStoresData){
+
+let store = allStoresData[id];
+
+if(
+(store.store_name || "")
+.toLowerCase()
+.includes(value)
+
+||
+
+(store.phone || "")
+.toLowerCase()
+.includes(value)
+){
+
+renderStore(id,store);
+
+}
+
+}
+
+};
 
 loadDashboard();
 
+window.deleteDriver = async function(id){
+
+let ok = confirm("حذف السائق؟");
+
+if(!ok){
+return;
+}
+
+try{
+
+await remove(
+ref(database,"drivers/"+id)
+);
+
+alert("تم حذف السائق");
+
+}catch{
+
+alert("فشل حذف السائق");
+
+}
+
+};
+
+window.deleteTaxi = async function(id){
+
+let ok = confirm("حذف التكسي؟");
+
+if(!ok){
+return;
+}
+
+try{
+
+await remove(
+ref(database,"taxis/"+id)
+);
+
+alert("تم حذف التكسي");
+
+}catch{
+
+alert("فشل حذف التكسي");
+
+}
+
+};
 </script>
 
 </body>
