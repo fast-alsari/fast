@@ -1,1 +1,602 @@
+<!-- admin-orders.html -->
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+إدارة الطلبات
+</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f5f6fa;
+padding-bottom:100px;
+overflow-x:hidden;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:25px 20px;
+color:white;
+
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+
+box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+.header h1{
+font-size:28px;
+margin-bottom:8px;
+}
+
+.header p{
+font-size:14px;
+opacity:.95;
+}
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr 1fr;
+gap:12px;
+padding:15px;
+}
+
+.stat-card{
+background:white;
+padding:18px;
+border-radius:24px;
+text-align:center;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.stat-card h2{
+font-size:26px;
+color:#ff6600;
+margin-bottom:6px;
+}
+
+.stat-card p{
+font-size:13px;
+font-weight:bold;
+color:#666;
+}
+
+.orders-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.order-card{
+background:white;
+padding:18px;
+border-radius:28px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.order-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:14px;
+}
+
+.order-id{
+font-size:13px;
+font-weight:bold;
+color:#888;
+}
+
+.order-status{
+padding:8px 14px;
+border-radius:14px;
+font-size:13px;
+font-weight:bold;
+background:#fff4e8;
+color:#ff6600;
+}
+
+.customer-box{
+background:#f8f8f8;
+padding:15px;
+border-radius:18px;
+margin-bottom:15px;
+}
+
+.customer-box h3{
+font-size:18px;
+margin-bottom:6px;
+}
+
+.customer-box p{
+font-size:14px;
+margin-bottom:5px;
+color:#666;
+}
+
+.items-box{
+background:#fffaf5;
+padding:15px;
+border-radius:18px;
+margin-bottom:15px;
+}
+
+.item{
+display:flex;
+justify-content:space-between;
+margin-bottom:10px;
+font-size:14px;
+}
+
+.price{
+font-size:26px;
+font-weight:bold;
+color:#00b894;
+text-align:center;
+margin-bottom:15px;
+}
+
+.actions{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+}
+
+.actions button{
+height:52px;
+border:none;
+border-radius:18px;
+font-size:14px;
+font-weight:bold;
+cursor:pointer;
+color:white;
+}
+
+.accept-btn{
+background:#00b894;
+}
+
+.cancel-btn{
+background:#e53935;
+}
+
+.delete-btn{
+background:#111827;
+grid-column:1/3;
+}
+
+.empty{
+padding:60px 20px;
+text-align:center;
+font-size:16px;
+color:#777;
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:82px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+box-shadow:0 -5px 18px rgba(0,0,0,.08);
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:5px;
+font-size:13px;
+font-weight:bold;
+color:#888;
+cursor:pointer;
+}
+
+.nav-item.active{
+color:#ff8800;
+}
+
+.nav-item i{
+font-size:22px;
+}
+
+@media(max-width:700px){
+
+.stats{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>
+إدارة الطلبات
+</h1>
+
+<p>
+جميع طلبات التوصيل داخل النظام
+</p>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-card">
+
+<h2 id="allOrders">
+0
+</h2>
+
+<p>
+كل الطلبات
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="activeOrders">
+0
+</h2>
+
+<p>
+طلبات نشطة
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="completedOrders">
+0
+</h2>
+
+<p>
+طلبات مكتملة
+</p>
+
+</div>
+
+</div>
+
+<div
+class="orders-container"
+id="ordersContainer"></div>
+
+<div class="bottom-bar">
+
+<div class="nav-item active">
+
+<i class="fa-solid fa-box"></i>
+
+<span>
+الطلبات
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='admin-users.html'">
+
+<i class="fa-solid fa-users"></i>
+
+<span>
+المستخدمين
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='admin-statistics.html'">
+
+<i class="fa-solid fa-chart-column"></i>
+
+<span>
+الإحصائيات
+</span>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { db }
+from "./config.js";
+
+import {
+
+ref,
+onValue,
+update,
+remove
+
+}
+
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const ordersContainer =
+document.getElementById(
+"ordersContainer"
+);
+
+onValue(
+ref(db,"orders"),
+(snapshot)=>{
+
+ordersContainer.innerHTML = "";
+
+if(!snapshot.exists()){
+
+ordersContainer.innerHTML = `
+<div class="empty">
+لا توجد طلبات
+</div>
+`;
+
+return;
+
+}
+
+const orders =
+Object.values(snapshot.val())
+.sort((a,b)=>
+
+b.createdAt - a.createdAt
+
+);
+
+let active = 0;
+let completed = 0;
+
+document.getElementById(
+"allOrders"
+).innerHTML =
+orders.length;
+
+orders.forEach(order=>{
+
+if(
+[
+"waiting_driver",
+"accepted",
+"on_the_way",
+"arrived"
+].includes(order.status)
+){
+active++;
+}
+
+if(order.status === "delivered"){
+completed++;
+}
+
+ordersContainer.innerHTML += `
+
+<div class="order-card">
+
+<div class="order-top">
+
+<div class="order-id">
+# ${order.id}
+</div>
+
+<div class="order-status">
+${getStatus(order.status)}
+</div>
+
+</div>
+
+<div class="customer-box">
+
+<h3>
+${order.customerName || ""}
+</h3>
+
+<p>
+📞 ${order.customerPhone || ""}
+</p>
+
+<p>
+📍 ${order.customerAddress || ""}
+</p>
+
+</div>
+
+<div class="items-box">
+
+${(order.items || [])
+.map(item => `
+
+<div class="item">
+
+<span>
+${item.name} × ${item.qty}
+</span>
+
+<b>
+${Number(item.totalPrice || 0)
+.toLocaleString()} د.ع
+</b>
+
+</div>
+
+`).join("")}
+
+</div>
+
+<div class="price">
+
+${Number(order.totalPrice || 0)
+.toLocaleString()} د.ع
+
+</div>
+
+<div class="actions">
+
+<button
+class="accept-btn"
+onclick="markDelivered('${order.id}')">
+
+تم التوصيل
+
+</button>
+
+<button
+class="cancel-btn"
+onclick="cancelOrder('${order.id}')">
+
+إلغاء الطلب
+
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteOrder('${order.id}')">
+
+حذف نهائي
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+document.getElementById(
+"activeOrders"
+).innerHTML = active;
+
+document.getElementById(
+"completedOrders"
+).innerHTML = completed;
+
+});
+
+window.markDelivered =
+async function(orderId){
+
+await update(
+ref(db,"orders/" + orderId),
+{
+
+status:"delivered",
+deliveredAt:Date.now()
+
+}
+);
+
+};
+
+window.cancelOrder =
+async function(orderId){
+
+await update(
+ref(db,"orders/" + orderId),
+{
+
+status:"cancelled",
+cancelledAt:Date.now()
+
+}
+);
+
+};
+
+window.deleteOrder =
+async function(orderId){
+
+if(!confirm("حذف الطلب نهائياً؟")){
+return;
+}
+
+await remove(
+ref(db,"orders/" + orderId)
+);
+
+};
+
+function getStatus(status){
+
+if(status === "waiting_driver"){
+return "بانتظار سائق";
+}
+
+if(status === "accepted"){
+return "تم قبول الطلب";
+}
+
+if(status === "on_the_way"){
+return "بالطريق";
+}
+
+if(status === "arrived"){
+return "وصل السائق";
+}
+
+if(status === "delivered"){
+return "تم التوصيل";
+}
+
+if(status === "cancelled"){
+return "ملغي";
+}
+
+return status;
+
+}
+
+</script>
+
+</body>
+
+</html>
