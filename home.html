@@ -87,6 +87,19 @@ font-size:16px !important;
 touch-action:manipulation;
 }
 
+.store-card:active{
+transform:scale(.98);
+}
+
+.product-card:active{
+transform:scale(.98);
+}
+
+.store-card,
+.product-card{
+transition:.2s;
+}
+
 .filters{
 display:flex;
 gap:10px;
@@ -118,6 +131,36 @@ padding:15px;
 display:flex;
 flex-direction:column;
 gap:14px;
+}
+
+.loading-screen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:white;
+z-index:999999;
+display:flex;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+gap:20px;
+}
+
+.loading-spinner{
+width:65px;
+height:65px;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+border-radius:50%;
+animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
 }
 
 .store-card{
@@ -598,6 +641,16 @@ color:#c40000;
 </head>
 
 <body>
+    
+    <div class="loading-screen" id="loadingScreen">
+
+<div class="loading-spinner"></div>
+
+<h3 style="color:#ff8800;">
+جاري التحميل...
+</h3>
+
+</div>
 
 <div id="homePage"
 class="page active-page">
@@ -975,6 +1028,14 @@ const snapshot = await get(
 ref(database, tableName + "/" + currentUser.id)
 );
 
+setTimeout(()=>{
+
+document.getElementById(
+"loadingScreen"
+).style.display = "none";
+
+},1500);
+
 if(!snapshot.exists()){
 
 localStorage.clear();
@@ -1038,11 +1099,13 @@ position.coords.longitude;
 
 // تحديث موقع المستخدم داخل Firebase
 
-set(
-ref(database,
-"customers/" + currentUser.id + "/userLat"
-),
-userLatitude
+update(
+ref(database,"customers/" + currentUser.id),
+{
+userLat:userLatitude,
+userLng:userLongitude,
+lastLocationUpdate:Date.now()
+}
 );
 
 set(
@@ -1095,7 +1158,7 @@ alert("يرجى تشغيل GPS");
 
 {
 enableHighAccuracy:true,
-maximumAge:0,
+maximumAge:5000,
 timeout:10000
 }
 
@@ -1194,6 +1257,13 @@ store.accountType === "vip";
 allStores.push(store);
 
 }
+
+allStores = allStores.filter(store=>
+
+store.store_name &&
+store.category
+
+);
 
 // ترتيب المتاجر
 allStores.sort((a,b)=>{
@@ -1832,6 +1902,25 @@ existingProduct.qty += qty;
 
 }else{
 
+if(
+cart.length > 0 &&
+!cart.find(item =>
+item.storeId === product.storeId
+)
+){
+
+const ok = confirm(
+"السلة تحتوي على متجر آخر، هل تريد تفريغ السلة؟"
+);
+
+if(!ok){
+return;
+}
+
+cart = [];
+
+}
+
 cart.push({
 
 ...product,
@@ -2108,7 +2197,7 @@ deliveryPrice += 2000;
 // وقت الليل
 const hour = new Date().getHours();
 
-if(hour >= 12 || hour <= 6){
+if(hour >= 0 && hour <= 6){
 
 deliveryPrice += 1000;
 
@@ -2371,6 +2460,15 @@ position.coords.longitude
 
 };
 
+document.querySelector(
+".send-order"
+).disabled = true;
+
+document.querySelector(
+".send-order"
+).innerHTML =
+"جاري ارسال الطلب...";
+
 await set(
 ref(database,"orders/"+orderId),
 orderData
@@ -2510,16 +2608,7 @@ window.location.href =
 "index.html";
 
 };
-window.logout =
-function(){
 
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.href =
-"index.html";
-
-};
 history.pushState(null,null,location.href);
 
 window.onpopstate = function(){
