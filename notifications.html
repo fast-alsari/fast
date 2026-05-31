@@ -1,1 +1,194 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+الإشعارات
+</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f5f6fa;
+padding:15px;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:22px;
+border-radius:28px;
+color:white;
+margin-bottom:20px;
+}
+
+.notification{
+background:white;
+padding:18px;
+border-radius:24px;
+margin-bottom:15px;
+
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+}
+
+.notification h3{
+margin-bottom:8px;
+font-size:16px;
+}
+
+.notification p{
+font-size:14px;
+line-height:1.8;
+color:#666;
+}
+
+.time{
+margin-top:10px;
+font-size:12px;
+color:#999;
+}
+
+.empty{
+padding:60px 20px;
+text-align:center;
+color:#777;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h2>
+الإشعارات
+</h2>
+
+<p>
+آخر تحديثات التطبيق
+</p>
+
+</div>
+
+<div id="notificationsContainer"></div>
+
+<script type="module">
+
+import { db }
+from "./firebase.js";
+
+import {
+
+ref,
+onValue
+
+}
+
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const currentUser =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+if(!currentUser){
+
+window.location.replace(
+"index.html"
+);
+
+}
+
+const container =
+document.getElementById(
+"notificationsContainer"
+);
+
+onValue(
+ref(
+db,
+"notifications/" + currentUser.id
+),
+(snapshot)=>{
+
+container.innerHTML = "";
+
+if(!snapshot.exists()){
+
+container.innerHTML = `
+
+<div class="empty">
+لا توجد إشعارات
+</div>
+
+`;
+
+return;
+
+}
+
+const notifications =
+Object.values(snapshot.val())
+.reverse();
+
+notifications.forEach(item=>{
+
+container.innerHTML += `
+
+<div class="notification">
+
+<h3>
+${item.title || ""}
+</h3>
+
+<p>
+${item.message || ""}
+</p>
+
+<div class="time">
+
+${new Date(item.createdAt)
+.toLocaleString("ar-IQ")}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+);
+
+</script>
+
+</body>
+
+</html>
