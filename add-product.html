@@ -14,7 +14,11 @@ content="width=device-width, initial-scale=1.0">
 </title>
 
 <link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
 rel="stylesheet">
 
 <style>
@@ -29,7 +33,7 @@ font-family:'Cairo',sans-serif;
 body{
 background:#f5f6fa;
 padding:15px;
-padding-bottom:100px;
+padding-bottom:120px;
 }
 
 .header{
@@ -43,18 +47,40 @@ linear-gradient(
 padding:22px;
 border-radius:28px;
 color:white;
+
+display:flex;
+align-items:center;
+gap:15px;
+
 margin-bottom:20px;
 }
 
-.header h2{
-font-size:26px;
-margin-bottom:6px;
+.back-btn{
+width:48px;
+height:48px;
+border:none;
+border-radius:50%;
+background:white;
+color:#ff6600;
+font-size:18px;
+cursor:pointer;
 }
 
-.card{
+.header h2{
+font-size:24px;
+margin-bottom:4px;
+}
+
+.header p{
+font-size:14px;
+opacity:.9;
+}
+
+.form-box{
 background:white;
 padding:20px;
-border-radius:26px;
+border-radius:28px;
+
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
 }
@@ -70,33 +96,30 @@ font-size:14px;
 font-weight:bold;
 }
 
-.input,
-.textarea{
+.input-group input,
+.input-group textarea,
+.input-group select{
 width:100%;
-border:none;
-background:#f5f5f5;
-border-radius:16px;
-padding:15px;
+padding:16px;
+border-radius:18px;
+border:1px solid #ddd;
+background:#fafafa;
 outline:none;
 font-size:15px;
 }
 
-.input{
-height:56px;
-}
-
-.textarea{
-height:120px;
+textarea{
 resize:none;
+height:130px;
 }
 
 .image-preview{
 width:100%;
-height:220px;
-border-radius:22px;
-background:#f5f5f5;
+height:240px;
+border-radius:24px;
 object-fit:cover;
-margin-top:12px;
+background:#eee;
+margin-bottom:18px;
 }
 
 .save-btn{
@@ -104,6 +127,7 @@ width:100%;
 height:58px;
 border:none;
 border-radius:18px;
+
 background:
 linear-gradient(
 135deg,
@@ -115,7 +139,6 @@ color:white;
 font-size:17px;
 font-weight:bold;
 cursor:pointer;
-margin-top:10px;
 }
 
 </style>
@@ -126,17 +149,47 @@ margin-top:10px;
 
 <div class="header">
 
+<button
+class="back-btn"
+onclick="window.location.href='store-panel.html'">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</button>
+
+<div>
+
 <h2>
-إضافة منتج 🛍️
+إضافة منتج
 </h2>
 
 <p>
-أضف منتج جديد للمتجر
+قم بإضافة منتج جديد للمتجر
 </p>
 
 </div>
 
-<div class="card">
+</div>
+
+<div class="form-box">
+
+<img
+src="product.png"
+id="previewImage"
+class="image-preview">
+
+<div class="input-group">
+
+<label>
+صورة المنتج
+</label>
+
+<input
+type="file"
+id="productImage"
+accept="image/*">
+
+</div>
 
 <div class="input-group">
 
@@ -146,8 +199,7 @@ margin-top:10px;
 
 <input
 type="text"
-id="nameInput"
-class="input"
+id="productName"
 placeholder="اسم المنتج">
 
 </div>
@@ -160,41 +212,48 @@ placeholder="اسم المنتج">
 
 <input
 type="number"
-id="priceInput"
-class="input"
-placeholder="السعر">
+id="productPrice"
+placeholder="السعر بالدينار">
 
 </div>
 
 <div class="input-group">
 
 <label>
-الوصف
+وصف المنتج
 </label>
 
 <textarea
-id="descriptionInput"
-class="textarea"
-placeholder="وصف المنتج"></textarea>
+id="productDescription"
+placeholder="اكتب وصف المنتج"></textarea>
 
 </div>
 
 <div class="input-group">
 
 <label>
-رابط الصورة
+القسم
 </label>
 
-<input
-type="text"
-id="imageInput"
-class="input"
-placeholder="رابط الصورة">
+<select id="productCategory">
 
-<img
-src="product.png"
-id="imagePreview"
-class="image-preview">
+<option value="مطاعم">
+مطاعم
+</option>
+
+<option value="ماركت">
+ماركت
+</option>
+
+<option value="حلويات">
+حلويات
+</option>
+
+<option value="مشروبات">
+مشروبات
+</option>
+
+</select>
 
 </div>
 
@@ -214,15 +273,13 @@ import { db }
 from "./firebase.js";
 
 import {
+
 ref,
 set
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-import {
-generateId
 }
-from "./utils.js";
+
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const currentUser =
 JSON.parse(
@@ -240,22 +297,37 @@ window.location.replace(
 
 }
 
-const imageInput =
+let imageBase64 = "";
+
 document.getElementById(
-"imageInput"
-);
+"productImage"
+).addEventListener(
+"change",
+function(e){
 
-const imagePreview =
+const file =
+e.target.files[0];
+
+if(!file){
+return;
+}
+
+const reader =
+new FileReader();
+
+reader.onload =
+function(event){
+
+imageBase64 =
+event.target.result;
+
 document.getElementById(
-"imagePreview"
-);
+"previewImage"
+).src = imageBase64;
 
-imageInput.addEventListener(
-"input",
-()=>{
+};
 
-imagePreview.src =
-imageInput.value || "product.png";
+reader.readAsDataURL(file);
 
 }
 );
@@ -265,37 +337,37 @@ async function(){
 
 const name =
 document.getElementById(
-"nameInput"
+"productName"
 ).value.trim();
 
 const price =
 document.getElementById(
-"priceInput"
+"productPrice"
 ).value.trim();
 
 const description =
 document.getElementById(
-"descriptionInput"
+"productDescription"
 ).value.trim();
 
-const image =
+const category =
 document.getElementById(
-"imageInput"
-).value.trim();
+"productCategory"
+).value;
 
 if(
 !name ||
 !price
 ){
 
-alert("اكمل البيانات");
+alert("يرجى ملء الحقول");
 
 return;
 
 }
 
 const productId =
-generateId("PRODUCT");
+"PRODUCT_" + Date.now();
 
 const productData = {
 
@@ -304,16 +376,19 @@ id:productId,
 storeId:
 currentUser.id,
 
+storeName:
+currentUser.store_name || "",
+
 name:name,
 
-price:
-Number(price),
+price:Number(price),
 
-description:
-description,
+description:description,
+
+category:category,
 
 image:
-image || "",
+imageBase64 || "",
 
 status:"active",
 
@@ -323,7 +398,6 @@ Date.now()
 };
 
 await set(
-
 ref(
 db,
 "store_products/" +
@@ -331,15 +405,13 @@ currentUser.id +
 "/" +
 productId
 ),
-
 productData
-
 );
 
-alert("تم إضافة المنتج");
+alert("تم حفظ المنتج");
 
 window.location.replace(
-"store.html"
+"store-panel.html"
 );
 
 };
