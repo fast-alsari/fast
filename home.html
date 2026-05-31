@@ -87,19 +87,6 @@ font-size:16px !important;
 touch-action:manipulation;
 }
 
-.store-card:active{
-transform:scale(.98);
-}
-
-.product-card:active{
-transform:scale(.98);
-}
-
-.store-card,
-.product-card{
-transition:.2s;
-}
-
 .filters{
 display:flex;
 gap:10px;
@@ -131,36 +118,6 @@ padding:15px;
 display:flex;
 flex-direction:column;
 gap:14px;
-}
-
-.loading-screen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:white;
-z-index:999999;
-display:flex;
-align-items:center;
-justify-content:center;
-flex-direction:column;
-gap:20px;
-}
-
-.loading-spinner{
-width:65px;
-height:65px;
-border:5px solid #eee;
-border-top:5px solid #ff8800;
-border-radius:50%;
-animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-100%{
-transform:rotate(360deg);
-}
 }
 
 .store-card{
@@ -641,16 +598,6 @@ color:#c40000;
 </head>
 
 <body>
-    
-    <div class="loading-screen" id="loadingScreen">
-
-<div class="loading-spinner"></div>
-
-<h3 style="color:#ff8800;">
-جاري التحميل...
-</h3>
-
-</div>
 
 <div id="homePage"
 class="page active-page">
@@ -901,25 +848,15 @@ initializeApp(firebaseConfig);
 const database =
 getDatabase(app);
 
-
-let currentUser = null;
-
-try{
-
-currentUser =
+const currentUser =
 JSON.parse(localStorage.getItem("user"));
-
-}catch{
-
-currentUser = null;
-
-}
 
 if(!currentUser || !currentUser.id){
 
 window.location.href = "index.html";
 
 }
+
 window.addEventListener(
 "pageshow",
 async function(){
@@ -1038,14 +975,6 @@ const snapshot = await get(
 ref(database, tableName + "/" + currentUser.id)
 );
 
-setTimeout(()=>{
-
-document.getElementById(
-"loadingScreen"
-).style.display = "none";
-
-},1500);
-
 if(!snapshot.exists()){
 
 localStorage.clear();
@@ -1070,11 +999,11 @@ JSON.stringify(userData)
 
 document.getElementById("welcomeText")
 .innerHTML =
-`اهلاً ${userData.name || userData.owner || "مستخدم"}`;
- 
+`اهلاً ${userData.name || "مستخدم"}`;
+
 document.getElementById("accountName")
 .innerHTML =
-userData.name || userData.owner || "مستخدم";
+userData.name || "مستخدم";
 
 document.getElementById("accountPhone")
 .innerHTML =
@@ -1090,7 +1019,6 @@ loadCurrentUser();
 let allStores = [];
 let userLatitude = null;
 let userLongitude = null;
- 
 let cart =
 JSON.parse(
 localStorage.getItem("cart")
@@ -1110,23 +1038,27 @@ position.coords.longitude;
 
 // تحديث موقع المستخدم داخل Firebase
 
-update(
-ref(database,"customers/" + currentUser.id),
-{
-latitude:userLatitude,
-longitude:userLongitude,
-lastLocationUpdate:Date.now()
-}
+set(
+ref(database,
+"customers/" + currentUser.id + "/userLat"
+),
+userLatitude
 );
- 
+
+set(
+ref(database,
+"customers/" + currentUser.id + "/userLng"
+),
+userLongitude
+);
 // حفظ الموقع للتاكسي
 localStorage.setItem(
-"userLatitude",
+"userLat",
 userLatitude
 );
 
 localStorage.setItem(
-"userLongitude",
+"userLng",
 userLongitude
 );
 
@@ -1136,10 +1068,10 @@ JSON.parse(localStorage.getItem("user"));
 
 if(savedUser){
 
-savedUser.latitude =
+savedUser.userLat =
 userLatitude;
 
-savedUser.longitude =
+savedUser.userLng =
 userLongitude;
 
 localStorage.setItem(
@@ -1163,7 +1095,7 @@ alert("يرجى تشغيل GPS");
 
 {
 enableHighAccuracy:true,
-maximumAge:5000,
+maximumAge:0,
 timeout:10000
 }
 
@@ -1244,7 +1176,7 @@ calculateDistance(
 
 userLatitude,
 userLongitude,
- 
+
 Number(store.latitude),
 Number(store.longitude)
 
@@ -1262,13 +1194,6 @@ store.accountType === "vip";
 allStores.push(store);
 
 }
-
-allStores = allStores.filter(store=>
-
-store.store_name &&
-store.category
-
-);
 
 // ترتيب المتاجر
 allStores.sort((a,b)=>{
@@ -1645,8 +1570,6 @@ cursor:pointer;
 
 }
 
-
-
 document.getElementById("searchInput")
 .addEventListener("input",function(){
 
@@ -1907,25 +1830,6 @@ existingProduct.qty += qty;
 
 }else{
 
-if(
-cart.length > 0 &&
-!cart.find(item =>
-item.storeId === product.storeId
-)
-){
-
-const ok = confirm(
-"السلة تحتوي على متجر آخر، هل تريد تفريغ السلة؟"
-);
-
-if(!ok){
-return;
-}
-
-cart = [];
-
-}
-
 cart.push({
 
 ...product,
@@ -2099,7 +2003,7 @@ calculateDistance(
 
 userLatitude,
 userLongitude,
- 
+
 Number(firstStore.latitude),
 Number(firstStore.longitude)
 
@@ -2202,7 +2106,7 @@ deliveryPrice += 2000;
 // وقت الليل
 const hour = new Date().getHours();
 
-if(hour >= 0 && hour <= 6){
+if(hour >= 12 || hour <= 6){
 
 deliveryPrice += 1000;
 
@@ -2239,36 +2143,9 @@ finalTotal.innerHTML =
 
 updateCart();
 
-// فتح السلة مباشرة اذا جاية من الحساب
-
-if(localStorage.getItem("openCartPage") === "true"){
-
-localStorage.removeItem("openCartPage");
-
-document.querySelectorAll(".page")
-.forEach(page=>{
-
-page.classList.remove("active-page");
-
-});
-
-document.getElementById("cartPage")
-.classList.add("active-page");
-
-document.querySelectorAll(".nav-item")
-.forEach(item=>{
-
-item.classList.remove("active");
-
-});
-
-document.querySelectorAll(".nav-item")[1]
-.classList.add("active");
-
-}
-
 window.increaseCartQty =
 function(productId,storeId){
+
 let item =
 cart.find(item =>
 item.id === productId &&
@@ -2484,22 +2361,13 @@ new Date().toLocaleDateString("ar-EG"),
 createdTime:
 new Date().toLocaleTimeString("ar-EG"),
 
-latitude:
+customerLat:
 position.coords.latitude,
 
-longitude:
+customerLng:
 position.coords.longitude
 
 };
-
-document.querySelector(
-".send-order"
-).disabled = true;
-
-document.querySelector(
-".send-order"
-).innerHTML =
-"جاري ارسال الطلب...";
 
 await set(
 ref(database,"orders/"+orderId),
@@ -2640,7 +2508,16 @@ window.location.href =
 "index.html";
 
 };
+window.logout =
+function(){
 
+localStorage.clear();
+sessionStorage.clear();
+
+window.location.href =
+"index.html";
+
+};
 history.pushState(null,null,location.href);
 
 window.onpopstate = function(){
