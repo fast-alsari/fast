@@ -1,1 +1,495 @@
+<!-- admin-users.html -->
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+إدارة المستخدمين
+</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f5f6fa;
+padding-bottom:100px;
+overflow-x:hidden;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:25px 20px;
+color:white;
+
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+
+box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+.header h1{
+font-size:28px;
+margin-bottom:8px;
+}
+
+.header p{
+font-size:14px;
+opacity:.95;
+}
+
+.search-box{
+margin:15px;
+background:white;
+padding:15px;
+border-radius:18px;
+display:flex;
+align-items:center;
+gap:10px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.search-box input{
+flex:1;
+border:none;
+outline:none;
+font-size:15px;
+}
+
+.users-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:16px;
+}
+
+.user-card{
+background:white;
+padding:18px;
+border-radius:26px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+display:flex;
+gap:15px;
+align-items:center;
+}
+
+.user-image{
+width:80px;
+height:80px;
+border-radius:50%;
+object-fit:cover;
+background:#eee;
+border:3px solid #f3f3f3;
+}
+
+.user-info{
+flex:1;
+}
+
+.user-name{
+font-size:20px;
+font-weight:bold;
+margin-bottom:6px;
+}
+
+.user-phone{
+font-size:14px;
+color:#666;
+margin-bottom:6px;
+}
+
+.user-status{
+display:inline-block;
+padding:6px 12px;
+border-radius:12px;
+font-size:12px;
+font-weight:bold;
+background:#e8fff3;
+color:#00b26b;
+}
+
+.actions{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+.actions button{
+width:110px;
+height:42px;
+border:none;
+border-radius:14px;
+font-size:13px;
+font-weight:bold;
+cursor:pointer;
+color:white;
+}
+
+.block-btn{
+background:#e53935;
+}
+
+.active-btn{
+background:#00b894;
+}
+
+.delete-btn{
+background:#111827;
+}
+
+.empty{
+padding:60px 20px;
+text-align:center;
+font-size:16px;
+color:#777;
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:82px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+box-shadow:0 -5px 18px rgba(0,0,0,.08);
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:5px;
+font-size:13px;
+font-weight:bold;
+color:#888;
+cursor:pointer;
+}
+
+.nav-item.active{
+color:#ff8800;
+}
+
+.nav-item i{
+font-size:22px;
+}
+
+@media(max-width:700px){
+
+.user-card{
+flex-direction:column;
+text-align:center;
+}
+
+.actions{
+width:100%;
+}
+
+.actions button{
+width:100%;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>
+إدارة المستخدمين
+</h1>
+
+<p>
+جميع حسابات الزبائن داخل التطبيق
+</p>
+
+</div>
+
+<div class="search-box">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+type="text"
+id="searchInput"
+placeholder="ابحث عن مستخدم">
+
+</div>
+
+<div
+class="users-container"
+id="usersContainer"></div>
+
+<div class="bottom-bar">
+
+<div
+class="nav-item"
+onclick="window.location.href='admin-orders.html'">
+
+<i class="fa-solid fa-box"></i>
+
+<span>
+الطلبات
+</span>
+
+</div>
+
+<div class="nav-item active">
+
+<i class="fa-solid fa-users"></i>
+
+<span>
+المستخدمين
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='admin-statistics.html'">
+
+<i class="fa-solid fa-chart-column"></i>
+
+<span>
+الإحصائيات
+</span>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { db }
+from "./config.js";
+
+import {
+
+ref,
+onValue,
+update,
+remove
+
+}
+
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const usersContainer =
+document.getElementById(
+"usersContainer"
+);
+
+let allUsers = [];
+
+onValue(
+ref(db,"customers"),
+(snapshot)=>{
+
+usersContainer.innerHTML = "";
+
+if(!snapshot.exists()){
+
+usersContainer.innerHTML = `
+<div class="empty">
+لا يوجد مستخدمين
+</div>
+`;
+
+return;
+
+}
+
+allUsers =
+Object.entries(snapshot.val())
+.map(([id,user]) => ({
+
+id,
+...user
+
+}));
+
+renderUsers(allUsers);
+
+});
+
+function renderUsers(users){
+
+usersContainer.innerHTML = "";
+
+if(users.length === 0){
+
+usersContainer.innerHTML = `
+<div class="empty">
+لا توجد نتائج
+</div>
+`;
+
+return;
+
+}
+
+users.forEach(user=>{
+
+const active =
+user.status !== "blocked";
+
+usersContainer.innerHTML += `
+
+<div class="user-card">
+
+<img
+src="${user.image || 'user.png'}"
+class="user-image"
+onerror="this.src='user.png'">
+
+<div class="user-info">
+
+<div class="user-name">
+${user.name || ""}
+</div>
+
+<div class="user-phone">
+📞 ${user.phone || ""}
+</div>
+
+<div class="user-phone">
+📍 ${user.address || ""}
+</div>
+
+<div class="user-status">
+
+${active ? "نشط" : "محظور"}
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<button
+class="
+${active ? 'block-btn' : 'active-btn'}
+"
+onclick="
+toggleUserStatus(
+'${user.id}',
+'${active ? 'blocked' : 'active'}'
+)
+">
+
+${active ? 'حظر' : 'تفعيل'}
+
+</button>
+
+<button
+class="delete-btn"
+onclick="deleteUser('${user.id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+document.getElementById(
+"searchInput"
+).addEventListener(
+"input",
+function(){
+
+const value =
+this.value.toLowerCase();
+
+const filtered =
+allUsers.filter(user =>
+
+(user.name || "")
+.toLowerCase()
+.includes(value)
+
+||
+
+(user.phone || "")
+.includes(value)
+
+);
+
+renderUsers(filtered);
+
+}
+);
+
+window.toggleUserStatus =
+async function(userId,status){
+
+await update(
+ref(db,"customers/" + userId),
+{
+
+status:status
+
+}
+);
+
+};
+
+window.deleteUser =
+async function(userId){
+
+if(!confirm("حذف المستخدم؟")){
+return;
+}
+
+await remove(
+ref(db,"customers/" + userId)
+);
+
+};
+
+</script>
+
+</body>
+
+</html>
