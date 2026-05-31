@@ -1,5 +1,3 @@
-<!-- asca.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -7,17 +5,20 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
+<meta
+name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
 الحساب الشخصي
 </title>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
 rel="stylesheet">
 
 <style>
@@ -30,50 +31,50 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f7f7f7;
+background:#f5f6fa;
 padding-bottom:120px;
 overflow-x:hidden;
 }
 
 .header{
-background:linear-gradient(135deg,#ff8800,#ff5500);
-padding:25px 20px;
-border-bottom-left-radius:30px;
-border-bottom-right-radius:30px;
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:30px 20px;
 color:white;
+
+border-bottom-left-radius:32px;
+border-bottom-right-radius:32px;
+
 text-align:center;
 }
 
-.logo-box{
-width:90px;
-height:90px;
-background:white;
+.user-image{
+width:110px;
+height:110px;
 border-radius:50%;
-margin:auto;
-display:flex;
-align-items:center;
-justify-content:center;
+object-fit:cover;
+background:white;
+padding:5px;
+margin:auto auto 15px;
 }
 
-.logo-box img{
-width:60px;
-height:60px;
-object-fit:contain;
-}
-
-.app-name{
+.user-name{
 font-size:28px;
 font-weight:bold;
-margin-top:15px;
+margin-bottom:8px;
 }
 
-.app-desc{
+.user-phone{
 font-size:15px;
-margin-top:8px;
 opacity:.95;
 }
 
-.page-content{
+.content{
 padding:15px;
 display:flex;
 flex-direction:column;
@@ -82,9 +83,11 @@ gap:15px;
 
 .card{
 background:white;
-padding:18px;
-border-radius:24px;
-box-shadow:0 5px 18px rgba(0,0,0,.06);
+padding:20px;
+border-radius:28px;
+
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
 }
 
 .card-title{
@@ -92,15 +95,16 @@ font-size:18px;
 font-weight:bold;
 margin-bottom:18px;
 color:#ff6600;
+
 display:flex;
 align-items:center;
-gap:8px;
+gap:10px;
 }
 
 .info-line{
-background:#f7f7f7;
-padding:14px;
-border-radius:16px;
+background:#f8f8f8;
+padding:15px;
+border-radius:18px;
 margin-bottom:12px;
 }
 
@@ -116,21 +120,21 @@ font-weight:bold;
 word-break:break-word;
 }
 
-.stats-grid{
+.stats{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
 }
 
 .stat-box{
-background:#fff7ef;
+background:#fff5ee;
 padding:18px;
-border-radius:18px;
+border-radius:20px;
 text-align:center;
 }
 
 .stat-number{
-font-size:24px;
+font-size:28px;
 font-weight:bold;
 color:#ff6600;
 margin-bottom:6px;
@@ -141,82 +145,32 @@ font-size:13px;
 color:#666;
 }
 
-.location-box{
-overflow:hidden;
-border-radius:20px;
-margin-top:12px;
-border:2px solid #eee;
-}
-
-.location-box iframe{
+.map-box{
 width:100%;
-height:220px;
-border:none;
-}
-
-.location-note{
-margin-top:12px;
-background:#fff7ef;
-padding:14px;
-border-radius:16px;
-font-size:13px;
-line-height:1.9;
-color:#555;
-}
-
-.code-box{
-display:flex;
-gap:10px;
+height:260px;
+border-radius:24px;
+overflow:hidden;
 margin-top:15px;
 }
 
-.code-input{
-flex:1;
-height:55px;
-border:none;
-background:#f5f5f5;
-border-radius:16px;
-padding:0 15px;
-font-size:18px;
-font-weight:bold;
-outline:none;
-direction:ltr;
-}
-
-.copy-btn{
-width:60px;
-border:none;
-border-radius:16px;
-background:#ff8800;
-color:white;
-font-size:20px;
-cursor:pointer;
-}
-
-.use-btn{
+.map-box iframe{
 width:100%;
-height:55px;
+height:100%;
 border:none;
-border-radius:18px;
-background:#00b894;
-color:white;
-font-size:16px;
-font-weight:bold;
-cursor:pointer;
-margin-top:14px;
 }
 
 .logout-btn{
 width:100%;
 height:58px;
 border:none;
-border-radius:20px;
-background:red;
+border-radius:18px;
+
+background:#e53935;
+
 color:white;
-font-size:17px;
+font-size:16px;
 font-weight:bold;
 cursor:pointer;
-margin-top:10px;
 }
 
 .bottom-bar{
@@ -226,17 +180,26 @@ left:0;
 right:0;
 height:82px;
 background:white;
+
 display:flex;
 justify-content:space-around;
 align-items:center;
-box-shadow:0 -5px 18px rgba(0,0,0,.08);
-z-index:1000;
+
+box-shadow:
+0 -5px 18px rgba(0,0,0,.08);
+
+z-index:9999;
 }
 
 .nav-item{
 display:flex;
 flex-direction:column;
 align-items:center;
+gap:5px;
+
+font-size:13px;
+font-weight:bold;
+
 color:#888;
 cursor:pointer;
 }
@@ -246,8 +209,7 @@ color:#ff8800;
 }
 
 .nav-item i{
-font-size:21px;
-margin-bottom:5px;
+font-size:22px;
 }
 
 </style>
@@ -258,25 +220,30 @@ margin-bottom:5px;
 
 <div class="header">
 
-<div class="logo-box">
+<img
+src="user.png"
+id="userImage"
+class="user-image">
 
-<img src="Logo.png">
+<div
+class="user-name"
+id="userName">
 
-</div>
-
-<div class="app-name">
-عالسريع
-</div>
-
-<div class="app-desc">
-نوصلك طلبك بأقل من ساعة 🚀
-</div>
+مستخدم
 
 </div>
 
-<div class="page-content">
+<div
+class="user-phone"
+id="userPhone">
 
-<!-- بيانات الحساب -->
+0000000000
+
+</div>
+
+</div>
+
+<div class="content">
 
 <div class="card">
 
@@ -284,21 +251,21 @@ margin-bottom:5px;
 
 <i class="fa-solid fa-user"></i>
 
-بيانات الحساب
+معلومات الحساب
 
 </div>
 
 <div class="info-line">
 
 <div class="info-label">
-الاسم
+الاسم الكامل
 </div>
 
 <div
 class="info-value"
-id="userName">
+id="fullName">
 
-...
+-
 
 </div>
 
@@ -312,9 +279,9 @@ id="userName">
 
 <div
 class="info-value"
-id="userPhone">
+id="phoneNumber">
 
-...
+-
 
 </div>
 
@@ -323,22 +290,20 @@ id="userPhone">
 <div class="info-line">
 
 <div class="info-label">
-نوع الحساب
+العنوان
 </div>
 
 <div
 class="info-value"
-id="userType">
+id="userAddress">
 
-...
-
-</div>
+-
 
 </div>
 
 </div>
 
-<!-- الاحصائيات -->
+</div>
 
 <div class="card">
 
@@ -350,13 +315,13 @@ id="userType">
 
 </div>
 
-<div class="stats-grid">
+<div class="stats">
 
 <div class="stat-box">
 
 <div
 class="stat-number"
-id="allOrders">
+id="ordersCount">
 
 0
 
@@ -372,14 +337,14 @@ id="allOrders">
 
 <div
 class="stat-number"
-id="activeOrders">
+id="completedOrders">
 
 0
 
 </div>
 
 <div class="stat-text">
-طلبات نشطة
+طلبات مكتملة
 </div>
 
 </div>
@@ -404,14 +369,14 @@ id="cancelledOrders">
 
 <div
 class="stat-number"
-id="completedOrders">
+id="totalSpent">
 
 0
 
 </div>
 
 <div class="stat-text">
-طلبات مكتملة
+إجمالي الصرف
 </div>
 
 </div>
@@ -419,8 +384,6 @@ id="completedOrders">
 </div>
 
 </div>
-
-<!-- الموقع -->
 
 <div class="card">
 
@@ -428,11 +391,11 @@ id="completedOrders">
 
 <i class="fa-solid fa-location-dot"></i>
 
-موقعك
+موقعك الحالي
 
 </div>
 
-<div class="location-box">
+<div class="map-box">
 
 <iframe
 id="mapFrame"
@@ -440,82 +403,6 @@ loading="lazy">
 </iframe>
 
 </div>
-
-<div class="location-note">
-
-هذا الموقع لا يظهر إلا أثناء الطلب فقط
-
-</div>
-
-</div>
-
-<!-- الدعوات -->
-
-<div class="card">
-
-<div class="card-title">
-
-<i class="fa-solid fa-gift"></i>
-
-الدعوات
-
-</div>
-
-<div class="info-line">
-
-<div class="info-label">
-كود الدعوة الخاص بك
-</div>
-
-<div style="
-display:flex;
-gap:10px;
-margin-top:10px;
-">
-
-<input
-type="text"
-readonly
-id="inviteCode"
-class="code-input">
-
-<button
-class="copy-btn"
-onclick="copyInviteCode()">
-
-<i class="fa-solid fa-copy"></i>
-
-</button>
-
-</div>
-
-</div>
-
-<div class="code-box">
-
-<input
-type="text"
-id="giftCode"
-class="code-input"
-placeholder="ادخل كود الدعوة">
-
-<button
-class="copy-btn"
-onclick="pasteCode()">
-
-<i class="fa-solid fa-paste"></i>
-
-</button>
-
-</div>
-
-<button
-class="use-btn"
-onclick="useInviteCode()">
-
-استخدام الكود
-
-</button>
 
 </div>
 
@@ -528,8 +415,6 @@ onclick="logout()">
 </button>
 
 </div>
-
-<!-- البار السفلي -->
 
 <div class="bottom-bar">
 
@@ -571,184 +456,118 @@ onclick="window.location.href='cart.html'">
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { db }
+from "./firebase.js";
 
 import {
-
-getDatabase,
 ref,
 get,
-update,
 onValue
-
 }
-
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-const firebaseConfig = {
-
-apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
-
-authDomain:"fast-937c9.firebaseapp.com",
-
-projectId:"fast-937c9",
-
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
-
-};
-
-const app =
-initializeApp(firebaseConfig);
-
-const database =
-getDatabase(app);
-
 const currentUser =
-JSON.parse(localStorage.getItem("user"));
+JSON.parse(
+localStorage.getItem("user")
+);
 
 if(
 !currentUser ||
 !currentUser.id
 ){
 
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.href =
-"index.html";
-
-}
-
-// تحميل المستخدم
-
-async function loadUser(){
-
-const snapshot =
-await get(
-ref(database,"users/" + currentUser.id)
+window.location.replace(
+"index.html"
 );
 
-if(!snapshot.exists()){
-
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.href =
-"index.html";
-
-return;
-
 }
 
-const user =
-snapshot.val();
+document.getElementById(
+"userName"
+).innerHTML =
+currentUser.name || "مستخدم";
 
-localStorage.setItem(
-"user",
-JSON.stringify(user)
-);
+document.getElementById(
+"userPhone"
+).innerHTML =
+currentUser.phone || "";
 
-document.getElementById("userName")
-.innerHTML =
-user.name || "";
+document.getElementById(
+"fullName"
+).innerHTML =
+currentUser.name || "";
 
-document.getElementById("userPhone")
-.innerHTML =
-user.phone || "";
+document.getElementById(
+"phoneNumber"
+).innerHTML =
+currentUser.phone || "";
 
-document.getElementById("userType")
-.innerHTML =
-user.type || "";
+document.getElementById(
+"userAddress"
+).innerHTML =
+currentUser.address || "لا يوجد";
 
-document.getElementById("inviteCode")
-.value =
-user.id || "";
+document.getElementById(
+"userImage"
+).src =
+currentUser.image || "user.png";
 
-// الموقع
+const lat =
+currentUser.userLat ||
+localStorage.getItem("userLat");
 
-if(
-user.location &&
-user.location.latitude &&
-user.location.longitude
-){
+const lng =
+currentUser.userLng ||
+localStorage.getItem("userLng");
 
-document.getElementById("mapFrame")
-.src =
+if(lat && lng){
 
-`https://maps.google.com/maps?q=${user.location.latitude},${user.location.longitude}&z=15&output=embed`;
+document.getElementById(
+"mapFrame"
+).src =
+
+`https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
 
 }
-
-}
-
-loadUser();
-
-// الاحصائيات
 
 onValue(
-ref(database,"orders"),
+ref(db,"orders"),
 (snapshot)=>{
 
-let all = 0;
-let active = 0;
-let cancelled = 0;
+let orders = 0;
 let completed = 0;
+let cancelled = 0;
+let spent = 0;
 
 if(snapshot.exists()){
 
-const orders =
+const data =
 snapshot.val();
 
-Object.values(orders)
+Object.values(data)
 .forEach(order=>{
 
 if(
-order.customer &&
-order.customer.id === currentUser.id
+order.customerId === currentUser.id
 ){
 
-all++;
+orders++;
+
+spent +=
+Number(
+order.totalPrice || 0
+);
 
 if(
-[
-"waiting_driver",
-"accepted",
-"preparing_order",
-"on_the_way",
-"arrived"
-]
-.includes(order.status)
+order.status === "completed"
 ){
-
-active++;
-
-}
-
-if(
-[
-"cancelled",
-"rejected",
-"failed_no_driver"
-]
-.includes(order.status)
-){
-
-cancelled++;
-
-}
-
-if(
-[
-"completed",
-"delivered"
-]
-.includes(order.status)
-){
-
 completed++;
+}
 
+if(
+order.status === "cancelled"
+){
+cancelled++;
 }
 
 }
@@ -757,142 +576,30 @@ completed++;
 
 }
 
-document.getElementById("allOrders")
-.innerHTML = all;
+document.getElementById(
+"ordersCount"
+).innerHTML =
+orders;
 
-document.getElementById("activeOrders")
-.innerHTML = active;
+document.getElementById(
+"completedOrders"
+).innerHTML =
+completed;
 
-document.getElementById("cancelledOrders")
-.innerHTML = cancelled;
+document.getElementById(
+"cancelledOrders"
+).innerHTML =
+cancelled;
 
-document.getElementById("completedOrders")
-.innerHTML = completed;
+document.getElementById(
+"totalSpent"
+).innerHTML =
+
+Number(spent)
+.toLocaleString();
 
 }
 );
-
-// نسخ الكود
-
-window.copyInviteCode =
-async function(){
-
-try{
-
-await navigator.clipboard.writeText(
-document.getElementById("inviteCode").value
-);
-
-alert("تم النسخ");
-
-}catch{
-
-alert("فشل النسخ");
-
-}
-
-};
-
-// لصق
-
-window.pasteCode =
-async function(){
-
-try{
-
-const text =
-await navigator.clipboard.readText();
-
-document.getElementById("giftCode")
-.value = text;
-
-}catch{
-
-alert("فشل اللصق");
-
-}
-
-};
-
-// استخدام الكود
-
-window.useInviteCode =
-async function(){
-
-const code =
-document.getElementById("giftCode")
-.value
-.trim();
-
-if(!code){
-
-alert("ادخل الكود");
-
-return;
-
-}
-
-if(code === currentUser.id){
-
-alert("لا يمكنك استخدام كودك");
-
-return;
-
-}
-
-const myRef =
-ref(database,"users/" + currentUser.id);
-
-const mySnapshot =
-await get(myRef);
-
-if(!mySnapshot.exists()){
-return;
-}
-
-const myUser =
-mySnapshot.val();
-
-if(myUser.usedInviteCode){
-
-alert("لقد استخدمت كود مسبقاً");
-
-return;
-
-}
-
-const inviterRef =
-ref(database,"users/" + code);
-
-const inviterSnapshot =
-await get(inviterRef);
-
-if(!inviterSnapshot.exists()){
-
-alert("الكود غير صحيح");
-
-return;
-
-}
-
-await update(myRef,{
-
-freeDelivery:true,
-
-usedInviteCode:true,
-
-invitedBy:code
-
-});
-
-alert("تم تفعيل التوصيلة المجانية 🎉");
-
-document.getElementById("giftCode")
-.value = "";
-
-};
-
-// تسجيل خروج
 
 window.logout =
 function(){
@@ -901,8 +608,9 @@ localStorage.clear();
 
 sessionStorage.clear();
 
-window.location.href =
-"index.html";
+window.location.replace(
+"index.html"
+);
 
 };
 
