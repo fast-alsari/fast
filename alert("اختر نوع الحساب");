@@ -540,7 +540,8 @@ alert("فشل رفع الصورة");
 return "";
 
 }
-return data.data.image.url;
+return data.data.url;
+
 }
 
 // =========================
@@ -1129,7 +1130,7 @@ registerBtn.innerText = "إنشاء الحساب";
 window.registerAccount =
 async function(){
 
-const registerBtn = document.querySelector(
+ registerBtn = document.querySelector(
 'button[onclick="registerAccount()"]'
 );
 
@@ -1143,6 +1144,8 @@ document.getElementById("account_type").value;
 if(type === ""){
 
 alert("اختر نوع الحساب");
+
+resetRegisterButton();
 
 return;
 
