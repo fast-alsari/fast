@@ -37,11 +37,12 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#f4f6f9;
-padding-bottom:110px;
+background:#f5f6fa;
+padding-bottom:120px;
 overflow-x:hidden;
 }
 
@@ -62,21 +63,15 @@ border-bottom-right-radius:30px;
 box-shadow:0 8px 25px rgba(0,0,0,.12);
 }
 
-.header-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-}
-
 .driver-box{
 display:flex;
 align-items:center;
-gap:12px;
+gap:14px;
 }
 
 .driver-image{
-width:65px;
-height:65px;
+width:75px;
+height:75px;
 border-radius:50%;
 object-fit:cover;
 border:3px solid white;
@@ -84,28 +79,31 @@ background:white;
 }
 
 .driver-info h2{
-font-size:20px;
-margin-bottom:4px;
+font-size:22px;
+margin-bottom:5px;
 }
 
 .driver-info p{
-font-size:13px;
+font-size:14px;
 opacity:.9;
 }
 
 .online-btn{
-padding:10px 18px;
+margin-top:18px;
+width:100%;
+padding:15px;
 border:none;
-border-radius:14px;
+border-radius:18px;
 background:white;
+color:#00b894;
+font-size:15px;
 font-weight:bold;
 cursor:pointer;
-color:#00b894;
 }
 
 .stats{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:1fr 1fr 1fr;
 gap:12px;
 padding:15px;
 }
@@ -114,8 +112,8 @@ padding:15px;
 background:white;
 padding:18px;
 border-radius:24px;
-box-shadow:0 5px 18px rgba(0,0,0,.06);
 text-align:center;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
 }
 
 .stat-card h2{
@@ -125,9 +123,9 @@ margin-bottom:5px;
 }
 
 .stat-card p{
-font-size:14px;
-color:#666;
+font-size:13px;
 font-weight:bold;
+color:#666;
 }
 
 .orders-container{
@@ -139,8 +137,8 @@ gap:18px;
 
 .order-card{
 background:white;
-border-radius:28px;
 padding:18px;
+border-radius:28px;
 box-shadow:0 5px 18px rgba(0,0,0,.06);
 }
 
@@ -151,19 +149,19 @@ align-items:center;
 margin-bottom:15px;
 }
 
+.order-price{
+font-size:28px;
+font-weight:bold;
+color:#00b894;
+}
+
 .order-status{
 padding:8px 14px;
-border-radius:12px;
+border-radius:14px;
 font-size:13px;
 font-weight:bold;
 background:#fff3e0;
 color:#ff6600;
-}
-
-.order-price{
-font-size:24px;
-font-weight:bold;
-color:#00b894;
 }
 
 .customer-box{
@@ -185,7 +183,7 @@ margin-bottom:5px;
 
 .map-box{
 width:100%;
-height:240px;
+height:280px;
 border-radius:22px;
 overflow:hidden;
 margin-bottom:15px;
@@ -194,24 +192,24 @@ margin-bottom:15px;
 .order-info{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:10px;
+gap:12px;
 margin-bottom:15px;
 }
 
-.info-item{
+.info-card{
 background:#f8f8f8;
-padding:12px;
-border-radius:16px;
+padding:14px;
+border-radius:18px;
 text-align:center;
 }
 
-.info-item h4{
+.info-card h4{
 font-size:13px;
 margin-bottom:6px;
-color:#666;
+color:#777;
 }
 
-.info-item p{
+.info-card p{
 font-size:16px;
 font-weight:bold;
 }
@@ -222,14 +220,17 @@ flex-wrap:wrap;
 gap:10px;
 }
 
-.actions button{
+.actions button,
+.actions a{
 flex:1;
-padding:14px;
+padding:15px;
 border:none;
-border-radius:16px;
+border-radius:18px;
 font-size:14px;
 font-weight:bold;
 cursor:pointer;
+text-align:center;
+text-decoration:none;
 color:white;
 }
 
@@ -249,14 +250,19 @@ background:#25D366;
 background:#2563eb;
 }
 
+.start-btn{
+background:#7c3aed;
+}
+
 .finish-btn{
 background:#ff8800;
 }
 
 .empty{
-padding:50px 20px;
+padding:60px 20px;
 text-align:center;
 color:#777;
+font-size:16px;
 }
 
 .loading{
@@ -302,8 +308,11 @@ z-index:1000;
 display:flex;
 flex-direction:column;
 align-items:center;
-color:#888;
+gap:5px;
 cursor:pointer;
+color:#888;
+font-size:13px;
+font-weight:bold;
 }
 
 .nav-item.active{
@@ -312,10 +321,13 @@ color:#ff8800;
 
 .nav-item i{
 font-size:22px;
-margin-bottom:5px;
 }
 
 @media(max-width:700px){
+
+.stats{
+grid-template-columns:1fr;
+}
 
 .order-info{
 grid-template-columns:1fr;
@@ -337,8 +349,6 @@ id="loading">
 </div>
 
 <div class="header">
-
-<div class="header-top">
 
 <div class="driver-box">
 
@@ -366,11 +376,9 @@ class="online-btn"
 id="onlineBtn"
 onclick="toggleOnline()">
 
-متصل
+متصل الآن
 
 </button>
-
-</div>
 
 </div>
 
@@ -395,7 +403,19 @@ onclick="toggleOnline()">
 </h2>
 
 <p>
-الارباح
+الأرباح
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="cancelledTrips">
+0
+</h2>
+
+<p>
+الطلبات الملغية
 </p>
 
 </div>
@@ -408,8 +428,7 @@ class="orders-container"></div>
 
 <div class="bottom-bar">
 
-<div
-class="nav-item active">
+<div class="nav-item active">
 
 <i class="fa-solid fa-taxi"></i>
 
@@ -479,11 +498,15 @@ if(
 currentUser.type !== "taxi"
 ){
 
-window.location.href = "index.html";
+window.location.href =
+"index.html";
 
 }
 
 let isOnline = true;
+
+let driverLat = null;
+let driverLng = null;
 
 document.getElementById(
 "driverName"
@@ -512,28 +535,111 @@ Number(
 currentUser.totalProfit || 0
 ).toLocaleString();
 
-// =====================
+document.getElementById(
+"cancelledTrips"
+).innerHTML =
+Number(
+currentUser.cancelledTrips || 0
+);
+
+// ======================
+// GPS مباشر
+// ======================
+
+navigator.geolocation.watchPosition(
+
+async(position)=>{
+
+driverLat =
+position.coords.latitude;
+
+driverLng =
+position.coords.longitude;
+
+await update(
+ref(database,"taxis/" + currentUser.id),
+{
+
+latitude:driverLat,
+longitude:driverLng,
+lastSeen:Date.now()
+
+}
+);
+
+},
+
+(error)=>{
+
+console.log(error);
+
+},
+
+{
+enableHighAccuracy:true,
+maximumAge:3000,
+timeout:10000
+}
+
+);
+
+// ======================
+// ايقونات
+// ======================
+
+const taxiIcon = L.icon({
+
+iconUrl:
+'https://cdn-icons-png.flaticon.com/512/744/744465.png',
+
+iconSize:[45,45],
+iconAnchor:[22,45]
+
+});
+
+const customerIcon = L.icon({
+
+iconUrl:
+'https://cdn-icons-png.flaticon.com/512/1077/1077114.png',
+
+iconSize:[40,40],
+iconAnchor:[20,40]
+
+});
+
+const destinationIcon = L.icon({
+
+iconUrl:
+'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+
+iconSize:[40,40],
+iconAnchor:[20,40]
+
+});
+
+// ======================
 // اونلاين
-// =====================
+// ======================
 
 window.toggleOnline =
 async function(){
 
 isOnline = !isOnline;
 
+const btn =
 document.getElementById(
 "onlineBtn"
-).innerHTML =
+);
+
+btn.innerHTML =
 
 isOnline
 ?
-"متصل"
+"متصل الآن"
 :
 "متوقف";
 
-document.getElementById(
-"onlineBtn"
-).style.color =
+btn.style.color =
 
 isOnline
 ?
@@ -553,9 +659,9 @@ lastSeen:Date.now()
 
 };
 
-// =====================
+// ======================
 // الطلبات
-// =====================
+// ======================
 
 const ordersContainer =
 document.getElementById(
@@ -640,7 +746,7 @@ id="map_${order.id}"></div>
 
 <div class="order-info">
 
-<div class="info-item">
+<div class="info-card">
 
 <h4>
 المسافة
@@ -652,7 +758,7 @@ ${order.distance || 0} كم
 
 </div>
 
-<div class="info-item">
+<div class="info-card">
 
 <h4>
 الحالة
@@ -699,14 +805,9 @@ onclick="rejectOrder('${order.id}')">
 <a
 href="https://wa.me/${order.customerPhone}"
 target="_blank"
-style="flex:1;">
-
-<button
 class="whatsapp-btn">
 
 واتساب
-
-</button>
 
 </a>
 
@@ -719,10 +820,18 @@ onclick="arriveOrder('${order.id}')">
 </button>
 
 <button
+class="start-btn"
+onclick="startTrip('${order.id}')">
+
+بدأ الرحلة
+
+</button>
+
+<button
 class="finish-btn"
 onclick="finishOrder('${order.id}')">
 
-انهاء
+تم التوصيل
 
 </button>
 
@@ -759,9 +868,9 @@ hideLoading();
 }
 );
 
-// =====================
+// ======================
 // خريطة
-// =====================
+// ======================
 
 function createMap(order){
 
@@ -782,17 +891,71 @@ maxZoom:19
 }
 ).addTo(map);
 
-L.marker([
+// سيارة التكسي
+
+if(driverLat && driverLng){
+
+L.marker(
+[
+driverLat,
+driverLng
+],
+{
+icon:taxiIcon
+}
+).addTo(map);
+
+}
+
+// الزبون
+
+L.marker(
+[
 order.pickupLat,
 order.pickupLng
-]).addTo(map);
+],
+{
+icon:customerIcon
+}
+).addTo(map);
 
-L.marker([
+// الوجهة
+
+L.marker(
+[
 order.destinationLat,
 order.destinationLng
-]).addTo(map);
+],
+{
+icon:destinationIcon
+}
+).addTo(map);
 
-const line = L.polyline([
+// خط السائق للزبون
+
+if(driverLat && driverLng){
+
+L.polyline([
+[
+driverLat,
+driverLng
+],
+[
+order.pickupLat,
+order.pickupLng
+]
+],
+{
+color:"#2563eb",
+weight:5
+}
+).addTo(map);
+
+}
+
+// خط الرحلة
+
+L.polyline([
 [
 order.pickupLat,
 order.pickupLng
@@ -808,13 +971,11 @@ weight:5
 }
 ).addTo(map);
 
-map.fitBounds(line.getBounds());
-
 }
 
-// =====================
+// ======================
 // قبول
-// =====================
+// ======================
 
 window.acceptOrder =
 async function(orderId){
@@ -832,16 +993,22 @@ driverName:
 currentUser.name,
 
 driverPhone:
-currentUser.phone
+currentUser.phone,
+
+driverImage:
+currentUser.vehicleImage || "",
+
+vehicleType:
+currentUser.vehicleType || ""
 
 }
 );
 
 };
 
-// =====================
+// ======================
 // رفض
-// =====================
+// ======================
 
 window.rejectOrder =
 async function(orderId){
@@ -857,9 +1024,9 @@ status:"waiting"
 
 };
 
-// =====================
+// ======================
 // وصلت
-// =====================
+// ======================
 
 window.arriveOrder =
 async function(orderId){
@@ -868,16 +1035,40 @@ await update(
 ref(database,"taxi_orders/" + orderId),
 {
 
-status:"arrived"
+status:"arrived",
+
+arrivedAt:Date.now()
+
+}
+);
+
+alert("لقد وصلت للزبون");
+
+};
+
+// ======================
+// بدء الرحلة
+// ======================
+
+window.startTrip =
+async function(orderId){
+
+await update(
+ref(database,"taxi_orders/" + orderId),
+{
+
+status:"started_trip",
+
+startedAt:Date.now()
 
 }
 );
 
 };
 
-// =====================
-// انهاء
-// =====================
+// ======================
+// إنهاء الرحلة
+// ======================
 
 window.finishOrder =
 async function(orderId){
@@ -917,16 +1108,20 @@ await update(
 ref(database,"taxi_orders/" + orderId),
 {
 
-status:"completed"
+status:"completed",
+
+completedAt:Date.now()
 
 }
 );
 
+alert("تم توصيل الزبون بنجاح");
+
 };
 
-// =====================
-// حالة الطلب
-// =====================
+// ======================
+// الحالة
+// ======================
 
 function getStatusText(status){
 
@@ -942,17 +1137,25 @@ if(status === "arrived"){
 return "وصل السائق";
 }
 
+if(status === "started_trip"){
+return "بدأت الرحلة";
+}
+
 if(status === "completed"){
-return "مكتمل";
+return "تم التوصيل";
+}
+
+if(status === "cancelled"){
+return "ملغي";
 }
 
 return status;
 
 }
 
-// =====================
+// ======================
 // تحميل
-// =====================
+// ======================
 
 function hideLoading(){
 
