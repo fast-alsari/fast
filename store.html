@@ -42,10 +42,6 @@ padding:20px;
 padding-bottom:120px;
 }
 
-
-
-
-
 .logout-btn{
 background:white;
 color:#ff8800;
@@ -139,15 +135,12 @@ align-items:center;
 }
 
 .product-image{
-width:150px;
-height:150px;
-border-radius:24px;
+width:110px;
+height:110px;
+border-radius:20px;
 object-fit:cover;
-background:#f3f3f3;
-border:2px solid #f1f1f1;
-flex-shrink:0;
-box-shadow:0 6px 18px rgba(0,0,0,.08);
-transition:.3s;
+background:#eee;
+border:1px solid #ddd;
 }
 
 .product-info{
@@ -165,7 +158,6 @@ font-size:15px;
 color:#666;
 margin-bottom:8px;
 line-height:1.7;
-word-break:break-word;
 }
 
 .status{
@@ -193,9 +185,6 @@ border-radius:25px;
 text-align:center;
 color:#666;
 }
-
-
-
 
 .top-dashboard{
 background:white;
@@ -365,15 +354,9 @@ background:linear-gradient(135deg,#ff8800,#ff5500);
 }
 
 .product-image{
-width:150px;
-height:150px;
-border-radius:24px;
-object-fit:cover;
-background:#f3f3f3;
-border:2px solid #f1f1f1;
-flex-shrink:0;
-box-shadow:0 6px 18px rgba(0,0,0,.08);
-transition:.3s;
+width:120px;
+height:120px;
+border-radius:22px;
 }
 
 @media(max-width:700px){
@@ -385,10 +368,10 @@ align-items:flex-start;
 
 .product-image{
 width:100%;
-height:200px;
-border-radius:20px;
-object-fit:cover;
-}.dashboard-header{
+height:220px;
+}
+
+.dashboard-header{
 flex-direction:column;
 align-items:flex-start;
 }
@@ -469,8 +452,6 @@ width:100%;
 height:100%;
 border:none;
 }
-
-
 
 </style>
 
@@ -714,10 +695,8 @@ import {
 getDatabase,
 ref,
 set,
-get,
 onValue,
-update,
-remove
+update
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -744,8 +723,6 @@ initializeApp(firebaseConfig);
 const database =
 getDatabase(app);
 
-
-
 // =========================
 // IMGBB
 // =========================
@@ -754,11 +731,7 @@ const IMGBB_API_KEY =
 "fa7d8e3e0c7fbc7686b65048fff45913";
 
 async function uploadImage(file){
-if(!file){
 
-return "product.png";
-
-}
 try{
 
 const formData = new FormData();
@@ -805,8 +778,6 @@ return "product.png";
 
 }
 
-
-
 // =========================
 // المستخدم الحالي
 // =========================
@@ -816,17 +787,10 @@ JSON.parse(
 localStorage.getItem("user")
 );
 
-if(
-!currentUser ||
-currentUser.type !== "store"
-){
+if(!currentUser){
 
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.replace(
-"index.html"
-);
+window.location.href =
+"index.html";
 
 }
 // =========================
@@ -844,8 +808,6 @@ snapshot.val();
 
 let updateData = {};
 
-
-
 // اذا ما موجود totalSales
 
 if(storeData.totalSales === undefined){
@@ -853,8 +815,6 @@ if(storeData.totalSales === undefined){
 updateData.totalSales = 0;
 
 }
-
-
 
 // اذا ما موجود lastMonthSales
 
@@ -864,8 +824,6 @@ updateData.lastMonthSales = 0;
 
 }
 
-
-
 // اذا ما موجود salesMonth
 
 if(storeData.salesMonth === undefined){
@@ -874,8 +832,6 @@ updateData.salesMonth =
 new Date().getMonth() + 1;
 
 }
-
-
 
 // اذا توجد بيانات ناقصة
 
@@ -892,12 +848,9 @@ updateData
 
 });
 
-
 // =========================
 // معلومات المتجر
 // =========================
-
-
 
 document.getElementById("topStoreName")
 .innerHTML =
@@ -955,16 +908,9 @@ document.getElementById("storeMapFrame")
 // اضافة منتج
 // =========================
 
-  let addingProduct = false;
-  
 window.addProduct =
 async function(){
- try{ 
-if(addingProduct){
-return;
-}
 
-addingProduct = true;
 const name =
 document.getElementById("productName")
 .value.trim();
@@ -990,12 +936,9 @@ description === "" ||
 
 alert("املأ جميع الحقول");
 
-addingProduct = false;
-
 return;
+
 }
-
-
 
 // =========================
 // رفع الصورة الحقيقي
@@ -1003,8 +946,6 @@ return;
 
 const imageUrl =
 await uploadImage(imageFile);
-
-
 
 // =========================
 // حفظ المنتج
@@ -1025,16 +966,13 @@ currentUser.store_name,
 
 name:name,
 
-price:Number(price),
+price:price,
+
 description:description,
 
 image:imageUrl,
 
 status:"pending",
-statusText:"قيد المراجعة",
-deleted:false,
-
-updatedAt:Date.now(),
 
 createdAt:Date.now()
 
@@ -1055,7 +993,9 @@ productData
 
 );
 
+// =========================
 // تنظيف الحقول
+// =========================
 
 document.getElementById("productName")
 .value = "";
@@ -1069,24 +1009,15 @@ document.getElementById("productDescription")
 document.getElementById("productImage")
 .value = "";
 
-addingProduct = false;
-
 alert("تم رفع المنتج بنجاح");
 
-}catch(error){
-
-console.log(error);
-
-addingProduct = false;
-
-alert("حدث خطأ أثناء رفع المنتج");
-
-}
+//loadProducts();
 
 };
 
-
-
+// =========================
+// تحميل المنتجات
+// =========================
 
 // =========================
 // تحميل المنتجات
@@ -1141,7 +1072,8 @@ ${product.name}
 </h3>
 
 <p>
-${Number(product.price || 0).toLocaleString()} د.ع</p>
+💰 ${product.price} د.ع
+</p>
 
 <p>
 📝 ${product.description}
@@ -1201,8 +1133,6 @@ document.getElementById("productsTotal")
 .innerHTML =
 totalProducts;
 
-
-
 }else{
 
 container.innerHTML =
@@ -1227,7 +1157,6 @@ onValue(
 ref(database,"stores/"+currentUser.id),
 async(snapshot)=>{
 
-
 if(snapshot.exists()){
 
 const storeData =
@@ -1235,9 +1164,8 @@ snapshot.val();
 
 document.getElementById("lastMonthSales")
 .innerHTML =
-Number(
-storeData.lastMonthSales || 0
-).toLocaleString() + " د.ع";
+(storeData.lastMonthSales || 0)
++ " د.ع";
 
 document.getElementById("pendingOrders")
 .innerHTML =
@@ -1281,9 +1209,8 @@ salesMonth:currentMonth
 
 document.getElementById("salesTotal")
 .innerHTML =
-Number(
-storeData.totalSales || 0
-).toLocaleString() + " د.ع";
+(storeData.totalSales || 0)
++ " د.ع";
 
 }
 
@@ -1308,76 +1235,25 @@ prompt("ادخل شرح المنتج الجديد");
 
 if(newDescription === null) return;
 
-// اختيار صورة جديدة
-const imageInput =
-document.createElement("input");
-
-imageInput.type = "file";
-
-imageInput.accept = "image/*";
-
-imageInput.onchange = async function(){
-if(!imageInput.files[0]){
-
-return;
-
-}
-try{
-
-let updateData = {
-
-price:Number(newPrice),
-
-description:newDescription,
-
-updatedAt:Date.now()
-
-};
-
-const file =
-imageInput.files[0];
-
-// اذا اختار صورة جديدة
-if(file){
-
-const imageUrl =
-await uploadImage(file);
-
-updateData.image = imageUrl;
-
-}
-
-await update(
-
+await set(
 ref(
 database,
-"store_products/" +
-currentUser.id +
-"/" +
-productId
+"store_products/" + currentUser.id + "/" + productId + "/price"
 ),
+newPrice
+);
 
-updateData
-
+await set(
+ref(
+database,
+"store_products/" + currentUser.id + "/" + productId + "/description"
+),
+newDescription
 );
 
 alert("تم تعديل المنتج");
 
-}catch(error){
-
-console.log(error);
-
-alert("حدث خطأ أثناء تعديل المنتج");
-
-}
-
 };
-
-imageInput.click();
-
-};
-
-
 
 // =========================
 // حذف المنتج
@@ -1390,11 +1266,12 @@ confirm("هل تريد حذف المنتج نهائياً؟");
 
 if(!confirmDelete) return;
 
-await remove(
+await set(
 ref(
 database,
 "store_products/" + currentUser.id + "/" + productId
-)
+),
+null
 );
 
 alert("تم حذف المنتج نهائياً");
