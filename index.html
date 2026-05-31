@@ -524,7 +524,7 @@ alert("فشل رفع الصورة");
 return "";
 
 }
-return data.data.url;
+return data.data.image.url;
 
 }
 
@@ -539,10 +539,8 @@ let currentUser = null;
 try{
 
 currentUser = JSON.parse(
-localStorage.getItem("user") ||
-sessionStorage.getItem("user")
+localStorage.getItem("user")
 );
-
 }catch{
 
 currentUser = null;
@@ -595,20 +593,25 @@ currentUser = snapshot.val();
 currentUser.id =
 currentUser.id || snapshot.key;
 
-saveSession(currentUser);
+currentUser.isOnline = true;
+currentUser.lastSeen = Date.now();
 
+await set(
+ref(database, tableName + "/" + currentUser.id),
+currentUser
+);
+
+saveSession(currentUser);
 // الحسابات المعلقة
 if(
 currentUser.status === "pending" ||
+currentUser.status === "inactive" ||
 currentUser.status === "banned" ||
-currentUser.status === "disabled" ||
 currentUser.status === "expired"
 ){
 
-
 localStorage.clear();
 sessionStorage.clear();
-
 window.location.replace("index.html");
 
 return;
@@ -636,7 +639,7 @@ window.location.replace("drive.html");
 }
 
 if(currentUser.type === "taxi"){
-window.location.replace("tixe.html");
+window.location.replace("taxie.html");
 }
 
 }
@@ -935,11 +938,6 @@ localStorage.setItem(
 JSON.stringify(userData)
 );
 
-sessionStorage.setItem(
-"user",
-JSON.stringify(userData)
-);
-
 }
 
 // =========================
@@ -969,6 +967,8 @@ target="_blank">
 `;
 
 showSection("pendingSection");
+
+
 
 return false;
 
@@ -1021,13 +1021,13 @@ target="_blank">
 `;
 
 showSection("pendingSection");
-
+resetRegisterButton();
 return false;
 
 }
 
 // disabled
-if(user.status==="disabled"){
+if(user.status==="inactive"){
 
 saveSession(user);
 
@@ -1047,7 +1047,7 @@ target="_blank">
 `;
 
 showSection("pendingSection");
-
+resetRegisterButton();
 return false;
 
 }
@@ -1173,20 +1173,35 @@ let id = "CUS"+Date.now();
 let customerData = {
 
 id:id,
+
 type:"customer",
+
+isOnline:false,
+lastSeen:Date.now(),
+
 status:"active",
 
 name:
-document.getElementById("customer_name")
-.value
-.trim(),
+document.getElementById("customer_name").value.trim(),
 
-phone:phone,
+phone:
+document.getElementById("customer_phone").value.trim(),
 
 password:
-document.getElementById("customer_password")
-.value
-.trim(),
+document.getElementById("customer_password").value.trim(),
+
+latitude:"",
+
+longitude:"",
+
+
+totalOrders:0,
+completedOrders:0,
+cancelledOrders:0,
+
+totalSpent:0,
+
+
 
 createdAt:Date.now()
 
@@ -1284,28 +1299,48 @@ document.getElementById(`to_${index}`).value
 // بيانات المتجر
 // =========================
 
+if(
+document.getElementById("store_owner").value.trim() === "" ||
+document.getElementById("store_name").value.trim() === "" ||
+document.getElementById("store_category").value === "" ||
+document.getElementById("store_password").value.trim() === ""
+){
+
+alert("املأ جميع الحقول");
+
+resetRegisterButton();
+
+return;
+
+}
+
 let storeData = {
 
 id:id,
 
 type:"store",
 
+isOnline:false,
+lastSeen:Date.now(),
+
 status:"pending",
 
+accountType:"normal",
+
 owner:
-document.getElementById("store_owner").value,
+document.getElementById("store_owner").value.trim(),
 
 phone:
-document.getElementById("store_phone").value,
+document.getElementById("store_phone").value.trim(),
 
 store_name:
-document.getElementById("store_name").value,
+document.getElementById("store_name").value.trim(),
 
 category:
 document.getElementById("store_category").value,
 
 password:
-document.getElementById("store_password").value,
+document.getElementById("store_password").value.trim(),
 
 latitude:store_latitude,
 
@@ -1317,7 +1352,26 @@ store_card:storeCardUrl,
 
 workingHours:workingHours,
 
+totalSales:0,
+
+lastMonthSales:0,
+
+
+totalOrders:0,
+completedOrders:0,
+
+cancelledOrders:0,
+
+pendingOrders:0,
+
+accountBalance:0,
+
+renewDate:"",
+expireDate:"",
+vipExpireDate:"",
+
 createdAt:Date.now()
+
 
 };
 
@@ -1337,7 +1391,7 @@ registerBtn.disabled = false;
 registerBtn.innerText = "إنشاء الحساب";
 
 showSection("pendingSection");
-
+resetRegisterButton();
 document.getElementById("pendingMessage")
 .innerHTML = `
 
@@ -1379,34 +1433,68 @@ await uploadImage(cardFile);
 const vehicleUrl =
 await uploadImage(vehicleFile);
 
+if(
+document.getElementById("taxi_name").value.trim() === "" ||
+document.getElementById("taxi_phone").value.trim() === "" ||
+document.getElementById("taxi_password").value.trim() === "" ||
+document.getElementById("taxi_vehicle").value === "" ||
+document.getElementById("taxi_color").value === ""
+){
+
+alert("املأ جميع الحقول");
+
+resetRegisterButton();
+
+return;
+
+}
+
 let taxiData = {
 
 id:id,
+
 type:"taxi",
+
+isOnline:false,
+lastSeen:Date.now(),
 
 status:"pending",
 
-name:
-document.getElementById("taxi_name").value,
+accountType:"normal",
 
-vehicle:
+name:
+document.getElementById("taxi_name").value.trim(),
+
+vehicleType:
 document.getElementById("taxi_vehicle").value,
 
-plate:
-document.getElementById("taxi_plate").value,
+vehicleNumber:
+document.getElementById("taxi_plate").value.trim(),
 
-color:
+vehicleColor:
 document.getElementById("taxi_color").value,
 
 phone:
-document.getElementById("taxi_phone").value,
+document.getElementById("taxi_phone").value.trim(),
 
 password:
-document.getElementById("taxi_password").value,
+document.getElementById("taxi_password").value.trim(),
 
-card:cardUrl,
+idImage:cardUrl,
 
-vehicle_image:vehicleUrl,
+vehicleImage:vehicleUrl,
+
+totalOrders:0,
+completedTrips:0,
+
+cancelledTrips:0,
+
+totalProfit:0,
+accountBalance:0,
+
+renewDate:"",
+expireDate:"",
+vipExpireDate:"",
 
 createdAt:Date.now()
 
@@ -1433,7 +1521,7 @@ registerBtn.disabled = false;
 registerBtn.innerText = "إنشاء الحساب";
 
 showSection("pendingSection");
-
+resetRegisterButton();
 document.getElementById("pendingMessage")
 .innerHTML = `
 
@@ -1450,19 +1538,26 @@ target="_blank">
 `;
 
 }
-// سائق
+
+
 
 if(type==="driver"){
-if(await phoneExists(
-document.getElementById("driver_phone").value
-)){
 
-alert("رقم الهاتف مستخدم مسبقاً");
+if(
+document.getElementById("driver_name").value.trim() === "" ||
+document.getElementById("driver_phone").value.trim() === "" ||
+document.getElementById("driver_password").value.trim() === "" ||
+document.getElementById("driver_vehicle").value === ""
+){
+
+alert("املأ جميع الحقول");
 
 resetRegisterButton();
 
 return;
+
 }
+
 let id = "DRV"+Date.now();
 
 const driverCardFile =
@@ -1470,6 +1565,7 @@ document.getElementById("driver_card").files[0];
 
 const vehicleImageFile =
 document.getElementById("driver_vehicle_image").files[0];
+
 if(!driverCardFile || !vehicleImageFile){
 
 alert("ارفع صور الهوية والمركبة");
@@ -1485,27 +1581,49 @@ await uploadImage(driverCardFile);
 const vehicleImageUrl =
 await uploadImage(vehicleImageFile);
 
+
+
 let driverData = {
 
 id:id,
+
 type:"driver",
+
+isOnline:false,
+lastSeen:Date.now(),
+
 status:"pending",
 
+accountType:"normal",
+
 name:
-document.getElementById("driver_name").value,
+document.getElementById("driver_name").value.trim(),
 
 phone:
-document.getElementById("driver_phone").value,
+document.getElementById("driver_phone").value.trim(),
 
-vehicle:
+vehicleType:
 document.getElementById("driver_vehicle").value,
 
 password:
-document.getElementById("driver_password").value,
+document.getElementById("driver_password").value.trim(),
 
-driver_card:driverCardUrl,
+idImage:driverCardUrl,
 
-vehicle_image:vehicleImageUrl,
+vehicleImage:vehicleImageUrl,
+
+
+totalOrders:0,
+completedOrders:0,
+
+cancelledOrders:0,
+
+totalDeliveryAmount:0,
+accountBalance:0,
+
+renewDate:"",
+expireDate:"",
+vipExpireDate:"",
 
 createdAt:Date.now()
 
@@ -1523,7 +1641,7 @@ registerBtn.disabled = false;
 registerBtn.innerText = "إنشاء الحساب";
 
 showSection("pendingSection");
-
+resetRegisterButton();
 document.getElementById("pendingMessage")
 .innerHTML = `
 
@@ -1540,7 +1658,7 @@ target="_blank">
 `;
 
 }
-
+}
 }catch(error){
 
 console.error(error);
@@ -1749,7 +1867,7 @@ if(!checkAccountStatus(user)){
 return;
 }
 
-window.location.replace("tixe.html");
+window.location.replace("taxie.html");
 
 return;
 
