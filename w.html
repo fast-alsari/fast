@@ -1,5 +1,3 @@
-<!-- w.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -7,28 +5,27 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
+<meta
+name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
 طلبات التكسي
 </title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-rel="stylesheet">
-
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
-<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
 <style>
 
@@ -42,54 +39,21 @@ font-family:'Cairo',sans-serif;
 body{
 background:#f5f6fa;
 padding-bottom:120px;
-overflow-x:hidden;
 }
 
 .header{
-background:linear-gradient(135deg,#ff8800,#ff5500);
-padding:22px;
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:24px;
 color:white;
+
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
-box-shadow:0 8px 25px rgba(0,0,0,.12);
-}
-
-.driver-box{
-display:flex;
-align-items:center;
-gap:14px;
-}
-
-.driver-image{
-width:75px;
-height:75px;
-border-radius:50%;
-object-fit:cover;
-border:3px solid white;
-background:white;
-}
-
-.driver-info h2{
-font-size:22px;
-margin-bottom:5px;
-}
-
-.driver-info p{
-font-size:14px;
-opacity:.9;
-}
-
-.online-btn{
-margin-top:18px;
-width:100%;
-padding:15px;
-border:none;
-border-radius:18px;
-background:white;
-color:#00b894;
-font-size:15px;
-font-weight:bold;
-cursor:pointer;
 }
 
 .orders-container{
@@ -103,10 +67,11 @@ gap:18px;
 background:white;
 padding:18px;
 border-radius:28px;
-box-shadow:0 5px 18px rgba(0,0,0,.06);
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
 }
 
-.order-header{
+.order-top{
 display:flex;
 justify-content:space-between;
 align-items:center;
@@ -122,10 +87,10 @@ color:#00b894;
 .status{
 padding:8px 14px;
 border-radius:14px;
+background:#fff3e0;
+color:#ff8800;
 font-size:13px;
 font-weight:bold;
-background:#fff3e0;
-color:#ff6600;
 }
 
 .customer-box{
@@ -135,67 +100,32 @@ border-radius:18px;
 margin-bottom:15px;
 }
 
-.customer-box h3{
-margin-bottom:8px;
-font-size:20px;
-}
-
-.customer-box p{
-font-size:14px;
-color:#666;
-margin-bottom:5px;
-}
-
 .map{
 width:100%;
-height:320px;
+height:300px;
 border-radius:22px;
 overflow:hidden;
 margin-bottom:15px;
 }
 
-.info-grid{
+.actions{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
-margin-bottom:15px;
-}
-
-.info-card{
-background:#f8f8f8;
-padding:15px;
-border-radius:18px;
-text-align:center;
-}
-
-.info-card h4{
-font-size:13px;
-margin-bottom:6px;
-color:#777;
-}
-
-.info-card p{
-font-size:17px;
-font-weight:bold;
-}
-
-.actions{
-display:flex;
-flex-wrap:wrap;
 gap:10px;
 }
 
 .actions button,
 .actions a{
-flex:1;
-padding:15px;
+height:52px;
 border:none;
-border-radius:18px;
+border-radius:16px;
 font-size:14px;
 font-weight:bold;
 cursor:pointer;
 text-decoration:none;
-text-align:center;
+display:flex;
+align-items:center;
+justify-content:center;
 color:white;
 }
 
@@ -207,23 +137,12 @@ background:#00b894;
 background:#25D366;
 }
 
-.contact-btn{
-background:#2563eb;
-}
-
-.reject-btn{
-background:#e53935;
-}
-
 .finish-btn{
 background:#ff8800;
 }
 
-.empty{
-padding:60px 20px;
-text-align:center;
-color:#777;
-font-size:18px;
+.reject-btn{
+background:#e53935;
 }
 
 </style>
@@ -234,234 +153,82 @@ font-size:18px;
 
 <div class="header">
 
-<div class="driver-box">
-
-<img
-src="user.png"
-class="driver-image"
-id="driverImage">
-
-<div class="driver-info">
-
-<h2 id="driverName">
-السائق
+<h2>
+طلبات التكسي 🚖
 </h2>
 
-<p id="driverPhone">
-000000000
+<p>
+استقبال الرحلات الجديدة
 </p>
 
 </div>
 
-</div>
-
-<button
-class="online-btn"
-id="onlineBtn"
-onclick="toggleOnline()">
-
-متصل الآن
-
-</button>
-
-</div>
-
 <div
-id="ordersContainer"
-class="orders-container"></div>
+class="orders-container"
+id="ordersContainer"></div>
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { db }
+from "./firebase.js";
 
 import {
-
-getDatabase,
 ref,
 onValue,
-update,
-get
-
+update
 }
-
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-const firebaseConfig = {
-
-apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
-
-authDomain:"fast-937c9.firebaseapp.com",
-
-projectId:"fast-937c9",
-
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
-
-};
-
-const app =
-initializeApp(firebaseConfig);
-
-const database =
-getDatabase(app);
+import {
+formatPrice
+}
+from "./utils.js";
 
 const currentUser =
-JSON.parse(localStorage.getItem("user"));
-
-if(
-!currentUser ||
-currentUser.type !== "taxi"
-){
-
-window.location.href = "index.html";
-
-}
-
-document.getElementById(
-"driverName"
-).innerHTML =
-currentUser.name || "سائق";
-
-document.getElementById(
-"driverPhone"
-).innerHTML =
-currentUser.phone || "";
-
-document.getElementById(
-"driverImage"
-).src =
-currentUser.vehicleImage || "user.png";
-
-let driverLat = null;
-let driverLng = null;
-let isOnline = true;
-
-// GPS مباشر
-
-navigator.geolocation.watchPosition(
-
-async(position)=>{
-
-driverLat =
-position.coords.latitude;
-
-driverLng =
-position.coords.longitude;
-
-await update(
-ref(database,"taxis/" + currentUser.id),
-{
-
-latitude:driverLat,
-longitude:driverLng,
-lastSeen:Date.now()
-
-}
+JSON.parse(
+localStorage.getItem("user")
 );
 
-},
-
-(error)=>{
-
-console.log(error);
-
-},
-
-{
-enableHighAccuracy:true
-}
-
+const container =
+document.getElementById(
+"ordersContainer"
 );
-
-// اونلاين
-
-window.toggleOnline =
-async function(){
-
-isOnline = !isOnline;
-
-const btn =
-document.getElementById("onlineBtn");
-
-btn.innerHTML =
-isOnline
-?
-"متصل الآن"
-:
-"متوقف";
-
-btn.style.color =
-isOnline
-?
-"#00b894"
-:
-"#e53935";
-
-await update(
-ref(database,"taxis/" + currentUser.id),
-{
-
-isOnline:isOnline
-
-}
-);
-
-};
-
-const ordersContainer =
-document.getElementById("ordersContainer");
-
-// الطلبات
 
 onValue(
-ref(database,"taxi_orders"),
+ref(db,"taxi_orders"),
 (snapshot)=>{
 
-ordersContainer.innerHTML = "";
+container.innerHTML = "";
 
 if(!snapshot.exists()){
 
-ordersContainer.innerHTML = `
-<div class="empty">
-لا توجد طلبات حالياً
-</div>
-`;
+container.innerHTML =
+"لا توجد طلبات";
 
 return;
 
 }
 
-const orders = snapshot.val();
-
-let found = false;
+const orders =
+snapshot.val();
 
 for(let key in orders){
 
-const order = orders[key];
+const order =
+orders[key];
 
-if(
-order.status !== "waiting_driver"
-&&
-order.driverId !== currentUser.id
-){
-continue;
-}
-
-found = true;
-
-ordersContainer.innerHTML += `
+container.innerHTML += `
 
 <div class="order-card">
 
-<div class="order-header">
+<div class="order-top">
 
 <div class="status">
-${getStatusText(order.status)}
+${order.status}
 </div>
 
 <div class="price">
-${Number(order.finalPrice || 0).toLocaleString()} د.ع
+${formatPrice(order.finalPrice)}
 </div>
 
 </div>
@@ -469,50 +236,26 @@ ${Number(order.finalPrice || 0).toLocaleString()} د.ع
 <div class="customer-box">
 
 <h3>
-${order.customerName || ""}
+${order.customerName}
 </h3>
 
 <p>
-📞 ${order.customerPhone || ""}
+📞 ${order.customerPhone}
+</p>
+
+<p>
+👥 ${order.persons} أشخاص
 </p>
 
 </div>
 
 <div
-id="map_${order.id}"
-class="map"></div>
-
-<div class="info-grid">
-
-<div class="info-card">
-
-<h4>
-المسافة
-</h4>
-
-<p>
-${order.distance || 0} كم
-</p>
-
-</div>
-
-<div class="info-card">
-
-<h4>
-عدد الأشخاص
-</h4>
-
-<p>
-${order.personsCount || 1}
-</p>
-
-</div>
-
-</div>
+class="map"
+id="map_${order.id}"></div>
 
 <div class="actions">
 
-${order.status === "waiting_driver"
+${order.status === "waiting"
 
 ?
 
@@ -520,9 +263,9 @@ ${order.status === "waiting_driver"
 
 <button
 class="accept-btn"
-onclick="acceptOrder('${order.id}')">
+onclick="acceptTaxi('${order.id}')">
 
-قبول الطلب
+قبول
 
 </button>
 
@@ -542,26 +285,18 @@ class="whatsapp-btn">
 </a>
 
 <button
-class="contact-btn"
-onclick="contactedCustomer('${order.id}')">
+class="finish-btn"
+onclick="finishTaxi('${order.id}')">
 
-تم التواصل
+تم التوصيل
 
 </button>
 
 <button
 class="reject-btn"
-onclick="customerRejected('${order.id}')">
+onclick="rejectTaxi('${order.id}')">
 
-الزبون رفض الطلب
-
-</button>
-
-<button
-class="finish-btn"
-onclick="finishOrder('${order.id}')">
-
-تم التوصيل
+رفض الزبون
 
 </button>
 
@@ -583,25 +318,15 @@ createMap(order);
 
 }
 
-if(!found){
-
-ordersContainer.innerHTML = `
-<div class="empty">
-لا توجد طلبات حالياً
-</div>
-`;
-
-}
-
 }
 );
-
-// الخريطة
 
 function createMap(order){
 
 const map =
-L.map(`map_${order.id}`).setView(
+L.map(
+`map_${order.id}`
+).setView(
 [
 order.pickupLat,
 order.pickupLng
@@ -610,240 +335,98 @@ order.pickupLng
 );
 
 L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
-).addTo(map);
-
-// موقع الزبون
-
-L.marker(
-[
-order.pickupLat,
-order.pickupLng
-]
-).addTo(map);
-
-// الوجهة
-
-L.marker(
-[
-order.destinationLat,
-order.destinationLng
-]
-).addTo(map);
-
-// طريق السائق للزبون
-
-if(driverLat && driverLng){
-
-L.Routing.control({
-
-waypoints:[
-
-L.latLng(driverLat,driverLng),
-
-L.latLng(
-order.pickupLat,
-order.pickupLng
-)
-
-],
-
-routeWhileDragging:false,
-addWaypoints:false,
-draggableWaypoints:false,
-show:false,
-
-lineOptions:{
-styles:[
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 {
-color:"#ff8800",
-weight:6
+maxZoom:19
 }
-]
-},
+).addTo(map);
 
-createMarker:()=>null
-
-}).addTo(map);
-
-}
-
-// طريق الزبون للوجهة
-
-L.Routing.control({
-
-waypoints:[
-
-L.latLng(
+const pickup = [
 order.pickupLat,
 order.pickupLng
-),
+];
 
-L.latLng(
+const destination = [
 order.destinationLat,
 order.destinationLng
-)
+];
 
+L.marker(pickup)
+.addTo(map);
+
+L.marker(destination)
+.addTo(map);
+
+L.polyline(
+[
+pickup,
+destination
 ],
-
-routeWhileDragging:false,
-addWaypoints:false,
-draggableWaypoints:false,
-show:false,
-
-lineOptions:{
-styles:[
 {
 color:"#2563eb",
-weight:6
+weight:7
 }
-]
-},
-
-createMarker:()=>null
-
-}).addTo(map);
+).addTo(map);
 
 }
 
-// قبول الطلب
-
-window.acceptOrder =
+window.acceptTaxi =
 async function(orderId){
 
 await update(
-ref(database,"taxi_orders/" + orderId),
+ref(db,"taxi_orders/" + orderId),
 {
 
 status:"accepted",
 
-driverId:currentUser.id,
+driverId:
+currentUser.id,
 
-driverName:currentUser.name || "",
+driverName:
+currentUser.name,
 
-driverPhone:currentUser.phone || ""
+driverPhone:
+currentUser.phone
 
 }
 );
 
 };
 
-// تم التواصل
-
-window.contactedCustomer =
+window.finishTaxi =
 async function(orderId){
 
 await update(
-ref(database,"taxi_orders/" + orderId),
-{
-
-contactedCustomer:true,
-
-contactedAt:Date.now()
-
-}
-);
-
-alert("تم تسجيل التواصل");
-
-};
-
-// الزبون رفض
-
-window.customerRejected =
-async function(orderId){
-
-await update(
-ref(database,"taxi_orders/" + orderId),
-{
-
-status:"cancelled",
-
-cancelReason:"customer_rejected",
-
-cancelledAt:Date.now()
-
-}
-);
-
-alert("تم إلغاء الطلب");
-
-};
-
-// إنهاء الرحلة
-
-window.finishOrder =
-async function(orderId){
-
-const orderSnapshot =
-await get(
-ref(database,"taxi_orders/" + orderId)
-);
-
-if(orderSnapshot.exists()){
-
-const order =
-orderSnapshot.val();
-
-await update(
-ref(database,"taxis/" + currentUser.id),
-{
-
-completedTrips:
-Number(
-currentUser.completedTrips || 0
-) + 1,
-
-totalProfit:
-Number(
-currentUser.totalProfit || 0
-)
-+
-Number(order.finalPrice || 0)
-
-}
-);
-
-}
-
-await update(
-ref(database,"taxi_orders/" + orderId),
+ref(db,"taxi_orders/" + orderId),
 {
 
 status:"completed",
 
-completedAt:Date.now()
+completedAt:
+Date.now()
 
 }
 );
 
-alert("تم توصيل الزبون");
+alert("تم التوصيل");
 
 };
 
-// النصوص
+window.rejectTaxi =
+async function(orderId){
 
-function getStatusText(status){
+await update(
+ref(db,"taxi_orders/" + orderId),
+{
 
-if(status === "waiting_driver"){
-return "بانتظار سائق";
-}
-
-if(status === "accepted"){
-return "تم قبول الطلب";
-}
-
-if(status === "completed"){
-return "تم التوصيل";
-}
-
-if(status === "cancelled"){
-return "ملغي";
-}
-
-return status;
+status:"cancelled"
 
 }
+);
+
+alert("تم إلغاء الرحلة");
+
+};
 
 </script>
 
