@@ -1,1 +1,562 @@
+<!-- order-history.html -->
 
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+سجل الطلبات
+</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
+rel="stylesheet">
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f5f6fa;
+padding-bottom:110px;
+overflow-x:hidden;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:25px 20px;
+color:white;
+
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+
+box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+.header h1{
+font-size:28px;
+margin-bottom:8px;
+}
+
+.header p{
+font-size:14px;
+opacity:.95;
+}
+
+.orders-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.order-card{
+background:white;
+padding:20px;
+border-radius:28px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.order-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:18px;
+gap:12px;
+}
+
+.order-id{
+font-size:14px;
+font-weight:bold;
+color:#666;
+}
+
+.order-status{
+padding:8px 14px;
+border-radius:14px;
+font-size:13px;
+font-weight:bold;
+color:white;
+}
+
+.status-delivered{
+background:#00b894;
+}
+
+.status-pending{
+background:#ff8800;
+}
+
+.status-cancelled{
+background:#e53935;
+}
+
+.products{
+display:flex;
+flex-direction:column;
+gap:12px;
+margin-bottom:18px;
+}
+
+.product-item{
+display:flex;
+align-items:center;
+gap:12px;
+background:#f8f8f8;
+padding:12px;
+border-radius:18px;
+}
+
+.product-image{
+width:70px;
+height:70px;
+border-radius:16px;
+object-fit:cover;
+background:#eee;
+}
+
+.product-info{
+flex:1;
+}
+
+.product-name{
+font-size:16px;
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.product-price{
+font-size:14px;
+color:#666;
+}
+
+.order-info{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:15px;
+}
+
+.info-box{
+background:#fff8f1;
+padding:15px;
+border-radius:18px;
+text-align:center;
+}
+
+.info-box h4{
+font-size:13px;
+margin-bottom:8px;
+color:#777;
+}
+
+.info-box p{
+font-size:17px;
+font-weight:bold;
+}
+
+.order-footer{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-top:10px;
+padding-top:15px;
+border-top:1px solid #eee;
+font-size:14px;
+color:#666;
+}
+
+.empty{
+padding:60px 20px;
+text-align:center;
+font-size:16px;
+color:#777;
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:82px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+box-shadow:0 -5px 18px rgba(0,0,0,.08);
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:5px;
+font-size:13px;
+font-weight:bold;
+color:#888;
+cursor:pointer;
+}
+
+.nav-item.active{
+color:#ff8800;
+}
+
+.nav-item i{
+font-size:22px;
+}
+
+@media(max-width:700px){
+
+.order-info{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<h1>
+سجل الطلبات
+</h1>
+
+<p>
+جميع طلباتك السابقة
+</p>
+
+</div>
+
+<div
+id="ordersContainer"
+class="orders-container"></div>
+
+<div class="bottom-bar">
+
+<div
+class="nav-item"
+onclick="window.location.href='home.html'">
+
+<i class="fa-solid fa-house"></i>
+
+<span>
+الرئيسية
+</span>
+
+</div>
+
+<div class="nav-item active">
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+<span>
+الطلبات
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='asca.html'">
+
+<i class="fa-solid fa-user"></i>
+
+<span>
+الحساب
+</span>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { db }
+from "./config.js";
+
+import {
+
+ref,
+onValue
+
+}
+
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const currentUser =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+if(
+!currentUser ||
+!currentUser.id
+){
+
+window.location.href =
+"index.html";
+
+}
+
+const container =
+document.getElementById(
+"ordersContainer"
+);
+
+onValue(
+ref(db,"orders"),
+(snapshot)=>{
+
+container.innerHTML = "";
+
+if(!snapshot.exists()){
+
+container.innerHTML = `
+<div class="empty">
+لا توجد طلبات
+</div>
+`;
+
+return;
+
+}
+
+const orders =
+Object.values(snapshot.val())
+.filter(
+order =>
+order.customerId === currentUser.id
+)
+.sort(
+(a,b)=>
+b.createdAt - a.createdAt
+);
+
+if(orders.length === 0){
+
+container.innerHTML = `
+<div class="empty">
+لا توجد طلبات
+</div>
+`;
+
+return;
+
+}
+
+orders.forEach(order=>{
+
+container.innerHTML += `
+
+<div class="order-card">
+
+<div class="order-top">
+
+<div class="order-id">
+
+# ${order.id || ""}
+
+</div>
+
+<div class="
+order-status
+${getStatusClass(order.status)}
+">
+
+${getStatusText(order.status)}
+
+</div>
+
+</div>
+
+<div class="products">
+
+${(order.items || [])
+.map(item=>`
+
+<div class="product-item">
+
+<img
+src="${item.image || 'product.png'}"
+class="product-image"
+onerror="this.src='product.png'">
+
+<div class="product-info">
+
+<div class="product-name">
+${item.name || ""}
+</div>
+
+<div class="product-price">
+
+${Number(item.price || 0)
+.toLocaleString()} د.ع
+
+× ${item.qty || 1}
+
+</div>
+
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+<div class="order-info">
+
+<div class="info-box">
+
+<h4>
+المجموع
+</h4>
+
+<p>
+
+${Number(order.totalPrice || 0)
+.toLocaleString()} د.ع
+
+</p>
+
+</div>
+
+<div class="info-box">
+
+<h4>
+التوصيل
+</h4>
+
+<p>
+
+${Number(order.deliveryPrice || 0)
+.toLocaleString()} د.ع
+
+</p>
+
+</div>
+
+</div>
+
+<div class="order-footer">
+
+<span>
+
+📅 ${order.createdDate || ""}
+
+</span>
+
+<span>
+
+🕒 ${order.createdTime || ""}
+
+</span>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+);
+
+function getStatusText(status){
+
+if(status === "waiting_driver"){
+return "بانتظار سائق";
+}
+
+if(status === "accepted"){
+return "تم قبول الطلب";
+}
+
+if(status === "on_the_way"){
+return "بالطريق";
+}
+
+if(status === "arrived"){
+return "وصل السائق";
+}
+
+if(status === "delivered"){
+return "مكتمل";
+}
+
+if(status === "cancelled"){
+return "ملغي";
+}
+
+if(status === "cancelled_by_customer"){
+return "ملغي";
+}
+
+if(status === "failed_no_driver"){
+return "لا يوجد سائق";
+}
+
+return status || "";
+
+}
+
+function getStatusClass(status){
+
+if(
+[
+"delivered",
+"completed"
+]
+.includes(status)
+){
+return "status-delivered";
+}
+
+if(
+[
+"cancelled",
+"cancelled_by_customer",
+"failed_no_driver"
+]
+.includes(status)
+){
+return "status-cancelled";
+}
+
+return "status-pending";
+
+}
+
+</script>
+
+</body>
+
+</html>
