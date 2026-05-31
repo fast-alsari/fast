@@ -841,8 +841,6 @@ if(type === ""){
 
 alert("اختر نوع الحساب");
 
-resetRegisterButton();
-
 return;
 
 }
@@ -1125,6 +1123,8 @@ registerBtn.disabled = false;
 
 registerBtn.innerText = "إنشاء الحساب";
 
+registerBtn.dataset.loading = "false";
+
 }
  
 window.registerAccount =
@@ -1136,7 +1136,11 @@ async function(){
 
 registerBtn.disabled = true;
 registerBtn.innerText = "جاري إنشاء الحساب...";
+if(registerBtn.dataset.loading === "true"){
+return;
+}
 
+registerBtn.dataset.loading = "true";
 try{
 
 let type =
@@ -1571,7 +1575,7 @@ target="_blank">
 console.error(error);
 
 resetRegisterButton();
-
+console.error(error);
 alert(error.message);
 
 }
