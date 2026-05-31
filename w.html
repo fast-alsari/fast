@@ -1,3 +1,5 @@
+<!-- w.html -->
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -6,20 +8,13 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+content="width=device-width, initial-scale=1.0">
 
 <title>
 طلبات التكسي
 </title>
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link rel="preconnect"
-href="https://fonts.gstatic.com"
-crossorigin>
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
 
 <link rel="stylesheet"
@@ -28,7 +23,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <style>
 
@@ -37,7 +37,6 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
--webkit-tap-highlight-color:transparent;
 }
 
 body{
@@ -47,19 +46,11 @@ overflow-x:hidden;
 }
 
 .header{
-background:
-linear-gradient(
-135deg,
-#ff8800,
-#ff5500
-);
-
+background:linear-gradient(135deg,#ff8800,#ff5500);
 padding:22px;
 color:white;
-
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
-
 box-shadow:0 8px 25px rgba(0,0,0,.12);
 }
 
@@ -101,33 +92,6 @@ font-weight:bold;
 cursor:pointer;
 }
 
-.stats{
-display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:12px;
-padding:15px;
-}
-
-.stat-card{
-background:white;
-padding:18px;
-border-radius:24px;
-text-align:center;
-box-shadow:0 5px 18px rgba(0,0,0,.06);
-}
-
-.stat-card h2{
-font-size:28px;
-color:#ff8800;
-margin-bottom:5px;
-}
-
-.stat-card p{
-font-size:13px;
-font-weight:bold;
-color:#666;
-}
-
 .orders-container{
 padding:15px;
 display:flex;
@@ -142,20 +106,20 @@ border-radius:28px;
 box-shadow:0 5px 18px rgba(0,0,0,.06);
 }
 
-.order-top{
+.order-header{
 display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:15px;
 }
 
-.order-price{
+.price{
 font-size:28px;
 font-weight:bold;
 color:#00b894;
 }
 
-.order-status{
+.status{
 padding:8px 14px;
 border-radius:14px;
 font-size:13px;
@@ -172,7 +136,8 @@ margin-bottom:15px;
 }
 
 .customer-box h3{
-margin-bottom:6px;
+margin-bottom:8px;
+font-size:20px;
 }
 
 .customer-box p{
@@ -181,15 +146,15 @@ color:#666;
 margin-bottom:5px;
 }
 
-.map-box{
+.map{
 width:100%;
-height:280px;
+height:320px;
 border-radius:22px;
 overflow:hidden;
 margin-bottom:15px;
 }
 
-.order-info{
+.info-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
@@ -198,7 +163,7 @@ margin-bottom:15px;
 
 .info-card{
 background:#f8f8f8;
-padding:14px;
+padding:15px;
 border-radius:18px;
 text-align:center;
 }
@@ -210,7 +175,7 @@ color:#777;
 }
 
 .info-card p{
-font-size:16px;
+font-size:17px;
 font-weight:bold;
 }
 
@@ -229,8 +194,8 @@ border-radius:18px;
 font-size:14px;
 font-weight:bold;
 cursor:pointer;
-text-align:center;
 text-decoration:none;
+text-align:center;
 color:white;
 }
 
@@ -238,20 +203,16 @@ color:white;
 background:#00b894;
 }
 
-.reject-btn{
-background:#e53935;
-}
-
 .whatsapp-btn{
 background:#25D366;
 }
 
-.arrive-btn{
+.contact-btn{
 background:#2563eb;
 }
 
-.start-btn{
-background:#7c3aed;
+.reject-btn{
+background:#e53935;
 }
 
 .finish-btn{
@@ -262,77 +223,7 @@ background:#ff8800;
 padding:60px 20px;
 text-align:center;
 color:#777;
-font-size:16px;
-}
-
-.loading{
-position:fixed;
-inset:0;
-background:white;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:999999;
-}
-
-.spinner{
-width:70px;
-height:70px;
-border:5px solid #eee;
-border-top:5px solid #ff8800;
-border-radius:50%;
-animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-100%{
-transform:rotate(360deg);
-}
-}
-
-.bottom-bar{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:82px;
-background:white;
-display:flex;
-justify-content:space-around;
-align-items:center;
-box-shadow:0 -5px 18px rgba(0,0,0,.08);
-z-index:1000;
-}
-
-.nav-item{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:5px;
-cursor:pointer;
-color:#888;
-font-size:13px;
-font-weight:bold;
-}
-
-.nav-item.active{
-color:#ff8800;
-}
-
-.nav-item i{
-font-size:22px;
-}
-
-@media(max-width:700px){
-
-.stats{
-grid-template-columns:1fr;
-}
-
-.order-info{
-grid-template-columns:1fr;
-}
-
+font-size:18px;
 }
 
 </style>
@@ -341,21 +232,14 @@ grid-template-columns:1fr;
 
 <body>
 
-<div class="loading"
-id="loading">
-
-<div class="spinner"></div>
-
-</div>
-
 <div class="header">
 
 <div class="driver-box">
 
 <img
 src="user.png"
-id="driverImage"
-class="driver-image">
+class="driver-image"
+id="driverImage">
 
 <div class="driver-info">
 
@@ -364,7 +248,7 @@ class="driver-image">
 </h2>
 
 <p id="driverPhone">
-0000000000
+000000000
 </p>
 
 </div>
@@ -382,81 +266,14 @@ onclick="toggleOnline()">
 
 </div>
 
-<div class="stats">
-
-<div class="stat-card">
-
-<h2 id="completedTrips">
-0
-</h2>
-
-<p>
-الرحلات المكتملة
-</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="totalProfit">
-0
-</h2>
-
-<p>
-الأرباح
-</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="cancelledTrips">
-0
-</h2>
-
-<p>
-الطلبات الملغية
-</p>
-
-</div>
-
-</div>
-
 <div
 id="ordersContainer"
 class="orders-container"></div>
 
-<div class="bottom-bar">
-
-<div class="nav-item active">
-
-<i class="fa-solid fa-taxi"></i>
-
-<span>
-الطلبات
-</span>
-
-</div>
-
-<div
-class="nav-item"
-onclick="window.location.href='asca.html'">
-
-<i class="fa-solid fa-user"></i>
-
-<span>
-الحساب
-</span>
-
-</div>
-
-</div>
-
 <script type="module">
 
 import { initializeApp }
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
 
@@ -468,8 +285,7 @@ get
 
 }
 
-from
-"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
 
@@ -498,15 +314,9 @@ if(
 currentUser.type !== "taxi"
 ){
 
-window.location.href =
-"index.html";
+window.location.href = "index.html";
 
 }
-
-let isOnline = true;
-
-let driverLat = null;
-let driverLng = null;
 
 document.getElementById(
 "driverName"
@@ -523,28 +333,11 @@ document.getElementById(
 ).src =
 currentUser.vehicleImage || "user.png";
 
-document.getElementById(
-"completedTrips"
-).innerHTML =
-currentUser.completedTrips || 0;
+let driverLat = null;
+let driverLng = null;
+let isOnline = true;
 
-document.getElementById(
-"totalProfit"
-).innerHTML =
-Number(
-currentUser.totalProfit || 0
-).toLocaleString();
-
-document.getElementById(
-"cancelledTrips"
-).innerHTML =
-Number(
-currentUser.cancelledTrips || 0
-);
-
-// ======================
 // GPS مباشر
-// ======================
 
 navigator.geolocation.watchPosition(
 
@@ -576,50 +369,12 @@ console.log(error);
 },
 
 {
-enableHighAccuracy:true,
-maximumAge:3000,
-timeout:10000
+enableHighAccuracy:true
 }
 
 );
 
-// ======================
-// ايقونات
-// ======================
-
-const taxiIcon = L.icon({
-
-iconUrl:
-'https://cdn-icons-png.flaticon.com/512/744/744465.png',
-
-iconSize:[45,45],
-iconAnchor:[22,45]
-
-});
-
-const customerIcon = L.icon({
-
-iconUrl:
-'https://cdn-icons-png.flaticon.com/512/1077/1077114.png',
-
-iconSize:[40,40],
-iconAnchor:[20,40]
-
-});
-
-const destinationIcon = L.icon({
-
-iconUrl:
-'https://cdn-icons-png.flaticon.com/512/684/684908.png',
-
-iconSize:[40,40],
-iconAnchor:[20,40]
-
-});
-
-// ======================
 // اونلاين
-// ======================
 
 window.toggleOnline =
 async function(){
@@ -627,12 +382,9 @@ async function(){
 isOnline = !isOnline;
 
 const btn =
-document.getElementById(
-"onlineBtn"
-);
+document.getElementById("onlineBtn");
 
 btn.innerHTML =
-
 isOnline
 ?
 "متصل الآن"
@@ -640,7 +392,6 @@ isOnline
 "متوقف";
 
 btn.style.color =
-
 isOnline
 ?
 "#00b894"
@@ -651,22 +402,17 @@ await update(
 ref(database,"taxis/" + currentUser.id),
 {
 
-isOnline:isOnline,
-lastSeen:Date.now()
+isOnline:isOnline
 
 }
 );
 
 };
 
-// ======================
-// الطلبات
-// ======================
-
 const ordersContainer =
-document.getElementById(
-"ordersContainer"
-);
+document.getElementById("ordersContainer");
+
+// الطلبات
 
 onValue(
 ref(database,"taxi_orders"),
@@ -678,18 +424,15 @@ if(!snapshot.exists()){
 
 ordersContainer.innerHTML = `
 <div class="empty">
-لا توجد طلبات
+لا توجد طلبات حالياً
 </div>
 `;
-
-hideLoading();
 
 return;
 
 }
 
-const orders =
-snapshot.val();
+const orders = snapshot.val();
 
 let found = false;
 
@@ -698,7 +441,7 @@ for(let key in orders){
 const order = orders[key];
 
 if(
-order.status !== "waiting"
+order.status !== "waiting_driver"
 &&
 order.driverId !== currentUser.id
 ){
@@ -711,19 +454,14 @@ ordersContainer.innerHTML += `
 
 <div class="order-card">
 
-<div class="order-top">
+<div class="order-header">
 
-<div class="order-status">
-
+<div class="status">
 ${getStatusText(order.status)}
-
 </div>
 
-<div class="order-price">
-
-${Number(order.price || 0)
-.toLocaleString()} د.ع
-
+<div class="price">
+${Number(order.finalPrice || 0).toLocaleString()} د.ع
 </div>
 
 </div>
@@ -741,10 +479,10 @@ ${order.customerName || ""}
 </div>
 
 <div
-class="map-box"
-id="map_${order.id}"></div>
+id="map_${order.id}"
+class="map"></div>
 
-<div class="order-info">
+<div class="info-grid">
 
 <div class="info-card">
 
@@ -761,11 +499,11 @@ ${order.distance || 0} كم
 <div class="info-card">
 
 <h4>
-الحالة
+عدد الأشخاص
 </h4>
 
 <p>
-${getStatusText(order.status)}
+${order.personsCount || 1}
 </p>
 
 </div>
@@ -774,7 +512,7 @@ ${getStatusText(order.status)}
 
 <div class="actions">
 
-${order.status === "waiting"
+${order.status === "waiting_driver"
 
 ?
 
@@ -785,14 +523,6 @@ class="accept-btn"
 onclick="acceptOrder('${order.id}')">
 
 قبول الطلب
-
-</button>
-
-<button
-class="reject-btn"
-onclick="rejectOrder('${order.id}')">
-
-رفض
 
 </button>
 
@@ -812,18 +542,18 @@ class="whatsapp-btn">
 </a>
 
 <button
-class="arrive-btn"
-onclick="arriveOrder('${order.id}')">
+class="contact-btn"
+onclick="contactedCustomer('${order.id}')">
 
-وصلت
+تم التواصل
 
 </button>
 
 <button
-class="start-btn"
-onclick="startTrip('${order.id}')">
+class="reject-btn"
+onclick="customerRejected('${order.id}')">
 
-بدأ الرحلة
+الزبون رفض الطلب
 
 </button>
 
@@ -863,20 +593,15 @@ ordersContainer.innerHTML = `
 
 }
 
-hideLoading();
-
 }
 );
 
-// ======================
-// خريطة
-// ======================
+// الخريطة
 
 function createMap(order){
 
-const map = L.map(
-`map_${order.id}`
-).setView(
+const map =
+L.map(`map_${order.id}`).setView(
 [
 order.pickupLat,
 order.pickupLng
@@ -885,38 +610,16 @@ order.pickupLng
 );
 
 L.tileLayer(
-'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-{
-maxZoom:19
-}
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
 ).addTo(map);
 
-// سيارة التكسي
-
-if(driverLat && driverLng){
-
-L.marker(
-[
-driverLat,
-driverLng
-],
-{
-icon:taxiIcon
-}
-).addTo(map);
-
-}
-
-// الزبون
+// موقع الزبون
 
 L.marker(
 [
 order.pickupLat,
 order.pickupLng
-],
-{
-icon:customerIcon
-}
+]
 ).addTo(map);
 
 // الوجهة
@@ -925,57 +628,85 @@ L.marker(
 [
 order.destinationLat,
 order.destinationLng
-],
-{
-icon:destinationIcon
-}
+]
 ).addTo(map);
 
-// خط السائق للزبون
+// طريق السائق للزبون
 
 if(driverLat && driverLng){
 
-L.polyline([
-[
-driverLat,
-driverLng
-],
-[
+L.Routing.control({
+
+waypoints:[
+
+L.latLng(driverLat,driverLng),
+
+L.latLng(
 order.pickupLat,
 order.pickupLng
-]
-],
-{
-color:"#2563eb",
-weight:5
-}
-).addTo(map);
+)
 
-}
-
-// خط الرحلة
-
-L.polyline([
-[
-order.pickupLat,
-order.pickupLng
 ],
-[
-order.destinationLat,
-order.destinationLng
-]
-],
+
+routeWhileDragging:false,
+addWaypoints:false,
+draggableWaypoints:false,
+show:false,
+
+lineOptions:{
+styles:[
 {
 color:"#ff8800",
-weight:5
+weight:6
 }
-).addTo(map);
+]
+},
+
+createMarker:()=>null
+
+}).addTo(map);
 
 }
 
-// ======================
-// قبول
-// ======================
+// طريق الزبون للوجهة
+
+L.Routing.control({
+
+waypoints:[
+
+L.latLng(
+order.pickupLat,
+order.pickupLng
+),
+
+L.latLng(
+order.destinationLat,
+order.destinationLng
+)
+
+],
+
+routeWhileDragging:false,
+addWaypoints:false,
+draggableWaypoints:false,
+show:false,
+
+lineOptions:{
+styles:[
+{
+color:"#2563eb",
+weight:6
+}
+]
+},
+
+createMarker:()=>null
+
+}).addTo(map);
+
+}
+
+// قبول الطلب
 
 window.acceptOrder =
 async function(orderId){
@@ -986,89 +717,60 @@ ref(database,"taxi_orders/" + orderId),
 
 status:"accepted",
 
-driverId:
-currentUser.id,
+driverId:currentUser.id,
 
-driverName:
-currentUser.name,
+driverName:currentUser.name || "",
 
-driverPhone:
-currentUser.phone,
-
-driverImage:
-currentUser.vehicleImage || "",
-
-vehicleType:
-currentUser.vehicleType || ""
+driverPhone:currentUser.phone || ""
 
 }
 );
 
 };
 
-// ======================
-// رفض
-// ======================
+// تم التواصل
 
-window.rejectOrder =
+window.contactedCustomer =
 async function(orderId){
 
 await update(
 ref(database,"taxi_orders/" + orderId),
 {
 
-status:"waiting"
+contactedCustomer:true,
+
+contactedAt:Date.now()
 
 }
 );
 
+alert("تم تسجيل التواصل");
+
 };
 
-// ======================
-// وصلت
-// ======================
+// الزبون رفض
 
-window.arriveOrder =
+window.customerRejected =
 async function(orderId){
 
 await update(
 ref(database,"taxi_orders/" + orderId),
 {
 
-status:"arrived",
+status:"cancelled",
 
-arrivedAt:Date.now()
+cancelReason:"customer_rejected",
 
-}
-);
-
-alert("لقد وصلت للزبون");
-
-};
-
-// ======================
-// بدء الرحلة
-// ======================
-
-window.startTrip =
-async function(orderId){
-
-await update(
-ref(database,"taxi_orders/" + orderId),
-{
-
-status:"started_trip",
-
-startedAt:Date.now()
+cancelledAt:Date.now()
 
 }
 );
 
+alert("تم إلغاء الطلب");
+
 };
 
-// ======================
 // إنهاء الرحلة
-// ======================
 
 window.finishOrder =
 async function(orderId){
@@ -1097,7 +799,7 @@ Number(
 currentUser.totalProfit || 0
 )
 +
-Number(order.price || 0)
+Number(order.finalPrice || 0)
 
 }
 );
@@ -1115,30 +817,20 @@ completedAt:Date.now()
 }
 );
 
-alert("تم توصيل الزبون بنجاح");
+alert("تم توصيل الزبون");
 
 };
 
-// ======================
-// الحالة
-// ======================
+// النصوص
 
 function getStatusText(status){
 
-if(status === "waiting"){
+if(status === "waiting_driver"){
 return "بانتظار سائق";
 }
 
 if(status === "accepted"){
 return "تم قبول الطلب";
-}
-
-if(status === "arrived"){
-return "وصل السائق";
-}
-
-if(status === "started_trip"){
-return "بدأت الرحلة";
 }
 
 if(status === "completed"){
@@ -1150,18 +842,6 @@ return "ملغي";
 }
 
 return status;
-
-}
-
-// ======================
-// تحميل
-// ======================
-
-function hideLoading(){
-
-document.getElementById(
-"loading"
-).style.display = "none";
 
 }
 
