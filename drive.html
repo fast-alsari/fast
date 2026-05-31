@@ -10,7 +10,7 @@ name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
-سائق التوصيل
+لوحة السائق
 </title>
 
 <link
@@ -40,6 +40,7 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
@@ -56,7 +57,7 @@ linear-gradient(
 #ff5500
 );
 
-padding:24px;
+padding:22px;
 color:white;
 
 border-bottom-left-radius:30px;
@@ -66,7 +67,7 @@ border-bottom-right-radius:30px;
 .driver-box{
 display:flex;
 align-items:center;
-gap:15px;
+gap:14px;
 }
 
 .driver-image{
@@ -74,22 +75,22 @@ width:80px;
 height:80px;
 border-radius:50%;
 object-fit:cover;
-border:3px solid white;
 background:white;
+border:3px solid white;
 }
 
 .driver-info h2{
 font-size:24px;
-margin-bottom:6px;
+margin-bottom:5px;
 }
 
 .driver-info p{
 font-size:14px;
-opacity:.95;
+opacity:.9;
 }
 
 .online-btn{
-margin-top:18px;
+margin-top:20px;
 width:100%;
 height:55px;
 border:none;
@@ -111,7 +112,7 @@ padding:15px;
 .stat-card{
 background:white;
 padding:18px;
-border-radius:24px;
+border-radius:22px;
 text-align:center;
 
 box-shadow:
@@ -120,8 +121,8 @@ box-shadow:
 
 .stat-card h2{
 font-size:28px;
-color:#ff8800;
-margin-bottom:5px;
+color:#ff6600;
+margin-bottom:6px;
 }
 
 .stat-card p{
@@ -154,7 +155,7 @@ margin-bottom:15px;
 }
 
 .order-price{
-font-size:30px;
+font-size:28px;
 font-weight:bold;
 color:#00b894;
 }
@@ -162,10 +163,10 @@ color:#00b894;
 .order-status{
 padding:8px 14px;
 border-radius:14px;
-background:#fff5ee;
-color:#ff6600;
 font-size:13px;
 font-weight:bold;
+background:#fff3e0;
+color:#ff6600;
 }
 
 .customer-box{
@@ -193,6 +194,31 @@ overflow:hidden;
 margin-bottom:15px;
 }
 
+.info-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-bottom:15px;
+}
+
+.info-card{
+background:#f8f8f8;
+padding:14px;
+border-radius:18px;
+text-align:center;
+}
+
+.info-card h4{
+font-size:13px;
+color:#777;
+margin-bottom:6px;
+}
+
+.info-card p{
+font-size:16px;
+font-weight:bold;
+}
+
 .actions{
 display:flex;
 flex-wrap:wrap;
@@ -204,36 +230,24 @@ gap:10px;
 flex:1;
 height:52px;
 border:none;
-border-radius:16px;
-cursor:pointer;
-
+border-radius:18px;
 font-size:14px;
 font-weight:bold;
-color:white;
+cursor:pointer;
 text-decoration:none;
 
 display:flex;
 align-items:center;
 justify-content:center;
+
+color:white;
 }
 
 .accept-btn{
 background:#00b894;
 }
 
-.store-btn{
-background:#7c3aed;
-}
-
-.customer-btn{
-background:#2563eb;
-}
-
-.finish-btn{
-background:#ff8800;
-}
-
-.cancel-btn{
+.reject-btn{
 background:#e53935;
 }
 
@@ -241,11 +255,50 @@ background:#e53935;
 background:#25D366;
 }
 
+.store-btn{
+background:#7c3aed;
+}
+
+.pickup-btn{
+background:#2563eb;
+}
+
+.finish-btn{
+background:#ff8800;
+}
+
 .empty{
 padding:80px 20px;
 text-align:center;
-font-size:18px;
 color:#777;
+}
+
+.loading{
+position:fixed;
+inset:0;
+background:white;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+z-index:99999;
+}
+
+.spinner{
+width:70px;
+height:70px;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+border-radius:50%;
+
+animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
 }
 
 .bottom-bar{
@@ -254,6 +307,7 @@ bottom:0;
 left:0;
 right:0;
 height:82px;
+
 background:white;
 
 display:flex;
@@ -262,8 +316,6 @@ align-items:center;
 
 box-shadow:
 0 -5px 18px rgba(0,0,0,.08);
-
-z-index:9999;
 }
 
 .nav-item{
@@ -272,10 +324,10 @@ flex-direction:column;
 align-items:center;
 gap:5px;
 
+color:#888;
 font-size:13px;
 font-weight:bold;
 
-color:#888;
 cursor:pointer;
 }
 
@@ -287,11 +339,31 @@ color:#ff8800;
 font-size:22px;
 }
 
+@media(max-width:700px){
+
+.stats{
+grid-template-columns:1fr;
+}
+
+.info-grid{
+grid-template-columns:1fr;
+}
+
+}
+
 </style>
 
 </head>
 
 <body>
+
+<div
+class="loading"
+id="loading">
+
+<div class="spinner"></div>
+
+</div>
 
 <div class="header">
 
@@ -309,7 +381,7 @@ class="driver-image">
 </h2>
 
 <p id="driverPhone">
-0000000000
+000000000
 </p>
 
 </div>
@@ -368,8 +440,8 @@ onclick="toggleOnline()">
 </div>
 
 <div
-class="orders-container"
-id="ordersContainer"></div>
+id="ordersContainer"
+class="orders-container"></div>
 
 <div class="bottom-bar">
 
@@ -403,10 +475,14 @@ import { db }
 from "./firebase.js";
 
 import {
+
 ref,
 onValue,
-update
+update,
+get
+
 }
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const currentUser =
@@ -425,34 +501,39 @@ window.location.replace(
 
 }
 
-let isOnline = true;
-
 let driverLat = null;
 let driverLng = null;
+
+let isOnline = true;
 
 document.getElementById(
 "driverName"
 ).innerHTML =
-currentUser.name || "";
+
+currentUser.name || "سائق";
 
 document.getElementById(
 "driverPhone"
 ).innerHTML =
+
 currentUser.phone || "";
 
 document.getElementById(
 "driverImage"
 ).src =
+
 currentUser.image || "user.png";
 
 document.getElementById(
 "completedOrders"
 ).innerHTML =
+
 currentUser.completedOrders || 0;
 
 document.getElementById(
 "cancelledOrders"
 ).innerHTML =
+
 currentUser.cancelledOrders || 0;
 
 document.getElementById(
@@ -462,6 +543,10 @@ document.getElementById(
 Number(
 currentUser.totalProfit || 0
 ).toLocaleString();
+
+// =====================
+// GPS مباشر
+// =====================
 
 navigator.geolocation.watchPosition(
 
@@ -480,21 +565,32 @@ db,
 ),
 {
 
-latitude:
-driverLat,
-
-longitude:
-driverLng,
-
-lastSeen:
-Date.now()
+latitude:driverLat,
+longitude:driverLng,
+lastSeen:Date.now()
 
 }
 );
 
+},
+
+(error)=>{
+
+console.log(error);
+
+},
+
+{
+enableHighAccuracy:true,
+maximumAge:3000,
+timeout:10000
 }
 
 );
+
+// =====================
+// اونلاين
+// =====================
 
 window.toggleOnline =
 async function(){
@@ -529,13 +625,16 @@ db,
 ),
 {
 
-isOnline:
-isOnline
+isOnline:isOnline
 
 }
 );
 
 };
+
+// =====================
+// الطلبات
+// =====================
 
 const ordersContainer =
 document.getElementById(
@@ -551,10 +650,16 @@ ordersContainer.innerHTML = "";
 if(!snapshot.exists()){
 
 ordersContainer.innerHTML = `
+
 <div class="empty">
-لا توجد طلبات
+
+لا توجد طلبات حالياً
+
 </div>
+
 `;
+
+hideLoading();
 
 return;
 
@@ -563,17 +668,22 @@ return;
 const orders =
 snapshot.val();
 
-Object.values(orders)
-.reverse()
-.forEach(order=>{
+let found = false;
+
+for(let key in orders){
+
+const order =
+orders[key];
 
 if(
 order.status !== "waiting_driver"
 &&
 order.driverId !== currentUser.id
 ){
-return;
+continue;
 }
+
+found = true;
 
 ordersContainer.innerHTML += `
 
@@ -582,7 +692,9 @@ ordersContainer.innerHTML += `
 <div class="order-top">
 
 <div class="order-status">
-${getStatus(order.status)}
+
+${getStatusText(order.status)}
+
 </div>
 
 <div class="order-price">
@@ -614,6 +726,37 @@ ${order.customerName || ""}
 class="map-box"
 id="map_${order.id}"></div>
 
+<div class="info-grid">
+
+<div class="info-card">
+
+<h4>
+عدد المنتجات
+</h4>
+
+<p>
+${order.products?.length || 0}
+</p>
+
+</div>
+
+<div class="info-card">
+
+<h4>
+السعر الكلي
+</h4>
+
+<p>
+
+${Number(order.finalTotal || 0)
+.toLocaleString()} د.ع
+
+</p>
+
+</div>
+
+</div>
+
 <div class="actions">
 
 ${order.status === "waiting_driver"
@@ -627,6 +770,14 @@ class="accept-btn"
 onclick="acceptOrder('${order.id}')">
 
 قبول الطلب
+
+</button>
+
+<button
+class="reject-btn"
+onclick="rejectOrder('${order.id}')">
+
+رفض
 
 </button>
 
@@ -647,17 +798,17 @@ class="whatsapp-btn">
 
 <button
 class="store-btn"
-onclick="goStore('${order.id}')">
+onclick="goToStore('${order.id}')">
 
-وصلت للمتجر
+استلام الطلب
 
 </button>
 
 <button
-class="customer-btn"
-onclick="goCustomer('${order.id}')">
+class="pickup-btn"
+onclick="startDelivery('${order.id}')">
 
-بالطريق للزبون
+بدء التوصيل
 
 </button>
 
@@ -666,14 +817,6 @@ class="finish-btn"
 onclick="finishOrder('${order.id}')">
 
 تم التوصيل
-
-</button>
-
-<button
-class="cancel-btn"
-onclick="cancelOrder('${order.id}')">
-
-إلغاء
 
 </button>
 
@@ -693,10 +836,30 @@ createMap(order);
 
 },100);
 
-});
+}
+
+if(!found){
+
+ordersContainer.innerHTML = `
+
+<div class="empty">
+
+لا توجد طلبات حالياً
+
+</div>
+
+`;
+
+}
+
+hideLoading();
 
 }
 );
+
+// =====================
+// الخريطة
+// =====================
 
 function createMap(order){
 
@@ -720,41 +883,67 @@ maxZoom:19
 
 if(driverLat && driverLng){
 
-L.Routing.control({
-
-waypoints:[
-
-L.latLng(
+L.marker(
+[
 driverLat,
 driverLng
-),
+]
+).addTo(map);
 
-L.latLng(
+}
+
+L.marker(
+[
 order.customerLat,
 order.customerLng
-)
+]
+).addTo(map);
 
+if(
+order.storesData &&
+order.storesData.length > 0
+){
+
+const store =
+order.storesData[0];
+
+if(
+store.storeLat &&
+store.storeLng
+){
+
+L.marker(
+[
+store.storeLat,
+store.storeLng
+]
+).addTo(map);
+
+L.polyline([
+[
+store.storeLat,
+store.storeLng
 ],
-
-addWaypoints:false,
-draggableWaypoints:false,
-fitSelectedRoutes:true,
-show:false,
-
-lineOptions:{
-styles:[
+[
+order.customerLat,
+order.customerLng
+]
+],
 {
 color:"#ff8800",
-weight:7
+weight:5
 }
-]
-}
-
-}).addTo(map);
+).addTo(map);
 
 }
 
 }
+
+}
+
+// =====================
+// قبول الطلب
+// =====================
 
 window.acceptOrder =
 async function(orderId){
@@ -781,14 +970,21 @@ driverLat:
 driverLat,
 
 driverLng:
-driverLng
+driverLng,
+
+acceptedAt:
+Date.now()
 
 }
 );
 
 };
 
-window.goStore =
+// =====================
+// رفض
+// =====================
+
+window.rejectOrder =
 async function(orderId){
 
 await update(
@@ -798,14 +994,18 @@ db,
 ),
 {
 
-status:"going_to_store"
+status:"waiting_driver"
 
 }
 );
 
 };
 
-window.goCustomer =
+// =====================
+// استلام الطلب
+// =====================
+
+window.goToStore =
 async function(orderId){
 
 await update(
@@ -815,16 +1015,84 @@ db,
 ),
 {
 
-status:"on_the_way"
+status:"picked_up",
+
+pickedUpAt:
+Date.now()
 
 }
 );
 
 };
+
+// =====================
+// بدء التوصيل
+// =====================
+
+window.startDelivery =
+async function(orderId){
+
+await update(
+ref(
+db,
+"orders/" + orderId
+),
+{
+
+status:"on_the_way",
+
+startedDeliveryAt:
+Date.now()
+
+}
+);
+
+};
+
+// =====================
+// إنهاء
+// =====================
 
 window.finishOrder =
 async function(orderId){
 
+const orderSnapshot =
+await get(
+ref(
+db,
+"orders/" + orderId
+)
+);
+
+if(orderSnapshot.exists()){
+
+const order =
+orderSnapshot.val();
+
+await update(
+ref(
+db,
+"drivers/" + currentUser.id
+),
+{
+
+completedOrders:
+Number(
+currentUser.completedOrders || 0
+) + 1,
+
+totalProfit:
+Number(
+currentUser.totalProfit || 0
+)
++
+Number(order.deliveryPrice || 0)
+
+}
+);
+
+}
+
 await update(
 ref(
 db,
@@ -832,41 +1100,23 @@ db,
 ),
 {
 
-status:"completed",
+status:"delivered",
 
-completedAt:
+deliveredAt:
 Date.now()
 
 }
 );
 
-alert("تم إنهاء الطلب");
+alert("تم توصيل الطلب");
 
 };
 
-window.cancelOrder =
-async function(orderId){
+// =====================
+// الحالة
+// =====================
 
-await update(
-ref(
-db,
-"orders/" + orderId
-),
-{
-
-status:"cancelled",
-
-cancelledAt:
-Date.now()
-
-}
-);
-
-alert("تم إلغاء الطلب");
-
-};
-
-function getStatus(status){
+function getStatusText(status){
 
 if(status === "waiting_driver"){
 return "بانتظار سائق";
@@ -876,23 +1126,31 @@ if(status === "accepted"){
 return "تم قبول الطلب";
 }
 
-if(status === "going_to_store"){
-return "متجه للمتجر";
+if(status === "picked_up"){
+return "تم استلام الطلب";
 }
 
 if(status === "on_the_way"){
-return "بالطريق للزبون";
+return "بالطريق";
 }
 
-if(status === "completed"){
+if(status === "delivered"){
 return "تم التوصيل";
 }
 
-if(status === "cancelled"){
-return "ملغي";
+return status;
+
 }
 
-return status;
+// =====================
+// loading
+// =====================
+
+function hideLoading(){
+
+document.getElementById(
+"loading"
+).style.display = "none";
 
 }
 
