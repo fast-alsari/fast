@@ -322,6 +322,35 @@ cursor:pointer;
 display:none;
 }
 
+.loading-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(255,255,255,.7);
+backdrop-filter:blur(5px);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.loading-spinner{
+width:60px;
+height:60px;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
+}
+
 #map{
 width:100%;
 height:60vh;
@@ -376,12 +405,47 @@ background:#00b894;
 .problem-btn{
 background:red;
 }
+
+.accept-btn:active,
+.reject-btn:active,
+.action-btn:active{
+
+transform:scale(.96);
+
+}
+
+button{
+transition:.2s;
+}
+
+.order-card{
+animation:showCard .4s ease;
+}
+
+@keyframes showCard{
+
+from{
+opacity:0;
+transform:translateY(20px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
 </style>
 
 </head>
 
 <body>
+<div class="loading-overlay" id="loadingOverlay">
 
+<div class="loading-spinner"></div>
+
+</div>
 <header class="header">
 
 <div class="driver-info">
@@ -567,9 +631,26 @@ const currentDriver = JSON.parse(localStorage.getItem("user"));
 if(!currentDriver){
 window.location.replace("index.html");
 }
+if(currentDriver.type !== "driver"){
+
+window.location.replace("index.html");
+
+}
 
 document.getElementById("driverName").innerHTML = currentDriver.name || "سائق";
-document.getElementById("driverAccountType").innerHTML = currentDriver.accountType || "عادي";
+document.getElementById(
+"driverAccountType"
+).innerHTML =
+
+currentDriver.accountType === "vip"
+
+?
+
+"🔥 VIP"
+
+:
+
+"⭐ عادي";
 
 document.getElementById(
 "driverProfileImage"
@@ -581,7 +662,9 @@ currentDriver.vehicle_image ||
 
 let driverLat = null;
 let driverLng = null;
+let locationWatcher = null;
 let currentOrderId = null;
+let notifiedOrders = {};
 let map = null;
 let driverMarker = null;
 let routeControl = null;
@@ -666,6 +749,7 @@ iconAnchor:[20,20]
 
 });
 
+locationWatcher =
 navigator.geolocation.watchPosition(
 async(position)=>{
 
@@ -714,11 +798,11 @@ L.latLng(driverLat,driverLng)
 
 if(map){
 
-map.panTo(
+map.flyTo(
 [driverLat,driverLng],
 {
 animate:true,
-duration:1
+duration:.5
 }
 );
 
@@ -750,7 +834,7 @@ alert("يجب تشغيل GPS");
 },
 {
 enableHighAccuracy:true,
-maximumAge:0,
+maximumAge:5000,
 timeout:10000
 }
 );
@@ -828,12 +912,21 @@ Number(order.customerLat),
 Number(order.customerLng)
 );
 
-if(distance > 1000){
+if(distance > 10){
 return;
 }
 
 foundOrders = true;
 
+if(!notifiedOrders[key]){
+
+notifiedOrders[key] = true;
+
+document.getElementById(
+"newOrderSound"
+).play().catch(()=>{});
+
+}
 container.innerHTML += `
 
 <div class="order-card">
@@ -963,7 +1056,27 @@ ref(db,"orders/" + id + "/rejectedBy"),
 };
 
 window.acceptOrder = async function(id){
+   
+   
+   
+   if(driverLat === null || driverLng === null){
 
+alert("انتظر تحديد الموقع");
+
+return;
+
+}
+
+   if(currentOrderId){
+
+alert("لديك طلب قيد التنفيذ");
+
+return;
+
+}
+document.getElementById(
+"loadingOverlay"
+).style.display = "flex";
 const orderRef = ref(db,"orders/" + id);
 const snapshot = await get(orderRef);
 
@@ -972,6 +1085,14 @@ return;
 }
 
 const order = snapshot.val();
+if(order.status !== "waiting_driver"){
+
+alert("الطلب تم قبوله");
+
+return;
+
+}
+
 
 await update(orderRef,{
 status:"accepted",
@@ -1004,7 +1125,9 @@ document.querySelectorAll(".store-whatsapp-btn")
 
 document.getElementById("ordersContainer").style.display = "none";
 document.getElementById("deliveryPage").style.display = "block";
-
+document.getElementById(
+"loadingOverlay"
+).style.display = "none";
 document.getElementById("customerName").innerHTML = "👤 " + order.customerName;
 let customerPhone =
 String(order.customerPhone || "");
@@ -1020,12 +1143,24 @@ document.getElementById("customerAddress").innerHTML = "📍 " + order.customerA
 const deliveryInfo =
 document.querySelector(".delivery-info");
 
+const oldProducts =
+document.getElementById("productsDetails");
+
+if(oldProducts){
+oldProducts.remove();
+}
+
 const productsContainer =
 document.createElement("div");
 
-productsContainer.style.marginTop = "20px";
+productsContainer.id =
+"productsDetails";
 
-productsContainer.innerHTML = `
+productsContainer.id =
+"productsDetails";
+
+productsContainer.style.marginTop =
+"20px";
 
 <h3 style="
 margin-bottom:15px;
@@ -1661,6 +1796,7 @@ cancelledAt:Date.now()
 
 alert("تم إلغاء الطلب");
 
+
 window.location.reload();
 
 };
@@ -1668,7 +1804,7 @@ window.location.reload();
 document.getElementById("logoutBtn").onclick = function(){
 
 localStorage.clear();
-
+navigator.geolocation.clearWatch(locationWatcher);
 sessionStorage.clear();
 
 setTimeout(()=>{
@@ -1679,7 +1815,22 @@ window.location.href = "index.html";
 
 };
 
-</script>
 
+window.addEventListener("offline",()=>{
+
+alert("انقطع الاتصال بالإنترنت");
+
+});
+
+window.addEventListener("online",()=>{
+
+alert("تم استرجاع الاتصال");
+
+});
+
+</script>
+<audio id="newOrderSound" preload="auto">
+<source src="notification.mp3" type="audio/mpeg">
+</audio>
 </body>
 </html>
