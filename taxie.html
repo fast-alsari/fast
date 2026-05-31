@@ -1,3 +1,4 @@
+ 
 <!-- taxie.html -->
 
 <!DOCTYPE html>
@@ -8,19 +9,30 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
 طلب تكسي
 </title>
 
-<link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap"
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
 rel="stylesheet">
 
-<link
-rel="stylesheet"
+<link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
 <style>
 
@@ -29,128 +41,190 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#f4f7fb;
-overflow:hidden;
+background:#f5f6fa;
+padding:15px;
+padding-bottom:120px;
+overflow-x:hidden;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:22px;
+border-radius:28px;
+display:flex;
+align-items:center;
+gap:15px;
+color:white;
+margin-bottom:20px;
+box-shadow:0 8px 25px rgba(0,0,0,.10);
+}
+
+.back-btn{
+width:48px;
+height:48px;
+border:none;
+border-radius:50%;
+background:white;
+color:#ff6600;
+font-size:18px;
+cursor:pointer;
+flex-shrink:0;
+}
+
+.header h2{
+font-size:24px;
+margin-bottom:4px;
+}
+
+.header p{
+font-size:14px;
+opacity:.9;
+}
+
+.card{
+background:white;
+padding:18px;
+border-radius:25px;
+margin-bottom:18px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.card-title{
+font-size:16px;
+font-weight:bold;
+margin-bottom:12px;
+color:#333;
+}
+
+.location-box{
+background:#f7f7f7;
+padding:15px;
+border-radius:16px;
+font-size:15px;
+margin-bottom:15px;
 }
 
 #map{
 width:100%;
-height:100vh;
+height:420px;
+border-radius:22px;
+overflow:hidden;
 }
 
-.top-box{
-position:absolute;
-top:20px;
-right:20px;
-left:20px;
-z-index:999;
-background:#fff;
-padding:15px;
-border-radius:25px;
-box-shadow:0 5px 20px rgba(0,0,0,.1);
+.info-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:15px;
+font-size:15px;
 }
 
-.input-box{
-position:relative;
-margin-bottom:12px;
+.price-box{
+background:#fff4e8;
+padding:18px;
+border-radius:18px;
+text-align:center;
+margin-bottom:18px;
 }
 
-.input-box i{
-position:absolute;
-top:17px;
-right:15px;
-color:#666;
+.price-number{
+font-size:34px;
+font-weight:bold;
+color:#ff6600;
 }
 
-.input-box input{
+.input-group{
+margin-bottom:15px;
+}
+
+.input-group label{
+display:block;
+margin-bottom:8px;
+font-size:14px;
+font-weight:bold;
+}
+
+.input-group select,
+.input-group input{
 width:100%;
-padding:15px 50px 15px 15px;
-border:none;
-background:#f4f7fb;
-border-radius:15px;
+padding:15px;
+border-radius:16px;
+border:1px solid #ddd;
+background:#fafafa;
 outline:none;
 font-size:15px;
 }
 
-.bottom-sheet{
-position:absolute;
-bottom:0;
-left:0;
-width:100%;
-background:#fff;
-padding:20px;
-border-radius:30px 30px 0 0;
-z-index:999;
-box-shadow:0 -5px 20px rgba(0,0,0,.1);
-}
-
-.trip-info{
+.actions{
 display:flex;
-justify-content:space-between;
-margin-bottom:15px;
-font-size:16px;
+gap:10px;
+margin-top:18px;
 }
 
-.price{
-font-size:30px;
-font-weight:bold;
-color:#0066ff;
-text-align:center;
-margin:15px 0;
-}
-
-.order-btn{
-width:100%;
+.actions button{
+flex:1;
 padding:16px;
 border:none;
 border-radius:18px;
-background:linear-gradient(45deg,#ff7b00,#0066ff);
-color:#fff;
-font-size:18px;
+font-size:15px;
 font-weight:bold;
 cursor:pointer;
+color:white;
 }
 
-.car-types{
+.order-btn{
+background:
+linear-gradient(
+135deg,
+#00b894,
+#00a383
+);
+}
+
+.cancel-btn{
+background:#e53935;
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:82px;
+background:white;
 display:flex;
-gap:10px;
-overflow:auto;
-margin-bottom:20px;
+justify-content:space-around;
+align-items:center;
+box-shadow:0 -5px 18px rgba(0,0,0,.08);
+z-index:1000;
 }
 
-.car{
-min-width:110px;
-background:#fff;
-border:2px solid #eee;
-padding:15px;
-border-radius:18px;
-text-align:center;
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:5px;
+font-size:13px;
+font-weight:bold;
+color:#888;
 cursor:pointer;
-transition:.3s;
 }
 
-.car.active{
-border-color:#0066ff;
-background:#eef4ff;
+.nav-item.active{
+color:#ff8800;
 }
 
-.car i{
-font-size:30px;
-margin-bottom:10px;
-color:#0066ff;
-}
-
-.car h3{
-font-size:14px;
-margin-bottom:5px;
-}
-
-.car p{
-font-size:12px;
-color:#666;
+.nav-item i{
+font-size:22px;
 }
 
 </style>
@@ -159,118 +233,174 @@ color:#666;
 
 <body>
 
+<div class="header">
+
+<button
+class="back-btn"
+onclick="window.location.href='home.html'">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</button>
+
+<div>
+
+<h2>
+طلب تكسي 🚕
+
+</h2>
+
+<p>
+حدد الوجهة المطلوبة
+</p>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+موقعك الحالي
+</div>
+
+<div
+class="location-box"
+id="currentLocation">
+
+جاري تحميل موقعك...
+
+</div>
+
 <div id="map"></div>
 
-<div class="top-box">
-
-<div class="input-box">
-
-<i class="fa-solid fa-location-dot"></i>
-
-<input
-type="text"
-id="pickup"
-placeholder="موقعك الحالي"
-readonly>
-
 </div>
 
-<div class="input-box">
+<div class="card">
 
-<i class="fa-solid fa-flag-checkered"></i>
-
-<input
-type="text"
-id="destination"
-placeholder="حدد الوجهة">
-
-</div>
-
-</div>
-
-<div class="bottom-sheet">
-
-<div class="car-types">
-
-<div
-class="car active"
-data-price="500"
-onclick="selectCar(this)">
-
-<i class="fa-solid fa-car"></i>
-
-<h3>اقتصادي</h3>
-
-<p>500 د.ع / كم</p>
-
-</div>
-
-<div
-class="car"
-data-price="750"
-onclick="selectCar(this)">
-
-<i class="fa-solid fa-car-side"></i>
-
-<h3>مميز</h3>
-
-<p>750 د.ع / كم</p>
-
-</div>
-
-<div
-class="car"
-data-price="1000"
-onclick="selectCar(this)">
-
-<i class="fa-solid fa-crown"></i>
-
-<h3>VIP</h3>
-
-<p>1000 د.ع / كم</p>
-
-</div>
-
-</div>
-
-<div class="trip-info">
+<div class="info-row">
 
 <span>
 المسافة
 </span>
 
-<span id="distance">
+<b id="distanceText">
 0 كم
-</span>
+</b>
 
 </div>
 
-<div class="trip-info">
+<div class="info-row">
 
 <span>
-الوقت المتوقع
+السعر
 </span>
 
-<span id="duration">
-0 دقيقة
-</span>
-
-</div>
-
-<div class="price"
-id="price">
-
+<b id="priceText">
 0 د.ع
+</b>
 
 </div>
+
+<div class="price-box">
+
+<div class="price-number"
+id="finalPrice">
+
+0
+
+</div>
+
+</div>
+
+<div class="input-group">
+
+<label>
+عدد الاشخاص
+</label>
+
+<select id="personsCount">
+
+<option value="0">0 شخص</option>
+<option value="1">1 شخص</option>
+<option value="2">2 اشخاص</option>
+<option value="3">3 اشخاص</option>
+<option value="4">4 اشخاص</option>
+
+</select>
+
+</div>
+
+<div class="input-group">
+
+<label>
+اكرامية للسائق
+</label>
+
+<input
+type="number"
+id="tipInput"
+placeholder="اختياري">
+
+</div>
+
+<div class="actions">
 
 <button
 class="order-btn"
-onclick="requestTaxi()">
+onclick="sendTaxiOrder()">
 
-طلب تكسي
+طلب تكسي 🚖
 
 </button>
+
+<button
+class="cancel-btn"
+onclick="window.location.href='home.html'">
+
+الغاء
+
+</button>
+
+</div>
+
+</div>
+
+<div class="bottom-bar">
+
+<div
+class="nav-item"
+onclick="window.location.href='home.html'">
+
+<i class="fa-solid fa-house"></i>
+
+<span>
+الرئيسية
+</span>
+
+</div>
+
+<div class="nav-item active">
+
+<i class="fa-solid fa-taxi"></i>
+
+<span>
+تكسي
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='asca.html'">
+
+<i class="fa-solid fa-user"></i>
+
+<span>
+الحساب
+</span>
+
+</div>
 
 </div>
 
@@ -280,28 +410,25 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
+
 getDatabase,
 ref,
-push,
 set
+
 }
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
 
-apiKey:"YOUR_API_KEY",
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
 
-authDomain:"YOUR_AUTH_DOMAIN",
+authDomain:"fast-937c9.firebaseapp.com",
 
-databaseURL:"YOUR_DATABASE_URL",
+projectId:"fast-937c9",
 
-projectId:"YOUR_PROJECT_ID",
-
-storageBucket:"YOUR_STORAGE_BUCKET",
-
-messagingSenderId:"YOUR_SENDER_ID",
-
-appId:"YOUR_APP_ID"
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 
 };
 
@@ -311,214 +438,300 @@ initializeApp(firebaseConfig);
 const database =
 getDatabase(app);
 
-let map;
-
-let directionsService;
-
-let directionsRenderer;
-
-let pickupLat = 0;
-let pickupLng = 0;
-
-let destinationLat = 0;
-let destinationLng = 0;
-
-let tripDistance = 0;
-let tripPrice = 0;
-
-let selectedPrice = 500;
-
-function initMap(){
-
-map = new google.maps.Map(
-document.getElementById("map"),
-{
-center:{
-lat:33.3152,
-lng:44.3661
-},
-zoom:14,
-disableDefaultUI:true
-}
-);
-
-directionsService =
-new google.maps.DirectionsService();
-
-directionsRenderer =
-new google.maps.DirectionsRenderer({
-polylineOptions:{
-strokeColor:"#0066ff",
-strokeWeight:6
-}
-});
-
-directionsRenderer.setMap(map);
-
-// موقع الزبون
-
-navigator.geolocation.getCurrentPosition(
-(position)=>{
-
-pickupLat =
-position.coords.latitude;
-
-pickupLng =
-position.coords.longitude;
-
-const userLocation = {
-lat:pickupLat,
-lng:pickupLng
-};
-
-map.setCenter(userLocation);
-
-new google.maps.Marker({
-position:userLocation,
-map:map,
-title:"موقعك"
-});
-
-const geocoder =
-new google.maps.Geocoder();
-
-geocoder.geocode({
-location:userLocation
-},
-(results,status)=>{
-
-if(status === "OK"){
-
-document.getElementById("pickup")
-.value =
-results[0].formatted_address;
-
-}
-
-});
-
-}
-);
-
-// autocomplete
-
-const destinationInput =
-new google.maps.places.Autocomplete(
-document.getElementById("destination")
-);
-
-destinationInput.addListener(
-"place_changed",
-()=>{
-
-const place =
-destinationInput.getPlace();
-
-destinationLat =
-place.geometry.location.lat();
-
-destinationLng =
-place.geometry.location.lng();
-
-calculateRoute();
-
-}
-);
-
-}
-
-window.selectCar = function(element){
-
-document.querySelectorAll(".car")
-.forEach(car=>{
-
-car.classList.remove("active");
-
-});
-
-element.classList.add("active");
-
-selectedPrice =
-parseInt(
-element.dataset.price
-);
-
-if(destinationLat){
-calculateRoute();
-}
-
-};
-
-function calculateRoute(){
-
-directionsService.route({
-
-origin:{
-lat:pickupLat,
-lng:pickupLng
-},
-
-destination:{
-lat:destinationLat,
-lng:destinationLng
-},
-
-travelMode:"DRIVING"
-
-},
-(result,status)=>{
-
-if(status === "OK"){
-
-directionsRenderer
-.setDirections(result);
-
-const route =
-result.routes[0].legs[0];
-
-tripDistance =
-route.distance.value / 1000;
-
-const duration =
-route.duration.text;
-
-tripPrice =
-2000 +
-(tripDistance * selectedPrice);
-
-document.getElementById("distance")
-.innerText =
-tripDistance.toFixed(1) + " كم";
-
-document.getElementById("duration")
-.innerText =
-duration;
-
-document.getElementById("price")
-.innerText =
-Math.round(tripPrice) + " د.ع";
-
-}
-
-});
-
-}
-
-window.requestTaxi =
-async function(){
-
-const user =
+const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
-if(!user){
+if(
+!currentUser ||
+!currentUser.id
+){
 
-alert("سجل دخول أولاً");
-
-return;
+window.location.href =
+"index.html";
 
 }
 
-if(!destinationLat){
+let map;
+let routingControl;
+
+let userLat =
+currentUser.latitude ||
+currentUser.lat ||
+Number(localStorage.getItem("userLat"));
+
+let userLng =
+currentUser.longitude ||
+currentUser.lng ||
+Number(localStorage.getItem("userLng"));
+
+let targetLat = null;
+let targetLng = null;
+
+let totalDistance = 0;
+let totalPrice = 0;
+
+if(!userLat || !userLng){
+
+alert("موقعك غير محفوظ بالحساب");
+
+window.location.href =
+"home.html";
+
+}
+
+document.getElementById(
+"currentLocation"
+).innerHTML =
+
+userLat.toFixed(5)
++
+" , "
++
+userLng.toFixed(5);
+
+const customerIcon = L.icon({
+
+iconUrl:
+'https://cdn-icons-png.flaticon.com/512/1077/1077114.png',
+
+iconSize:[40,40],
+iconAnchor:[20,40]
+
+});
+
+const destinationIcon = L.icon({
+
+iconUrl:
+'https://cdn-icons-png.flaticon.com/512/684/684908.png',
+
+iconSize:[40,40],
+iconAnchor:[20,40]
+
+});
+
+startMap();
+
+function startMap(){
+
+map =
+L.map('map').setView(
+[userLat,userLng],
+14
+);
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+maxZoom:19
+}
+).addTo(map);
+
+L.marker(
+[userLat,userLng],
+{
+icon:customerIcon
+}
+).addTo(map);
+
+setTimeout(()=>{
+
+map.invalidateSize();
+
+},500);
+
+map.on("click",(e)=>{
+
+targetLat =
+e.latlng.lat;
+
+targetLng =
+e.latlng.lng;
+
+drawRoute();
+
+});
+
+}
+
+function drawRoute(){
+
+if(routingControl){
+
+map.removeControl(
+routingControl
+);
+
+}
+
+routingControl =
+L.Routing.control({
+
+waypoints:[
+
+L.latLng(
+userLat,
+userLng
+),
+
+L.latLng(
+targetLat,
+targetLng
+)
+
+],
+
+routeWhileDragging:false,
+addWaypoints:false,
+draggableWaypoints:false,
+fitSelectedRoutes:true,
+show:false,
+
+lineOptions:{
+styles:[
+{
+color:"#ff6600",
+weight:7
+}
+]
+},
+
+createMarker:function(i,waypoint){
+
+if(i === 0){
+
+return L.marker(
+waypoint.latLng,
+{
+icon:customerIcon
+}
+);
+
+}
+
+return L.marker(
+waypoint.latLng,
+{
+icon:destinationIcon
+}
+);
+
+}
+
+}).addTo(map);
+
+routingControl.on(
+'routesfound',
+function(e){
+
+const route =
+e.routes[0];
+
+totalDistance =
+route.summary.totalDistance / 1000;
+
+calculatePrice();
+
+}
+
+);
+
+}
+
+function calculatePrice(){
+
+const personsCount =
+Number(
+document.getElementById(
+"personsCount"
+).value || 0
+);
+
+if(totalDistance <= 1){
+
+totalPrice = 500;
+
+}
+
+else if(totalDistance <= 3){
+
+totalPrice = 1000;
+
+}
+
+else if(totalDistance <= 5){
+
+totalPrice = 1500;
+
+}
+
+else if(totalDistance <= 8){
+
+totalPrice = 2500;
+
+}
+
+else{
+
+totalPrice =
+2500 +
+Math.round(
+(totalDistance - 8) * 250
+);
+
+}
+
+if(personsCount > 0){
+
+totalPrice +=
+personsCount * 250;
+
+}
+
+document.getElementById(
+"distanceText"
+).innerHTML =
+
+totalDistance.toFixed(1)
++
+" كم";
+
+document.getElementById(
+"priceText"
+).innerHTML =
+
+totalPrice.toLocaleString()
++
+" د.ع";
+
+document.getElementById(
+"finalPrice"
+).innerHTML =
+
+totalPrice.toLocaleString()
++
+" د.ع";
+
+}
+
+document
+.getElementById("personsCount")
+.addEventListener(
+"change",
+()=>{
+
+if(targetLat){
+
+calculatePrice();
+
+}
+
+}
+);
+
+window.sendTaxiOrder =
+async function(){
+
+if(!targetLat){
 
 alert("حدد الوجهة");
 
@@ -526,55 +739,83 @@ return;
 
 }
 
-const tripId =
-push(ref(database,"taxi_orders")).key;
-
-await set(
-ref(database,"taxi_orders/" + tripId),
-{
-
-tripId:tripId,
-
-customerId:user.id,
-
-customerName:user.name,
-
-customerPhone:user.phone,
-
-pickupLat:pickupLat,
-
-pickupLng:pickupLng,
-
-destinationLat:destinationLat,
-
-destinationLng:destinationLng,
-
-distance:tripDistance,
-
-price:Math.round(tripPrice),
-
-status:"pending",
-
-driverId:"",
-
-createdAt:Date.now()
-
-}
+const tip =
+Number(
+document.getElementById(
+"tipInput"
+).value || 0
 );
 
-alert("تم إرسال طلب التكسي");
+const orderId =
+"TAXI_" + Date.now();
+
+const orderData = {
+
+id:orderId,
+
+type:"taxi",
+
+status:"waiting",
+
+customerId:
+currentUser.id,
+
+customerName:
+currentUser.name || "",
+
+customerPhone:
+currentUser.phone || "",
+
+customerImage:
+currentUser.image || "",
+
+pickupLat:userLat,
+pickupLng:userLng,
+
+destinationLat:targetLat,
+destinationLng:targetLng,
+
+distance:
+Number(
+totalDistance.toFixed(1)
+),
+
+personsCount:
+Number(
+document.getElementById(
+"personsCount"
+).value
+),
+
+price:totalPrice,
+
+tip:tip,
+
+finalPrice:
+totalPrice + tip,
+
+createdAt:
+Date.now()
 
 };
 
-window.initMap = initMap;
+await set(
+ref(
+database,
+"taxi_orders/" + orderId
+),
+orderData
+);
 
-</script>
+alert("تم ارسال الطلب 🚕");
 
-<script
-async
-defer
-src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAP_KEY&libraries=places&callback=initMap">
+window.location.href =
+"home.html";
+
+};
+
 </script>
 
 </body>
-</html>
+
+</html> 
