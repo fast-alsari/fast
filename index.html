@@ -439,7 +439,8 @@ getDatabase,
 ref,
 set,
 get,
-child
+child,
+update
 }
 from
 "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
@@ -470,7 +471,18 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 function showToast(message){
 
-alert(message);
+const toast =
+document.getElementById("toast");
+
+toast.innerText = message;
+
+toast.style.display = "block";
+
+setTimeout(()=>{
+
+toast.style.display = "none";
+
+},3000);
 
 }
 // =========================
@@ -505,7 +517,11 @@ const formData = new FormData();
 
 formData.append("image",file);
 
-const response = await fetch(
+let response;
+
+try{
+
+response = await fetch(
 
 `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
 
@@ -517,6 +533,13 @@ body:formData
 );
 
 const data = await response.json();
+}catch(error){
+
+showToast("فشل الاتصال بالسيرفر");
+
+return "";
+
+}
 if(!data.success){
 
 alert("فشل رفع الصورة");
@@ -575,8 +598,12 @@ tableName = "admins";
 
 try{
 
-const snapshot = await get(
-ref(database, tableName + "/" + currentUser.id)
+await update(
+ref(database, tableName + "/" + currentUser.id),
+{
+isOnline:true,
+lastSeen:Date.now()
+}
 );
 
 if(!snapshot.exists()){
@@ -891,7 +918,13 @@ document.getElementById("taxiForm")
 function loadStoreMap(){
 
 if(storeMap){
+
+storeMap.off();
+
 storeMap.remove();
+
+storeMap = null;
+
 }
 
 storeMap = L.map('storeMap')
@@ -949,7 +982,7 @@ function checkAccountStatus(user){
 // pending
 if(user.status==="pending"){
 
-saveSession(user);
+
 
 document.getElementById("pendingMessage")
 .innerHTML = `
@@ -977,7 +1010,7 @@ return false;
 // banned
 if(user.status==="banned"){
 
-saveSession(user);
+
 
 document.getElementById("pendingMessage")
 .innerHTML = `
@@ -1003,7 +1036,7 @@ return false;
 // expired
 if(user.status==="expired"){
 
-saveSession(user);
+
 
 document.getElementById("pendingMessage")
 .innerHTML = `
@@ -1029,7 +1062,7 @@ return false;
 // disabled
 if(user.status==="inactive"){
 
-saveSession(user);
+
 
 document.getElementById("pendingMessage")
 .innerHTML = `
@@ -1119,11 +1152,7 @@ registerBtn = document.querySelector(
 
 registerBtn.disabled = true;
 registerBtn.innerText = "جاري إنشاء الحساب...";
-function resetRegisterButton(){
 
-registerBtn.disabled = false;
-
-registerBtn.innerText = "إنشاء الحساب";
 
 }
 try{
@@ -1204,9 +1233,9 @@ document.getElementById("customer_phone").value.trim(),
 password:
 document.getElementById("customer_password").value.trim(),
 
-latitude:"",
+userLat:"",
 
-longitude:"",
+userLng:"",
 
 
 totalOrders:0,
@@ -1692,6 +1721,16 @@ alert(error.message);
 window.login =
 async function(){
 
+const loginBtn =
+document.querySelector(
+'button[onclick="login()"]'
+);
+
+loginBtn.disabled = true;
+
+loginBtn.innerText =
+"جاري تسجيل الدخول...";
+
 let phone =
 document.getElementById("login_phone").value.trim();
 
@@ -1769,7 +1808,7 @@ user.password === password
 if(!checkAccountStatus(user)){
 return;
 }
-saveSession(user);
+
 
 if(user.status === "active"){
 
@@ -1807,7 +1846,7 @@ user.phone === phone &&
 user.password === password
 ){
 
-saveSession(user);
+
 
 if(!checkAccountStatus(user)){
 return;
@@ -1841,7 +1880,7 @@ user.phone === phone &&
 user.password === password
 ){
 
-saveSession(user);
+
 
 if(!checkAccountStatus(user)){
 return;
@@ -1875,7 +1914,7 @@ user.phone === phone &&
 user.password === password
 ){
 
-saveSession(user);
+
 
 if(!checkAccountStatus(user)){
 return;
@@ -1895,7 +1934,10 @@ alert("بيانات تسجيل الدخول غير صحيحة");
 }catch(error){
 
 console.log(error);
+loginBtn.disabled = false;
 
+loginBtn.innerText =
+"تسجيل الدخول";
 alert("حدث خطأ");
 
 }
