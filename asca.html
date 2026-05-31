@@ -8,7 +8,7 @@
 <meta charset="UTF-8">
 
 <meta name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+content="width=device-width, initial-scale=1.0">
 
 <title>
 الحساب الشخصي
@@ -41,7 +41,6 @@ padding:25px 20px;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
 color:white;
-box-shadow:0 8px 25px rgba(0,0,0,.12);
 text-align:center;
 }
 
@@ -54,7 +53,6 @@ margin:auto;
 display:flex;
 align-items:center;
 justify-content:center;
-box-shadow:0 5px 20px rgba(0,0,0,.15);
 }
 
 .logo-box img{
@@ -73,7 +71,6 @@ margin-top:15px;
 font-size:15px;
 margin-top:8px;
 opacity:.95;
-line-height:1.8;
 }
 
 .page-content{
@@ -263,7 +260,7 @@ margin-bottom:5px;
 
 <div class="logo-box">
 
-<img src="ok.png">
+<img src="Logo.png">
 
 </div>
 
@@ -279,22 +276,30 @@ margin-bottom:5px;
 
 <div class="page-content">
 
+<!-- بيانات الحساب -->
+
 <div class="card">
 
 <div class="card-title">
+
 <i class="fa-solid fa-user"></i>
+
 بيانات الحساب
+
 </div>
 
 <div class="info-line">
 
 <div class="info-label">
-اسم المستخدم
+الاسم
 </div>
 
-<div class="info-value"
+<div
+class="info-value"
 id="userName">
+
 ...
+
 </div>
 
 </div>
@@ -305,9 +310,12 @@ id="userName">
 رقم الهاتف
 </div>
 
-<div class="info-value"
+<div
+class="info-value"
 id="userPhone">
+
 ...
+
 </div>
 
 </div>
@@ -315,32 +323,43 @@ id="userPhone">
 <div class="info-line">
 
 <div class="info-label">
-كلمة المرور
+نوع الحساب
 </div>
 
-<div class="info-value"
-id="userPassword">
+<div
+class="info-value"
+id="userType">
+
 ...
-</div>
 
 </div>
 
 </div>
+
+</div>
+
+<!-- الاحصائيات -->
 
 <div class="card">
 
 <div class="card-title">
+
 <i class="fa-solid fa-chart-column"></i>
+
 الإحصائيات
+
 </div>
 
 <div class="stats-grid">
 
 <div class="stat-box">
 
-<div class="stat-number"
+<div
+class="stat-number"
 id="allOrders">
+
 0
+
 </div>
 
 <div class="stat-text">
@@ -351,39 +370,48 @@ id="allOrders">
 
 <div class="stat-box">
 
-<div class="stat-number"
-id="acceptedOrders">
+<div
+class="stat-number"
+id="activeOrders">
+
 0
+
 </div>
 
 <div class="stat-text">
-الطلبات المقبولة
+طلبات نشطة
 </div>
 
 </div>
 
 <div class="stat-box">
 
-<div class="stat-number"
-id="rejectedOrders">
+<div
+class="stat-number"
+id="cancelledOrders">
+
 0
+
 </div>
 
 <div class="stat-text">
-الطلبات المرفوضة
+طلبات ملغية
 </div>
 
 </div>
 
 <div class="stat-box">
 
-<div class="stat-number"
-id="deliveredOrders">
+<div
+class="stat-number"
+id="completedOrders">
+
 0
+
 </div>
 
 <div class="stat-text">
-تم التوصيل
+طلبات مكتملة
 </div>
 
 </div>
@@ -391,12 +419,17 @@ id="deliveredOrders">
 </div>
 
 </div>
+
+<!-- الموقع -->
 
 <div class="card">
 
 <div class="card-title">
+
 <i class="fa-solid fa-location-dot"></i>
+
 موقعك
+
 </div>
 
 <div class="location-box">
@@ -410,24 +443,28 @@ loading="lazy">
 
 <div class="location-note">
 
-هذا الموقع لا يمكن لأحد مشاهدته،
-ويظهر فقط عند إرسال طلب باسمك.
+هذا الموقع لا يظهر إلا أثناء الطلب فقط
 
 </div>
 
 </div>
+
+<!-- الدعوات -->
 
 <div class="card">
 
 <div class="card-title">
+
 <i class="fa-solid fa-gift"></i>
-توصيلة  طلب مجانية
+
+الدعوات
+
 </div>
 
 <div class="info-line">
 
 <div class="info-label">
-رمز الدعوة الخاص بك 
+كود الدعوة الخاص بك
 </div>
 
 <div style="
@@ -440,12 +477,7 @@ margin-top:10px;
 type="text"
 readonly
 id="inviteCode"
-class="code-input"
-style="
-background:#fff7ef;
-font-size:17px;
-font-weight:bold;
-">
+class="code-input">
 
 <button
 class="copy-btn"
@@ -465,9 +497,7 @@ onclick="copyInviteCode()">
 type="text"
 id="giftCode"
 class="code-input"
-placeholder="الصق الكود هنا"
-inputmode="text"
-autocomplete="off">
+placeholder="ادخل كود الدعوة">
 
 <button
 class="copy-btn"
@@ -499,6 +529,8 @@ onclick="logout()">
 
 </div>
 
+<!-- البار السفلي -->
+
 <div class="bottom-bar">
 
 <div
@@ -515,7 +547,7 @@ onclick="window.location.href='home.html'">
 
 <div
 class="nav-item"
-onclick="goToCart()">
+onclick="window.location.href='cart.html'">
 
 <i class="fa-solid fa-cart-shopping"></i>
 
@@ -543,12 +575,15 @@ import { initializeApp }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
+
 getDatabase,
 ref,
 get,
 update,
 onValue
+
 }
+
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -567,45 +602,32 @@ databaseURL:
 const app =
 initializeApp(firebaseConfig);
 
-const db =
+const database =
 getDatabase(app);
 
-let currentUser = null;
-
-try{
-
-currentUser = JSON.parse(
-localStorage.getItem("user")
-);
-
-}catch{
-
-currentUser = null;
-
-}
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
 
 if(
 !currentUser ||
-!currentUser.id ||
-currentUser.type !== "customer"
+!currentUser.id
 ){
 
 localStorage.clear();
 sessionStorage.clear();
 
-window.location.replace(
-"index.html"
-);
+window.location.href =
+"index.html";
 
 }
 
-async function loadUserData(){
+// تحميل المستخدم
 
-const snapshot = await get(
-ref(
-db,
-"customers/" + currentUser.id
-)
+async function loadUser(){
+
+const snapshot =
+await get(
+ref(database,"users/" + currentUser.id)
 );
 
 if(!snapshot.exists()){
@@ -613,68 +635,66 @@ if(!snapshot.exists()){
 localStorage.clear();
 sessionStorage.clear();
 
-window.location.replace(
-"index.html"
-);
+window.location.href =
+"index.html";
 
 return;
 
 }
 
-const userData = snapshot.val();
-
-userData.id =
-userData.id || currentUser.id;
+const user =
+snapshot.val();
 
 localStorage.setItem(
 "user",
-JSON.stringify(userData)
+JSON.stringify(user)
 );
 
 document.getElementById("userName")
 .innerHTML =
-userData.name || "";
+user.name || "";
 
 document.getElementById("userPhone")
 .innerHTML =
-userData.phone || "";
+user.phone || "";
 
-document.getElementById("userPassword")
+document.getElementById("userType")
 .innerHTML =
-userData.password || "";
+user.type || "";
 
 document.getElementById("inviteCode")
 .value =
-userData.id || "";
+user.id || "";
 
+// الموقع
 
-
-}
-
-loadUserData();
-
-let userLat =
-currentUser.userLat || "";
-
-let userLng =
-currentUser.userLng || "";
-
-if(userLat && userLng){
+if(
+user.location &&
+user.location.latitude &&
+user.location.longitude
+){
 
 document.getElementById("mapFrame")
 .src =
-`https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
+
+`https://maps.google.com/maps?q=${user.location.latitude},${user.location.longitude}&z=15&output=embed`;
 
 }
 
+}
+
+loadUser();
+
+// الاحصائيات
+
 onValue(
-ref(db,"orders"),
+ref(database,"orders"),
 (snapshot)=>{
 
 let all = 0;
-let accepted = 0;
-let rejected = 0;
-let delivered = 0;
+let active = 0;
+let cancelled = 0;
+let completed = 0;
 
 if(snapshot.exists()){
 
@@ -685,37 +705,50 @@ Object.values(orders)
 .forEach(order=>{
 
 if(
-order.customerId === currentUser.id
+order.customer &&
+order.customer.id === currentUser.id
 ){
 
 all++;
 
 if(
 [
+"waiting_driver",
 "accepted",
+"preparing_order",
 "on_the_way",
 "arrived"
 ]
 .includes(order.status)
 ){
-accepted++;
+
+active++;
+
 }
 
 if(
 [
-"failed_no_driver",
-"delivery_problem",
 "cancelled",
-"cancelled_by_customer"]
+"rejected",
+"failed_no_driver"
+]
 .includes(order.status)
 ){
-rejected++;
+
+cancelled++;
+
 }
 
 if(
-order.status === "delivered"
+[
+"completed",
+"delivered"
+]
+.includes(order.status)
 ){
-delivered++;
+
+completed++;
+
 }
 
 }
@@ -727,38 +760,40 @@ delivered++;
 document.getElementById("allOrders")
 .innerHTML = all;
 
-document.getElementById("acceptedOrders")
-.innerHTML = accepted;
+document.getElementById("activeOrders")
+.innerHTML = active;
 
-document.getElementById("rejectedOrders")
-.innerHTML = rejected;
+document.getElementById("cancelledOrders")
+.innerHTML = cancelled;
 
-document.getElementById("deliveredOrders")
-.innerHTML = delivered;
+document.getElementById("completedOrders")
+.innerHTML = completed;
 
 }
 );
+
+// نسخ الكود
 
 window.copyInviteCode =
 async function(){
 
 try{
 
-const code =
-document.getElementById("inviteCode")
-.value;
+await navigator.clipboard.writeText(
+document.getElementById("inviteCode").value
+);
 
-await navigator.clipboard.writeText(code);
-
-alert("تم نسخ الكود");
+alert("تم النسخ");
 
 }catch{
 
-alert("فشل نسخ الكود");
+alert("فشل النسخ");
 
 }
 
 };
+
+// لصق
 
 window.pasteCode =
 async function(){
@@ -773,11 +808,13 @@ document.getElementById("giftCode")
 
 }catch{
 
-alert("فشل لصق الكود");
+alert("فشل اللصق");
 
 }
 
 };
+
+// استخدام الكود
 
 window.useInviteCode =
 async function(){
@@ -789,7 +826,7 @@ document.getElementById("giftCode")
 
 if(!code){
 
-alert("الصق الكود");
+alert("ادخل الكود");
 
 return;
 
@@ -804,55 +841,33 @@ return;
 }
 
 const myRef =
-ref(
-db,
-"customers/" + currentUser.id
-);
+ref(database,"users/" + currentUser.id);
 
-const myData =
+const mySnapshot =
 await get(myRef);
 
-if(!myData.exists()){
+if(!mySnapshot.exists()){
 return;
 }
 
 const myUser =
-myData.val();
+mySnapshot.val();
 
-if(
-myUser.usedFreeDelivery === true
-){
+if(myUser.usedInviteCode){
 
-alert(
-"لقد استخدمت التوصيلة المجانية مسبقاً"
-);
-
-return;
-
-}
-
-if(
-myUser.invitedBy
-){
-
-alert(
-"لا يمكنك استخدام أكثر من كود"
-);
+alert("لقد استخدمت كود مسبقاً");
 
 return;
 
 }
 
 const inviterRef =
-ref(
-db,
-"customers/" + code
-);
+ref(database,"users/" + code);
 
-const inviterData =
+const inviterSnapshot =
 await get(inviterRef);
 
-if(!inviterData.exists()){
+if(!inviterSnapshot.exists()){
 
 alert("الكود غير صحيح");
 
@@ -860,42 +875,25 @@ return;
 
 }
 
-await update(
-myRef,
-{
+await update(myRef,{
 
 freeDelivery:true,
 
-usedFreeDelivery:true,
+usedInviteCode:true,
 
-invitedBy:code,
+invitedBy:code
 
-freeDeliveryUsed:false
+});
 
-}
-);
-
-alert(
-"تم الحصول على توصيلة مجانية 🎉"
-);
+alert("تم تفعيل التوصيلة المجانية 🎉");
 
 document.getElementById("giftCode")
 .value = "";
 
 };
 
-window.goToCart =
-function(){
+// تسجيل خروج
 
-localStorage.setItem(
-"openCartPage",
-"true"
-);
-
-window.location.href =
-"home.html";
-
-};
 window.logout =
 function(){
 
@@ -903,9 +901,8 @@ localStorage.clear();
 
 sessionStorage.clear();
 
-window.location.replace(
-"index.html"
-);
+window.location.href =
+"index.html";
 
 };
 
