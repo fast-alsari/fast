@@ -540,8 +540,7 @@ alert("فشل رفع الصورة");
 return "";
 
 }
-return data.data.url;
-
+return data.data.image.url;
 }
 
 // =========================
@@ -1134,13 +1133,15 @@ async function(){
 'button[onclick="registerAccount()"]'
 );
 
-registerBtn.disabled = true;
-registerBtn.innerText = "جاري إنشاء الحساب...";
 if(registerBtn.dataset.loading === "true"){
 return;
 }
 
 registerBtn.dataset.loading = "true";
+
+registerBtn.disabled = true;
+
+registerBtn.innerText = "جاري إنشاء الحساب...";
 try{
 
 let type =
@@ -1575,7 +1576,6 @@ target="_blank">
 console.error(error);
 
 resetRegisterButton();
-console.error(error);
 alert(error.message);
 
 }
