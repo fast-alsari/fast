@@ -2239,9 +2239,36 @@ finalTotal.innerHTML =
 
 updateCart();
 
+// فتح السلة مباشرة اذا جاية من الحساب
+
+if(localStorage.getItem("openCartPage") === "true"){
+
+localStorage.removeItem("openCartPage");
+
+document.querySelectorAll(".page")
+.forEach(page=>{
+
+page.classList.remove("active-page");
+
+});
+
+document.getElementById("cartPage")
+.classList.add("active-page");
+
+document.querySelectorAll(".nav-item")
+.forEach(item=>{
+
+item.classList.remove("active");
+
+});
+
+document.querySelectorAll(".nav-item")[1]
+.classList.add("active");
+
+}
+
 window.increaseCartQty =
 function(productId,storeId){
-
 let item =
 cart.find(item =>
 item.id === productId &&
