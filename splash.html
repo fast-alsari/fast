@@ -1,1 +1,206 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+عالسريع
+</title>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+height:100vh;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+overflow:hidden;
+}
+
+.box{
+text-align:center;
+color:white;
+animation:show 1s ease;
+}
+
+.logo{
+width:130px;
+height:130px;
+
+border-radius:35px;
+background:white;
+
+display:flex;
+align-items:center;
+justify-content:center;
+
+margin:auto auto 25px;
+
+font-size:65px;
+}
+
+.title{
+font-size:38px;
+font-weight:800;
+margin-bottom:10px;
+}
+
+.desc{
+font-size:16px;
+opacity:.95;
+}
+
+.loader{
+margin:35px auto 0;
+
+width:55px;
+height:55px;
+
+border:5px solid rgba(255,255,255,.3);
+border-top:5px solid white;
+
+border-radius:50%;
+
+animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
+}
+
+@keyframes show{
+
+from{
+opacity:0;
+transform:translateY(30px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<div class="logo">
+🚀
+</div>
+
+<div class="title">
+عالسريع
+</div>
+
+<div class="desc">
+توصيل الطلبات بأسرع وقت
+</div>
+
+<div class="loader"></div>
+
+</div>
+
+<script>
+
+setTimeout(()=>{
+
+const user =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+if(!user){
+
+window.location.replace(
+"index.html"
+);
+
+return;
+
+}
+
+if(user.type === "customer"){
+
+window.location.replace(
+"home.html"
+);
+
+return;
+
+}
+
+if(user.type === "driver"){
+
+window.location.replace(
+"driver.html"
+);
+
+return;
+
+}
+
+if(user.type === "taxi"){
+
+window.location.replace(
+"w.html"
+);
+
+return;
+
+}
+
+if(user.type === "admin"){
+
+window.location.replace(
+"admin.html"
+);
+
+return;
+
+}
+
+window.location.replace(
+"index.html"
+);
+
+},2500);
+
+</script>
+
+</body>
+
+</html>
