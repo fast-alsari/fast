@@ -1,5 +1,3 @@
-<!-- taxie.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -7,31 +5,33 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
+<meta
+name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
 طلب تكسي
 </title>
 
-<link rel="preconnect"
-href="https://fonts.googleapis.com">
-
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
-rel="stylesheet">
-
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
 
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
 <style>
 
@@ -40,105 +40,78 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
--webkit-tap-highlight-color:transparent;
 }
 
 body{
 background:#f5f6fa;
 padding:15px;
+padding-bottom:120px;
 overflow-x:hidden;
 }
 
 .header{
-background:linear-gradient(135deg,#ff8800,#ff5500);
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
 padding:22px;
 border-radius:28px;
-display:flex;
-align-items:center;
-gap:15px;
 color:white;
 margin-bottom:20px;
-box-shadow:0 8px 25px rgba(0,0,0,.10);
-}
-
-.back-btn{
-width:48px;
-height:48px;
-border:none;
-border-radius:50%;
-background:white;
-color:#ff6600;
-font-size:18px;
-cursor:pointer;
-flex-shrink:0;
 }
 
 .header h2{
-font-size:24px;
-margin-bottom:4px;
-}
-
-.header p{
-font-size:14px;
-opacity:.9;
+font-size:28px;
+margin-bottom:6px;
 }
 
 .card{
 background:white;
 padding:18px;
-border-radius:25px;
+border-radius:26px;
 margin-bottom:18px;
-box-shadow:0 5px 18px rgba(0,0,0,.06);
-}
-
-.card-title{
-font-size:16px;
-font-weight:bold;
-margin-bottom:12px;
-color:#333;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
 }
 
 .location-box{
-background:#f7f7f7;
+background:#f5f5f5;
 padding:15px;
-border-radius:16px;
-font-size:15px;
+border-radius:18px;
 margin-bottom:15px;
+font-size:14px;
 line-height:1.8;
 }
 
 #map{
 width:100%;
-height:430px;
-border-radius:22px;
+height:420px;
+border-radius:24px;
 overflow:hidden;
 }
 
 .info-row{
 display:flex;
 justify-content:space-between;
-margin-bottom:15px;
+margin-bottom:14px;
 font-size:15px;
 }
 
 .price-box{
 background:#fff4e8;
-padding:18px;
-border-radius:18px;
+padding:20px;
+border-radius:20px;
 text-align:center;
 margin-bottom:18px;
 }
 
-.price-title{
-font-size:15px;
-margin-bottom:10px;
-color:#555;
-}
-
-.price-number{
-font-size:36px;
-font-weight:bold;
+.price-box h2{
+font-size:38px;
 color:#ff6600;
+margin-top:10px;
 }
 
 .input-group{
@@ -152,27 +125,34 @@ font-size:14px;
 font-weight:bold;
 }
 
-.input-group select,
-.input-group input{
+.input,
+.select{
 width:100%;
-padding:15px;
+height:56px;
+border:none;
+background:#f5f5f5;
 border-radius:16px;
-border:1px solid #ddd;
-background:#fafafa;
+padding:0 15px;
 outline:none;
 font-size:15px;
 }
 
 .order-btn{
 width:100%;
-padding:17px;
+height:58px;
 border:none;
 border-radius:18px;
-font-size:16px;
+background:
+linear-gradient(
+135deg,
+#00b894,
+#00a383
+);
+
+color:white;
+font-size:17px;
 font-weight:bold;
 cursor:pointer;
-color:white;
-background:linear-gradient(135deg,#00b894,#00a383);
 }
 
 </style>
@@ -182,16 +162,6 @@ background:linear-gradient(135deg,#00b894,#00a383);
 <body>
 
 <div class="header">
-
-<button
-class="back-btn"
-onclick="window.location.href='home.html'">
-
-<i class="fa-solid fa-arrow-right"></i>
-
-</button>
-
-<div>
 
 <h2>
 طلب تكسي 🚕
@@ -204,19 +174,13 @@ onclick="window.location.href='home.html'">
 
 </div>
 
-</div>
-
 <div class="card">
-
-<div class="card-title">
-موقعك الحالي
-</div>
 
 <div
 class="location-box"
 id="currentLocation">
 
-جاري تحميل الموقع...
+جاري تحديد موقعك...
 
 </div>
 
@@ -252,17 +216,13 @@ id="currentLocation">
 
 <div class="price-box">
 
-<div class="price-title">
+<div>
 السعر النهائي
 </div>
 
-<div
-class="price-number"
-id="finalPrice">
-
+<h2 id="finalPrice">
 0
-
-</div>
+</h2>
 
 </div>
 
@@ -272,7 +232,9 @@ id="finalPrice">
 عدد الأشخاص
 </label>
 
-<select id="personsCount">
+<select
+id="personsInput"
+class="select">
 
 <option value="1">
 1 شخص
@@ -297,12 +259,13 @@ id="finalPrice">
 <div class="input-group">
 
 <label>
-إكرامية للسائق
+إكرامية السائق
 </label>
 
 <input
 type="number"
 id="tipInput"
+class="input"
 placeholder="اختياري">
 
 </div>
@@ -311,7 +274,7 @@ placeholder="اختياري">
 class="order-btn"
 onclick="sendTaxiOrder()">
 
-إرسال طلب 🚖
+إرسال الطلب
 
 </button>
 
@@ -319,91 +282,46 @@ onclick="sendTaxiOrder()">
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { db }
+from "./firebase.js";
 
 import {
-
-getDatabase,
 ref,
 set
-
 }
-
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-const firebaseConfig = {
-
-apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
-
-authDomain:"fast-937c9.firebaseapp.com",
-
-projectId:"fast-937c9",
-
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
-
-};
-
-const app =
-initializeApp(firebaseConfig);
-
-const database =
-getDatabase(app);
+import {
+generateId,
+formatPrice,
+calculateDistance
+}
+from "./utils.js";
 
 const currentUser =
 JSON.parse(
 localStorage.getItem("user")
 );
 
-if(
-!currentUser ||
-!currentUser.id
-){
+if(!currentUser){
 
-window.location.href =
-"index.html";
+window.location.replace(
+"index.html"
+);
 
 }
 
 let map;
-let routingControl;
-
-let pickupMarker;
-let destinationMarker;
+let routeControl;
 
 let userLat = null;
 let userLng = null;
 
-let destinationLat = null;
-let destinationLng = null;
+let targetLat = null;
+let targetLng = null;
 
 let totalDistance = 0;
 let totalPrice = 0;
-
-const customerIcon =
-L.icon({
-
-iconUrl:
-"https://cdn-icons-png.flaticon.com/512/1077/1077114.png",
-
-iconSize:[40,40],
-iconAnchor:[20,40]
-
-});
-
-const destinationIcon =
-L.icon({
-
-iconUrl:
-"https://cdn-icons-png.flaticon.com/512/684/684908.png",
-
-iconSize:[40,40],
-iconAnchor:[20,40]
-
-});
-
-// تحميل موقع المستخدم
 
 navigator.geolocation.getCurrentPosition(
 
@@ -420,10 +338,9 @@ document.getElementById(
 ).innerHTML =
 
 `
-خط العرض:
+📍
 ${userLat.toFixed(5)}
-<br>
-خط الطول:
+,
 ${userLng.toFixed(5)}
 `;
 
@@ -433,46 +350,37 @@ startMap();
 
 ()=>{
 
-alert("فشل تحميل الموقع");
-
-window.location.href =
-"home.html";
+alert("يجب تشغيل GPS");
 
 }
-
 );
-
-// تشغيل الخريطة
 
 function startMap(){
 
 map =
-L.map("map").setView(
+L.map("map")
+.setView(
 [userLat,userLng],
 14
 );
 
 L.tileLayer(
-"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
 {
 maxZoom:19
 }
 ).addTo(map);
 
-pickupMarker =
 L.marker(
-[userLat,userLng],
-{
-icon:customerIcon
-}
+[userLat,userLng]
 ).addTo(map);
 
 map.on("click",(e)=>{
 
-destinationLat =
+targetLat =
 e.latlng.lat;
 
-destinationLng =
+targetLng =
 e.latlng.lng;
 
 drawRoute();
@@ -481,49 +389,32 @@ drawRoute();
 
 }
 
-// رسم المسار
-
 function drawRoute(){
 
-if(destinationMarker){
-
-map.removeLayer(
-destinationMarker
-);
-
-}
-
-destinationMarker =
-L.marker(
-[destinationLat,destinationLng],
-{
-icon:destinationIcon
-}
-).addTo(map);
-
-if(routingControl){
+if(routeControl){
 
 map.removeControl(
-routingControl
+routeControl
 );
 
 }
 
-routingControl =
+routeControl =
 L.Routing.control({
 
 waypoints:[
 
-L.latLng(userLat,userLng),
+L.latLng(
+userLat,
+userLng
+),
 
 L.latLng(
-destinationLat,
-destinationLng
+targetLat,
+targetLng
 )
 
 ],
-
-routeWhileDragging:false,
 
 addWaypoints:false,
 
@@ -536,66 +427,36 @@ show:false,
 lineOptions:{
 styles:[
 {
-color:"#ff6600",
+color:"#ff8800",
 weight:7
 }
 ]
-},
-
-createMarker:()=>null
+}
 
 }).addTo(map);
 
-routingControl.on(
-"routesfound",
-function(e){
-
-const route =
-e.routes[0];
-
 totalDistance =
-route.summary.totalDistance / 1000;
+calculateDistance(
+userLat,
+userLng,
+targetLat,
+targetLng
+);
 
 calculatePrice();
 
 }
-);
-
-}
-
-// تقريب السعر
-
-function roundPrice(price){
-
-const remain =
-price % 250;
-
-if(remain === 0){
-return price;
-}
-
-return price + (250 - remain);
-
-}
-
-// حساب السعر
 
 function calculatePrice(){
 
-const personsCount =
+const persons =
 Number(
 document.getElementById(
-"personsCount"
+"personsInput"
 ).value
 );
 
-if(totalDistance <= 1){
-
-totalPrice = 1000;
-
-}
-
-else if(totalDistance <= 3){
+if(totalDistance <= 2){
 
 totalPrice = 2000;
 
@@ -623,17 +484,18 @@ Math.round(
 
 }
 
-// زيادة حسب الأشخاص
-
-if(personsCount > 1){
-
 totalPrice +=
-(personsCount - 1) * 500;
+persons * 250;
 
-}
+const tip =
+Number(
+document.getElementById(
+"tipInput"
+).value || 0
+);
 
-totalPrice =
-roundPrice(totalPrice);
+const finalPrice =
+totalPrice + tip;
 
 document.getElementById(
 "distanceText"
@@ -646,74 +508,33 @@ totalDistance.toFixed(1)
 document.getElementById(
 "priceText"
 ).innerHTML =
-
-totalPrice.toLocaleString()
-+
-" د.ع";
-
-const tip =
-Number(
-document.getElementById(
-"tipInput"
-).value || 0
-);
-
-const finalPrice =
-roundPrice(
-totalPrice + tip
-);
+formatPrice(totalPrice);
 
 document.getElementById(
 "finalPrice"
 ).innerHTML =
-
-finalPrice.toLocaleString()
-+
-" د.ع";
+formatPrice(finalPrice);
 
 }
 
-// تحديث السعر
-
-document
-.getElementById("personsCount")
-.addEventListener(
+document.getElementById(
+"personsInput"
+).addEventListener(
 "change",
-()=>{
-
-if(destinationLat){
-
-calculatePrice();
-
-}
-
-}
+calculatePrice
 );
 
-document
-.getElementById("tipInput")
-.addEventListener(
+document.getElementById(
+"tipInput"
+).addEventListener(
 "input",
-()=>{
-
-if(destinationLat){
-
-calculatePrice();
-
-}
-
-}
+calculatePrice
 );
-
-// إرسال الطلب
 
 window.sendTaxiOrder =
 async function(){
 
-if(
-!destinationLat ||
-!destinationLng
-){
+if(!targetLat){
 
 alert("حدد الوجهة");
 
@@ -721,6 +542,13 @@ return;
 
 }
 
+const persons =
+Number(
+document.getElementById(
+"personsInput"
+).value
+);
+
 const tip =
 Number(
 document.getElementById(
@@ -728,53 +556,34 @@ document.getElementById(
 ).value || 0
 );
 
-const finalPrice =
-roundPrice(
-totalPrice + tip
-);
-
 const orderId =
-"TAXI_" + Date.now();
+generateId("TAXI");
 
-const taxiOrder = {
+const finalPrice =
+totalPrice + tip;
+
+const orderData = {
 
 id:orderId,
 
 type:"taxi",
 
-status:"waiting_driver",
+status:"waiting",
 
-createdAt:Date.now(),
+customerId:
+currentUser.id,
 
-customer:{
+customerName:
+currentUser.name || "",
 
-id:currentUser.id || "",
+customerPhone:
+currentUser.phone || "",
 
-name:currentUser.name || "",
+pickupLat:userLat,
+pickupLng:userLng,
 
-phone:currentUser.phone || "",
-
-image:currentUser.image || ""
-
-},
-
-pickup:{
-
-latitude:userLat,
-
-longitude:userLng
-
-},
-
-destination:{
-
-latitude:destinationLat,
-
-longitude:destinationLng
-
-},
-
-trip:{
+destinationLat:targetLat,
+destinationLng:targetLng,
 
 distance:
 Number(
@@ -782,37 +591,35 @@ totalDistance.toFixed(1)
 ),
 
 persons:
-Number(
-document.getElementById(
-"personsCount"
-).value
-),
+persons,
 
-price:totalPrice,
+price:
+totalPrice,
 
-tip:tip,
+tip:
+tip,
 
-finalPrice:finalPrice
+finalPrice:
+finalPrice,
 
-}
+createdAt:
+Date.now()
 
 };
 
 await set(
-
 ref(
-database,
+db,
 "taxi_orders/" + orderId
 ),
-
-taxiOrder
-
+orderData
 );
 
-alert("تم إرسال طلب التكسي 🚕");
+alert("تم إرسال طلب التكسي");
 
-window.location.href =
-"home.html";
+window.location.replace(
+"home.html"
+);
 
 };
 
