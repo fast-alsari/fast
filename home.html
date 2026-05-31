@@ -1,5 +1,3 @@
-<!-- home.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -7,17 +5,20 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
 عالسريع
 </title>
 
-<link rel="stylesheet"
+<link
+rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
 rel="stylesheet">
 
 <style>
@@ -27,51 +28,85 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#f7f7f7;
-padding-bottom:110px;
+background:#f5f6fa;
+padding-bottom:120px;
 overflow-x:hidden;
 }
 
-.page{
-display:none;
-}
-
-.active-page{
-display:block;
-}
-
 .header{
-background:linear-gradient(135deg,#ff8800,#ff5500);
-padding:20px;
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+padding:22px;
+color:white;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
-color:white;
+box-shadow:
+0 8px 25px rgba(0,0,0,.10);
 }
 
 .header-top{
 display:flex;
 justify-content:space-between;
 align-items:center;
+gap:12px;
+}
+
+.welcome h2{
+font-size:24px;
+margin-bottom:5px;
+}
+
+.welcome p{
+font-size:14px;
+opacity:.9;
+}
+
+.taxi-btn{
+width:65px;
+height:65px;
+border-radius:50%;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+color:#ff8800;
+box-shadow:
+0 5px 18px rgba(0,0,0,.15);
+cursor:pointer;
+flex-shrink:0;
 }
 
 .search-box{
-margin-top:18px;
+margin-top:20px;
 background:white;
-padding:14px;
-border-radius:16px;
+height:58px;
+border-radius:18px;
 display:flex;
 align-items:center;
+padding:0 18px;
+}
+
+.search-box i{
+color:#ff8800;
+font-size:16px;
 }
 
 .search-box input{
 border:none;
 outline:none;
 width:100%;
+margin-right:12px;
 font-size:15px;
-margin-right:10px;
+background:none;
 }
 
 .filters{
@@ -87,12 +122,15 @@ display:none;
 
 .filter-btn{
 border:none;
-padding:10px 18px;
+padding:11px 18px;
 border-radius:14px;
-background:#eee;
+background:white;
+font-size:14px;
 font-weight:bold;
 cursor:pointer;
 white-space:nowrap;
+box-shadow:
+0 3px 10px rgba(0,0,0,.05);
 }
 
 .filter-btn.active{
@@ -104,68 +142,78 @@ color:white;
 padding:15px;
 display:flex;
 flex-direction:column;
-gap:14px;
+gap:16px;
 }
 
 .store-card{
 background:white;
-padding:14px;
-border-radius:22px;
-box-shadow:0 5px 18px rgba(0,0,0,.06);
+padding:15px;
+border-radius:28px;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
 cursor:pointer;
+transition:.2s;
 }
 
-.store-header{
+.store-card:active{
+transform:scale(.99);
+}
+
+.closed-store{
+opacity:.55;
+pointer-events:none;
+}
+
+.store-top{
 display:flex;
-gap:12px;
-align-items:center;
+gap:14px;
 }
 
 .store-image{
-width:80px;
-height:80px;
-border-radius:18px;
+width:88px;
+height:88px;
+border-radius:22px;
 object-fit:cover;
 background:#eee;
 }
 
-.store-info{
+.store-content{
 flex:1;
 }
 
 .store-name{
 display:flex;
-align-items:center;
 justify-content:space-between;
-margin-bottom:5px;
+align-items:center;
+margin-bottom:6px;
+gap:10px;
 }
 
 .store-name h3{
-font-size:17px;
-}
-
-.store-category{
-font-size:13px;
-color:#666;
-margin-bottom:6px;
+font-size:18px;
 }
 
 .store-distance{
-font-size:12px;
-color:#ff8800;
+font-size:13px;
 font-weight:bold;
+color:#ff8800;
+}
+
+.store-category{
+font-size:14px;
+color:#666;
+margin-bottom:8px;
 }
 
 .store-status{
-margin-top:10px;
 display:inline-flex;
 align-items:center;
 gap:6px;
-padding:5px 10px;
-border-radius:12px;
+padding:6px 12px;
+border-radius:14px;
+background:#f5f5f5;
 font-size:12px;
 font-weight:bold;
-background:#f3f3f3;
 }
 
 .status-dot{
@@ -182,22 +230,24 @@ background:#00c853;
 background:red;
 }
 
-.single-store-page{
-display:none;
+.single-store{
 position:fixed;
-top:0;
-left:0;
-right:0;
-bottom:0;
-background:#f7f7f7;
-z-index:999;
+inset:0;
+background:#f5f6fa;
+z-index:9999;
+display:none;
 overflow-y:auto;
 padding-bottom:120px;
 }
 
-.store-top-bar{
-background:linear-gradient(135deg,#ff8800,#ff5500);
-padding:18px;
+.store-header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+padding:20px;
 display:flex;
 align-items:center;
 gap:12px;
@@ -208,8 +258,8 @@ z-index:100;
 }
 
 .back-btn{
-width:42px;
-height:42px;
+width:45px;
+height:45px;
 border:none;
 border-radius:50%;
 background:white;
@@ -218,28 +268,28 @@ font-size:18px;
 cursor:pointer;
 }
 
-.products-container{
+.products{
 padding:15px;
 display:flex;
 flex-direction:column;
-gap:14px;
+gap:16px;
 }
 
 .product-card{
 background:white;
-padding:12px;
-border-radius:22px;
+padding:14px;
+border-radius:25px;
 display:flex;
-gap:12px;
-align-items:center;
-box-shadow:0 5px 18px rgba(0,0,0,.06);
+gap:14px;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
 }
 
 .product-image{
-width:95px;
-height:95px;
+width:100px;
+height:100px;
+border-radius:20px;
 object-fit:cover;
-border-radius:18px;
 background:#eee;
 }
 
@@ -254,30 +304,31 @@ margin-bottom:5px;
 }
 
 .product-price{
-font-size:18px;
+font-size:20px;
 font-weight:bold;
 color:#ff8800;
-margin-bottom:5px;
+margin-bottom:8px;
 }
 
 .product-description{
 font-size:13px;
+line-height:1.8;
 color:#666;
-margin-bottom:10px;
+margin-bottom:12px;
 }
 
-.qty-controller{
+.qty-box{
 display:flex;
 align-items:center;
 gap:8px;
-margin-bottom:10px;
+margin-bottom:12px;
 }
 
 .qty-btn{
-width:32px;
-height:32px;
+width:34px;
+height:34px;
 border:none;
-border-radius:10px;
+border-radius:12px;
 background:#ff8800;
 color:white;
 font-size:18px;
@@ -286,19 +337,19 @@ cursor:pointer;
 
 .qty-input{
 width:45px;
-height:32px;
-text-align:center;
+height:34px;
 border:none;
-background:#f2f2f2;
-border-radius:10px;
+background:#f3f3f3;
+border-radius:12px;
+text-align:center;
 font-weight:bold;
 }
 
 .add-btn{
 width:100%;
-padding:13px;
+height:46px;
 border:none;
-border-radius:14px;
+border-radius:15px;
 background:#00b894;
 color:white;
 font-size:15px;
@@ -311,21 +362,25 @@ position:fixed;
 bottom:0;
 left:0;
 right:0;
-height:82px;
+height:84px;
 background:white;
 display:flex;
 justify-content:space-around;
 align-items:center;
-box-shadow:0 -5px 18px rgba(0,0,0,.08);
-z-index:9999;
+box-shadow:
+0 -5px 18px rgba(0,0,0,.08);
+z-index:99999;
 }
 
 .nav-item{
 display:flex;
 flex-direction:column;
 align-items:center;
-color:#888;
+gap:5px;
+font-size:13px;
+font-weight:bold;
 cursor:pointer;
+color:#888;
 }
 
 .nav-item.active{
@@ -334,18 +389,13 @@ color:#ff8800;
 
 .nav-item i{
 font-size:22px;
-margin-bottom:5px;
 }
 
 .empty{
+padding:70px 20px;
 text-align:center;
-padding:40px;
+font-size:16px;
 color:#777;
-}
-
-.closed-store{
-opacity:.55;
-pointer-events:none;
 }
 
 </style>
@@ -354,14 +404,11 @@ pointer-events:none;
 
 <body>
 
-<div id="homePage"
-class="page active-page">
-
 <div class="header">
 
 <div class="header-top">
 
-<div>
+<div class="welcome">
 
 <h2 id="welcomeText">
 اهلاً بك
@@ -370,6 +417,14 @@ class="page active-page">
 <p>
 اطلب كل ما تحتاجه 🚀
 </p>
+
+</div>
+
+<div
+class="taxi-btn"
+onclick="window.location.href='taxie.html'">
+
+<i class="fa-solid fa-taxi"></i>
 
 </div>
 
@@ -382,27 +437,31 @@ class="page active-page">
 <input
 type="text"
 id="searchInput"
-placeholder="ابحث عن متجر">
+placeholder="ابحث عن متجر أو منتج">
 
 </div>
 
 </div>
 
-<div class="filters"></div>
+<div
+class="filters"
+id="filters"></div>
 
-<div id="storesContainer"
-class="stores-container"></div>
+<div
+class="stores-container"
+id="storesContainer"></div>
 
-</div>
+<!-- STORE -->
 
-<div id="singleStorePage"
-class="single-store-page">
+<div
+class="single-store"
+id="singleStore">
 
-<div class="store-top-bar">
+<div class="store-header">
 
 <button
 class="back-btn"
-onclick="backHome()">
+onclick="closeStore()">
 
 <i class="fa-solid fa-arrow-right"></i>
 
@@ -410,11 +469,11 @@ onclick="backHome()">
 
 <div>
 
-<h2 id="singleStoreName">
-اسم المتجر
+<h2 id="storeTitle">
+المتجر
 </h2>
 
-<p id="singleStoreCategory">
+<p id="storeCategory">
 القسم
 </p>
 
@@ -422,15 +481,17 @@ onclick="backHome()">
 
 </div>
 
-<div id="singleProductsContainer"
-class="products-container"></div>
+<div
+class="products"
+id="productsContainer"></div>
 
 </div>
 
+<!-- NAV -->
+
 <div class="bottom-bar">
 
-<div
-class="nav-item active">
+<div class="nav-item active">
 
 <i class="fa-solid fa-house"></i>
 
@@ -468,63 +529,57 @@ onclick="window.location.href='asca.html'">
 
 <script type="module">
 
-import { initializeApp }
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+import { db }
+from "./firebase.js";
 
 import {
-getDatabase,
 ref,
 get,
 onValue
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-const firebaseConfig = {
-
-apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
-
-authDomain:"fast-937c9.firebaseapp.com",
-
-projectId:"fast-937c9",
-
-databaseURL:
-"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
-
-};
-
-const app =
-initializeApp(firebaseConfig);
-
-const database =
-getDatabase(app);
+import {
+calculateDistance,
+formatPrice
+}
+from "./utils.js";
 
 const currentUser =
-JSON.parse(localStorage.getItem("user"));
+JSON.parse(
+localStorage.getItem("user")
+);
 
-if(!currentUser){
+if(
+!currentUser ||
+currentUser.type !== "customer"
+){
 
-window.location.href =
-"index.html";
+window.location.replace(
+"index.html"
+);
 
 }
 
-document.getElementById("welcomeText")
-.innerHTML =
-`اهلاً ${currentUser.name || "مستخدم"}`;
+document.getElementById(
+"welcomeText"
+).innerHTML =
+
+`اهلاً ${currentUser.name || ""}`;
 
 let allStores = [];
 
-let userLatitude = null;
-let userLongitude = null;
+let userLat = 0;
+let userLng = 0;
 
 navigator.geolocation.getCurrentPosition(
 
 (position)=>{
 
-userLatitude =
+userLat =
 position.coords.latitude;
 
-userLongitude =
+userLng =
 position.coords.longitude;
 
 loadStores();
@@ -539,172 +594,74 @@ alert("يرجى تشغيل GPS");
 
 );
 
-function calculateDistance(lat1,lon1,lat2,lon2){
-
-const R = 6371;
-
-const dLat =
-(lat2-lat1) * Math.PI / 180;
-
-const dLon =
-(lon2-lon1) * Math.PI / 180;
-
-const a =
-
-Math.sin(dLat/2) *
-Math.sin(dLat/2)
-
-+
-
-Math.cos(lat1 * Math.PI / 180)
-
-*
-
-Math.cos(lat2 * Math.PI / 180)
-
-*
-
-Math.sin(dLon/2)
-
-*
-
-Math.sin(dLon/2);
-
-const c =
-2 *
-Math.atan2(
-Math.sqrt(a),
-Math.sqrt(1-a)
-);
-
-return R * c;
-
-}
-
-function isStoreOpen(store){
-
-if(!store.workingHours){
-return false;
-}
-
-const days = [
-
-"الأحد",
-"الاثنين",
-"الثلاثاء",
-"الأربعاء",
-"الخميس",
-"الجمعة",
-"السبت"
-
-];
-
-const now =
-new Date();
-
-const currentDay =
-days[now.getDay()];
-
-const currentHour =
-now.getHours();
-
-let today =
-store.workingHours.find(
-d => d.day === currentDay
-);
-
-if(!today){
-return false;
-}
-
-if(
-today.from === "مغلق" ||
-today.to === "مغلق"
-){
-return false;
-}
-
-function convert(time){
-
-if(!time){
-return 0;
-}
-
-let parts =
-time.split(" ");
-
-let hour =
-parseInt(parts[0]);
-
-let period =
-parts[1];
-
-if(period === "PM" && hour !== 12){
-hour += 12;
-}
-
-if(period === "AM" && hour === 12){
-hour = 0;
-}
-
-return hour;
-
-}
-
-const from =
-convert(today.from);
-
-const to =
-convert(today.to);
-
-return currentHour >= from &&
-currentHour < to;
-
-}
-
 function loadStores(){
 
 onValue(
-
-ref(database,"users"),
-
+ref(db,"users"),
 (snapshot)=>{
 
 allStores = [];
 
-if(snapshot.exists()){
+if(!snapshot.exists()){
 
-const data =
+renderStores([]);
+
+return;
+
+}
+
+const users =
 snapshot.val();
 
-for(let key in data){
+for(let key in users){
 
-let store =
-data[key];
+const store =
+users[key];
 
-if(store.type !== "store")
+if(store.type !== "store"){
 continue;
+}
 
-if(store.status !== "active")
+if(store.status !== "active"){
 continue;
+}
 
 const distance =
 calculateDistance(
 
-userLatitude,
-userLongitude,
+userLat,
+userLng,
 
-Number(store.location.latitude),
-Number(store.location.longitude)
+Number(store.latitude || 0),
+Number(store.longitude || 0)
 
 );
 
-store.distance =
-distance.toFixed(1);
+allStores.push({
 
-store.id = key;
+id:store.id,
 
-allStores.push(store);
+name:store.name || "",
+
+image:
+store.image || "store.png",
+
+category:
+store.category || "عام",
+
+distance:
+distance.toFixed(1),
+
+latitude:
+store.latitude || 0,
+
+longitude:
+store.longitude || 0,
+
+workingHours:
+store.workingHours || []
+
+});
 
 }
 
@@ -712,26 +669,23 @@ allStores.sort((a,b)=>
 a.distance - b.distance
 );
 
-generateFilters();
+renderFilters();
 
 renderStores(allStores);
 
 }
-
-}
-
 );
 
 }
 
-function generateFilters(){
+function renderFilters(){
 
 const filters =
-document.querySelector(".filters");
+document.getElementById(
+"filters"
+);
 
-filters.innerHTML = "";
-
-filters.innerHTML += `
+filters.innerHTML = `
 <button
 class="filter-btn active"
 data-category="all">
@@ -739,12 +693,11 @@ data-category="all">
 </button>
 `;
 
-let categories = [];
+const categories = [];
 
 allStores.forEach(store=>{
 
 if(
-store.category &&
 !categories.includes(store.category)
 ){
 
@@ -766,22 +719,24 @@ ${category}
 
 });
 
-document.querySelectorAll(".filter-btn")
-.forEach(button=>{
-
-button.onclick = ()=>{
-
-document.querySelectorAll(".filter-btn")
+document
+.querySelectorAll(".filter-btn")
 .forEach(btn=>{
 
-btn.classList.remove("active");
+btn.onclick = ()=>{
+
+document
+.querySelectorAll(".filter-btn")
+.forEach(item=>{
+
+item.classList.remove("active");
 
 });
 
-button.classList.add("active");
+btn.classList.add("active");
 
-let category =
-button.dataset.category;
+const category =
+btn.dataset.category;
 
 if(category === "all"){
 
@@ -807,7 +762,9 @@ store.category === category
 function renderStores(stores){
 
 const container =
-document.getElementById("storesContainer");
+document.getElementById(
+"storesContainer"
+);
 
 container.innerHTML = "";
 
@@ -825,52 +782,47 @@ return;
 
 stores.forEach(store=>{
 
-const open =
-isStoreOpen(store);
-
 container.innerHTML += `
 
 <div
-class="
-store-card
-${!open ? "closed-store" : ""}
-"
+class="store-card"
 onclick="openStore('${store.id}')">
 
-<div class="store-header">
+<div class="store-top">
 
 <img
-src="${store.image || "store.png"}"
+src="${store.image}"
 class="store-image"
 onerror="this.src='store.png'">
 
-<div class="store-info">
+<div class="store-content">
 
 <div class="store-name">
 
 <h3>
-${store.name || ""}
+${store.name}
 </h3>
 
-<span class="store-distance">
+<div class="store-distance">
+
 📍 ${store.distance} كم
-</span>
+
+</div>
 
 </div>
 
 <div class="store-category">
-${store.category || ""}
+
+${store.category}
+
 </div>
 
 <div class="store-status">
 
-<div class="
-status-dot
-${open ? "open-dot" : "closed-dot"}
-"></div>
+<div class="status-dot open-dot"></div>
 
 <span>
-${open ? "مفتوح" : "مغلق"}
+مفتوح الآن
 </span>
 
 </div>
@@ -887,13 +839,16 @@ ${open ? "مفتوح" : "مغلق"}
 
 }
 
-document.getElementById("searchInput")
-.addEventListener("input",function(){
+document.getElementById(
+"searchInput"
+).addEventListener(
+"input",
+function(){
 
-let value =
+const value =
 this.value.toLowerCase();
 
-let filtered =
+const filtered =
 allStores.filter(store=>
 
 (store.name || "")
@@ -910,7 +865,8 @@ allStores.filter(store=>
 
 renderStores(filtered);
 
-});
+}
+);
 
 window.openStore =
 async function(storeId){
@@ -924,19 +880,24 @@ if(!store){
 return;
 }
 
-document.getElementById("singleStorePage")
-.style.display = "block";
+document.getElementById(
+"singleStore"
+).style.display = "block";
 
-document.getElementById("singleStoreName")
-.innerHTML =
-store.name || "";
+document.getElementById(
+"storeTitle"
+).innerHTML =
+store.name;
 
-document.getElementById("singleStoreCategory")
-.innerHTML =
-store.category || "";
+document.getElementById(
+"storeCategory"
+).innerHTML =
+store.category;
 
 const container =
-document.getElementById("singleProductsContainer");
+document.getElementById(
+"productsContainer"
+);
 
 container.innerHTML = `
 <div class="empty">
@@ -946,10 +907,7 @@ container.innerHTML = `
 
 const snapshot =
 await get(
-ref(
-database,
-"products/" + storeId
-)
+ref(db,"products/" + storeId)
 );
 
 container.innerHTML = "";
@@ -971,10 +929,8 @@ snapshot.val();
 
 for(let key in products){
 
-let product =
+const product =
 products[key];
-
-product.id = key;
 
 container.innerHTML += `
 
@@ -988,22 +944,28 @@ onerror="this.src='product.png'">
 <div class="product-content">
 
 <div class="product-name">
+
 ${product.name || ""}
+
 </div>
 
 <div class="product-price">
-${Number(product.price || 0).toLocaleString()} د.ع
+
+${formatPrice(product.price)}
+
 </div>
 
 <div class="product-description">
+
 ${product.description || ""}
+
 </div>
 
-<div class="qty-controller">
+<div class="qty-box">
 
 <button
 class="qty-btn"
-onclick="decreaseQty('${product.id}')">
+onclick="decreaseQty('${key}')">
 
 -
 
@@ -1013,12 +975,12 @@ onclick="decreaseQty('${product.id}')">
 type="text"
 readonly
 value="1"
-id="qty_${product.id}"
+id="qty_${key}"
 class="qty-input">
 
 <button
 class="qty-btn"
-onclick="increaseQty('${product.id}')">
+onclick="increaseQty('${key}')">
 
 +
 
@@ -1028,7 +990,11 @@ onclick="increaseQty('${product.id}')">
 
 <button
 class="add-btn"
-onclick='addToCart(${JSON.stringify(product)},${JSON.stringify(store)})'>
+onclick='addToCart(
+${JSON.stringify(product)},
+${JSON.stringify(store)},
+"${key}"
+)'>
 
 اضافة للسلة
 
@@ -1044,11 +1010,12 @@ onclick='addToCart(${JSON.stringify(product)},${JSON.stringify(store)})'>
 
 };
 
-window.backHome =
+window.closeStore =
 function(){
 
-document.getElementById("singleStorePage")
-.style.display = "none";
+document.getElementById(
+"singleStore"
+).style.display = "none";
 
 };
 
@@ -1056,7 +1023,9 @@ window.increaseQty =
 function(id){
 
 const input =
-document.getElementById(`qty_${id}`);
+document.getElementById(
+`qty_${id}`
+);
 
 input.value =
 Number(input.value) + 1;
@@ -1067,7 +1036,9 @@ window.decreaseQty =
 function(id){
 
 const input =
-document.getElementById(`qty_${id}`);
+document.getElementById(
+`qty_${id}`
+);
 
 if(Number(input.value) > 1){
 
@@ -1079,23 +1050,23 @@ Number(input.value) - 1;
 };
 
 window.addToCart =
-function(product,store){
+function(product,store,id){
+
+const qty =
+Number(
+document.getElementById(
+`qty_${id}`
+).value
+);
 
 let cart =
 JSON.parse(
 localStorage.getItem("cart")
 ) || [];
 
-const qty =
-Number(
-document.getElementById(
-`qty_${product.id}`
-).value
-);
-
 const exists =
 cart.find(item =>
-item.id === product.id
+item.productId === id
 );
 
 if(exists){
@@ -1106,16 +1077,22 @@ exists.qty += qty;
 
 cart.push({
 
-id:product.id,
-name:product.name,
-price:product.price,
-image:product.image || "",
-description:product.description || "",
-
-qty:qty,
+productId:id,
 
 storeId:store.id,
-storeName:store.name
+
+storeName:store.name,
+
+name:product.name || "",
+
+price:Number(product.price || 0),
+
+image:product.image || "",
+
+description:
+product.description || "",
+
+qty:qty
 
 });
 
@@ -1126,7 +1103,7 @@ localStorage.setItem(
 JSON.stringify(cart)
 );
 
-alert("تمت الاضافة للسلة");
+alert("تمت الإضافة للسلة");
 
 };
 
