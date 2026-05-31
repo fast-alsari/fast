@@ -1,5 +1,3 @@
-<!-- retry-order.html -->
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -7,14 +5,16 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
+<meta
+name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
 إعادة الطلب
 </title>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
 rel="stylesheet">
 
 <style>
@@ -27,13 +27,10 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-
 height:100vh;
-
 display:flex;
 align-items:center;
 justify-content:center;
-
 padding:20px;
 
 background:
@@ -42,63 +39,32 @@ linear-gradient(
 #fff5ee,
 #ffffff
 );
-
-overflow:hidden;
-
 }
 
-.retry-box{
-
+.box{
 width:100%;
 max-width:420px;
-
 background:white;
-
 padding:35px 25px;
-
 border-radius:30px;
-
 text-align:center;
 
 box-shadow:
-0 10px 30px rgba(0,0,0,.08);
-
-animation:showBox .4s ease;
-
+0 10px 35px rgba(0,0,0,.08);
 }
 
-@keyframes showBox{
-
-from{
-
-opacity:0;
-transform:translateY(20px);
-
-}
-
-to{
-
-opacity:1;
-transform:translateY(0);
-
-}
-
-}
-
-.retry-icon{
-
-width:110px;
-height:110px;
-
-margin:0 auto 20px;
-
+.icon{
+width:120px;
+height:120px;
 border-radius:50%;
+
+margin:auto auto 20px;
 
 display:flex;
 align-items:center;
 justify-content:center;
 
-font-size:50px;
+font-size:55px;
 color:white;
 
 background:
@@ -107,43 +73,27 @@ linear-gradient(
 #ff8800,
 #ff5500
 );
-
-box-shadow:
-0 10px 25px rgba(255,136,0,.25);
-
 }
 
-.retry-title{
-
+.title{
 font-size:30px;
 font-weight:bold;
-
 color:#ff5500;
-
 margin-bottom:15px;
-
 }
 
-.retry-text{
-
-font-size:18px;
+.text{
+font-size:17px;
 line-height:2;
-
 color:#666;
-
 margin-bottom:30px;
-
 }
 
-.retry-btn{
-
+.btn{
 width:100%;
-
-padding:18px;
-
+height:58px;
 border:none;
-
-border-radius:20px;
+border-radius:18px;
 
 background:
 linear-gradient(
@@ -153,33 +103,15 @@ linear-gradient(
 );
 
 color:white;
-
-font-size:18px;
+font-size:17px;
 font-weight:bold;
-
 cursor:pointer;
-
-transition:.3s;
-
-box-shadow:
-0 5px 20px rgba(255,136,0,.3);
-
 }
 
-.retry-btn:hover{
-
-transform:translateY(-2px);
-
-}
-
-.small-text{
-
+.note{
 margin-top:20px;
-
 font-size:14px;
-
 color:#999;
-
 }
 
 </style>
@@ -188,33 +120,33 @@ color:#999;
 
 <body>
 
-<div class="retry-box">
+<div class="box">
 
-<div class="retry-icon">
+<div class="icon">
 ⏰
 </div>
 
-<div class="retry-title">
+<div class="title">
 انتهى وقت الطلب
 </div>
 
-<div class="retry-text">
+<div class="text">
 
 لم يتم العثور على سائق خلال الوقت المحدد
 
-يمكنك إعادة المحاولة مرة أخرى
+يمكنك إعادة المحاولة الآن
 
 </div>
 
 <button
-class="retry-btn"
+class="btn"
 onclick="retryOrder()">
 
 إعادة الطلب 🚀
 
 </button>
 
-<div class="small-text">
+<div class="note">
 
 شكراً لاستخدامك تطبيق عالسريع
 
@@ -224,48 +156,17 @@ onclick="retryOrder()">
 
 <script>
 
-const currentUser =
-JSON.parse(localStorage.getItem("user"));
-
-if(!currentUser){
-
-window.location.replace(
-"index.html"
-);
-
-}
-
 function retryOrder(){
 
-// حذف الطلب الحالي
 localStorage.removeItem(
 "currentOrderId"
 );
 
-// العودة للرئيسية
 window.location.replace(
 "home.html"
 );
 
 }
-
-// منع الرجوع
-history.pushState(
-null,
-null,
-location.href
-);
-
-window.onpopstate =
-function(){
-
-history.pushState(
-null,
-null,
-location.href
-);
-
-};
 
 </script>
 
