@@ -1,1 +1,969 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>
+طلبات التكسي
+</title>
+
+<link rel="preconnect"
+href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f4f6f9;
+padding-bottom:110px;
+overflow-x:hidden;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:22px;
+color:white;
+
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+
+box-shadow:0 8px 25px rgba(0,0,0,.12);
+}
+
+.header-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.driver-box{
+display:flex;
+align-items:center;
+gap:12px;
+}
+
+.driver-image{
+width:65px;
+height:65px;
+border-radius:50%;
+object-fit:cover;
+border:3px solid white;
+background:white;
+}
+
+.driver-info h2{
+font-size:20px;
+margin-bottom:4px;
+}
+
+.driver-info p{
+font-size:13px;
+opacity:.9;
+}
+
+.online-btn{
+padding:10px 18px;
+border:none;
+border-radius:14px;
+background:white;
+font-weight:bold;
+cursor:pointer;
+color:#00b894;
+}
+
+.stats{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+padding:15px;
+}
+
+.stat-card{
+background:white;
+padding:18px;
+border-radius:24px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+text-align:center;
+}
+
+.stat-card h2{
+font-size:28px;
+color:#ff8800;
+margin-bottom:5px;
+}
+
+.stat-card p{
+font-size:14px;
+color:#666;
+font-weight:bold;
+}
+
+.orders-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:18px;
+}
+
+.order-card{
+background:white;
+border-radius:28px;
+padding:18px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
+}
+
+.order-top{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:15px;
+}
+
+.order-status{
+padding:8px 14px;
+border-radius:12px;
+font-size:13px;
+font-weight:bold;
+background:#fff3e0;
+color:#ff6600;
+}
+
+.order-price{
+font-size:24px;
+font-weight:bold;
+color:#00b894;
+}
+
+.customer-box{
+background:#f8f8f8;
+padding:15px;
+border-radius:18px;
+margin-bottom:15px;
+}
+
+.customer-box h3{
+margin-bottom:6px;
+}
+
+.customer-box p{
+font-size:14px;
+color:#666;
+margin-bottom:5px;
+}
+
+.map-box{
+width:100%;
+height:240px;
+border-radius:22px;
+overflow:hidden;
+margin-bottom:15px;
+}
+
+.order-info{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-bottom:15px;
+}
+
+.info-item{
+background:#f8f8f8;
+padding:12px;
+border-radius:16px;
+text-align:center;
+}
+
+.info-item h4{
+font-size:13px;
+margin-bottom:6px;
+color:#666;
+}
+
+.info-item p{
+font-size:16px;
+font-weight:bold;
+}
+
+.actions{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+}
+
+.actions button{
+flex:1;
+padding:14px;
+border:none;
+border-radius:16px;
+font-size:14px;
+font-weight:bold;
+cursor:pointer;
+color:white;
+}
+
+.accept-btn{
+background:#00b894;
+}
+
+.reject-btn{
+background:#e53935;
+}
+
+.whatsapp-btn{
+background:#25D366;
+}
+
+.arrive-btn{
+background:#2563eb;
+}
+
+.finish-btn{
+background:#ff8800;
+}
+
+.empty{
+padding:50px 20px;
+text-align:center;
+color:#777;
+}
+
+.loading{
+position:fixed;
+inset:0;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:999999;
+}
+
+.spinner{
+width:70px;
+height:70px;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+border-radius:50%;
+animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:82px;
+background:white;
+display:flex;
+justify-content:space-around;
+align-items:center;
+box-shadow:0 -5px 18px rgba(0,0,0,.08);
+z-index:1000;
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+color:#888;
+cursor:pointer;
+}
+
+.nav-item.active{
+color:#ff8800;
+}
+
+.nav-item i{
+font-size:22px;
+margin-bottom:5px;
+}
+
+@media(max-width:700px){
+
+.order-info{
+grid-template-columns:1fr;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="loading"
+id="loading">
+
+<div class="spinner"></div>
+
+</div>
+
+<div class="header">
+
+<div class="header-top">
+
+<div class="driver-box">
+
+<img
+src="user.png"
+id="driverImage"
+class="driver-image">
+
+<div class="driver-info">
+
+<h2 id="driverName">
+السائق
+</h2>
+
+<p id="driverPhone">
+0000000000
+</p>
+
+</div>
+
+</div>
+
+<button
+class="online-btn"
+id="onlineBtn"
+onclick="toggleOnline()">
+
+متصل
+
+</button>
+
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-card">
+
+<h2 id="completedTrips">
+0
+</h2>
+
+<p>
+الرحلات المكتملة
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="totalProfit">
+0
+</h2>
+
+<p>
+الارباح
+</p>
+
+</div>
+
+</div>
+
+<div
+id="ordersContainer"
+class="orders-container"></div>
+
+<div class="bottom-bar">
+
+<div
+class="nav-item active">
+
+<i class="fa-solid fa-taxi"></i>
+
+<span>
+الطلبات
+</span>
+
+</div>
+
+<div
+class="nav-item"
+onclick="window.location.href='asca.html'">
+
+<i class="fa-solid fa-user"></i>
+
+<span>
+الحساب
+</span>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { initializeApp }
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+
+import {
+
+getDatabase,
+ref,
+onValue,
+update,
+get
+
+}
+
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const firebaseConfig = {
+
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+
+authDomain:"fast-937c9.firebaseapp.com",
+
+projectId:"fast-937c9",
+
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const database =
+getDatabase(app);
+
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
+
+if(
+!currentUser ||
+currentUser.type !== "taxi"
+){
+
+window.location.href = "index.html";
+
+}
+
+let isOnline = true;
+
+document.getElementById(
+"driverName"
+).innerHTML =
+currentUser.name || "سائق";
+
+document.getElementById(
+"driverPhone"
+).innerHTML =
+currentUser.phone || "";
+
+document.getElementById(
+"driverImage"
+).src =
+currentUser.vehicleImage || "user.png";
+
+document.getElementById(
+"completedTrips"
+).innerHTML =
+currentUser.completedTrips || 0;
+
+document.getElementById(
+"totalProfit"
+).innerHTML =
+Number(
+currentUser.totalProfit || 0
+).toLocaleString();
+
+// =====================
+// اونلاين
+// =====================
+
+window.toggleOnline =
+async function(){
+
+isOnline = !isOnline;
+
+document.getElementById(
+"onlineBtn"
+).innerHTML =
+
+isOnline
+?
+"متصل"
+:
+"متوقف";
+
+document.getElementById(
+"onlineBtn"
+).style.color =
+
+isOnline
+?
+"#00b894"
+:
+"#e53935";
+
+await update(
+ref(database,"taxis/" + currentUser.id),
+{
+
+isOnline:isOnline,
+lastSeen:Date.now()
+
+}
+);
+
+};
+
+// =====================
+// الطلبات
+// =====================
+
+const ordersContainer =
+document.getElementById(
+"ordersContainer"
+);
+
+onValue(
+ref(database,"taxi_orders"),
+(snapshot)=>{
+
+ordersContainer.innerHTML = "";
+
+if(!snapshot.exists()){
+
+ordersContainer.innerHTML = `
+<div class="empty">
+لا توجد طلبات
+</div>
+`;
+
+hideLoading();
+
+return;
+
+}
+
+const orders =
+snapshot.val();
+
+let found = false;
+
+for(let key in orders){
+
+const order = orders[key];
+
+if(
+order.status !== "waiting"
+&&
+order.driverId !== currentUser.id
+){
+continue;
+}
+
+found = true;
+
+ordersContainer.innerHTML += `
+
+<div class="order-card">
+
+<div class="order-top">
+
+<div class="order-status">
+
+${getStatusText(order.status)}
+
+</div>
+
+<div class="order-price">
+
+${Number(order.price || 0)
+.toLocaleString()} د.ع
+
+</div>
+
+</div>
+
+<div class="customer-box">
+
+<h3>
+${order.customerName || ""}
+</h3>
+
+<p>
+📞 ${order.customerPhone || ""}
+</p>
+
+</div>
+
+<div
+class="map-box"
+id="map_${order.id}"></div>
+
+<div class="order-info">
+
+<div class="info-item">
+
+<h4>
+المسافة
+</h4>
+
+<p>
+${order.distance || 0} كم
+</p>
+
+</div>
+
+<div class="info-item">
+
+<h4>
+الحالة
+</h4>
+
+<p>
+${getStatusText(order.status)}
+</p>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+${order.status === "waiting"
+
+?
+
+`
+
+<button
+class="accept-btn"
+onclick="acceptOrder('${order.id}')">
+
+قبول الطلب
+
+</button>
+
+<button
+class="reject-btn"
+onclick="rejectOrder('${order.id}')">
+
+رفض
+
+</button>
+
+`
+
+:
+
+`
+
+<a
+href="https://wa.me/${order.customerPhone}"
+target="_blank"
+style="flex:1;">
+
+<button
+class="whatsapp-btn">
+
+واتساب
+
+</button>
+
+</a>
+
+<button
+class="arrive-btn"
+onclick="arriveOrder('${order.id}')">
+
+وصلت
+
+</button>
+
+<button
+class="finish-btn"
+onclick="finishOrder('${order.id}')">
+
+انهاء
+
+</button>
+
+`
+
+}
+
+</div>
+
+</div>
+
+`;
+
+setTimeout(()=>{
+
+createMap(order);
+
+},100);
+
+}
+
+if(!found){
+
+ordersContainer.innerHTML = `
+<div class="empty">
+لا توجد طلبات حالياً
+</div>
+`;
+
+}
+
+hideLoading();
+
+}
+);
+
+// =====================
+// خريطة
+// =====================
+
+function createMap(order){
+
+const map = L.map(
+`map_${order.id}`
+).setView(
+[
+order.pickupLat,
+order.pickupLng
+],
+13
+);
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+{
+maxZoom:19
+}
+).addTo(map);
+
+L.marker([
+order.pickupLat,
+order.pickupLng
+]).addTo(map);
+
+L.marker([
+order.destinationLat,
+order.destinationLng
+]).addTo(map);
+
+const line = L.polyline([
+[
+order.pickupLat,
+order.pickupLng
+],
+[
+order.destinationLat,
+order.destinationLng
+]
+],
+{
+color:"#ff8800",
+weight:5
+}
+).addTo(map);
+
+map.fitBounds(line.getBounds());
+
+}
+
+// =====================
+// قبول
+// =====================
+
+window.acceptOrder =
+async function(orderId){
+
+await update(
+ref(database,"taxi_orders/" + orderId),
+{
+
+status:"accepted",
+
+driverId:
+currentUser.id,
+
+driverName:
+currentUser.name,
+
+driverPhone:
+currentUser.phone
+
+}
+);
+
+};
+
+// =====================
+// رفض
+// =====================
+
+window.rejectOrder =
+async function(orderId){
+
+await update(
+ref(database,"taxi_orders/" + orderId),
+{
+
+status:"waiting"
+
+}
+);
+
+};
+
+// =====================
+// وصلت
+// =====================
+
+window.arriveOrder =
+async function(orderId){
+
+await update(
+ref(database,"taxi_orders/" + orderId),
+{
+
+status:"arrived"
+
+}
+);
+
+};
+
+// =====================
+// انهاء
+// =====================
+
+window.finishOrder =
+async function(orderId){
+
+const orderSnapshot =
+await get(
+ref(database,"taxi_orders/" + orderId)
+);
+
+if(orderSnapshot.exists()){
+
+const order =
+orderSnapshot.val();
+
+await update(
+ref(database,"taxis/" + currentUser.id),
+{
+
+completedTrips:
+Number(
+currentUser.completedTrips || 0
+) + 1,
+
+totalProfit:
+Number(
+currentUser.totalProfit || 0
+)
++
+Number(order.price || 0)
+
+}
+);
+
+}
+
+await update(
+ref(database,"taxi_orders/" + orderId),
+{
+
+status:"completed"
+
+}
+);
+
+};
+
+// =====================
+// حالة الطلب
+// =====================
+
+function getStatusText(status){
+
+if(status === "waiting"){
+return "بانتظار سائق";
+}
+
+if(status === "accepted"){
+return "تم قبول الطلب";
+}
+
+if(status === "arrived"){
+return "وصل السائق";
+}
+
+if(status === "completed"){
+return "مكتمل";
+}
+
+return status;
+
+}
+
+// =====================
+// تحميل
+// =====================
+
+function hideLoading(){
+
+document.getElementById(
+"loading"
+).style.display = "none";
+
+}
+
+</script>
+
+</body>
+
+</html>
