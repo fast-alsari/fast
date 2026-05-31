@@ -1,3 +1,6 @@
+ 
+<!-- asca.html -->
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -5,20 +8,17 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
 الحساب الشخصي
 </title>
 
-<link
-rel="stylesheet"
+<link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
 
 <style>
@@ -31,50 +31,53 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f5f6fa;
+background:#f7f7f7;
 padding-bottom:120px;
 overflow-x:hidden;
 }
 
 .header{
-background:
-linear-gradient(
-135deg,
-#ff8800,
-#ff5500
-);
-
-padding:30px 20px;
+background:linear-gradient(135deg,#ff8800,#ff5500);
+padding:25px 20px;
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
 color:white;
-
-border-bottom-left-radius:32px;
-border-bottom-right-radius:32px;
-
+box-shadow:0 8px 25px rgba(0,0,0,.12);
 text-align:center;
 }
 
-.user-image{
-width:110px;
-height:110px;
-border-radius:50%;
-object-fit:cover;
+.logo-box{
+width:90px;
+height:90px;
 background:white;
-padding:5px;
-margin:auto auto 15px;
+border-radius:50%;
+margin:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+box-shadow:0 5px 20px rgba(0,0,0,.15);
 }
 
-.user-name{
+.logo-box img{
+width:60px;
+height:60px;
+object-fit:contain;
+}
+
+.app-name{
 font-size:28px;
 font-weight:bold;
-margin-bottom:8px;
+margin-top:15px;
 }
 
-.user-phone{
+.app-desc{
 font-size:15px;
+margin-top:8px;
 opacity:.95;
+line-height:1.8;
 }
 
-.content{
+.page-content{
 padding:15px;
 display:flex;
 flex-direction:column;
@@ -83,11 +86,9 @@ gap:15px;
 
 .card{
 background:white;
-padding:20px;
-border-radius:28px;
-
-box-shadow:
-0 5px 18px rgba(0,0,0,.06);
+padding:18px;
+border-radius:24px;
+box-shadow:0 5px 18px rgba(0,0,0,.06);
 }
 
 .card-title{
@@ -95,16 +96,15 @@ font-size:18px;
 font-weight:bold;
 margin-bottom:18px;
 color:#ff6600;
-
 display:flex;
 align-items:center;
-gap:10px;
+gap:8px;
 }
 
 .info-line{
-background:#f8f8f8;
-padding:15px;
-border-radius:18px;
+background:#f7f7f7;
+padding:14px;
+border-radius:16px;
 margin-bottom:12px;
 }
 
@@ -120,21 +120,21 @@ font-weight:bold;
 word-break:break-word;
 }
 
-.stats{
+.stats-grid{
 display:grid;
 grid-template-columns:1fr 1fr;
 gap:12px;
 }
 
 .stat-box{
-background:#fff5ee;
+background:#fff7ef;
 padding:18px;
-border-radius:20px;
+border-radius:18px;
 text-align:center;
 }
 
 .stat-number{
-font-size:28px;
+font-size:24px;
 font-weight:bold;
 color:#ff6600;
 margin-bottom:6px;
@@ -145,32 +145,82 @@ font-size:13px;
 color:#666;
 }
 
-.map-box{
-width:100%;
-height:260px;
-border-radius:24px;
+.location-box{
 overflow:hidden;
+border-radius:20px;
+margin-top:12px;
+border:2px solid #eee;
+}
+
+.location-box iframe{
+width:100%;
+height:220px;
+border:none;
+}
+
+.location-note{
+margin-top:12px;
+background:#fff7ef;
+padding:14px;
+border-radius:16px;
+font-size:13px;
+line-height:1.9;
+color:#555;
+}
+
+.code-box{
+display:flex;
+gap:10px;
 margin-top:15px;
 }
 
-.map-box iframe{
-width:100%;
-height:100%;
+.code-input{
+flex:1;
+height:55px;
 border:none;
+background:#f5f5f5;
+border-radius:16px;
+padding:0 15px;
+font-size:18px;
+font-weight:bold;
+outline:none;
+direction:ltr;
+}
+
+.copy-btn{
+width:60px;
+border:none;
+border-radius:16px;
+background:#ff8800;
+color:white;
+font-size:20px;
+cursor:pointer;
+}
+
+.use-btn{
+width:100%;
+height:55px;
+border:none;
+border-radius:18px;
+background:#00b894;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+margin-top:14px;
 }
 
 .logout-btn{
 width:100%;
 height:58px;
 border:none;
-border-radius:18px;
-
-background:#e53935;
-
+border-radius:20px;
+background:red;
 color:white;
-font-size:16px;
+font-size:17px;
 font-weight:bold;
 cursor:pointer;
+margin-top:10px;
 }
 
 .bottom-bar{
@@ -180,26 +230,17 @@ left:0;
 right:0;
 height:82px;
 background:white;
-
 display:flex;
 justify-content:space-around;
 align-items:center;
-
-box-shadow:
-0 -5px 18px rgba(0,0,0,.08);
-
-z-index:9999;
+box-shadow:0 -5px 18px rgba(0,0,0,.08);
+z-index:1000;
 }
 
 .nav-item{
 display:flex;
 flex-direction:column;
 align-items:center;
-gap:5px;
-
-font-size:13px;
-font-weight:bold;
-
 color:#888;
 cursor:pointer;
 }
@@ -209,7 +250,8 @@ color:#ff8800;
 }
 
 .nav-item i{
-font-size:22px;
+font-size:21px;
+margin-bottom:5px;
 }
 
 </style>
@@ -220,53 +262,40 @@ font-size:22px;
 
 <div class="header">
 
-<img
-src="user.png"
-id="userImage"
-class="user-image">
+<div class="logo-box">
 
-<div
-class="user-name"
-id="userName">
-
-مستخدم
+<img src="ok.png">
 
 </div>
 
-<div
-class="user-phone"
-id="userPhone">
+<div class="app-name">
+عالسريع
+</div>
 
-0000000000
-
+<div class="app-desc">
+نوصلك طلبك بأقل من ساعة 🚀
 </div>
 
 </div>
 
-<div class="content">
+<div class="page-content">
 
 <div class="card">
 
 <div class="card-title">
-
 <i class="fa-solid fa-user"></i>
-
-معلومات الحساب
-
+بيانات الحساب
 </div>
 
 <div class="info-line">
 
 <div class="info-label">
-الاسم الكامل
+اسم المستخدم
 </div>
 
-<div
-class="info-value"
-id="fullName">
-
--
-
+<div class="info-value"
+id="userName">
+...
 </div>
 
 </div>
@@ -277,12 +306,9 @@ id="fullName">
 رقم الهاتف
 </div>
 
-<div
-class="info-value"
-id="phoneNumber">
-
--
-
+<div class="info-value"
+id="userPhone">
+...
 </div>
 
 </div>
@@ -290,15 +316,12 @@ id="phoneNumber">
 <div class="info-line">
 
 <div class="info-label">
-العنوان
+كلمة المرور
 </div>
 
-<div
-class="info-value"
-id="userAddress">
-
--
-
+<div class="info-value"
+id="userPassword">
+...
 </div>
 
 </div>
@@ -308,23 +331,17 @@ id="userAddress">
 <div class="card">
 
 <div class="card-title">
-
 <i class="fa-solid fa-chart-column"></i>
-
 الإحصائيات
-
 </div>
 
-<div class="stats">
+<div class="stats-grid">
 
 <div class="stat-box">
 
-<div
-class="stat-number"
-id="ordersCount">
-
+<div class="stat-number"
+id="allOrders">
 0
-
 </div>
 
 <div class="stat-text">
@@ -335,48 +352,39 @@ id="ordersCount">
 
 <div class="stat-box">
 
-<div
-class="stat-number"
-id="completedOrders">
-
+<div class="stat-number"
+id="acceptedOrders">
 0
-
 </div>
 
 <div class="stat-text">
-طلبات مكتملة
+الطلبات المقبولة
 </div>
 
 </div>
 
 <div class="stat-box">
 
-<div
-class="stat-number"
-id="cancelledOrders">
-
+<div class="stat-number"
+id="rejectedOrders">
 0
-
 </div>
 
 <div class="stat-text">
-طلبات ملغية
+الطلبات المرفوضة
 </div>
 
 </div>
 
 <div class="stat-box">
 
-<div
-class="stat-number"
-id="totalSpent">
-
+<div class="stat-number"
+id="deliveredOrders">
 0
-
 </div>
 
 <div class="stat-text">
-إجمالي الصرف
+تم التوصيل
 </div>
 
 </div>
@@ -388,14 +396,11 @@ id="totalSpent">
 <div class="card">
 
 <div class="card-title">
-
 <i class="fa-solid fa-location-dot"></i>
-
-موقعك الحالي
-
+موقعك
 </div>
 
-<div class="map-box">
+<div class="location-box">
 
 <iframe
 id="mapFrame"
@@ -403,6 +408,85 @@ loading="lazy">
 </iframe>
 
 </div>
+
+<div class="location-note">
+
+هذا الموقع لا يمكن لأحد مشاهدته،
+ويظهر فقط عند إرسال طلب باسمك.
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+<i class="fa-solid fa-gift"></i>
+توصيلة  طلب مجانية
+</div>
+
+<div class="info-line">
+
+<div class="info-label">
+رمز الدعوة الخاص بك 
+</div>
+
+<div style="
+display:flex;
+gap:10px;
+margin-top:10px;
+">
+
+<input
+type="text"
+readonly
+id="inviteCode"
+class="code-input"
+style="
+background:#fff7ef;
+font-size:17px;
+font-weight:bold;
+">
+
+<button
+class="copy-btn"
+onclick="copyInviteCode()">
+
+<i class="fa-solid fa-copy"></i>
+
+</button>
+
+</div>
+
+</div>
+
+<div class="code-box">
+
+<input
+type="text"
+id="giftCode"
+class="code-input"
+placeholder="الصق الكود هنا"
+inputmode="text"
+autocomplete="off">
+
+<button
+class="copy-btn"
+onclick="pasteCode()">
+
+<i class="fa-solid fa-paste"></i>
+
+</button>
+
+</div>
+
+<button
+class="use-btn"
+onclick="useInviteCode()">
+
+استخدام الكود
+
+</button>
 
 </div>
 
@@ -432,7 +516,7 @@ onclick="window.location.href='home.html'">
 
 <div
 class="nav-item"
-onclick="window.location.href='cart.html'">
+onclick="goToCart()">
 
 <i class="fa-solid fa-cart-shopping"></i>
 
@@ -456,25 +540,59 @@ onclick="window.location.href='cart.html'">
 
 <script type="module">
 
-import { db }
-from "./firebase.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
+getDatabase,
 ref,
 get,
+update,
 onValue
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-const currentUser =
-JSON.parse(
+const firebaseConfig = {
+
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+
+authDomain:"fast-937c9.firebaseapp.com",
+
+projectId:"fast-937c9",
+
+databaseURL:
+"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+
+};
+
+const app =
+initializeApp(firebaseConfig);
+
+const db =
+getDatabase(app);
+
+let currentUser = null;
+
+try{
+
+currentUser = JSON.parse(
 localStorage.getItem("user")
 );
 
+}catch{
+
+currentUser = null;
+
+}
+
 if(
 !currentUser ||
-!currentUser.id
+!currentUser.id ||
+currentUser.type !== "customer"
 ){
+
+localStorage.clear();
+sessionStorage.clear();
 
 window.location.replace(
 "index.html"
@@ -482,51 +600,69 @@ window.location.replace(
 
 }
 
-document.getElementById(
-"userName"
-).innerHTML =
-currentUser.name || "مستخدم";
+async function loadUserData(){
 
-document.getElementById(
-"userPhone"
-).innerHTML =
-currentUser.phone || "";
+const snapshot = await get(
+ref(
+db,
+"customers/" + currentUser.id
+)
+);
 
-document.getElementById(
-"fullName"
-).innerHTML =
-currentUser.name || "";
+if(!snapshot.exists()){
 
-document.getElementById(
-"phoneNumber"
-).innerHTML =
-currentUser.phone || "";
+localStorage.clear();
+sessionStorage.clear();
 
-document.getElementById(
-"userAddress"
-).innerHTML =
-currentUser.address || "لا يوجد";
+window.location.replace(
+"index.html"
+);
 
-document.getElementById(
-"userImage"
-).src =
-currentUser.image || "user.png";
+return;
 
-const lat =
-currentUser.userLat ||
-localStorage.getItem("userLat");
+}
 
-const lng =
-currentUser.userLng ||
-localStorage.getItem("userLng");
+const userData = snapshot.val();
 
-if(lat && lng){
+userData.id =
+userData.id || currentUser.id;
 
-document.getElementById(
-"mapFrame"
-).src =
+localStorage.setItem(
+"user",
+JSON.stringify(userData)
+);
 
-`https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+document.getElementById("userName")
+.innerHTML =
+userData.name || "";
+
+document.getElementById("userPhone")
+.innerHTML =
+userData.phone || "";
+
+document.getElementById("userPassword")
+.innerHTML =
+userData.password || "";
+
+document.getElementById("inviteCode")
+.value =
+userData.id || "";
+
+}
+
+loadUserData();
+
+let userLat =
+currentUser.userLat || "";
+
+let userLng =
+currentUser.userLng || "";
+
+if(userLat && userLng){
+
+document.getElementById("mapFrame")
+.src =
+`https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
 
 }
 
@@ -534,40 +670,51 @@ onValue(
 ref(db,"orders"),
 (snapshot)=>{
 
-let orders = 0;
-let completed = 0;
-let cancelled = 0;
-let spent = 0;
+let all = 0;
+let accepted = 0;
+let rejected = 0;
+let delivered = 0;
 
 if(snapshot.exists()){
 
-const data =
+const orders =
 snapshot.val();
 
-Object.values(data)
+Object.values(orders)
 .forEach(order=>{
 
 if(
 order.customerId === currentUser.id
 ){
 
-orders++;
-
-spent +=
-Number(
-order.totalPrice || 0
-);
+all++;
 
 if(
-order.status === "completed"
+[
+"accepted",
+"on_the_way",
+"arrived"
+]
+.includes(order.status)
 ){
-completed++;
+accepted++;
 }
 
 if(
-order.status === "cancelled"
+[
+"failed_no_driver",
+"delivery_problem",
+"cancelled",
+"cancelled_by_customer"]
+.includes(order.status)
 ){
-cancelled++;
+rejected++;
+}
+
+if(
+order.status === "delivered"
+){
+delivered++;
 }
 
 }
@@ -576,31 +723,178 @@ cancelled++;
 
 }
 
-document.getElementById(
-"ordersCount"
-).innerHTML =
-orders;
+document.getElementById("allOrders")
+.innerHTML = all;
 
-document.getElementById(
-"completedOrders"
-).innerHTML =
-completed;
+document.getElementById("acceptedOrders")
+.innerHTML = accepted;
 
-document.getElementById(
-"cancelledOrders"
-).innerHTML =
-cancelled;
+document.getElementById("rejectedOrders")
+.innerHTML = rejected;
 
-document.getElementById(
-"totalSpent"
-).innerHTML =
-
-Number(spent)
-.toLocaleString();
+document.getElementById("deliveredOrders")
+.innerHTML = delivered;
 
 }
 );
 
+window.copyInviteCode =
+async function(){
+
+try{
+
+const code =
+document.getElementById("inviteCode")
+.value;
+
+await navigator.clipboard.writeText(code);
+
+alert("تم نسخ الكود");
+
+}catch{
+
+alert("فشل نسخ الكود");
+
+}
+
+};
+
+window.pasteCode =
+async function(){
+
+try{
+
+const text =
+await navigator.clipboard.readText();
+
+document.getElementById("giftCode")
+.value = text;
+
+}catch{
+
+alert("فشل لصق الكود");
+
+}
+
+};
+
+window.useInviteCode =
+async function(){
+
+const code =
+document.getElementById("giftCode")
+.value
+.trim();
+
+if(!code){
+
+alert("الصق الكود");
+
+return;
+
+}
+
+if(code === currentUser.id){
+
+alert("لا يمكنك استخدام كودك");
+
+return;
+
+}
+
+const myRef =
+ref(
+db,
+"customers/" + currentUser.id
+);
+
+const myData =
+await get(myRef);
+
+if(!myData.exists()){
+return;
+}
+
+const myUser =
+myData.val();
+
+if(
+myUser.usedFreeDelivery === true
+){
+
+alert(
+"لقد استخدمت التوصيلة المجانية مسبقاً"
+);
+
+return;
+
+}
+
+if(
+myUser.invitedBy
+){
+
+alert(
+"لا يمكنك استخدام أكثر من كود"
+);
+
+return;
+
+}
+
+const inviterRef =
+ref(
+db,
+"customers/" + code
+);
+
+const inviterData =
+await get(inviterRef);
+
+if(!inviterData.exists()){
+
+alert("الكود غير صحيح");
+
+return;
+
+}
+
+await update(
+myRef,
+{
+
+freeDelivery:true,
+
+usedFreeDelivery:true,
+
+invitedBy:code,
+
+freeDeliveryUsed:false
+
+}
+);
+
+alert(
+"تم الحصول على توصيلة مجانية 🎉"
+);
+
+document.getElementById("giftCode")
+.value = "";
+
+};
+
+window.goToCart =
+function(){
+
+localStorage.setItem(
+"openCartPage",
+"true"
+);
+
+window.location.href =
+"home.html";
+
+};
 window.logout =
 function(){
 
