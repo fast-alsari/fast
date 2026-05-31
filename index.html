@@ -1096,10 +1096,24 @@ return false;
 
 }
 
+let registerBtn = null;
+
+function resetRegisterButton(){
+
+if(!registerBtn){
+return;
+}
+
+registerBtn.disabled = false;
+
+registerBtn.innerText = "إنشاء الحساب";
+
+}
+
 window.registerAccount =
 async function(){
 
-const registerBtn = document.querySelector(
+registerBtn = document.querySelector(
 'button[onclick="registerAccount()"]'
 );
 
