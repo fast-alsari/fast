@@ -901,15 +901,25 @@ initializeApp(firebaseConfig);
 const database =
 getDatabase(app);
 
-const currentUser =
+
+let currentUser = null;
+
+try{
+
+currentUser =
 JSON.parse(localStorage.getItem("user"));
+
+}catch{
+
+currentUser = null;
+
+}
 
 if(!currentUser || !currentUser.id){
 
 window.location.href = "index.html";
 
 }
-
 window.addEventListener(
 "pageshow",
 async function(){
@@ -1060,11 +1070,11 @@ JSON.stringify(userData)
 
 document.getElementById("welcomeText")
 .innerHTML =
-`اهلاً ${userData.name || "مستخدم"}`;
-
+`اهلاً ${userData.name || userData.owner || "مستخدم"}`;
+ 
 document.getElementById("accountName")
 .innerHTML =
-userData.name || "مستخدم";
+userData.name || userData.owner || "مستخدم";
 
 document.getElementById("accountPhone")
 .innerHTML =
@@ -1080,6 +1090,7 @@ loadCurrentUser();
 let allStores = [];
 let userLatitude = null;
 let userLongitude = null;
+ 
 let cart =
 JSON.parse(
 localStorage.getItem("cart")
@@ -1102,26 +1113,20 @@ position.coords.longitude;
 update(
 ref(database,"customers/" + currentUser.id),
 {
-userLat:userLatitude,
-userLng:userLongitude,
+latitude:userLatitude,
+longitude:userLongitude,
 lastLocationUpdate:Date.now()
 }
 );
-
-set(
-ref(database,
-"customers/" + currentUser.id + "/userLng"
-),
-userLongitude
-);
+ 
 // حفظ الموقع للتاكسي
 localStorage.setItem(
-"userLat",
+"userLatitude",
 userLatitude
 );
 
 localStorage.setItem(
-"userLng",
+"userLongitude",
 userLongitude
 );
 
@@ -1131,10 +1136,10 @@ JSON.parse(localStorage.getItem("user"));
 
 if(savedUser){
 
-savedUser.userLat =
+savedUser.latitude =
 userLatitude;
 
-savedUser.userLng =
+savedUser.longitude =
 userLongitude;
 
 localStorage.setItem(
@@ -1239,7 +1244,7 @@ calculateDistance(
 
 userLatitude,
 userLongitude,
-
+ 
 Number(store.latitude),
 Number(store.longitude)
 
@@ -2094,7 +2099,7 @@ calculateDistance(
 
 userLatitude,
 userLongitude,
-
+ 
 Number(firstStore.latitude),
 Number(firstStore.longitude)
 
@@ -2452,10 +2457,10 @@ new Date().toLocaleDateString("ar-EG"),
 createdTime:
 new Date().toLocaleTimeString("ar-EG"),
 
-customerLat:
+latitude:
 position.coords.latitude,
 
-customerLng:
+longitude:
 position.coords.longitude
 
 };
