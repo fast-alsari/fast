@@ -1,1 +1,642 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+حساب السائق
+</title>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+}
+
+body{
+background:#f5f6fa;
+padding:15px;
+padding-bottom:120px;
+overflow-x:hidden;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+
+padding:30px 20px;
+border-radius:30px;
+color:white;
+text-align:center;
+margin-bottom:20px;
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.12);
+}
+
+.driver-image{
+width:110px;
+height:110px;
+border-radius:50%;
+object-fit:cover;
+background:white;
+padding:4px;
+margin:auto auto 15px;
+display:block;
+}
+
+.driver-name{
+font-size:28px;
+font-weight:bold;
+margin-bottom:8px;
+}
+
+.driver-phone{
+font-size:15px;
+opacity:.95;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:15px;
+margin-bottom:20px;
+}
+
+.stat-card{
+background:white;
+padding:22px;
+border-radius:24px;
+text-align:center;
+
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+}
+
+.stat-card h2{
+font-size:30px;
+color:#ff6600;
+margin-bottom:8px;
+}
+
+.stat-card p{
+font-size:14px;
+font-weight:bold;
+color:#666;
+}
+
+.section{
+background:white;
+padding:18px;
+border-radius:24px;
+margin-bottom:18px;
+
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+}
+
+.section-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:15px;
+color:#ff6600;
+}
+
+.info-line{
+background:#fafafa;
+padding:15px;
+border-radius:18px;
+margin-bottom:12px;
+}
+
+.info-label{
+font-size:13px;
+color:#777;
+margin-bottom:6px;
+}
+
+.info-value{
+font-size:16px;
+font-weight:bold;
+word-break:break-word;
+}
+
+.online-box{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:16px;
+border-radius:18px;
+background:#fff7ef;
+margin-top:15px;
+}
+
+.switch{
+position:relative;
+width:60px;
+height:32px;
+}
+
+.switch input{
+display:none;
+}
+
+.slider{
+position:absolute;
+inset:0;
+background:#ccc;
+border-radius:30px;
+cursor:pointer;
+transition:.3s;
+}
+
+.slider::before{
+content:"";
+position:absolute;
+width:24px;
+height:24px;
+left:4px;
+top:4px;
+background:white;
+border-radius:50%;
+transition:.3s;
+}
+
+input:checked + .slider{
+background:#00b894;
+}
+
+input:checked + .slider::before{
+transform:translateX(28px);
+}
+
+.logout-btn{
+width:100%;
+height:58px;
+border:none;
+border-radius:20px;
+background:#e53935;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.bottom-bar{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+height:82px;
+background:white;
+
+display:flex;
+justify-content:space-around;
+align-items:center;
+
+box-shadow:
+0 -5px 18px rgba(0,0,0,.08);
+
+z-index:9999;
+}
+
+.nav-item{
+display:flex;
+flex-direction:column;
+align-items:center;
+gap:5px;
+
+font-size:13px;
+font-weight:bold;
+
+color:#888;
+cursor:pointer;
+}
+
+.nav-item.active{
+color:#ff8800;
+}
+
+.nav-item i{
+font-size:22px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="header">
+
+<img
+src="user.png"
+id="driverImage"
+class="driver-image">
+
+<div
+class="driver-name"
+id="driverName">
+
+السائق
+
+</div>
+
+<div
+class="driver-phone"
+id="driverPhone">
+
+0000000000
+
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat-card">
+
+<h2 id="completedOrders">
+0
+</h2>
+
+<p>
+الطلبات المكتملة
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="totalProfit">
+0
+</h2>
+
+<p>
+الأرباح
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="cancelledOrders">
+0
+</h2>
+
+<p>
+الطلبات الملغية
+</p>
+
+</div>
+
+<div class="stat-card">
+
+<h2 id="rating">
+5.0
+</h2>
+
+<p>
+التقييم
+</p>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+بيانات السائق
+</div>
+
+<div class="info-line">
+
+<div class="info-label">
+الاسم
+</div>
+
+<div
+class="info-value"
+id="infoName">
+
+-
+
+</div>
+
+</div>
+
+<div class="info-line">
+
+<div class="info-label">
+رقم الهاتف
+</div>
+
+<div
+class="info-value"
+id="infoPhone">
+
+-
+
+</div>
+
+</div>
+
+<div class="info-line">
+
+<div class="info-label">
+نوع المركبة
+</div>
+
+<div
+class="info-value"
+id="vehicleType">
+
+-
+
+</div>
+
+</div>
+
+<div class="online-box">
+
+<div>
+
+<b>
+الحالة
+</b>
+
+<br>
+
+<span id="onlineText">
+متصل الآن
+</span>
+
+</div>
+
+<label class="switch">
+
+<input
+type="checkbox"
+id="onlineSwitch"
+checked>
+
+<span class="slider"></span>
+
+</label>
+
+</div>
+
+</div>
+
+<button
+class="logout-btn"
+onclick="logout()">
+
+تسجيل الخروج
+
+</button>
+
+<div class="bottom-bar">
+
+<div
+class="nav-item"
+onclick="window.location.href='driver-orders.html'">
+
+<i class="fa-solid fa-motorcycle"></i>
+
+<span>
+الطلبات
+</span>
+
+</div>
+
+<div class="nav-item active">
+
+<i class="fa-solid fa-user"></i>
+
+<span>
+الحساب
+</span>
+
+</div>
+
+</div>
+
+<script type="module">
+
+import { db }
+from "./firebase.js";
+
+import {
+
+ref,
+get,
+update
+
+}
+
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+const currentUser =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+if(
+!currentUser ||
+currentUser.type !== "driver"
+){
+
+window.location.replace(
+"index.html"
+);
+
+}
+
+const snapshot =
+await get(
+ref(
+db,
+"drivers/" + currentUser.id
+)
+);
+
+if(!snapshot.exists()){
+
+window.location.replace(
+"index.html"
+);
+
+}
+
+const driver =
+snapshot.val();
+
+// =====================
+// بيانات
+// =====================
+
+document.getElementById(
+"driverImage"
+).src =
+
+driver.image || "user.png";
+
+document.getElementById(
+"driverName"
+).innerHTML =
+
+driver.name || "";
+
+document.getElementById(
+"driverPhone"
+).innerHTML =
+
+driver.phone || "";
+
+document.getElementById(
+"infoName"
+).innerHTML =
+
+driver.name || "";
+
+document.getElementById(
+"infoPhone"
+).innerHTML =
+
+driver.phone || "";
+
+document.getElementById(
+"vehicleType"
+).innerHTML =
+
+driver.vehicleType || "";
+
+document.getElementById(
+"completedOrders"
+).innerHTML =
+
+driver.completedOrders || 0;
+
+document.getElementById(
+"totalProfit"
+).innerHTML =
+
+Number(
+driver.totalProfit || 0
+).toLocaleString();
+
+document.getElementById(
+"cancelledOrders"
+).innerHTML =
+
+driver.cancelledOrders || 0;
+
+document.getElementById(
+"rating"
+).innerHTML =
+
+driver.rating || "5.0";
+
+// =====================
+// اونلاين
+// =====================
+
+const onlineSwitch =
+document.getElementById(
+"onlineSwitch"
+);
+
+onlineSwitch.checked =
+driver.isOnline !== false;
+
+document.getElementById(
+"onlineText"
+).innerHTML =
+
+onlineSwitch.checked
+?
+"متصل الآن"
+:
+"غير متصل";
+
+onlineSwitch.addEventListener(
+"change",
+async()=>{
+
+const status =
+onlineSwitch.checked;
+
+await update(
+ref(
+db,
+"drivers/" + currentUser.id
+),
+{
+
+isOnline:status,
+
+lastSeen:
+Date.now()
+
+}
+);
+
+document.getElementById(
+"onlineText"
+).innerHTML =
+
+status
+?
+"متصل الآن"
+:
+"غير متصل";
+
+}
+);
+
+// =====================
+// تسجيل خروج
+// =====================
+
+window.logout =
+function(){
+
+localStorage.clear();
+
+sessionStorage.clear();
+
+window.location.replace(
+"index.html"
+);
+
+};
+
+</script>
+
+</body>
+
+</html>
