@@ -1,15 +1,16 @@
-// utils.js
-
 export function formatPrice(price){
 
-return Number(price || 0)
-.toLocaleString() + " د.ع";
+return Number(
+price || 0
+).toLocaleString()
++
+" د.ع";
 
 }
 
-export function generateId(prefix){
+export function generateId(prefix="ID"){
 
-return prefix + "_" + Date.now();
+return `${prefix}_${Date.now()}`;
 
 }
 
@@ -23,30 +24,30 @@ lon2
 const R = 6371;
 
 const dLat =
-(lat2-lat1) * Math.PI / 180;
+(lat2 - lat1)
+*
+Math.PI / 180;
 
 const dLon =
-(lon2-lon1) * Math.PI / 180;
+(lon2 - lon1)
+*
+Math.PI / 180;
 
 const a =
 
-Math.sin(dLat/2) *
+Math.sin(dLat/2)
+*
 Math.sin(dLat/2)
 
 +
 
-Math.cos(lat1 * Math.PI / 180)
+Math.cos(lat1 * Math.PI/180)
+*
+Math.cos(lat2 * Math.PI/180)
 
 *
-
-Math.cos(lat2 * Math.PI / 180)
-
-*
-
 Math.sin(dLon/2)
-
 *
-
 Math.sin(dLon/2);
 
 const c =
@@ -60,15 +61,31 @@ return R * c;
 
 }
 
-export function roundPrice(price){
+export function saveUser(user){
 
-const remainder =
-price % 250;
+localStorage.setItem(
+"user",
+JSON.stringify(user)
+);
 
-if(remainder === 0){
-return price;
 }
 
-return price + (250 - remainder);
+export function getUser(){
+
+return JSON.parse(
+localStorage.getItem("user")
+);
+
+}
+
+export function logout(){
+
+localStorage.clear();
+
+sessionStorage.clear();
+
+window.location.replace(
+"index.html"
+);
 
 }
