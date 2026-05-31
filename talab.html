@@ -17,18 +17,29 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 <link rel="stylesheet"
 href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"/>
+<script
+src="https://unpkg.com/leaflet/dist/leaflet.js">
+</script>
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
-<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+
+<script
+src="https://unpkg.com/leaflet/dist/leaflet.js">
+</script>
+
+<link rel="stylesheet"
+href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"/>
+
+<script
+src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js">
+</script>
+
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
 rel="stylesheet">
-
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
 
 <style>
 
@@ -37,12 +48,21 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
--webkit-tap-highlight-color:transparent;
 }
 
 body{
-background:#f5f6fa;
-overflow-x:hidden;
+background:#f5f5f5;
+overflow:hidden;
+}
+
+.page{
+position:fixed;
+top:0;
+left:0;
+right:0;
+bottom:0;
+overflow-y:auto;
+background:#f5f5f5;
 }
 
 .top-header{
@@ -52,12 +72,12 @@ linear-gradient(
 #ff8800,
 #ff5500
 );
-
 padding:25px 20px;
 color:white;
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
-box-shadow:0 8px 25px rgba(0,0,0,.12);
+box-shadow:
+0 8px 25px rgba(0,0,0,.12);
 }
 
 .order-title{
@@ -67,20 +87,20 @@ margin-bottom:10px;
 }
 
 .order-status{
-font-size:16px;
+font-size:17px;
 line-height:1.8;
-opacity:.95;
+opacity:.96;
 }
 
 .timer-box{
 margin-top:18px;
-background:rgba(255,255,255,.18);
 padding:15px;
 border-radius:18px;
-font-size:24px;
-font-weight:bold;
+background:rgba(255,255,255,.15);
+backdrop-filter:blur(10px);
 text-align:center;
-backdrop-filter:blur(8px);
+font-size:22px;
+font-weight:bold;
 }
 
 .searching-box{
@@ -96,8 +116,8 @@ width:170px;
 height:170px;
 border-radius:50%;
 border:5px solid #ff8800;
-position:relative;
 animation:radarPulse 2s infinite;
+position:relative;
 }
 
 .radar::before{
@@ -107,25 +127,27 @@ top:50%;
 left:50%;
 width:22px;
 height:22px;
-border-radius:50%;
 background:#ff8800;
+border-radius:50%;
 transform:translate(-50%,-50%);
 }
 
 @keyframes radarPulse{
 
 0%{
-box-shadow:0 0 0 0 rgba(255,136,0,.5);
+box-shadow:
+0 0 0 0 rgba(255,136,0,.5);
 }
 
 100%{
-box-shadow:0 0 0 55px rgba(255,136,0,0);
+box-shadow:
+0 0 0 55px rgba(255,136,0,0);
 }
 
 }
 
 .search-text{
-margin-top:25px;
+margin-top:28px;
 font-size:22px;
 font-weight:bold;
 color:#777;
@@ -136,8 +158,8 @@ line-height:2;
 .driver-card{
 background:white;
 margin:15px;
-padding:18px;
-border-radius:26px;
+padding:15px;
+border-radius:25px;
 box-shadow:0 5px 20px rgba(0,0,0,.08);
 display:none;
 }
@@ -145,13 +167,13 @@ display:none;
 .driver-top{
 display:flex;
 align-items:center;
-gap:15px;
+gap:12px;
 }
 
 .driver-image{
-width:85px;
-height:85px;
-border-radius:22px;
+width:80px;
+height:80px;
+border-radius:20px;
 object-fit:cover;
 background:#eee;
 }
@@ -173,7 +195,7 @@ color:#666;
 
 .whatsapp-btn{
 width:100%;
-margin-top:18px;
+margin-top:15px;
 padding:16px;
 border:none;
 border-radius:18px;
@@ -187,8 +209,8 @@ cursor:pointer;
 #map{
 width:100%;
 height:45vh;
+margin-top:10px;
 display:none;
-margin-top:12px;
 z-index:1;
 }
 
@@ -196,13 +218,13 @@ z-index:1;
 background:white;
 margin:15px;
 padding:20px;
-border-radius:26px;
+border-radius:25px;
 box-shadow:0 5px 20px rgba(0,0,0,.08);
 }
 
 .bottom-box h3{
-font-size:23px;
-margin-bottom:20px;
+font-size:22px;
+margin-bottom:18px;
 }
 
 .live-status{
@@ -211,104 +233,32 @@ line-height:2;
 color:#555;
 }
 
-.store-box{
-background:#fafafa;
-padding:14px;
-border-radius:22px;
-margin-top:15px;
-border:1px solid #eee;
-}
-
-.store-header{
-display:flex;
-align-items:center;
-gap:12px;
-margin-bottom:12px;
-}
-
-.store-image{
-width:60px;
-height:60px;
-border-radius:16px;
-object-fit:cover;
-background:#eee;
-}
-
-.store-name{
-font-size:17px;
-font-weight:bold;
-}
-
-.product-box{
-background:white;
-padding:12px;
-border-radius:18px;
-margin-top:10px;
-border:1px solid #eee;
-}
-
-.product-top{
-display:flex;
-align-items:center;
-gap:12px;
-}
-
-.product-image{
-width:58px;
-height:58px;
-border-radius:14px;
-object-fit:cover;
-background:#eee;
-}
-
-.product-info{
-flex:1;
-}
-
-.product-name{
-font-size:15px;
-font-weight:bold;
-margin-bottom:5px;
-}
-
-.product-details{
-font-size:13px;
-line-height:1.8;
-color:#666;
-}
-
-.total-box{
-background:#fff4e8;
+.complete-btn{
+width:100%;
 padding:18px;
-border-radius:20px;
-margin-top:18px;
-text-align:center;
+border:none;
+border-radius:18px;
+background:#00b894;
+color:white;
 font-size:18px;
 font-weight:bold;
-color:#ff6600;
-line-height:2;
+cursor:pointer;
+margin-top:20px;
+display:none;
 }
 
-.complete-btn,
 .reject-btn{
 width:100%;
 padding:18px;
 border:none;
 border-radius:18px;
+background:red;
 color:white;
 font-size:18px;
 font-weight:bold;
 cursor:pointer;
-margin-top:18px;
+margin-top:15px;
 display:none;
-}
-
-.complete-btn{
-background:#00b894;
-}
-
-.reject-btn{
-background:#e53935;
 }
 
 </style>
@@ -316,6 +266,8 @@ background:#e53935;
 </head>
 
 <body>
+
+<div class="page">
 
 <div class="top-header">
 
@@ -327,7 +279,7 @@ background:#e53935;
 class="order-status"
 id="orderStatus">
 
-جاري البحث عن سائق
+جاري البحث عن سائق توصيل لإيصال طلبك
 
 </div>
 
@@ -348,9 +300,7 @@ id="searchingBox">
 <div class="radar"></div>
 
 <div class="search-text">
-
-جاري البحث عن سائق مناسب
-
+جاري البحث عن سائق توصيل مناسب
 </div>
 
 </div>
@@ -363,8 +313,7 @@ id="driverCard">
 
 <img
 src="driver.png"
-class="driver-image"
-id="driverImage">
+class="driver-image">
 
 <div class="driver-info">
 
@@ -403,24 +352,14 @@ id="whatsappBtn">
 <div class="bottom-box">
 
 <h3>
-تفاصيل الطلب
+حالة الطلب
 </h3>
 
 <div
 class="live-status"
 id="liveStatus">
 
-بانتظار قبول سائق
-
-</div>
-
-<div id="storesContainer"></div>
-
-<div
-class="total-box"
-id="totalBox">
-
-0 د.ع
+بانتظار قبول سائق...
 
 </div>
 
@@ -442,6 +381,8 @@ id="rejectBtn">
 
 </div>
 
+</div>
+
 <script type="module">
 
 import { initializeApp }
@@ -451,8 +392,8 @@ import {
 
 getDatabase,
 ref,
-onValue,
 update,
+onValue,
 remove
 
 }
@@ -483,8 +424,7 @@ JSON.parse(localStorage.getItem("user"));
 
 if(!currentUser){
 
-window.location.href =
-"index.html";
+window.location.replace("index.html");
 
 }
 
@@ -496,13 +436,15 @@ params.get("orderId");
 
 if(!orderId){
 
-window.location.href =
-"home.html";
+window.location.replace("home.html");
 
 }
 
 const orderRef =
 ref(db,"orders/" + orderId);
+
+const timerBox =
+document.getElementById("timerBox");
 
 const orderStatus =
 document.getElementById("orderStatus");
@@ -519,12 +461,71 @@ document.getElementById("searchingBox");
 const mapDiv =
 document.getElementById("map");
 
-const timerBox =
-document.getElementById("timerBox");
+const completeBtn =
+document.getElementById("completeBtn");
+
+const rejectBtn =
+document.getElementById("rejectBtn");
 
 let map;
-let routeControl;
 let driverMarker;
+let customerMarker;
+let storeMarkers = [];
+let routeControl;
+
+let orderTimerInterval = null;
+
+function startOrderMainTimer(createdAt){
+
+clearInterval(orderTimerInterval);
+
+orderTimerInterval = setInterval(async()=>{
+
+const remaining = Math.max(
+0,
+(60 * 60 * 1000) -
+(Date.now() - createdAt)
+);
+
+const hours =
+String(
+Math.floor(remaining / 1000 / 60 / 60)
+).padStart(2,"0");
+
+const minutes =
+String(
+Math.floor((remaining / 1000 / 60) % 60)
+).padStart(2,"0");
+
+const seconds =
+String(
+Math.floor((remaining / 1000) % 60)
+).padStart(2,"0");
+
+timerBox.innerHTML =
+`${hours}:${minutes}:${seconds}`;
+
+if(remaining <= 0){
+
+clearInterval(orderTimerInterval);
+
+await remove(orderRef);
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+alert("انتهى وقت الطلب");
+
+window.location.replace(
+"retry-order.html"
+);
+
+}
+
+},1000);
+
+}
 
 const bikeIcon =
 L.divIcon({
@@ -533,6 +534,7 @@ html:`
 <div style="
 font-size:38px;
 transform:rotate(-15deg);
+filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
 ">
 🛵
 </div>
@@ -549,7 +551,8 @@ L.divIcon({
 
 html:`
 <div style="
-font-size:38px;
+font-size:40px;
+filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
 ">
 🚩
 </div>
@@ -561,7 +564,7 @@ iconAnchor:[20,35]
 
 });
 
-function createStoreIcon(name){
+function createStoreIcon(storeName){
 
 return L.divIcon({
 
@@ -574,23 +577,24 @@ align-items:center;
 ">
 
 <div style="
-font-size:34px;
+font-size:35px;
+filter:drop-shadow(0 2px 5px rgba(0,0,0,.25));
 ">
 🏪
 </div>
 
 <div style="
 background:white;
-padding:4px 10px;
+padding:5px 12px;
 border-radius:12px;
 font-size:12px;
 font-weight:bold;
 margin-top:4px;
-white-space:nowrap;
 box-shadow:0 2px 10px rgba(0,0,0,.15);
+white-space:nowrap;
 ">
 
-${name}
+${storeName || "متجر"}
 
 </div>
 
@@ -606,148 +610,30 @@ iconAnchor:[20,40]
 
 }
 
-function startTimer(createdAt){
+function formatTime(ms){
 
-setInterval(()=>{
-
-const passed =
-Date.now() - createdAt;
-
-const remain =
-Math.max(
-0,
-(60 * 60 * 1000) - passed
-);
-
-const h =
-String(
-Math.floor(remain / 1000 / 60 / 60)
-).padStart(2,"0");
-
-const m =
-String(
-Math.floor((remain / 1000 / 60) % 60)
-).padStart(2,"0");
-
-const s =
-String(
-Math.floor((remain / 1000) % 60)
-).padStart(2,"0");
-
-timerBox.innerHTML =
-`${h}:${m}:${s}`;
-
-},1000);
-
+if(ms <= 0){
+return "00:00:00";
 }
 
-function renderStores(order){
+let totalSeconds =
+Math.floor(ms / 1000);
 
-const container =
-document.getElementById(
-"storesContainer"
-);
+let hours =
+String(
+Math.floor(totalSeconds / 3600)
+).padStart(2,"0");
 
-container.innerHTML = "";
+let minutes =
+String(
+Math.floor((totalSeconds % 3600)/60)
+).padStart(2,"0");
 
-(order.storesData || [])
-.forEach(store=>{
+let seconds =
+String(totalSeconds % 60)
+.padStart(2,"0");
 
-const storeItems =
-(order.items || [])
-.filter(
-item =>
-item.storeId === store.storeId
-);
-
-container.innerHTML += `
-
-<div class="store-box">
-
-<div class="store-header">
-
-<img
-src="${store.storeImage || 'store.png'}"
-class="store-image">
-
-<div class="store-name">
-🏪 ${store.storeName}
-</div>
-
-</div>
-
-${storeItems.map(item=>`
-
-<div class="product-box">
-
-<div class="product-top">
-
-<img
-src="${item.image || 'product.png'}"
-class="product-image">
-
-<div class="product-info">
-
-<div class="product-name">
-
-${item.name}
-
-</div>
-
-<div class="product-details">
-
-📦 الكمية:
-${item.qty}
-
-<br>
-
-💰 السعر:
-${Number(item.price)
-.toLocaleString()} د.ع
-
-<br>
-
-🧾 المجموع:
-${Number(item.totalPrice)
-.toLocaleString()} د.ع
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-`).join("")}
-
-</div>
-
-`;
-
-});
-
-document.getElementById(
-"totalBox"
-).innerHTML =
-
-`
-💰 المنتجات:
-${Number(order.productsPrice || 0)
-.toLocaleString()} د.ع
-
-<br>
-
-🚚 التوصيل:
-${Number(order.deliveryPrice || 0)
-.toLocaleString()} د.ع
-
-<br>
-
-🧾 الكلي:
-${Number(order.totalPrice || 0)
-.toLocaleString()} د.ع
-`;
+return `${hours}:${minutes}:${seconds}`;
 
 }
 
@@ -755,56 +641,89 @@ function initMap(order){
 
 mapDiv.style.display = "block";
 
-if(map){
-
-map.remove();
-
-}
+if(!map){
 
 map =
 L.map("map").setView(
+
 [
 Number(order.customerLat),
 Number(order.customerLng)
 ],
-14
+
+15
+
 );
 
 L.tileLayer(
+
 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+
 {
 maxZoom:19
 }
+
 ).addTo(map);
 
+customerMarker =
 L.marker(
+
 [
 Number(order.customerLat),
 Number(order.customerLng)
 ],
+
 {
 icon:customerIcon
 }
-).addTo(map);
 
-(order.storesData || [])
-.forEach(store=>{
+)
 
+.addTo(map)
+
+.bindPopup("موقع الزبون");
+
+if(order.storesData){
+
+order.storesData.forEach(store=>{
+
+const marker =
 L.marker(
+
 [
 Number(store.storeLat),
 Number(store.storeLng)
 ],
+
 {
 icon:createStoreIcon(store.storeName)
 }
-).addTo(map);
+
+)
+
+.addTo(map)
+
+.bindPopup(store.storeName);
+
+storeMarkers.push(marker);
 
 });
 
 }
 
-function updateDriver(order){
+}
+
+setTimeout(()=>{
+
+map.invalidateSize();
+
+},500);
+
+}
+
+function updateDriverLocation(order){
+
+initMap(order);
 
 if(
 !order.driverLat ||
@@ -823,22 +742,23 @@ if(!driverMarker){
 
 driverMarker =
 L.marker(
-[
-driverLat,
-driverLng
-],
+
+[driverLat,driverLng],
+
 {
 icon:bikeIcon
 }
-).addTo(map);
+
+)
+
+.addTo(map)
+
+.bindPopup("سائق التوصيل");
 
 }else{
 
 driverMarker.setLatLng(
-[
-driverLat,
-driverLng
-]
+[driverLat,driverLng]
 );
 
 }
@@ -848,22 +768,25 @@ let targetLng;
 
 if(order.status === "accepted"){
 
+if(order.storesData && order.storesData.length > 0){
+
 targetLat =
-Number(
-order.storesData[0].storeLat
-);
+Number(order.storesData[0].storeLat);
 
 targetLng =
-Number(
-order.storesData[0].storeLng
-);
+Number(order.storesData[0].storeLng);
+
+}
 
 }
 
 if(
-order.status === "on_the_way" ||
+order.status === "on_the_way"
+||
 order.status === "arrived"
-){
+)
+
+{
 
 targetLat =
 Number(order.customerLat);
@@ -875,9 +798,7 @@ Number(order.customerLng);
 
 if(routeControl){
 
-map.removeControl(
-routeControl
-);
+map.removeControl(routeControl);
 
 }
 
@@ -886,46 +807,49 @@ L.Routing.control({
 
 waypoints:[
 
-L.latLng(
-driverLat,
-driverLng
-),
+L.latLng(driverLat,driverLng),
 
-L.latLng(
-targetLat,
-targetLng
-)
+L.latLng(targetLat,targetLng)
 
 ],
 
 routeWhileDragging:false,
 
+router:
+L.Routing.osrmv1({
+
+serviceUrl:
+'https://router.project-osrm.org/route/v1'
+
+}),
+
 addWaypoints:false,
-
 draggableWaypoints:false,
-
 fitSelectedRoutes:true,
-
 show:false,
 
 lineOptions:{
 styles:[
 {
-color:"#ff6600",
-weight:7
+color:"#ff8800",
+weight:7,
+opacity:.9
 }
 ]
 },
 
-router:
-L.Routing.osrmv1({
-serviceUrl:
-'https://router.project-osrm.org/route/v1'
-}),
-
 createMarker:()=>null
 
 }).addTo(map);
+
+map.flyTo(
+[driverLat,driverLng],
+map.getZoom(),
+{
+animate:true,
+duration:1.5
+}
+);
 
 }
 
@@ -933,8 +857,13 @@ onValue(orderRef,(snapshot)=>{
 
 if(!snapshot.exists()){
 
-window.location.href =
-"home.html";
+localStorage.removeItem(
+"currentOrderId"
+);
+
+window.location.replace(
+"home.html"
+);
 
 return;
 
@@ -943,25 +872,22 @@ return;
 const order =
 snapshot.val();
 
-renderStores(order);
-
-if(order.createdAt){
-
-startTimer(order.createdAt);
-
-}
+startOrderMainTimer(order.createdAt);
 
 if(order.status === "waiting_driver"){
 
 orderStatus.innerHTML =
-"جاري البحث عن سائق";
+"جاري البحث عن سائق توصيل";
 
 liveStatus.innerHTML =
-"بانتظار قبول سائق";
+"بانتظار قبول سائق...";
 
 }
 
 if(order.status === "accepted"){
+
+liveStatus.innerHTML =
+order.statusText || "السائق متجه";
 
 searchingBox.style.display =
 "none";
@@ -969,27 +895,16 @@ searchingBox.style.display =
 driverCard.style.display =
 "block";
 
-document.getElementById(
-"driverName"
-).innerHTML =
+document.getElementById("driverName")
+.innerHTML =
+order.acceptedDriver || "السائق";
 
-order.driverName || "السائق";
-
-document.getElementById(
-"driverPhone"
-).innerHTML =
-
+document.getElementById("driverPhone")
+.innerHTML =
 order.driverPhone || "";
 
-document.getElementById(
-"driverImage"
-).src =
-
-order.driverImage || "driver.png";
-
-document.getElementById(
-"whatsappBtn"
-).onclick = function(){
+document.getElementById("whatsappBtn")
+.onclick = function(){
 
 window.open(
 `https://wa.me/${order.driverPhone}`
@@ -1001,11 +916,9 @@ orderStatus.innerHTML =
 "تم قبول الطلب";
 
 liveStatus.innerHTML =
-"السائق متجه للمتجر";
+"السائق متجه إلى المتجر";
 
-initMap(order);
-
-updateDriver(order);
+updateDriverLocation(order);
 
 }
 
@@ -1017,19 +930,20 @@ orderStatus.innerHTML =
 liveStatus.innerHTML =
 "المتجر يقوم بتجهيز الطلب";
 
-updateDriver(order);
+updateDriverLocation(order);
 
 }
 
 if(order.status === "on_the_way"){
 
 orderStatus.innerHTML =
-"السائق بالطريق إليك";
+"السائق في الطريق إليك";
 
 liveStatus.innerHTML =
+order.statusText ||
 "السائق متجه إليك";
 
-updateDriver(order);
+updateDriverLocation(order);
 
 }
 
@@ -1041,36 +955,74 @@ orderStatus.innerHTML =
 liveStatus.innerHTML =
 "اضغط استلام الطلب";
 
-document.getElementById(
-"completeBtn"
-).style.display = "block";
+completeBtn.style.display =
+"block";
 
-document.getElementById(
-"rejectBtn"
-).style.display = "block";
+rejectBtn.style.display =
+"block";
 
-updateDriver(order);
+updateDriverLocation(order);
 
 }
 
-if(order.status === "delivered"){
+if(order.status === "driver_timeout"){
 
-alert("تم توصيل الطلب");
+alert(
+"تم إلغاء الطلب بسبب تجاوز السائق للوقت"
+);
 
 localStorage.removeItem(
 "currentOrderId"
 );
 
-window.location.href =
-"home.html";
+window.location.replace(
+"home.html"
+);
 
 }
 
+if(order.status === "delivered"){
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+alert("تم تسليم الطلب");
+
+window.location.replace(
+"home.html"
+);
+
+}
+
+if(order.status === "failed_no_driver"){
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+window.location.replace(
+"retry-order.html"
+);
+
+}
+if(order.status === "cancelled_by_customer"){
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+alert("تم إلغاء الطلب");
+
+window.location.replace(
+"home.html"
+);
+
+}
 });
 
-document.getElementById(
-"completeBtn"
-).onclick = async function(){
+completeBtn.onclick =
+async function(){
 
 await update(orderRef,{
 
@@ -1080,14 +1032,18 @@ completedAt:Date.now()
 
 });
 
-window.location.href =
-"home.html";
+localStorage.removeItem(
+"currentOrderId"
+);
+
+window.location.replace(
+"home.html"
+);
 
 };
 
-document.getElementById(
-"rejectBtn"
-).onclick = async function(){
+rejectBtn.onclick =
+async function(){
 
 await update(orderRef,{
 
@@ -1097,8 +1053,30 @@ rejectedAt:Date.now()
 
 });
 
-window.location.href =
-"home.html";
+localStorage.removeItem(
+"currentOrderId"
+);
+
+window.location.replace(
+"home.html"
+);
+
+};
+
+history.pushState(
+null,
+null,
+location.href
+);
+
+window.onpopstate =
+function(){
+
+history.pushState(
+null,
+null,
+location.href
+);
 
 };
 
