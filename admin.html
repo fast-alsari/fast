@@ -10,7 +10,7 @@ name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
-لوحة الإدارة
+لوحة الادمن
 </title>
 
 <link
@@ -18,7 +18,7 @@ rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
 rel="stylesheet">
 
 <style>
@@ -32,40 +32,34 @@ font-family:'Cairo',sans-serif;
 
 body{
 background:#f5f6fa;
+padding:15px;
 padding-bottom:120px;
-overflow-x:hidden;
 }
 
 .header{
 background:
 linear-gradient(
 135deg,
-#111827,
-#1f2937
+#ff8800,
+#ff5500
 );
 
-padding:25px;
+padding:24px;
+border-radius:28px;
 color:white;
-
-border-bottom-left-radius:30px;
-border-bottom-right-radius:30px;
+margin-bottom:20px;
 }
 
-.header h1{
+.header h2{
 font-size:28px;
 margin-bottom:8px;
 }
 
-.header p{
-font-size:14px;
-opacity:.9;
-}
-
 .stats{
 display:grid;
-grid-template-columns:1fr 1fr;
+grid-template-columns:repeat(2,1fr);
 gap:15px;
-padding:15px;
+margin-bottom:20px;
 }
 
 .stat-card{
@@ -79,9 +73,9 @@ box-shadow:
 }
 
 .stat-card h2{
-font-size:32px;
-margin-bottom:8px;
+font-size:30px;
 color:#ff6600;
+margin-bottom:8px;
 }
 
 .stat-card p{
@@ -91,167 +85,61 @@ color:#666;
 }
 
 .section{
-padding:0 15px 15px;
-}
-
-.section-title{
-font-size:20px;
-font-weight:bold;
-margin-bottom:15px;
-color:#222;
-}
-
-.card{
 background:white;
 padding:18px;
 border-radius:24px;
-margin-bottom:15px;
+margin-bottom:18px;
 
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
 }
 
-.card-top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:15px;
-}
-
-.badge{
-padding:7px 14px;
-border-radius:14px;
-font-size:12px;
-font-weight:bold;
-}
-
-.active{
-background:#dcfce7;
-color:#15803d;
-}
-
-.pending{
-background:#fff7ed;
-color:#ea580c;
-}
-
-.blocked{
-background:#fee2e2;
-color:#dc2626;
-}
-
-.card h3{
+.section-title{
 font-size:18px;
-margin-bottom:8px;
+font-weight:bold;
+margin-bottom:15px;
+color:#ff6600;
 }
 
-.card p{
-font-size:14px;
+.user-card{
+background:#fafafa;
+padding:15px;
+border-radius:18px;
+margin-bottom:12px;
+}
+
+.user-card h3{
+margin-bottom:6px;
+}
+
+.user-card p{
+font-size:13px;
 color:#666;
-margin-bottom:5px;
+margin-bottom:4px;
 }
 
 .actions{
 display:flex;
 gap:10px;
-margin-top:15px;
+margin-top:12px;
 }
 
 .actions button{
 flex:1;
-height:48px;
+height:45px;
 border:none;
-border-radius:16px;
-font-size:14px;
+border-radius:14px;
+color:white;
 font-weight:bold;
 cursor:pointer;
-color:white;
 }
 
 .accept-btn{
 background:#00b894;
 }
 
-.reject-btn{
+.block-btn{
 background:#e53935;
-}
-
-.delete-btn{
-background:#111827;
-}
-
-.bottom-bar{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:82px;
-
-background:white;
-
-display:flex;
-justify-content:space-around;
-align-items:center;
-
-box-shadow:
-0 -5px 18px rgba(0,0,0,.08);
-}
-
-.nav-item{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:5px;
-
-font-size:13px;
-font-weight:bold;
-
-color:#888;
-cursor:pointer;
-}
-
-.nav-item.active{
-color:#ff8800;
-}
-
-.nav-item i{
-font-size:22px;
-}
-
-.loading{
-position:fixed;
-inset:0;
-background:white;
-
-display:flex;
-align-items:center;
-justify-content:center;
-
-z-index:9999;
-}
-
-.spinner{
-width:70px;
-height:70px;
-border:5px solid #eee;
-border-top:5px solid #ff8800;
-border-radius:50%;
-
-animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-100%{
-transform:rotate(360deg);
-}
-}
-
-@media(max-width:700px){
-
-.stats{
-grid-template-columns:1fr;
-}
-
 }
 
 </style>
@@ -260,22 +148,14 @@ grid-template-columns:1fr;
 
 <body>
 
-<div
-class="loading"
-id="loading">
-
-<div class="spinner"></div>
-
-</div>
-
 <div class="header">
 
-<h1>
-لوحة الإدارة ⚙️
-</h1>
+<h2>
+لوحة التحكم
+</h2>
 
 <p>
-إدارة التطبيق والمتاجر والسائقين
+إدارة التطبيق بالكامل
 </p>
 
 </div>
@@ -301,7 +181,7 @@ id="loading">
 </h2>
 
 <p>
-السائقين
+السواق
 </p>
 
 </div>
@@ -320,12 +200,12 @@ id="loading">
 
 <div class="stat-card">
 
-<h2 id="usersCount">
+<h2 id="customersCount">
 0
 </h2>
 
 <p>
-المستخدمين
+الزبائن
 </p>
 
 </div>
@@ -338,43 +218,17 @@ id="loading">
 طلبات المتاجر
 </div>
 
-<div id="storesContainer"></div>
+<div id="storesRequests"></div>
 
 </div>
 
 <div class="section">
 
 <div class="section-title">
-طلبات السائقين
+طلبات السواق
 </div>
 
-<div id="driversContainer"></div>
-
-</div>
-
-<div class="bottom-bar">
-
-<div class="nav-item active">
-
-<i class="fa-solid fa-chart-line"></i>
-
-<span>
-الإدارة
-</span>
-
-</div>
-
-<div
-class="nav-item"
-onclick="logout()">
-
-<i class="fa-solid fa-right-from-bracket"></i>
-
-<span>
-خروج
-</span>
-
-</div>
+<div id="driversRequests"></div>
 
 </div>
 
@@ -387,21 +241,20 @@ import {
 
 ref,
 onValue,
-update,
-remove
+update
 
 }
 
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-const currentUser =
+const admin =
 JSON.parse(
 localStorage.getItem("user")
 );
 
 if(
-!currentUser ||
-currentUser.type !== "admin"
+!admin ||
+admin.type !== "admin"
 ){
 
 window.location.replace(
@@ -410,91 +263,134 @@ window.location.replace(
 
 }
 
-// ====================
-// المتاجر
-// ====================
-
 onValue(
-ref(db,"stores"),
+ref(db,"users"),
 (snapshot)=>{
 
-const container =
-document.getElementById(
-"storesContainer"
-);
+if(!snapshot.exists()){
+return;
+}
 
-container.innerHTML = "";
-
-let total = 0;
-
-if(snapshot.exists()){
-
-const stores =
+const data =
 snapshot.val();
 
-for(let key in stores){
+let stores = 0;
+let drivers = 0;
+let customers = 0;
 
-const store =
-stores[key];
+const storesContainer =
+document.getElementById(
+"storesRequests"
+);
 
-total++;
+const driversContainer =
+document.getElementById(
+"driversRequests"
+);
 
-container.innerHTML += `
+storesContainer.innerHTML = "";
+driversContainer.innerHTML = "";
 
-<div class="card">
+for(let key in data){
 
-<div class="card-top">
+const user =
+data[key];
 
-<div class="
-badge
-${store.status === "active"
-? "active"
-: "pending"}
-">
+if(user.type === "store"){
+stores++;
+}
 
-${store.status === "active"
-? "نشط"
-: "بانتظار"}
+if(user.type === "driver"){
+drivers++;
+}
 
-</div>
+if(user.type === "customer"){
+customers++;
+}
 
-</div>
+if(
+user.type === "store" &&
+user.status === "pending"
+){
+
+storesContainer.innerHTML += `
+
+<div class="user-card">
 
 <h3>
-${store.store_name || ""}
+${user.store_name || ""}
 </h3>
 
 <p>
-📞 ${store.phone || ""}
+📞 ${user.phone || ""}
 </p>
 
 <p>
-🏪 ${store.category || ""}
+📍 ${user.category || ""}
 </p>
 
 <div class="actions">
 
 <button
 class="accept-btn"
-onclick="approveStore('${key}')">
+onclick="acceptUser('${key}')">
 
 قبول
 
 </button>
 
 <button
-class="reject-btn"
-onclick="blockStore('${key}')">
+class="block-btn"
+onclick="blockUser('${key}')">
 
-حظر
+رفض
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+if(
+user.type === "driver" &&
+user.status === "pending"
+){
+
+driversContainer.innerHTML += `
+
+<div class="user-card">
+
+<h3>
+${user.name || ""}
+</h3>
+
+<p>
+📞 ${user.phone || ""}
+</p>
+
+<p>
+🚗 ${user.vehicleType || ""}
+</p>
+
+<div class="actions">
+
+<button
+class="accept-btn"
+onclick="acceptUser('${key}')">
+
+قبول
 
 </button>
 
 <button
-class="delete-btn"
-onclick="deleteStore('${key}')">
+class="block-btn"
+onclick="blockUser('${key}')">
 
-حذف
+رفض
 
 </button>
 
@@ -510,182 +406,41 @@ onclick="deleteStore('${key}')">
 
 document.getElementById(
 "storesCount"
-).innerHTML = total;
-
-hideLoading();
-
-}
-);
-
-// ====================
-// السائقين
-// ====================
-
-onValue(
-ref(db,"drivers"),
-(snapshot)=>{
-
-const container =
-document.getElementById(
-"driversContainer"
-);
-
-container.innerHTML = "";
-
-let total = 0;
-
-if(snapshot.exists()){
-
-const drivers =
-snapshot.val();
-
-for(let key in drivers){
-
-const driver =
-drivers[key];
-
-total++;
-
-container.innerHTML += `
-
-<div class="card">
-
-<div class="card-top">
-
-<div class="
-badge
-${driver.status === "active"
-? "active"
-: "pending"}
-">
-
-${driver.status === "active"
-? "نشط"
-: "بانتظار"}
-
-</div>
-
-</div>
-
-<h3>
-${driver.name || ""}
-</h3>
-
-<p>
-📞 ${driver.phone || ""}
-</p>
-
-<p>
-🚗 ${driver.vehicleType || ""}
-</p>
-
-<div class="actions">
-
-<button
-class="accept-btn"
-onclick="approveDriver('${key}')">
-
-قبول
-
-</button>
-
-<button
-class="reject-btn"
-onclick="blockDriver('${key}')">
-
-حظر
-
-</button>
-
-<button
-class="delete-btn"
-onclick="deleteDriver('${key}')">
-
-حذف
-
-</button>
-
-</div>
-
-</div>
-
-`;
-
-}
-
-}
+).innerHTML = stores;
 
 document.getElementById(
 "driversCount"
-).innerHTML = total;
+).innerHTML = drivers;
+
+document.getElementById(
+"customersCount"
+).innerHTML = customers;
 
 }
 );
-
-// ====================
-// الطلبات
-// ====================
 
 onValue(
 ref(db,"orders"),
 (snapshot)=>{
 
-let total = 0;
-
-if(snapshot.exists()){
-
-total =
-Object.keys(
-snapshot.val()
-).length;
-
-}
-
 document.getElementById(
 "ordersCount"
-).innerHTML = total;
+).innerHTML =
+
+snapshot.exists()
+?
+Object.keys(snapshot.val()).length
+:
+0;
 
 }
 );
 
-// ====================
-// المستخدمين
-// ====================
-
-onValue(
-ref(db,"customers"),
-(snapshot)=>{
-
-let total = 0;
-
-if(snapshot.exists()){
-
-total =
-Object.keys(
-snapshot.val()
-).length;
-
-}
-
-document.getElementById(
-"usersCount"
-).innerHTML = total;
-
-}
-);
-
-// ====================
-// قبول متجر
-// ====================
-
-window.approveStore =
-async function(storeId){
+window.acceptUser =
+async function(userId){
 
 await update(
-ref(
-db,
-"stores/" + storeId
-),
+ref(db,"users/" + userId),
 {
 
 status:"active"
@@ -693,22 +448,15 @@ status:"active"
 }
 );
 
-alert("تم قبول المتجر");
+alert("تم القبول");
 
 };
 
-// ====================
-// حظر متجر
-// ====================
-
-window.blockStore =
-async function(storeId){
+window.blockUser =
+async function(userId){
 
 await update(
-ref(
-db,
-"stores/" + storeId
-),
+ref(db,"users/" + userId),
 {
 
 status:"blocked"
@@ -716,126 +464,9 @@ status:"blocked"
 }
 );
 
-alert("تم حظر المتجر");
+alert("تم الرفض");
 
 };
-
-// ====================
-// حذف متجر
-// ====================
-
-window.deleteStore =
-async function(storeId){
-
-if(
-!confirm("حذف المتجر ؟")
-){
-return;
-}
-
-await remove(
-ref(
-db,
-"stores/" + storeId
-)
-);
-
-};
-
-// ====================
-// قبول سائق
-// ====================
-
-window.approveDriver =
-async function(driverId){
-
-await update(
-ref(
-db,
-"drivers/" + driverId
-),
-{
-
-status:"active"
-
-}
-);
-
-alert("تم قبول السائق");
-
-};
-
-// ====================
-// حظر سائق
-// ====================
-
-window.blockDriver =
-async function(driverId){
-
-await update(
-ref(
-db,
-"drivers/" + driverId
-),
-{
-
-status:"blocked"
-
-}
-);
-
-alert("تم حظر السائق");
-
-};
-
-// ====================
-// حذف سائق
-// ====================
-
-window.deleteDriver =
-async function(driverId){
-
-if(
-!confirm("حذف السائق ؟")
-){
-return;
-}
-
-await remove(
-ref(
-db,
-"drivers/" + driverId
-)
-);
-
-};
-
-// ====================
-// تسجيل خروج
-// ====================
-
-window.logout =
-function(){
-
-localStorage.clear();
-
-window.location.replace(
-"index.html"
-);
-
-};
-
-// ====================
-// loading
-// ====================
-
-function hideLoading(){
-
-document.getElementById(
-"loading"
-).style.display = "none";
-
-}
 
 </script>
 
