@@ -1,3 +1,5 @@
+<!-- checkout.html -->
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -7,14 +9,18 @@
 
 <meta
 name="viewport"
-content="width=device-width, initial-scale=1.0">
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
-تأكيد الطلب
+إتمام الطلب
 </title>
 
 <link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700;800&display=swap"
 rel="stylesheet">
 
 <style>
@@ -24,11 +30,13 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
+-webkit-tap-highlight-color:transparent;
 }
 
 body{
 background:#f5f6fa;
 padding-bottom:120px;
+overflow-x:hidden;
 }
 
 .header{
@@ -38,75 +46,196 @@ linear-gradient(
 #ff8800,
 #ff5500
 );
+
 padding:22px;
 color:white;
+
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
+
+box-shadow:
+0 8px 25px rgba(0,0,0,.12);
 }
 
-.form{
+.header-top{
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.back-btn{
+width:45px;
+height:45px;
+border:none;
+border-radius:50%;
+background:white;
+color:#ff6600;
+font-size:18px;
+cursor:pointer;
+flex-shrink:0;
+}
+
+.header h2{
+font-size:24px;
+margin-bottom:4px;
+}
+
+.header p{
+font-size:14px;
+opacity:.9;
+}
+
+.page-content{
 padding:15px;
 display:flex;
 flex-direction:column;
-gap:15px;
+gap:18px;
 }
 
 .card{
 background:white;
 padding:18px;
-border-radius:24px;
+border-radius:25px;
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
 }
 
-.input{
-width:100%;
-height:56px;
-border:none;
-background:#f5f5f5;
-border-radius:16px;
-padding:0 15px;
-outline:none;
-font-size:15px;
-margin-top:12px;
+.card-title{
+font-size:18px;
+font-weight:bold;
+margin-bottom:16px;
+color:#333;
 }
 
-.textarea{
+.products-list{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.product-item{
+display:flex;
+gap:12px;
+align-items:center;
+background:#f8f8f8;
+padding:12px;
+border-radius:18px;
+}
+
+.product-image{
+width:75px;
+height:75px;
+border-radius:16px;
+object-fit:cover;
+background:#eee;
+}
+
+.product-info{
+flex:1;
+}
+
+.product-name{
+font-size:16px;
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.product-price{
+font-size:14px;
+color:#666;
+margin-bottom:5px;
+}
+
+.product-qty{
+font-size:13px;
+font-weight:bold;
+color:#ff6600;
+}
+
+.summary-box{
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+
+.summary-row{
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:15px;
+}
+
+.summary-row.total{
+padding-top:12px;
+border-top:1px solid #eee;
+font-size:18px;
+font-weight:bold;
+}
+
+textarea{
 width:100%;
 height:120px;
 border:none;
-background:#f5f5f5;
-border-radius:16px;
-padding:15px;
 outline:none;
 resize:none;
-margin-top:12px;
+background:#f7f7f7;
+border-radius:18px;
+padding:15px;
 font-size:15px;
-}
-
-.total-box{
-display:flex;
-justify-content:space-between;
-font-size:18px;
-font-weight:bold;
-margin-bottom:15px;
 }
 
 .order-btn{
 width:100%;
 height:58px;
 border:none;
-border-radius:18px;
+border-radius:22px;
+
 background:
 linear-gradient(
 135deg,
 #00b894,
 #00a383
 );
+
 color:white;
 font-size:17px;
 font-weight:bold;
 cursor:pointer;
+
+box-shadow:
+0 8px 20px rgba(0,184,148,.25);
+}
+
+.empty{
+padding:50px 20px;
+text-align:center;
+color:#777;
+font-size:16px;
+}
+
+.loading{
+position:fixed;
+inset:0;
+background:white;
+display:flex;
+align-items:center;
+justify-content:center;
+z-index:999999;
+}
+
+.spinner{
+width:70px;
+height:70px;
+border-radius:50%;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
 }
 
 </style>
@@ -115,70 +244,113 @@ cursor:pointer;
 
 <body>
 
+<div
+class="loading"
+id="loading">
+
+<div class="spinner"></div>
+
+</div>
+
 <div class="header">
 
+<div class="header-top">
+
+<button
+class="back-btn"
+onclick="history.back()">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</button>
+
+<div>
+
 <h2>
-تأكيد الطلب 🚀
+إتمام الطلب
 </h2>
 
-</div>
-
-<div class="form">
-
-<div class="card">
-
-<h3>
-العنوان
-</h3>
-
-<input
-type="text"
-id="addressInput"
-class="input"
-placeholder="اكتب عنوانك">
-
-<textarea
-id="notesInput"
-class="textarea"
-placeholder="ملاحظات إضافية"></textarea>
+<p>
+راجع طلبك قبل الإرسال
+</p>
 
 </div>
 
+</div>
+
+</div>
+
+<div class="page-content">
+
 <div class="card">
 
-<div class="total-box">
+<div class="card-title">
+المنتجات
+</div>
+
+<div
+class="products-list"
+id="productsList"></div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+ملخص الطلب
+</div>
+
+<div class="summary-box">
+
+<div class="summary-row">
 
 <span>
 سعر المنتجات
 </span>
 
-<span id="productsPrice">
+<b id="productsTotal">
 0 د.ع
-</span>
+</b>
 
 </div>
 
-<div class="total-box">
+<div class="summary-row">
 
 <span>
-سعر التوصيل
+أجرة التوصيل
 </span>
 
-<span id="deliveryPrice">
-2500 د.ع
-</span>
+<b id="deliveryPrice">
+0 د.ع
+</b>
 
 </div>
 
-<div class="total-box">
+<div class="summary-row total">
 
 <span>
 المجموع النهائي
 </span>
 
-<span id="finalPrice">
+<b id="finalTotal">
 0 د.ع
-</span>
+</b>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<div class="card-title">
+ملاحظات الطلب
+</div>
+
+<textarea
+id="orderNote"
+placeholder="اكتب ملاحظاتك هنا..."></textarea>
 
 </div>
 
@@ -186,11 +358,9 @@ placeholder="ملاحظات إضافية"></textarea>
 class="order-btn"
 onclick="sendOrder()">
 
-إرسال الطلب
+إرسال الطلب 🚀
 
 </button>
-
-</div>
 
 </div>
 
@@ -200,93 +370,176 @@ import { db }
 from "./firebase.js";
 
 import {
+
 ref,
 set
-}
-from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
-import {
-formatPrice,
-generateId
 }
-from "./utils.js";
+
+from
+"https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+// ====================
+// المستخدم
+// ====================
 
 const currentUser =
 JSON.parse(
 localStorage.getItem("user")
 );
 
-const cart =
+if(!currentUser){
+
+window.location.replace(
+"index.html"
+);
+
+}
+
+// ====================
+// السلة
+// ====================
+
+let cart =
 JSON.parse(
 localStorage.getItem("cart")
 ) || [];
 
-if(
-!currentUser ||
-cart.length === 0
-){
+if(cart.length === 0){
 
-window.location.replace(
-"home.html"
-);
+document.body.innerHTML = `
+<div class="empty">
+السلة فارغة
+</div>
+`;
 
 }
+
+// ====================
+// العناصر
+// ====================
+
+const productsList =
+document.getElementById(
+"productsList"
+);
 
 let productsTotal = 0;
 
 cart.forEach(item=>{
 
-productsTotal +=
-Number(item.price)
+const total =
+Number(item.price || 0)
 *
-Number(item.qty);
+Number(item.qty || 1);
+
+productsTotal += total;
+
+productsList.innerHTML += `
+
+<div class="product-item">
+
+<img
+src="${item.image || 'product.png'}"
+class="product-image"
+onerror="this.src='product.png'">
+
+<div class="product-info">
+
+<div class="product-name">
+${item.name || ""}
+</div>
+
+<div class="product-price">
+${Number(item.price || 0)
+.toLocaleString()} د.ع
+</div>
+
+<div class="product-qty">
+الكمية: ${item.qty || 1}
+</div>
+
+</div>
+
+</div>
+
+`;
 
 });
 
-const deliveryPrice = 2500;
+// ====================
+// التوصيل
+// ====================
+
+let deliveryPrice = 2000;
 
 const finalTotal =
-productsTotal +
-deliveryPrice;
+productsTotal + deliveryPrice;
+
+// ====================
+// عرض
+// ====================
 
 document.getElementById(
-"productsPrice"
+"productsTotal"
 ).innerHTML =
-formatPrice(productsTotal);
+
+productsTotal.toLocaleString()
++
+" د.ع";
 
 document.getElementById(
 "deliveryPrice"
 ).innerHTML =
-formatPrice(deliveryPrice);
+
+deliveryPrice.toLocaleString()
++
+" د.ع";
 
 document.getElementById(
-"finalPrice"
+"finalTotal"
 ).innerHTML =
-formatPrice(finalTotal);
+
+finalTotal.toLocaleString()
++
+" د.ع";
+
+// ====================
+// ارسال الطلب
+// ====================
 
 window.sendOrder =
 async function(){
 
-const address =
+const orderId =
+"ORDER_" + Date.now();
+
+const note =
 document.getElementById(
-"addressInput"
-).value.trim();
+"orderNote"
+).value
+.trim();
 
-const notes =
-document.getElementById(
-"notesInput"
-).value.trim();
+const storesData = [];
 
-if(!address){
+cart.forEach(item=>{
 
-alert("اكتب العنوان");
+if(
+!storesData.find(
+s => s.storeId === item.storeId
+)
+){
 
-return;
+storesData.push({
+
+storeId:item.storeId,
+storeName:item.storeName || "",
+
+});
 
 }
 
-const orderId =
-generateId("ORDER");
+});
 
 const orderData = {
 
@@ -295,6 +548,9 @@ id:orderId,
 type:"delivery",
 
 status:"waiting_driver",
+
+statusText:
+"بانتظار قبول سائق",
 
 customerId:
 currentUser.id,
@@ -309,15 +565,12 @@ customerImage:
 currentUser.image || "",
 
 customerLat:
-currentUser.latitude || 0,
+Number(currentUser.latitude || 0),
 
 customerLng:
-currentUser.longitude || 0,
+Number(currentUser.longitude || 0),
 
-customerAddress:
-address,
-
-notes:notes,
+storesData:storesData,
 
 products:cart,
 
@@ -330,18 +583,19 @@ deliveryPrice,
 finalTotal:
 finalTotal,
 
+note:note,
+
 createdAt:
 Date.now()
 
 };
 
 await set(
-ref(db,"orders/" + orderId),
+ref(
+db,
+"orders/" + orderId
+),
 orderData
-);
-
-localStorage.removeItem(
-"cart"
 );
 
 localStorage.setItem(
@@ -349,12 +603,24 @@ localStorage.setItem(
 orderId
 );
 
+localStorage.removeItem(
+"cart"
+);
+
 alert("تم إرسال الطلب");
 
-window.location.href =
-`talab.html?orderId=${orderId}`;
+window.location.replace(
+"talab.html?orderId=" + orderId);
 
 };
+
+// ====================
+// تحميل
+// ====================
+
+document.getElementById(
+"loading"
+).style.display = "none";
 
 </script>
 
