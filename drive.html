@@ -7,10 +7,10 @@
 
 <meta
 name="viewport"
-content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+content="width=device-width, initial-scale=1.0">
 
 <title>
-سائق التوصيل
+لوحة السائق
 </title>
 
 <link
@@ -25,13 +25,13 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 rel="stylesheet"
 href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css"/>
 
-<link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
-rel="stylesheet">
-
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
 <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
 
 <style>
 
@@ -40,7 +40,6 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Cairo',sans-serif;
--webkit-tap-highlight-color:transparent;
 }
 
 body{
@@ -56,12 +55,12 @@ linear-gradient(
 #ff8800,
 #ff5500
 );
-padding:22px;
+
+padding:24px;
 color:white;
+
 border-bottom-left-radius:30px;
 border-bottom-right-radius:30px;
-box-shadow:
-0 8px 25px rgba(0,0,0,.10);
 }
 
 .driver-box{
@@ -71,8 +70,8 @@ gap:14px;
 }
 
 .driver-image{
-width:78px;
-height:78px;
+width:80px;
+height:80px;
 border-radius:50%;
 object-fit:cover;
 border:3px solid white;
@@ -81,53 +80,46 @@ background:white;
 
 .driver-info h2{
 font-size:24px;
-margin-bottom:5px;
+margin-bottom:6px;
 }
 
 .driver-info p{
-font-size:14px;
 opacity:.9;
 }
 
 .online-btn{
-margin-top:20px;
+margin-top:18px;
 width:100%;
-height:55px;
+height:54px;
 border:none;
-border-radius:20px;
+border-radius:18px;
 background:white;
 color:#00b894;
-font-size:15px;
+font-size:16px;
 font-weight:bold;
 cursor:pointer;
 }
 
 .stats{
 display:grid;
-grid-template-columns:1fr 1fr 1fr;
-gap:12px;
+grid-template-columns:1fr 1fr;
+gap:15px;
 padding:15px;
 }
 
 .stat-card{
 background:white;
-padding:18px;
-border-radius:25px;
+padding:20px;
+border-radius:24px;
 text-align:center;
 box-shadow:
 0 5px 18px rgba(0,0,0,.06);
 }
 
 .stat-card h2{
-font-size:28px;
+font-size:32px;
 color:#ff8800;
-margin-bottom:6px;
-}
-
-.stat-card p{
-font-size:13px;
-font-weight:bold;
-color:#666;
+margin-bottom:8px;
 }
 
 .orders-container{
@@ -150,7 +142,6 @@ display:flex;
 justify-content:space-between;
 align-items:center;
 margin-bottom:15px;
-gap:10px;
 }
 
 .order-price{
@@ -171,66 +162,39 @@ font-weight:bold;
 .customer-box{
 background:#f8f8f8;
 padding:15px;
-border-radius:20px;
+border-radius:18px;
 margin-bottom:15px;
 }
 
 .customer-box h3{
-margin-bottom:6px;
-font-size:19px;
+margin-bottom:8px;
 }
 
 .customer-box p{
 font-size:14px;
 color:#666;
-margin-bottom:6px;
+margin-bottom:5px;
 }
 
 .map-box{
 width:100%;
-height:320px;
+height:300px;
 border-radius:22px;
 overflow:hidden;
 margin-bottom:15px;
 }
 
-.order-info{
+.actions{
 display:grid;
 grid-template-columns:1fr 1fr;
-gap:12px;
-margin-bottom:15px;
-}
-
-.info-card{
-background:#f8f8f8;
-padding:15px;
-border-radius:18px;
-text-align:center;
-}
-
-.info-card h4{
-font-size:13px;
-margin-bottom:8px;
-color:#777;
-}
-
-.info-card p{
-font-size:16px;
-font-weight:bold;
-}
-
-.actions{
-display:flex;
-flex-wrap:wrap;
 gap:10px;
 }
 
 .actions button,
 .actions a{
-flex:1;
-height:52px;
+height:50px;
 border:none;
-border-radius:18px;
+border-radius:16px;
 font-size:14px;
 font-weight:bold;
 cursor:pointer;
@@ -245,54 +209,27 @@ color:white;
 background:#00b894;
 }
 
-.reject-btn{
-background:#ff3b30;
-}
-
-.whatsapp-btn{
-background:#25D366;
-}
-
-.arrive-btn{
+.pickup-btn{
 background:#2563eb;
+}
+
+.delivery-btn{
+background:#7c3aed;
 }
 
 .finish-btn{
 background:#ff8800;
 }
 
+.whatsapp-btn{
+background:#25D366;
+}
+
 .empty{
-padding:70px 20px;
+padding:60px 20px;
 text-align:center;
-font-size:16px;
 color:#777;
-}
-
-.loading{
-position:fixed;
-inset:0;
-background:white;
-display:flex;
-align-items:center;
-justify-content:center;
-z-index:999999;
-}
-
-.spinner{
-width:70px;
-height:70px;
-border-radius:50%;
-border:5px solid #eee;
-border-top:5px solid #ff8800;
-animation:spin .8s linear infinite;
-}
-
-@keyframes spin{
-
-100%{
-transform:rotate(360deg);
-}
-
+font-size:16px;
 }
 
 .bottom-bar{
@@ -300,14 +237,13 @@ position:fixed;
 bottom:0;
 left:0;
 right:0;
-height:84px;
+height:82px;
 background:white;
 display:flex;
 justify-content:space-around;
 align-items:center;
 box-shadow:
 0 -5px 18px rgba(0,0,0,.08);
-z-index:99999;
 }
 
 .nav-item{
@@ -317,7 +253,6 @@ align-items:center;
 gap:5px;
 font-size:13px;
 font-weight:bold;
-cursor:pointer;
 color:#888;
 }
 
@@ -329,31 +264,11 @@ color:#ff8800;
 font-size:22px;
 }
 
-@media(max-width:700px){
-
-.stats{
-grid-template-columns:1fr;
-}
-
-.order-info{
-grid-template-columns:1fr;
-}
-
-}
-
 </style>
 
 </head>
 
 <body>
-
-<div
-class="loading"
-id="loading">
-
-<div class="spinner"></div>
-
-</div>
 
 <div class="header">
 
@@ -371,7 +286,7 @@ class="driver-image">
 </h2>
 
 <p id="driverPhone">
-0000000000
+000000
 </p>
 
 </div>
@@ -398,31 +313,19 @@ onclick="toggleOnline()">
 </h2>
 
 <p>
-الطلبات المكتملة
+طلبات مكتملة
 </p>
 
 </div>
 
 <div class="stat-card">
 
-<h2 id="totalProfit">
+<h2 id="profits">
 0
 </h2>
 
 <p>
 الأرباح
-</p>
-
-</div>
-
-<div class="stat-card">
-
-<h2 id="cancelledOrders">
-0
-</h2>
-
-<p>
-الطلبات الملغية
 </p>
 
 </div>
@@ -467,13 +370,11 @@ from "./firebase.js";
 import {
 ref,
 onValue,
-update,
-get
+update
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 import {
-calculateDistance,
 formatPrice
 }
 from "./utils.js";
@@ -494,10 +395,9 @@ window.location.replace(
 
 }
 
+let driverLat = null;
+let driverLng = null;
 let isOnline = true;
-
-let driverLat = 0;
-let driverLng = 0;
 
 document.getElementById(
 "driverName"
@@ -520,16 +420,11 @@ document.getElementById(
 currentUser.completedOrders || 0;
 
 document.getElementById(
-"cancelledOrders"
+"profits"
 ).innerHTML =
-currentUser.cancelledOrders || 0;
-
-document.getElementById(
-"totalProfit"
-).innerHTML =
-Number(
+formatPrice(
 currentUser.totalProfit || 0
-).toLocaleString();
+);
 
 navigator.geolocation.watchPosition(
 
@@ -542,11 +437,12 @@ driverLng =
 position.coords.longitude;
 
 await update(
-ref(db,"users/" + currentUser.id),
+ref(db,"drivers/" + currentUser.id),
 {
 
 latitude:driverLat,
 longitude:driverLng,
+isOnline:isOnline,
 lastSeen:Date.now()
 
 }
@@ -554,12 +450,14 @@ lastSeen:Date.now()
 
 },
 
-()=>{},
+(error)=>{
+
+console.log(error);
+
+},
 
 {
-enableHighAccuracy:true,
-maximumAge:3000,
-timeout:10000
+enableHighAccuracy:true
 }
 
 );
@@ -575,7 +473,6 @@ document.getElementById(
 );
 
 btn.innerHTML =
-
 isOnline
 ?
 "متصل الآن"
@@ -583,15 +480,14 @@ isOnline
 "متوقف";
 
 btn.style.color =
-
 isOnline
 ?
 "#00b894"
 :
-"#ff3b30";
+"#e53935";
 
 await update(
-ref(db,"users/" + currentUser.id),
+ref(db,"drivers/" + currentUser.id),
 {
 
 isOnline:isOnline
@@ -601,7 +497,7 @@ isOnline:isOnline
 
 };
 
-const ordersContainer =
+const container =
 document.getElementById(
 "ordersContainer"
 );
@@ -610,17 +506,15 @@ onValue(
 ref(db,"orders"),
 (snapshot)=>{
 
-ordersContainer.innerHTML = "";
+container.innerHTML = "";
 
 if(!snapshot.exists()){
 
-ordersContainer.innerHTML = `
+container.innerHTML = `
 <div class="empty">
 لا توجد طلبات
 </div>
 `;
-
-hideLoading();
 
 return;
 
@@ -646,22 +540,18 @@ continue;
 
 found = true;
 
-ordersContainer.innerHTML += `
+container.innerHTML += `
 
 <div class="order-card">
 
 <div class="order-top">
 
 <div class="order-status">
-
-${getStatusText(order.status)}
-
+${getStatus(order.status)}
 </div>
 
 <div class="order-price">
-
 ${formatPrice(order.deliveryPrice)}
-
 </div>
 
 </div>
@@ -669,21 +559,15 @@ ${formatPrice(order.deliveryPrice)}
 <div class="customer-box">
 
 <h3>
-
 ${order.customerName || ""}
-
 </h3>
 
 <p>
-
 📞 ${order.customerPhone || ""}
-
 </p>
 
 <p>
-
 📍 ${order.customerAddress || ""}
-
 </p>
 
 </div>
@@ -691,38 +575,6 @@ ${order.customerName || ""}
 <div
 class="map-box"
 id="map_${order.id}"></div>
-
-<div class="order-info">
-
-<div class="info-card">
-
-<h4>
-المجموع
-</h4>
-
-<p>
-
-${formatPrice(order.finalTotal)}
-
-</p>
-
-</div>
-
-<div class="info-card">
-
-<h4>
-الحالة
-</h4>
-
-<p>
-
-${getStatusText(order.status)}
-
-</p>
-
-</div>
-
-</div>
 
 <div class="actions">
 
@@ -737,14 +589,6 @@ class="accept-btn"
 onclick="acceptOrder('${order.id}')">
 
 قبول الطلب
-
-</button>
-
-<button
-class="reject-btn"
-onclick="rejectOrder('${order.id}')">
-
-رفض
 
 </button>
 
@@ -764,10 +608,18 @@ class="whatsapp-btn">
 </a>
 
 <button
-class="arrive-btn"
-onclick="arriveOrder('${order.id}')">
+class="pickup-btn"
+onclick="pickupOrder('${order.id}')">
 
-وصلت
+استلام الطلب
+
+</button>
+
+<button
+class="delivery-btn"
+onclick="deliverOrder('${order.id}')">
+
+بالطريق
 
 </button>
 
@@ -799,7 +651,7 @@ createMap(order);
 
 if(!found){
 
-ordersContainer.innerHTML = `
+container.innerHTML = `
 <div class="empty">
 لا توجد طلبات حالياً
 </div>
@@ -807,15 +659,12 @@ ordersContainer.innerHTML = `
 
 }
 
-hideLoading();
-
 }
 );
 
 function createMap(order){
 
-const map =
-L.map(
+const map = L.map(
 `map_${order.id}`
 ).setView(
 [
@@ -832,54 +681,59 @@ maxZoom:19
 }
 ).addTo(map);
 
-L.marker(
-[
-driverLat,
-driverLng
-]
-).addTo(map);
-
-L.marker(
-[
-order.customerLat,
-order.customerLng
-]
-).addTo(map);
-
-L.Routing.control({
-
-waypoints:[
-
-L.latLng(
-driverLat,
-driverLng
-),
-
+const customer =
 L.latLng(
 order.customerLat,
 order.customerLng
-)
+);
 
+const store =
+L.latLng(
+order.products[0]?.storeLat || 0,
+order.products[0]?.storeLng || 0
+);
+
+L.marker(customer)
+.addTo(map);
+
+L.marker(store)
+.addTo(map);
+
+L.polyline(
+[
+store,
+customer
 ],
+{
+color:"#ff8800",
+weight:6
+}
+).addTo(map);
 
-routeWhileDragging:false,
-addWaypoints:false,
-draggableWaypoints:false,
-fitSelectedRoutes:true,
-show:false,
+if(driverLat && driverLng){
 
-lineOptions:{
-styles:[
+L.marker(
+[
+driverLat,
+driverLng
+]
+).addTo(map);
+
+L.polyline(
+[
+[
+driverLat,
+driverLng
+],
+store
+],
 {
 color:"#2563eb",
 weight:6
 }
-]
-},
+).addTo(map);
 
-createMarker:()=>null
-
-}).addTo(map);
+}
 
 }
 
@@ -901,85 +755,56 @@ currentUser.name,
 driverPhone:
 currentUser.phone,
 
-driverImage:
-currentUser.image || "",
-
 driverLat:
 driverLat,
 
 driverLng:
-driverLng
+driverLng,
+
+statusText:
+"السائق متجه للمتجر"
 
 }
 );
 
 };
 
-window.rejectOrder =
+window.pickupOrder =
 async function(orderId){
 
 await update(
 ref(db,"orders/" + orderId),
 {
 
-status:"waiting_driver"
+status:"picked_up",
+
+statusText:
+"تم استلام الطلب"
 
 }
 );
 
 };
 
-window.arriveOrder =
+window.deliverOrder =
 async function(orderId){
 
 await update(
 ref(db,"orders/" + orderId),
 {
 
-status:"arrived",
+status:"on_the_way",
 
-arrivedAt:Date.now()
+statusText:
+"السائق بالطريق إليك"
 
 }
 );
-
-alert("تم الوصول");
 
 };
 
 window.finishOrder =
 async function(orderId){
-
-const orderSnapshot =
-await get(
-ref(db,"orders/" + orderId)
-);
-
-if(orderSnapshot.exists()){
-
-const order =
-orderSnapshot.val();
-
-await update(
-ref(db,"users/" + currentUser.id),
-{
-
-completedOrders:
-Number(
-currentUser.completedOrders || 0
-) + 1,
-
-totalProfit:
-Number(
-currentUser.totalProfit || 0
-)
-+
-Number(order.deliveryPrice || 0)
-
-}
-);
-
-}
 
 await update(
 ref(db,"orders/" + orderId),
@@ -987,46 +812,42 @@ ref(db,"orders/" + orderId),
 
 status:"delivered",
 
-deliveredAt:Date.now()
+statusText:
+"تم توصيل الطلب",
+
+deliveredAt:
+Date.now()
 
 }
 );
 
-alert("تم توصيل الطلب");
+alert("تم التوصيل");
 
 };
 
-function getStatusText(status){
+function getStatus(status){
 
 if(status === "waiting_driver"){
 return "بانتظار سائق";
 }
 
 if(status === "accepted"){
-return "تم قبول الطلب";
+return "تم القبول";
 }
 
-if(status === "arrived"){
-return "وصل السائق";
+if(status === "picked_up"){
+return "تم الاستلام";
+}
+
+if(status === "on_the_way"){
+return "بالطريق";
 }
 
 if(status === "delivered"){
 return "تم التوصيل";
 }
 
-if(status === "cancelled"){
-return "ملغي";
-}
-
 return status;
-
-}
-
-function hideLoading(){
-
-document.getElementById(
-"loading"
-).style.display = "none";
 
 }
 
