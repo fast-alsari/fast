@@ -1,1 +1,826 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+<title>
+السلة
+</title>
+
+<link
+rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+<link
+href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Cairo',sans-serif;
+-webkit-tap-highlight-color:transparent;
+}
+
+body{
+background:#f5f6fa;
+padding-bottom:140px;
+overflow-x:hidden;
+}
+
+.header{
+background:
+linear-gradient(
+135deg,
+#ff8800,
+#ff5500
+);
+padding:22px;
+color:white;
+border-bottom-left-radius:30px;
+border-bottom-right-radius:30px;
+box-shadow:
+0 8px 25px rgba(0,0,0,.10);
+display:flex;
+align-items:center;
+gap:14px;
+}
+
+.back-btn{
+width:48px;
+height:48px;
+border:none;
+border-radius:50%;
+background:white;
+color:#ff6600;
+font-size:18px;
+cursor:pointer;
+flex-shrink:0;
+}
+
+.header h2{
+font-size:25px;
+margin-bottom:4px;
+}
+
+.header p{
+font-size:14px;
+opacity:.9;
+}
+
+.cart-container{
+padding:15px;
+display:flex;
+flex-direction:column;
+gap:16px;
+}
+
+.cart-card{
+background:white;
+padding:15px;
+border-radius:28px;
+display:flex;
+gap:14px;
+box-shadow:
+0 5px 18px rgba(0,0,0,.06);
+}
+
+.cart-image{
+width:95px;
+height:95px;
+border-radius:22px;
+object-fit:cover;
+background:#eee;
+}
+
+.cart-content{
+flex:1;
+}
+
+.cart-name{
+font-size:18px;
+font-weight:bold;
+margin-bottom:5px;
+}
+
+.cart-store{
+font-size:13px;
+color:#666;
+margin-bottom:8px;
+}
+
+.cart-price{
+font-size:18px;
+font-weight:bold;
+color:#ff8800;
+margin-bottom:10px;
+}
+
+.qty-box{
+display:flex;
+align-items:center;
+gap:8px;
+}
+
+.qty-btn{
+width:34px;
+height:34px;
+border:none;
+border-radius:12px;
+background:#ff8800;
+color:white;
+font-size:18px;
+cursor:pointer;
+}
+
+.qty-input{
+width:45px;
+height:34px;
+border:none;
+background:#f3f3f3;
+border-radius:12px;
+text-align:center;
+font-weight:bold;
+}
+
+.delete-btn{
+margin-top:12px;
+height:42px;
+padding:0 16px;
+border:none;
+border-radius:14px;
+background:#ff3b30;
+color:white;
+font-size:13px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.summary-box{
+position:fixed;
+bottom:0;
+left:0;
+right:0;
+background:white;
+padding:20px;
+border-top-left-radius:30px;
+border-top-right-radius:30px;
+box-shadow:
+0 -5px 25px rgba(0,0,0,.08);
+z-index:9999;
+}
+
+.bill-row{
+display:flex;
+justify-content:space-between;
+margin-bottom:12px;
+font-size:15px;
+}
+
+.total{
+font-size:24px;
+font-weight:bold;
+color:#ff6600;
+margin-top:15px;
+}
+
+.tip-input{
+width:100%;
+height:55px;
+border:none;
+background:#f5f5f5;
+border-radius:18px;
+padding:0 16px;
+outline:none;
+font-size:15px;
+margin-top:14px;
+}
+
+.send-btn{
+width:100%;
+height:58px;
+border:none;
+border-radius:20px;
+background:
+linear-gradient(
+135deg,
+#00b894,
+#00a383
+);
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+margin-top:16px;
+}
+
+.empty{
+padding:100px 20px;
+text-align:center;
+font-size:17px;
+color:#777;
+}
+
+.loading{
+position:fixed;
+inset:0;
+background:rgba(255,255,255,.9);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:999999;
+}
+
+.spinner{
+width:70px;
+height:70px;
+border-radius:50%;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+animation:spin .8s linear infinite;
+}
+
+@keyframes spin{
+
+100%{
+transform:rotate(360deg);
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div
+class="loading"
+id="loading">
+
+<div class="spinner"></div>
+
+</div>
+
+<div class="header">
+
+<button
+class="back-btn"
+onclick="window.location.href='home.html'">
+
+<i class="fa-solid fa-arrow-right"></i>
+
+</button>
+
+<div>
+
+<h2>
+السلة
+</h2>
+
+<p>
+راجع طلبك قبل الإرسال 🚀
+</p>
+
+</div>
+
+</div>
+
+<div
+class="cart-container"
+id="cartContainer"></div>
+
+<div class="summary-box">
+
+<div class="bill-row">
+
+<span>
+مجموع المنتجات
+</span>
+
+<b id="productsTotal">
+0 د.ع
+</b>
+
+</div>
+
+<div class="bill-row">
+
+<span>
+أجرة التوصيل
+</span>
+
+<b id="deliveryPrice">
+0 د.ع
+</b>
+
+</div>
+
+<input
+type="number"
+id="tipInput"
+class="tip-input"
+placeholder="إكرامية للسائق (اختياري)">
+
+<div class="bill-row total">
+
+<span>
+المجموع
+</span>
+
+<b id="finalTotal">
+0 د.ع
+</b>
+
+</div>
+
+<button
+class="send-btn"
+onclick="sendOrder()">
+
+إرسال الطلب 🚀
+
+</button>
+
+</div>
+
+<script type="module">
+
+import { db }
+from "./firebase.js";
+
+import {
+ref,
+set,
+get
+}
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+import {
+generateId,
+calculateDistance,
+formatPrice
+}
+from "./utils.js";
+
+const currentUser =
+JSON.parse(
+localStorage.getItem("user")
+);
+
+if(
+!currentUser ||
+currentUser.type !== "customer"
+){
+
+window.location.replace(
+"index.html"
+);
+
+}
+
+let cart =
+JSON.parse(
+localStorage.getItem("cart")
+) || [];
+
+const cartContainer =
+document.getElementById(
+"cartContainer"
+);
+
+function renderCart(){
+
+cartContainer.innerHTML = "";
+
+if(cart.length === 0){
+
+cartContainer.innerHTML = `
+<div class="empty">
+السلة فارغة
+</div>
+`;
+
+updateSummary();
+
+return;
+
+}
+
+cart.forEach((item,index)=>{
+
+const itemTotal =
+Number(item.price || 0)
+*
+Number(item.qty || 1);
+
+cartContainer.innerHTML += `
+
+<div class="cart-card">
+
+<img
+src="${item.image || "product.png"}"
+class="cart-image"
+onerror="this.src='product.png'">
+
+<div class="cart-content">
+
+<div class="cart-name">
+
+${item.name || ""}
+
+</div>
+
+<div class="cart-store">
+
+🏪 ${item.storeName || ""}
+
+</div>
+
+<div class="cart-price">
+
+${formatPrice(itemTotal)}
+
+</div>
+
+<div class="qty-box">
+
+<button
+class="qty-btn"
+onclick="decreaseQty(${index})">
+
+-
+
+</button>
+
+<input
+type="text"
+readonly
+value="${item.qty}"
+class="qty-input">
+
+<button
+class="qty-btn"
+onclick="increaseQty(${index})">
+
++
+
+</button>
+
+</div>
+
+<button
+class="delete-btn"
+onclick="removeItem(${index})">
+
+حذف المنتج
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+updateSummary();
+
+}
+
+window.increaseQty =
+function(index){
+
+cart[index].qty += 1;
+
+saveCart();
+
+};
+
+window.decreaseQty =
+function(index){
+
+if(cart[index].qty > 1){
+
+cart[index].qty -= 1;
+
+saveCart();
+
+}
+
+};
+
+window.removeItem =
+function(index){
+
+cart.splice(index,1);
+
+saveCart();
+
+};
+
+function saveCart(){
+
+localStorage.setItem(
+"cart",
+JSON.stringify(cart)
+);
+
+renderCart();
+
+}
+
+async function updateSummary(){
+
+let productsTotal = 0;
+
+cart.forEach(item=>{
+
+productsTotal +=
+Number(item.price || 0)
+*
+Number(item.qty || 1);
+
+});
+
+let deliveryPrice = 0;
+
+if(cart.length > 0){
+
+const firstStore =
+cart[0];
+
+const usersSnapshot =
+await get(ref(db,"users"));
+
+if(usersSnapshot.exists()){
+
+const users =
+usersSnapshot.val();
+
+const store =
+users[firstStore.storeId];
+
+if(store){
+
+const distance =
+calculateDistance(
+
+Number(currentUser.latitude || 0),
+Number(currentUser.longitude || 0),
+
+Number(store.latitude || 0),
+Number(store.longitude || 0)
+
+);
+
+if(distance <= 2){
+
+deliveryPrice = 2000;
+
+}
+
+else if(distance <= 5){
+
+deliveryPrice = 3000;
+
+}
+
+else if(distance <= 8){
+
+deliveryPrice = 4000;
+
+}
+
+else if(distance <= 12){
+
+deliveryPrice = 5000;
+
+}
+
+else{
+
+deliveryPrice =
+5000 +
+Math.round(
+(distance - 12) * 350
+);
+
+}
+
+}
+
+}
+
+}
+
+const tip =
+Number(
+document.getElementById(
+"tipInput"
+).value || 0
+);
+
+const finalTotal =
+productsTotal +
+deliveryPrice +
+tip;
+
+document.getElementById(
+"productsTotal"
+).innerHTML =
+formatPrice(productsTotal);
+
+document.getElementById(
+"deliveryPrice"
+).innerHTML =
+formatPrice(deliveryPrice);
+
+document.getElementById(
+"finalTotal"
+).innerHTML =
+formatPrice(finalTotal);
+
+}
+
+document.getElementById(
+"tipInput"
+).addEventListener(
+"input",
+updateSummary
+);
+
+window.sendOrder =
+async function(){
+
+if(cart.length === 0){
+
+alert("السلة فارغة");
+
+return;
+
+}
+
+showLoading();
+
+navigator.geolocation.getCurrentPosition(
+
+async(position)=>{
+
+try{
+
+let productsTotal = 0;
+
+cart.forEach(item=>{
+
+productsTotal +=
+Number(item.price || 0)
+*
+Number(item.qty || 1);
+
+});
+
+const tip =
+Number(
+document.getElementById(
+"tipInput"
+).value || 0
+);
+
+const orderId =
+generateId("ORDER");
+
+const orderData = {
+
+id:orderId,
+
+type:"delivery",
+
+status:"waiting_driver",
+
+customerId:
+currentUser.id,
+
+customerName:
+currentUser.name || "",
+
+customerPhone:
+currentUser.phone || "",
+
+customerAddress:
+currentUser.address || "",
+
+customerLat:
+position.coords.latitude,
+
+customerLng:
+position.coords.longitude,
+
+items:cart,
+
+productsTotal:
+productsTotal,
+
+deliveryPrice:
+Number(
+document.getElementById(
+"deliveryPrice"
+).innerText
+.replace(/[^\d]/g,'')
+) || 0,
+
+tip:tip,
+
+finalTotal:
+Number(
+document.getElementById(
+"finalTotal"
+).innerText
+.replace(/[^\d]/g,'')
+) || 0,
+
+createdAt:
+Date.now(),
+
+driverId:"",
+driverName:"",
+driverPhone:""
+
+};
+
+await set(
+ref(db,"orders/" + orderId),
+orderData
+);
+
+localStorage.setItem(
+"currentOrderId",
+orderId
+);
+
+localStorage.removeItem(
+"cart"
+);
+
+hideLoading();
+
+window.location.href =
+"talab.html?orderId=" + orderId;
+
+}catch(error){
+
+hideLoading();
+
+alert("حدث خطأ");
+
+console.log(error);
+
+}
+
+},
+
+()=>{
+
+hideLoading();
+
+alert("فشل تحديد الموقع");
+
+}
+
+);
+
+};
+
+function showLoading(){
+
+document.getElementById(
+"loading"
+).style.display = "flex";
+
+}
+
+function hideLoading(){
+
+document.getElementById(
+"loading"
+).style.display = "none";
+
+}
+
+renderCart();
+
+</script>
+
+</body>
+
+</html>
