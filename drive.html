@@ -458,13 +458,11 @@ transform:translateY(0);
 
 <div class="driver-badge">
 الطلبات المنجزة:
-<span id="completedCount">0</span>
-</div>
+<span id="completedOrders">0</span></div>
 
 <div class="driver-badge">
 الأرباح الشهرية:
-<span id="monthProfit">0</span>
-د.ع
+<span id="totalDeliveryAmount">0</span>د.ع
 </div>
 
 <div class="driver-badge" id="driverAccountType">
@@ -617,8 +615,9 @@ get
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
-apiKey:"AIzaSy",
-authDomain:"fast-937c9.firebaseapp.com",
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+
+ authDomain:"fast-937c9.firebaseapp.com",
 projectId:"fast-937c9",
 databaseURL:"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 };
@@ -656,7 +655,7 @@ document.getElementById(
 "driverProfileImage"
 ).src =
 
-currentDriver.vehicle_image ||
+currentDriver.vehicleImage ||
 
 "user.png";
 
@@ -664,6 +663,7 @@ let driverLat = null;
 let driverLng = null;
 let locationWatcher = null;
 let currentOrderId = null;
+   let orderListenerAttached = false;
 let notifiedOrders = {};
 let map = null;
 let driverMarker = null;
@@ -788,22 +788,23 @@ routeControl.getWaypoints();
 currentWaypoints[0].latLng =
 L.latLng(driverLat,driverLng);
 
+try{
+
 routeControl.spliceWaypoints(
 0,
 1,
 L.latLng(driverLat,driverLng)
 );
 
+}catch(e){}
+   
+
 }
 
 if(map){
 
-map.flyTo(
-[driverLat,driverLng],
-{
-animate:true,
-duration:.5
-}
+map.panTo(
+[driverLat,driverLng]
 );
 
 }
@@ -1081,7 +1082,15 @@ const orderRef = ref(db,"orders/" + id);
 const snapshot = await get(orderRef);
 
 if(!snapshot.exists()){
+
+document.getElementById(
+"loadingOverlay"
+).style.display = "none";
+
+alert("الطلب غير موجود");
+
 return;
+
 }
 
 const order = snapshot.val();
@@ -1100,14 +1109,33 @@ statusText:"السائق متجه إلى المتجر",
 acceptedDriver:currentDriver.name,
 driverId:currentDriver.id,
 driverPhone:currentDriver.phone || "",
-driverVehicle:currentDriver.vehicle || "",
-driverImage:currentDriver.vehicle_image || "",
+driverVehicle:currentDriver.vehicleType || "",
+driverImage:currentDriver.vehicleImage || "",
 driverLat:driverLat,
 driverLng:driverLng,
 acceptedAt:Date.now()
 });
 
 currentOrderId = id;
+   if(!orderListenerAttached){
+
+orderListenerAttached = true;
+
+onValue(
+ref(db,"orders/" + currentOrderId),
+(snapshot)=>{
+
+if(snapshot.exists()){
+
+autoUpdateOrderStatus(
+snapshot.val()
+);
+
+}
+
+});
+
+}
 stageStartTime = Date.now();
 
 currentStage = "store";
@@ -1156,11 +1184,10 @@ document.createElement("div");
 productsContainer.id =
 "productsDetails";
 
-productsContainer.id =
-"productsDetails";
-
 productsContainer.style.marginTop =
 "20px";
+
+productsContainer.innerHTML = `
 
 <h3 style="
 margin-bottom:15px;
@@ -1230,7 +1257,9 @@ class="product-image">
 <br>
 🧾 الكلي: ${order.totalPrice} د.ع
 </div>
+
 `;
+
 
 deliveryInfo.insertBefore(
 productsContainer,
