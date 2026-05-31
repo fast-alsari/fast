@@ -476,6 +476,14 @@ let routeControl;
 
 let orderTimerInterval = null;
 
+let currentOrderStatus = "";
+
+let mapInitialized = false;
+
+let lastDriverLat = null;
+let lastDriverLng = null;
+
+let routeUpdateTimeout = null;
 function startOrderMainTimer(createdAt){
 
 clearInterval(orderTimerInterval);
@@ -644,8 +652,7 @@ function initMap(order){
 
 mapDiv.style.display = "block";
 
-if(!map){
-
+if(!mapInitialized){
 map =
 L.map("map").setView(
 
@@ -713,7 +720,7 @@ storeMarkers.push(marker);
 });
 
 }
-
+mapInitialized = true;
 }
 
 setTimeout(()=>{
@@ -740,7 +747,19 @@ Number(order.driverLat);
 
 const driverLng =
 Number(order.driverLng);
+if(
 
+lastDriverLat === driverLat &&
+lastDriverLng === driverLng
+
+){
+
+return;
+
+}
+
+lastDriverLat = driverLat;
+lastDriverLng = driverLng;
 if(!driverMarker){
 
 driverMarker =
@@ -798,12 +817,19 @@ targetLng =
 Number(order.customerLng);
 
 }
-
 if(routeControl){
+
+try{
 
 map.removeControl(routeControl);
 
+}catch(e){}
+
 }
+
+clearTimeout(routeUpdateTimeout);
+
+routeUpdateTimeout = setTimeout(()=>{
 
 routeControl =
 L.Routing.control({
@@ -845,6 +871,10 @@ createMarker:()=>null
 
 }).addTo(map);
 
+},500);
+
+if(order.status !== currentOrderStatus){
+
 map.flyTo(
 [driverLat,driverLng],
 map.getZoom(),
@@ -856,6 +886,9 @@ duration:1.5
 
 }
 
+  currentOrderStatus = order.status;
+
+}
 onValue(orderRef,(snapshot)=>{
 
 if(!snapshot.exists()){
@@ -875,9 +908,12 @@ return;
 const order =
 snapshot.val();
 
+if(!orderTimerInterval){
+
 startOrderMainTimer(order.createdAt);
 
-if(order.status === "waiting_driver"){
+}
+  if(order.status === "waiting_driver"){
 
 orderStatus.innerHTML =
 "جاري البحث عن سائق توصيل";
@@ -992,9 +1028,13 @@ localStorage.removeItem(
 
 alert("تم تسليم الطلب");
 
+setTimeout(()=>{
+
 window.location.replace(
 "home.html"
 );
+
+},1200);
 
 }
 
@@ -1004,9 +1044,13 @@ localStorage.removeItem(
 "currentOrderId"
 );
 
+setTimeout(()=>{
+
 window.location.replace(
 "retry-order.html"
 );
+
+},1200);
 
 }
 if(order.status === "cancelled_by_customer"){
@@ -1072,8 +1116,7 @@ null,
 location.href
 );
 
-window.onpopstate =
-function(){
+window.onpopstate = function(e){
 
 history.pushState(
 null,
@@ -1083,6 +1126,29 @@ location.href
 
 };
 
+
+  window.addEventListener("beforeunload",()=>{
+
+clearInterval(orderTimerInterval);
+
+if(routeControl){
+
+try{
+
+map.removeControl(routeControl);
+
+}catch(e){}
+
+}
+
+if(map){
+
+map.remove();
+
+}
+
+});
+  
 </script>
 
 </body>
