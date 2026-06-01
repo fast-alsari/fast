@@ -1,4 +1,3 @@
- 
 <!-- taxie.html -->
 
 <!DOCTYPE html>
@@ -47,7 +46,6 @@ font-family:'Cairo',sans-serif;
 body{
 background:#f5f6fa;
 padding:15px;
-padding-bottom:120px;
 overflow-x:hidden;
 }
 
@@ -116,7 +114,7 @@ margin-bottom:15px;
 
 #map{
 width:100%;
-height:420px;
+height:430px;
 border-radius:22px;
 overflow:hidden;
 }
@@ -136,8 +134,14 @@ text-align:center;
 margin-bottom:18px;
 }
 
+.price-title{
+font-size:15px;
+margin-bottom:10px;
+color:#555;
+}
+
 .price-number{
-font-size:34px;
+font-size:36px;
 font-weight:bold;
 color:#ff6600;
 }
@@ -164,67 +168,23 @@ outline:none;
 font-size:15px;
 }
 
-.actions{
-display:flex;
-gap:10px;
-margin-top:18px;
-}
-
-.actions button{
-flex:1;
-padding:16px;
+.order-btn{
+width:100%;
+padding:17px;
 border:none;
 border-radius:18px;
-font-size:15px;
+font-size:16px;
 font-weight:bold;
 cursor:pointer;
 color:white;
-}
 
-.order-btn{
 background:
 linear-gradient(
 135deg,
 #00b894,
 #00a383
 );
-}
 
-.cancel-btn{
-background:#e53935;
-}
-
-.bottom-bar{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:82px;
-background:white;
-display:flex;
-justify-content:space-around;
-align-items:center;
-box-shadow:0 -5px 18px rgba(0,0,0,.08);
-z-index:1000;
-}
-
-.nav-item{
-display:flex;
-flex-direction:column;
-align-items:center;
-gap:5px;
-font-size:13px;
-font-weight:bold;
-color:#888;
-cursor:pointer;
-}
-
-.nav-item.active{
-color:#ff8800;
-}
-
-.nav-item i{
-font-size:22px;
 }
 
 </style>
@@ -251,7 +211,7 @@ onclick="window.location.href='home.html'">
 </h2>
 
 <p>
-حدد الوجهة المطلوبة
+حدد موقع الوصول على الخريطة
 </p>
 
 </div>
@@ -304,7 +264,12 @@ id="currentLocation">
 
 <div class="price-box">
 
-<div class="price-number"
+<div class="price-title">
+السعر النهائي
+</div>
+
+<div
+class="price-number"
 id="finalPrice">
 
 0
@@ -344,8 +309,6 @@ placeholder="اختياري">
 
 </div>
 
-<div class="actions">
-
 <button
 class="order-btn"
 onclick="sendTaxiOrder()">
@@ -353,54 +316,6 @@ onclick="sendTaxiOrder()">
 طلب تكسي 🚖
 
 </button>
-
-<button
-class="cancel-btn"
-onclick="window.location.href='home.html'">
-
-الغاء
-
-</button>
-
-</div>
-
-</div>
-
-<div class="bottom-bar">
-
-<div
-class="nav-item"
-onclick="window.location.href='home.html'">
-
-<i class="fa-solid fa-house"></i>
-
-<span>
-الرئيسية
-</span>
-
-</div>
-
-<div class="nav-item active">
-
-<i class="fa-solid fa-taxi"></i>
-
-<span>
-تكسي
-</span>
-
-</div>
-
-<div
-class="nav-item"
-onclick="window.location.href='asca.html'">
-
-<i class="fa-solid fa-user"></i>
-
-<span>
-الحساب
-</span>
-
-</div>
 
 </div>
 
@@ -472,7 +387,7 @@ let totalPrice = 0;
 
 if(!userLat || !userLng){
 
-alert("موقعك غير محفوظ بالحساب");
+alert("موقعك غير محفوظ");
 
 window.location.href =
 "home.html";
@@ -637,6 +552,21 @@ calculatePrice();
 
 }
 
+function roundPrice(price){
+
+const remainder =
+price % 250;
+
+if(remainder === 0){
+
+return price;
+
+}
+
+return price + (250 - remainder);
+
+}
+
 function calculatePrice(){
 
 const personsCount =
@@ -680,12 +610,26 @@ Math.round(
 
 }
 
+// زيادة الاشخاص
+
 if(personsCount > 0){
 
 totalPrice +=
 personsCount * 250;
 
 }
+
+// زيادة 3%
+
+totalPrice =
+Math.round(
+totalPrice * 1.03
+);
+
+// تقريب السعر
+
+totalPrice =
+roundPrice(totalPrice);
 
 document.getElementById(
 "distanceText"
@@ -703,11 +647,23 @@ totalPrice.toLocaleString()
 +
 " د.ع";
 
+const tip =
+Number(
+document.getElementById(
+"tipInput"
+).value || 0
+);
+
+const finalPrice =
+roundPrice(
+totalPrice + tip
+);
+
 document.getElementById(
 "finalPrice"
 ).innerHTML =
 
-totalPrice.toLocaleString()
+finalPrice.toLocaleString()
 +
 " د.ع";
 
@@ -717,6 +673,21 @@ document
 .getElementById("personsCount")
 .addEventListener(
 "change",
+()=>{
+
+if(targetLat){
+
+calculatePrice();
+
+}
+
+}
+);
+
+document
+.getElementById("tipInput")
+.addEventListener(
+"input",
 ()=>{
 
 if(targetLat){
@@ -744,6 +715,11 @@ Number(
 document.getElementById(
 "tipInput"
 ).value || 0
+);
+
+const finalPrice =
+roundPrice(
+totalPrice + tip
 );
 
 const orderId =
@@ -791,8 +767,7 @@ price:totalPrice,
 
 tip:tip,
 
-finalPrice:
-totalPrice + tip,
+finalPrice:finalPrice,
 
 createdAt:
 Date.now()
@@ -807,7 +782,7 @@ database,
 orderData
 );
 
-alert("تم ارسال الطلب 🚕");
+alert("تم ارسال طلب التكسي 🚕");
 
 window.location.href =
 "home.html";
@@ -818,4 +793,4 @@ window.location.href =
 
 </body>
 
-</html> 
+</html>
