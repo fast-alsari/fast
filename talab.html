@@ -15,13 +15,6 @@ content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable
 </title>
 
 <link rel="stylesheet"
-href="https://unpkg.com/leaflet/dist/leaflet.css"/>
-
-<script
-src="https://unpkg.com/leaflet/dist/leaflet.js">
-</script>
-
-<link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <link rel="stylesheet"
@@ -29,13 +22,6 @@ href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 
 <script
 src="https://unpkg.com/leaflet/dist/leaflet.js">
-</script>
-
-<link rel="stylesheet"
-href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css"/>
-
-<script
-src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js">
 </script>
 
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap"
@@ -470,146 +456,19 @@ document.getElementById("rejectBtn");
 let map;
 let driverMarker;
 let customerMarker;
-let storeMarkers = [];
-let routeControl;
-
-
-let orderTimerInterval = null;
-
-function startOrderMainTimer(createdAt){
-
-clearInterval(orderTimerInterval);
-
-orderTimerInterval = setInterval(async()=>{
-
-const remaining = Math.max(
-0,
-(60 * 60 * 1000) -
-(Date.now() - createdAt)
-);
-
-const hours =
-String(
-Math.floor(remaining / 1000 / 60 / 60)
-).padStart(2,"0");
-
-const minutes =
-String(
-Math.floor((remaining / 1000 / 60) % 60)
-).padStart(2,"0");
-
-const seconds =
-String(
-Math.floor((remaining / 1000) % 60)
-).padStart(2,"0");
-
-timerBox.innerHTML =
-`${hours}:${minutes}:${seconds}`;
-
-if(remaining <= 0){
-
-clearInterval(orderTimerInterval);
-
-await remove(orderRef);
-
-localStorage.removeItem(
-"currentOrderId"
-);
-
-alert("انتهى وقت الطلب");
-
-window.location.replace(
-"retry-order.html"
-);
-
-}
-
-},1000);
-
-}
+let storeMarker;
+let routeLine;
+let timerStarted = false;
 
 const bikeIcon =
-L.divIcon({
+L.icon({
 
-html:`
-<div style="
-font-size:38px;
-transform:rotate(-15deg);
-filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
-">
-🛵
-</div>
-`,
+iconUrl:
+"https://cdn-icons-png.flaticon.com/512/2972/2972185.png",
 
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,20]
+iconSize:[45,45]
 
 });
-
-const customerIcon =
-L.divIcon({
-
-html:`
-<div style="
-font-size:40px;
-filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
-">
-🚩
-</div>
-`,
-
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,35]
-
-});
-
-function createStoreIcon(storeName){
-
-return L.divIcon({
-
-html:`
-
-<div style="
-display:flex;
-flex-direction:column;
-align-items:center;
-">
-
-<div style="
-font-size:35px;
-filter:drop-shadow(0 2px 5px rgba(0,0,0,.25));
-">
-🏪
-</div>
-
-<div style="
-background:white;
-padding:5px 12px;
-border-radius:12px;
-font-size:12px;
-font-weight:bold;
-margin-top:4px;
-box-shadow:0 2px 10px rgba(0,0,0,.15);
-white-space:nowrap;
-">
-
-${storeName || "متجر"}
-
-</div>
-
-</div>
-
-`,
-
-className:"",
-iconSize:[40,40],
-iconAnchor:[20,40]
-
-});
-
-}
 
 function formatTime(ms){
 
@@ -638,7 +497,55 @@ return `${hours}:${minutes}:${seconds}`;
 
 }
 
+function startLiveTimer(createdAt){
 
+if(timerStarted){
+return;
+}
+
+timerStarted = true;
+
+const timerInterval =
+setInterval(async()=>{
+
+const remaining =
+
+(60 * 60 * 1000)
+
+-
+
+(Date.now() - createdAt);
+
+timerBox.innerHTML =
+formatTime(remaining);
+
+if(remaining <= 0){
+
+clearInterval(timerInterval);
+
+try{
+
+await remove(orderRef);
+
+}catch(error){
+
+console.log(error);
+
+}
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+window.location.replace(
+"retry-order.html"
+);
+
+}
+
+},1000);
+
+}
 
 function initMap(order){
 
@@ -654,7 +561,7 @@ Number(order.customerLat),
 Number(order.customerLng)
 ],
 
-15
+13
 
 );
 
@@ -674,43 +581,29 @@ L.marker(
 [
 Number(order.customerLat),
 Number(order.customerLng)
-],
-
-{
-icon:customerIcon
-}
+]
 
 )
 
 .addTo(map)
 
-.bindPopup("موقع الزبون");
+.bindPopup("موقعك");
 
-if(order.storesData){
+if(order.storeLat && order.storeLng){
 
-order.storesData.forEach(store=>{
-
-const marker =
+storeMarker =
 L.marker(
 
 [
-Number(store.storeLat),
-Number(store.storeLng)
-],
-
-{
-icon:createStoreIcon(store.storeName)
-}
+Number(order.storeLat),
+Number(order.storeLng)
+]
 
 )
 
 .addTo(map)
 
-.bindPopup(store.storeName);
-
-storeMarkers.push(marker);
-
-});
+.bindPopup("المتجر");
 
 }
 
@@ -766,92 +659,68 @@ driverMarker.setLatLng(
 
 }
 
-let targetLat;
-let targetLng;
+if(routeLine){
+
+map.removeLayer(routeLine);
+
+}
+
+let routePoints = [];
 
 if(order.status === "accepted"){
 
-if(order.storesData && order.storesData.length > 0){
+routePoints = [
 
-targetLat =
-Number(order.storesData[0].storeLat);
+[driverLat,driverLng],
 
-targetLng =
-Number(order.storesData[0].storeLng);
+[
+Number(order.storeLat),
+Number(order.storeLng)
+]
 
-}
+];
 
 }
 
 if(
-order.status === "on_the_way"
+order.status === "picked_up"
 ||
 order.status === "arrived"
-)
+){
 
-{
+routePoints = [
 
-targetLat =
-Number(order.customerLat);
-
-targetLng =
-Number(order.customerLng);
-
-}
-
-if(routeControl){
-
-map.removeControl(routeControl);
-
-}
-
-routeControl =
-L.Routing.control({
-
-waypoints:[
-
-L.latLng(driverLat,driverLng),
-
-L.latLng(targetLat,targetLng)
-
-],
-
-routeWhileDragging:false,
-
-router:
-L.Routing.osrmv1({
-
-serviceUrl:
-'https://router.project-osrm.org/route/v1'
-
-}),
-
-addWaypoints:false,
-draggableWaypoints:false,
-fitSelectedRoutes:true,
-show:false,
-
-lineOptions:{
-styles:[
-{
-color:"#ff8800",
-weight:7,
-opacity:.9
-}
-]
-},
-
-createMarker:()=>null
-
-}).addTo(map);
-
-map.flyTo(
 [driverLat,driverLng],
-map.getZoom(),
-{
-animate:true,
-duration:1.5
+
+[
+Number(order.customerLat),
+Number(order.customerLng)
+]
+
+];
+
 }
+
+routeLine =
+L.polyline(
+
+routePoints,
+
+{
+color:"blue",
+weight:6
+}
+
+).addTo(map);
+
+map.fitBounds(
+
+routeLine.getBounds(),
+
+{
+padding:[40,40]
+}
+
 );
 
 }
@@ -875,7 +744,7 @@ return;
 const order =
 snapshot.val();
 
-startOrderMainTimer(order.createdAt);
+startLiveTimer(order.createdAt);
 
 if(order.status === "waiting_driver"){
 
@@ -888,9 +757,6 @@ liveStatus.innerHTML =
 }
 
 if(order.status === "accepted"){
-
-liveStatus.innerHTML =
-order.statusText || "السائق متجه";
 
 searchingBox.style.display =
 "none";
@@ -925,26 +791,13 @@ updateDriverLocation(order);
 
 }
 
-if(order.status === "preparing_order"){
+if(order.status === "picked_up"){
 
 orderStatus.innerHTML =
-"جاري تجهيز الطلب";
+"تم استلام الطلب من المتجر";
 
 liveStatus.innerHTML =
-"المتجر يقوم بتجهيز الطلب";
-
-updateDriverLocation(order);
-
-}
-
-if(order.status === "on_the_way"){
-
-orderStatus.innerHTML =
 "السائق في الطريق إليك";
-
-liveStatus.innerHTML =
-order.statusText ||
-"السائق متجه إليك";
 
 updateDriverLocation(order);
 
@@ -965,22 +818,6 @@ rejectBtn.style.display =
 "block";
 
 updateDriverLocation(order);
-
-}
-
-if(order.status === "driver_timeout"){
-
-alert(
-"تم إلغاء الطلب بسبب تجاوز السائق للوقت"
-);
-
-localStorage.removeItem(
-"currentOrderId"
-);
-
-window.location.replace(
-"home.html"
-);
 
 }
 
@@ -1009,19 +846,7 @@ window.location.replace(
 );
 
 }
-if(order.status === "cancelled_by_customer"){
 
-localStorage.removeItem(
-"currentOrderId"
-);
-
-alert("تم إلغاء الطلب");
-
-window.location.replace(
-"home.html"
-);
-
-}
 });
 
 completeBtn.onclick =
