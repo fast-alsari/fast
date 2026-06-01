@@ -1,4 +1,4 @@
- 
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -470,10 +470,26 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 function showToast(message){
 
+const toast =
+document.getElementById("toast");
+
+if(!toast){
 alert(message);
+return;
+}
+
+toast.innerText = message;
+
+toast.style.display = "block";
+
+setTimeout(()=>{
+
+toast.style.display = "none";
+
+},3000);
 
 }
-// =========================
+ // =========================
 // ImgBB
 // =========================
 
@@ -524,8 +540,7 @@ alert("فشل رفع الصورة");
 return "";
 
 }
-return data.data.url;
-
+return data.data.image.url;
 }
 
 // =========================
@@ -601,7 +616,7 @@ saveSession(currentUser);
 if(
 currentUser.status === "pending" ||
 currentUser.status === "banned" ||
-currentUser.status === "disabled" ||
+currentUser.status === "inactive" ||
 currentUser.status === "expired"
 ){
 
@@ -636,8 +651,7 @@ window.location.replace("drive.html");
 }
 
 if(currentUser.type === "taxi"){
-window.location.replace("tixe.html");
-}
+window.location.replace("taxie.html");}
 
 }
 
@@ -1027,7 +1041,7 @@ return false;
 }
 
 // disabled
-if(user.status==="disabled"){
+if(user.status==="inactive"){
 
 saveSession(user);
 
@@ -1096,22 +1110,38 @@ return false;
 
 }
 
-window.registerAccount =
-async function(){
+let registerBtn = null;
 
-const registerBtn = document.querySelector(
-'button[onclick="registerAccount()"]'
-);
-
-registerBtn.disabled = true;
-registerBtn.innerText = "جاري إنشاء الحساب...";
 function resetRegisterButton(){
+
+if(!registerBtn){
+return;
+}
 
 registerBtn.disabled = false;
 
 registerBtn.innerText = "إنشاء الحساب";
 
+registerBtn.dataset.loading = "false";
+
 }
+ 
+window.registerAccount =
+async function(){
+
+ registerBtn = document.querySelector(
+'button[onclick="registerAccount()"]'
+);
+
+if(registerBtn.dataset.loading === "true"){
+return;
+}
+
+registerBtn.dataset.loading = "true";
+
+registerBtn.disabled = true;
+
+registerBtn.innerText = "جاري إنشاء الحساب...";
 try{
 
 let type =
@@ -1119,6 +1149,8 @@ document.getElementById("account_type").value;
 if(type === ""){
 
 alert("اختر نوع الحساب");
+
+resetRegisterButton();
 
 return;
 
@@ -1389,7 +1421,7 @@ status:"pending",
 name:
 document.getElementById("taxi_name").value,
 
-vehicle:
+vehicleType:
 document.getElementById("taxi_vehicle").value,
 
 plate:
@@ -1404,9 +1436,8 @@ document.getElementById("taxi_phone").value,
 password:
 document.getElementById("taxi_password").value,
 
-card:cardUrl,
-
-vehicle_image:vehicleUrl,
+idImage:cardUrl,
+vehicleImage:vehicleUrl,
 
 createdAt:Date.now()
 
@@ -1497,16 +1528,15 @@ document.getElementById("driver_name").value,
 phone:
 document.getElementById("driver_phone").value,
 
-vehicle:
+vehicleType:
 document.getElementById("driver_vehicle").value,
 
 password:
 document.getElementById("driver_password").value,
 
-driver_card:driverCardUrl,
-
-vehicle_image:vehicleImageUrl,
-
+idImage:driverCardUrl,
+vehicleImage:vehicleImageUrl,
+ 
 createdAt:Date.now()
 
 };
@@ -1546,7 +1576,6 @@ target="_blank">
 console.error(error);
 
 resetRegisterButton();
-
 alert(error.message);
 
 }
@@ -1749,8 +1778,7 @@ if(!checkAccountStatus(user)){
 return;
 }
 
-window.location.replace("tixe.html");
-
+window.location.replace("taxie.html");
 return;
 
 }
@@ -1786,6 +1814,6 @@ window.location.replace("index.html");
 };
 
 </script>
-
+<div id="toast"></div>
 </body>
 </html> 
