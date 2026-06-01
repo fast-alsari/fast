@@ -1,4 +1,3 @@
- 
 <!-- asca.html -->
 
 <!DOCTYPE html>
@@ -571,86 +570,31 @@ initializeApp(firebaseConfig);
 const db =
 getDatabase(app);
 
-let currentUser = null;
+const currentUser =
+JSON.parse(localStorage.getItem("user"));
 
-try{
+if(!currentUser){
 
-currentUser = JSON.parse(
-localStorage.getItem("user")
-);
-
-}catch{
-
-currentUser = null;
+window.location.href =
+"index.html";
 
 }
-
-if(
-!currentUser ||
-!currentUser.id ||
-currentUser.type !== "customer"
-){
-
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.replace(
-"index.html"
-);
-
-}
-
-async function loadUserData(){
-
-const snapshot = await get(
-ref(
-db,
-"customers/" + currentUser.id
-)
-);
-
-if(!snapshot.exists()){
-
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.replace(
-"index.html"
-);
-
-return;
-
-}
-
-const userData = snapshot.val();
-
-userData.id =
-userData.id || currentUser.id;
-
-localStorage.setItem(
-"user",
-JSON.stringify(userData)
-);
 
 document.getElementById("userName")
 .innerHTML =
-userData.name || "";
+currentUser.name || "";
 
 document.getElementById("userPhone")
 .innerHTML =
-userData.phone || "";
+currentUser.phone || "";
 
 document.getElementById("userPassword")
 .innerHTML =
-userData.password || "";
+currentUser.password || "";
 
 document.getElementById("inviteCode")
 .value =
-userData.id || "";
-
-}
-
-loadUserData();
+currentUser.id || "";
 
 let userLat =
 currentUser.userLat || "";
@@ -704,8 +648,8 @@ if(
 [
 "failed_no_driver",
 "delivery_problem",
-"cancelled",
-"cancelled_by_customer"]
+"cancelled"
+]
 .includes(order.status)
 ){
 rejected++;
@@ -895,6 +839,7 @@ window.location.href =
 "home.html";
 
 };
+
 window.logout =
 function(){
 
@@ -902,9 +847,8 @@ localStorage.clear();
 
 sessionStorage.clear();
 
-window.location.replace(
-"index.html"
-);
+window.location.href =
+"index.html";
 
 };
 
