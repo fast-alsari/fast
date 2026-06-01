@@ -112,6 +112,15 @@ height:55px;
 object-fit:contain;
 }
 
+.driver-image{
+width:55px;
+height:55px;
+object-fit:cover;
+border-radius:50%;
+border:2px solid white;
+background:white;
+}
+
 .radar-box{
 display:flex;
 flex-direction:column;
@@ -313,6 +322,35 @@ cursor:pointer;
 display:none;
 }
 
+.loading-overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(255,255,255,.7);
+backdrop-filter:blur(5px);
+display:none;
+align-items:center;
+justify-content:center;
+z-index:9999;
+}
+
+.loading-spinner{
+width:60px;
+height:60px;
+border:5px solid #eee;
+border-top:5px solid #ff8800;
+border-radius:50%;
+animation:spin 1s linear infinite;
+}
+
+@keyframes spin{
+100%{
+transform:rotate(360deg);
+}
+}
+
 #map{
 width:100%;
 height:60vh;
@@ -367,12 +405,47 @@ background:#00b894;
 .problem-btn{
 background:red;
 }
+
+.accept-btn:active,
+.reject-btn:active,
+.action-btn:active{
+
+transform:scale(.96);
+
+}
+
+button{
+transition:.2s;
+}
+
+.order-card{
+animation:showCard .4s ease;
+}
+
+@keyframes showCard{
+
+from{
+opacity:0;
+transform:translateY(20px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
 </style>
 
 </head>
 
 <body>
+<div class="loading-overlay" id="loadingOverlay">
 
+<div class="loading-spinner"></div>
+
+</div>
 <header class="header">
 
 <div class="driver-info">
@@ -407,7 +480,10 @@ VIP
 <i class="fa-solid fa-right-from-bracket"></i>
 </button>
 
-<img src="motorbike.png" class="driver-image">
+<img
+id="driverProfileImage"
+src="user.png"
+class="driver-image">
 
 </div>
 </header>
@@ -433,6 +509,66 @@ VIP
 معلومات الزبون
 </h3>
 
+   
+    <div id="timeManagerBox" style="
+background:#fff4e8;
+padding:18px;
+border-radius:20px;
+margin-bottom:18px;
+text-align:center;
+">
+
+<div id="timeStageTitle" style="
+font-size:18px;
+font-weight:bold;
+color:#ff6600;
+margin-bottom:10px;
+">
+
+الوقت المتبقي للوصول للمتجر
+
+</div>
+
+<div id="timeCounter" style="
+font-size:32px;
+font-weight:bold;
+color:#222;
+">
+
+00:15:00
+
+</div>
+
+<button
+id="extraTimeBtn"
+class="action-btn"
+style="
+background:#ff8800;
+margin-top:15px;
+display:none;
+">
+
+طلب زيادة وقت +15 دقيقة
+
+</button>
+
+<button
+id="cancelByCustomerBtn"
+class="action-btn"
+style="
+background:red;
+color:white;
+margin-top:12px;
+">
+
+الطلب ألغي من قبل الزبون
+
+</button>
+
+</div>
+    
+    
+     
 <p id="customerName"></p>
 <p id="customerPhone"></p>
 <p id="customerAddress"></p>
@@ -441,6 +577,8 @@ VIP
 واتساب الزبون
 </button>
 
+<div style="display:none;">
+
 <button id="arrivedStoreBtn" class="action-btn arrive-store">
 وصلت المتجر
 </button>
@@ -448,6 +586,8 @@ VIP
 <button id="arrivedCustomerBtn" class="action-btn arrive-customer">
 وصلت الزبون
 </button>
+
+</div>
 
 <div id="finishButtons">
 
@@ -491,13 +631,40 @@ const currentDriver = JSON.parse(localStorage.getItem("user"));
 if(!currentDriver){
 window.location.replace("index.html");
 }
+if(currentDriver.type !== "driver"){
+
+window.location.replace("index.html");
+
+}
 
 document.getElementById("driverName").innerHTML = currentDriver.name || "سائق";
-document.getElementById("driverAccountType").innerHTML = currentDriver.accountType || "عادي";
+document.getElementById(
+"driverAccountType"
+).innerHTML =
+
+currentDriver.accountType === "vip"
+
+?
+
+"🔥 VIP"
+
+:
+
+"⭐ عادي";
+
+document.getElementById(
+"driverProfileImage"
+).src =
+
+currentDriver.vehicle_image ||
+
+"user.png";
 
 let driverLat = null;
 let driverLng = null;
+let locationWatcher = null;
 let currentOrderId = null;
+let notifiedOrders = {};
 let map = null;
 let driverMarker = null;
 let routeControl = null;
@@ -582,6 +749,7 @@ iconAnchor:[20,20]
 
 });
 
+locationWatcher =
 navigator.geolocation.watchPosition(
 async(position)=>{
 
@@ -620,15 +788,43 @@ routeControl.getWaypoints();
 currentWaypoints[0].latLng =
 L.latLng(driverLat,driverLng);
 
-routeControl.setWaypoints(
-currentWaypoints.map(w=>w.latLng)
+routeControl.spliceWaypoints(
+0,
+1,
+L.latLng(driverLat,driverLng)
 );
 
 }
 
 if(map){
-map.panTo([driverLat,driverLng]);
+
+map.flyTo(
+[driverLat,driverLng],
+{
+animate:true,
+duration:.5
 }
+);
+
+}
+
+if(currentOrderId){
+
+const orderSnapshot =
+await get(
+ref(db,"orders/" + currentOrderId)
+);
+
+if(orderSnapshot.exists()){
+
+autoUpdateOrderStatus(
+orderSnapshot.val()
+);
+
+}
+
+}
+
 
 }
 
@@ -638,7 +834,7 @@ alert("يجب تشغيل GPS");
 },
 {
 enableHighAccuracy:true,
-maximumAge:0,
+maximumAge:5000,
 timeout:10000
 }
 );
@@ -716,12 +912,21 @@ Number(order.customerLat),
 Number(order.customerLng)
 );
 
-if(distance > 1000){
+if(distance > 10){
 return;
 }
 
 foundOrders = true;
 
+if(!notifiedOrders[key]){
+
+notifiedOrders[key] = true;
+
+document.getElementById(
+"newOrderSound"
+).play().catch(()=>{});
+
+}
 container.innerHTML += `
 
 <div class="order-card">
@@ -763,37 +968,24 @@ class="store-image">
 
 </div>
 
-${order.items
-.filter(item => item.storeId === store.storeId)
-.map(item => `
+<div style="
+background:#fff4e8;
+padding:20px;
+border-radius:18px;
+text-align:center;
+font-size:16px;
+font-weight:bold;
+color:#ff6600;
+line-height:2;
+">
 
-<div class="product-box">
+🔒 تفاصيل الطلب مخفية
 
-<div class="product-top">
-
-<img
-src="${item.image || 'product.png'}"
-class="product-image">
-
-<div class="product-info">
-
-<div class="product-name">
-🍔 ${item.name}
-</div>
-
-<div class="product-details">
-📦 الكمية: ${item.qty}
 <br>
-💰 السعر: ${item.price} د.ع
-<br>
-🧾 المجموع: ${item.totalPrice} د.ع
-</div>
+
+تظهر بعد قبول الطلب
 
 </div>
-</div>
-</div>
-
-`).join("")}
 
 </div>
 
@@ -864,7 +1056,27 @@ ref(db,"orders/" + id + "/rejectedBy"),
 };
 
 window.acceptOrder = async function(id){
+   
+   
+   
+   if(driverLat === null || driverLng === null){
 
+alert("انتظر تحديد الموقع");
+
+return;
+
+}
+
+   if(currentOrderId){
+
+alert("لديك طلب قيد التنفيذ");
+
+return;
+
+}
+document.getElementById(
+"loadingOverlay"
+).style.display = "flex";
 const orderRef = ref(db,"orders/" + id);
 const snapshot = await get(orderRef);
 
@@ -873,6 +1085,14 @@ return;
 }
 
 const order = snapshot.val();
+if(order.status !== "waiting_driver"){
+
+alert("الطلب تم قبوله");
+
+return;
+
+}
+
 
 await update(orderRef,{
 status:"accepted",
@@ -888,13 +1108,26 @@ acceptedAt:Date.now()
 });
 
 currentOrderId = id;
+stageStartTime = Date.now();
 
+currentStage = "store";
+
+stageDuration = 15 * 60 * 1000;
+
+document.getElementById(
+"timeStageTitle"
+).innerHTML =
+"الوقت المتبقي للوصول إلى المتجر";
+
+startStageTimer();
 document.querySelectorAll(".store-whatsapp-btn")
 .forEach(btn=>btn.remove());
 
 document.getElementById("ordersContainer").style.display = "none";
 document.getElementById("deliveryPage").style.display = "block";
-
+document.getElementById(
+"loadingOverlay"
+).style.display = "none";
 document.getElementById("customerName").innerHTML = "👤 " + order.customerName;
 let customerPhone =
 String(order.customerPhone || "");
@@ -906,6 +1139,103 @@ customerPhone = "0" + customerPhone;
 document.getElementById("customerPhone").innerHTML =
 "📞 " + customerPhone;
 document.getElementById("customerAddress").innerHTML = "📍 " + order.customerAddress;
+
+const deliveryInfo =
+document.querySelector(".delivery-info");
+
+const oldProducts =
+document.getElementById("productsDetails");
+
+if(oldProducts){
+oldProducts.remove();
+}
+
+const productsContainer =
+document.createElement("div");
+
+productsContainer.id =
+"productsDetails";
+
+productsContainer.id =
+"productsDetails";
+
+productsContainer.style.marginTop =
+"20px";
+
+<h3 style="
+margin-bottom:15px;
+font-size:22px;
+">
+تفاصيل الطلب
+</h3>
+
+${(order.storesData || []).map(store => `
+
+<div class="store-box">
+
+<div class="store-header">
+
+<img
+src="${store.storeImage || 'store.png'}"
+class="store-image">
+
+<div class="store-name">
+🏪 ${store.storeName}
+</div>
+
+</div>
+
+${order.items
+.filter(item => item.storeId === store.storeId)
+.map(item => `
+
+<div class="product-box">
+
+<div class="product-top">
+
+<img
+src="${item.image || 'product.png'}"
+class="product-image">
+
+<div class="product-info">
+
+<div class="product-name">
+📋 ${item.name}
+</div>
+
+<div class="product-details">
+📦 الكمية: ${item.qty}
+<br>
+💰 السعر: ${item.price} د.ع
+<br>
+🧾 المجموع: ${item.totalPrice} د.ع
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`).join("")}
+
+</div>
+
+`).join("")}
+
+<div class="total-box">
+💰 المنتجات: ${order.productsPrice} د.ع
+<br>
+🚚 التوصيل: ${order.deliveryPrice} د.ع
+<br>
+🧾 الكلي: ${order.totalPrice} د.ع
+</div>
+`;
+
+deliveryInfo.insertBefore(
+productsContainer,
+deliveryInfo.firstChild
+);
 
 document.getElementById("whatsappCustomer").onclick = function(){
 
@@ -957,7 +1287,9 @@ if(map){
 map.remove();
 }
 
-map = L.map("map").setView([
+map = L.map("map",{
+zoomControl:true
+}).setView([
 driverLat,
 driverLng
 ],15);
@@ -1059,7 +1391,7 @@ serviceUrl:
 
 addWaypoints:false,
 draggableWaypoints:false,
-fitSelectedRoutes:true,
+fitSelectedRoutes:false,
 show:false,
 
 lineOptions:{
@@ -1078,81 +1410,247 @@ createMarker:()=>null
 
 };
 
-document.getElementById("arrivedStoreBtn").onclick = async function(){
+let arrivedToStore = false;
 
-if(!currentOrderId){
+let preparingOrder = false;
+
+let leftStore = false;
+
+let customerArrived = false;
+
+let extraTimeUsed = false;
+
+let stageStartTime = null;
+
+let currentStage = "store";
+
+let stageDuration = 15 * 60 * 1000;
+
+let timerInterval = null;
+
+function startStageTimer(){
+
+clearInterval(timerInterval);
+
+timerInterval = setInterval(async()=>{
+
+const now = Date.now();
+
+const elapsed =
+now - stageStartTime;
+
+const remaining =
+Math.max(
+0,
+stageDuration - elapsed
+);
+const minutes =
+String(
+Math.floor((remaining / 1000 / 60) % 60)
+).padStart(2,"0");
+
+const seconds =
+String(
+Math.floor((remaining / 1000) % 60)
+).padStart(2,"0");
+
+document.getElementById(
+"timeCounter"
+).innerHTML = `00:${minutes}:${seconds}`;
+
+if(remaining <= 300000 && !extraTimeUsed){
+
+document.getElementById(
+"extraTimeBtn"
+).style.display = "block";
+
+}else{
+
+document.getElementById(
+"extraTimeBtn"
+).style.display = "none";
+
+}
+
+if(remaining <= 0){
+
+clearInterval(timerInterval);
+
+await update(
+ref(db,"drivers/" + currentDriver.id),
+{
+status:"banned",
+banUntil:
+Date.now() +
+(3 * 24 * 60 * 60 * 1000)
+}
+);
+
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"driver_timeout",
+statusText:"تم حظر السائق بسبب تجاوز الوقت"
+}
+);
+
+alert(
+"تم حظرك لمدة 3 أيام بسبب تجاوز الوقت"
+);
+
+localStorage.clear();
+
+window.location.href =
+"index.html";
+
+}
+
+},1000);
+
+}
+
+async function autoUpdateOrderStatus(order){
+
+if(!driverLat || !driverLng){
 return;
 }
+
+if(!order.storesData || !order.storesData.length){
+return;
+}
+
+const firstStore = order.storesData[0];
+
+const storeLat =
+Number(firstStore.storeLat);
+
+const storeLng =
+Number(firstStore.storeLng);
+
+const customerLat =
+Number(order.customerLat);
+
+const customerLng =
+Number(order.customerLng);
+
+const distanceToStore =
+calculateDistance(
+driverLat,
+driverLng,
+storeLat,
+storeLng
+);
+
+const distanceToCustomer =
+calculateDistance(
+driverLat,
+driverLng,
+customerLat,
+customerLng
+);
+
+if(order.status === "accepted"){
+
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"accepted",
+statusText:"السائق متجه إلى المتجر"
+}
+);
+
+}
+
+if(
+distanceToStore <= 0.1 &&
+!arrivedToStore
+){
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"preparing_order",
+statusText:"جاري تجهيز الطلب",
+arrivedStoreAt:Date.now()
+}
+);
+
+preparingOrder = true;
+
+stageStartTime = Date.now();
+
+currentStage = "prepare";
+
+stageDuration = 15 * 60 * 1000;
+
+document.getElementById(
+"timeStageTitle"
+).innerHTML =
+"الوقت المتبقي لتجهيز الطلب";
+
+startStageTimer();
+
+arrivedToStore = true;
+
+console.log(
+"وصل السائق للمتجر"
+);
+
+}
+
+if(
+preparingOrder &&
+distanceToStore > 0.15 &&
+!leftStore
+){
+
+leftStore = true;
 
 await update(
 ref(db,"orders/" + currentOrderId),
 {
 status:"on_the_way",
-statusText:"السائق في طريقه إلى الزبون"
+statusText:"السائق في الطريق للزبون",
+leftStoreAt:Date.now()
 }
 );
 
-alert("تم تحديث الحالة");
+stageStartTime = Date.now();
 
-};
+currentStage = "customer";
 
-document.getElementById("arrivedCustomerBtn").onclick = async function(){
+stageDuration = 15 * 60 * 1000;
 
-if(!currentOrderId){
-return;
-}
+document.getElementById(
+"timeStageTitle"
+).innerHTML =
+"الوقت المتبقي للوصول للزبون";
 
-if(routeControl){
-
-map.removeControl(routeControl);
-
-routeControl =
-L.Routing.control({
-
-waypoints:
-routeControl.getWaypoints(),
-
-routeWhileDragging:false,
-
-router:L.Routing.osrmv1({
-serviceUrl:
-'https://router.project-osrm.org/route/v1'
-}),
-
-addWaypoints:false,
-draggableWaypoints:false,
-fitSelectedRoutes:true,
-show:false,
-
-lineOptions:{
-styles:[
-{
-color:"#0984e3",
-weight:7,
-opacity:.9
-}
-]
-},
-
-createMarker:()=>null
-
-}).addTo(map);
+startStageTimer();
 
 }
+
+if(
+distanceToCustomer <= 0.1 &&
+!customerArrived
+){
+
+customerArrived = true;
 
 await update(
 ref(db,"orders/" + currentOrderId),
 {
 status:"arrived",
-statusText:"السائق وصل إلى الزبون"
+statusText:"السائق وصل استلم الطلب"
 }
 );
-document.getElementById("finishButtons")
-.style.display = "block";
 
-alert("تم تحديث الحالة");
+document.getElementById(
+"finishButtons"
+).style.display = "block";
 
-};
+}
+
+}
 
 document.getElementById("deliveredBtn").onclick = async function(){
 
@@ -1178,7 +1676,7 @@ serviceUrl:
 
 addWaypoints:false,
 draggableWaypoints:false,
-fitSelectedRoutes:true,
+fitSelectedRoutes:false,
 show:false,
 
 lineOptions:{
@@ -1226,16 +1724,113 @@ statusText:"حدثت مشكلة بالتوصيل"
 );
 
 alert("تم تسجيل المشكلة");
+
+window.location.reload();
+
+};
+
+document.getElementById(
+"extraTimeBtn"
+).onclick = function(){
+
+if(extraTimeUsed){
+return;
+}
+
+extraTimeUsed = true;
+
+stageDuration += 15 * 60 * 1000;
+
+this.style.display = "none";
+
+alert("تمت إضافة 15 دقيقة");
+
+};
+
+document.getElementById(
+"cancelByCustomerBtn"
+).onclick = async function(){
+
+if(!currentOrderId){
+return;
+}
+
+const orderSnapshot =
+await get(
+ref(db,"orders/" + currentOrderId)
+);
+
+if(orderSnapshot.exists()){
+
+const order =
+orderSnapshot.val();
+
+const customerRef =
+ref(db,"customers/" + order.customerId);
+
+const customerSnapshot =
+await get(customerRef);
+
+if(customerSnapshot.exists()){
+
+const customer =
+customerSnapshot.val();
+
+await update(customerRef,{
+cancelledOrders:
+(customer.cancelledOrders || 0) + 1
+});
+
+}
+
+}
+
+await update(
+ref(db,"orders/" + currentOrderId),
+{
+status:"cancelled_by_customer",
+statusText:"الطلب ألغي من قبل الزبون",
+cancelledAt:Date.now()
+}
+);
+
+alert("تم إلغاء الطلب");
+
+
 window.location.reload();
 
 };
 
 document.getElementById("logoutBtn").onclick = function(){
+
 localStorage.clear();
-window.location.replace("index.html");
+navigator.geolocation.clearWatch(locationWatcher);
+sessionStorage.clear();
+
+setTimeout(()=>{
+
+window.location.href = "index.html";
+
+},300);
+
 };
 
-</script>
 
+window.addEventListener("offline",()=>{
+
+alert("انقطع الاتصال بالإنترنت");
+
+});
+
+window.addEventListener("online",()=>{
+
+alert("تم استرجاع الاتصال");
+
+});
+
+</script>
+<audio id="newOrderSound" preload="auto">
+<source src="notification.mp3" type="audio/mpeg">
+</audio>
 </body>
 </html>
