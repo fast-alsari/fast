@@ -883,7 +883,7 @@ order.rejectedBy[currentDriver.id]
 
 const rejectTime = order.rejectedBy[currentDriver.id];
 
-if(Date.now() - rejectTime < 3600000){
+if(Date.now() - rejectTime < 600000){
 return;
 }
 
@@ -1525,15 +1525,16 @@ statusText:"السائق متجه إلى المتجر"
 }
 
 if(
-distanceToStore <= 0.1 &&
+distanceToStore <= 0.05 &&
 !arrivedToStore
 ){
 await update(
 ref(db,"orders/" + currentOrderId),
 {
 status:"preparing_order",
-statusText:"جاري تجهيز الطلب",
-arrivedStoreAt:Date.now()
+statusText:"السائق وصل للمتجر وجاري تجهيز الطلب",
+   
+   arrivedStoreAt:Date.now()
 }
 );
 
@@ -1562,7 +1563,7 @@ console.log(
 
 if(
 preparingOrder &&
-distanceToStore > 0.15 &&
+distanceToStore > 0.08 &&
 !leftStore
 ){
 
@@ -1572,8 +1573,8 @@ await update(
 ref(db,"orders/" + currentOrderId),
 {
 status:"on_the_way",
-statusText:"السائق في الطريق للزبون",
-leftStoreAt:Date.now()
+statusText:"السائق استلم الطلب وهو بالطريق للزبون",
+   leftStoreAt:Date.now()
 }
 );
 
@@ -1685,12 +1686,39 @@ return;
 await update(
 ref(db,"orders/" + currentOrderId),
 {
-status:"delivery_problem",
-statusText:"حدثت مشكلة بالتوصيل"
+
+status:"waiting_driver",
+
+statusText:"السائق السابق واجه مشكلة بالتوصيل",
+
+previousDriverId:currentDriver.id,
+
+previousDriverName:currentDriver.name,
+
+problemAt:Date.now(),
+
+driverId:"",
+
+acceptedDriver:"",
+
+driverPhone:"",
+
+driverVehicle:"",
+
+driverImage:"",
+
+driverLat:"",
+
+driverLng:""
+
 }
 );
 
-alert("تم تسجيل المشكلة");
+localStorage.removeItem(
+"currentOrderId"
+);
+
+alert("تم تحويل الطلب لسائق آخر");
 
 window.location.reload();
 
