@@ -5,21 +5,18 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
+<meta name="viewport"
 content="width=device-width, initial-scale=1.0">
 
 <title>
-لوحة الإدارة
+لوحة تحكم الادمن
 </title>
 
-<link
-rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
-
-<link
-href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap"
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;700&display=swap"
 rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 
 <style>
 
@@ -31,175 +28,232 @@ font-family:'Cairo',sans-serif;
 }
 
 body{
-background:#f5f6fa;
-padding-bottom:120px;
+background:#f4f7fb;
+padding:20px;
 }
 
 .header{
-background:
-linear-gradient(
-135deg,
-#111827,
-#1f2937
-);
-
-padding:24px;
-color:white;
-
-border-bottom-left-radius:30px;
-border-bottom-right-radius:30px;
-}
-
-.header h2{
-font-size:28px;
-margin-bottom:6px;
-}
-
-.header p{
-opacity:.9;
-}
-
-.stats{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:15px;
-padding:15px;
-}
-
-.stat-card{
-background:white;
+background:linear-gradient(45deg,#ff7b00,#0066ff);
 padding:20px;
-border-radius:24px;
-box-shadow:
-0 5px 18px rgba(0,0,0,.06);
-text-align:center;
+border-radius:20px;
+color:#fff;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
 }
 
-.stat-card h3{
-font-size:32px;
-margin-bottom:8px;
-color:#ff8800;
-}
-
-.stat-card p{
-font-size:14px;
+.logout-btn{
+background:#fff;
+color:#000;
+border:none;
+padding:10px 18px;
+border-radius:12px;
+cursor:pointer;
 font-weight:bold;
-color:#666;
+}
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:15px;
+margin-bottom:20px;
+}
+
+.stats-btn{
+border:none;
+background:#fff;
+padding:22px;
+border-radius:24px;
+display:flex;
+align-items:center;
+gap:15px;
+cursor:pointer;
+transition:.3s;
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+text-align:right;
+}
+
+.stats-btn:hover{
+transform:translateY(-5px);
+}
+
+.stats-icon{
+width:70px;
+height:70px;
+border-radius:20px;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:28px;
+color:#fff;
+background:linear-gradient(45deg,#ff7b00,#0066ff);
+}
+
+.stats-info h2{
+font-size:34px;
+color:#0066ff;
+}
+
+.stats-info p{
+font-size:16px;
+font-weight:bold;
+color:#444;
+}
+
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+flex-wrap:wrap;
+}
+
+.tab-btn{
+border:none;
+padding:12px 18px;
+border-radius:12px;
+background:#ddd;
+cursor:pointer;
+font-weight:bold;
+}
+
+.tab-btn.active{
+background:#ff7b00;
+color:#fff;
 }
 
 .section{
-padding:15px;
+display:none;
+background:#fff;
+padding:20px;
+border-radius:20px;
+margin-bottom:20px;
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+
+.active-section{
+display:block;
 }
 
 .section-title{
 font-size:22px;
-font-weight:bold;
+margin-bottom:15px;
+color:#ff7b00;
+}
+
+.item{
+border:1px solid #ddd;
+padding:15px;
+border-radius:15px;
 margin-bottom:15px;
 }
 
-.card{
-background:white;
-padding:18px;
-border-radius:24px;
-margin-bottom:15px;
-box-shadow:
-0 5px 18px rgba(0,0,0,.06);
-}
-
-.store-top{
-display:flex;
-align-items:center;
-gap:12px;
-margin-bottom:12px;
-}
-
-.store-image{
-width:70px;
-height:70px;
-border-radius:18px;
-object-fit:cover;
-background:#eee;
-}
-
-.store-name{
-font-size:19px;
-font-weight:bold;
-margin-bottom:4px;
-}
-
-.store-category{
-font-size:13px;
-color:#666;
+.item p{
+margin-bottom:8px;
 }
 
 .actions{
 display:flex;
 gap:10px;
+flex-wrap:wrap;
 margin-top:15px;
 }
 
 .actions button{
-flex:1;
-height:48px;
 border:none;
-border-radius:14px;
-font-size:14px;
-font-weight:bold;
+padding:10px 15px;
+border-radius:10px;
 cursor:pointer;
-color:white;
+font-weight:bold;
+color:#fff;
 }
 
-.accept-btn{
+.accept{
 background:#00b894;
 }
 
-.reject-btn{
-background:#e53935;
+.reject{
+background:#d63031;
 }
 
-.block-btn{
-background:#ff8800;
+.map-btn{
+background:#0984e3;
 }
 
-.empty{
-padding:50px 20px;
-text-align:center;
-color:#777;
+.big-image{
+width:120px;
+height:120px;
+object-fit:cover;
+border-radius:15px;
+margin-top:10px;
+border:2px solid #eee;
 }
 
-.bottom-bar{
-position:fixed;
-bottom:0;
-left:0;
-right:0;
-height:82px;
-background:white;
+.filter-buttons{
 display:flex;
-justify-content:space-around;
-align-items:center;
-box-shadow:
-0 -5px 18px rgba(0,0,0,.08);
+gap:10px;
+flex-wrap:wrap;
+margin-bottom:20px;
 }
 
-.nav-item{
+.filter-buttons button{
+border:none;
+padding:10px 18px;
+border-radius:12px;
+cursor:pointer;
+font-weight:bold;
+background:#0066ff;
+color:#fff;
+}
+
+.status-active{
+color:#00b894;
+font-weight:bold;
+}
+
+.status-inactive{
+color:#d63031;
+font-weight:bold;
+}
+
+.schedule-box{
+margin-top:15px;
+padding:15px;
+border-radius:15px;
+background:#f7f9ff;
+border:1px solid #e2e8ff;
+}
+
+.schedule-item{
 display:flex;
-flex-direction:column;
-align-items:center;
-gap:5px;
+justify-content:space-between;
+padding:8px 0;
+border-bottom:1px solid #eee;
+font-size:14px;
+gap:10px;
+}
+
+.schedule-item:last-child{
+border-bottom:none;
+}
+.vip-status{
+background:linear-gradient(45deg,#ff8800,#ff0000);
+color:white;
+padding:6px 12px;
+border-radius:10px;
 font-size:13px;
 font-weight:bold;
-color:#888;
-cursor:pointer;
+display:inline-block;
+margin-top:8px;
 }
 
-.nav-item.active{
-color:#ff8800;
+.vip-btn{
+background:#ff8800 !important;
 }
 
-.nav-item i{
-font-size:22px;
+.remove-vip-btn{
+background:#555 !important;
 }
-
 </style>
 
 </head>
@@ -208,232 +262,1232 @@ font-size:22px;
 
 <div class="header">
 
-<h2>
-لوحة الإدارة 👑
+<div>
+<h1>لوحة تحكم الادمن</h1>
+<p>إدارة التطبيق بالكامل</p>
+</div>
+
+<button class="logout-btn"
+onclick="logout()">
+تسجيل الخروج
+</button>
+
+</div>
+
+<div class="cards">
+
+<button class="stats-btn"
+onclick="showSection('customersSection',document.querySelectorAll('.tab-btn')[0])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-users"></i>
+</div>
+
+<div class="stats-info">
+<h2 id="customersCount">0</h2>
+<p>المستخدمين</p>
+</div>
+
+</button>
+
+<button class="stats-btn"
+onclick="showSection('storesSection',document.querySelectorAll('.tab-btn')[1])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-store"></i>
+</div>
+
+<div class="stats-info">
+<h2 id="storesCount">0</h2>
+<p>المتاجر</p>
+</div>
+
+</button>
+
+<button class="stats-btn"
+onclick="showSection('driversSection',document.querySelectorAll('.tab-btn')[2])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-motorcycle"></i>
+</div>
+
+<div class="stats-info">
+<h2 id="driversCount">0</h2>
+<p>سواق التوصيل</p>
+</div>
+
+</button>
+
+<button class="stats-btn"
+onclick="showSection('taxiSection',document.querySelectorAll('.tab-btn')[3])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-car"></i>
+</div>
+
+<div class="stats-info">
+<h2 id="taxiCount">0</h2>
+<p>سواق التكسي</p>
+</div>
+
+</button>
+<button class="stats-btn"
+onclick="showSection('productsSection',document.querySelectorAll('.tab-btn')[4])">
+
+<div class="stats-icon">
+<i class="fa-solid fa-box"></i>
+</div>
+
+<div class="stats-info">
+<h2 id="productsCount">0</h2>
+<p>المنتجات</p>
+</div>
+
+</button>
+</div>
+
+<div class="tabs">
+
+<button class="tab-btn active"
+onclick="showSection('customersSection',this)">
+المستخدمين
+</button>
+
+<button class="tab-btn"
+onclick="showSection('storesSection',this)">
+المتاجر
+</button>
+
+<button class="tab-btn"
+onclick="showSection('driversSection',this)">
+سواق التوصيل
+</button>
+
+<button class="tab-btn"
+onclick="showSection('productsSection',this)">
+المنتجات
+</button>
+
+<button class="tab-btn"
+onclick="showSection('taxiSection',this)">
+سواق التكسي
+</button>
+</div>
+
+<div id="customersSection"
+class="section active-section">
+
+<h2 class="section-title">
+المستخدمين
 </h2>
 
-<p>
-إدارة التطبيق والمتاجر والطلبات
-</p>
+<div id="customersContainer"></div>
 
 </div>
 
-<div class="stats">
+<div id="storesSection"
+class="section">
 
-<div class="stat-card">
-
-<h3 id="storesCount">
-0
-</h3>
-
-<p>
+<h2 class="section-title">
 المتاجر
-</p>
+</h2>
 
-</div>
+<div class="filter-buttons">
 
-<div class="stat-card">
+<button onclick="showActiveStores()">
+المتاجر المفعلة
+(<span id="activeStoresCount">0</span>)
+</button>
 
-<h3 id="ordersCount">
-0
-</h3>
+<button onclick="showInactiveStores()">
+المتاجر الغير مفعلة
+(<span id="inactiveStoresCount">0</span>)
+</button>
 
-<p>
-الطلبات
-</p>
+<button onclick="activateAllStores()">
+تفعيل الكل
+</button>
 
-</div>
+<button onclick="deactivateAllStores()">
+الغاء تفعيل الكل
+</button>
 
-<div class="stat-card">
-
-<h3 id="driversCount">
-0
-</h3>
-
-<p>
-السائقين
-</p>
-
-</div>
-
-<div class="stat-card">
-
-<h3 id="usersCount">
-0
-</h3>
-
-<p>
-المستخدمين
-</p>
-
-</div>
-
-</div>
-
-<div class="section">
-
-<div class="section-title">
-طلبات المتاجر
 </div>
 
 <div id="storesContainer"></div>
 
 </div>
 
-<div class="bottom-bar">
+<div id="driversSection"
+class="section">
 
-<div class="nav-item active">
+<h2 class="section-title">
+سواق التوصيل
+</h2>
 
-<i class="fa-solid fa-chart-line"></i>
+<div id="driversContainer"></div>
 
-<span>
-الإدارة
-</span>
+</div>
+
+<div id="taxiSection"
+class="section">
+
+<h2 class="section-title">
+سواق التكسي
+</h2>
+
+<div id="taxiContainer"></div>
 
 </div>
 
-<div
-class="nav-item"
-onclick="window.location.href='home.html'">
+<div id="productsSection"
+class="section">
 
-<i class="fa-solid fa-house"></i>
+<h2 class="section-title">
+المنتجات
+</h2>
 
-<span>
-الرئيسية
-</span>
+<div class="filter-buttons">
+
+<button onclick="showPendingProducts()">
+قيد المراجعة
+</button>
+
+<button onclick="showApprovedProducts()">
+المقبولة
+</button>
 
 </div>
+
+<div id="productsContainer"></div>
 
 </div>
 
 <script type="module">
 
-import { db }
-from "./firebase.js";
+import { initializeApp }
+from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
 
 import {
+getDatabase,
 ref,
 onValue,
-update
+update,
+remove
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+const firebaseConfig = {
+
+apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+
+authDomain:"fast-937c9.firebaseapp.com",
+
+projectId:"fast-937c9",
+
+storageBucket:"fast-937c9.firebasestorage.app",
+
+messagingSenderId:"221388561840",
+
+appId:"1:221388561840:web:ec9d75183ddd7d44be0a75",
+
+measurementId:"G-CEKHEPNR9X",
+
+databaseURL:"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+
+};
+
+const app = initializeApp(firebaseConfig);
+
+const database = getDatabase(app);
 
 const currentUser =
-JSON.parse(
-localStorage.getItem("user")
-);
+JSON.parse(localStorage.getItem("user"));
 
-if(
-!currentUser ||
-currentUser.type !== "admin"
-){
+if(!currentUser || currentUser.type !== "admin"){
+window.location.href = "index.html";
+}
 
-window.location.replace(
-"index.html"
-);
+window.logout = function(){
+
+localStorage.removeItem("user");
+
+window.location.href = "index.html";
+
+};
+
+window.showSection = function(id,button){
+
+document.querySelectorAll(".section")
+.forEach(section=>{
+section.classList.remove("active-section");
+});
+
+document.getElementById(id)
+.classList.add("active-section");
+
+document.querySelectorAll(".tab-btn")
+.forEach(btn=>{
+btn.classList.remove("active");
+});
+
+button.classList.add("active");
+
+};
+
+let allStoresData = {};
+
+function loadDashboard(){
+
+// المستخدمين
+
+onValue(ref(database,"customers"),(snapshot)=>{
+
+const container =
+document.getElementById("customersContainer");
+
+container.innerHTML = "";
+
+if(snapshot.exists()){
+
+const customers = snapshot.val();
+
+document.getElementById("customersCount").innerText =
+Object.keys(customers).length;
+
+for(let id in customers){
+
+let user = customers[id];
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>الاسم:</strong>
+${user.name || "-"}</p>
+
+<p><strong>الرقم:</strong>
+${user.phone || "-"}</p>
+
+<p><strong>عدد الطلبات:</strong>
+${user.ordersCount || 0}</p>
+
+<p><strong>السعر الكلي:</strong>
+${user.totalPrice || 0} د.ع</p>
+
+<p><strong>عدد التوصيلات:</strong>
+${user.deliveryCount || 0}</p>
+
+<p><strong>السعر الكلي للتوصيل:</strong>
+${user.deliveryTotal || 0} د.ع</p>
+
+<p><strong>الطلبات الملغية:</strong>
+${user.cancelledOrders || 0}</p>
+
+<p><strong>الطلبات المكتملة:</strong>
+${user.completedOrders || 0}</p>
+
+</div>
+
+`;
 
 }
 
-const storesContainer =
-document.getElementById(
-"storesContainer"
+}
+
+});
+
+// المتاجر
+
+onValue(ref(database,"stores"),async(snapshot)=>{
+
+const container =
+document.getElementById("storesContainer");
+
+container.innerHTML = "";
+
+if(snapshot.exists()){
+
+const stores = snapshot.val();
+
+allStoresData = stores;
+
+document.getElementById("storesCount").innerText =
+Object.keys(stores).length;
+
+let activeCount = 0;
+let inactiveCount = 0;
+
+for(let id in stores){
+
+let store = stores[id];
+if(store.accountType === "vip"){
+
+let today =
+new Date()
+.toISOString()
+.split("T")[0];
+
+if(
+store.vipExpireDate &&
+today > store.vipExpireDate
+){
+
+await update(
+ref(database,"stores/"+id),
+{
+
+accountType:"normal",
+vipExpireDate:""
+
+}
 );
 
-onValue(
-ref(db,"stores"),
-(snapshot)=>{
+store.accountType = "normal";
+store.vipExpireDate = "";
 
-storesContainer.innerHTML = "";
+}
 
-if(!snapshot.exists()){
+}
+if(store.status === "active"){
+activeCount++;
+}else{
+inactiveCount++;
+}
 
-storesContainer.innerHTML = `
-<div class="empty">
-لا توجد متاجر
+renderStore(id,store);
+
+}
+
+document.getElementById("activeStoresCount").innerText =
+activeCount;
+
+document.getElementById("inactiveStoresCount").innerText =
+inactiveCount;
+
+}
+
+});
+
+// سواق التوصيل
+
+window.activateDriver = async function(id){
+
+const today = new Date();
+
+const nextMonth = new Date();
+
+nextMonth.setMonth(nextMonth.getMonth()+1);
+
+await update(ref(database,"drivers/"+id),{
+
+status:"active",
+
+renewDate:today.toLocaleDateString(),
+
+expireDate:nextMonth.toLocaleDateString()
+
+});
+
+alert("تم تفعيل السائق");
+
+};
+
+window.deactivateDriver = async function(id){
+
+await update(ref(database,"drivers/"+id),{
+
+status:"inactive"
+
+});
+
+alert("تم إلغاء التفعيل");
+
+};
+// التكسي
+
+window.activateTaxi = async function(id){
+
+const today = new Date();
+
+const nextMonth = new Date();
+
+nextMonth.setMonth(nextMonth.getMonth()+1);
+
+await update(ref(database,"taxi_drivers/"+id),{
+
+status:"active",
+
+renewDate:today.toLocaleDateString(),
+
+expireDate:nextMonth.toLocaleDateString()
+
+});
+
+alert("تم تفعيل التكسي");
+
+};
+
+window.deactivateTaxi = async function(id){
+
+await update(ref(database,"taxi_drivers/"+id),{
+
+status:"inactive"
+
+});
+
+alert("تم إلغاء التفعيل");
+
+};
+
+function renderStore(id,store){
+
+const container =
+document.getElementById("storesContainer");
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>اسم المتجر:</strong>
+${store.store_name || "-"}</p>
+
+<p><strong>اسم صاحب المتجر:</strong>
+${store.owner || "-"}</p>
+
+<p>
+<strong>الحالة:</strong>
+
+<span class="${
+store.status === "active"
+? "status-active"
+: "status-inactive"
+}">
+${store.status || "-"}
+</span>
+
+</p>
+
+<p>
+<strong>نوع الحساب:</strong>
+
+${
+store.accountType === "vip"
+
+?
+
+`<span class="vip-status">
+🔥 VIP
+</span>`
+
+:
+
+"عادي"
+
+}
+
+</p>
+
+<p>
+<strong>انتهاء VIP:</strong>
+${store.vipExpireDate || "-"}
+</p>
+<p><strong>تاريخ انتهاء الاشتراك:</strong>
+${store.expireDate || "-"}</p>
+
+<p><strong>تاريخ التجديد:</strong>
+${store.renewDate || "-"}</p>
+
+<div class="actions">
+
+<button class="accept"
+onclick="activateStore('${id}')">
+تفعيل شهر
+</button>
+
+<button class="reject"
+onclick="deactivateStore('${id}')">
+الغاء التفعيل
+</button>
+<button
+class="vip-btn"
+onclick="activateVipStore('${id}')">
+
+تفعيل VIP
+
+</button>
+
+<button
+class="remove-vip-btn"
+onclick="removeVipStore('${id}')">
+
+إلغاء VIP
+
+</button>
+
+<button class="map-btn"
+onclick="openMap(
+'${store.latitude || ""}',
+'${store.longitude || ""}'
+)">
+عرض الموقع
+</button>
+
 </div>
+
+<div class="schedule-box">
+
+<h3 style="margin-bottom:10px;">
+جدول الدوام الأسبوعي
+</h3>
+
+${
+store.workingHours
+?
+
+Object.values(store.workingHours)
+.map(hour => `
+
+<div class="schedule-item">
+
+<span>
+${hour.day || "-"}
+</span>
+
+<span>
+من:
+${hour.from || "-"}
+|
+الى:
+${hour.to || "-"}
+</span>
+
+</div>
+
+`)
+.join("")
+
+: "<p>لا يوجد جدول دوام</p>"
+}
+
+</div>
+
+<p><strong>صورة المتجر:</strong></p>
+
+<img class="big-image"
+src="${store['store_image'] ? store['store_image'] : 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+
+<p><strong>هوية صاحب المتجر:</strong></p>
+
+<img class="big-image"
+src="${store['store_card'] ? store['store_card'] : 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+
+</div>
+
 `;
+
+}
+
+window.activateStore = async function(id){
+
+const today = new Date();
+
+const nextMonth = new Date();
+
+nextMonth.setMonth(nextMonth.getMonth()+1);
+
+await update(ref(database,"stores/"+id),{
+
+status:"active",
+
+renewDate:today.toLocaleDateString(),
+
+expireDate:nextMonth.toLocaleDateString()
+
+});
+
+};
+
+window.deactivateStore = async function(id){
+
+await update(ref(database,"stores/"+id),{
+
+status:"inactive"
+
+});
+
+};
+
+window.activateAllStores = async function(){
+
+for(let id in allStoresData){
+
+await update(ref(database,"stores/"+id),{
+status:"active"
+});
+
+}
+
+};
+
+window.deactivateAllStores = async function(){
+
+for(let id in allStoresData){
+
+await update(ref(database,"stores/"+id),{
+status:"inactive"
+});
+
+}
+
+};
+
+window.showActiveStores = function(){
+
+const container =
+document.getElementById("storesContainer");
+
+container.innerHTML = "";
+
+for(let id in allStoresData){
+
+if(allStoresData[id].status === "active"){
+
+renderStore(id,allStoresData[id]);
+
+}
+
+}
+
+};
+
+window.showInactiveStores = function(){
+
+const container =
+document.getElementById("storesContainer");
+
+container.innerHTML = "";
+
+for(let id in allStoresData){
+
+if(allStoresData[id].status !== "active"){
+
+renderStore(id,allStoresData[id]);
+
+}
+
+}
+
+};
+
+window.openMap = function(lat,lng){
+
+if(!lat || !lng){
+
+alert("لا يوجد موقع لهذا المتجر");
 
 return;
 
 }
 
-const stores =
-snapshot.val();
+window.open(
+`https://www.google.com/maps?q=${lat},${lng}`,
+"_blank"
+);
 
-let count = 0;
+};
+window.activateVipStore = async function(id){
 
-for(let key in stores){
+const nextMonth = new Date();
 
-const store =
-stores[key];
+nextMonth.setMonth(
+nextMonth.getMonth()+1
+);
 
-count++;
+await update(
+ref(database,"stores/"+id),
+{
 
-storesContainer.innerHTML += `
+accountType:"vip",
 
-<div class="card">
+vipExpireDate:
+nextMonth
+.toISOString()
+.split("T")[0]
 
-<div class="store-top">
+}
+);
 
-<img
-src="${store.store_image || "store.png"}"
-class="store-image">
+alert("تم تفعيل VIP");
 
-<div>
+};
 
-<div class="store-name">
-${store.store_name || ""}
-</div>
+window.removeVipStore = async function(id){
 
-<div class="store-category">
-${store.category || ""}
-</div>
+await update(
+ref(database,"stores/"+id),
+{
 
-</div>
+accountType:"normal",
 
-</div>
+vipExpireDate:""
 
-<div>
+}
+);
 
-📞
-${store.phone || ""}
+alert("تم إلغاء VIP");
 
-</div>
+};
 
-<div style="
-margin-top:10px;
-">
+}
 
-الحالة:
-<b>
-${store.status || "pending"}
-</b>
+// =========================
+// سواق التوصيل
+// =========================
 
-</div>
+onValue(ref(database,"drivers"),(snapshot)=>{
+
+const container =
+document.getElementById("driversContainer");
+
+container.innerHTML = "";
+
+if(snapshot.exists()){
+
+const drivers = snapshot.val();
+
+document.getElementById("driversCount").innerText =
+Object.keys(drivers).length;
+
+for(let id in drivers){
+
+let driver = drivers[id];
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>الاسم:</strong>
+${driver.name || "-"}</p>
+
+<p><strong>الرقم:</strong>
+${driver.phone || "-"}</p>
+
+<p><strong>الحالة:</strong>
+
+<span class="${
+driver.status === "active"
+? "status-active"
+: "status-inactive"
+}">
+${driver.status || "inactive"}
+</span>
+
+</p>
+
+<p><strong>تاريخ الاشتراك:</strong>
+${driver.renewDate || "-"}</p>
+
+<p><strong>تاريخ الانتهاء:</strong>
+${driver.expireDate || "-"}</p>
+
+<p>
+<strong>الحساب:</strong>
+
+${
+taxi.accountType === "vip"
+
+?
+
+`<span class="vip-status">
+🔥 VIP
+</span>`
+
+:
+
+"عادي"
+
+}
+
+</p>
+
+<p>
+<strong>انتهاء VIP:</strong>
+${taxi.vipExpireDate || "-"}
+</p>
+
+<p><strong>عدد الطلبات:</strong>
+${driver.completedOrders || 0}</p>
+
+<p><strong>مبلغ التوصيل:</strong>
+${driver.totalDeliveryAmount || 0} د.ع</p>
 
 <div class="actions">
 
 <button
-class="accept-btn"
-onclick="approveStore('${key}')">
+class="accept"
+onclick="activateDriver('${id}')">
+
+تفعيل
+
+</button>
+
+<button
+class="reject"
+onclick="deactivateDriver('${id}')">
+
+إلغاء
+
+</button>
+
+<button
+class="vip-btn"
+onclick="activateVipDriver('${id}')">
+
+VIP
+
+</button>
+
+<button
+class="remove-vip-btn"
+onclick="removeVipDriver('${id}')">
+
+إلغاء VIP
+
+</button>
+
+</div>
+
+<p><strong>صورة الهوية:</strong></p>
+
+<img
+class="big-image"
+src="${driver.idImage || 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+
+<p><strong>صورة المركبة:</strong></p>
+
+<img
+class="big-image"
+src="${driver.vehicleImage || 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+
+</div>
+
+`;
+
+}
+
+}
+
+});
+
+// =========================
+// التكسي
+// =========================
+
+onValue(ref(database,"taxi_drivers"),(snapshot)=>{
+
+const container =
+document.getElementById("taxiContainer");
+
+container.innerHTML = "";
+
+if(snapshot.exists()){
+
+const taxis = snapshot.val();
+
+document.getElementById("taxiCount").innerText =
+Object.keys(taxis).length;
+
+for(let id in taxis){
+
+let taxi = taxis[id];
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>الاسم:</strong>
+${taxi.name || "-"}</p>
+
+<p><strong>الرقم:</strong>
+${taxi.phone || "-"}</p>
+
+<p><strong>نوع السيارة:</strong>
+${taxi.carType || "-"}</p>
+
+<p><strong>لون السيارة:</strong>
+${taxi.carColor || "-"}</p>
+
+<p><strong>رقم السيارة:</strong>
+${taxi.carNumber || "-"}</p>
+
+<p><strong>الحالة:</strong>
+
+<span class="${
+taxi.status === "active"
+? "status-active"
+: "status-inactive"
+}">
+${taxi.status || "inactive"}
+</span>
+
+</p>
+
+<p><strong>تاريخ الاشتراك:</strong>
+${taxi.renewDate || "-"}</p>
+
+<p><strong>تاريخ الانتهاء:</strong>
+${taxi.expireDate || "-"}</p>
+
+<div class="actions">
+<p>
+<p>
+<strong>الحساب:</strong>
+
+${
+driver.accountType === "vip"
+
+?
+
+`<span class="vip-status">
+🔥 VIP
+</span>`
+
+:
+
+"عادي"
+
+}
+
+</p>
+
+<p>
+<strong>انتهاء VIP:</strong>
+${driver.vipExpireDate || "-"}
+</p>
+<button
+class="accept"
+onclick="activateTaxi('${id}')">
+
+تفعيل
+
+</button>
+
+<button
+class="reject"
+onclick="deactivateTaxi('${id}')">
+
+إلغاء
+
+</button>
+
+<button
+class="vip-btn"
+onclick="activateVipTaxi('${id}')">
+
+VIP
+
+</button>
+
+<button
+class="remove-vip-btn"
+onclick="removeVipTaxi('${id}')">
+
+إلغاء VIP
+
+</button>
+
+</div>
+
+<p><strong>صورة السيارة:</strong></p>
+
+<img
+class="big-image"
+src="${taxi.carImage || 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+
+</div>
+
+`;
+
+}
+
+}
+
+});
+
+/* VIP للتكسي */
+
+window.activateVipTaxi = async function(id){
+
+const nextMonth = new Date();
+
+nextMonth.setMonth(
+nextMonth.getMonth()+1
+);
+
+await update(
+ref(database,"taxi_drivers/"+id),
+{
+
+accountType:"vip",
+
+vipExpireDate:
+nextMonth
+.toISOString()
+.split("T")[0]
+
+}
+);
+
+alert("تم تفعيل VIP للتكسي");
+
+};
+
+window.removeVipTaxi = async function(id){
+
+await update(
+ref(database,"taxi_drivers/"+id),
+{
+
+accountType:"normal",
+
+vipExpireDate:""
+
+}
+);
+
+alert("تم إلغاء VIP");
+
+};
+/* VIP للسواق */
+
+window.activateVipDriver = async function(id){
+
+const nextMonth = new Date();
+
+nextMonth.setMonth(
+nextMonth.getMonth()+1
+);
+
+await update(
+ref(database,"drivers/"+id),
+{
+
+accountType:"vip",
+
+vipExpireDate:
+nextMonth
+.toISOString()
+.split("T")[0]
+
+}
+);
+
+alert("تم تفعيل VIP للسائق");
+
+};
+
+window.removeVipDriver = async function(id){
+
+await update(
+ref(database,"drivers/"+id),
+{
+
+accountType:"normal",
+
+vipExpireDate:""
+
+}
+);
+
+alert("تم إلغاء VIP");
+
+};
+// =========================
+// المنتجات
+// =========================
+
+let allProductsData = {};
+
+onValue(ref(database,"store_products"),(snapshot)=>{
+
+const container =
+document.getElementById("productsContainer");
+
+container.innerHTML = "";
+
+allProductsData = {};
+
+let totalProducts = 0;
+
+if(snapshot.exists()){
+
+const storesProducts =
+snapshot.val();
+
+for(let storeId in storesProducts){
+
+const products =
+storesProducts[storeId];
+
+for(let productId in products){
+
+const product =
+products[productId];
+
+product.id = productId;
+
+product.storeId = storeId;
+
+allProductsData[productId] = product;
+
+if(product.deleted) continue;
+
+totalProducts++;
+
+if(
+product.status !== "approved"
+){
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>اسم المنتج:</strong>
+${product.name || "-"}</p>
+
+<p><strong>السعر:</strong>
+${product.price || 0} د.ع</p>
+
+<p><strong>اسم المتجر:</strong>
+${product.storeName || "-"}</p>
+
+<p><strong>الوصف:</strong>
+${product.description || "-"}</p>
+
+<img
+class="big-image"
+src="${product.image || 'https://via.placeholder.com/120'}">
+
+<div class="actions">
+
+<button
+class="accept"
+onclick="approveProduct('${storeId}','${productId}')">
 
 قبول
 
 </button>
 
 <button
-class="reject-btn"
-onclick="rejectStore('${key}')">
+class="reject"
+onclick="deleteProduct('${storeId}','${productId}')">
 
-رفض
-
-</button>
-
-<button
-class="block-btn"
-onclick="blockStore('${key}')">
-
-حظر
+حذف
 
 </button>
 
@@ -445,129 +1499,201 @@ onclick="blockStore('${key}')">
 
 }
 
-document.getElementById(
-"storesCount"
-).innerHTML = count;
-
 }
-);
-
-onValue(
-ref(db,"orders"),
-(snapshot)=>{
-
-let count = 0;
-
-if(snapshot.exists()){
-
-count =
-Object.keys(
-snapshot.val()
-).length;
 
 }
 
-document.getElementById(
-"ordersCount"
-).innerHTML = count;
-
-}
-);
-
-onValue(
-ref(db,"drivers"),
-(snapshot)=>{
-
-let count = 0;
-
-if(snapshot.exists()){
-
-count =
-Object.keys(
-snapshot.val()
-).length;
-
 }
 
-document.getElementById(
-"driversCount"
-).innerHTML = count;
+document.getElementById("productsCount")
+.innerText =
+totalProducts;
 
-}
-);
+});
 
-onValue(
-ref(db,"customers"),
-(snapshot)=>{
+// =========================
+// قبول المنتج
+// =========================
 
-let count = 0;
-
-if(snapshot.exists()){
-
-count =
-Object.keys(
-snapshot.val()
-).length;
-
-}
-
-document.getElementById(
-"usersCount"
-).innerHTML = count;
-
-}
-);
-
-window.approveStore =
-async function(storeId){
+window.approveProduct =
+async function(storeId,productId){
 
 await update(
-ref(db,"stores/" + storeId),
+ref(
+database,
+"store_products/"+storeId+"/"+productId
+),
 {
-
-status:"active"
-
+status:"approved"
 }
 );
 
-alert("تم قبول المتجر");
+alert("تم قبول المنتج");
 
 };
 
-window.rejectStore =
-async function(storeId){
+// =========================
+// حذف المنتج
+// =========================
 
-await update(
-ref(db,"stores/" + storeId),
-{
+window.deleteProduct = async function(storeId,productId){
 
-status:"rejected"
+try{
 
-}
+await remove(
+ref(
+database,
+"store_products/"+storeId+"/"+productId
+)
 );
 
-alert("تم رفض المتجر");
+alert("تم حذف المنتج بنجاح");
+
+}catch(error){
+
+console.error(error);
+
+alert("فشل حذف المنتج");
+
+}
 
 };
 
-window.blockStore =
-async function(storeId){
+// =========================
+// المنتجات قيد المراجعة
+// =========================
 
-await update(
-ref(db,"stores/" + storeId),
-{
+window.showPendingProducts =
+function(){
 
-status:"blocked"
+const container =
+document.getElementById("productsContainer");
+
+container.innerHTML = "";
+
+for(let id in allProductsData){
+
+let product =
+allProductsData[id];
+
+if(
+product.status !== "approved"
+&&
+!product.deleted
+){
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>اسم المنتج:</strong>
+${product.name || "-"}</p>
+
+<p><strong>السعر:</strong>
+${product.price || 0} د.ع</p>
+
+<p><strong>اسم المتجر:</strong>
+${product.storeName || "-"}</p>
+
+<img
+class="big-image"
+src="${product.image || 'https://via.placeholder.com/120'}"
+onerror="this.src='https://via.placeholder.com/120'">
+<div class="actions">
+
+<button
+class="accept"
+onclick="approveProduct('${product.storeId}','${product.id}')">
+
+قبول
+
+</button>
+
+<button
+class="reject"
+onclick="deleteProduct('${product.storeId}','${product.id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
 
 }
-);
 
-alert("تم حظر المتجر");
+}
 
 };
+
+// =========================
+// المنتجات المقبولة
+// =========================
+
+window.showApprovedProducts =
+function(){
+
+const container =
+document.getElementById("productsContainer");
+
+container.innerHTML = "";
+
+for(let id in allProductsData){
+
+let product =
+allProductsData[id];
+
+if(
+product.status === "approved"
+&&
+!product.deleted
+){
+
+container.innerHTML += `
+
+<div class="item">
+
+<p><strong>اسم المنتج:</strong>
+${product.name || "-"}</p>
+
+<p><strong>السعر:</strong>
+${product.price || 0} د.ع</p>
+
+<p><strong>اسم المتجر:</strong>
+${product.storeName || "-"}</p>
+
+<img
+class="big-image"
+src="${product.image || 'https://via.placeholder.com/120'}">
+
+<div class="actions">
+
+<button
+class="reject"
+onclick="deleteProduct('${product.storeId}','${product.id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+}
+
+};
+
+loadDashboard();
 
 </script>
 
 </body>
-
 </html>
