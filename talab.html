@@ -312,9 +312,10 @@ id="driverCard">
 <div class="driver-top">
 
 <img
+id="driverImage"
 src="driver.png"
 class="driver-image">
-
+  
 <div class="driver-info">
 
 <div
@@ -577,7 +578,7 @@ iconAnchor:[20,35]
 
 });
 
-function createStoreIcon(storeName){
+function createStoreIcon(store){
 
 return L.divIcon({
 
@@ -589,16 +590,21 @@ flex-direction:column;
 align-items:center;
 ">
 
-<div style="
-font-size:35px;
-filter:drop-shadow(0 2px 5px rgba(0,0,0,.25));
+<img
+src="${store.storeImage || 'store.png'}"
+style="
+width:58px;
+height:58px;
+border-radius:50%;
+border:3px solid white;
+object-fit:cover;
+background:white;
+box-shadow:0 4px 10px rgba(0,0,0,.25);
 ">
-🏪
-</div>
 
 <div style="
 background:white;
-padding:5px 12px;
+padding:5px 10px;
 border-radius:12px;
 font-size:12px;
 font-weight:bold;
@@ -607,7 +613,7 @@ box-shadow:0 2px 10px rgba(0,0,0,.15);
 white-space:nowrap;
 ">
 
-${storeName || "متجر"}
+${store.storeName || "متجر"}
 
 </div>
 
@@ -616,13 +622,12 @@ ${storeName || "متجر"}
 `,
 
 className:"",
-iconSize:[40,40],
-iconAnchor:[20,40]
+iconSize:[60,60],
+iconAnchor:[30,30]
 
 });
 
 }
-
 function formatTime(ms){
 
 if(ms <= 0){
@@ -716,8 +721,7 @@ Number(store.storeLng)
 ],
 
 {
-icon:createStoreIcon(store.storeName)
-}
+icon:createStoreIcon(store)}
 
 )
 
@@ -916,6 +920,9 @@ document.getElementById("driverPhone")
 .innerHTML =
 order.driverPhone || "";
 
+  document.getElementById("driverImage").src =
+order.driverImage || "driver.png";
+
 document.getElementById("whatsappBtn")
 .onclick = function(){
 
@@ -937,9 +944,10 @@ updateDriverLocation(order);
 
 if(order.status === "preparing_order"){
 
-orderStatus.innerHTML =
-"جاري تجهيز الطلب";
 
+orderStatus.innerHTML =
+"السائق وصل للمتجر وجاري تجهيز الطلب";
+  
 liveStatus.innerHTML =
 "المتجر يقوم بتجهيز الطلب";
 
@@ -950,7 +958,7 @@ updateDriverLocation(order);
 if(order.status === "on_the_way"){
 
 orderStatus.innerHTML =
-"السائق في الطريق إليك";
+"السائق استلم الطلب وهو بالطريق إليك";
 
 liveStatus.innerHTML =
 order.statusText ||
