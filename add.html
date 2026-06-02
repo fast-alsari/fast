@@ -363,15 +363,12 @@ onclick="showSection('driversSection',this)">
 سواق التوصيل
 </button>
 
+
 <button class="tab-btn"
 onclick="showSection('adsSection',this)">
 الإعلانات
 </button>
 
-<button class="tab-btn"
-onclick="showSection('productsSection',this)">
-المنتجات
-</button>
 
 <button class="tab-btn"
 onclick="showSection('taxiSection',this)">
@@ -450,6 +447,72 @@ class="section">
 class="section">
 
 <h2 class="section-title">
+لوحة الإعلانات
+</h2>
+
+<div class="item">
+
+<input
+type="text"
+id="adImage"
+placeholder="رابط صورة الإعلان"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<input
+type="text"
+id="adStoreId"
+placeholder="ايدي المتجر اختياري"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<input
+type="text"
+id="adLink"
+placeholder="رابط خارجي اختياري"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<button
+onclick="addAd()"
+style="
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#00b894;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+">
+
+رفع الإعلان
+
+</button>
+
+</div>
+
+<div id="adsContainer"></div>
+
+</div>
+
+<h2 class="section-title">
 المنتجات
 </h2>
 
@@ -466,6 +529,75 @@ class="section">
 </div>
 
 <div id="productsContainer"></div>
+
+</div>
+
+<div id="adsSection"
+class="section">
+
+<h2 class="section-title">
+لوحة الإعلانات
+</h2>
+
+<div class="item">
+
+<input
+type="text"
+id="adImage"
+placeholder="رابط صورة الإعلان"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<input
+type="text"
+id="adStoreId"
+placeholder="ايدي المتجر اختياري"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<input
+type="text"
+id="adLink"
+placeholder="رابط خارجي اختياري"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<button
+onclick="addAd()"
+style="
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#00b894;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+">
+
+رفع الإعلان
+
+</button>
+
+</div>
+
+<div id="adsContainer"></div>
 
 </div>
 
@@ -1778,6 +1910,7 @@ onclick="deleteProduct('${product.storeId}','${product.id}')">
 // الإعلانات
 // =========================
 
+
 window.addAd = async function(){
 
 const image =
@@ -1818,14 +1951,14 @@ createdAt:Date.now()
 );
 
 document.getElementById("adImage").value = "";
+
 document.getElementById("adStoreId").value = "";
+
 document.getElementById("adLink").value = "";
 
 alert("تم رفع الإعلان");
 
 };
-
-// عرض الاعلانات
 
 onValue(ref(database,"ads"),(snapshot)=>{
 
@@ -1920,37 +2053,27 @@ onclick="deleteAd('${id}')">
 
 });
 
-// تفعيل
-
 window.activateAd = async function(id){
 
 await update(
 ref(database,"ads/" + id),
 {
-
 status:"active"
-
 }
 );
 
 };
-
-// إيقاف
 
 window.deactivateAd = async function(id){
 
 await update(
 ref(database,"ads/" + id),
 {
-
 status:"inactive"
-
 }
 );
 
 };
-
-// حذف
 
 window.deleteAd = async function(id){
 
