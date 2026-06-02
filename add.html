@@ -369,6 +369,11 @@ onclick="showSection('productsSection',this)">
 </button>
 
 <button class="tab-btn"
+onclick="showSection('adsSection',this)">
+الإعلانات
+</button>
+
+<button class="tab-btn"
 onclick="showSection('taxiSection',this)">
 سواق التكسي
 </button>
@@ -463,6 +468,75 @@ class="section">
 
 </div>
 
+<div id="adsSection"
+class="section">
+
+<h2 class="section-title">
+لوحة الإعلانات
+</h2>
+
+<div class="item">
+
+<input
+type="text"
+id="adImage"
+placeholder="رابط صورة الإعلان"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<input
+type="text"
+id="adStoreId"
+placeholder="ايدي المتجر اختياري"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<input
+type="text"
+id="adLink"
+placeholder="رابط خارجي اختياري"
+style="
+width:100%;
+padding:14px;
+border-radius:12px;
+border:1px solid #ddd;
+margin-bottom:12px;
+">
+
+<button
+onclick="addAd()"
+style="
+width:100%;
+padding:14px;
+border:none;
+border-radius:14px;
+background:#00b894;
+color:#fff;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+">
+
+رفع الإعلان
+
+</button>
+
+</div>
+
+<div id="adsContainer"></div>
+
+</div>
+
 <script type="module">
 
 import { initializeApp }
@@ -473,7 +547,8 @@ getDatabase,
 ref,
 onValue,
 update,
-remove
+remove,
+set
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 const firebaseConfig = {
@@ -1096,7 +1171,7 @@ ${driver.expireDate || "-"}</p>
 <strong>الحساب:</strong>
 
 ${
-taxi.accountType === "vip"
+driver.accountType === "vip"
 
 ?
 
@@ -1114,7 +1189,7 @@ taxi.accountType === "vip"
 
 <p>
 <strong>انتهاء VIP:</strong>
-${taxi.vipExpireDate || "-"}
+${driver.vipExpireDate || "-"}
 </p>
 
 <p><strong>عدد الطلبات:</strong>
@@ -1248,8 +1323,7 @@ ${taxi.expireDate || "-"}</p>
 <strong>الحساب:</strong>
 
 ${
-driver.accountType === "vip"
-
+taxi.accountType === "vip"
 ?
 
 `<span class="vip-status">
@@ -1266,7 +1340,7 @@ driver.accountType === "vip"
 
 <p>
 <strong>انتهاء VIP:</strong>
-${driver.vipExpireDate || "-"}
+${taxi.vipExpireDate || "-"}
 </p>
 <button
 class="accept"
@@ -1688,6 +1762,183 @@ onclick="deleteProduct('${product.storeId}','${product.id}')">
 }
 
 }
+
+};
+
+
+// =========================
+// الإعلانات
+// =========================
+
+window.addAd = async function(){
+
+const image =
+document.getElementById("adImage").value.trim();
+
+const storeId =
+document.getElementById("adStoreId").value.trim();
+
+const link =
+document.getElementById("adLink").value.trim();
+
+if(!image){
+
+alert("اضف رابط الصورة");
+
+return;
+
+}
+
+const adId =
+"ad" + Date.now();
+
+await set(
+ref(database,"ads/" + adId),
+{
+
+image:image,
+
+storeId:storeId || "",
+
+link:link || "",
+
+status:"active",
+
+createdAt:Date.now()
+
+}
+);
+
+document.getElementById("adImage").value = "";
+
+document.getElementById("adStoreId").value = "";
+
+document.getElementById("adLink").value = "";
+
+alert("تم رفع الإعلان");
+
+};
+
+onValue(ref(database,"ads"),(snapshot)=>{
+
+const container =
+document.getElementById("adsContainer");
+
+container.innerHTML = "";
+
+if(!snapshot.exists()){
+
+container.innerHTML = `
+<div class="item">
+لا توجد إعلانات
+</div>
+`;
+
+return;
+
+}
+
+const ads = snapshot.val();
+
+for(let id in ads){
+
+const ad = ads[id];
+
+container.innerHTML += `
+
+<div class="item">
+
+<p>
+<strong>الحالة:</strong>
+
+<span class="${
+ad.status === "active"
+? "status-active"
+: "status-inactive"
+}">
+${ad.status}
+</span>
+
+</p>
+
+<p>
+<strong>ايدي المتجر:</strong>
+${ad.storeId || "-"}
+</p>
+
+<p>
+<strong>الرابط:</strong>
+${ad.link || "-"}
+</p>
+
+<img
+src="${ad.image}"
+class="big-image"
+onerror="this.src='https://via.placeholder.com/120'">
+
+<div class="actions">
+
+<button
+class="accept"
+onclick="activateAd('${id}')">
+
+تفعيل
+
+</button>
+
+<button
+class="reject"
+onclick="deactivateAd('${id}')">
+
+إيقاف
+
+</button>
+
+<button
+class="map-btn"
+onclick="deleteAd('${id}')">
+
+حذف
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+});
+
+window.activateAd = async function(id){
+
+await update(
+ref(database,"ads/" + id),
+{
+status:"active"
+}
+);
+
+};
+
+window.deactivateAd = async function(id){
+
+await update(
+ref(database,"ads/" + id),
+{
+status:"inactive"
+}
+);
+
+};
+
+window.deleteAd = async function(id){
+
+await remove(
+ref(database,"ads/" + id)
+);
 
 };
 
