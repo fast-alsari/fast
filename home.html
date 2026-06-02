@@ -1379,7 +1379,11 @@ clearInterval(window.adsInterval);
 
 window.adsInterval = setInterval(()=>{
 
+if(adsList.length >= 1){
+
 changeAd();
+
+}
 
 },5000);
 
