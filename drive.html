@@ -800,10 +800,34 @@ Object.keys(orders).forEach((key)=>{
 
 const order = orders[key];
 
-if(order.status !== "waiting_driver"){
+if(
+order.status !== "waiting_driver" &&
+!(
+order.status === "accepted" &&
+order.driverId === currentDriver.id
+)
+){
 return;
 }
 
+const isVip =
+currentDriver.accountType === "vip";
+
+const orderTime =
+order.createdAt || 0;
+
+const passedTime =
+Date.now() - orderTime;
+
+if(
+!isVip &&
+passedTime < 300000
+){
+return;
+}   
+
+
+   
 if(
 order.rejectedBy &&
 order.rejectedBy[currentDriver.id]
@@ -960,6 +984,8 @@ ref(db,"orders/" + id + "/rejectedBy"),
 }
 );
 
+alert("تم رفض الطلب");
+
 };
 
 window.acceptOrder = async function(id){
@@ -974,6 +1000,8 @@ return;
 const order = snapshot.val();
 
 await update(orderRef,{
+
+   
 status:"accepted",
 statusText:"السائق متجه إلى المتجر",
 acceptedDriver:currentDriver.name,
