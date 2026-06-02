@@ -8,16 +8,8 @@
 
 <meta charset="UTF-8">
 
-<meta
-name="viewport"
-content="
-width=device-width,
-initial-scale=1,
-maximum-scale=1,
-minimum-scale=1,
-user-scalable=no,
-viewport-fit=cover
-">
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
 <title>
 عالسريع
@@ -42,7 +34,6 @@ body{
 background:#f7f7f7;
 padding-bottom:110px;
 overflow-x:hidden;
-overflow-y:hidden;
 }
 
 .page{
@@ -646,45 +637,6 @@ height:100%;
 object-fit:cover;
 display:block;
 }
-/* =========================
-منطقة ثابتة فوق
-========================= */
-
-.top-fixed-area{
-position:fixed;
-top:0;
-left:0;
-right:0;
-z-index:999;
-background:#f7f7f7;
-}
-
-/* المتاجر تتحرك وحدها */
-
-.stores-container{
-position:fixed;
-top:340px;
-left:0;
-right:0;
-bottom:82px;
-overflow-y:auto;
-padding:15px;
-display:flex;
-flex-direction:column;
-gap:14px;
-}
-
-/* سكرول المتاجر */
-
-.stores-container::-webkit-scrollbar{
-width:4px;
-}
-
-.stores-container::-webkit-scrollbar-thumb{
-background:#ccc;
-border-radius:10px;
-}
-
 </style>
 
 </head>
@@ -693,8 +645,6 @@ border-radius:10px;
 
 <div id="homePage"
 class="page active-page">
-
-<div class="top-fixed-area">
 
 <div class="header">
 
@@ -750,8 +700,6 @@ placeholder="ابحث عن متجر او منتج">
 </div>
 
 <div class="filters"></div>
-
-</div>
 
 <div id="storesContainer"
 class="stores-container"></div>
@@ -2851,7 +2799,6 @@ window.location.href = "taxie.html";
 
 };
 
-
 window.logout =
 function(){
 
@@ -2862,19 +2809,19 @@ window.location.href =
 "index.html";
 
 };
-// منع الرجوع الكامل
+window.logout =
+function(){
 
+localStorage.clear();
+sessionStorage.clear();
+
+window.location.href =
+"index.html";
+
+};
 history.pushState(null,null,location.href);
 
-setInterval(()=>{
-
-history.pushState(null,null,location.href);
-
-},500);
-
-window.addEventListener("popstate",function(){
-
-history.pushState(null,null,location.href);
+window.onpopstate = function(){
 
 const currentOrderId =
 localStorage.getItem("currentOrderId");
@@ -2886,15 +2833,15 @@ window.location.replace(
 currentOrderId
 );
 
-}else{
-
-window.location.replace(
+history.pushState(
+null,
+null,
 location.href
 );
 
 }
 
-});
+};
 </script>
 <!-- نافذة الخريطة -->
 
@@ -2961,53 +2908,15 @@ loading="lazy">
 </div>
 <script>
 
-// منع الزوم بالكامل
-
-document.addEventListener(
-'gesturestart',
-function(e){
+document.addEventListener('gesturestart', function(e){
 e.preventDefault();
-}
-);
+});
 
-document.addEventListener(
-'gesturechange',
-function(e){
+document.addEventListener('dblclick', function(e){
 e.preventDefault();
-}
-);
-
-document.addEventListener(
-'gestureend',
-function(e){
-e.preventDefault();
-}
-);
-
-document.addEventListener(
-'dblclick',
-function(e){
-e.preventDefault();
-},
-{ passive:false }
-);
-
-document.addEventListener(
-'touchmove',
-function(e){
-
-if(e.scale !== 1){
-
-e.preventDefault();
-
-}
-
-},
-{ passive:false }
-);
+}, { passive:false });
 
 </script>
-
 </body>
 
 </html> 
