@@ -729,6 +729,7 @@ placeholder="اكرامية للسائق">
 
 <button
 class="send-order"
+id="sendOrderBtn"
 onclick="sendOrder()">
 
 طلب توصيل 🚀
@@ -2216,9 +2217,28 @@ document.getElementById("tipInput")
 window.sendOrder =
 async function(){
 
+const sendBtn =
+document.getElementById("sendOrderBtn");
+
+// منع الضغط مرتين
+if(sendBtn.disabled){
+return;
+}
+
+// قفل الزر
+sendBtn.disabled = true;
+
+sendBtn.innerHTML =
+"جاري ارسال الطلب...";
+
 if(cart.length === 0){
 
 alert("السلة فارغة");
+
+sendBtn.disabled = false;
+
+sendBtn.innerHTML =
+"طلب توصيل 🚀";
 
 return;
 
@@ -2381,11 +2401,29 @@ position.coords.longitude
 
 };
 
+// حماية من تكرار الطلب
+if(localStorage.getItem("sendingOrder") === "true"){
+
+sendBtn.disabled = false;
+
+sendBtn.innerHTML =
+"طلب توصيل 🚀";
+
+return;
+
+}
+
+localStorage.setItem("sendingOrder","true");
+
 await set(
 ref(database,"orders/"+orderId),
 orderData
 );
 
+// يبقى مقفول حتى لا يرسل مرتين
+sendBtn.innerHTML =
+"تم ارسال الطلب";
+localStorage.removeItem("sendingOrder");
 // =======================
 // انتظار قبول سائق
 // =======================
