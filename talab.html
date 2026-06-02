@@ -208,7 +208,7 @@ cursor:pointer;
 
 #map{
 width:100%;
-height:45vh;
+height:34vh;
 margin-top:10px;
 display:none;
 z-index:1;
@@ -528,8 +528,37 @@ window.location.replace(
 
 }
 
-const bikeIcon =
-L.divIcon({
+const bikeIcon = L.divIcon({
+
+html:`
+
+<div style="
+width:70px;
+height:70px;
+display:flex;
+justify-content:center;
+align-items:center;
+">
+
+<img
+src="delivery-bike.png"
+style="
+width:70px;
+height:70px;
+object-fit:contain;
+filter:drop-shadow(0 4px 8px rgba(0,0,0,.35));
+transform:rotate(-8deg);
+">
+
+</div>
+
+`,
+
+className:"",
+iconSize:[70,70],
+iconAnchor:[35,35]
+
+});
 
 html:`
 <div style="
@@ -565,7 +594,7 @@ iconAnchor:[20,35]
 
 });
 
-function createStoreIcon(storeName){
+function createStoreIcon(store){
 
 return L.divIcon({
 
@@ -577,16 +606,21 @@ flex-direction:column;
 align-items:center;
 ">
 
-<div style="
-font-size:35px;
-filter:drop-shadow(0 2px 5px rgba(0,0,0,.25));
+<img
+src="${store.storeImage || 'store.png'}"
+style="
+width:58px;
+height:58px;
+border-radius:50%;
+border:3px solid white;
+object-fit:cover;
+box-shadow:0 4px 10px rgba(0,0,0,.25);
+background:white;
 ">
-🏪
-</div>
 
 <div style="
 background:white;
-padding:5px 12px;
+padding:4px 10px;
 border-radius:12px;
 font-size:12px;
 font-weight:bold;
@@ -595,7 +629,7 @@ box-shadow:0 2px 10px rgba(0,0,0,.15);
 white-space:nowrap;
 ">
 
-${storeName || "متجر"}
+${store.storeName || "متجر"}
 
 </div>
 
@@ -604,13 +638,13 @@ ${storeName || "متجر"}
 `,
 
 className:"",
-iconSize:[40,40],
-iconAnchor:[20,40]
+iconSize:[60,60],
+iconAnchor:[30,30]
 
 });
 
 }
-
+  
 function formatTime(ms){
 
 if(ms <= 0){
@@ -699,8 +733,7 @@ Number(store.storeLng)
 ],
 
 {
-icon:createStoreIcon(store.storeName)
-}
+icon:createStoreIcon(store)}
 
 )
 
@@ -845,14 +878,7 @@ createMarker:()=>null
 
 }).addTo(map);
 
-map.flyTo(
-[driverLat,driverLng],
-map.getZoom(),
-{
-animate:true,
-duration:1.5
-}
-);
+
 
 }
 
@@ -928,7 +954,7 @@ updateDriverLocation(order);
 if(order.status === "preparing_order"){
 
 orderStatus.innerHTML =
-"جاري تجهيز الطلب";
+"السائق وصل للمتجر وجاري تجهيز الطلب";
 
 liveStatus.innerHTML =
 "المتجر يقوم بتجهيز الطلب";
@@ -940,7 +966,7 @@ updateDriverLocation(order);
 if(order.status === "on_the_way"){
 
 orderStatus.innerHTML =
-"السائق في الطريق إليك";
+"السائق استلم الطلب وهو بالطريق إليك";
 
 liveStatus.innerHTML =
 order.statusText ||
