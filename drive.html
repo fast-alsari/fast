@@ -581,8 +581,8 @@ currentDriver.vehicle_image ||
 
 let driverLat = null;
 let driverLng = null;
-let currentOrderId = null;
-let map = null;
+let currentOrderId =
+localStorage.getItem("currentOrderId") || null;let map = null;
 let driverMarker = null;
 let routeControl = null;
 
@@ -774,6 +774,47 @@ const c = 2 * Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 return R * c;
 }
 
+if(currentOrderId){
+
+get(
+ref(db,"orders/" + currentOrderId)
+).then((snapshot)=>{
+
+if(snapshot.exists()){
+
+const order = snapshot.val();
+
+if(
+order.driverId === currentDriver.id &&
+order.status !== "delivered" &&
+order.status !== "cancelled_by_customer"
+){
+
+document.getElementById(
+"ordersContainer"
+).style.display = "none";
+
+document.getElementById(
+"deliveryPage"
+).style.display = "block";
+
+restoreOrder(order,currentOrderId);
+
+}
+
+}else{
+
+localStorage.removeItem(
+"currentOrderId"
+);
+
+}
+
+});
+
+}
+   
+   
 onValue(ref(db,"orders"),(snapshot)=>{
 
 const container = document.getElementById("ordersContainer");
@@ -1015,7 +1056,12 @@ acceptedAt:Date.now()
 });
 
 currentOrderId = id;
-stageStartTime = Date.now();
+
+localStorage.setItem(
+"currentOrderId",
+id
+);
+   stageStartTime = Date.now();
 
 currentStage = "store";
 
@@ -1564,6 +1610,8 @@ document.getElementById(
 
 document.getElementById("deliveredBtn").onclick = async function(){
 
+
+   
 if(!currentOrderId){
 return;
 }
@@ -1616,7 +1664,9 @@ deliveredAt:Date.now()
 
 alert("تم توصيل الطلب");
 window.location.reload();
-
+localStorage.removeItem(
+"currentOrderId"
+);
 };
 
 document.getElementById("failedBtn").onclick = async function(){
@@ -1705,11 +1755,84 @@ cancelledAt:Date.now()
 );
 
 alert("تم إلغاء الطلب");
-
+localStorage.removeItem(
+"currentOrderId"
+);
 window.location.reload();
 
 };
 
+async function restoreOrder(order,id){
+
+currentOrderId = id;
+
+document.getElementById(
+"customerName"
+).innerHTML =
+"👤 " + order.customerName;
+
+document.getElementById(
+"customerPhone"
+).innerHTML =
+"📞 " + order.customerPhone;
+
+document.getElementById(
+"customerAddress"
+).innerHTML =
+"📍 " + order.customerAddress;
+
+if(map){
+map.remove();
+}
+
+map = L.map("map").setView(
+[
+driverLat || order.driverLat,
+driverLng || order.driverLng
+],
+15
+);
+
+L.tileLayer(
+'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+).addTo(map);
+
+driverMarker = L.marker(
+[
+driverLat || order.driverLat,
+driverLng || order.driverLng
+],
+{
+icon:bikeIcon
+}
+).addTo(map);
+
+L.marker(
+[
+Number(order.customerLat),
+Number(order.customerLng)
+],
+{
+icon:customerIcon
+}
+).addTo(map);
+
+(order.storesData || []).forEach(store=>{
+
+L.marker(
+[
+Number(store.storeLat),
+Number(store.storeLng)
+],
+{
+icon:createStoreIcon(store)
+}
+).addTo(map);
+
+});
+
+}
+   
 document.getElementById("logoutBtn").onclick = function(){
 
 localStorage.clear();
