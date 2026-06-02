@@ -2012,52 +2012,53 @@ Number(firstStore.longitude)
 );
 
 // =========================
-// التسعيرة الاساسية الجديدة
+// تسعيرة توصيل ذكية ومناسبة
 // =========================
 
-// اول 2 كم
-if(distance <= 2){
+if(distance <= 1){
+
+deliveryPrice = 1500;
+
+}
+
+else if(distance <= 3){
 
 deliveryPrice = 2000;
 
 }
 
-// من 2 الى 5
 else if(distance <= 5){
 
 deliveryPrice = 3000;
 
 }
 
-// من 5 الى 8
 else if(distance <= 8){
 
 deliveryPrice = 4000;
 
 }
 
-// من 8 الى 12
 else if(distance <= 12){
 
 deliveryPrice = 5000;
 
 }
 
-// فوق 12 كم
 else{
 
 deliveryPrice =
-5000 + Math.round((distance - 12) * 350);
+5000 + Math.round((distance - 12) * 250);
 
 }
 
 // حد اعلى
-if(deliveryPrice > 9000){
+if(deliveryPrice > 10000){
 
-deliveryPrice = 9000;
+deliveryPrice = 10000;
 
 }
-
+ 
 }
 
 // =========================
@@ -2294,6 +2295,11 @@ cart[0].storeId || "",
 storeName:
 cart[0].storeName || "",
 
+ storeImage:
+allStores.find(
+s => s.id === cart[0].storeId
+)?.store_image || "",
+
 storeLat:
 allStores.find(
 s => s.id === cart[0].storeId
@@ -2315,6 +2321,10 @@ return {
 storeId:
 store?.id || "",
 
+ storeImage:
+store?.store_image || "",
+
+ 
 storeName:
 store?.store_name || "",
 
