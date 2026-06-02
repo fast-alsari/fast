@@ -1096,12 +1096,29 @@ class="product-image">
 📋 ${item.name}
 </div>
 
+
 <div class="product-details">
-📦 الكمية: ${item.qty}
+
+📝 الوصف:
+${item.description || "لا يوجد شرح"}
 <br>
-💰 السعر: ${item.price} د.ع
+
+
+📦 الكمية:
+${item.qty}
+
 <br>
-🧾 المجموع: ${item.totalPrice} د.ع
+
+💰 سعر القطعة:
+${Number(item.price).toLocaleString()} د.ع
+
+<br>
+
+🧾 مجموع المنتج:
+${Number(item.totalPrice).toLocaleString()} د.ع
+
+
+
 </div>
 
 </div>
