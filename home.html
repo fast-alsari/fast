@@ -663,7 +663,7 @@ background:#f7f7f7;
 
 .stores-container{
 position:fixed;
-top:320px;
+top:340px;
 left:0;
 right:0;
 bottom:82px;
@@ -2851,6 +2851,7 @@ window.location.href = "taxie.html";
 
 };
 
+
 window.logout =
 function(){
 
@@ -2861,19 +2862,8 @@ window.location.href =
 "index.html";
 
 };
-window.logout =
-function(){
-
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.href =
-"index.html";
-
-};
-<script>
-
 // منع الرجوع الكامل
+
 history.pushState(null,null,location.href);
 
 setInterval(()=>{
@@ -2905,8 +2895,6 @@ location.href
 }
 
 });
-
-</script>
 </script>
 <!-- نافذة الخريطة -->
 
