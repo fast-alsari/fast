@@ -528,22 +528,34 @@ window.location.replace(
 
 }
 
-const bikeIcon =
-L.divIcon({
+const bikeIcon = L.divIcon({
 
 html:`
+
 <div style="
-font-size:38px;
-transform:rotate(-15deg);
-filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));
+width:70px;
+height:70px;
+display:flex;
+justify-content:center;
+align-items:center;
 ">
-🛵
+
+<img
+src="delivery-bike.png"
+style="
+width:70px;
+height:70px;
+object-fit:contain;
+filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));
+">
+
 </div>
+
 `,
 
 className:"",
-iconSize:[40,40],
-iconAnchor:[20,20]
+iconSize:[70,70],
+iconAnchor:[35,35]
 
 });
 
@@ -646,9 +658,14 @@ mapDiv.style.display = "block";
 
 if(!map){
 
-map =
-L.map("map").setView(
-
+map = L.map("map",{
+zoomControl:true,
+scrollWheelZoom:false,
+doubleClickZoom:false,
+touchZoom:false,
+boxZoom:false,
+keyboard:false
+}).setView(
 [
 Number(order.customerLat),
 Number(order.customerLng)
@@ -845,14 +862,7 @@ createMarker:()=>null
 
 }).addTo(map);
 
-map.flyTo(
-[driverLat,driverLng],
-map.getZoom(),
-{
-animate:true,
-duration:1.5
-}
-);
+
 
 }
 
