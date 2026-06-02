@@ -1398,37 +1398,61 @@ function changeAd(){
 if(adsList.length === 0)
 return;
 
+// اذا اعلان واحد فقط
+if(adsList.length === 1){
+
+const onlySlide =
+document.getElementById("ad_0");
+
+onlySlide.classList.remove("active");
+
+setTimeout(()=>{
+
+onlySlide.classList.add("active");
+
+},200);
+
+return;
+
+}
+
+const slides =
+document.querySelectorAll(".ad-slide");
+
+// تنظيف الحالات القديمة
+slides.forEach(slide=>{
+
+slide.classList.remove("active");
+slide.classList.remove("prev");
+
+});
+
+// السلايد القديم
 const oldSlide =
 document.getElementById(
 `ad_${currentAdIndex}`
 );
 
-oldSlide.classList.remove("active");
-
 oldSlide.classList.add("prev");
 
+// التالي
 currentAdIndex++;
 
 if(currentAdIndex >= adsList.length){
+
 currentAdIndex = 0;
+
 }
 
+// السلايد الجديد
 const newSlide =
 document.getElementById(
 `ad_${currentAdIndex}`
 );
 
-document.querySelectorAll(".ad-slide")
-.forEach(slide=>{
-
-slide.classList.remove("prev");
-
-});
-
 newSlide.classList.add("active");
 
 }
-
 window.openAd = function(index){
 
 const ad = adsList[index];
