@@ -611,19 +611,16 @@ box-shadow:0 6px 20px rgba(0,0,0,.10);
 display:flex;
 height:100%;
 transition:transform .5s ease;
+width:100%;
 }
 
 .ad-slide{
 min-width:100%;
 height:100%;
+flex-shrink:0;
 position:relative;
-opacity:1;
 }
 
-.ad-slide.active{
-opacity:1;
-z-index:2;
-}
 
 .ad-slide img{
 width:100%;
@@ -1305,6 +1302,8 @@ document.getElementById("adsTrack");
 
 adsTrack.innerHTML = "";
 
+adsTrack.style.transform = "translateX(0%)";
+
 adsList = [];
 
 if(!snapshot.exists()){
@@ -1349,10 +1348,7 @@ adsList.forEach((ad,index)=>{
 adsTrack.innerHTML += `
 
 <div
-class="
-ad-slide
-${index === 0 ? "active" : ""}
-"
+class="ad-slide"
 id="ad_${index}"
 onclick="openAd(${index})"
 >
@@ -1368,9 +1364,15 @@ onerror="this.src='store.png'">
 });
 
 currentAdIndex = 0;
-document
-.getElementById("ad_0")
-.classList.add("active");
+sliderInitialized = sliderInitialized || false;
+
+if(!sliderInitialized){
+
+setupAdsSwipe();
+
+sliderInitialized = true;
+
+}
 setupAdsSwipe();
 
 if(window.adsInterval){
