@@ -616,19 +616,17 @@ position:relative;
 .ad-slide{
 position:absolute;
 top:0;
-left:100%;
+left:0;
 width:100%;
 height:100%;
-transition:1s;
+opacity:0;
+transition:opacity .8s ease;
 cursor:pointer;
 }
 
 .ad-slide.active{
-left:0;
-}
-
-.ad-slide.prev{
-left:-100%;
+opacity:1;
+z-index:2;
 }
 
 .ad-slide img{
@@ -877,7 +875,6 @@ child,
 get,
 onValue
 }
-
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
 const firebaseConfig = {
@@ -1074,6 +1071,9 @@ let allStores = [];
 
 let adsList = [];
 let currentAdIndex = 0;
+let startX = 0;
+let endX = 0;
+
 let userLatitude = null;
 let userLongitude = null;
 let cart =
@@ -1372,6 +1372,10 @@ onerror="this.src='store.png'">
 });
 
 currentAdIndex = 0;
+document
+.getElementById("ad_0")
+.classList.add("active");
+setupAdsSwipe();
 
 if(window.adsInterval){
 clearInterval(window.adsInterval);
@@ -1395,64 +1399,14 @@ changeAd();
 
 function changeAd(){
 
-if(adsList.length === 0)
-return;
+if(adsList.length <= 1) return;
 
-// اذا اعلان واحد فقط
-if(adsList.length === 1){
-
-const onlySlide =
-document.getElementById("ad_0");
-
-onlySlide.classList.remove("active");
-
-setTimeout(()=>{
-
-onlySlide.classList.add("active");
-
-},200);
-
-return;
+nextAd();
 
 }
 
-const slides =
-document.querySelectorAll(".ad-slide");
 
-// تنظيف الحالات القديمة
-slides.forEach(slide=>{
 
-slide.classList.remove("active");
-slide.classList.remove("prev");
-
-});
-
-// السلايد القديم
-const oldSlide =
-document.getElementById(
-`ad_${currentAdIndex}`
-);
-
-oldSlide.classList.add("prev");
-
-// التالي
-currentAdIndex++;
-
-if(currentAdIndex >= adsList.length){
-
-currentAdIndex = 0;
-
-}
-
-// السلايد الجديد
-const newSlide =
-document.getElementById(
-`ad_${currentAdIndex}`
-);
-
-newSlide.classList.add("active");
-
-}
 window.openAd = function(index){
 
 const ad = adsList[index];
@@ -1482,6 +1436,94 @@ return;
 return;
 
 };
+
+
+function showAd(index){
+
+const slides =
+document.querySelectorAll(".ad-slide");
+
+slides.forEach(slide=>{
+slide.classList.remove("active");
+});
+
+currentAdIndex = index;
+
+if(currentAdIndex < 0){
+currentAdIndex = adsList.length - 1;
+}
+
+if(currentAdIndex >= adsList.length){
+currentAdIndex = 0;
+}
+
+slides[currentAdIndex]
+.classList.add("active");
+
+restartAdsAuto();
+}
+
+function nextAd(){
+
+showAd(currentAdIndex + 1);
+
+}
+
+function prevAd(){
+
+showAd(currentAdIndex - 1);
+
+}
+
+function restartAdsAuto(){
+
+clearInterval(window.adsInterval);
+
+window.adsInterval = setInterval(()=>{
+
+changeAd();
+
+},5000);
+
+}
+
+function setupAdsSwipe(){
+
+const slider =
+document.getElementById("adsSlider");
+
+slider.addEventListener("touchstart",(e)=>{
+
+startX =
+e.touches[0].clientX;
+
+});
+
+slider.addEventListener("touchend",(e)=>{
+
+endX =
+e.changedTouches[0].clientX;
+
+const diff =
+startX - endX;
+
+// سحب لليسار
+if(diff > 50){
+
+nextAd();
+
+}
+
+// سحب لليمين
+else if(diff < -50){
+
+prevAd();
+
+}
+
+});
+
+}
 
 function generateFilters(){
 
@@ -2799,16 +2841,7 @@ window.location.href = "taxie.html";
 
 };
 
-window.logout =
-function(){
 
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.href =
-"index.html";
-
-};
 window.logout =
 function(){
 
