@@ -607,27 +607,48 @@ box-shadow:0 6px 20px rgba(0,0,0,.10);
 }
 
 .ads-track{
-width:100%;
+display:flex;
 height:100%;
-position:relative;
+transition:transform .5s ease;
+will-change:transform;
 }
 
 .ad-slide{
-position:absolute;
-top:0;
-left:100%;
+min-width:100%;
+height:100%;
+cursor:pointer;
+flex-shrink:0;
+}
+
+.ad-slide img{
 width:100%;
 height:100%;
-transition:1s;
+object-fit:cover;
+display:block;
+}
+
+.ads-dots{
+position:absolute;
+bottom:10px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:6px;
+z-index:10;
+}
+
+.ads-dot{
+width:8px;
+height:8px;
+border-radius:50%;
+background:rgba(255,255,255,.5);
 cursor:pointer;
 }
 
-.ad-slide.active{
-left:0;
-}
-
-.ad-slide.prev{
-left:-100%;
+.ads-dot.active{
+background:white;
+width:22px;
+border-radius:20px;
 }
 
 .ad-slide img{
@@ -695,6 +716,8 @@ placeholder="ابحث عن متجر او منتج">
 <div id="adsSlider" class="ads-slider">
 
 <div id="adsTrack" class="ads-track"></div>
+
+<div id="adsDots" class="ads-dots"></div>
 
 </div>
 
@@ -1073,6 +1096,7 @@ let allStores = [];
 
 let adsList = [];
 let currentAdIndex = 0;
+let adsAutoPlay = null;
 let userLatitude = null;
 let userLongitude = null;
 let cart =
@@ -1318,6 +1342,49 @@ return;
 
 }
 
+let startX = 0;
+let endX = 0;
+
+const adsSlider =
+document.getElementById("adsSlider");
+
+adsSlider.addEventListener(
+"touchstart",
+e=>{
+
+startX =
+e.changedTouches[0].screenX;
+
+}
+);
+
+adsSlider.addEventListener(
+"touchend",
+e=>{
+
+endX =
+e.changedTouches[0].screenX;
+
+const diff =
+startX-endX;
+
+if(diff>50){
+
+showAd(currentAdIndex+1);
+
+}
+
+if(diff<-50){
+
+showAd(currentAdIndex-1);
+
+}
+
+startAutoAds();
+
+}
+);
+
 const ads = snapshot.val();
 
 for(let key in ads){
@@ -1347,16 +1414,16 @@ return;
 
 adsSlider.style.display = "block";
 
+const dots =
+document.getElementById("adsDots");
+
+dots.innerHTML="";
+
 adsList.forEach((ad,index)=>{
 
 adsTrack.innerHTML += `
-
 <div
-class="
-ad-slide
-${index === 0 ? "active" : ""}
-"
-id="ad_${index}"
+class="ad-slide"
 onclick="openAd(${index})"
 >
 
@@ -1365,56 +1432,83 @@ src="${ad.image}"
 onerror="this.src='store.png'">
 
 </div>
+`;
 
+dots.innerHTML += `
+<div
+class="ads-dot ${index===0?'active':''}"
+onclick="showAd(${index})"
+>
+</div>
 `;
 
 });
 
 currentAdIndex = 0;
 
-if(window.adsInterval){
-clearInterval(window.adsInterval);
-}
+showAd(0);
 
-window.adsInterval = setInterval(()=>{
-
-if(adsList.length >= 1){
-
-changeAd();
-
-}
-
-},5000);
-
+startAutoAds();
 }
 
 );
 
 }
 
-function changeAd(){
+function showAd(index){
 
-if(adsList.length === 0)
-return;
+if(adsList.length===0) return;
 
-// اذا اعلان واحد فقط
-if(adsList.length === 1){
+if(index<0){
+index=adsList.length-1;
+}
 
-const onlySlide =
-document.getElementById("ad_0");
+if(index>=adsList.length){
+index=0;
+}
 
-onlySlide.classList.remove("active");
+currentAdIndex=index;
 
-setTimeout(()=>{
+const track =
+document.getElementById("adsTrack");
 
-onlySlide.classList.add("active");
+track.style.transform =
+`translateX(-${index*100}%)`;
 
-},200);
+document
+.querySelectorAll(".ads-dot")
+.forEach((dot,i)=>{
 
-return;
+dot.classList.toggle(
+"active",
+i===index
+);
+
+});
 
 }
 
+function nextAd(){
+
+showAd(currentAdIndex+1);
+
+}
+
+function startAutoAds(){
+
+if(adsAutoPlay){
+
+clearInterval(adsAutoPlay);
+
+}
+
+adsAutoPlay=setInterval(()=>{
+
+nextAd();
+
+},5000);
+
+}
 const slides =
 document.querySelectorAll(".ad-slide");
 
