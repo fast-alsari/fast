@@ -607,35 +607,49 @@ box-shadow:0 6px 20px rgba(0,0,0,.10);
 }
 
 .ads-track{
-width:100%;
+display:flex;
 height:100%;
-position:relative;
+transition:transform .5s ease;
 }
 
 .ad-slide{
-position:absolute;
-top:0;
-left:100%;
-width:100%;
+min-width:100%;
 height:100%;
-transition:1s;
+flex-shrink:0;
 cursor:pointer;
 }
-
-.ad-slide.active{
-left:0;
-}
-
-.ad-slide.prev{
-left:-100%;
-}
-
 .ad-slide img{
 width:100%;
 height:100%;
 object-fit:cover;
 display:block;
 }
+
+.ads-dots{
+position:absolute;
+bottom:10px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:8px;
+z-index:10;
+}
+
+.ads-dot{
+width:10px;
+height:10px;
+border-radius:50%;
+background:rgba(255,255,255,.6);
+transition:.3s;
+cursor:pointer;
+}
+
+.ads-dot.active{
+width:25px;
+border-radius:20px;
+background:#ff8800;
+}
+
 </style>
 
 </head>
@@ -695,7 +709,7 @@ placeholder="ابحث عن متجر او منتج">
 <div id="adsSlider" class="ads-slider">
 
 <div id="adsTrack" class="ads-track"></div>
-
+<div id="adsDots" class="ads-dots"></div>
 </div>
 
 <div class="filters"></div>
@@ -872,7 +886,6 @@ getDatabase,
 ref,
 set,
 update,
-child,
 get,
 onValue
 }
@@ -1073,6 +1086,8 @@ let allStores = [];
 
 let adsList = [];
 let currentAdIndex = 0;
+let startX = 0;
+let endX = 0;
 let userLatitude = null;
 let userLongitude = null;
 let cart =
@@ -1307,7 +1322,10 @@ const adsTrack =
 document.getElementById("adsTrack");
 
 adsTrack.innerHTML = "";
+const adsDots =
+document.getElementById("adsDots");
 
+adsDots.innerHTML = "";
 adsList = [];
 
 if(!snapshot.exists()){
@@ -1350,27 +1368,40 @@ adsSlider.style.display = "block";
 adsList.forEach((ad,index)=>{
 
 adsTrack.innerHTML += `
-
 <div
-class="
-ad-slide
-${index === 0 ? "active" : ""}
-"
+class="ad-slide"
 id="ad_${index}"
-onclick="openAd(${index})"
->
+onclick="openAd(${index})">
 
 <img
 src="${ad.image}"
 onerror="this.src='store.png'">
 
 </div>
+`;
 
+adsDots.innerHTML += `
+<div
+class="ads-dot ${index===0 ? 'active' : ''}"
+onclick="goToAd(${index})">
+</div>
 `;
 
 });
 
+
+
+
 currentAdIndex = 0;
+showAd(0);
+if(!window.adsSwipeLoaded){
+
+setupAdsSwipe();
+
+window.adsSwipeLoaded = true;
+
+}
+
 
 if(window.adsInterval){
 clearInterval(window.adsInterval);
@@ -1380,7 +1411,7 @@ window.adsInterval = setInterval(()=>{
 
 if(adsList.length >= 1){
 
-changeAd();
+nextAd();
 
 }
 
@@ -1392,66 +1423,116 @@ changeAd();
 
 }
 
-function changeAd(){
+function showAd(index){
 
-if(adsList.length === 0)
-return;
+if(index < 0){
 
-// اذا اعلان واحد فقط
-if(adsList.length === 1){
-
-const onlySlide =
-document.getElementById("ad_0");
-
-onlySlide.classList.remove("active");
-
-setTimeout(()=>{
-
-onlySlide.classList.add("active");
-
-},200);
-
-return;
+index = adsList.length - 1;
 
 }
 
-const slides =
-document.querySelectorAll(".ad-slide");
+if(index >= adsList.length){
 
-// تنظيف الحالات القديمة
-slides.forEach(slide=>{
+index = 0;
 
-slide.classList.remove("active");
-slide.classList.remove("prev");
+}
+
+currentAdIndex = index;
+
+document.getElementById("adsTrack")
+.style.transform =
+`translateX(${-100 * index}%)`;
+
+document
+.querySelectorAll(".ads-dot")
+.forEach((dot,i)=>{
+
+dot.classList.toggle(
+"active",
+i === index
+);
 
 });
 
-// السلايد القديم
-const oldSlide =
-document.getElementById(
-`ad_${currentAdIndex}`
-);
-
-oldSlide.classList.add("prev");
-
-// التالي
-currentAdIndex++;
-
-if(currentAdIndex >= adsList.length){
-
-currentAdIndex = 0;
+restartAdsTimer();
 
 }
 
-// السلايد الجديد
-const newSlide =
-document.getElementById(
-`ad_${currentAdIndex}`
-);
+function nextAd(){
 
-newSlide.classList.add("active");
+showAd(currentAdIndex + 1);
 
 }
+
+function prevAd(){
+
+showAd(currentAdIndex - 1);
+
+}
+
+window.goToAd = function(index){
+
+showAd(index);
+
+};
+
+function restartAdsTimer(){
+
+clearInterval(window.adsInterval);
+
+window.adsInterval =
+setInterval(()=>{
+
+nextAd();
+
+},5000);
+
+}
+
+
+
+function setupAdsSwipe(){
+
+const slider =
+document.getElementById("adsSlider");
+
+slider.addEventListener(
+"touchstart",
+e=>{
+
+startX =
+e.touches[0].clientX;
+
+}
+);
+
+slider.addEventListener(
+"touchend",
+e=>{
+
+endX =
+e.changedTouches[0].clientX;
+
+const diff =
+startX - endX;
+
+if(diff > 50){
+
+nextAd();
+
+}
+
+if(diff < -50){
+
+prevAd();
+
+}
+
+}
+);
+
+}
+
 window.openAd = function(index){
 
 const ad = adsList[index];
@@ -2808,16 +2889,7 @@ window.location.href =
 "index.html";
 
 };
-window.logout =
-function(){
 
-localStorage.clear();
-sessionStorage.clear();
-
-window.location.href =
-"index.html";
-
-};
 history.pushState(null,null,location.href);
 
 window.onpopstate = function(){
