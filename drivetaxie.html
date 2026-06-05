@@ -1,0 +1,1185 @@
+<!-- taxi-drive.html -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>طلبات التكسي</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+    html,body{background:#f5f5f5;overflow-x:hidden;color:#222}
+    body{padding-bottom:40px}
+    button,input,select,textarea{font:inherit}
+    .hidden{display:none!important}
+
+    .header{
+      background:linear-gradient(135deg,#ff8800,#ff5500);
+      padding:16px;border-bottom-left-radius:30px;border-bottom-right-radius:30px;
+      display:flex;justify-content:space-between;align-items:flex-start;gap:14px;color:#fff;
+      box-shadow:0 5px 20px rgba(0,0,0,.12)
+    }
+    .driver-info{flex:1;display:flex;flex-direction:column;gap:10px}
+    .driver-name{font-size:22px;font-weight:800;line-height:1.2}
+    .driver-top-info{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:8px}
+    .driver-badge{
+      background:rgba(255,255,255,.96);color:#ff6600;padding:10px 12px;border-radius:14px;
+      font-size:13px;font-weight:800;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,.08)
+    }
+    .header-left{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .logout-btn{
+      width:48px;height:48px;border:none;border-radius:15px;background:#fff;color:#ff5500;
+      font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;
+      box-shadow:0 2px 10px rgba(0,0,0,.08)
+    }
+    .driver-image{
+      width:58px;height:58px;object-fit:cover;border-radius:50%;border:2px solid #fff;background:#fff;
+      box-shadow:0 2px 10px rgba(0,0,0,.15)
+    }
+
+    .orders-container{padding:15px;display:flex;flex-direction:column;gap:18px}
+    .order-card{
+      background:#fff;padding:16px;border-radius:25px;box-shadow:0 5px 20px rgba(0,0,0,.08)
+    }
+    .order-title{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:15px}
+    .order-main-title{font-size:21px;font-weight:800;line-height:1.3}
+    .mini-text{font-size:13px;color:#666;margin-top:5px;line-height:1.8}
+    .delivery-price{
+      background:#fff4e8;padding:10px 15px;border-radius:14px;font-weight:800;color:#ff6600;white-space:nowrap
+    }
+    .taxi-badge{
+      display:inline-flex;align-items:center;gap:6px;background:#eef7ff;color:#0b74d1;
+      padding:7px 11px;border-radius:999px;font-size:12px;font-weight:800;margin-top:8px
+    }
+
+    .details-box{
+      background:#fafafa;padding:14px;border-radius:20px;margin-bottom:14px;border:1px solid #eee
+    }
+    .details-row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;line-height:1.8}
+    .details-label{font-size:13px;color:#777;min-width:72px;font-weight:700}
+    .details-value{font-size:15px;font-weight:800;flex:1;word-break:break-word}
+    .details-pill{
+      display:inline-flex;align-items:center;gap:6px;padding:7px 11px;border-radius:999px;
+      font-size:12px;font-weight:800;background:#fff4e8;color:#ff6600
+    }
+    .link-btn{
+      width:100%;padding:13px;border:none;border-radius:14px;background:#0ea5e9;color:#fff;
+      font-size:15px;font-weight:800;cursor:pointer;margin-top:10px
+    }
+
+    .map-box{
+      width:100%;height:220px;border-radius:22px;overflow:hidden;margin-top:15px;border:2px solid #eee
+    }
+    .order-buttons{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+    .accept-btn,.reject-btn,.action-btn{
+      flex:1;min-width:140px;padding:16px;border:none;border-radius:16px;color:#fff;
+      font-size:16px;font-weight:800;cursor:pointer
+    }
+    .accept-btn{background:#00b894}
+    .reject-btn{background:#d63031}
+    .action-btn{width:100%}
+    .done-btn{background:#00b894}
+    .problem-btn{background:#d63031}
+    .extra-btn{background:#ff8800}
+    .whatsapp-btn{background:#25D366}
+    .customer-cancel-btn{background:#222}
+
+    .delivery-page{display:none}
+    #map{
+      width:100%;height:38vh;border-bottom-left-radius:30px;border-bottom-right-radius:30px;
+      overflow:hidden;border:3px solid #fff;box-shadow:0 5px 20px rgba(0,0,0,.12)
+    }
+    .delivery-info{
+      background:#fff;margin:15px;padding:15px;border-radius:25px;box-shadow:0 5px 20px rgba(0,0,0,.08)
+    }
+    .delivery-info h3{margin-bottom:15px;font-size:22px}
+    .delivery-info p{margin-bottom:12px;font-size:16px;color:#555;line-height:1.8}
+
+    .status-pill{
+      display:inline-flex;align-items:center;justify-content:center;gap:8px;
+      background:#fff4e8;color:#ff6600;padding:10px 14px;border-radius:14px;font-weight:800;margin-bottom:14px
+    }
+
+    .timer-box{
+      background:#fff4e8;padding:18px;border-radius:20px;margin-bottom:18px;text-align:center
+    }
+    .time-stage-title{font-size:18px;font-weight:800;color:#ff6600;margin-bottom:10px}
+    .time-counter{font-size:32px;font-weight:800;color:#222;line-height:1.2}
+
+    .grid-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:12px}
+    .radar-box{
+      display:flex;flex-direction:column;align-items:center;justify-content:center;
+      padding:25px 20px;width:100%
+    }
+    .radar{
+      width:130px;height:130px;border-radius:50%;border:5px solid #ff8800;
+      animation:radarPulse 2s infinite;position:relative
+    }
+    .radar::before{
+      content:"";position:absolute;top:50%;left:50%;width:18px;height:18px;background:#ff8800;
+      border-radius:50%;transform:translate(-50%,-50%)
+    }
+    @keyframes radarPulse{
+      0%{box-shadow:0 0 0 0 rgba(255,136,0,.5)}
+      100%{box-shadow:0 0 0 40px rgba(255,136,0,0)}
+    }
+    .radar-text{margin-top:20px;font-size:18px;font-weight:800;color:#777;text-align:center;line-height:1.8}
+
+    .ratings-box{
+      margin-top:14px;background:#fafafa;border:1px solid #eee;border-radius:18px;padding:14px
+    }
+    .ratings-head{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px
+    }
+    .ratings-title{font-size:17px;font-weight:800;color:#222}
+    .ratings-chip{
+      background:#fff4e8;color:#ff6600;padding:8px 12px;border-radius:999px;font-size:13px;font-weight:800
+    }
+    .rating-list{display:flex;flex-direction:column;gap:10px}
+    .rating-item{
+      background:#fff;border:1px solid #eee;border-radius:14px;padding:10px 12px;line-height:1.7
+    }
+    .rating-item-top{
+      display:flex;justify-content:space-between;gap:10px;margin-bottom:4px;font-size:13px;color:#666
+    }
+    .rating-score{font-weight:800;color:#ff6600}
+
+    @media (max-width:480px){
+      .driver-top-info{grid-template-columns:1fr}
+      .order-title{flex-direction:column;align-items:flex-start}
+      .delivery-price{align-self:flex-start}
+      .grid-actions{grid-template-columns:1fr}
+      .accept-btn,.reject-btn,.action-btn{min-width:100%}
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="driver-info">
+      <div class="driver-name" id="driverName">سائق التكسي</div>
+      <div class="driver-top-info">
+        <div class="driver-badge">المكتملة اليوم: <span id="completedCount">0</span></div>
+        <div class="driver-badge">أرباح اليوم: <span id="todayProfit">0</span> د.ع</div>
+        <div class="driver-badge">الأرباح الشهرية: <span id="monthProfit">0</span> د.ع</div>
+        <div class="driver-badge">الطلبات الملغاة: <span id="cancelledCount">0</span></div>
+        <div class="driver-badge">التقييم: <span id="driverRating">0.0</span>/10</div>
+        <div class="driver-badge">عدد التقييمات: <span id="ratingCount">0</span></div>
+        <div class="driver-badge" id="driverAccountType">تكسي</div>
+      </div>
+    </div>
+    <div class="header-left">
+      <button class="logout-btn" id="logoutBtn"><i class="fa-solid fa-right-from-bracket"></i></button>
+      <img id="driverProfileImage" src="user.png" class="driver-image" alt="driver" />
+    </div>
+  </header>
+
+  <div class="orders-container" id="ordersContainer">
+    <div class="radar-box">
+      <div class="radar"></div>
+      <div class="radar-text">جاري البحث عن طلبات تكسي قريبة...</div>
+    </div>
+  </div>
+
+  <div class="delivery-page" id="deliveryPage">
+    <div id="map"></div>
+
+    <div class="delivery-info">
+      <h3>تفاصيل طلب التكسي</h3>
+
+      <div id="statusPill" class="status-pill">الحالة: <span id="orderStatusText">—</span></div>
+
+      <div id="timeManagerBox" class="timer-box">
+        <div id="timeStageTitle" class="time-stage-title">الوقت المتبقي</div>
+        <div id="timeCounter" class="time-counter">00:15:00</div>
+        <button id="extraTimeBtn" class="action-btn extra-btn" style="margin-top:15px;display:none;">طلب زيادة وقت +5 دقائق</button>
+      </div>
+
+      <p id="customerName"></p>
+      <p id="customerPhone"></p>
+      <p id="pickupAddress"></p>
+      <p id="dropoffAddress"></p>
+
+      <button id="whatsappCustomer" class="action-btn whatsapp-btn" style="margin-top:8px;">واتساب الزبون</button>
+      <button id="cancelByCustomerBtn" class="action-btn customer-cancel-btn" style="margin-top:12px;">الطلب ألغي من قبل الزبون</button>
+
+      <div id="detailsBlock"></div>
+      <div id="ratingsBlock"></div>
+
+      <div class="grid-actions">
+        <button id="doneBtn" class="action-btn done-btn">تم التوصيل</button>
+        <button id="problemBtn" class="action-btn problem-btn">مشكلة بالتوصيل</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import { getDatabase, ref, onValue, update, get, runTransaction } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+      authDomain: "fast-937c9.firebaseapp.com",
+      projectId: "fast-937c9",
+      databaseURL: "https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const currentDriver = JSON.parse(localStorage.getItem("user") || "null");
+    if (!currentDriver) window.location.replace("index.html");
+
+    const els = {
+      driverName: document.getElementById("driverName"),
+      driverAccountType: document.getElementById("driverAccountType"),
+      driverProfileImage: document.getElementById("driverProfileImage"),
+      ordersContainer: document.getElementById("ordersContainer"),
+      deliveryPage: document.getElementById("deliveryPage"),
+      customerName: document.getElementById("customerName"),
+      customerPhone: document.getElementById("customerPhone"),
+      pickupAddress: document.getElementById("pickupAddress"),
+      dropoffAddress: document.getElementById("dropoffAddress"),
+      whatsappCustomer: document.getElementById("whatsappCustomer"),
+      doneBtn: document.getElementById("doneBtn"),
+      problemBtn: document.getElementById("problemBtn"),
+      extraTimeBtn: document.getElementById("extraTimeBtn"),
+      cancelByCustomerBtn: document.getElementById("cancelByCustomerBtn"),
+      orderStatusText: document.getElementById("orderStatusText"),
+      timeStageTitle: document.getElementById("timeStageTitle"),
+      timeCounter: document.getElementById("timeCounter"),
+      completedCount: document.getElementById("completedCount"),
+      todayProfit: document.getElementById("todayProfit"),
+      monthProfit: document.getElementById("monthProfit"),
+      cancelledCount: document.getElementById("cancelledCount"),
+      driverRating: document.getElementById("driverRating"),
+      ratingCount: document.getElementById("ratingCount"),
+      logoutBtn: document.getElementById("logoutBtn"),
+      detailsBlock: document.getElementById("detailsBlock"),
+      ratingsBlock: document.getElementById("ratingsBlock")
+    };
+
+    const state = {
+      driverLat: null,
+      driverLng: null,
+      map: null,
+      driverMarker: null,
+      pickupMarker: null,
+      dropoffMarker: null,
+      routeControl: null,
+      activeOrderId: localStorage.getItem("currentTaxiOrderId") || null,
+      activeOrder: null,
+      stage: "to_pickup",
+      stageStartedAt: Date.now(),
+      stageDuration: 15 * 60 * 1000,
+      extraTimeUsed: false,
+      timerHandle: null,
+      timerExpired: false,
+      loadedOnce: false,
+      ordersCache: {}
+    };
+
+    const PICKUP_ROUTE_COLOR = "#ff8800";
+    const DROPOFF_ROUTE_COLOR = "#0984e3";
+    const ARRIVAL_RADIUS_KM = 0.05;
+    const LEAVE_RADIUS_KM = 0.08;
+    const DEST_RADIUS_KM = 0.10;
+    const WAIT_VIP_MS = 0;
+    const WAIT_NORMAL_MS = 10 * 60 * 1000;
+    const REJECT_COOLDOWN_MS = 10 * 60 * 1000;
+    const STAGE_MS = 15 * 60 * 1000;
+    const EXTRA_TIME_MS = 5 * 60 * 1000;
+    const MAX_VISIBLE_DISTANCE_KM = 25;
+
+    els.driverName.textContent = currentDriver.name || "سائق التكسي";
+    els.driverAccountType.textContent = String(currentDriver.accountType || currentDriver.type || "تكسي");
+    els.driverProfileImage.src = currentDriver.vehicle_image || currentDriver.image || "user.png";
+
+    function money(value) {
+      return Number(value || 0).toLocaleString("en-US");
+    }
+
+    function safeText(v, fallback = "—") {
+      const s = String(v ?? "").trim();
+      return s || fallback;
+    }
+
+    function normalizePhone(phone) {
+      let p = String(phone || "").replace(/\s+/g, "").replace(/[^0-9+]/g, "");
+      if (!p) return "";
+      if (p.startsWith("+964")) p = "0" + p.slice(4);
+      if (p.startsWith("964")) p = "0" + p.slice(3);
+      if (!p.startsWith("0")) p = "0" + p;
+      return p;
+    }
+
+    function toWhatsAppPhone(phone) {
+      let p = String(phone || "").replace(/\s+/g, "").replace(/[^0-9+]/g, "");
+      if (!p) return "";
+      if (p.startsWith("+")) p = p.slice(1);
+      if (p.startsWith("964")) return p;
+      if (p.startsWith("0")) return "964" + p.slice(1);
+      return p;
+    }
+
+    function calculateDistanceKm(lat1, lon1, lat2, lon2) {
+      const R = 6371;
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLon = (lon2 - lon1) * Math.PI / 180;
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      return R * c;
+    }
+
+    function isVipOrder(order) {
+      return Boolean(
+        order?.isVip === true ||
+        String(order?.vip || "").toLowerCase() === "true" ||
+        String(order?.customerType || order?.customerAccountType || "").toLowerCase() === "vip" ||
+        String(order?.priority || "").toLowerCase() === "vip"
+      );
+    }
+
+    function driverIsVip() {
+      return String(currentDriver.accountType || currentDriver.type || "").toLowerCase() === "vip";
+    }
+
+    function isClosedOrder(order) {
+      return ["completed", "cancelled_by_customer", "driver_timeout", "rejected_final", "failed_no_driver", "cancelled"].includes(order?.status);
+    }
+
+    function isActiveDriverOrder(order) {
+      if (!order) return false;
+      const activeStatuses = new Set(["accepted", "driver_arrived_pickup", "picked_up", "on_the_way", "arrived_destination"]);
+      return order.driverId === currentDriver.id && activeStatuses.has(order.status);
+    }
+
+    function getPickupLatLng(order) {
+      return {
+        lat: Number(order.customerLat || 0),
+        lng: Number(order.customerLng || 0)
+      };
+    }
+
+    function getDropoffLatLng(order) {
+      return {
+        lat: Number(order.targetLat || 0),
+        lng: Number(order.targetLng || 0)
+      };
+    }
+
+    function getVisibleAt(order) {
+      const vip = isVipOrder(order) || driverIsVip();
+      return Number(order.createdAt || 0) + (vip ? WAIT_VIP_MS : WAIT_NORMAL_MS);
+    }
+
+    function isVisibleToDriver(order) {
+      if (!order || isClosedOrder(order)) return false;
+
+      if (isActiveDriverOrder(order)) return true;
+
+      const validPending = ["pending", "waiting_driver"].includes(order.status);
+      if (!validPending) return false;
+
+      const createdAt = Number(order.createdAt || 0);
+      const vip = isVipOrder(order) || driverIsVip();
+      if (!vip && Date.now() < getVisibleAt(order)) return false;
+
+      if (state.driverLat == null || state.driverLng == null) return false;
+
+      const pickup = getPickupLatLng(order);
+      if (!pickup.lat || !pickup.lng) return false;
+
+      const distanceToPickup = calculateDistanceKm(state.driverLat, state.driverLng, pickup.lat, pickup.lng);
+      if (distanceToPickup > MAX_VISIBLE_DISTANCE_KM) return false;
+
+      const rejectedAt = Number(order.rejectedBy?.[currentDriver.id] || 0);
+      if (rejectedAt && Date.now() - rejectedAt < REJECT_COOLDOWN_MS) return false;
+
+      return true;
+    }
+
+    function getNearestOrderDistance(order) {
+      if (state.driverLat == null || state.driverLng == null) return null;
+      const pickup = getPickupLatLng(order);
+      if (!pickup.lat || !pickup.lng) return null;
+      return calculateDistanceKm(state.driverLat, state.driverLng, pickup.lat, pickup.lng);
+    }
+
+    function getOrderRatingValue(order) {
+      const candidates = [
+        order?.customerRating,
+        order?.rating,
+        order?.review?.rating,
+        order?.feedback?.rating
+      ];
+
+      for (const c of candidates) {
+        if (c === "" || c == null) continue;
+        const n = Number(c);
+        if (!Number.isFinite(n)) continue;
+        let v = n;
+        if (v <= 5) v *= 2;
+        if (v > 10) v = 10;
+        if (v < 0) v = 0;
+        return Math.round(v * 10) / 10;
+      }
+      return null;
+    }
+
+    function getOrderReviewText(order) {
+      return safeText(order?.customerComment || order?.comment || order?.review?.comment || order?.feedback?.comment, "");
+    }
+
+    function buildRatingStats(ordersObj) {
+      const orders = Object.values(ordersObj || {});
+      const completed = orders.filter((o) => o.driverId === currentDriver.id && o.status === "completed");
+      const entries = completed
+        .map((o) => ({
+          score: getOrderRatingValue(o),
+          comment: getOrderReviewText(o),
+          customerName: o.customerName || "زبون",
+          createdAt: Number(o.completedAt || o.deliveredAt || 0)
+        }))
+        .filter((x) => x.score != null);
+
+      const avg = entries.length ? entries.reduce((s, x) => s + Number(x.score || 0), 0) / entries.length : 0;
+
+      return {
+        avg: Math.round(avg * 10) / 10,
+        count: entries.length,
+        entries: entries.sort((a, b) => b.createdAt - a.createdAt).slice(0, 5)
+      };
+    }
+
+    function updateDriverStats(ordersObj) {
+      const orders = Object.values(ordersObj || {});
+      const startOfToday = new Date();
+      startOfToday.setHours(0, 0, 0, 0);
+
+      const startOfMonth = new Date();
+      startOfMonth.setDate(1);
+      startOfMonth.setHours(0, 0, 0, 0);
+
+      const completed = orders.filter((o) => o.driverId === currentDriver.id && o.status === "completed");
+      const cancelled = orders.filter((o) => o.driverId === currentDriver.id && o.status === "cancelled_by_customer");
+
+      const todayProfit = completed
+        .filter((o) => Number(o.completedAt || o.deliveredAt || 0) >= startOfToday.getTime())
+        .reduce((sum, o) => sum + Number(o.finalPrice || o.price || 0), 0);
+
+      const monthProfit = completed
+        .filter((o) => Number(o.completedAt || o.deliveredAt || 0) >= startOfMonth.getTime())
+        .reduce((sum, o) => sum + Number(o.finalPrice || o.price || 0), 0);
+
+      const ratings = buildRatingStats(orders);
+
+      els.completedCount.textContent = String(
+        completed.filter((o) => Number(o.completedAt || o.deliveredAt || 0) >= startOfToday.getTime()).length
+      );
+      els.todayProfit.textContent = money(todayProfit);
+      els.monthProfit.textContent = money(monthProfit);
+      els.cancelledCount.textContent = String(cancelled.length);
+      els.driverRating.textContent = ratings.avg ? ratings.avg.toFixed(1) : "0.0";
+      els.ratingCount.textContent = String(ratings.count);
+
+      renderRatingsBlock(ratings);
+    }
+
+    function fmtStageTitle(stage) {
+      switch (stage) {
+        case "to_pickup": return "الوقت المتبقي للوصول إلى الزبون";
+        case "at_pickup": return "الوقت المتبقي داخل موقع الزبون";
+        case "to_destination": return "الوقت المتبقي للوصول إلى الوجهة";
+        case "arrived_destination": return "الوصول إلى الوجهة";
+        default: return "الوقت المتبقي";
+      }
+    }
+
+    function stopTimer() {
+      if (state.timerHandle) clearInterval(state.timerHandle);
+      state.timerHandle = null;
+    }
+
+    function updateTimerUI() {
+      els.timeStageTitle.textContent = fmtStageTitle(state.stage);
+      if (state.activeOrder?.statusText) els.orderStatusText.textContent = state.activeOrder.statusText;
+      syncActionVisibility();
+    }
+
+    function startTimer() {
+      stopTimer();
+      state.timerExpired = false;
+
+      state.timerHandle = setInterval(async () => {
+        if (!state.activeOrderId) return;
+
+        const elapsed = Date.now() - Number(state.stageStartedAt || Date.now());
+        let remaining = Number(state.stageDuration || STAGE_MS) - elapsed;
+        if (remaining < 0) remaining = 0;
+
+        const hh = String(Math.floor(remaining / 3600000)).padStart(2, "0");
+        const mm = String(Math.floor((remaining % 3600000) / 60000)).padStart(2, "0");
+        const ss = String(Math.floor((remaining % 60000) / 1000)).padStart(2, "0");
+        els.timeCounter.textContent = `${hh}:${mm}:${ss}`;
+
+        const showExtra = remaining <= 5 * 60 * 1000 && !state.extraTimeUsed && state.stage !== "arrived_destination";
+        els.extraTimeBtn.style.display = showExtra ? "block" : "none";
+
+        if (remaining === 0 && !state.timerExpired) {
+          state.timerExpired = true;
+          await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+            statusText: "انتهى الوقت بانتظار طلب زيادة وقت",
+            timeExpired: true,
+            stage: state.stage,
+            stageStartedAt: state.stageStartedAt,
+            stageDuration: state.stageDuration,
+            extraTimeUsed: state.extraTimeUsed
+          }).catch(() => {});
+        }
+      }, 1000);
+    }
+
+    function clearActiveOrderUI() {
+      state.activeOrderId = null;
+      state.activeOrder = null;
+      localStorage.removeItem("currentTaxiOrderId");
+      els.deliveryPage.style.display = "none";
+      els.ordersContainer.style.display = "flex";
+      stopTimer();
+
+      if (state.routeControl && state.map) {
+        try { state.map.removeControl(state.routeControl); } catch (_) {}
+      }
+      state.routeControl = null;
+
+      els.detailsBlock.innerHTML = "";
+      els.ratingsBlock.innerHTML = "";
+    }
+
+    function syncActionVisibility() {
+      const active = Boolean(state.activeOrderId);
+      els.doneBtn.style.display = active && state.stage === "arrived_destination" ? "block" : "none";
+      els.problemBtn.style.display = active ? "block" : "none";
+      els.cancelByCustomerBtn.style.display = active ? "block" : "none";
+      els.extraTimeBtn.style.display = active && state.stage !== "arrived_destination" ? els.extraTimeBtn.style.display : "none";
+    }
+
+    function buildOrderDetailsHTML(order) {
+      const pickup = getPickupLatLng(order);
+      const dropoff = getDropoffLatLng(order);
+      const distance = Number(order.distance || 0);
+      const vip = isVipOrder(order) || driverIsVip();
+      const visibleAt = getVisibleAt(order);
+      const waitLeft = Math.max(0, visibleAt - Date.now());
+      const waitMinutes = Math.ceil(waitLeft / 60000);
+
+      return `
+        <div class="details-box">
+          <div class="details-row">
+            <div class="details-label">من</div>
+            <div class="details-value">موقع الزبون</div>
+          </div>
+
+          <div class="details-row">
+            <div class="details-label">إلى</div>
+            <div class="details-value">${safeText(order.targetLocation, `${dropoff.lat || 0}, ${dropoff.lng || 0}`)}</div>
+          </div>
+
+          <div class="details-row">
+            <div class="details-label">الزبون</div>
+            <div class="details-value">${safeText(order.customerName, "زبون")}</div>
+          </div>
+
+          <div class="details-row">
+            <div class="details-label">الهاتف</div>
+            <div class="details-value">${normalizePhone(order.customerPhone || "") || "—"}</div>
+          </div>
+
+          <div class="details-row">
+            <div class="details-label">المسافة</div>
+            <div class="details-value">${distance ? `${Number(distance).toFixed(2)} كم` : "—"}</div>
+          </div>
+
+          <div class="details-row">
+            <div class="details-label">الركاب</div>
+            <div class="details-value">${Number(order.personsCount || 0)} شخص</div>
+          </div>
+
+          <div class="details-row">
+            <div class="details-label">السعر</div>
+            <div class="details-value">${money(order.price)} د.ع</div>
+          </div>
+
+          <div class="details-row">
+            <div class="details-label">الإكرامية</div>
+            <div class="details-value">${money(order.tip)} د.ع</div>
+          </div>
+
+          <div class="details-row">
+            <div class="details-label">المجموع</div>
+            <div class="details-value">${money(order.finalPrice || (Number(order.price || 0) + Number(order.tip || 0)))} د.ع</div>
+          </div>
+
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">
+            <span class="details-pill">${vip ? "VIP مباشر" : (waitLeft > 0 ? `يظهر بعد ${waitMinutes} دقيقة` : "متاح الآن")}</span>
+            <span class="details-pill">ضمن 25 كم</span>
+          </div>
+
+          ${order.googleMapsLink ? `<button class="link-btn" onclick="window.open('${order.googleMapsLink}','_blank')">فتح موقع الوجهة</button>` : ""}
+        </div>
+      `;
+    }
+
+    function renderRatingsBlock(ratings) {
+      if (!ratings.count) {
+        els.ratingsBlock.innerHTML = "";
+        return;
+      }
+
+      els.ratingsBlock.innerHTML = `
+        <div class="ratings-box">
+          <div class="ratings-head">
+            <div class="ratings-title">آخر التقييمات</div>
+            <div class="ratings-chip">المعدل ${ratings.avg.toFixed(1)}/10</div>
+          </div>
+          <div class="rating-list">
+            ${ratings.entries.map((r) => `
+              <div class="rating-item">
+                <div class="rating-item-top">
+                  <span>${safeText(r.customerName, "زبون")}</span>
+                  <span class="rating-score">${Number(r.score).toFixed(1)}/10</span>
+                </div>
+                ${r.comment ? `<div style="font-size:14px;color:#444;line-height:1.8;">${safeText(r.comment, "")}</div>` : `<div style="font-size:14px;color:#999;line-height:1.8;">لا يوجد تعليق مكتوب</div>`}
+              </div>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOrderCard(order, id) {
+      const pickup = getPickupLatLng(order);
+      const dropoff = getDropoffLatLng(order);
+      const vip = isVipOrder(order) || driverIsVip();
+      const visibleAt = getVisibleAt(order);
+      const waitLeft = Math.max(0, visibleAt - Date.now());
+      const waitMinutes = Math.ceil(waitLeft / 60000);
+      const distance = getNearestOrderDistance(order);
+
+      return `
+        <div class="order-card">
+          <div class="order-title">
+            <div>
+              <div class="order-main-title">🚕 ${safeText(order.customerName, "طلب تكسي")}</div>
+              <div class="mini-text">
+                من: موقع الزبون<br>
+                إلى: ${safeText(order.targetLocation, `${dropoff.lat || 0}, ${dropoff.lng || 0}`)}<br>
+                📍 المسافة: ${distance != null ? `${distance.toFixed(1)} كم` : "—"}<br>
+                ⏱️ الظهور: ${vip ? "VIP مباشر" : (waitLeft > 0 ? `بعد ${waitMinutes} دقيقة` : "متاح الآن")}
+              </div>
+              <div class="taxi-badge">${vip ? "🔥 VIP" : "طلب تكسي"}</div>
+            </div>
+            <div class="delivery-price">${money(order.finalPrice || (Number(order.price || 0) + Number(order.tip || 0)))} د.ع</div>
+          </div>
+
+          <div class="details-box">
+            <div class="details-row">
+              <div class="details-label">من</div>
+              <div class="details-value">موقع الزبون</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">إلى</div>
+              <div class="details-value">${safeText(order.targetLocation, `${dropoff.lat || 0}, ${dropoff.lng || 0}`)}</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">الركاب</div>
+              <div class="details-value">${Number(order.personsCount || 0)} شخص</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">السعر</div>
+              <div class="details-value">${money(order.price)} د.ع</div>
+            </div>
+            <div class="details-row">
+              <div class="details-label">الإكرامية</div>
+              <div class="details-value">${money(order.tip)} د.ع</div>
+            </div>
+          </div>
+
+          <div class="map-box">
+            <iframe width="100%" height="100%" style="border:none;" loading="lazy"
+              src="https://maps.google.com/maps?q=${pickup.lat},${pickup.lng}&z=14&output=embed"></iframe>
+          </div>
+
+          <div class="order-buttons">
+            <button class="accept-btn" onclick="acceptTaxiOrder('${id}')">قبول الطلب</button>
+            <button class="reject-btn" onclick="rejectTaxiOrder('${id}')">رفض الطلب</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderOrders(ordersObj) {
+      const orders = Object.entries(ordersObj || {})
+        .map(([id, order]) => ({ id, order }))
+        .filter(({ order }) => isVisibleToDriver(order))
+        .sort((a, b) => {
+          const aVip = isVipOrder(a.order) ? 1 : 0;
+          const bVip = isVipOrder(b.order) ? 1 : 0;
+          if (aVip !== bVip) return bVip - aVip;
+          return Number(b.order.createdAt || 0) - Number(a.order.createdAt || 0);
+        });
+
+      if (!orders.length) {
+        const noGps = state.driverLat == null || state.driverLng == null;
+        els.ordersContainer.innerHTML = `
+          <div class="radar-box">
+            <div class="radar"></div>
+            <div class="radar-text">${noGps ? "شغل GPS حتى تظهر الطلبات القريبة" : "لا توجد طلبات تكسي قريبة الآن"}</div>
+          </div>
+        `;
+        return;
+      }
+
+      els.ordersContainer.innerHTML = orders.map(({ id, order }) => renderOrderCard(order, id)).join("");
+    }
+
+    function buildMap(order) {
+      if (state.map) {
+        try { state.map.remove(); } catch (_) {}
+      }
+
+      const driverLatLng = [
+        Number(state.driverLat || order.driverLat || 0),
+        Number(state.driverLng || order.driverLng || 0)
+      ];
+
+      state.map = L.map("map", { zoomControl: true }).setView(driverLatLng, 15);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(state.map);
+
+      const taxiIcon = L.divIcon({
+        html: `<div style="font-size:38px;transform:rotate(-10deg);filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">🚕</div>`,
+        className: "",
+        iconSize: [40, 40],
+        iconAnchor: [20, 20]
+      });
+
+      const pickupIcon = L.divIcon({
+        html: `<div style="font-size:38px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">📍</div>`,
+        className: "",
+        iconSize: [40, 40],
+        iconAnchor: [20, 35]
+      });
+
+      const dropoffIcon = L.divIcon({
+        html: `<div style="font-size:38px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">🏁</div>`,
+        className: "",
+        iconSize: [40, 40],
+        iconAnchor: [20, 35]
+      });
+
+      state.driverMarker = L.marker(driverLatLng, { icon: taxiIcon }).addTo(state.map);
+
+      const pickup = getPickupLatLng(order);
+      const dropoff = getDropoffLatLng(order);
+
+      state.pickupMarker = L.marker([pickup.lat, pickup.lng], { icon: pickupIcon }).addTo(state.map);
+      state.dropoffMarker = L.marker([dropoff.lat, dropoff.lng], { icon: dropoffIcon }).addTo(state.map);
+
+      state.map.invalidateSize();
+      updateRoute(order);
+    }
+
+    function updateRoute(order) {
+      if (!state.map || state.driverLat == null || state.driverLng == null || !order) return;
+
+      if (state.routeControl) {
+        try { state.map.removeControl(state.routeControl); } catch (_) {}
+        state.routeControl = null;
+      }
+
+      const pickup = getPickupLatLng(order);
+      const dropoff = getDropoffLatLng(order);
+      let destination = null;
+      let color = PICKUP_ROUTE_COLOR;
+
+      if (state.stage === "to_destination" || state.stage === "arrived_destination") {
+        destination = L.latLng(dropoff.lat, dropoff.lng);
+        color = DROPOFF_ROUTE_COLOR;
+      } else {
+        destination = L.latLng(pickup.lat, pickup.lng);
+        color = PICKUP_ROUTE_COLOR;
+      }
+
+      if (!destination || !destination.lat || !destination.lng) return;
+
+      state.routeControl = L.Routing.control({
+        waypoints: [L.latLng(state.driverLat, state.driverLng), destination],
+        routeWhileDragging: false,
+        addWaypoints: false,
+        draggableWaypoints: false,
+        fitSelectedRoutes: false,
+        show: false,
+        router: L.Routing.osrmv1({ serviceUrl: "https://router.project-osrm.org/route/v1" }),
+        lineOptions: { styles: [{ color, weight: 7, opacity: 0.92 }] },
+        createMarker: () => null
+      }).addTo(state.map);
+    }
+
+    function setStageFromOrder(order) {
+      if (!order) return;
+
+      if (order.status === "accepted") state.stage = "to_pickup";
+      else if (order.status === "driver_arrived_pickup") state.stage = "at_pickup";
+      else if (order.status === "picked_up" || order.status === "on_the_way") state.stage = "to_destination";
+      else if (order.status === "arrived_destination") state.stage = "arrived_destination";
+      else state.stage = order.stage || state.stage || "to_pickup";
+
+      state.stageStartedAt = Number(order.stageStartedAt || order.acceptedAt || Date.now());
+      state.stageDuration = Number(order.stageDuration || STAGE_MS);
+      state.extraTimeUsed = Boolean(order.extraTimeUsed);
+      state.timerExpired = Boolean(order.timeExpired);
+
+      updateTimerUI();
+      startTimer();
+    }
+
+    function updateContactButtons(order) {
+      const phone = toWhatsAppPhone(order.customerPhone || "");
+      els.whatsappCustomer.style.display = phone ? "block" : "none";
+      els.whatsappCustomer.onclick = () => {
+        if (!phone) return alert("رقم الزبون غير موجود");
+        window.open(`https://wa.me/${phone}`, "_blank");
+      };
+    }
+
+    function showActiveOrder(order, id) {
+      state.activeOrderId = id;
+      state.activeOrder = order;
+      localStorage.setItem("currentTaxiOrderId", id);
+
+      els.ordersContainer.style.display = "none";
+      els.deliveryPage.style.display = "block";
+
+      els.customerName.textContent = `👤 ${safeText(order.customerName, "زبون")}`;
+      els.customerPhone.textContent = `📞 ${normalizePhone(order.customerPhone || "") || "—"}`;
+      els.pickupAddress.textContent = `من: موقع الزبون (${Number(order.customerLat || 0)}, ${Number(order.customerLng || 0)})`;
+      els.dropoffAddress.textContent = `إلى: ${safeText(order.targetLocation, `${Number(order.targetLat || 0)}, ${Number(order.targetLng || 0)}`)}`;
+      els.orderStatusText.textContent = safeText(order.statusText || order.status, "—");
+
+      els.detailsBlock.innerHTML = buildOrderDetailsHTML(order);
+      updateContactButtons(order);
+
+      setStageFromOrder(order);
+      buildMap(order);
+      syncActionVisibility();
+    }
+
+    async function syncProgressFromGPS(order) {
+      if (!order || !state.activeOrderId || state.driverLat == null || state.driverLng == null) return;
+
+      const pickup = getPickupLatLng(order);
+      const dropoff = getDropoffLatLng(order);
+      const distanceToPickup = calculateDistanceKm(state.driverLat, state.driverLng, pickup.lat, pickup.lng);
+      const distanceToDestination = calculateDistanceKm(state.driverLat, state.driverLng, dropoff.lat, dropoff.lng);
+
+      if (state.stage === "to_pickup" && distanceToPickup <= ARRIVAL_RADIUS_KM) {
+        state.stage = "at_pickup";
+        state.stageStartedAt = Date.now();
+        state.stageDuration = STAGE_MS;
+        state.extraTimeUsed = false;
+
+        await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+          status: "driver_arrived_pickup",
+          statusText: "السائق وصل إلى موقع الزبون",
+          stage: state.stage,
+          stageStartedAt: state.stageStartedAt,
+          stageDuration: state.stageDuration,
+          extraTimeUsed: state.extraTimeUsed,
+          arrivedPickupAt: Date.now(),
+          driverLat: state.driverLat,
+          driverLng: state.driverLng
+        }).catch(() => {});
+
+        updateTimerUI();
+        updateRoute(order);
+        return;
+      }
+
+      if (state.stage === "at_pickup" && distanceToPickup > LEAVE_RADIUS_KM) {
+        state.stage = "to_destination";
+        state.stageStartedAt = Date.now();
+        state.stageDuration = STAGE_MS;
+        state.extraTimeUsed = false;
+
+        await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+          status: "picked_up",
+          statusText: "السائق انطلق بالزبون",
+          stage: state.stage,
+          stageStartedAt: state.stageStartedAt,
+          stageDuration: state.stageDuration,
+          extraTimeUsed: state.extraTimeUsed,
+          leftPickupAt: Date.now(),
+          driverLat: state.driverLat,
+          driverLng: state.driverLng
+        }).catch(() => {});
+
+        updateTimerUI();
+        updateRoute(order);
+        return;
+      }
+
+      if (state.stage === "to_destination" && distanceToDestination <= DEST_RADIUS_KM) {
+        state.stage = "arrived_destination";
+
+        await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+          status: "arrived_destination",
+          statusText: "السائق وصل إلى الوجهة",
+          stage: state.stage,
+          driverLat: state.driverLat,
+          driverLng: state.driverLng,
+          arrivedDestinationAt: Date.now()
+        }).catch(() => {});
+
+        updateTimerUI();
+        updateRoute(order);
+      }
+
+      if (state.map && state.driverMarker) {
+        state.driverMarker.setLatLng([state.driverLat, state.driverLng]);
+        if (state.pickupMarker) state.pickupMarker.setLatLng([pickup.lat, pickup.lng]);
+        if (state.dropoffMarker) state.dropoffMarker.setLatLng([dropoff.lat, dropoff.lng]);
+        try { state.map.panTo([state.driverLat, state.driverLng], { animate: true, duration: 0.7 }); } catch (_) {}
+      }
+
+      updateRoute(order);
+    }
+
+    async function acceptTaxiOrder(id) {
+      if (state.activeOrderId) return alert("عندك طلب نشط حالياً");
+
+      const orderRef = ref(db, `taxi_orders/${id}`);
+      const tx = await runTransaction(orderRef, (current) => {
+        if (!current) return current;
+        if (!["pending", "waiting_driver"].includes(current.status)) return;
+
+        const vip = isVipOrder(current) || driverIsVip();
+        if (!vip && Date.now() < Number(current.createdAt || 0) + WAIT_NORMAL_MS) return;
+
+        return {
+          ...current,
+          status: "accepted",
+          statusText: "السائق متجه إلى موقع الزبون",
+          acceptedAt: Date.now(),
+          acceptedDriver: currentDriver.name || "",
+          driverId: currentDriver.id || "",
+          driverPhone: currentDriver.phone || "",
+          driverVehicle: currentDriver.vehicle || "",
+          driverImage: currentDriver.vehicle_image || currentDriver.image || "",
+          driverLat: state.driverLat,
+          driverLng: state.driverLng,
+          stage: "to_pickup",
+          stageStartedAt: Date.now(),
+          stageDuration: STAGE_MS,
+          extraTimeUsed: false,
+          timeExpired: false
+        };
+      });
+
+      if (!tx.committed) return alert("الطلب لم يعد متاحاً");
+
+      const snap = await get(orderRef);
+      if (!snap.exists()) return;
+      showActiveOrder(snap.val(), id);
+    }
+
+    async function rejectTaxiOrder(id) {
+      await update(ref(db, `taxi_orders/${id}/rejectedBy`), {
+        [currentDriver.id]: Date.now()
+      }).catch(() => {});
+
+      alert("تم رفض الطلب، وسيظهر لك مرة أخرى بعد 10 دقائق إذا بقي متاحاً.");
+    }
+
+    async function requestExtraTime() {
+      if (!state.activeOrderId || state.extraTimeUsed) return;
+
+      state.extraTimeUsed = true;
+      state.stageStartedAt = Date.now();
+      state.stageDuration = Number(state.stageDuration || STAGE_MS) + EXTRA_TIME_MS;
+      state.timerExpired = false;
+      els.extraTimeBtn.style.display = "none";
+
+      await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+        extraTimeUsed: true,
+        timeExpired: false,
+        stageStartedAt: state.stageStartedAt,
+        stageDuration: state.stageDuration,
+        statusText: "تم طلب زيادة وقت 5 دقائق"
+      }).catch(() => {});
+
+      startTimer();
+      alert("تمت إضافة 5 دقائق");
+    }
+
+    async function finishTrip() {
+      if (!state.activeOrderId || !state.activeOrder) return;
+      if (state.stage !== "arrived_destination") return alert("لا يمكن إكمال الطلب قبل الوصول");
+
+      const order = state.activeOrder;
+
+      await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+        status: "completed",
+        statusText: "تم إكمال رحلة التكسي",
+        completedAt: Date.now()
+      }).catch(() => {});
+
+      await update(ref(db, `drivers/${currentDriver.id}`), {
+        completedOrders: Number((currentDriver.completedOrders || 0)) + 1,
+        lastDeliveryAt: Date.now()
+      }).catch(() => {});
+
+      alert(`تمت الرحلة بنجاح. ربحك: ${money(order.finalPrice || (Number(order.price || 0) + Number(order.tip || 0)))} د.ع`);
+      clearActiveOrderUI();
+    }
+
+    async function markProblem() {
+      if (!state.activeOrderId) return;
+
+      await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+        status: "pending",
+        statusText: "السائق السابق واجه مشكلة بالتوصيل",
+        previousDriverId: currentDriver.id,
+        previousDriverName: currentDriver.name || "",
+        problemAt: Date.now(),
+        driverId: "",
+        acceptedDriver: "",
+        driverPhone: "",
+        driverVehicle: "",
+        driverImage: "",
+        driverLat: "",
+        driverLng: "",
+        stage: "pending"
+      }).catch(() => {});
+
+      alert("تم إرجاع الطلب للانتظار من جديد");
+      clearActiveOrderUI();
+    }
+
+    async function customerCancelled() {
+      if (!state.activeOrderId) return;
+
+      await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+        status: "cancelled_by_customer",
+        statusText: "الطلب ألغي من قبل الزبون",
+        cancelledAt: Date.now()
+      }).catch(() => {});
+
+      alert("تم تسجيل الإلغاء من قبل الزبون");
+      clearActiveOrderUI();
+    }
+
+    async function updateDriverLocation(position) {
+      state.driverLat = position.coords.latitude;
+      state.driverLng = position.coords.longitude;
+
+      await update(ref(db, `drivers/${currentDriver.id}`), {
+        latitude: state.driverLat,
+        longitude: state.driverLng,
+        status: "active",
+        lastUpdate: Date.now()
+      }).catch(() => {});
+
+      if (state.activeOrder) {
+        await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+          driverLat: state.driverLat,
+          driverLng: state.driverLng
+        }).catch(() => {});
+
+        if (state.driverMarker) state.driverMarker.setLatLng([state.driverLat, state.driverLng]);
+        await syncProgressFromGPS(state.activeOrder);
+      } else {
+        renderOrders(state.ordersCache);
+      }
+    }
+
+    function reconcileFromOrders(ordersObj) {
+      state.ordersCache = ordersObj || {};
+      updateDriverStats(state.ordersCache);
+
+      const current = state.activeOrderId ? ordersObj?.[state.activeOrderId] : null;
+
+      if (current && isActiveDriverOrder(current)) {
+        state.activeOrder = current;
+        showActiveOrder(current, state.activeOrderId);
+        return;
+      }
+
+      if (state.activeOrderId && (!current || isClosedOrder(current) || current.driverId !== currentDriver.id)) {
+        clearActiveOrderUI();
+      }
+
+      renderOrders(ordersObj);
+    }
+
+    window.acceptTaxiOrder = acceptTaxiOrder;
+    window.rejectTaxiOrder = rejectTaxiOrder;
+
+    els.doneBtn.onclick = finishTrip;
+    els.problemBtn.onclick = markProblem;
+    els.extraTimeBtn.onclick = requestExtraTime;
+    els.cancelByCustomerBtn.onclick = customerCancelled;
+
+    els.logoutBtn.onclick = () => {
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.href = "index.html";
+    };
+
+    navigator.geolocation.watchPosition(
+      updateDriverLocation,
+      () => {
+        if (!state.loadedOnce) alert("يجب تشغيل GPS حتى تعمل الخريطة والتتبع بشكل صحيح");
+        state.loadedOnce = true;
+      },
+      { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
+    );
+
+    onValue(ref(db, "taxi_orders"), (snapshot) => {
+      const ordersObj = snapshot.exists() ? snapshot.val() : {};
+      reconcileFromOrders(ordersObj);
+    });
+
+    if (state.activeOrderId) {
+      get(ref(db, `taxi_orders/${state.activeOrderId}`))
+        .then((snapshot) => {
+          if (!snapshot.exists()) {
+            clearActiveOrderUI();
+            return;
+          }
+
+          const order = snapshot.val();
+          if (isActiveDriverOrder(order)) {
+            showActiveOrder(order, state.activeOrderId);
+          } else {
+            clearActiveOrderUI();
+          }
+        })
+        .catch(() => {});
+    }
+
+    updateTimerUI();
+  </script>
+
+  <script type="module" src="notifications.js"></script>
+</body>
+</html>
