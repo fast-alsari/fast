@@ -14,8 +14,15 @@
     input,textarea,select{font-size:16px !important;touch-action:manipulation}
     .page{display:none}
     .active-page{display:block}
-    .header{background:linear-gradient(135deg,#ff8800,#ff5500);padding:16px 20px 14px;border-bottom-left-radius:30px;border-bottom-right-radius:30px;color:#fff;box-shadow:0 8px 25px rgba(0,0,0,.12)}
-    .header-top{display:flex;justify-content:space-between;align-items:center;gap:14px}
+    .header{
+background:linear-gradient(135deg,#ff8800,#ff5500);
+padding:10px 18px 8px;
+border-bottom-left-radius:24px;
+border-bottom-right-radius:24px;
+color:white;
+box-shadow:0 5px 18px rgba(0,0,0,.10);
+}
+   .header-top{display:flex;justify-content:space-between;align-items:center;gap:14px}
     .search-box{margin-top:18px;background:#fff;padding:14px;border-radius:16px;display:flex;align-items:center;gap:10px}
     .search-box i{color:#ff8800;font-size:18px;flex-shrink:0}
     .search-box input{border:none;outline:none;width:100%;font-size:15px;background:transparent}
@@ -82,12 +89,35 @@
     .nav-item i{font-size:21px;margin-bottom:5px}
     .empty{text-align:center;padding:35px;color:#777}
     .closed-store{opacity:.55;filter:grayscale(100%);background:#dcdcdc !important;pointer-events:none}
-    .store-status{margin-top:10px;display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;width:max-content;padding:5px 10px;border-radius:12px;background:#f3f3f3}
-    .status-dot{width:10px;height:10px;border-radius:50%}
-    .open-dot{background:#00c853;box-shadow:0 0 8px #00c853}
-    .closed-dot{background:red;box-shadow:0 0 8px red}
-    .open-text{color:#00a844}
-    .closed-text{color:#c40000}
+.store-status{
+position:absolute;
+top:12px;
+right:12px;
+z-index:5;
+background:none;
+padding:0;
+margin:0;
+}
+
+.status-dot{
+width:14px;
+height:14px;
+border-radius:50%;
+}
+
+.open-dot{
+background:#00ff44;
+box-shadow:
+0 0 6px #00ff44,
+0 0 12px #00ff44,
+0 0 18px #00ff44;
+}
+
+.closed-dot{
+background:#777;
+box-shadow:none;
+}
+    
     .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.10)}
     .ads-track{width:100%;height:100%;position:relative}
     .ad-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transform:translateX(100%);transition:transform .7s ease,opacity .7s ease;cursor:pointer}
@@ -520,7 +550,14 @@
           <div class="store-card ${store.vip ? "vip-store" : ""} ${!isOpen ? "closed-store" : ""}" onclick="${isOpen ? `openStore('${store.id}')` : ""}">
             ${store.vip ? `<div class="vip-badge">🔥 VIP</div>` : ""}
             <div class="store-status">
-              ${isOpen ? `<div class="status-dot open-dot"></div><span class="open-text">مفتوح حالياً</span>` : `<div class="status-dot closed-dot"></div><span class="closed-text">مغلق حالياً</span>`}
+              ${isOpen ? `
+              <div class="store-status">
+<div class="
+status-dot
+${isOpen ? 'open-dot' : 'closed-dot'}
+"></div>
+</div>
+              `}
             </div>
             <div class="store-header">
               <img src="${store.store_image || store.image || "store.png"}" class="store-image" onerror="this.src='store.png'" alt="store">
