@@ -5,8 +5,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>عالسريع</title>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css">
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
     html,body{background:#f7f7f7;overflow-x:hidden}
@@ -14,6 +21,7 @@
     input,textarea,select{font-size:16px!important;touch-action:manipulation}
     .page{display:none}
     .page.active-page{display:block}
+
     .top-bar{background:linear-gradient(135deg,#ff8800,#ff5500);padding:7px 14px 8px;border-bottom-left-radius:18px;border-bottom-right-radius:18px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
     .home-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:nowrap}
     .home-title{flex:1;min-width:0}
@@ -27,11 +35,13 @@
     .search-box{margin-top:8px;background:#fff;padding:10px 13px;border-radius:14px;display:flex;align-items:center;gap:10px}
     .search-box i{color:#ff8800;font-size:18px;flex-shrink:0}
     .search-box input{border:none;outline:none;width:100%;font-size:15px;background:transparent}
+
     .filters{display:flex;gap:10px;overflow:auto;padding:12px 15px 10px}
     .filters::-webkit-scrollbar{display:none}
     .filter-btn{border:none;padding:10px 18px;border-radius:14px;background:#eee;font-weight:700;cursor:pointer;white-space:nowrap;flex-shrink:0}
     .filter-btn.active{background:#ff8800;color:#fff}
     .filter-note{padding:0 15px 0;color:#888;font-size:12px;margin-top:-6px;margin-bottom:8px}
+
     .stores-container,.products-container,.cart-container{padding:15px;display:flex;flex-direction:column;gap:14px}
     .store-card{background:#fff;padding:10px 12px;border-radius:20px;box-shadow:0 5px 18px rgba(0,0,0,.06);position:relative;cursor:pointer;overflow:hidden;border:3px solid transparent;min-height:95px}
     .vip-store{background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#ff0000,#ff8800,#000000,#ff2200) border-box}
@@ -48,6 +58,7 @@
     .open-dot{background:#00c853;box-shadow:0 0 8px #00c853}
     .closed-dot{background:#cfcfcf;opacity:.4;box-shadow:none}
     .closed-store{opacity:.55;filter:grayscale(100%);background:#dcdcdc!important;pointer-events:none}
+
     .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.10)}
     .ads-track{width:100%;height:100%;position:relative}
     .ad-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transform:translateX(100%);transition:transform .7s ease,opacity .7s ease;cursor:pointer}
@@ -56,6 +67,7 @@
     .ad-slide img{width:100%;height:100%;object-fit:cover;display:block}
     .ad-controls{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 10px;pointer-events:none}
     .ad-nav-btn{width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,.88);color:#ff6600;font-size:18px;cursor:pointer;pointer-events:auto;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+
     .single-store-page{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#f7f7f7;z-index:999;overflow-y:auto;padding-bottom:120px}
     .store-top-bar{background:linear-gradient(135deg,#ff8800,#ff5500);padding:7px 14px 8px;display:flex;align-items:center;gap:12px;color:#fff;position:sticky;top:0;z-index:100;flex-wrap:wrap;box-shadow:0 4px 12px rgba(0,0,0,.08)}
     .back-btn{width:42px;height:42px;border-radius:50%;border:none;background:#fff;color:#ff6600;font-size:18px;cursor:pointer;flex-shrink:0}
@@ -65,6 +77,7 @@
     .store-title-wrap h2{font-size:18px;line-height:1.4;word-break:break-word}
     .store-title-wrap p{font-size:13px;opacity:.95}
     .single-store-search{margin:12px 15px 0;display:flex}
+
     .product-card{background:#fff;padding:12px;border-radius:22px;box-shadow:0 5px 18px rgba(0,0,0,.06);display:flex;gap:12px;align-items:center}
     .product-image{width:95px;height:95px;object-fit:cover;border-radius:18px;background:#eee;flex-shrink:0}
     .product-content{flex:1;min-width:0}
@@ -76,6 +89,7 @@
     .qty-btn{width:32px;height:32px;border:none;border-radius:10px;background:#ff8800;color:#fff;font-size:18px;font-weight:700;cursor:pointer}
     .qty-input{width:42px;height:32px;text-align:center;border:none;background:#fff;border-radius:10px;font-size:15px;font-weight:700}
     .add-btn{width:100%;padding:13px;border:none;border-radius:14px;background:#00b894;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+
     .cart-item{background:#fff;padding:12px;border-radius:20px;display:flex;gap:12px;align-items:center;box-shadow:0 5px 18px rgba(0,0,0,.06)}
     .cart-image{width:75px;height:75px;border-radius:16px;object-fit:cover;background:#eee;flex-shrink:0}
     .cart-info{flex:1;min-width:0}
@@ -83,11 +97,13 @@
     .cart-info p{margin-bottom:3px;color:#666;font-size:13px}
     .cart-note{font-size:12px;color:#777;line-height:1.5;word-break:break-word}
     .delete-btn{background:red;border:none;padding:10px 13px;border-radius:12px;color:#fff;cursor:pointer;font-weight:700;flex-shrink:0}
+
     .summary-box{background:#fff;margin:15px;padding:20px;border-radius:24px;box-shadow:0 5px 18px rgba(0,0,0,.06)}
     .bill-line{display:flex;justify-content:space-between;gap:10px;margin-bottom:12px;font-size:15px}
     .final-price{font-size:22px;font-weight:700;color:#ff8800;margin-top:10px}
     .tip-input{width:100%;padding:13px;border-radius:14px;border:1px solid #ddd;margin:15px 0;font-size:14px;outline:none}
     .send-order{width:100%;padding:15px;border:none;border-radius:15px;background:#00b894;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
+
     .account-page{padding-bottom:100px}
     .account-top{background:linear-gradient(135deg,#ff8800,#ff5500);padding:18px 15px 16px;border-bottom-left-radius:24px;border-bottom-right-radius:24px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08);text-align:center}
     .logo-box{width:80px;height:80px;background:#fff;border-radius:50%;margin:auto;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 15px rgba(0,0,0,.15)}
@@ -112,16 +128,50 @@
     .copy-btn{width:60px;border:none;border-radius:16px;background:#ff8800;color:#fff;font-size:20px;cursor:pointer}
     .use-btn{width:100%;height:55px;border:none;border-radius:18px;background:#00b894;color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:14px}
     .logout-btn{width:100%;height:58px;border:none;border-radius:20px;background:red;color:#fff;font-size:17px;font-weight:700;cursor:pointer;margin-top:10px}
+
     .bottom-bar{position:fixed;bottom:0;left:0;right:0;height:82px;background:#fff;display:flex;justify-content:space-around;align-items:center;box-shadow:0 -5px 18px rgba(0,0,0,.08);z-index:1000}
     .nav-item{display:flex;flex-direction:column;align-items:center;color:#888;cursor:pointer;min-width:64px}
     .nav-item.active{color:#ff8800}
     .nav-item i{font-size:21px;margin-bottom:5px}
     .nav-item span{font-size:12px;font-weight:700}
+
     .empty{text-align:center;padding:35px;color:#777}
     .map-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.55);z-index:99999;justify-content:center;align-items:center;padding:20px}
     .map-modal-box{width:100%;max-width:500px;height:420px;background:#fff;border-radius:24px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(0,0,0,.25)}
     .close-map-btn{position:absolute;top:12px;left:12px;width:38px;height:38px;border:none;border-radius:50%;background:red;color:#fff;font-size:18px;font-weight:700;z-index:10;cursor:pointer}
     .map-frame{width:100%;height:100%;border:none}
+
+    .order-page{position:fixed;inset:0;background:#f5f5f5;z-index:2000;display:none;overflow-y:auto}
+    .order-top-header{background:linear-gradient(135deg,#ff8800,#ff5500);padding:18px 16px 16px;color:#fff;border-bottom-left-radius:28px;border-bottom-right-radius:28px;box-shadow:0 8px 25px rgba(0,0,0,.12)}
+    .order-title{font-size:22px;font-weight:800;margin-bottom:8px;line-height:1.3}
+    .order-status{font-size:16px;line-height:1.8;opacity:.96}
+    .timer-box{margin-top:14px;padding:14px;border-radius:18px;background:rgba(255,255,255,.15);backdrop-filter:blur(10px);text-align:center;font-size:20px;font-weight:800}
+    .searching-box{padding:36px 20px;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .radar{width:170px;height:170px;border-radius:50%;border:5px solid #ff8800;animation:radarPulse 2s infinite;position:relative}
+    .radar::before{content:"";position:absolute;top:50%;left:50%;width:22px;height:22px;background:#ff8800;border-radius:50%;transform:translate(-50%,-50%)}
+    @keyframes radarPulse{0%{box-shadow:0 0 0 0 rgba(255,136,0,.5)}100%{box-shadow:0 0 0 55px rgba(255,136,0,0)}}
+    .search-text{margin-top:28px;font-size:20px;font-weight:700;color:#777;text-align:center;line-height:2}
+    .driver-card{background:#fff;margin:15px;padding:15px;border-radius:25px;box-shadow:0 5px 20px rgba(0,0,0,.08);display:none}
+    .driver-top{display:flex;align-items:center;gap:12px}
+    .driver-image{width:80px;height:80px;border-radius:20px;object-fit:cover;background:#eee}
+    .driver-info{flex:1}
+    .driver-name{font-size:21px;font-weight:800;margin-bottom:8px}
+    .driver-phone{font-size:15px;color:#666}
+    .whatsapp-btn{width:100%;margin-top:15px;padding:16px;border:none;border-radius:18px;background:#25D366;color:#fff;font-size:16px;font-weight:800;cursor:pointer}
+    #orderMap{width:100%;height:46vh;margin-top:10px;display:none;z-index:1}
+    .bottom-box{background:#fff;margin:15px;padding:20px;border-radius:25px;box-shadow:0 5px 20px rgba(0,0,0,.08)}
+    .bottom-box h3{font-size:21px;margin-bottom:16px}
+    .live-status{font-size:16px;line-height:2;color:#555}
+    .rating-box{display:none;margin-top:18px;padding:16px;border-radius:20px;background:#fff7ef}
+    .rating-title{font-size:18px;font-weight:800;color:#ff6600;margin-bottom:10px}
+    .rating-sub{font-size:14px;color:#666;line-height:1.8;margin-bottom:12px}
+    .stars-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+    .star-btn{border:none;background:#fff;color:#bbb;height:44px;border-radius:14px;font-size:18px;font-weight:800;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,.05)}
+    .star-btn.active{background:#ff8800;color:#fff}
+    .rating-score{margin-top:12px;font-size:15px;font-weight:800;color:#444;text-align:center}
+    .rating-submit{width:100%;padding:16px;border:none;border-radius:18px;background:#00b894;color:#fff;font-size:17px;font-weight:800;cursor:pointer;margin-top:14px;opacity:.55;pointer-events:none}
+    .rating-submit.enabled{opacity:1;pointer-events:auto}
+
     @media (max-width:480px){
       body{padding-bottom:94px}
       .home-top{gap:8px}
@@ -259,7 +309,46 @@
     </div>
   </div>
 
-  <div class="bottom-bar">
+  <div id="orderPage" class="order-page">
+    <div class="order-top-header">
+      <div class="order-title">طلبك قيد التوصيل 🚀</div>
+      <div class="order-status" id="orderStatus">جاري البحث عن سائق توصيل لإيصال طلبك</div>
+      <div class="timer-box" id="timerBox">00:00:00</div>
+    </div>
+
+    <div class="searching-box" id="searchingBox">
+      <div class="radar"></div>
+      <div class="search-text">جاري البحث عن سائق توصيل مناسب</div>
+    </div>
+
+    <div class="driver-card" id="driverCard">
+      <div class="driver-top">
+        <img id="driverImage" src="driver.png" class="driver-image" alt="driver">
+        <div class="driver-info">
+          <div class="driver-name" id="driverName">السائق</div>
+          <div class="driver-phone" id="driverPhone">رقم الهاتف</div>
+        </div>
+      </div>
+      <button class="whatsapp-btn" id="whatsappBtn">مراسلة السائق عبر واتساب</button>
+    </div>
+
+    <div id="orderMap"></div>
+
+    <div class="bottom-box">
+      <h3>حالة الطلب</h3>
+      <div class="live-status" id="liveStatus">بانتظار قبول سائق...</div>
+
+      <div class="rating-box" id="ratingBox">
+        <div class="rating-title">قيم السائق</div>
+        <div class="rating-sub">اختر تقييمك من 1 إلى 10 نجوم بعد وصول الطلب.</div>
+        <div class="stars-grid" id="starsGrid"></div>
+        <div class="rating-score" id="ratingScore">لم يتم الاختيار بعد</div>
+        <button class="rating-submit" id="ratingSubmit">إرسال التقييم والرجوع للرئيسية</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-bar" id="bottomBar">
     <div class="nav-item active" onclick="showPage('homePage',this)"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div>
     <div class="nav-item" onclick="showPage('cartPage',this)"><i class="fa-solid fa-cart-shopping"></i><span>السلة</span></div>
     <div class="nav-item" onclick="showPage('accountPage',this)"><i class="fa-solid fa-user"></i><span>الحساب</span></div>
@@ -267,7 +356,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-    import { getDatabase, ref, set, update, get, onValue } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+    import { getDatabase, ref, set, update, get, onValue, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
@@ -280,7 +369,9 @@
     const database = getDatabase(app);
 
     const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-    if(!currentUser || !currentUser.id) window.location.href = "index.html";
+    if(!currentUser || !currentUser.id){
+      window.location.href = "index.html";
+    }
 
     let allStores = [];
     let adsList = [];
@@ -295,6 +386,15 @@
     let homeSearchQuery = "";
     let currentFilterCategory = "all";
     let deliveryPrice = 1000;
+    let currentOrderId = localStorage.getItem("currentOrderId") || "";
+    let orderUnsubscribe = null;
+    let orderTimerInterval = null;
+    let orderMap = null;
+    let driverMarker = null;
+    let customerMarker = null;
+    let routeControl = null;
+    let currentRating = 0;
+    let orderLoadedOnce = false;
 
     const storesContainer = document.getElementById("storesContainer");
     const adsSlider = document.getElementById("adsSlider");
@@ -302,25 +402,43 @@
     const productSearchInput = document.getElementById("productSearchInput");
     const blockedStatuses = ["waiting_driver","accepted","going_to_store","picked_up","on_the_way","arrived"];
 
-    window.addEventListener("pageshow", async () => {
-      const currentOrderId = localStorage.getItem("currentOrderId");
-      if(!currentOrderId) return;
-      const snapshot = await get(ref(database, "orders/" + currentOrderId));
-      if(!snapshot.exists()) return;
-      const order = snapshot.val();
-      if(blockedStatuses.includes(order.status)) window.location.replace("talab.html?orderId=" + currentOrderId);
-    });
-
-    const existingOrderId = localStorage.getItem("currentOrderId");
-    if(existingOrderId){
-      const activeOrderSnapshot = await get(ref(database, "orders/" + existingOrderId));
-      if(activeOrderSnapshot.exists()){
-        const activeOrder = activeOrderSnapshot.val();
-        if(blockedStatuses.includes(activeOrder.status)) window.location.href = "talab.html?orderId=" + existingOrderId;
-      }else{
-        localStorage.removeItem("currentOrderId");
-      }
+    function showAppPage(pageId, element){
+      document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
+      document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
+      document.getElementById("orderPage").style.display = "none";
+      document.getElementById(pageId).classList.add("active-page");
+      if(element) element.classList.add("active");
+      document.getElementById("bottomBar").style.display = "flex";
+      window.scrollTo({ top:0, behavior:"smooth" });
     }
+
+    window.showPage = function(pageId, element){
+      document.getElementById("singleStorePage").style.display = "none";
+      if(pageId === "orderPage"){
+        openOrderPage();
+        return;
+      }
+      showAppPage(pageId, element);
+    };
+
+    window.openTaxiPage = function(){
+      window.location.href = "taxie.html";
+    };
+
+    window.addEventListener("pageshow", async () => {
+      if(currentOrderId){
+        const snapshot = await get(ref(database, "orders/" + currentOrderId));
+        if(snapshot.exists()){
+          const order = snapshot.val();
+          if(blockedStatuses.includes(order.status) || order.status === "delivered"){
+            openOrderPage();
+          }
+        }else{
+          localStorage.removeItem("currentOrderId");
+          currentOrderId = "";
+        }
+      }
+    });
 
     async function loadCurrentUser(){
       let tableName = "";
@@ -355,52 +473,81 @@
         document.getElementById("accountMapFrame").src = `https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
       }
     }
+
     loadCurrentUser();
 
     function calculateDistance(lat1, lon1, lat2, lon2){
-      const R = 6371, dLat = (lat2-lat1) * Math.PI / 180, dLon = (lon2-lon1) * Math.PI / 180;
-      const a = Math.sin(dLat/2)*Math.sin(dLat/2) + Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLon/2)*Math.sin(dLon/2);
+      const R = 6371;
+      const dLat = (lat2-lat1) * Math.PI / 180;
+      const dLon = (lon2-lon1) * Math.PI / 180;
+      const a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(lat1 * Math.PI / 180) *
+        Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon/2) *
+        Math.sin(dLon/2);
       return R * (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
     }
 
     function isStoreOpen(store){
       if(!store.workingHours) return false;
       const days = ["الأحد","الاثنين","الثلاثاء","الأربعاء","الخميس","الجمعة","السبت"];
-      const now = new Date(), currentDay = days[now.getDay()], currentTime = now.getHours() + (now.getMinutes() / 60);
+      const now = new Date();
+      const currentDay = days[now.getDay()];
+      const currentTime = now.getHours() + (now.getMinutes() / 60);
+
       let todaySchedule = null;
-      Object.values(store.workingHours).forEach(item => { if(item.day === currentDay) todaySchedule = item; });
+      Object.values(store.workingHours).forEach(item => {
+        if(item.day === currentDay) todaySchedule = item;
+      });
+
       if(!todaySchedule) return false;
       if(todaySchedule.from === "مغلق" || todaySchedule.to === "مغلق") return false;
 
       function convertTo24(time){
         if(!time) return 0;
-        const parts = time.trim().split(" "), hourMinute = parts[0], period = parts[1];
-        let hour = parseInt(hourMinute.split(":")[0]), minute = hourMinute.includes(":") ? parseInt(hourMinute.split(":")[1]) : 0;
-        if(period === "AM"){ if(hour === 12) hour = 0; }
-        else if(period === "PM"){ if(hour !== 12) hour += 12; }
+        const parts = time.trim().split(" ");
+        const hourMinute = parts[0];
+        const period = parts[1];
+        let hour = parseInt(hourMinute.split(":")[0]);
+        let minute = hourMinute.includes(":") ? parseInt(hourMinute.split(":")[1]) : 0;
+        if(period === "AM"){
+          if(hour === 12) hour = 0;
+        }else if(period === "PM"){
+          if(hour !== 12) hour += 12;
+        }
         return hour + (minute / 60);
       }
 
-      const fromHour = convertTo24(todaySchedule.from), toHour = convertTo24(todaySchedule.to);
+      const fromHour = convertTo24(todaySchedule.from);
+      const toHour = convertTo24(todaySchedule.to);
       if(fromHour === toHour) return true;
       if(fromHour < toHour) return currentTime >= fromHour && currentTime < toHour;
       return currentTime >= fromHour || currentTime < toHour;
     }
 
     function sortStores(stores){
-      return [...stores].sort((a,b) => {
-        const aVip = !!a.vip, bVip = !!b.vip;
+      return [...stores].sort((a, b) => {
+        const aVip = !!a.vip;
+        const bVip = !!b.vip;
         if(aVip && !bVip) return -1;
         if(!aVip && bVip) return 1;
-        const aOpen = isStoreOpen(a), bOpen = isStoreOpen(b);
+
+        const aOpen = isStoreOpen(a);
+        const bOpen = isStoreOpen(b);
         if(aOpen && !bOpen) return -1;
         if(!aOpen && bOpen) return 1;
+
         return Number(a.distance || 0) - Number(b.distance || 0);
       });
     }
 
     function normalizeStore(store){
-      return {...store, vip:String(store.accountType || "").toLowerCase() === "vip", distance:store.distance != null ? Number(store.distance) : Number(store.distanceKm || 0)};
+      return {
+        ...store,
+        vip: String(store.accountType || "").toLowerCase() === "vip",
+        distance: store.distance != null ? Number(store.distance) : Number(store.distanceKm || 0)
+      };
     }
 
     function homeMatchesQuery(store, query){
@@ -422,8 +569,13 @@
       const filtersContainer = document.querySelector(".filters");
       filtersContainer.innerHTML = `<button class="filter-btn active" data-category="all">الكل</button>`;
       const categories = [];
-      allStores.forEach(store => { if(store.category && !categories.includes(store.category)) categories.push(store.category); });
-      categories.forEach(category => { filtersContainer.innerHTML += `<button class="filter-btn" data-category="${category}">${category}</button>`; });
+      allStores.forEach(store => {
+        if(store.category && !categories.includes(store.category)) categories.push(store.category);
+      });
+      categories.forEach(category => {
+        filtersContainer.innerHTML += `<button class="filter-btn" data-category="${category}">${category}</button>`;
+      });
+
       document.querySelectorAll(".filter-btn").forEach(button => {
         button.addEventListener("click", () => {
           document.querySelectorAll(".filter-btn").forEach(btn => btn.classList.remove("active"));
@@ -434,77 +586,13 @@
       });
     }
 
-    function startLiveStores(){
-      onValue(ref(database, "stores"), snapshot => {
-        allStores = [];
-        if(!snapshot.exists()){ renderStores([]); generateFilters(); return; }
-        if(userLatitude === null || userLongitude === null) return;
-        const stores = snapshot.val();
-        for(const key in stores){
-          let store = normalizeStore(stores[key]); store.id = key;
-          if(store.status !== "active") continue;
-          if(!store.latitude || !store.longitude) continue;
-          const distance = calculateDistance(userLatitude, userLongitude, Number(store.latitude), Number(store.longitude));
-          if(distance > 25) continue;
-          store.distance = distance.toFixed(1);
-          allStores.push(store);
-        }
-        generateFilters();
-        renderStores(getVisibleStores());
-      });
-    }
-
-    function startAdsSlider(){
-      onValue(ref(database, "ads"), snapshot => {
-        adsTrack.innerHTML = "";
-        adsList = [];
-        if(!snapshot.exists()){ adsSlider.style.display = "none"; stopAdTimer(); return; }
-        const ads = snapshot.val();
-        for(const key in ads){
-          const ad = ads[key];
-          if(ad.status !== "active" || !ad.image) continue;
-          adsList.push({id:key, ...ad});
-        }
-        if(!adsList.length){ adsSlider.style.display = "none"; stopAdTimer(); return; }
-        adsSlider.style.display = "block";
-        if(currentAdIndex >= adsList.length) currentAdIndex = 0;
-        renderAds();
-        startAdTimer();
-      });
-    }
-
-    function renderAds(){
-      adsTrack.innerHTML = adsList.map((ad, index) => `
-        <div class="ad-slide ${index === currentAdIndex ? "active" : ""} ${index < currentAdIndex ? "prev" : ""}" onclick="openAd(${index})">
-          <img src="${ad.image}" onerror="this.src='store.png'" alt="ad">
-        </div>
-      `).join("");
-    }
-
-    function stopAdTimer(){ if(adTimer) clearInterval(adTimer); adTimer = null; }
-    function startAdTimer(){ stopAdTimer(); if(adsList.length <= 1) return; adTimer = setInterval(() => advanceAd(1), 5000); }
-    function resetAdTimer(){ startAdTimer(); }
-    function advanceAd(step = 1){
-      if(!adsList.length) return;
-      currentAdIndex = (currentAdIndex + step + adsList.length) % adsList.length;
-      renderAds();
-      resetAdTimer();
-    }
-
-    window.nextAd = function(){ advanceAd(1); };
-    window.prevAd = function(){ advanceAd(-1); };
-    window.openAd = function(index){
-      const ad = adsList[index];
-      if(!ad) return;
-      if(ad.storeId){ openStore(ad.storeId); return; }
-      if(ad.link) window.open(ad.link, "_blank");
-    };
-
-    window.openTaxiPage = function(){ window.location.href = "taxie.html"; };
-
     function renderStores(stores){
       storesContainer.innerHTML = "";
-      if(!stores.length){ storesContainer.innerHTML = `<div class="empty">لا توجد نتائج</div>`; return; }
+      if(!stores.length){
+        storesContainer.innerHTML = `<div class="empty">لا توجد نتائج</div>`;
+        return;
+      }
+
       stores.forEach(store => {
         const isOpen = isStoreOpen(store);
         storesContainer.innerHTML += `
@@ -530,10 +618,125 @@
       });
     }
 
+    function startLiveStores(){
+      onValue(ref(database, "stores"), snapshot => {
+        allStores = [];
+        if(!snapshot.exists()){
+          renderStores([]);
+          generateFilters();
+          return;
+        }
+        if(userLatitude === null || userLongitude === null) return;
+
+        const stores = snapshot.val();
+        for(const key in stores){
+          let store = normalizeStore(stores[key]);
+          store.id = key;
+          if(store.status !== "active") continue;
+          if(!store.latitude || !store.longitude) continue;
+
+          const distance = calculateDistance(
+            userLatitude,
+            userLongitude,
+            Number(store.latitude),
+            Number(store.longitude)
+          );
+          if(distance > 25) continue;
+
+          store.distance = distance.toFixed(1);
+          allStores.push(store);
+        }
+
+        generateFilters();
+        renderStores(getVisibleStores());
+      });
+    }
+
+    function startAdsSlider(){
+      onValue(ref(database, "ads"), snapshot => {
+        adsTrack.innerHTML = "";
+        adsList = [];
+        if(!snapshot.exists()){
+          adsSlider.style.display = "none";
+          stopAdTimer();
+          return;
+        }
+
+        const ads = snapshot.val();
+        for(const key in ads){
+          const ad = ads[key];
+          if(ad.status !== "active" || !ad.image) continue;
+          adsList.push({ id:key, ...ad });
+        }
+
+        if(!adsList.length){
+          adsSlider.style.display = "none";
+          stopAdTimer();
+          return;
+        }
+
+        adsSlider.style.display = "block";
+        if(currentAdIndex >= adsList.length) currentAdIndex = 0;
+        renderAds();
+        startAdTimer();
+      });
+    }
+
+    function renderAds(){
+      adsTrack.innerHTML = adsList.map((ad, index) => `
+        <div class="ad-slide ${index === currentAdIndex ? "active" : ""} ${index < currentAdIndex ? "prev" : ""}" onclick="openAd(${index})">
+          <img src="${ad.image}" onerror="this.src='store.png'" alt="ad">
+        </div>
+      `).join("");
+    }
+
+    function stopAdTimer(){
+      if(adTimer) clearInterval(adTimer);
+      adTimer = null;
+    }
+
+    function startAdTimer(){
+      stopAdTimer();
+      if(adsList.length <= 1) return;
+      adTimer = setInterval(() => advanceAd(1), 5000);
+    }
+
+    function resetAdTimer(){
+      startAdTimer();
+    }
+
+    function advanceAd(step = 1){
+      if(!adsList.length) return;
+      currentAdIndex = (currentAdIndex + step + adsList.length) % adsList.length;
+      renderAds();
+      resetAdTimer();
+    }
+
+    window.nextAd = function(){
+      advanceAd(1);
+    };
+
+    window.prevAd = function(){
+      advanceAd(-1);
+    };
+
+    window.openAd = function(index){
+      const ad = adsList[index];
+      if(!ad) return;
+      if(ad.storeId){
+        openStore(ad.storeId);
+        return;
+      }
+      if(ad.link){
+        window.open(ad.link, "_blank");
+      }
+    };
+
     function renderProducts(){
       if(!currentStore) return;
       const container = document.getElementById("singleProductsContainer");
       const query = currentProductSearch.trim().toLowerCase();
+
       const filtered = currentStoreProducts.filter(product => {
         if(product.deleted === true) return false;
         if(!(product.status === "active" || product.status === "approved")) return false;
@@ -541,7 +744,12 @@
         const fields = [product.name, product.description, product.category].map(v => String(v || "").toLowerCase());
         return fields.some(v => v.includes(query));
       });
-      if(!filtered.length){ container.innerHTML = `<div class="empty">${currentStoreProducts.length ? "لا توجد منتجات مطابقة" : "لا توجد منتجات حالياً"}</div>`; return; }
+
+      if(!filtered.length){
+        container.innerHTML = `<div class="empty">${currentStoreProducts.length ? "لا توجد منتجات مطابقة" : "لا توجد منتجات حالياً"}</div>`;
+        return;
+      }
+
       container.innerHTML = filtered.map(product => `
         <div class="product-card">
           <img src="${product.image || "product.png"}" class="product-image" onerror="this.src='product.png'" alt="product">
@@ -562,12 +770,23 @@
       `).join("");
     }
 
-    document.getElementById("searchInput").addEventListener("input", function(){ homeSearchQuery = this.value.toLowerCase().trim(); renderStores(getVisibleStores()); });
-    productSearchInput.addEventListener("input", function(){ currentProductSearch = this.value; renderProducts(); });
+    document.getElementById("searchInput").addEventListener("input", function(){
+      homeSearchQuery = this.value.toLowerCase().trim();
+      renderStores(getVisibleStores());
+    });
+
+    productSearchInput.addEventListener("input", function(){
+      currentProductSearch = this.value;
+      renderProducts();
+    });
 
     window.openStore = async function(storeId){
       const store = allStores.find(s => s.id === storeId);
-      if(!store){ alert("المتجر غير موجود"); return; }
+      if(!store){
+        alert("المتجر غير موجود");
+        return;
+      }
+
       currentStore = store;
       currentProductSearch = "";
       productSearchInput.value = "";
@@ -576,6 +795,7 @@
       document.getElementById("singleStoreCategory").innerHTML = store.category || "";
       document.getElementById("singleStoreImage").src = store.store_image || store.image || "store.png";
       document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">جاري تحميل المنتجات...</div>`;
+
       try{
         const snapshot = await get(ref(database, "store_products/" + storeId));
         currentStoreProducts = [];
@@ -604,14 +824,31 @@
       productSearchInput.value = "";
     };
 
-    window.increaseQty = function(id){ const input = document.getElementById(`qty_${id}`); input.value = Number(input.value) + 1; };
-    window.decreaseQty = function(id){ const input = document.getElementById(`qty_${id}`); if(Number(input.value) > 1) input.value = Number(input.value) - 1; };
+    window.increaseQty = function(id){
+      const input = document.getElementById(`qty_${id}`);
+      input.value = Number(input.value) + 1;
+    };
+
+    window.decreaseQty = function(id){
+      const input = document.getElementById(`qty_${id}`);
+      if(Number(input.value) > 1) input.value = Number(input.value) - 1;
+    };
 
     window.addToCart = function(product){
       const qty = Number(document.getElementById(`qty_${product.id}`).value || 1);
       const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId);
-      if(existingProduct) existingProduct.qty += qty;
-      else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""});
+
+      if(existingProduct){
+        existingProduct.qty += qty;
+      }else{
+        cart.push({
+          ...product,
+          qty,
+          storeId: product.storeId || "",
+          storeName: product.storeName || ""
+        });
+      }
+
       localStorage.setItem("cart", JSON.stringify(cart));
       updateCart();
       alert("تمت الاضافة");
@@ -621,6 +858,7 @@
       const cartContainer = document.getElementById("cartContainer");
       const itemsTotal = document.getElementById("itemsTotal");
       const finalTotal = document.getElementById("finalTotal");
+
       cartContainer.innerHTML = "";
       if(cart.length === 0){
         cartContainer.innerHTML = `<div class="empty">السلة فارغة</div>`;
@@ -631,10 +869,10 @@
       }
 
       let total = 0;
-
       cart.forEach(item => {
         const itemTotal = Number(item.price) * Number(item.qty);
         total += itemTotal;
+
         cartContainer.innerHTML += `
           <div class="cart-item">
             <img src="${item.image || "product.png"}" class="cart-image" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.src='product.png'" alt="item">
@@ -714,56 +952,345 @@
     document.getElementById("tipInput").addEventListener("input", updateCart);
     updateCart();
 
-    navigator.geolocation.watchPosition(
-      (position) => {
-        userLatitude = position.coords.latitude;
-        userLongitude = position.coords.longitude;
+    function openHomeAfterOrder(message){
+      if(message) alert(message);
+      document.getElementById("orderPage").style.display = "none";
+      document.getElementById("bottomBar").style.display = "flex";
+      document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
+      const firstItem = document.querySelector(".bottom-bar .nav-item");
+      if(firstItem) firstItem.classList.add("active");
+      showAppPage("homePage", firstItem);
+      localStorage.removeItem("currentOrderId");
+      currentOrderId = "";
+      stopOrderTimer();
+      stopOrderListener();
+    }
 
-        set(ref(database, "customers/" + currentUser.id + "/userLat"), userLatitude);
-        set(ref(database, "customers/" + currentUser.id + "/userLng"), userLongitude);
+    function stopOrderTimer(){
+      if(orderTimerInterval) clearInterval(orderTimerInterval);
+      orderTimerInterval = null;
+    }
 
-        localStorage.setItem("userLat", userLatitude);
-        localStorage.setItem("userLng", userLongitude);
+    function stopOrderListener(){
+      if(orderUnsubscribe){
+        try{ orderUnsubscribe(); }catch(e){}
+      }
+      orderUnsubscribe = null;
+    }
 
-        const savedUser = JSON.parse(localStorage.getItem("user") || "null");
-        if(savedUser){
-          savedUser.userLat = userLatitude;
-          savedUser.userLng = userLongitude;
-          localStorage.setItem("user", JSON.stringify(savedUser));
+    function formatTime(ms){
+      if(ms <= 0) return "00:00:00";
+      let totalSeconds = Math.floor(ms / 1000);
+      let hours = String(Math.floor(totalSeconds / 3600)).padStart(2,"0");
+      let minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,"0");
+      let seconds = String(totalSeconds % 60).padStart(2,"0");
+      return `${hours}:${minutes}:${seconds}`;
+    }
+
+    function startOrderMainTimer(createdAt){
+      stopOrderTimer();
+      orderTimerInterval = setInterval(async () => {
+        const remaining = Math.max(0, (60 * 60 * 1000) - (Date.now() - createdAt));
+        document.getElementById("timerBox").innerHTML = formatTime(remaining);
+
+        if(remaining <= 0){
+          stopOrderTimer();
+          try{
+            if(currentOrderId) await update(ref(database, "orders/" + currentOrderId), {
+              status:"failed_no_driver",
+              statusText:"الطلب الغي بسبب عدم وجود سائق قبل طلب توصيلك",
+              failedDriverSearch:true,
+              closedAt:Date.now()
+            });
+          }catch(e){}
+          try{ if(currentOrderId) await remove(ref(database, "orders/" + currentOrderId)); }catch(e){}
+          openHomeAfterOrder("الطلب الغي بسبب عدم وجود سائق قبل طلب توصيلك");
+        }
+      }, 1000);
+    }
+
+    const bikeIcon = L.divIcon({
+      html:`<div style="width:70px;height:70px;display:flex;justify-content:center;align-items:center;"><img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));"></div>`,
+      className:"", iconSize:[70,70], iconAnchor:[35,35]
+    });
+
+    const customerIcon = L.divIcon({
+      html:`<div style="font-size:40px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">🚩</div>`,
+      className:"", iconSize:[40,40], iconAnchor:[20,35]
+    });
+
+    function createStoreIcon(store){
+      return L.divIcon({
+        html:`<div style="display:flex;flex-direction:column;align-items:center;">
+                <img src="${store.storeImage || 'store.png'}" style="width:58px;height:58px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.25);">
+                <div style="background:#fff;padding:5px 10px;border-radius:12px;font-size:12px;font-weight:700;margin-top:4px;box-shadow:0 2px 10px rgba(0,0,0,.15);white-space:nowrap;">${store.storeName || "متجر"}</div>
+              </div>`,
+        className:"", iconSize:[60,60], iconAnchor:[30,30]
+      });
+    }
+
+    function drawRoute(fromLat, fromLng, toLat, toLng, color){
+      if(!orderMap || !fromLat || !fromLng || !toLat || !toLng) return;
+
+      if(routeControl){
+        try{ orderMap.removeControl(routeControl); }catch(e){}
+        routeControl = null;
+      }
+
+      routeControl = L.Routing.control({
+        waypoints:[L.latLng(fromLat, fromLng), L.latLng(toLat, toLng)],
+        routeWhileDragging:false,
+        addWaypoints:false,
+        draggableWaypoints:false,
+        fitSelectedRoutes:true,
+        show:false,
+        lineOptions:{ styles:[{ color, weight:7, opacity:.92 }] },
+        router:L.Routing.osrmv1({ serviceUrl:"https://router.project-osrm.org/route/v1" }),
+        createMarker:()=>null
+      }).addTo(orderMap);
+
+      routeControl.on("routesfound", (e) => {
+        if(e.routes && e.routes[0] && e.routes[0].coordinates){
+          try{
+            orderMap.fitBounds(e.routes[0].coordinates, { padding:[40,40] });
+          }catch(err){}
+        }
+      });
+    }
+
+    function initOrderMap(order){
+      document.getElementById("orderMap").style.display = "block";
+
+      if(!orderMap){
+        orderMap = L.map("orderMap", {
+          zoomControl:true,
+          scrollWheelZoom:false,
+          doubleClickZoom:false,
+          touchZoom:false,
+          boxZoom:false,
+          keyboard:false
+        }).setView([Number(order.customerLat), Number(order.customerLng)], 15);
+
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19 }).addTo(orderMap);
+      }
+
+      if(customerMarker){
+        try{ orderMap.removeLayer(customerMarker); }catch(e){}
+      }
+
+      customerMarker = L.marker([Number(order.customerLat), Number(order.customerLng)], { icon:customerIcon }).addTo(orderMap).bindPopup("موقع الزبون");
+
+      setTimeout(() => { try{ orderMap.invalidateSize(); }catch(e){} }, 400);
+    }
+
+    function getStoreTarget(order){
+      if(order.storesData && order.storesData.length > 0){
+        const store = order.storesData[0];
+        return { lat:Number(store.storeLat), lng:Number(store.storeLng) };
+      }
+      if(order.storeLat && order.storeLng){
+        return { lat:Number(order.storeLat), lng:Number(order.storeLng) };
+      }
+      return null;
+    }
+
+    function updateDriverLocation(order){
+      initOrderMap(order);
+
+      if(!order.driverLat || !order.driverLng){
+        return;
+      }
+
+      const driverLat = Number(order.driverLat);
+      const driverLng = Number(order.driverLng);
+
+      if(!driverMarker){
+        driverMarker = L.marker([driverLat, driverLng], { icon:bikeIcon }).addTo(orderMap).bindPopup("سائق التوصيل");
+      }else{
+        driverMarker.setLatLng([driverLat, driverLng]);
+      }
+
+      const storeTarget = getStoreTarget(order);
+
+      if(order.status === "accepted" || order.status === "preparing_order"){
+        if(storeTarget){
+          drawRoute(driverLat, driverLng, storeTarget.lat, storeTarget.lng, "#ff8800");
+        }
+      }else if(order.status === "on_the_way" || order.status === "arrived" || order.status === "delivered"){
+        drawRoute(driverLat, driverLng, Number(order.customerLat), Number(order.customerLng), "#1e88e5");
+      }
+    }
+
+    function buildStars(){
+      const starsGrid = document.getElementById("starsGrid");
+      starsGrid.innerHTML = "";
+      for(let i = 1; i <= 10; i++){
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "star-btn";
+        btn.dataset.rating = String(i);
+        btn.innerHTML = `<i class="fa-solid fa-star"></i> ${i}`;
+        btn.addEventListener("click", () => selectRating(i));
+        starsGrid.appendChild(btn);
+      }
+    }
+
+    function selectRating(value){
+      currentRating = value;
+      document.getElementById("ratingScore").innerHTML = `تم اختيار تقييم: ${value} من 10`;
+      document.querySelectorAll(".star-btn").forEach(btn => {
+        btn.classList.toggle("active", Number(btn.dataset.rating) <= value);
+      });
+      document.getElementById("ratingSubmit").classList.add("enabled");
+    }
+
+    async function submitRating(){
+      if(!currentOrderId || !currentRating) return;
+
+      try{
+        await update(ref(database, "orders/" + currentOrderId), {
+          customerRating: currentRating,
+          customerRated: true,
+          customerRatedAt: Date.now(),
+          customerRatedBy: currentUser.id,
+          status: "customer_rated"
+        });
+      }catch(e){}
+
+      openHomeAfterOrder("تم تقييم السائق بنجاح");
+    }
+
+    document.getElementById("ratingSubmit").addEventListener("click", submitRating);
+    buildStars();
+
+    function openOrderPage(){
+      if(orderLoadedOnce && !currentOrderId) return;
+      document.getElementById("singleStorePage").style.display = "none";
+      document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
+      document.getElementById("orderPage").style.display = "block";
+      document.getElementById("bottomBar").style.display = "none";
+      stopOrderListener();
+
+      if(!currentOrderId){
+        currentOrderId = localStorage.getItem("currentOrderId") || "";
+      }
+      if(!currentOrderId){
+        openHomeAfterOrder();
+        return;
+      }
+
+      const orderRef = ref(database, "orders/" + currentOrderId);
+      orderUnsubscribe = onValue(orderRef, (snapshot) => {
+        if(!snapshot.exists()){
+          openHomeAfterOrder("تم إلغاء الطلب");
+          return;
         }
 
-        if(allStores.length === 0) startLiveStores();
-      },
-      () => { alert("يرجى تشغيل GPS"); },
-      { enableHighAccuracy:true, maximumAge:0, timeout:10000 }
-    );
+        const order = snapshot.val();
+        orderLoadedOnce = true;
+        startOrderMainTimer(order.createdAt || Date.now());
 
-    startAdsSlider();
+        if(order.status === "waiting_driver"){
+          document.getElementById("searchingBox").style.display = "flex";
+          document.getElementById("driverCard").style.display = "none";
+          document.getElementById("ratingBox").style.display = "none";
+          document.getElementById("orderStatus").innerHTML = "جاري البحث عن سائق توصيل";
+          document.getElementById("liveStatus").innerHTML = "بانتظار قبول سائق...";
+        }
+
+        if(order.status === "accepted" || order.status === "preparing_order"){
+          document.getElementById("searchingBox").style.display = "none";
+          document.getElementById("driverCard").style.display = "block";
+          document.getElementById("ratingBox").style.display = "none";
+          document.getElementById("orderStatus").innerHTML = order.status === "accepted" ? "تم قبول الطلب" : "السائق وصل للمتجر وجاري تجهيز الطلب";
+          document.getElementById("liveStatus").innerHTML = order.status === "accepted" ? "السائق متجه إلى المتجر" : "المتجر يقوم بتجهيز الطلب";
+
+          document.getElementById("driverName").innerHTML = order.acceptedDriver || "السائق";
+          document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
+          document.getElementById("driverImage").src = order.driverImage || "driver.png";
+
+          document.getElementById("whatsappBtn").onclick = function(){
+            if(order.driverPhone){
+              window.open(`https://wa.me/${order.driverPhone}`);
+            }else{
+              alert("لا يوجد رقم للسائق");
+            }
+          };
+
+          updateDriverLocation(order);
+        }
+
+        if(order.status === "on_the_way" || order.status === "arrived"){
+          document.getElementById("searchingBox").style.display = "none";
+          document.getElementById("driverCard").style.display = "block";
+          document.getElementById("ratingBox").style.display = "none";
+          document.getElementById("orderStatus").innerHTML = order.status === "on_the_way" ? "السائق استلم الطلب وهو بالطريق إليك" : "وصل السائق";
+          document.getElementById("liveStatus").innerHTML = order.status === "on_the_way" ? (order.statusText || "السائق متجه إليك") : "السائق وصل إلى موقعك";
+
+          document.getElementById("driverName").innerHTML = order.acceptedDriver || "السائق";
+          document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
+          document.getElementById("driverImage").src = order.driverImage || "driver.png";
+
+          updateDriverLocation(order);
+        }
+
+        if(order.status === "delivered"){
+          stopOrderTimer();
+          document.getElementById("searchingBox").style.display = "none";
+          document.getElementById("driverCard").style.display = "block";
+          document.getElementById("ratingBox").style.display = order.customerRated ? "none" : "block";
+          document.getElementById("orderStatus").innerHTML = "تم تسليم الطلب";
+          document.getElementById("liveStatus").innerHTML = order.customerRated ? "تم تقييم السائق مسبقاً" : "قيم السائق الآن ثم ارجع للرئيسية";
+
+          document.getElementById("driverName").innerHTML = order.acceptedDriver || "السائق";
+          document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
+          document.getElementById("driverImage").src = order.driverImage || "driver.png";
+
+          updateDriverLocation(order);
+
+          if(order.customerRated){
+            setTimeout(() => openHomeAfterOrder(), 1200);
+          }
+        }
+
+        if(order.status === "failed_no_driver" || order.status === "driver_timeout"){
+          openHomeAfterOrder("الطلب الغي بسبب عدم وجود سائق قبل طلب توصيلك");
+        }
+
+        if(order.status === "cancelled_by_customer" || order.status === "rejected_by_customer"){
+          openHomeAfterOrder("تم إلغاء الطلب");
+        }
+      });
+    }
 
     window.sendOrder = async function(){
       const sendBtn = document.getElementById("sendOrderBtn");
       if(sendBtn.disabled) return;
+
       sendBtn.disabled = true;
       sendBtn.innerHTML = "جاري ارسال الطلب...";
 
       if(cart.length === 0){
         alert("السلة فارغة");
         sendBtn.disabled = false;
-        sendBtn.innerHTML = "طلب توصيل";
+        sendBtn.innerHTML = "طلب توصيل 🚀";
         return;
       }
 
       navigator.geolocation.getCurrentPosition(async (position) => {
         let total = 0;
-        cart.forEach(item => { total += Number(item.price) * Number(item.qty); });
+        cart.forEach(item => {
+          total += Number(item.price) * Number(item.qty);
+        });
+
         const tip = Number(document.getElementById("tipInput").value || 0);
-        const orderId = "ORDER" + Date.now();
+        const newOrderId = "ORDER" + Date.now();
 
         const orderData = {
-          id: orderId,
+          id: newOrderId,
           customerId: currentUser.id,
-          customerName: currentUser.name,
-          customerPhone: currentUser.phone,
+          customerName: currentUser.name || "",
+          customerPhone: currentUser.phone || "",
           customerAddress: currentUser.address || "",
           items: cart.map(item => ({
             id: item.id || "",
@@ -783,7 +1310,14 @@
           storeLng: allStores.find(s => s.id === cart[0].storeId)?.longitude || "",
           storesData: [...new Set(cart.map(item => item.storeId))].map(storeId => {
             const store = allStores.find(s => s.id === storeId);
-            return { storeId: store?.id || "", storeImage: store?.store_image || "", storeName: store?.store_name || "", storeLat: store?.latitude || "", storeLng: store?.longitude || "", storePhone: store?.phone || "" };
+            return {
+              storeId: store?.id || "",
+              storeImage: store?.store_image || "",
+              storeName: store?.store_name || "",
+              storeLat: store?.latitude || "",
+              storeLng: store?.longitude || "",
+              storePhone: store?.phone || ""
+            };
           }),
           deliveryPrice,
           tip,
@@ -808,53 +1342,98 @@
         }
 
         localStorage.setItem("sendingOrder", "true");
-        await set(ref(database, "orders/" + orderId), orderData);
-        sendBtn.innerHTML = "تم ارسال الطلب";
+        await set(ref(database, "orders/" + newOrderId), orderData);
+        localStorage.setItem("currentOrderId", newOrderId);
+        currentOrderId = newOrderId;
         localStorage.removeItem("sendingOrder");
-
-        setTimeout(async () => {
-          const checkOrder = await get(ref(database, "orders/" + orderId));
-          if(checkOrder.exists()){
-            const order = checkOrder.val();
-            if(order.status === "waiting_driver"){
-              await update(ref(database, "orders/" + orderId), {
-                status: "failed_no_driver",
-                statusText: "تم رفض الطلب بسبب عدم توفر سائق",
-                failedDriverSearch: true,
-                closedAt: Date.now()
-              });
-            }
-          }
-        }, 3600000);
 
         cart = [];
         localStorage.removeItem("cart");
         updateCart();
-        localStorage.setItem("currentOrderId", orderId);
-        window.location.href = "talab.html?orderId=" + orderId;
+
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = "تم ارسال الطلب";
+
+        document.getElementById("orderPage").style.display = "block";
+        document.getElementById("bottomBar").style.display = "none";
+        document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
+        openOrderPage();
+
+        setTimeout(async () => {
+          try{
+            const checkOrder = await get(ref(database, "orders/" + newOrderId));
+            if(checkOrder.exists()){
+              const order = checkOrder.val();
+              if(order.status === "waiting_driver"){
+                await update(ref(database, "orders/" + newOrderId), {
+                  status: "failed_no_driver",
+                  statusText: "تم رفض الطلب بسبب عدم توفر سائق",
+                  failedDriverSearch: true,
+                  closedAt: Date.now()
+                });
+              }
+            }
+          }catch(e){}
+        }, 3600000);
+      }, () => {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = "طلب توصيل 🚀";
+        alert("يرجى تشغيل GPS");
+      }, {
+        enableHighAccuracy:true,
+        maximumAge:0,
+        timeout:10000
       });
     };
 
-    window.showPage = function(pageId, element){
-      document.getElementById("singleStorePage").style.display = "none";
-      document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
-      document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
-      document.getElementById(pageId).classList.add("active-page");
-      if(element) element.classList.add("active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+    navigator.geolocation.watchPosition(
+      (position) => {
+        userLatitude = position.coords.latitude;
+        userLongitude = position.coords.longitude;
+
+        set(ref(database, "customers/" + currentUser.id + "/userLat"), userLatitude);
+        set(ref(database, "customers/" + currentUser.id + "/userLng"), userLongitude);
+
+        localStorage.setItem("userLat", userLatitude);
+        localStorage.setItem("userLng", userLongitude);
+
+        const savedUser = JSON.parse(localStorage.getItem("user") || "null");
+        if(savedUser){
+          savedUser.userLat = userLatitude;
+          savedUser.userLng = userLongitude;
+          localStorage.setItem("user", JSON.stringify(savedUser));
+        }
+
+        if(allStores.length === 0){
+          startLiveStores();
+        }
+      },
+      () => {
+        alert("يرجى تشغيل GPS");
+      },
+      {
+        enableHighAccuracy:true,
+        maximumAge:0,
+        timeout:10000
+      }
+    );
+
+    startAdsSlider();
 
     window.openMap = function(event, latitude, longitude){
       event.preventDefault();
       event.stopPropagation();
-      if(!latitude || !longitude){ alert("لا يوجد موقع للمتجر"); return; }
+      if(!latitude || !longitude){
+        alert("لا يوجد موقع للمتجر");
+        return;
+      }
       document.getElementById("mapModal").style.display = "flex";
-      document.getElementById("mapModalFrame").src = `https://maps.google.com/maps?q=${latitude},${longitude}&z=16&output=embed`;
+      document.getElementById("mapFrame").src = `https://maps.google.com/maps?q=${latitude},${longitude}&z=16&output=embed`;
     };
 
     window.closeMap = function(){
       document.getElementById("mapModal").style.display = "none";
-      document.getElementById("mapModalFrame").src = "";
+      document.getElementById("mapFrame").src = "";
     };
 
     window.logout = function(){
@@ -865,9 +1444,9 @@
 
     history.pushState(null, null, location.href);
     window.onpopstate = function(){
-      const currentOrderId = localStorage.getItem("currentOrderId");
-      if(currentOrderId){
-        window.location.replace("talab.html?orderId=" + currentOrderId);
+      const currentOrderIdCheck = localStorage.getItem("currentOrderId");
+      if(currentOrderIdCheck){
+        openOrderPage();
         history.pushState(null, null, location.href);
       }
     };
@@ -914,31 +1493,61 @@
 
     window.useInviteCode = async function(){
       const code = document.getElementById("giftCode").value.trim();
-      if(!code){ alert("الصق الكود"); return; }
-      if(code === currentUser.id){ alert("لا يمكنك استخدام كودك"); return; }
+      if(!code){
+        alert("الصق الكود");
+        return;
+      }
+
+      if(code === currentUser.id){
+        alert("لا يمكنك استخدام كودك");
+        return;
+      }
 
       const myRef = ref(database, "customers/" + currentUser.id);
       const myData = await get(myRef);
       if(!myData.exists()) return;
 
       const myUser = myData.val();
-      if(myUser.usedFreeDelivery === true){ alert("لقد استخدمت التوصيلة المجانية مسبقاً"); return; }
-      if(myUser.invitedBy){ alert("لا يمكنك استخدام أكثر من كود"); return; }
+      if(myUser.usedFreeDelivery === true){
+        alert("لقد استخدمت التوصيلة المجانية مسبقاً");
+        return;
+      }
+
+      if(myUser.invitedBy){
+        alert("لا يمكنك استخدام أكثر من كود");
+        return;
+      }
 
       const inviterRef = ref(database, "customers/" + code);
       const inviterData = await get(inviterRef);
-      if(!inviterData.exists()){ alert("الكود غير صحيح"); return; }
+      if(!inviterData.exists()){
+        alert("الكود غير صحيح");
+        return;
+      }
 
-      await update(myRef, { freeDelivery:true, usedFreeDelivery:true, invitedBy:code, freeDeliveryUsed:false });
+      await update(myRef, {
+        freeDelivery:true,
+        usedFreeDelivery:true,
+        invitedBy:code,
+        freeDeliveryUsed:false
+      });
+
       alert("تم الحصول على توصيلة مجانية 🎉");
       document.getElementById("giftCode").value = "";
     };
+
+    if(currentOrderId){
+      openOrderPage();
+    }else{
+      document.getElementById("bottomBar").style.display = "flex";
+      document.getElementById("orderPage").style.display = "none";
+    }
   </script>
 
   <div id="mapModal" class="map-modal">
     <div class="map-modal-box">
       <button onclick="closeMap()" class="close-map-btn">✕</button>
-      <iframe id="mapModalFrame" class="map-frame" loading="lazy"></iframe>
+      <iframe id="mapFrame" class="map-frame" loading="lazy"></iframe>
     </div>
   </div>
 </body>
