@@ -304,7 +304,7 @@
       document.body.classList.add("pending-locked");
       document.getElementById("pendingMessage").innerHTML = pendingMessageForStatus(user);
       showSection("pendingSection");
-      activateHistoryLock();
+      lockPendingNavigation();
       startPendingWatcher(user);
     }
 
@@ -337,6 +337,9 @@
         state.currentUser = freshUser;
 
         if (freshUser.status === "active") {
+          state.locked = false;
+          document.body.classList.remove("pending-locked");
+          window.onpopstate = null;
           stopPendingWatcher();
           redirectByType(freshUser);
           return;
