@@ -343,7 +343,7 @@
       localStorage.setItem("user", JSON.stringify(userData));
 
       const displayName = userData.name || userData.owner || userData.store_name || "مستخدم";
-      document.getElementById("welcomeText").innerHTML = `هلا ${displayName}`;
+      document.getElementById("welcomeText").innerHTML = `ياهلا ${displayName}`;
       document.getElementById("userName").innerHTML = userData.name || "";
       document.getElementById("userPhone").innerHTML = userData.phone || "";
       document.getElementById("userPassword").innerHTML = userData.password || "";
@@ -749,7 +749,7 @@
       if(cart.length === 0){
         alert("السلة فارغة");
         sendBtn.disabled = false;
-        sendBtn.innerHTML = "طلب توصيل 🚀";
+        sendBtn.innerHTML = "طلب توصيل";
         return;
       }
 
