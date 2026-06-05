@@ -1,4 +1,3 @@
-
 <!-- drive.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -404,6 +403,10 @@ background:red;
 <span id="monthProfit">0</span>
 د.ع
 </div>
+<div class="driver-badge">
+الطلبات الملغاة:
+<span id="cancelledCount">0</span>
+</div>
 
 <div class="driver-badge" id="driverAccountType">
 VIP
@@ -572,6 +575,37 @@ window.location.replace("index.html");
 
 document.getElementById("driverName").innerHTML = currentDriver.name || "سائق";
 document.getElementById("driverAccountType").innerHTML = currentDriver.accountType || "عادي";
+
+loadDriverStats();
+
+async function loadDriverStats(){
+
+const snapshot =
+await get(
+ref(db,"drivers/" + currentDriver.id)
+);
+
+if(!snapshot.exists()) return;
+
+const driver =
+snapshot.val();
+
+document.getElementById(
+"completedCount"
+).innerHTML =
+driver.completedOrders || 0;
+
+document.getElementById(
+"monthProfit"
+).innerHTML =
+(driver.monthProfit || 0);
+
+document.getElementById(
+"cancelledCount"
+).innerHTML =
+(driver.cancelledOrders || 0);
+
+}
 
 document.getElementById(
 "driverProfileImage"
@@ -1670,6 +1704,43 @@ deliveredAt:Date.now()
 }
 );
 
+const orderSnapshot =
+await get(
+ref(db,"orders/" + currentOrderId)
+);
+
+if(orderSnapshot.exists()){
+
+const order =
+orderSnapshot.val();
+
+const driverRef =
+ref(db,"drivers/" + currentDriver.id);
+
+const driverSnapshot =
+await get(driverRef);
+
+if(driverSnapshot.exists()){
+
+const driverData =
+driverSnapshot.val();
+
+await update(driverRef,{
+
+completedOrders:
+(driverData.completedOrders || 0) + 1,
+
+monthProfit:
+(driverData.monthProfit || 0)
++
+Number(order.deliveryPrice || 0)
+
+});
+
+}
+
+}
+
 alert("تم توصيل الطلب");
 window.location.reload();
 localStorage.removeItem(
@@ -1745,7 +1816,25 @@ alert("تمت إضافة 15 دقيقة");
 document.getElementById(
 "cancelByCustomerBtn"
 ).onclick = async function(){
+const driverRef =
+ref(db,"drivers/" + currentDriver.id);
 
+const driverSnapshot =
+await get(driverRef);
+
+if(driverSnapshot.exists()){
+
+const driverData =
+driverSnapshot.val();
+
+await update(driverRef,{
+
+cancelledOrders:
+(driverData.cancelledOrders || 0) + 1
+
+});
+
+}
 if(!currentOrderId){
 return;
 }
@@ -1779,7 +1868,25 @@ cancelledOrders:
 }
 
 }
+const driverRef =
+ref(db,"drivers/" + currentDriver.id);
 
+const driverSnapshot =
+await get(driverRef);
+
+if(driverSnapshot.exists()){
+
+const driverData =
+driverSnapshot.val();
+
+await update(driverRef,{
+
+cancelledOrders:
+(driverData.cancelledOrders || 0) + 1
+
+});
+
+}
 await update(
 ref(db,"orders/" + currentOrderId),
 {
