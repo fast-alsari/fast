@@ -234,6 +234,8 @@ font-size:14px;
 gap:10px;
 }
 
+
+
 .schedule-item:last-child{
 border-bottom:none;
 }
@@ -626,15 +628,18 @@ async function uploadAdImage(file) {
                 `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`,
                 {
                     method: "PUT",
-                    headers: {
-                        "Authorization": `Bearer ${GITHUB_TOKEN}`,
-                        "Accept": "application/vnd.github+json"
-                    },
-                    body: JSON.stringify({
-                        message: `Upload ${fileName}`,
-                        content: content,
-                        branch: GITHUB_BRANCH
-                    })
+                   headers: {
+    "Authorization": `Bearer ${GITHUB_TOKEN}`,
+    "Accept": "application/vnd.github+json",
+    "Content-Type": "application/json",
+    "X-GitHub-Api-Version": "2022-11-28"
+},
+
+body: JSON.stringify({
+    message: `Upload ${fileName}`,
+    content: content,
+    branch: GITHUB_BRANCH
+})
                 }
             );
 
@@ -653,7 +658,7 @@ async function uploadAdImage(file) {
             return "";
         }
 
-        return `https://cdn.jsdelivr.net/gh/${GITHUB_OWNER}/${GITHUB_REPO}@${GITHUB_BRANCH}/${path}`;
+return `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/${GITHUB_BRANCH}/${path}`;
 
     } catch (error) {
 
