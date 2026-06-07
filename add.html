@@ -254,7 +254,10 @@ body{
     <h1>لوحة تحكم الادمن</h1>
     <p>إدارة التطبيق بالكامل</p>
   </div>
-  <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
+
+  <button class="logout-btn" onclick="logout()">
+    تسجيل الخروج
+  </button>
 </div>
 
 <div class="cards">
@@ -327,10 +330,21 @@ body{
   <h2 class="section-title">المتاجر</h2>
 
   <div class="filter-buttons">
-    <button onclick="showActiveStores()">المتاجر المفعلة (<span id="activeStoresCount">0</span>)</button>
-    <button onclick="showInactiveStores()">المتاجر الغير مفعلة (<span id="inactiveStoresCount">0</span>)</button>
-    <button onclick="activateAllStores()">تفعيل الكل</button>
-    <button onclick="deactivateAllStores()">الغاء تفعيل الكل</button>
+    <button onclick="showActiveStores()">
+      المتاجر المفعلة (<span id="activeStoresCount">0</span>)
+    </button>
+
+    <button onclick="showInactiveStores()">
+      المتاجر الغير مفعلة (<span id="inactiveStoresCount">0</span>)
+    </button>
+
+    <button onclick="activateAllStores()">
+      تفعيل الكل
+    </button>
+
+    <button onclick="deactivateAllStores()">
+      الغاء تفعيل الكل
+    </button>
   </div>
 
   <div id="storesContainer"></div>
@@ -419,13 +433,13 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // =========================
-// GitHub + jsDelivr
+// GitHub Upload
 // =========================
 
 const GITHUB_OWNER = "fast-alsari";
 const GITHUB_REPO = "alsaree-images";
 const GITHUB_FOLDER = "images";
-const GITHUB_BRANCH = "main"; // إذا كان الفرع عندك master غيّره هنا
+const GITHUB_BRANCH = "main"; // إذا كان الفرع عندك master غيّره إلى master
 const GITHUB_TOKEN = "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";
 
 function getSafeFileName(fileName) {
@@ -499,6 +513,7 @@ async function uploadAdImage(file) {
 }
 
 const currentUser = JSON.parse(localStorage.getItem("user"));
+
 if(!currentUser || currentUser.type !== "admin"){
   window.location.href = "index.html";
 }
@@ -513,13 +528,14 @@ window.showSection = function(id, button){
     section.classList.remove("active-section");
   });
 
-  document.getElementById(id).classList.add("active-section");
+  const target = document.getElementById(id);
+  if (target) target.classList.add("active-section");
 
   document.querySelectorAll(".tab-btn").forEach(btn => {
     btn.classList.remove("active");
   });
 
-  button.classList.add("active");
+  if (button) button.classList.add("active");
 };
 
 let allStoresData = {};
@@ -587,6 +603,7 @@ function renderStore(id, store){
 
 function loadDashboard(){
 
+  // المستخدمين
   onValue(ref(database,"customers"),(snapshot)=>{
     const container = document.getElementById("customersContainer");
     container.innerHTML = "";
@@ -596,7 +613,8 @@ function loadDashboard(){
       document.getElementById("customersCount").innerText = Object.keys(customers).length;
 
       for(let id in customers){
-        let user = customers[id];
+        const user = customers[id];
+
         container.innerHTML += `
           <div class="item">
             <p><strong>الاسم:</strong> ${user.name || "-"}</p>
@@ -613,6 +631,7 @@ function loadDashboard(){
     }
   });
 
+  // المتاجر
   onValue(ref(database,"stores"),async(snapshot)=>{
     const container = document.getElementById("storesContainer");
     container.innerHTML = "";
@@ -630,12 +649,13 @@ function loadDashboard(){
         let store = stores[id];
 
         if(store.accountType === "vip"){
-          let today = new Date().toISOString().split("T")[0];
+          const today = new Date().toISOString().split("T")[0];
           if(store.vipExpireDate && today > store.vipExpireDate){
             await update(ref(database,"stores/"+id),{
               accountType:"normal",
               vipExpireDate:""
             });
+
             store.accountType = "normal";
             store.vipExpireDate = "";
           }
@@ -643,7 +663,7 @@ function loadDashboard(){
 
         if(store.status === "active"){
           activeCount++;
-        }else{
+        } else {
           inactiveCount++;
         }
 
@@ -655,6 +675,7 @@ function loadDashboard(){
     }
   });
 
+  // سواق التوصيل
   window.activateDriver = async function(id){
     const today = new Date();
     const nextMonth = new Date();
@@ -673,9 +694,11 @@ function loadDashboard(){
     await update(ref(database,"drivers/"+id),{
       status:"inactive"
     });
+
     alert("تم إلغاء التفعيل");
   };
 
+  // التكسي
   window.activateTaxi = async function(id){
     const today = new Date();
     const nextMonth = new Date();
@@ -694,8 +717,70 @@ function loadDashboard(){
     await update(ref(database,"taxi_drivers/"+id),{
       status:"inactive"
     });
+
     alert("تم إلغاء التفعيل");
   };
+
+  function renderStore(id,store){
+    const container =
+    document.getElementById("storesContainer");
+
+    container.innerHTML += `
+      <div class="item">
+        <p><strong>اسم المتجر:</strong> ${store.store_name || "-"}</p>
+        <p><strong>اسم صاحب المتجر:</strong> ${store.owner || "-"}</p>
+
+        <p>
+          <strong>الحالة:</strong>
+          <span class="${store.status === "active" ? "status-active" : "status-inactive"}">
+            ${store.status || "-"}
+          </span>
+        </p>
+
+        <p>
+          <strong>نوع الحساب:</strong>
+          ${
+            store.accountType === "vip"
+              ? `<span class="vip-status">🔥 VIP</span>`
+              : "عادي"
+          }
+        </p>
+
+        <p><strong>انتهاء VIP:</strong> ${store.vipExpireDate || "-"}</p>
+        <p><strong>تاريخ انتهاء الاشتراك:</strong> ${store.expireDate || "-"}</p>
+        <p><strong>تاريخ التجديد:</strong> ${store.renewDate || "-"}</p>
+
+        <div class="actions">
+          <button class="accept" onclick="activateStore('${id}')">تفعيل شهر</button>
+          <button class="reject" onclick="deactivateStore('${id}')">الغاء التفعيل</button>
+          <button class="vip-btn" onclick="activateVipStore('${id}')">تفعيل VIP</button>
+          <button class="remove-vip-btn" onclick="removeVipStore('${id}')">إلغاء VIP</button>
+          <button class="map-btn" onclick="openMap('${store.latitude || ""}','${store.longitude || ""}')">عرض الموقع</button>
+        </div>
+
+        <div class="schedule-box">
+          <h3 style="margin-bottom:10px;">جدول الدوام الأسبوعي</h3>
+          ${
+            store.workingHours
+              ? Object.values(store.workingHours)
+                  .map(hour => `
+                    <div class="schedule-item">
+                      <span>${hour.day || "-"}</span>
+                      <span>من: ${hour.from || "-"} | الى: ${hour.to || "-"}</span>
+                    </div>
+                  `).join("")
+              : "<p>لا يوجد جدول دوام</p>"
+          }
+        </div>
+
+        <p><strong>صورة المتجر:</strong></p>
+        <img class="big-image" src="${store['store_image'] ? store['store_image'] : 'https://via.placeholder.com/120'}" onerror="this.src='https://via.placeholder.com/120'">
+
+        <p><strong>هوية صاحب المتجر:</strong></p>
+        <img class="big-image" src="${store['store_card'] ? store['store_card'] : 'https://via.placeholder.com/120'}" onerror="this.src='https://via.placeholder.com/120'">
+      </div>
+    `;
+  }
 
   window.activateStore = async function(id){
     const today = new Date();
@@ -734,6 +819,7 @@ function loadDashboard(){
   window.showActiveStores = function(){
     const container = document.getElementById("storesContainer");
     container.innerHTML = "";
+
     for(let id in allStoresData){
       if(allStoresData[id].status === "active"){
         renderStore(id,allStoresData[id]);
@@ -744,6 +830,7 @@ function loadDashboard(){
   window.showInactiveStores = function(){
     const container = document.getElementById("storesContainer");
     container.innerHTML = "";
+
     for(let id in allStoresData){
       if(allStoresData[id].status !== "active"){
         renderStore(id,allStoresData[id]);
@@ -777,9 +864,11 @@ function loadDashboard(){
       accountType:"normal",
       vipExpireDate:""
     });
+
     alert("تم إلغاء VIP");
   };
 
+  // سواق التوصيل
   onValue(ref(database,"drivers"),(snapshot)=>{
     const container = document.getElementById("driversContainer");
     container.innerHTML = "";
@@ -789,7 +878,7 @@ function loadDashboard(){
       document.getElementById("driversCount").innerText = Object.keys(drivers).length;
 
       for(let id in drivers){
-        let driver = drivers[id];
+        const driver = drivers[id];
 
         container.innerHTML += `
           <div class="item">
@@ -837,6 +926,7 @@ function loadDashboard(){
     }
   });
 
+  // التكسي
   onValue(ref(database,"taxi_drivers"),(snapshot)=>{
     const container = document.getElementById("taxiContainer");
     container.innerHTML = "";
@@ -846,7 +936,7 @@ function loadDashboard(){
       document.getElementById("taxiCount").innerText = Object.keys(taxis).length;
 
       for(let id in taxis){
-        let taxi = taxis[id];
+        const taxi = taxis[id];
 
         container.innerHTML += `
           <div class="item">
@@ -909,6 +999,7 @@ function loadDashboard(){
       accountType:"normal",
       vipExpireDate:""
     });
+
     alert("تم إلغاء VIP");
   };
 
@@ -929,9 +1020,11 @@ function loadDashboard(){
       accountType:"normal",
       vipExpireDate:""
     });
+
     alert("تم إلغاء VIP");
   };
 
+  // المنتجات
   onValue(ref(database,"store_products"),(snapshot)=>{
     const container = document.getElementById("productsContainer");
     container.innerHTML = "";
@@ -982,14 +1075,20 @@ function loadDashboard(){
   window.approveProduct = async function(storeId,productId){
     await update(
       ref(database,"store_products/"+storeId+"/"+productId),
-      { status:"approved" }
+      {
+        status:"approved"
+      }
     );
+
     alert("تم قبول المنتج");
   };
 
   window.deleteProduct = async function(storeId,productId){
     try{
-      await remove(ref(database,"store_products/"+storeId+"/"+productId));
+      await remove(
+        ref(database,"store_products/"+storeId+"/"+productId)
+      );
+
       alert("تم حذف المنتج بنجاح");
     }catch(error){
       console.error(error);
@@ -1002,7 +1101,7 @@ function loadDashboard(){
     container.innerHTML = "";
 
     for(let id in allProductsData){
-      let product = allProductsData[id];
+      const product = allProductsData[id];
 
       if(product.status !== "approved" && !product.deleted){
         container.innerHTML += `
@@ -1028,7 +1127,7 @@ function loadDashboard(){
     container.innerHTML = "";
 
     for(let id in allProductsData){
-      let product = allProductsData[id];
+      const product = allProductsData[id];
 
       if(product.status === "approved" && !product.deleted){
         container.innerHTML += `
@@ -1048,6 +1147,7 @@ function loadDashboard(){
     }
   };
 
+  // الإعلانات
   window.addAd = async function(){
     const imageFile = document.getElementById("adImage").files[0];
     const storeId = document.getElementById("adStoreId").value.trim();
