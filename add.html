@@ -578,57 +578,92 @@ const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
 // =========================
-// IMGBB
+// GitHub Upload
 // =========================
 
-const IMGBB_API_KEY =
-"fa7d8e3e0c7fbc7686b65048fff45913";
+const GITHUB_OWNER = "اسم_حسابك";
+const GITHUB_REPO = "اسم_المستودع";
+const GITHUB_BRANCH = "main";
+const GITHUB_FOLDER = "images";
 
-async function uploadAdImage(file){
+const GITHUB_TOKEN = "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";
 
-try{
-
-const formData = new FormData();
-
-formData.append("image",file);
-
-const response = await fetch(
-
-`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
-
-{
-method:"POST",
-body:formData
+function getSafeFileName(fileName) {
+    return Date.now() + "_" +
+        fileName.replace(/\s+/g, "_")
+                .replace(/[^\w.-]/g, "_");
 }
 
-);
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
 
-const data = await response.json();
+        const reader = new FileReader();
 
-if(data.success){
+        reader.onload = () => {
+            resolve(reader.result.split(",")[1]);
+        };
 
-return data.data.url;
+        reader.onerror = reject;
 
-}else{
-
-alert("فشل رفع الصورة");
-
-return "";
-
+        reader.readAsDataURL(file);
+    });
 }
 
-}catch(error){
+async function uploadAdImage(file) {
 
-console.log(error);
+    try {
 
-alert("حدث خطأ أثناء رفع الصورة");
+        const fileName = getSafeFileName(file.name);
 
-return "";
+        const path =
+            `${GITHUB_FOLDER}/${fileName}`;
 
+        const content =
+            await fileToBase64(file);
+
+        const response =
+            await fetch(
+                `https://api.github.com/repos/${GITHUB_OWNER}/${GITHUB_REPO}/contents/${path}`,
+                {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": `Bearer ${GITHUB_TOKEN}`,
+                        "Accept": "application/vnd.github+json"
+                    },
+                    body: JSON.stringify({
+                        message: `Upload ${fileName}`,
+                        content: content,
+                        branch: GITHUB_BRANCH
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (!response.ok) {
+
+            console.log(data);
+
+            alert(
+                data.message ||
+                "فشل رفع الصورة"
+            );
+
+            return "";
+        }
+
+        return `https://cdn.jsdelivr.net/gh/${GITHUB_OWNER}/${GITHUB_REPO}@${GITHUB_BRANCH}/${path}`;
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("خطأ أثناء رفع الصورة");
+
+        return "";
+    }
 }
-
-}
-
 const currentUser =
 JSON.parse(localStorage.getItem("user"));
 
