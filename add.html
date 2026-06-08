@@ -605,9 +605,23 @@ body:formData
 
 const data = await response.json();
 
+
+
+
+// فحص الروابط
+
+console.log("url =", data.data.url);
+
+console.log("display_url =", data.data.display_url);
+
+console.log("medium =", data.data.medium?.url);
+
+console.log("thumb =", data.data.thumb?.url);
+
 if(data.success){
 
-return data.data.medium.url;
+return data.data.url;
+
 
 }else{
 
