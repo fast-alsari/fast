@@ -1,12 +1,20 @@
-
 <!-- home.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>عالسريع</title>
 
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://i.ibb.co">
+  <link rel="preconnect" href="https://firebasestorage.googleapis.com">
+  <link rel="preconnect" href="https://www.gstatic.com">
+  <link rel="preconnect" href="https://unpkg.com">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
@@ -19,6 +27,7 @@
     html,body{background:#f7f7f7;overflow-x:hidden}
     body{padding-bottom:96px}
     input,textarea,select{font-size:16px!important;touch-action:manipulation}
+    img{image-rendering:auto;-webkit-user-drag:none;user-select:none}
     .page{display:none}
     .page.active-page{display:block}
 
@@ -232,7 +241,7 @@
     <div class="store-top-bar">
       <button class="back-btn" onclick="backHome()"><i class="fa-solid fa-arrow-right"></i></button>
       <div class="single-store-info">
-        <img id="singleStoreImage" src="store.png" class="single-store-image" onerror="this.src='store.png'" alt="store">
+        <img id="singleStoreImage" src="store.png" class="single-store-image" onerror="this.src='store.png'" alt="store" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async">
         <div class="store-title-wrap">
           <h2 id="singleStoreName">اسم المتجر</h2>
           <p id="singleStoreCategory">القسم</p>
@@ -261,7 +270,7 @@
 
   <div id="accountPage" class="page account-page">
     <div class="account-top">
-      <div class="logo-box"><img src="ok.png" alt="logo"></div>
+      <div class="logo-box"><img src="ok.png" alt="logo" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async"></div>
       <div class="app-name">عالسريع</div>
       <div class="app-desc">نوصلك طلبك بأقل من ساعة 🚀</div>
     </div>
@@ -326,7 +335,7 @@
 
     <div class="driver-card" id="driverCard">
       <div class="driver-top">
-        <img id="driverImage" src="driver.png" class="driver-image" alt="driver">
+        <img id="driverImage" src="driver.png" class="driver-image" alt="driver" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async">
         <div class="driver-info">
           <div class="driver-name" id="driverName">السائق</div>
           <div class="driver-phone" id="driverPhone">رقم الهاتف</div>
@@ -462,6 +471,38 @@
     const productSearchInput = document.getElementById("productSearchInput");
     const blockedStatuses = ["waiting_driver","accepted","going_to_store","picked_up","on_the_way","arrived"];
 
+    function enhanceImage(img){
+      if(!img || img.dataset.enhanced === "1") return;
+      img.dataset.enhanced = "1";
+      img.loading = "eager";
+      img.decoding = "async";
+      img.referrerPolicy = "no-referrer";
+      img.crossOrigin = "anonymous";
+      img.addEventListener("error", function(){
+        if(this.dataset.fallback && this.src !== this.dataset.fallback){
+          this.src = this.dataset.fallback;
+        }
+      });
+    }
+
+    function enhanceAllImages(root = document){
+      root.querySelectorAll("img").forEach(enhanceImage);
+    }
+
+    const imageObserver = new MutationObserver(() => enhanceAllImages());
+
+    window.addEventListener("DOMContentLoaded", () => {
+      enhanceAllImages();
+      imageObserver.observe(document.body, { childList:true, subtree:true });
+    });
+
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        enhanceAllImages();
+        window.dispatchEvent(new Event("resize"));
+      }, 800);
+    });
+
     function showAppPage(pageId, element){
       document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
       document.querySelectorAll(".nav-item").forEach(item => item.classList.remove("active"));
@@ -471,6 +512,7 @@
       if(element) element.classList.add("active");
       document.getElementById("bottomBar").style.display = "flex";
       window.scrollTo({ top:0, behavior:"smooth" });
+      enhanceAllImages();
     }
 
     window.showPage = function(pageId, element){
@@ -489,6 +531,7 @@
       document.getElementById("taxiPage").style.display = "block";
       document.getElementById("taxiPage").scrollTop = 0;
       initTaxiMap();
+      enhanceAllImages();
     };
 
     window.closeTaxiPage = function(){
@@ -546,6 +589,7 @@
 
       taxiUserLat = Number(userLat || 0);
       taxiUserLng = Number(userLng || 0);
+      enhanceAllImages();
     }
 
     loadCurrentUser();
@@ -645,17 +689,18 @@
 
       stores.forEach(store => {
         const isOpen = isStoreOpen(store);
+        const storeImage = store.store_image || store.image || "store.png";
         storesContainer.innerHTML += `
           <div class="store-card ${store.vip ? "vip-store" : ""} ${!isOpen ? "closed-store" : ""}" onclick="${isOpen ? `openStore('${store.id}')` : ""}">
             ${store.vip ? `<div class="vip-badge">🔥 VIP</div>` : ""}
             <div class="store-status"><div class="status-dot ${isOpen ? "open-dot" : "closed-dot"}"></div></div>
             <div class="store-header">
-              <img src="${store.store_image || store.image || "store.png"}" class="store-image" onerror="this.src='store.png'" alt="store">
+              <img src="${storeImage}" class="store-image" onerror="this.src='store.png'" alt="store" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="store.png">
               <div class="store-info">
                 <div class="store-name">
                   <h3>${store.store_name || "متجر"}</h3>
                   ${store.distance != null ? `<span style="font-size:12px;color:#ff8800;font-weight:700">📍 ${store.distance} كم</span>` : ""}
-                  <img src="ok.png" class="ok-icon" alt="ok">
+                  <img src="ok.png" class="ok-icon" alt="ok" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="ok.png">
                 </div>
                 <p>${store.category || ""}</p>
                 <div style="position:absolute;left:12px;top:50%;transform:translateY(-50%);">
@@ -666,6 +711,7 @@
           </div>
         `;
       });
+      enhanceAllImages();
     }
 
     function startLiveStores(){
@@ -726,9 +772,10 @@
     function renderAds(){
       adsTrack.innerHTML = adsList.map((ad, index) => `
         <div class="ad-slide ${index === currentAdIndex ? "active" : ""} ${index < currentAdIndex ? "prev" : ""}" onclick="openAd(${index})">
-          <img src="${ad.image}" onerror="this.src='store.png'" alt="ad">
+          <img src="${ad.image}" onerror="this.src='store.png'" alt="ad" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="store.png">
         </div>
       `).join("");
+      enhanceAllImages();
     }
 
     function stopAdTimer(){ if(adTimer) clearInterval(adTimer); adTimer = null; }
@@ -770,7 +817,7 @@
 
       container.innerHTML = filtered.map(product => `
         <div class="product-card">
-          <img src="${product.image || "product.png"}" class="product-image" onerror="this.src='product.png'" alt="product">
+          <img src="${product.image || "product.png"}" class="product-image" onerror="this.src='product.png'" alt="product" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="product.png">
           <div class="product-content">
             <div class="product-name">${product.name || ""}</div>
             <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
@@ -786,6 +833,7 @@
           </div>
         </div>
       `).join("");
+      enhanceAllImages();
     }
 
     document.getElementById("searchInput").addEventListener("input", function(){
@@ -813,6 +861,7 @@
       document.getElementById("singleStoreCategory").innerHTML = store.category || "";
       document.getElementById("singleStoreImage").src = store.store_image || store.image || "store.png";
       document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">جاري تحميل المنتجات...</div>`;
+      enhanceAllImages();
 
       try{
         const snapshot = await get(ref(database, "store_products/" + storeId));
@@ -874,7 +923,7 @@
         total += itemTotal;
         cartContainer.innerHTML += `
           <div class="cart-item">
-            <img src="${item.image || "product.png"}" class="cart-image" referrerpolicy="no-referrer" crossorigin="anonymous" onerror="this.src='product.png'" alt="item">
+            <img src="${item.image || "product.png"}" class="cart-image" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" onerror="this.src='product.png'" alt="item" data-fallback="product.png">
             <div class="cart-info">
               <h3>${item.name}</h3>
               <p>🏪 ${item.storeName}</p>
@@ -925,6 +974,7 @@
       document.getElementById("deliveryPriceText").innerHTML = Number(deliveryPrice).toLocaleString() + " د.ع";
       itemsTotal.innerHTML = `${Number(total).toLocaleString()} د.ع`;
       finalTotal.innerHTML = `${Number(total + deliveryPrice + tip).toLocaleString()} د.ع`;
+      enhanceAllImages();
     }
 
     window.increaseCartQty = function(productId, storeId){
@@ -1005,7 +1055,7 @@
     }
 
     const bikeIcon = L.divIcon({
-      html:`<div style="width:70px;height:70px;display:flex;justify-content:center;align-items:center;"><img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));"></div>`,
+      html:`<div style="width:70px;height:70px;display:flex;justify-content:center;align-items:center;"><img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async"></div>`,
       className:"", iconSize:[70,70], iconAnchor:[35,35]
     });
 
@@ -1017,7 +1067,7 @@
     function createStoreIcon(store){
       return L.divIcon({
         html:`<div style="display:flex;flex-direction:column;align-items:center;">
-                <img src="${store.storeImage || 'store.png'}" style="width:58px;height:58px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.25);">
+                <img src="${store.storeImage || 'store.png'}" style="width:58px;height:58px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.25);" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async">
                 <div style="background:#fff;padding:5px 10px;border-radius:12px;font-size:12px;font-weight:700;margin-top:4px;box-shadow:0 2px 10px rgba(0,0,0,.15);white-space:nowrap;">${store.storeName || "متجر"}</div>
               </div>`,
         className:"", iconSize:[60,60], iconAnchor:[30,30]
