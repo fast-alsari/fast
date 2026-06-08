@@ -1833,6 +1833,9 @@ return;
 const imageUrl =
 await uploadAdImage(imageFile);
 
+console.log("IMAGE URL =", imageUrl);
+alert("IMAGE URL = " + imageUrl);
+
 if(imageUrl === "") return;
 
 // =========================
@@ -1842,20 +1845,26 @@ if(imageUrl === "") return;
 const adId =
 "ad" + Date.now();
 
+try{
+
 await set(
 ref(database,"ads/" + adId),
 {
-
 image:imageUrl,
-
 link:link || "",
-
 storeId:storeId || "",
-
 status:"active"
-
 }
 );
+
+alert("تم الحفظ بالفايربيس");
+
+}catch(error){
+
+console.error(error);
+alert("Firebase Error: " + error.message);
+
+}
 
 // =========================
 // تنظيف الحقول
