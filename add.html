@@ -1,3 +1,4 @@
+ 
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 
@@ -552,7 +553,6 @@ remove,
 set
 }
 from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
-
 const firebaseConfig = {
 
 apiKey:"AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
@@ -574,69 +574,59 @@ databaseURL:"https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
 };
 
 const app = initializeApp(firebaseConfig);
+
 const database = getDatabase(app);
 
 // =========================
-// IMAGEKIT
+// IMGBB
 // =========================
-const IMAGEKIT_PUBLIC_KEY = "public_rn0F9EDbBUuNyStwOgxaVWCDlhE=";
-const IMAGEKIT_URL_ENDPOINT = "https://ik.imagekit.io/alsaree";
-const IMAGEKIT_AUTH_ENDPOINT = "https://patient-star-cb4c.poi-poiu550.workers.dev/";
 
-async function getImageKitAuth() {
-try {
-const response = await fetch(IMAGEKIT_AUTH_ENDPOINT, {
-method: "GET"
-});
+const IMGBB_API_KEY =
+"fa7d8e3e0c7fbc7686b65048fff45913";
 
-if (!response.ok) {
-throw new Error("Auth endpoint failed");
-}
+async function uploadAdImage(file){
 
-return await response.json();
-} catch (error) {
-console.log(error);
-alert("فشل الاتصال بخدمة التوثيق الخاصة بـ ImageKit");
-return null;
-}
-}
-
-async function uploadAdImage(file) {
-try {
-const auth = await getImageKitAuth();
-if (!auth) return "";
+try{
 
 const formData = new FormData();
-formData.append("file", file);
-formData.append("fileName", `ad_${Date.now()}`);
-formData.append("publicKey", IMAGEKIT_PUBLIC_KEY);
-formData.append("signature", auth.signature);
-formData.append("token", auth.token);
-formData.append("expire", auth.expire);
+
+formData.append("image",file);
 
 const response = await fetch(
-"https://upload.imagekit.io/api/v1/files/upload",
+
+`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
+
 {
-method: "POST",
-body: formData
+method:"POST",
+body:formData
 }
+
 );
 
 const data = await response.json();
 
-if (response.ok && data && data.url) {
-return data.url;
-} else {
-console.log(data);
-alert("فشل رفع الصورة إلى ImageKit");
+if(data.success){
+
+return data.data.url;
+
+}else{
+
+alert("فشل رفع الصورة");
+
 return "";
+
 }
 
-} catch (error) {
+}catch(error){
+
 console.log(error);
+
 alert("حدث خطأ أثناء رفع الصورة");
+
 return "";
+
 }
+
 }
 
 const currentUser =
@@ -1179,6 +1169,8 @@ alert("تم إلغاء VIP");
 
 };
 
+}
+
 // =========================
 // سواق التوصيل
 // =========================
@@ -1543,7 +1535,6 @@ vipExpireDate:""
 alert("تم إلغاء VIP");
 
 };
-
 // =========================
 // المنتجات
 // =========================
@@ -1854,10 +1845,18 @@ return;
 
 }
 
+// =========================
+// رفع الصورة الى IMGBB
+// =========================
+
 const imageUrl =
 await uploadAdImage(imageFile);
 
 if(imageUrl === "") return;
+
+// =========================
+// انشاء الاعلان
+// =========================
 
 const adId =
 "ad" + Date.now();
@@ -1876,6 +1875,10 @@ status:"active"
 
 }
 );
+
+// =========================
+// تنظيف الحقول
+// =========================
 
 document.getElementById("adImage")
 .value = "";
