@@ -582,7 +582,6 @@ async function uploadAdImage(file){
 try{
 
 const formData = new FormData();
-
 formData.append("file", file);
 
 const response = await fetch(
@@ -593,20 +592,17 @@ body:formData
 }
 );
 
-const data = await response.json();
+const text = await response.text();
 
-console.log(data);
+alert(text);
 
-alert(JSON.stringify(data));
+const data = JSON.parse(text);
 
-alert("URL = " + data.url);
-return data.url;
+return data.url || "";
 
 }catch(error){
 
-console.error(error);
-
-alert("حدث خطأ أثناء رفع الصورة");
+alert("ERROR: " + error.message);
 
 return "";
 
