@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>عالسريع</title>
+
+  <link rel="icon" href="Logo.png">
+  <link rel="apple-touch-icon" href="Logo.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <style>
+    .section { display: none; }
+    .section.active { display: block; }
+    #pendingSection .pending-text a {
+      display: inline-block;
+      margin-top: 12px;
+      text-decoration: none;
+      font-weight: 700;
+    }
+    body.pending-locked .link a,
+    body.pending-locked button,
+    body.pending-locked input,
+    body.pending-locked select {
+      pointer-events: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- تسجيل الدخول -->
+    <div id="loginSection" class="card section active">
+      <div class="logo"><img src="Logo.png" alt="Logo"></div>
+      <p class="app-text">نوصلك طلبك عالسريع</p>
+      <h2 class="title">تسجيل الدخول</h2>
+      <input type="tel" id="login_phone" placeholder="رقم الهاتف" inputmode="numeric" maxlength="11">
+      <div class="password-box">
+        <input type="password" id="login_password" placeholder="الرمز السري">
+        <i class="fa-solid fa-eye" onclick="togglePassword('login_password',this)"></i>
+      </div>
+      <button onclick="login()">تسجيل الدخول</button>
+      <div class="link"><a onclick="showSection('registerSection')">إنشاء حساب</a></div>
+    </div>
+
+    <!-- إنشاء حساب -->
+    <div id="registerSection" class="card section">
+      <div class="logo"><img src="Logo.png" alt="Logo"></div>
+      <h2 class="title">إنشاء حساب</h2>
+
+      <select id="account_type" onchange="changeRegisterForm()">
+        <option value="">اختر نوع الحساب</option>
+        <option value="customer">زبون</option>
+        <option value="taxi">تكسي</option>
+        <option value="store">متجر</option>
+        <option value="driver">سائق توصيل</option>
+      </select>
+
+      <!-- الزبون -->
+      <div id="customerForm" style="display:none;">
+        <input type="text" id="customer_name" placeholder="الاسم الكامل">
+        <input type="tel" id="customer_phone" placeholder="رقم الهاتف واتساب" inputmode="numeric" maxlength="11">
+        <div class="password-box">
+          <input type="password" id="customer_password" placeholder="الرمز السري">
+          <i class="fa-solid fa-eye" onclick="togglePassword('customer_password',this)"></i>
+        </div>
+      </div>
+
+      <!-- تكسي -->
+      <div id="taxiForm" style="display:none;">
+        <input type="text" id="taxi_name" placeholder="اسم السائق الكامل">
+        <input type="text" id="taxi_vehicle" placeholder="نوع المركبة">
+        <input type="text" id="taxi_plate" placeholder="رقم المركبة الكامل">
+        <select id="taxi_color">
+          <option value="">لون المركبة</option>
+          <option>ابيض</option><option>اسود</option><option>احمر</option><option>ازرق</option><option>اخضر</option><option>اصفر</option><option>برتقالي</option><option>بنفسجي</option><option>وردي</option><option>بني</option><option>رصاصي</option><option>رمادي</option><option>فضي</option><option>ذهبي</option><option>كحلي</option><option>سماوي</option><option>زيتي</option><option>عنابي</option><option>تركوازي</option><option>بيج</option><option>نحاسي</option><option>كرزي</option><option>اخضر غامق</option><option>اخضر فاتح</option><option>ازرق غامق</option><option>ازرق فاتح</option><option>احمر غامق</option><option>احمر فاتح</option><option>فضي غامق</option><option>فضي فاتح</option><option>ابيض لؤلؤي</option><option>اسود مطفي</option><option>اسود لامع</option>
+        </select>
+        <input type="tel" id="taxi_phone" placeholder="رقم الهاتف واتساب" inputmode="numeric" maxlength="11">
+        <div class="password-box">
+          <input type="password" id="taxi_password" placeholder="الرمز السري">
+          <i class="fa-solid fa-eye" onclick="togglePassword('taxi_password',this)"></i>
+        </div>
+        <p class="upload-title">صورة الهوية</p>
+        <input type="file" id="taxi_card" accept="image/*">
+        <p class="upload-title">صورة السيارة من الأمام</p>
+        <input type="file" id="taxi_vehicle_image" accept="image/*">
+      </div>
+
+      <!-- المتجر -->
+      <div id="storeForm" style="display:none;">
+        <input type="text" id="store_owner" placeholder="الاسم الكامل">
+        <input type="tel" id="store_phone" placeholder="رقم الهاتف" inputmode="numeric" maxlength="11">
+        <input type="text" id="store_name" placeholder="اسم المتجر">
+        <select id="store_category">
+          <option value="">اختر نوع المتجر</option>
+          <option>مطعم</option><option>مخبز</option><option>ماركت</option><option>خضروات</option><option>مواد انشائية</option><option>أدوات احتياطية</option><option>ملابس</option><option>صيدلية</option><option>الكترونيات</option><option>مشويات</option><option>تاجير</option><option>كهربائيات</option><option>صحيات</option><option>مواد غذائية</option><option>تاجر جملة</option><option>متجر منزلي</option><option>العاب</option><option>مرطبات</option><option>مفروشات</option><option>احذية</option><option>ملابس رجالية</option><option>ملابس نسائية</option><option>كوزمتك</option>
+        </select>
+        <div class="password-box">
+          <input type="password" id="store_password" placeholder="الرمز السري">
+          <i class="fa-solid fa-eye" onclick="togglePassword('store_password',this)"></i>
+        </div>
+        <p class="upload-title">صورة المتجر</p>
+        <input type="file" id="store_image" accept="image/*">
+        <p class="upload-title">صورة البطاقة الموحدة</p>
+        <input type="file" id="store_card" accept="image/*">
+        <div class="work-times">
+          <h3>أوقات عمل المتجر</h3>
+          <div id="daysContainer"></div>
+        </div>
+        <p class="map-title">حدد موقع المتجر على الخريطة</p>
+        <div id="storeMap" class="map-box"></div>
+      </div>
+
+      <!-- الدليفري -->
+      <div id="driverForm" style="display:none;">
+        <input type="text" id="driver_name" placeholder="الاسم الكامل">
+        <input type="tel" id="driver_phone" placeholder="رقم الهاتف" inputmode="numeric" maxlength="11">
+        <select id="driver_vehicle"><option>دراجة</option><option>سيارة</option></select>
+        <div class="password-box">
+          <input type="password" id="driver_password" placeholder="الرمز السري">
+          <i class="fa-solid fa-eye" onclick="togglePassword('driver_password',this)"></i>
+        </div>
+        <p class="upload-title">صورة الهوية</p>
+        <input type="file" id="driver_card" accept="image/*">
+        <p class="upload-title">صورة السيارة او الدراجة</p>
+        <input type="file" id="driver_vehicle_image" accept="image/*">
+      </div>
+
+      <button onclick="registerAccount()">إنشاء الحساب</button>
+      <div class="link"><a onclick="showSection('loginSection')">العودة لتسجيل الدخول</a></div>
+    </div>
+
+    <!-- صفحة الانتظار -->
+    <div id="pendingSection" class="card section">
+      <div class="logo"><img src="Logo.png" alt="Logo"></div>
+      <div class="pending-icon"><i class="fa-solid fa-clock"></i></div>
+      <h2 class="title">حسابك قيد المراجعة</h2>
+      <p class="pending-text" id="pendingMessage">انتظر ريثما يتم تفعيل حسابك.</p>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import { getDatabase, ref, set, get, child, onValue } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+      authDomain: "fast-937c9.firebaseapp.com",
+      projectId: "fast-937c9",
+      storageBucket: "fast-937c9.firebasestorage.app",
+      messagingSenderId: "221388561840",
+      appId: "1:221388561840:web:ec9d75183ddd7d44be0a75",
+      measurementId: "G-CEKHEPNR9X",
+      databaseURL: "https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    const IMGBB_API_KEY = "fa7d8e3e0c7fbc7686b65048fff45913";
+    const PENDING_CONTACT_URL = "https://wa.me/9647851521585";
+
+    const state = {
+      locked: false,
+      currentUser: null,
+      pendingUnsubscribe: null,
+      storeMap: null,
+      storeMarker: null,
+      storeLatitude: "",
+      storeLongitude: "",
+      registerLoading: false
+    };
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      if (!toast) { alert(message); return; }
+      toast.innerText = message;
+      toast.style.display = "block";
+      setTimeout(() => { toast.style.display = "none"; }, 3000);
+    }
+
+    function normalizeIraqiPhone(phone) {
+      let value = String(phone || "").trim().replace(/\D/g, "");
+      if (!value) return "";
+      if (value.startsWith("964")) value = "0" + value.slice(3);
+      if (value.startsWith("7")) value = "0" + value;
+      return value.slice(0, 11);
+    }
+
+    function validateIraqiPhone(phone) {
+      const normalized = normalizeIraqiPhone(phone);
+      const regex = /^07\d{9}$/;
+      if (!regex.test(normalized)) {
+        alert("رقم الهاتف يجب أن يكون بالشكل 07XXXXXXXXX ويتكون من 11 رقم");
+        return false;
+      }
+      return true;
+    }
+
+    function whatsappLink(phone) {
+      const normalized = normalizeIraqiPhone(phone);
+      if (!/^07\d{9}$/.test(normalized)) return "";
+      return `https://wa.me/964${normalized.slice(1)}`;
+    }
+
+    function bindPhoneInputs() {
+      document.querySelectorAll('input[type="tel"]').forEach((input) => {
+        input.addEventListener("input", () => {
+          const caretAtStart = input.selectionStart || 0;
+          const oldValue = input.value;
+          let cleaned = oldValue.replace(/\D/g, "").slice(0, 11);
+          if (cleaned.length > 0 && !cleaned.startsWith("07")) {
+            if (cleaned.startsWith("7")) cleaned = "0" + cleaned;
+            if (!cleaned.startsWith("07")) cleaned = "07" + cleaned.replace(/^0+/, "").replace(/^7+/, "");
+            cleaned = cleaned.slice(0, 11);
+          }
+          input.value = cleaned;
+          try { input.setSelectionRange(Math.min(caretAtStart, input.value.length), Math.min(caretAtStart, input.value.length)); } catch (_) {}
+        });
+      });
+    }
+
+    async function uploadImage(file) {
+      if (!file) return "";
+      if (!file.type.startsWith("image/")) { alert("اختر صورة فقط"); return ""; }
+      if (file.size > 5 * 1024 * 1024) { alert("حجم الصورة أكبر من 5MB"); return ""; }
+
+      const formData = new FormData();
+      formData.append("image", file);
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, { method: "POST", body: formData });
+      const data = await response.json();
+      if (!data.success) { alert("فشل رفع الصورة"); return ""; }
+      return data.data.image.url;
+    }
+
+    function saveSession(userData) {
+      localStorage.setItem("user", JSON.stringify(userData));
+      sessionStorage.setItem("user", JSON.stringify(userData));
+    }
+
+    function getTableName(type) {
+      if (type === "customer") return "customers";
+      if (type === "store") return "stores";
+      if (type === "driver") return "drivers";
+      if (type === "taxi") return "taxis";
+      if (type === "admin") return "admins";
+      return "";
+    }
+
+    function activateHistoryLock() {
+      try {
+        history.replaceState({ locked: true }, "", location.href);
+        history.pushState({ locked: true }, "", location.href);
+      } catch (_) {}
+    }
+
+    function stopPendingWatcher() {
+      if (typeof state.pendingUnsubscribe === "function") state.pendingUnsubscribe();
+      state.pendingUnsubscribe = null;
+    }
+
+    function redirectByType(user) {
+      if (user.type === "customer") { window.location.replace("home.html"); return; }
+      if (user.type === "admin") { window.location.replace("add.html"); return; }
+      if (user.type === "store") { window.location.replace("store.html"); return; }
+      if (user.type === "driver") { window.location.replace("drive.html"); return; }
+      if (user.type === "taxi") { window.location.replace("taxi-drive.html"); }
+    }
+
+    function isRestrictedStatus(status) {
+      return ["pending", "inactive", "expired", "banned"].includes(String(status || "").toLowerCase());
+    }
+
+    function pendingMessageForStatus(user) {
+      const status = String(user?.status || "pending");
+      if (status === "active") return "";
+      if (status === "pending") {
+        return `حسابك قيد المراجعة حالياً.<br><br>انتظر ريثما يتم تفعيل الحساب.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة عبر واتساب للدفع والتفعيل</a>`;
+      }
+      if (status === "banned") {
+        return `حسابك محظور حالياً.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة</a>`;
+      }
+      if (status === "expired") {
+        return `انتهت صلاحية حسابك.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة لتجديد الاشتراك</a>`;
+      }
+      if (status === "inactive") {
+        return `حسابك غير فعال حالياً.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة</a>`;
+      }
+      return `حسابك قيد المراجعة حالياً.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة عبر واتساب</a>`;
+    }
+
+    function showRestrictedAccount(user) {
+      state.locked = true;
+      state.currentUser = user;
+      saveSession(user);
+      document.body.classList.add("pending-locked");
+      document.getElementById("pendingMessage").innerHTML = pendingMessageForStatus(user);
+      showSection("pendingSection");
+      lockPendingNavigation();
+      startPendingWatcher(user);
+    }
+
+    function normalizeIncomingUser(data, key) {
+      if (!data) return null;
+      return { ...data, id: data.id || key };
+    }
+
+    function getStoredUser() {
+      try { return JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "null"); }
+      catch { return null; }
+    }
+
+    async function autoLogin() {
+      const currentUser = getStoredUser();
+      if (!currentUser) return;
+      const tableName = getTableName(currentUser.type);
+      if (!tableName) return;
+
+      try {
+        const snapshot = await get(ref(database, `${tableName}/${currentUser.id}`));
+        if (!snapshot.exists()) {
+          localStorage.removeItem("user");
+          sessionStorage.removeItem("user");
+          return;
+        }
+
+        const freshUser = normalizeIncomingUser(snapshot.val(), snapshot.key);
+        saveSession(freshUser);
+        state.currentUser = freshUser;
+
+        if (freshUser.status === "active") {
+          state.locked = false;
+          document.body.classList.remove("pending-locked");
+          window.onpopstate = null;
+          stopPendingWatcher();
+          redirectByType(freshUser);
+          return;
+        }
+
+        if (currentUser.type === "store" || currentUser.type === "driver" || currentUser.type === "taxi" || currentUser.type === "customer") {
+          if (isRestrictedStatus(freshUser.status) || freshUser.status === "pending") {
+            showRestrictedAccount(freshUser);
+            return;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    function startPendingWatcher(user) {
+      stopPendingWatcher();
+      const tableName = getTableName(user?.type);
+      if (!tableName || !user?.id) return;
+
+      const accountRef = ref(database, `${tableName}/${user.id}`);
+      state.pendingUnsubscribe = onValue(accountRef, (snapshot) => {
+        if (!snapshot.exists()) return;
+        const freshUser = normalizeIncomingUser(snapshot.val(), snapshot.key);
+        saveSession(freshUser);
+        state.currentUser = freshUser;
+
+        if (freshUser.status === "active") {
+          state.locked = false;
+          document.body.classList.remove("pending-locked");
+          stopPendingWatcher();
+          redirectByType(freshUser);
+          return;
+        }
+
+        if (isRestrictedStatus(freshUser.status) || freshUser.status === "pending") {
+          document.getElementById("pendingMessage").innerHTML = pendingMessageForStatus(freshUser);
+          if (document.getElementById("pendingSection").classList.contains("active")) {
+            showSection("pendingSection");
+          }
+        }
+      });
+    }
+
+    window.addEventListener("popstate", () => {
+      if (state.locked) {
+        activateHistoryLock();
+        showSection("pendingSection");
+      }
+    });
+
+    const days = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
+    const hours = ["مغلق"];
+    for (let i = 1; i <= 12; i++) hours.push(i + " AM");
+    for (let i = 1; i <= 12; i++) hours.push(i + " PM");
+
+    let storeMap = null;
+    let storeMarker = null;
+    state.storeLatitude = "";
+    state.storeLongitude = "";
+
+    const daysContainer = document.getElementById("daysContainer");
+    if (daysContainer) {
+      days.forEach((day, index) => {
+        daysContainer.innerHTML += `
+          <div class="day-row">
+            <label class="day-name">${day}</label>
+            <div class="time-selects">
+              <select id="from_${index}">
+                <option value="">من</option>
+                ${hours.map(hour => `<option value="${hour}">${hour}</option>`).join("")}
+              </select>
+              <span class="time-separator">إلى</span>
+              <select id="to_${index}">
+                <option value="">إلى</option>
+                ${hours.map(hour => `<option value="${hour}">${hour}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    window.togglePassword = function(id, icon) {
+      const input = document.getElementById(id);
+      if (input.type === "password") {
+        input.type = "text";
+        icon.classList.replace("fa-eye", "fa-eye-slash");
+      } else {
+        input.type = "password";
+        icon.classList.replace("fa-eye-slash", "fa-eye");
+      }
+    };
+
+    window.showSection = function(sectionId) {
+      if (state.locked && sectionId !== "pendingSection") {
+        showSection("pendingSection");
+        return;
+      }
+      document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
+      document.getElementById(sectionId).classList.add("active");
+    };
+
+    window.changeRegisterForm = function() {
+      const type = document.getElementById("account_type").value;
+      if (type === "") { alert("اختر نوع الحساب"); return; }
+
+      document.getElementById("customerForm").style.display = "none";
+      document.getElementById("storeForm").style.display = "none";
+      document.getElementById("driverForm").style.display = "none";
+      document.getElementById("taxiForm").style.display = "none";
+
+      if (type === "customer") document.getElementById("customerForm").style.display = "block";
+      if (type === "store") { document.getElementById("storeForm").style.display = "block"; if (!storeMap) setTimeout(loadStoreMap, 300); }
+      if (type === "driver") document.getElementById("driverForm").style.display = "block";
+      if (type === "taxi") document.getElementById("taxiForm").style.display = "block";
+    };
+
+    function loadStoreMap() {
+      if (storeMap) storeMap.remove();
+      storeMap = L.map("storeMap").setView([35.4893, 43.2275], 13);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, minZoom: 6 }).addTo(storeMap);
+      setTimeout(() => storeMap.invalidateSize(), 300);
+      storeMap.on("click", function(e) {
+        state.storeLatitude = e.latlng.lat;
+        state.storeLongitude = e.latlng.lng;
+        if (storeMarker) storeMap.removeLayer(storeMarker);
+        storeMarker = L.marker([state.storeLatitude, state.storeLongitude]).addTo(storeMap);
+      });
+    }
+
+    async function phoneExists(phone) {
+      const target = normalizeIraqiPhone(phone);
+      if (!/^07\d{9}$/.test(target)) return false;
+      const tables = ["customers", "stores", "drivers", "taxis", "admins"];
+      for (const table of tables) {
+        const snapshot = await get(child(ref(database), table));
+        if (snapshot.exists()) {
+          const data = snapshot.val();
+          for (const key in data) {
+            const existing = normalizeIraqiPhone(data[key]?.phone || "");
+            if (existing === target) return true;
+          }
+        }
+      }
+      return false;
+    }
+
+    let registerBtn = null;
+    function resetRegisterButton() {
+      if (!registerBtn) return;
+      registerBtn.disabled = false;
+      registerBtn.innerText = "إنشاء الحساب";
+      registerBtn.dataset.loading = "false";
+      state.registerLoading = false;
+    }
+
+    function pendingDefaultMessage() {
+      return `حسابك قيد المراجعة حالياً.<br><br>انتظر ريثما يتم تفعيل الحساب.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة عبر واتساب للدفع والتفعيل</a>`;
+    }
+
+    window.registerAccount = async function() {
+      registerBtn = document.querySelector('button[onclick="registerAccount()"]');
+      if (state.registerLoading || registerBtn?.dataset.loading === "true") return;
+
+      state.registerLoading = true;
+      registerBtn.dataset.loading = "true";
+      registerBtn.disabled = true;
+      registerBtn.innerText = "جاري إنشاء الحساب...";
+
+      try {
+        const type = document.getElementById("account_type").value;
+        if (type === "") { alert("اختر نوع الحساب"); resetRegisterButton(); return; }
+
+        if (type === "customer") {
+          const phoneRaw = document.getElementById("customer_phone").value.trim();
+          const phone = normalizeIraqiPhone(phoneRaw);
+          const name = document.getElementById("customer_name").value.trim();
+          const password = document.getElementById("customer_password").value.trim();
+
+          if (name.length < 3 || password.length < 4) { alert("املأ جميع الحقول"); resetRegisterButton(); return; }
+          if (!validateIraqiPhone(phone)) { resetRegisterButton(); return; }
+          if (await phoneExists(phone)) { showToast("رقم الهاتف مستخدم مسبقاً"); resetRegisterButton(); return; }
+
+          const customerData = { id: "CUS" + Date.now(), type: "customer", status: "active", name, phone, password, createdAt: Date.now() };
+          await set(ref(database, "customers/" + customerData.id), customerData);
+          saveSession(customerData);
+          window.location.replace("home.html");
+          resetRegisterButton();
+          return;
+        }
+
+        if (type === "store") {
+          if (state.storeLatitude === "" || state.storeLongitude === "") { alert("حدد موقع المتجر على الخريطة"); resetRegisterButton(); return; }
+          const storePhone = normalizeIraqiPhone(document.getElementById("store_phone").value.trim());
+          if (!validateIraqiPhone(storePhone)) { resetRegisterButton(); return; }
+          if (await phoneExists(storePhone)) { alert("رقم الهاتف مستخدم مسبقاً"); resetRegisterButton(); return; }
+
+          const storeImageFile = document.getElementById("store_image").files[0];
+          const storeCardFile = document.getElementById("store_card").files[0];
+          if (!storeImageFile || !storeCardFile) { alert("ارفع صور المتجر ووجه البطاقة الموحدة"); resetRegisterButton(); return; }
+
+          const storeImageUrl = await uploadImage(storeImageFile);
+          const storeCardUrl = await uploadImage(storeCardFile);
+          const workingHours = days.map((day, index) => ({ day, from: document.getElementById(`from_${index}`).value, to: document.getElementById(`to_${index}`).value }));
+          const storeData = {
+            id: "STORE" + Date.now(),
+            type: "store",
+            status: "pending",
+            owner: document.getElementById("store_owner").value.trim(),
+            phone: storePhone,
+            store_name: document.getElementById("store_name").value.trim(),
+            category: document.getElementById("store_category").value,
+            password: document.getElementById("store_password").value.trim(),
+            latitude: state.storeLatitude,
+            longitude: state.storeLongitude,
+            store_image: storeImageUrl,
+            store_card: storeCardUrl,
+            workingHours,
+            createdAt: Date.now()
+          };
+          await set(ref(database, "stores/" + storeData.id), storeData);
+          saveSession(storeData);
+          showRestrictedAccount(storeData);
+          resetRegisterButton();
+          return;
+        }
+
+        if (type === "taxi") {
+          const taxiPhone = normalizeIraqiPhone(document.getElementById("taxi_phone").value.trim());
+          if (!validateIraqiPhone(taxiPhone)) { resetRegisterButton(); return; }
+          if (await phoneExists(taxiPhone)) { alert("رقم الهاتف مستخدم مسبقاً"); resetRegisterButton(); return; }
+
+          const cardFile = document.getElementById("taxi_card").files[0];
+          const vehicleFile = document.getElementById("taxi_vehicle_image").files[0];
+          if (!cardFile || !vehicleFile) { alert("ارفع صور الهوية والسيارة"); resetRegisterButton(); return; }
+
+          const taxiData = {
+            id: "TAXI" + Date.now(),
+            type: "taxi",
+            status: "pending",
+            name: document.getElementById("taxi_name").value.trim(),
+            vehicleType: document.getElementById("taxi_vehicle").value,
+            plate: document.getElementById("taxi_plate").value.trim(),
+            color: document.getElementById("taxi_color").value,
+            phone: taxiPhone,
+            password: document.getElementById("taxi_password").value.trim(),
+            idImage: await uploadImage(cardFile),
+            vehicleImage: await uploadImage(vehicleFile),
+            createdAt: Date.now()
+          };
+          await set(ref(database, "taxis/" + taxiData.id), taxiData);
+          saveSession(taxiData);
+          showRestrictedAccount(taxiData);
+          resetRegisterButton();
+          return;
+        }
+
+        if (type === "driver") {
+          const driverPhone = normalizeIraqiPhone(document.getElementById("driver_phone").value.trim());
+          if (!validateIraqiPhone(driverPhone)) { resetRegisterButton(); return; }
+          if (await phoneExists(driverPhone)) { alert("رقم الهاتف مستخدم مسبقاً"); resetRegisterButton(); return; }
+
+          const driverCardFile = document.getElementById("driver_card").files[0];
+          const vehicleImageFile = document.getElementById("driver_vehicle_image").files[0];
+          if (!driverCardFile || !vehicleImageFile) { alert("ارفع صور الهوية والمركبة"); resetRegisterButton(); return; }
+
+          const driverData = {
+            id: "DRV" + Date.now(),
+            type: "driver",
+            status: "pending",
+            name: document.getElementById("driver_name").value.trim(),
+            phone: driverPhone,
+            vehicleType: document.getElementById("driver_vehicle").value,
+            password: document.getElementById("driver_password").value.trim(),
+            idImage: await uploadImage(driverCardFile),
+            vehicleImage: await uploadImage(vehicleImageFile),
+            createdAt: Date.now()
+          };
+          await set(ref(database, "drivers/" + driverData.id), driverData);
+          saveSession(driverData);
+          showRestrictedAccount(driverData);
+          resetRegisterButton();
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+        alert(error.message || "حدث خطأ");
+      }
+
+      resetRegisterButton();
+    };
+
+    window.login = async function() {
+      const phoneRaw = document.getElementById("login_phone").value.trim();
+      const phone = normalizeIraqiPhone(phoneRaw);
+      const password = document.getElementById("login_password").value.trim();
+
+      if (!validateIraqiPhone(phone)) return;
+      if (password === "") { alert("املأ جميع الحقول"); return; }
+
+      try {
+        const tables = ["admins", "customers", "stores", "drivers", "taxis"];
+        for (const table of tables) {
+          const snap = await get(child(ref(database), table));
+          if (!snap.exists()) continue;
+          const data = snap.val();
+          for (const key in data) {
+            const user = normalizeIncomingUser(data[key], key);
+            const storedPhone = normalizeIraqiPhone(user.phone || "");
+            if (storedPhone === phone && user.password === password) {
+              saveSession(user);
+              state.currentUser = user;
+
+              if (user.type === "admin") {
+                if (user.status !== "active") { alert("تم تعطيل حساب الادمن"); return; }
+                window.location.replace("add.html");
+                return;
+              }
+
+              if (user.status === "active") {
+                stopPendingWatcher();
+                redirectByType(user);
+                return;
+              }
+
+              if (user.type === "store" || user.type === "driver" || user.type === "taxi" || user.type === "customer") {
+                showRestrictedAccount(user);
+                return;
+              }
+
+              alert("حالة الحساب غير صالحة");
+              return;
+            }
+          }
+        }
+        alert("بيانات تسجيل الدخول غير صحيحة");
+      } catch (error) {
+        console.log(error);
+        alert("حدث خطأ");
+      }
+    };
+
+    window.logout = function() {
+      stopPendingWatcher();
+      localStorage.clear();
+      sessionStorage.clear();
+      window.location.replace("index.html");
+    };
+
+    bindPhoneInputs();
+    autoLogin();
+  </script>
+
+  <div id="toast"></div>
+</body>
+</html>
