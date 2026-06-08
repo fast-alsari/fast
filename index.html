@@ -149,10 +149,11 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-    import { getDatabase, ref, set, get, child, onValue } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+    import { getDatabase, ref, set, get, child, onValue, update } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-messaging.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+      apiKey: "AIzaSyC7QTYMSGRV_nraJBneBqDqYGhugF0Pw",
       authDomain: "fast-937c9.firebaseapp.com",
       projectId: "fast-937c9",
       storageBucket: "fast-937c9.firebasestorage.app",
@@ -164,9 +165,11 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const messaging = getMessaging(app);
 
     const IMAGE_UPLOAD_WORKER_URL = "https://floral-pine-2aa7.ahmed-a-ahmed00457.workers.dev/";
     const PENDING_CONTACT_URL = "https://wa.me/9647851521585";
+    const VAPID_KEY = "ضع_هنا_VAPID_PUBLIC_KEY";
 
     const state = {
       locked: false,
@@ -178,6 +181,8 @@
       storeLongitude: "",
       registerLoading: false
     };
+
+    let swRegistration = null;
 
     function showToast(message) {
       const toast = document.getElementById("toast");
@@ -205,12 +210,6 @@
       return true;
     }
 
-    function whatsappLink(phone) {
-      const normalized = normalizeIraqiPhone(phone);
-      if (!/^07\d{9}$/.test(normalized)) return "";
-      return `https://wa.me/964${normalized.slice(1)}`;
-    }
-
     function bindPhoneInputs() {
       document.querySelectorAll('input[type="tel"]').forEach((input) => {
         input.addEventListener("input", () => {
@@ -223,7 +222,9 @@
             cleaned = cleaned.slice(0, 11);
           }
           input.value = cleaned;
-          try { input.setSelectionRange(Math.min(caretAtStart, input.value.length), Math.min(caretAtStart, input.value.length)); } catch (_) {}
+          try {
+            input.setSelectionRange(Math.min(caretAtStart, input.value.length), Math.min(caretAtStart, input.value.length));
+          } catch (_) {}
         });
       });
     }
@@ -251,6 +252,41 @@
       }
     }
 
+    async function ensureServiceWorker() {
+      if (!("serviceWorker" in navigator)) return null;
+      try {
+        if (swRegistration) return swRegistration;
+        swRegistration = await navigator.serviceWorker.register("firebase-messaging-sw.js");
+        return swRegistration;
+      } catch (error) {
+        console.log("SW ERROR:", error);
+        return null;
+      }
+    }
+
+    async function getFcmToken() {
+      try {
+        if (!("Notification" in window)) return "";
+
+        if (Notification.permission !== "granted") {
+          const permission = await Notification.requestPermission();
+          if (permission !== "granted") return "";
+        }
+
+        const registration = await ensureServiceWorker();
+
+        const token = await getToken(messaging, {
+          vapidKey: VAPID_KEY,
+          serviceWorkerRegistration: registration || undefined
+        });
+
+        return token || "";
+      } catch (error) {
+        console.log("FCM TOKEN ERROR:", error);
+        return "";
+      }
+    }
+
     function saveSession(userData) {
       localStorage.setItem("user", JSON.stringify(userData));
       sessionStorage.setItem("user", JSON.stringify(userData));
@@ -272,17 +308,35 @@
       } catch (_) {}
     }
 
+    function lockPendingNavigation() {
+      activateHistoryLock();
+    }
+
     function stopPendingWatcher() {
       if (typeof state.pendingUnsubscribe === "function") state.pendingUnsubscribe();
       state.pendingUnsubscribe = null;
     }
 
     function redirectByType(user) {
-      if (user.type === "customer") { window.location.replace("home.html"); return; }
-      if (user.type === "admin") { window.location.replace("add.html"); return; }
-      if (user.type === "store") { window.location.replace("store.html"); return; }
-      if (user.type === "driver") { window.location.replace("drive.html"); return; }
-      if (user.type === "taxi") { window.location.replace("taxi-drive.html"); }
+      if (user.type === "customer") {
+        window.location.replace("home.html");
+        return;
+      }
+      if (user.type === "admin") {
+        window.location.replace("add.html");
+        return;
+      }
+      if (user.type === "store") {
+        window.location.replace("store.html");
+        return;
+      }
+      if (user.type === "driver") {
+        window.location.replace("drive.html");
+        return;
+      }
+      if (user.type === "taxi") {
+        window.location.replace("taxi-drive.html");
+      }
     }
 
     function isRestrictedStatus(status) {
@@ -307,6 +361,19 @@
       return `حسابك قيد المراجعة حالياً.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة عبر واتساب</a>`;
     }
 
+    function normalizeIncomingUser(data, key) {
+      if (!data) return null;
+      return { ...data, id: data.id || key };
+    }
+
+    function getStoredUser() {
+      try {
+        return JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "null");
+      } catch {
+        return null;
+      }
+    }
+
     function showRestrictedAccount(user) {
       state.locked = true;
       state.currentUser = user;
@@ -316,54 +383,6 @@
       showSection("pendingSection");
       lockPendingNavigation();
       startPendingWatcher(user);
-    }
-
-    function normalizeIncomingUser(data, key) {
-      if (!data) return null;
-      return { ...data, id: data.id || key };
-    }
-
-    function getStoredUser() {
-      try { return JSON.parse(localStorage.getItem("user") || sessionStorage.getItem("user") || "null"); }
-      catch { return null; }
-    }
-
-    async function autoLogin() {
-      const currentUser = getStoredUser();
-      if (!currentUser) return;
-      const tableName = getTableName(currentUser.type);
-      if (!tableName) return;
-
-      try {
-        const snapshot = await get(ref(database, `${tableName}/${currentUser.id}`));
-        if (!snapshot.exists()) {
-          localStorage.removeItem("user");
-          sessionStorage.removeItem("user");
-          return;
-        }
-
-        const freshUser = normalizeIncomingUser(snapshot.val(), snapshot.key);
-        saveSession(freshUser);
-        state.currentUser = freshUser;
-
-        if (freshUser.status === "active") {
-          state.locked = false;
-          document.body.classList.remove("pending-locked");
-          window.onpopstate = null;
-          stopPendingWatcher();
-          redirectByType(freshUser);
-          return;
-        }
-
-        if (currentUser.type === "store" || currentUser.type === "driver" || currentUser.type === "taxi" || currentUser.type === "customer") {
-          if (isRestrictedStatus(freshUser.status) || freshUser.status === "pending") {
-            showRestrictedAccount(freshUser);
-            return;
-          }
-        }
-      } catch (error) {
-        console.log(error);
-      }
     }
 
     function startPendingWatcher(user) {
@@ -393,6 +412,49 @@
           }
         }
       });
+    }
+
+    async function autoLogin() {
+      const currentUser = getStoredUser();
+      if (!currentUser) return;
+      const tableName = getTableName(currentUser.type);
+      if (!tableName) return;
+
+      try {
+        const snapshot = await get(ref(database, `${tableName}/${currentUser.id}`));
+        if (!snapshot.exists()) {
+          localStorage.removeItem("user");
+          sessionStorage.removeItem("user");
+          return;
+        }
+
+        const freshUser = normalizeIncomingUser(snapshot.val(), snapshot.key);
+        saveSession(freshUser);
+        state.currentUser = freshUser;
+
+        if (freshUser.status === "active") {
+          state.locked = false;
+          document.body.classList.remove("pending-locked");
+          window.onpopstate = null;
+          stopPendingWatcher();
+          redirectByType(freshUser);
+          return;
+        }
+
+        if (
+          currentUser.type === "store" ||
+          currentUser.type === "driver" ||
+          currentUser.type === "taxi" ||
+          currentUser.type === "customer"
+        ) {
+          if (isRestrictedStatus(freshUser.status) || freshUser.status === "pending") {
+            showRestrictedAccount(freshUser);
+            return;
+          }
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     window.addEventListener("popstate", () => {
@@ -456,7 +518,10 @@
 
     window.changeRegisterForm = function() {
       const type = document.getElementById("account_type").value;
-      if (type === "") { alert("اختر نوع الحساب"); return; }
+      if (type === "") {
+        alert("اختر نوع الحساب");
+        return;
+      }
 
       document.getElementById("customerForm").style.display = "none";
       document.getElementById("storeForm").style.display = "none";
@@ -464,7 +529,10 @@
       document.getElementById("taxiForm").style.display = "none";
 
       if (type === "customer") document.getElementById("customerForm").style.display = "block";
-      if (type === "store") { document.getElementById("storeForm").style.display = "block"; if (!storeMap) setTimeout(loadStoreMap, 300); }
+      if (type === "store") {
+        document.getElementById("storeForm").style.display = "block";
+        if (!storeMap) setTimeout(loadStoreMap, 300);
+      }
       if (type === "driver") document.getElementById("driverForm").style.display = "block";
       if (type === "taxi") document.getElementById("taxiForm").style.display = "block";
     };
@@ -472,7 +540,10 @@
     function loadStoreMap() {
       if (storeMap) storeMap.remove();
       storeMap = L.map("storeMap").setView([35.4893, 43.2275], 13);
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19, minZoom: 6 }).addTo(storeMap);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        minZoom: 6
+      }).addTo(storeMap);
       setTimeout(() => storeMap.invalidateSize(), 300);
       storeMap.on("click", function(e) {
         state.storeLatitude = e.latlng.lat;
@@ -508,10 +579,6 @@
       state.registerLoading = false;
     }
 
-    function pendingDefaultMessage() {
-      return `حسابك قيد المراجعة حالياً.<br><br>انتظر ريثما يتم تفعيل الحساب.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة عبر واتساب للدفع والتفعيل</a>`;
-    }
-
     window.registerAccount = async function() {
       registerBtn = document.querySelector('button[onclick="registerAccount()"]');
       if (state.registerLoading || registerBtn?.dataset.loading === "true") return;
@@ -523,7 +590,11 @@
 
       try {
         const type = document.getElementById("account_type").value;
-        if (type === "") { alert("اختر نوع الحساب"); resetRegisterButton(); return; }
+        if (type === "") {
+          alert("اختر نوع الحساب");
+          resetRegisterButton();
+          return;
+        }
 
         if (type === "customer") {
           const phoneRaw = document.getElementById("customer_phone").value.trim();
@@ -531,11 +602,32 @@
           const name = document.getElementById("customer_name").value.trim();
           const password = document.getElementById("customer_password").value.trim();
 
-          if (name.length < 3 || password.length < 4) { alert("املأ جميع الحقول"); resetRegisterButton(); return; }
-          if (!validateIraqiPhone(phone)) { resetRegisterButton(); return; }
-          if (await phoneExists(phone)) { showToast("رقم الهاتف مستخدم مسبقاً"); resetRegisterButton(); return; }
+          if (name.length < 3 || password.length < 4) {
+            alert("املأ جميع الحقول");
+            resetRegisterButton();
+            return;
+          }
+          if (!validateIraqiPhone(phone)) {
+            resetRegisterButton();
+            return;
+          }
+          if (await phoneExists(phone)) {
+            showToast("رقم الهاتف مستخدم مسبقاً");
+            resetRegisterButton();
+            return;
+          }
 
-          const customerData = { id: "CUS" + Date.now(), type: "customer", status: "active", name, phone, password, createdAt: Date.now() };
+          const customerFcmToken = await getFcmToken();
+          const customerData = {
+            id: "CUS" + Date.now(),
+            type: "customer",
+            status: "active",
+            name,
+            phone,
+            password,
+            fcmToken: customerFcmToken,
+            createdAt: Date.now()
+          };
           await set(ref(database, "customers/" + customerData.id), customerData);
           saveSession(customerData);
           window.location.replace("home.html");
@@ -544,18 +636,40 @@
         }
 
         if (type === "store") {
-          if (state.storeLatitude === "" || state.storeLongitude === "") { alert("حدد موقع المتجر على الخريطة"); resetRegisterButton(); return; }
+          if (state.storeLatitude === "" || state.storeLongitude === "") {
+            alert("حدد موقع المتجر على الخريطة");
+            resetRegisterButton();
+            return;
+          }
           const storePhone = normalizeIraqiPhone(document.getElementById("store_phone").value.trim());
-          if (!validateIraqiPhone(storePhone)) { resetRegisterButton(); return; }
-          if (await phoneExists(storePhone)) { alert("رقم الهاتف مستخدم مسبقاً"); resetRegisterButton(); return; }
+          if (!validateIraqiPhone(storePhone)) {
+            resetRegisterButton();
+            return;
+          }
+          if (await phoneExists(storePhone)) {
+            alert("رقم الهاتف مستخدم مسبقاً");
+            resetRegisterButton();
+            return;
+          }
 
           const storeImageFile = document.getElementById("store_image").files[0];
           const storeCardFile = document.getElementById("store_card").files[0];
-          if (!storeImageFile || !storeCardFile) { alert("ارفع صور المتجر ووجه البطاقة الموحدة"); resetRegisterButton(); return; }
+          if (!storeImageFile || !storeCardFile) {
+            alert("ارفع صور المتجر ووجه البطاقة الموحدة");
+            resetRegisterButton();
+            return;
+          }
 
           const storeImageUrl = await uploadImage(storeImageFile);
           const storeCardUrl = await uploadImage(storeCardFile);
-          const workingHours = days.map((day, index) => ({ day, from: document.getElementById(`from_${index}`).value, to: document.getElementById(`to_${index}`).value }));
+          const storeFcmToken = await getFcmToken();
+
+          const workingHours = days.map((day, index) => ({
+            day,
+            from: document.getElementById(`from_${index}`).value,
+            to: document.getElementById(`to_${index}`).value
+          }));
+
           const storeData = {
             id: "STORE" + Date.now(),
             type: "store",
@@ -570,8 +684,10 @@
             store_image: storeImageUrl,
             store_card: storeCardUrl,
             workingHours,
+            fcmToken: storeFcmToken,
             createdAt: Date.now()
           };
+
           await set(ref(database, "stores/" + storeData.id), storeData);
           saveSession(storeData);
           showRestrictedAccount(storeData);
@@ -581,13 +697,25 @@
 
         if (type === "taxi") {
           const taxiPhone = normalizeIraqiPhone(document.getElementById("taxi_phone").value.trim());
-          if (!validateIraqiPhone(taxiPhone)) { resetRegisterButton(); return; }
-          if (await phoneExists(taxiPhone)) { alert("رقم الهاتف مستخدم مسبقاً"); resetRegisterButton(); return; }
+          if (!validateIraqiPhone(taxiPhone)) {
+            resetRegisterButton();
+            return;
+          }
+          if (await phoneExists(taxiPhone)) {
+            alert("رقم الهاتف مستخدم مسبقاً");
+            resetRegisterButton();
+            return;
+          }
 
           const cardFile = document.getElementById("taxi_card").files[0];
           const vehicleFile = document.getElementById("taxi_vehicle_image").files[0];
-          if (!cardFile || !vehicleFile) { alert("ارفع صور الهوية والسيارة"); resetRegisterButton(); return; }
+          if (!cardFile || !vehicleFile) {
+            alert("ارفع صور الهوية والسيارة");
+            resetRegisterButton();
+            return;
+          }
 
+          const taxiFcmToken = await getFcmToken();
           const taxiData = {
             id: "TAXI" + Date.now(),
             type: "taxi",
@@ -600,8 +728,10 @@
             password: document.getElementById("taxi_password").value.trim(),
             idImage: await uploadImage(cardFile),
             vehicleImage: await uploadImage(vehicleFile),
+            fcmToken: taxiFcmToken,
             createdAt: Date.now()
           };
+
           await set(ref(database, "taxis/" + taxiData.id), taxiData);
           saveSession(taxiData);
           showRestrictedAccount(taxiData);
@@ -611,13 +741,25 @@
 
         if (type === "driver") {
           const driverPhone = normalizeIraqiPhone(document.getElementById("driver_phone").value.trim());
-          if (!validateIraqiPhone(driverPhone)) { resetRegisterButton(); return; }
-          if (await phoneExists(driverPhone)) { alert("رقم الهاتف مستخدم مسبقاً"); resetRegisterButton(); return; }
+          if (!validateIraqiPhone(driverPhone)) {
+            resetRegisterButton();
+            return;
+          }
+          if (await phoneExists(driverPhone)) {
+            alert("رقم الهاتف مستخدم مسبقاً");
+            resetRegisterButton();
+            return;
+          }
 
           const driverCardFile = document.getElementById("driver_card").files[0];
           const vehicleImageFile = document.getElementById("driver_vehicle_image").files[0];
-          if (!driverCardFile || !vehicleImageFile) { alert("ارفع صور الهوية والمركبة"); resetRegisterButton(); return; }
+          if (!driverCardFile || !vehicleImageFile) {
+            alert("ارفع صور الهوية والمركبة");
+            resetRegisterButton();
+            return;
+          }
 
+          const driverFcmToken = await getFcmToken();
           const driverData = {
             id: "DRV" + Date.now(),
             type: "driver",
@@ -628,8 +770,10 @@
             password: document.getElementById("driver_password").value.trim(),
             idImage: await uploadImage(driverCardFile),
             vehicleImage: await uploadImage(vehicleImageFile),
+            fcmToken: driverFcmToken,
             createdAt: Date.now()
           };
+
           await set(ref(database, "drivers/" + driverData.id), driverData);
           saveSession(driverData);
           showRestrictedAccount(driverData);
@@ -650,23 +794,40 @@
       const password = document.getElementById("login_password").value.trim();
 
       if (!validateIraqiPhone(phone)) return;
-      if (password === "") { alert("املأ جميع الحقول"); return; }
+      if (password === "") {
+        alert("املأ جميع الحقول");
+        return;
+      }
 
       try {
         const tables = ["admins", "customers", "stores", "drivers", "taxis"];
         for (const table of tables) {
           const snap = await get(child(ref(database), table));
           if (!snap.exists()) continue;
+
           const data = snap.val();
           for (const key in data) {
             const user = normalizeIncomingUser(data[key], key);
             const storedPhone = normalizeIraqiPhone(user.phone || "");
+
             if (storedPhone === phone && user.password === password) {
+              const loginFcmToken = await getFcmToken();
+
+              if (loginFcmToken) {
+                user.fcmToken = loginFcmToken;
+                await update(ref(database, `${table}/${user.id}`), {
+                  fcmToken: loginFcmToken
+                });
+              }
+
               saveSession(user);
               state.currentUser = user;
 
               if (user.type === "admin") {
-                if (user.status !== "active") { alert("تم تعطيل حساب الادمن"); return; }
+                if (user.status !== "active") {
+                  alert("تم تعطيل حساب الادمن");
+                  return;
+                }
                 window.location.replace("add.html");
                 return;
               }
@@ -677,7 +838,12 @@
                 return;
               }
 
-              if (user.type === "store" || user.type === "driver" || user.type === "taxi" || user.type === "customer") {
+              if (
+                user.type === "store" ||
+                user.type === "driver" ||
+                user.type === "taxi" ||
+                user.type === "customer"
+              ) {
                 showRestrictedAccount(user);
                 return;
               }
