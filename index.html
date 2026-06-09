@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -150,6 +151,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
     import { getDatabase, ref, set, get, child, onValue, update } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+    import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-messaging.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC7QTYMSGRV_nraJBneBqDqYGhugF0Pw",
@@ -164,8 +166,12 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
+    const messaging = getMessaging(app);
+
     const IMAGE_UPLOAD_WORKER_URL = "https://floral-pine-2aa7.ahmed-a-ahmed00457.workers.dev/";
     const PENDING_CONTACT_URL = "https://wa.me/9647851521585";
+    const VAPID_KEY = "tlg13Scawyv6LQRAbB7Voz32Da4TvqV8fEvkz_nwZB8";
+
     const state = {
       locked: false,
       currentUser: null,
@@ -177,6 +183,7 @@
       registerLoading: false
     };
 
+    let swRegistration = null;
 
     function showToast(message) {
       const toast = document.getElementById("toast");
@@ -246,8 +253,39 @@
       }
     }
 
-    function getAndroidFcmToken() {
-      return localStorage.getItem("androidFcmToken") || "";
+    async function ensureServiceWorker() {
+      if (!("serviceWorker" in navigator)) return null;
+      try {
+        if (swRegistration) return swRegistration;
+        swRegistration = await navigator.serviceWorker.register("firebase-messaging-sw.js");
+        return swRegistration;
+      } catch (error) {
+        console.log("SW ERROR:", error);
+        return null;
+      }
+    }
+
+    async function getFcmToken() {
+      try {
+        if (!("Notification" in window)) return "";
+
+        if (Notification.permission !== "granted") {
+          const permission = await Notification.requestPermission();
+          if (permission !== "granted") return "";
+        }
+
+        const registration = await ensureServiceWorker();
+
+        const token = await getToken(messaging, {
+          vapidKey: VAPID_KEY,
+          serviceWorkerRegistration: registration || undefined
+        });
+
+        return token || "";
+      } catch (error) {
+        console.log("FCM TOKEN ERROR:", error);
+        return "";
+      }
     }
 
     function saveSession(userData) {
@@ -357,15 +395,6 @@
       state.pendingUnsubscribe = onValue(accountRef, (snapshot) => {
         if (!snapshot.exists()) return;
         const freshUser = normalizeIncomingUser(snapshot.val(), snapshot.key);
-
-        const androidToken = getAndroidFcmToken();
-        if (androidToken) {
-          await update(ref(database, `${tableName}/${freshUser.id}`), {
-            fcmToken: androidToken
-          });
-          freshUser.fcmToken = androidToken;
-        }
-
         saveSession(freshUser);
         state.currentUser = freshUser;
 
@@ -401,15 +430,6 @@
         }
 
         const freshUser = normalizeIncomingUser(snapshot.val(), snapshot.key);
-
-        const androidToken = getAndroidFcmToken();
-        if (androidToken) {
-          await update(ref(database, `${tableName}/${freshUser.id}`), {
-            fcmToken: androidToken
-          });
-          freshUser.fcmToken = androidToken;
-        }
-
         saveSession(freshUser);
         state.currentUser = freshUser;
 
@@ -598,6 +618,7 @@
             return;
           }
 
+          const customerFcmToken = await getFcmToken();
           const customerData = {
             id: "CUS" + Date.now(),
             type: "customer",
@@ -605,7 +626,7 @@
             name,
             phone,
             password,
-            fcmToken: getAndroidFcmToken(),
+            fcmToken: customerFcmToken,
             createdAt: Date.now()
           };
           await set(ref(database, "customers/" + customerData.id), customerData);
@@ -642,6 +663,8 @@
 
           const storeImageUrl = await uploadImage(storeImageFile);
           const storeCardUrl = await uploadImage(storeCardFile);
+          const storeFcmToken = await getFcmToken();
+
           const workingHours = days.map((day, index) => ({
             day,
             from: document.getElementById(`from_${index}`).value,
@@ -662,7 +685,7 @@
             store_image: storeImageUrl,
             store_card: storeCardUrl,
             workingHours,
-            fcmToken: getAndroidFcmToken(),
+            fcmToken: storeFcmToken,
             createdAt: Date.now()
           };
 
@@ -693,6 +716,7 @@
             return;
           }
 
+          const taxiFcmToken = await getFcmToken();
           const taxiData = {
             id: "TAXI" + Date.now(),
             type: "taxi",
@@ -705,7 +729,7 @@
             password: document.getElementById("taxi_password").value.trim(),
             idImage: await uploadImage(cardFile),
             vehicleImage: await uploadImage(vehicleFile),
-            fcmToken: getAndroidFcmToken(),
+            fcmToken: taxiFcmToken,
             createdAt: Date.now()
           };
 
@@ -736,6 +760,7 @@
             return;
           }
 
+          const driverFcmToken = await getFcmToken();
           const driverData = {
             id: "DRV" + Date.now(),
             type: "driver",
@@ -746,7 +771,7 @@
             password: document.getElementById("driver_password").value.trim(),
             idImage: await uploadImage(driverCardFile),
             vehicleImage: await uploadImage(vehicleImageFile),
-            fcmToken: getAndroidFcmToken(),
+            fcmToken: driverFcmToken,
             createdAt: Date.now()
           };
 
@@ -787,12 +812,12 @@
             const storedPhone = normalizeIraqiPhone(user.phone || "");
 
             if (storedPhone === phone && user.password === password) {
-              const androidToken = getAndroidFcmToken();
+              const loginFcmToken = await getFcmToken();
 
-              if (androidToken) {
-                user.fcmToken = androidToken;
+              if (loginFcmToken) {
+                user.fcmToken = loginFcmToken;
                 await update(ref(database, `${table}/${user.id}`), {
-                  fcmToken: androidToken
+                  fcmToken: loginFcmToken
                 });
               }
 
