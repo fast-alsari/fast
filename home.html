@@ -464,111 +464,19 @@
     let taxiTargetLng = null;
     let taxiDistance = 0;
     let taxiPrice = 0;
-
-    const NOTIFICATION_WEBHOOK_URL = "";
-
-    function getMyFcmToken(){
-      return currentUser?.fcmToken || JSON.parse(localStorage.getItem("user") || "null")?.fcmToken || localStorage.getItem("androidFcmToken") || "";
-    }
-
-    function getStoreById(storeId){
-      return allStores.find(s => s.id === storeId) || null;
-    }
-
-    function getStoreToken(storeId){
-      return getStoreById(storeId)?.fcmToken || "";
-    }
-
-    async function getActiveDriverTokens(){
-      try{
-        const snapshot = await get(ref(database, "drivers"));
-        if(!snapshot.exists()) return [];
-        return Object.values(snapshot.val())
-          .filter(driver => (driver.status === "active" || driver.status === "approved") && driver.fcmToken)
-          .map(driver => driver.fcmToken);
-      }catch(error){
-        console.log(error);
-        return [];
-      }
-    }
-
-    async function getActiveTaxiTokens(){
-      try{
-        const snapshot = await get(ref(database, "taxis"));
-        if(!snapshot.exists()) return [];
-        return Object.values(snapshot.val())
-          .filter(taxi => (taxi.status === "active" || taxi.status === "approved") && taxi.fcmToken)
-          .map(taxi => taxi.fcmToken);
-      }catch(error){
-        console.log(error);
-        return [];
-      }
-    }
-
-    async function sendNotificationToToken(token, title, body, data = {}){
-      if(!NOTIFICATION_WEBHOOK_URL || !token) return false;
-      try{
-        await fetch(NOTIFICATION_WEBHOOK_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ token, title, body, data })
-        });
-        return true;
-      }catch(error){
-        console.log("notification error", error);
-        return false;
-      }
-    }
-
-    async function sendNotificationToMany(tokens, title, body, data = {}){
-      const uniqueTokens = [...new Set((tokens || []).filter(Boolean))];
-      if(!uniqueTokens.length) return [];
-      return Promise.allSettled(uniqueTokens.map(token => sendNotificationToToken(token, title, body, data)));
-    }
-
     async function notifyNewDeliveryOrder(orderData){
-      const storeTokens = (orderData.storesData || []).map(store => store.storeToken).filter(Boolean);
-      const driverTokens = await getActiveDriverTokens();
-      await Promise.allSettled([
-        sendNotificationToMany(
-          storeTokens,
-          `طلب جديد من ${orderData.customerName || "زبون"}`,
-          "يوجد طلب جديد بانتظار قبول سائق توصيل",
-          { orderId: orderData.id, status: orderData.status, type: "delivery" }
-        ),
-        sendNotificationToMany(
-          driverTokens,
-          `طلب جديد من ${orderData.customerName || "زبون"}`,
-          `يوجد طلب جديد من ${orderData.storeName || "متجر"} بانتظار القبول`,
-          { orderId: orderData.id, status: orderData.status, type: "delivery" }
-        ),
-        sendNotificationToToken(
-          orderData.customerToken,
-          "تم استلام طلبك",
-          "جاري البحث عن سائق توصيل مناسب",
-          { orderId: orderData.id, status: orderData.status, type: "delivery" }
-        )
-      ]);
+      if (typeof window.notifyNewDeliveryOrder === "function") {
+        return window.notifyNewDeliveryOrder(orderData);
+      }
+      return Promise.resolve();
     }
 
     async function notifyTaxiOrder(orderData){
-      const taxiTokens = await getActiveTaxiTokens();
-      await Promise.allSettled([
-        sendNotificationToMany(
-          taxiTokens,
-          "طلب تكسي جديد",
-          `هناك شخص طلب توصيل رحلة من ${orderData.customerName || "زبون"}`,
-          { orderId: orderData.id, status: orderData.status, type: "taxi" }
-        ),
-        sendNotificationToToken(
-          orderData.customerToken,
-          "تم استلام طلب التكسي",
-          "جاري البحث عن سائق تكسي مناسب",
-          { orderId: orderData.id, status: orderData.status, type: "taxi" }
-        )
-      ]);
+      if (typeof window.notifyTaxiOrder === "function") {
+        return window.notifyTaxiOrder(orderData);
+      }
+      return Promise.resolve();
     }
-
 
     const storesContainer = document.getElementById("storesContainer");
     const adsSlider = document.getElementById("adsSlider");
@@ -1516,6 +1424,7 @@
 
         localStorage.setItem("sendingOrder", "true");
         await set(ref(database, "orders/" + newOrderId), orderData);
+        notifyNewDeliveryOrder(orderData).catch(() => {});
         localStorage.setItem("currentOrderId", newOrderId);
         currentOrderId = newOrderId;
         localStorage.removeItem("sendingOrder");
@@ -1847,5 +1756,6 @@
       <iframe id="mapFrame" class="map-frame" loading="lazy"></iframe>
     </div>
   </div>
+  <script type="module" src="notifications.js"></script>
 </body>
 </html>
