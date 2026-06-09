@@ -1429,7 +1429,6 @@
         currentOrderId = newOrderId;
         localStorage.removeItem("sendingOrder");
 
-        notifyNewDeliveryOrder(orderData).catch(()=>{});
 
         cart = [];
         localStorage.removeItem("cart");
