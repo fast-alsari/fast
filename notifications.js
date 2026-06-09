@@ -16,7 +16,7 @@ const app = getApps().length ? getApp() : initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
 /* ضع رابط Cloudflare Worker / webhook هنا */
-const NOTIFICATION_WEBHOOK_URL = "PUT_YOUR_WORKER_URL_HERE";
+const NOTIFICATION_WEBHOOK_URL = "https://purple-heart-d6d6.ahmed-a-ahmed00457.workers.dev/";
 
 function getUserFromStorage() {
   try {
