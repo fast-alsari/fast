@@ -552,6 +552,25 @@
       state.timerHandle = null;
     }
 
+
+    async function updateDeliveryOrderStatus(orderId, patch) {
+      const orderRef = ref(db, `orders/${orderId}`);
+      const snapshot = await get(orderRef);
+      const previousStatus = snapshot.exists() ? String(snapshot.val().status || "") : "";
+
+      const nextOrder = snapshot.exists()
+        ? { ...snapshot.val(), ...patch, id: orderId }
+        : { id: orderId, ...patch };
+
+      await update(orderRef, patch).catch(() => {});
+
+      if (typeof notifyDeliveryStatusChange === "function") {
+        await notifyDeliveryStatusChange(nextOrder, previousStatus).catch(() => {});
+      }
+
+      return nextOrder;
+    }
+
     function updateTimerUI() {
       els.timeStageTitle.textContent = fmtStageTitle(state.stage);
       if (state.activeOrder?.statusText) els.orderStatusText.textContent = state.activeOrder.statusText;
@@ -965,7 +984,7 @@
         state.stageDuration = STAGE_MS;
         state.extraTimeUsed = false;
 
-        await update(ref(db, `orders/${state.activeOrderId}`), {
+        await updateDeliveryOrderStatus(state.activeOrderId, {
           status: "driver_arrived_store",
           statusText: "السائق وصل المتجر",
           stage: state.stage,
@@ -975,7 +994,7 @@
           arrivedStoreAt: Date.now(),
           driverLat: state.driverLat,
           driverLng: state.driverLng
-        }).catch(() => {});
+        });
 
         updateTimerUI();
         updateRoute(order);
@@ -988,7 +1007,7 @@
         state.stageDuration = STAGE_MS;
         state.extraTimeUsed = false;
 
-        await update(ref(db, `orders/${state.activeOrderId}`), {
+        await updateDeliveryOrderStatus(state.activeOrderId, {
           status: "picked_up",
           statusText: "السائق استلم الطلب وقادم إليك",
           stage: state.stage,
@@ -998,7 +1017,7 @@
           leftStoreAt: Date.now(),
           driverLat: state.driverLat,
           driverLng: state.driverLng
-        }).catch(() => {});
+        });
 
         updateTimerUI();
         updateRoute(order);
@@ -1008,14 +1027,14 @@
       if (state.stage === "to_customer" && distanceToCustomer <= CUSTOMER_RADIUS_KM) {
         state.stage = "arrived_customer";
 
-        await update(ref(db, `orders/${state.activeOrderId}`), {
+        await updateDeliveryOrderStatus(state.activeOrderId, {
           status: "arrived_customer",
           statusText: "السائق وصل إلى الزبون",
           stage: state.stage,
           driverLat: state.driverLat,
           driverLng: state.driverLng,
           arrivedCustomerAt: Date.now()
-        }).catch(() => {});
+        });
 
         updateTimerUI();
         updateRoute(order);
@@ -1036,6 +1055,9 @@
       if (state.activeOrderId) return alert("عندك طلب نشط حالياً");
 
       const orderRef = ref(db, `orders/${id}`);
+      const beforeSnap = await get(orderRef);
+      const previousStatus = beforeSnap.exists() ? String(beforeSnap.val().status || "") : "";
+
       const tx = await runTransaction(orderRef, (current) => {
         if (!current) return current;
         if (current.status !== "waiting_driver") return;
@@ -1067,7 +1089,10 @@
 
       const snap = await get(orderRef);
       if (!snap.exists()) return;
-      showActiveOrder(snap.val(), id);
+
+      const order = snap.val();
+      showActiveOrder(order, id);
+      await notifyDeliveryStatusChange(order, previousStatus).catch(() => {});
     }
 
     async function rejectOrder(id) {
@@ -1103,11 +1128,11 @@
       if (!state.activeOrderId || !state.activeOrder) return;
 
       const order = state.activeOrder;
-      await update(ref(db, `orders/${state.activeOrderId}`), {
+      await updateDeliveryOrderStatus(state.activeOrderId, {
         status: "delivered",
         statusText: "تم تسليم الطلب",
         deliveredAt: Date.now()
-      }).catch(() => {});
+      });
 
       await update(ref(db, `drivers/${currentDriver.id}`), {
         completedOrders: Number((currentDriver.completedOrders || 0)) + 1,
@@ -1121,7 +1146,7 @@
     async function markProblem() {
       if (!state.activeOrderId) return;
 
-      await update(ref(db, `orders/${state.activeOrderId}`), {
+      await updateDeliveryOrderStatus(state.activeOrderId, {
         status: "waiting_driver",
         statusText: "السائق السابق واجه مشكلة بالتوصيل",
         previousDriverId: currentDriver.id,
@@ -1135,7 +1160,7 @@
         driverLat: "",
         driverLng: "",
         stage: "waiting_driver"
-      }).catch(() => {});
+      });
 
       alert("تم إرجاع الطلب للانتظار من جديد");
       clearActiveOrderUI();
@@ -1144,11 +1169,11 @@
     async function customerCancelled() {
       if (!state.activeOrderId) return;
 
-      await update(ref(db, `orders/${state.activeOrderId}`), {
+      await updateDeliveryOrderStatus(state.activeOrderId, {
         status: "cancelled_by_customer",
         statusText: "الطلب ألغي من قبل الزبون",
         cancelledAt: Date.now()
-      }).catch(() => {});
+      });
 
       alert("تم تسجيل الإلغاء من قبل الزبون");
       clearActiveOrderUI();
