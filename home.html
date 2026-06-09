@@ -727,21 +727,6 @@
       enhanceAllImages();
     }
 
-
-    function getStoreById(storeId){
-      return allStores.find(store => String(store.id || "") === String(storeId || "")) || null;
-    }
-
-    function getStoreToken(storeId){
-      const store = getStoreById(storeId);
-      return store?.fcmToken || store?.storeToken || store?.token || "";
-    }
-
-    function getMyFcmToken(){
-      const user = JSON.parse(localStorage.getItem("user") || "null") || currentUser || {};
-      return user.fcmToken || localStorage.getItem("androidFcmToken") || localStorage.getItem("fcmToken") || "";
-    }
-
     function startLiveStores(){
       onValue(ref(database, "stores"), snapshot => {
         allStores = [];
@@ -1363,7 +1348,6 @@
       }
 
       navigator.geolocation.getCurrentPosition(async (position) => {
-        try {
         let total = 0;
         cart.forEach(item => { total += Number(item.price) * Number(item.qty); });
         const tip = Number(document.getElementById("tipInput").value || 0);
@@ -1444,6 +1428,8 @@
         localStorage.setItem("currentOrderId", newOrderId);
         currentOrderId = newOrderId;
         localStorage.removeItem("sendingOrder");
+
+        notifyNewDeliveryOrder(orderData).catch(()=>{});
 
         cart = [];
         localStorage.removeItem("cart");
