@@ -65,14 +65,14 @@
     .open-dot{background:#00c853;box-shadow:0 0 8px #00c853}
     .closed-dot{background:#cfcfcf;opacity:.4;box-shadow:none}
     .closed-store{opacity:.55;filter:grayscale(100%);background:#dcdcdc!important;pointer-events:none}
-    .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.10);perspective:1000px}
-    .ads-track{width:100%;height:100%;position:relative;perspective:1000px}
-    .ad-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transform:rotateY(90deg);transform-origin:center;backface-visibility:hidden;transition:transform .7s ease,opacity .7s ease;cursor:pointer}
-    .ad-slide.active{opacity:1;transform:rotateY(0deg)}
-    .ad-slide.prev{opacity:0;transform:rotateY(-90deg)}
+    .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.10)}
+    .ads-track{width:100%;height:100%;position:relative}
+    .ad-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transform:translateX(100%);transition:transform .7s ease,opacity .7s ease;cursor:pointer}
+    .ad-slide.active{opacity:1;transform:translateX(0)}
+    .ad-slide.prev{opacity:0;transform:translateX(-100%)}
     .ad-slide img{width:100%;height:100%;object-fit:cover;display:block}
     .ad-controls{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 10px;pointer-events:none}
-    .ad-nav-btn{width:42px;height:42px;border:none;border-radius:14px;background:rgba(255,255,255,.92);color:#ff6600;font-size:18px;cursor:pointer;pointer-events:auto;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+    .ad-nav-btn{width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,.88);color:#ff6600;font-size:18px;cursor:pointer;pointer-events:auto;box-shadow:0 3px 12px rgba(0,0,0,.12)}
     .single-store-page{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#f7f7f7;z-index:999;overflow-y:auto;padding-bottom:120px}
     .store-top-bar{background:linear-gradient(135deg,#ff8800,#ff5500);padding:7px 14px 8px;display:flex;align-items:center;gap:12px;color:#fff;position:sticky;top:0;z-index:100;flex-wrap:wrap;box-shadow:0 4px 12px rgba(0,0,0,.08)}
     .back-btn{width:42px;height:42px;border-radius:50%;border:none;background:#fff;color:#ff6600;font-size:18px;cursor:pointer;flex-shrink:0}
@@ -464,45 +464,25 @@
     let taxiTargetLng = null;
     let taxiDistance = 0;
     let taxiPrice = 0;
-
-    function getMyFcmToken(){
-      const savedUser = JSON.parse(localStorage.getItem("user") || "null");
-      return String(savedUser?.fcmToken || localStorage.getItem("androidFcmToken") || "").trim();
+    async function notifyNewDeliveryOrder(orderData){
+      if (typeof window.notifyNewDeliveryOrder === "function") {
+        return window.notifyNewDeliveryOrder(orderData);
+      }
+      return Promise.resolve();
     }
 
-    function getStoreById(storeId){
-      return allStores.find(store => String(store.id) === String(storeId)) || null;
-    }
-
-    function getStoreToken(storeId){
-      const store = getStoreById(storeId);
-      return String(store?.fcmToken || "").trim();
-    }
-
-    function buildStoresData(storeIds){
-      return [...new Set((storeIds || []).filter(Boolean))].map(storeId => {
-        const store = getStoreById(storeId);
-        return {
-          storeId: store?.id || "",
-          storeImage: store?.store_image || store?.image || "",
-          storeName: store?.store_name || "",
-          storeLat: store?.latitude || "",
-          storeLng: store?.longitude || "",
-          storePhone: store?.phone || "",
-          storeToken: store?.fcmToken || ""
-        };
-      });
-    }
-
-    function getCartTotal(){
-      return cart.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.qty || 1)), 0);
+    async function notifyTaxiOrder(orderData){
+      if (typeof window.notifyTaxiOrder === "function") {
+        return window.notifyTaxiOrder(orderData);
+      }
+      return Promise.resolve();
     }
 
     const storesContainer = document.getElementById("storesContainer");
     const adsSlider = document.getElementById("adsSlider");
     const adsTrack = document.getElementById("adsTrack");
     const productSearchInput = document.getElementById("productSearchInput");
-    const blockedStatuses = ["waiting_driver","accepted","going_to_store","picked_up","on_the_way","arrived"];
+    const blockedStatuses = ["waiting_driver","accepted","driver_accepted","going_to_store","driver_to_store","preparing_order","driver_arrived_store","picked_up","on_the_way","arrived","driver_arrived_customer","delivered","customer_rated","failed_no_driver","driver_timeout","delivery_problem","cancelled_by_customer","rejected_by_customer"];
 
     function enhanceImage(img){
       if(!img || img.dataset.enhanced === "1") return;
@@ -1227,6 +1207,7 @@
     document.getElementById("ratingSubmit").addEventListener("click", submitRating);
     buildStars();
 
+
     function openOrderPage(){
       document.getElementById("singleStorePage").style.display = "none";
       document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
@@ -1242,6 +1223,24 @@
         return;
       }
 
+      const setDriverInfo = (order) => {
+        document.getElementById("driverName").innerHTML = order.acceptedDriver || order.driverName || "السائق";
+        document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
+        document.getElementById("driverImage").src = order.driverImage || "driver.png";
+        document.getElementById("whatsappBtn").onclick = function(){
+          if(order.driverPhone) window.open(`https://wa.me/${order.driverPhone}`);
+          else alert("لا يوجد رقم للسائق");
+        };
+      };
+
+      const showDriverCard = (order) => {
+        document.getElementById("searchingBox").style.display = "none";
+        document.getElementById("driverCard").style.display = "block";
+        document.getElementById("ratingBox").style.display = "none";
+        setDriverInfo(order);
+        updateDriverLocation(order);
+      };
+
       const orderRef = ref(database, "orders/" + currentOrderId);
       orderUnsubscribe = onValue(orderRef, (snapshot) => {
         if(!snapshot.exists()){
@@ -1250,229 +1249,220 @@
         }
 
         const order = snapshot.val();
+        const status = String(order.status || "");
         startOrderTimer(order.createdAt || Date.now());
 
-        if(order.status === "waiting_driver"){
+        if(status === "waiting_driver"){
           document.getElementById("searchingBox").style.display = "flex";
           document.getElementById("driverCard").style.display = "none";
           document.getElementById("ratingBox").style.display = "none";
           document.getElementById("orderStatus").innerHTML = "جاري البحث عن سائق توصيل";
           document.getElementById("liveStatus").innerHTML = "بانتظار قبول سائق...";
+          return;
         }
 
-        if(order.status === "accepted" || order.status === "preparing_order"){
-          document.getElementById("searchingBox").style.display = "none";
-          document.getElementById("driverCard").style.display = "block";
-          document.getElementById("ratingBox").style.display = "none";
-          document.getElementById("orderStatus").innerHTML = order.status === "accepted" ? "تم قبول الطلب" : "السائق وصل للمتجر وجاري تجهيز الطلب";
-          document.getElementById("liveStatus").innerHTML = order.status === "accepted" ? "السائق متجه إلى المتجر" : "المتجر يقوم بتجهيز الطلب";
-          document.getElementById("driverName").innerHTML = order.acceptedDriver || "السائق";
-          document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
-          document.getElementById("driverImage").src = order.driverImage || "driver.png";
-          document.getElementById("whatsappBtn").onclick = function(){
-            if(order.driverPhone) window.open(`https://wa.me/${order.driverPhone}`);
-            else alert("لا يوجد رقم للسائق");
-          };
-          updateDriverLocation(order);
+        if(status === "accepted" || status === "driver_accepted"){
+          showDriverCard(order);
+          document.getElementById("orderStatus").innerHTML = "تم قبول الطلب";
+          document.getElementById("liveStatus").innerHTML = "تم قبول طلبك من قبل السائق وسوف يتواصل معك لتأكيد الطلب";
+          return;
         }
 
-        if(order.status === "on_the_way" || order.status === "arrived"){
-          document.getElementById("searchingBox").style.display = "none";
-          document.getElementById("driverCard").style.display = "block";
-          document.getElementById("ratingBox").style.display = "none";
-          document.getElementById("orderStatus").innerHTML = order.status === "on_the_way" ? "السائق استلم الطلب وهو بالطريق إليك" : "وصل السائق";
-          document.getElementById("liveStatus").innerHTML = order.status === "on_the_way" ? (order.statusText || "السائق متجه إليك") : "السائق وصل إلى موقعك";
-          document.getElementById("driverName").innerHTML = order.acceptedDriver || "السائق";
-          document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
-          document.getElementById("driverImage").src = order.driverImage || "driver.png";
-          updateDriverLocation(order);
+        if(status === "going_to_store" || status === "driver_to_store"){
+          showDriverCard(order);
+          document.getElementById("orderStatus").innerHTML = "السائق في طريقه إلى المتجر";
+          document.getElementById("liveStatus").innerHTML = "السائق متجه الآن إلى المتجر لاستلام الطلب";
+          return;
         }
 
-        if(order.status === "delivered"){
+        if(status === "preparing_order" || status === "driver_arrived_store"){
+          showDriverCard(order);
+          document.getElementById("orderStatus").innerHTML = "السائق وصل إلى المتجر";
+          document.getElementById("liveStatus").innerHTML = "السائق وصل لاستلام الطلب، يرجى تجهيز الطلب";
+          return;
+        }
+
+        if(status === "picked_up"){
+          showDriverCard(order);
+          document.getElementById("orderStatus").innerHTML = "السائق استلم الطلب";
+          document.getElementById("liveStatus").innerHTML = "السائق استلم الطلب وهو في طريقه إليك";
+          return;
+        }
+
+        if(status === "on_the_way"){
+          showDriverCard(order);
+          document.getElementById("orderStatus").innerHTML = "السائق في الطريق إليك";
+          document.getElementById("liveStatus").innerHTML = order.statusText || "السائق متجه إليك";
+          return;
+        }
+
+        if(status === "arrived" || status === "driver_arrived_customer"){
+          showDriverCard(order);
+          document.getElementById("orderStatus").innerHTML = "السائق وصل بالقرب منك";
+          document.getElementById("liveStatus").innerHTML = "السائق وصل، يرجى الاستعداد لاستلام الطلب";
+          return;
+        }
+
+        if(status === "delivery_problem"){
+          showDriverCard(order);
+          document.getElementById("orderStatus").innerHTML = "توجد مشكلة في التوصيل";
+          document.getElementById("liveStatus").innerHTML = order.statusText || "سيتم البحث عن سائق آخر";
+          return;
+        }
+
+        if(status === "delivered" || status === "customer_rated"){
           stopOrderTimer();
           document.getElementById("searchingBox").style.display = "none";
           document.getElementById("driverCard").style.display = "block";
           document.getElementById("ratingBox").style.display = order.customerRated ? "none" : "block";
           document.getElementById("orderStatus").innerHTML = "تم تسليم الطلب";
           document.getElementById("liveStatus").innerHTML = order.customerRated ? "تم تقييم السائق مسبقاً" : "قيم السائق الآن ثم ارجع للرئيسية";
-          document.getElementById("driverName").innerHTML = order.acceptedDriver || "السائق";
-          document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
-          document.getElementById("driverImage").src = order.driverImage || "driver.png";
+          setDriverInfo(order);
           updateDriverLocation(order);
           if(order.customerRated){
             setTimeout(() => openHomeAfterOrder(), 1200);
           }
+          return;
         }
 
-        if(order.status === "failed_no_driver" || order.status === "driver_timeout"){
-          openHomeAfterOrder("الطلب الغي بسبب عدم وجود سائق قبل طلب توصيلك");
-        }
-
-        if(order.status === "cancelled_by_customer" || order.status === "rejected_by_customer"){
+        if(status === "failed_no_driver" || status === "driver_timeout" || status === "cancelled_by_customer" || status === "rejected_by_customer"){
           openHomeAfterOrder("تم إلغاء الطلب");
+          return;
         }
       });
     }
 
+
     window.sendOrder = async function(){
       const sendBtn = document.getElementById("sendOrderBtn");
-      if(!sendBtn || sendBtn.dataset.busy === "1") return;
+      if(sendBtn.disabled) return;
 
-      sendBtn.dataset.busy = "1";
       sendBtn.disabled = true;
       sendBtn.innerHTML = "جاري ارسال الطلب...";
 
-      try{
-        if(cart.length === 0){
-          alert("السلة فارغة");
-          return;
-        }
-
-        if(!navigator.geolocation){
-          alert("هذا الجهاز لا يدعم تحديد الموقع");
-          return;
-        }
-
-        navigator.geolocation.getCurrentPosition(async (position) => {
-          try{
-            const total = getCartTotal();
-            const tip = Number(document.getElementById("tipInput").value || 0);
-            const newOrderId = "ORDER" + Date.now();
-
-            const uniqueStoreIds = [...new Set(cart.map(item => item.storeId).filter(Boolean))];
-            const storesData = buildStoresData(uniqueStoreIds);
-            const firstStore = getStoreById(cart[0]?.storeId);
-
-            const orderData = {
-              id: newOrderId,
-              requestType: "delivery",
-              customerId: currentUser.id,
-              customerName: currentUser.name || "",
-              customerPhone: currentUser.phone || "",
-              customerAddress: currentUser.address || "",
-              customerToken: getMyFcmToken(),
-
-              items: cart.map(item => ({
-                id: item.id || "",
-                name: item.name || "",
-                price: Number(item.price || 0),
-                qty: Number(item.qty || 1),
-                totalPrice: Number(item.price || 0) * Number(item.qty || 1),
-                image: item.image || "",
-                description: item.description || "",
-                storeId: item.storeId || "",
-                storeName: item.storeName || ""
-              })),
-
-              storeId: cart[0]?.storeId || "",
-              storeName: cart[0]?.storeName || "",
-              storeImage: firstStore?.store_image || firstStore?.image || "",
-              storeLat: firstStore?.latitude || "",
-              storeLng: firstStore?.longitude || "",
-              storePhone: firstStore?.phone || "",
-              storeToken: getStoreToken(cart[0]?.storeId || ""),
-              storeTokens: storesData.map(s => s.storeToken).filter(Boolean),
-              storesData,
-
-              driverId: "",
-              driverName: "",
-              driverPhone: "",
-              driverToken: "",
-
-              deliveryPrice,
-              tip,
-              productsPrice: total,
-              totalPrice: total + deliveryPrice + tip,
-              status: "waiting_driver",
-              statusText: "بانتظار قبول سائق",
-              driverFound: false,
-              delivered: false,
-              failedDriverSearch: false,
-              createdAt: Date.now(),
-              createdDate: new Date().toLocaleDateString("ar-EG"),
-              createdTime: new Date().toLocaleTimeString("ar-EG"),
-              customerLat: position.coords.latitude,
-              customerLng: position.coords.longitude,
-              statusHistory: [{
-                status: "waiting_driver",
-                at: Date.now(),
-                by: currentUser.id
-              }]
-            };
-
-            if(localStorage.getItem("sendingOrder") === "true") return;
-
-            localStorage.setItem("sendingOrder", "true");
-            await set(ref(database, "orders/" + newOrderId), orderData);
-await notifyNewDeliveryOrder({
-  ...orderData,
-  customerToken: orderData.customerToken || "",
-  storeToken: orderData.storeToken || "",
-  storeTokens: orderData.storeTokens || [],
-  driverToken: ""
-}).catch(error => console.log(error));
-            localStorage.setItem("currentOrderId", newOrderId);
-            currentOrderId = newOrderId;
-
-            cart = [];
-            localStorage.removeItem("cart");
-            updateCart();
-
-            sendBtn.dataset.busy = "0";
-            sendBtn.disabled = false;
-            sendBtn.innerHTML = "تم ارسال الطلب";
-
-            document.getElementById("orderPage").style.display = "block";
-            document.getElementById("bottomBar").style.display = "none";
-            document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
-            openOrderPage();
-
-            setTimeout(async () => {
-              try{
-                const checkOrder = await get(ref(database, "orders/" + newOrderId));
-                if(checkOrder.exists()){
-                  const order = checkOrder.val();
-                  if(order.status === "waiting_driver"){
-                    await update(ref(database, "orders/" + newOrderId), {
-                      status: "failed_no_driver",
-                      statusText: "تم رفض الطلب بسبب عدم توفر سائق",
-                      failedDriverSearch: true,
-                      closedAt: Date.now()
-                    });
-                  }
-                }
-              }catch(e){
-                console.log(e);
-              }finally{
-                localStorage.removeItem("sendingOrder");
-                sendBtn.dataset.busy = "0";
-                sendBtn.disabled = false;
-                sendBtn.innerHTML = "تم ارسال الطلب";
-              }
-            }, 3600000);
-          }catch(error){
-            console.error("sendOrder error:", error);
-            alert("حصل خطأ أثناء إرسال الطلب");
-            localStorage.removeItem("sendingOrder");
-            sendBtn.dataset.busy = "0";
-            sendBtn.disabled = false;
-            sendBtn.innerHTML = "طلب توصيل 🚀";
-          }
-        }, (error) => {
-          console.error("GPS error:", error);
-          alert("يرجى تشغيل GPS");
-          localStorage.removeItem("sendingOrder");
-          sendBtn.dataset.busy = "0";
-          sendBtn.disabled = false;
-          sendBtn.innerHTML = "طلب توصيل 🚀";
-        }, { enableHighAccuracy:true, maximumAge:0, timeout:10000 });
-      }catch(error){
-        console.error("sendOrder outer error:", error);
-        localStorage.removeItem("sendingOrder");
-        sendBtn.dataset.busy = "0";
+      if(cart.length === 0){
+        alert("السلة فارغة");
         sendBtn.disabled = false;
         sendBtn.innerHTML = "طلب توصيل 🚀";
+        return;
       }
+
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        let total = 0;
+        cart.forEach(item => { total += Number(item.price) * Number(item.qty); });
+        const tip = Number(document.getElementById("tipInput").value || 0);
+        const newOrderId = "ORDER" + Date.now();
+
+        const uniqueStoreIds = [...new Set(cart.map(item => item.storeId).filter(Boolean))];
+        const storesData = uniqueStoreIds.map(storeId => {
+          const store = getStoreById(storeId);
+          return {
+            storeId: store?.id || "",
+            storeImage: store?.store_image || "",
+            storeName: store?.store_name || "",
+            storeLat: store?.latitude || "",
+            storeLng: store?.longitude || "",
+            storePhone: store?.phone || "",
+            storeToken: store?.fcmToken || ""
+          };
+        });
+
+        const orderData = {
+          id: newOrderId,
+          requestType: "delivery",
+          customerId: currentUser.id,
+          customerName: currentUser.name || "",
+          customerPhone: currentUser.phone || "",
+          customerAddress: currentUser.address || "",
+          customerToken: getMyFcmToken(),
+          items: cart.map(item => ({
+            id: item.id || "",
+            name: item.name || "",
+            price: Number(item.price || 0),
+            qty: Number(item.qty || 1),
+            totalPrice: Number(item.price || 0) * Number(item.qty || 1),
+            image: item.image || "",
+            description: item.description || "",
+            storeId: item.storeId || "",
+            storeName: item.storeName || ""
+          })),
+          storeId: cart[0].storeId || "",
+          storeName: cart[0].storeName || "",
+          storeImage: getStoreById(cart[0].storeId)?.store_image || "",
+          storeLat: getStoreById(cart[0].storeId)?.latitude || "",
+          storeLng: getStoreById(cart[0].storeId)?.longitude || "",
+          storeToken: getStoreToken(cart[0].storeId),
+          storeTokens: storesData.map(store => store.storeToken).filter(Boolean),
+          storesData,
+          driverToken: "",
+          deliveryPrice,
+          tip,
+          productsPrice: total,
+          totalPrice: total + deliveryPrice + tip,
+          status: "waiting_driver",
+          statusText: "بانتظار قبول سائق",
+          driverFound: false,
+          delivered: false,
+          failedDriverSearch: false,
+          createdAt: Date.now(),
+          createdDate: new Date().toLocaleDateString("ar-EG"),
+          createdTime: new Date().toLocaleTimeString("ar-EG"),
+          customerLat: position.coords.latitude,
+          customerLng: position.coords.longitude,
+          statusHistory: [{
+            status: "waiting_driver",
+            at: Date.now(),
+            by: currentUser.id
+          }]
+        };
+
+        if(localStorage.getItem("sendingOrder") === "true"){
+          sendBtn.disabled = false;
+          sendBtn.innerHTML = "طلب توصيل 🚀";
+          return;
+        }
+
+        localStorage.setItem("sendingOrder", "true");
+        await set(ref(database, "orders/" + newOrderId), orderData);
+        notifyNewDeliveryOrder(orderData).catch(() => {});
+        localStorage.setItem("currentOrderId", newOrderId);
+        currentOrderId = newOrderId;
+        localStorage.removeItem("sendingOrder");
+
+
+        cart = [];
+        localStorage.removeItem("cart");
+        updateCart();
+
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = "تم ارسال الطلب";
+
+        document.getElementById("orderPage").style.display = "block";
+        document.getElementById("bottomBar").style.display = "none";
+        document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
+        openOrderPage();
+
+        setTimeout(async () => {
+          try{
+            const checkOrder = await get(ref(database, "orders/" + newOrderId));
+            if(checkOrder.exists()){
+              const order = checkOrder.val();
+              if(order.status === "waiting_driver"){
+                await update(ref(database, "orders/" + newOrderId), {
+                  status: "failed_no_driver",
+                  statusText: "تم رفض الطلب بسبب عدم توفر سائق",
+                  failedDriverSearch: true,
+                  closedAt: Date.now()
+                });
+              }
+            }
+          }catch(e){}
+        }, 3600000);
+      }, () => {
+        sendBtn.disabled = false;
+        sendBtn.innerHTML = "طلب توصيل 🚀";
+        alert("يرجى تشغيل GPS");
+      }, { enableHighAccuracy:true, maximumAge:0, timeout:10000 });
     };
 
     navigator.geolocation.watchPosition(
@@ -1544,7 +1534,7 @@ await notifyNewDeliveryOrder({
         Object.values(snapshot.val()).forEach(order => {
           if(order.customerId === currentUser.id){
             all++;
-            if(["accepted","on_the_way","arrived"].includes(order.status)) accepted++;
+            if(["accepted","driver_accepted","going_to_store","driver_to_store","preparing_order","driver_arrived_store","picked_up","on_the_way","arrived","driver_arrived_customer","delivered"].includes(order.status)) accepted++;
             if(["failed_no_driver","delivery_problem","cancelled","cancelled_by_customer","driver_timeout"].includes(order.status)) rejected++;
             if(order.status === "delivered") delivered++;
           }
@@ -1705,6 +1695,7 @@ await notifyNewDeliveryOrder({
       }, 300);
     }
 
+
     window.sendTaxiOrder = async function(){
       if(!taxiTargetLat || !taxiTargetLng){
         alert("حدد موقع الوصول");
@@ -1718,21 +1709,17 @@ await notifyNewDeliveryOrder({
       const orderData = {
         id: orderId,
         requestType: "taxi",
+        targetLocation: `${taxiTargetLat},${taxiTargetLng}`,
+        googleMapsLink: `https://www.google.com/maps?q=${taxiTargetLat},${taxiTargetLng}`,
         customerId: currentUser.id,
         customerName: currentUser.name || "",
         customerPhone: currentUser.phone || "",
         customerToken: getMyFcmToken(),
-        taxiDriverId: "",
-        taxiDriverName: "",
-        taxiDriverPhone: "",
-        taxiDriverToken: "",
         personsCount,
         customerLat: taxiUserLat,
         customerLng: taxiUserLng,
         targetLat: taxiTargetLat,
         targetLng: taxiTargetLng,
-        targetLocation: `${taxiTargetLat},${taxiTargetLng}`,
-        googleMapsLink: `https://www.google.com/maps?q=${taxiTargetLat},${taxiTargetLng}`,
         distance: taxiDistance,
         price: taxiPrice,
         tip,
@@ -1748,13 +1735,8 @@ await notifyNewDeliveryOrder({
       };
 
       await set(ref(database, "taxi_orders/" + orderId), orderData);
-      await notifyTaxiOrder({
-  ...orderData,
-  customerToken: orderData.customerToken || "",
-  taxiDriverToken: "",
-  taxiToken: ""
-}).catch(error => console.log(error));
-      alert("تم ارسال طلب التكسي خلال ساعة اذا لم يتصل بك السائق فسوف يتم حذف طلبك  ");
+      notifyTaxiOrder(orderData).catch(()=>{});
+      alert("تم ارسال طلب التكسي خلال ساعة اذا لم يتصل بك السائق فسوف يتم حذف طلبك  🚕");
       document.getElementById("taxiPage").style.display = "none";
       showAppPage("homePage", document.querySelector(".bottom-bar .nav-item"));
     };
