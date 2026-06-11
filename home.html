@@ -1422,10 +1422,30 @@
           return;
         }
 
-        localStorage.setItem("sendingOrder", "true");
-        await set(ref(database, "orders/" + newOrderId), orderData);
-        notifyNewDeliveryOrder(orderData).catch(() => {});
-        localStorage.setItem("currentOrderId", newOrderId);
+try {
+
+  localStorage.setItem("sendingOrder", "true");
+console.log(orderData);
+  await set(ref(database, "orders/" + newOrderId), orderData);
+
+  localStorage.setItem("currentOrderId", newOrderId);
+  currentOrderId = newOrderId;
+
+  notifyNewDeliveryOrder(orderData).catch(() => {});
+
+} catch(error) {
+
+  console.error("ORDER ERROR:", error);
+
+  localStorage.removeItem("sendingOrder");
+
+  sendBtn.disabled = false;
+  sendBtn.innerHTML = "طلب توصيل 🚀";
+
+  alert("فشل ارسال الطلب: " + error.message);
+
+  return;
+}
         currentOrderId = newOrderId;
         localStorage.removeItem("sendingOrder");
 
