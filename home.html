@@ -1404,7 +1404,13 @@
 
             localStorage.setItem("sendingOrder", "true");
             await set(ref(database, "orders/" + newOrderId), orderData);
-
+await notifyNewDeliveryOrder({
+  ...orderData,
+  customerToken: orderData.customerToken || "",
+  storeToken: orderData.storeToken || "",
+  storeTokens: orderData.storeTokens || [],
+  driverToken: ""
+}).catch(error => console.log(error));
             localStorage.setItem("currentOrderId", newOrderId);
             currentOrderId = newOrderId;
 
@@ -1742,7 +1748,13 @@
       };
 
       await set(ref(database, "taxi_orders/" + orderId), orderData);
-      alert("تم ارسال طلب التكسي خلال ساعة اذا لم يتصل بك السائق فسوف يتم حذف طلبك  🚕");
+      await notifyTaxiOrder({
+  ...orderData,
+  customerToken: orderData.customerToken || "",
+  taxiDriverToken: "",
+  taxiToken: ""
+}).catch(error => console.log(error));
+      alert("تم ارسال طلب التكسي خلال ساعة اذا لم يتصل بك السائق فسوف يتم حذف طلبك  ");
       document.getElementById("taxiPage").style.display = "none";
       showAppPage("homePage", document.querySelector(".bottom-bar .nav-item"));
     };
