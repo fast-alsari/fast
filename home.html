@@ -1,4 +1,3 @@
-رجعه كلين و كامل للصفحة كلها اريد اذكا تصير تعادل 1000 مبرمج 
 <!-- home.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
@@ -66,28 +65,14 @@
     .open-dot{background:#00c853;box-shadow:0 0 8px #00c853}
     .closed-dot{background:#cfcfcf;opacity:.4;box-shadow:none}
     .closed-store{opacity:.55;filter:grayscale(100%);background:#dcdcdc!important;pointer-events:none}
-    .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 8px 24px rgba(0,0,0,.12);perspective:1200px}
-    .ads-track{width:100%;height:100%;position:relative;perspective:1200px}
-    .ad-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transform:translateX(100%) scale(.98);cursor:pointer;backface-visibility:hidden;will-change:transform,opacity;overflow:hidden}
-    .ad-slide.active{opacity:1;transform:translateX(0) scale(1)}
+    .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.10)}
+    .ads-track{width:100%;height:100%;position:relative}
+    .ad-slide{position:absolute;top:0;left:0;width:100%;height:100%;opacity:0;transform:translateX(100%);transition:transform .7s ease,opacity .7s ease;cursor:pointer}
+    .ad-slide.active{opacity:1;transform:translateX(0)}
+    .ad-slide.prev{opacity:0;transform:translateX(-100%)}
     .ad-slide img{width:100%;height:100%;object-fit:cover;display:block}
-    .ad-controls{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 10px;pointer-events:none;z-index:2}
-    .ad-nav-btn{width:44px;height:44px;border:none;border-radius:16px;background:rgba(255,255,255,.92);color:#ff6600;font-size:18px;cursor:pointer;pointer-events:auto;box-shadow:0 4px 14px rgba(0,0,0,.14);transition:transform .2s ease, box-shadow .2s ease, background .2s ease}
-    .ad-nav-btn:hover{transform:translateY(-1px) scale(1.03);box-shadow:0 6px 18px rgba(0,0,0,.18);background:#fff}
-    .ad-anim-right{animation:adInRight .75s ease both}
-    .ad-anim-left{animation:adInLeft .75s ease both}
-    .ad-anim-up{animation:adInUp .75s ease both}
-    .ad-anim-down{animation:adInDown .75s ease both}
-    .ad-anim-zoom{animation:adZoom .75s ease both}
-    @keyframes adInRight{from{opacity:0;transform:translateX(100%) scale(.96) rotateY(-10deg)}to{opacity:1;transform:translateX(0) scale(1) rotateY(0)}}
-    @keyframes adInLeft{from{opacity:0;transform:translateX(-100%) scale(.96) rotateY(10deg)}to{opacity:1;transform:translateX(0) scale(1) rotateY(0)}}
-    @keyframes adInUp{from{opacity:0;transform:translateY(-100%) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-    @keyframes adInDown{from{opacity:0;transform:translateY(100%) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
-    @keyframes adZoom{from{opacity:0;transform:scale(.85) rotate(-2deg)}to{opacity:1;transform:scale(1) rotate(0)}}
-    .app-toast{position:fixed;left:50%;bottom:102px;transform:translateX(-50%) translateY(20px);background:rgba(17,17,17,.92);color:#fff;padding:12px 16px;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.18);z-index:10005;font-size:14px;font-weight:700;line-height:1.4;opacity:0;pointer-events:none;transition:opacity .25s ease, transform .25s ease;max-width:min(92vw,420px);text-align:center}
-    .app-toast[data-type="success"]{background:rgba(0,140,80,.95)}
-    .app-toast[data-type="error"]{background:rgba(200,30,30,.95)}
-    .app-toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+    .ad-controls{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 10px;pointer-events:none}
+    .ad-nav-btn{width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,.88);color:#ff6600;font-size:18px;cursor:pointer;pointer-events:auto;box-shadow:0 3px 12px rgba(0,0,0,.12)}
     .single-store-page{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#f7f7f7;z-index:999;overflow-y:auto;padding-bottom:120px}
     .store-top-bar{background:linear-gradient(135deg,#ff8800,#ff5500);padding:7px 14px 8px;display:flex;align-items:center;gap:12px;color:#fff;position:sticky;top:0;z-index:100;flex-wrap:wrap;box-shadow:0 4px 12px rgba(0,0,0,.08)}
     .back-btn{width:42px;height:42px;border-radius:50%;border:none;background:#fff;color:#ff6600;font-size:18px;cursor:pointer;flex-shrink:0}
@@ -451,7 +436,6 @@
     let adsList = [];
     let currentAdIndex = 0;
     let adTimer = null;
-    let currentAdAnimation = "ad-anim-right";
     let userLatitude = null;
     let userLongitude = null;
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -499,51 +483,6 @@
     const adsTrack = document.getElementById("adsTrack");
     const productSearchInput = document.getElementById("productSearchInput");
     const blockedStatuses = ["waiting_driver","accepted","driver_accepted","going_to_store","driver_to_store","preparing_order","driver_arrived_store","picked_up","on_the_way","arrived","driver_arrived_customer","delivered","customer_rated","failed_no_driver","driver_timeout","delivery_problem","cancelled_by_customer","rejected_by_customer"];
-
-    function getMyFcmToken(){
-      const savedUser = JSON.parse(localStorage.getItem("user") || "null") || currentUser || {};
-      return String(savedUser.fcmToken || localStorage.getItem("androidFcmToken") || localStorage.getItem("fcmToken") || "").trim();
-    }
-
-    function getStoreById(storeId){
-      return allStores.find(store => String(store.id || "") === String(storeId || "")) || null;
-    }
-
-    function getStoreToken(storeId){
-      const store = getStoreById(storeId);
-      return String(store?.fcmToken || store?.storeToken || store?.token || "").trim();
-    }
-
-    function buildStoresData(storeIds){
-      return [...new Set((storeIds || []).filter(Boolean))].map(storeId => {
-        const store = getStoreById(storeId);
-        return {
-          storeId: store?.id || "",
-          storeImage: store?.store_image || store?.image || "",
-          storeName: store?.store_name || "",
-          storeLat: store?.latitude || "",
-          storeLng: store?.longitude || "",
-          storePhone: store?.phone || "",
-          storeToken: store?.fcmToken || ""
-        };
-      });
-    }
-
-    function getCartTotal(){
-      return cart.reduce((sum, item) => sum + (Number(item.price || 0) * Number(item.qty || 1)), 0);
-    }
-
-    function showToast(message, type = "success"){
-      const toast = document.getElementById("appToast");
-      if(!toast) return;
-      toast.textContent = message;
-      toast.dataset.type = type;
-      toast.classList.add("show");
-      clearTimeout(window.__appToastTimer);
-      window.__appToastTimer = setTimeout(() => {
-        toast.classList.remove("show");
-      }, 2200);
-    }
 
     function enhanceImage(img){
       if(!img || img.dataset.enhanced === "1") return;
@@ -816,13 +755,6 @@
       });
     }
 
-    function getAdAnimation(step = 1){
-      const nextAnimations = ["ad-anim-right", "ad-anim-up", "ad-anim-zoom"];
-      const prevAnimations = ["ad-anim-left", "ad-anim-down", "ad-anim-zoom"];
-      const pool = step >= 0 ? nextAnimations : prevAnimations;
-      return pool[Math.floor(Math.random() * pool.length)];
-    }
-
     function startAdsSlider(){
       onValue(ref(database, "ads"), snapshot => {
         adsTrack.innerHTML = "";
@@ -845,7 +777,6 @@
         }
         adsSlider.style.display = "block";
         if(currentAdIndex >= adsList.length) currentAdIndex = 0;
-        currentAdAnimation = getAdAnimation(1);
         renderAds();
         startAdTimer();
       });
@@ -853,7 +784,7 @@
 
     function renderAds(){
       adsTrack.innerHTML = adsList.map((ad, index) => `
-        <div class="ad-slide ${index === currentAdIndex ? ("active " + currentAdAnimation) : ""}" onclick="openAd(${index})">
+        <div class="ad-slide ${index === currentAdIndex ? "active" : ""} ${index < currentAdIndex ? "prev" : ""}" onclick="openAd(${index})">
           <img src="${ad.image}" onerror="this.src='store.png'" alt="ad" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="store.png">
         </div>
       `).join("");
@@ -865,7 +796,6 @@
     function resetAdTimer(){ startAdTimer(); }
     function advanceAd(step = 1){
       if(!adsList.length) return;
-      currentAdAnimation = getAdAnimation(step);
       currentAdIndex = (currentAdIndex + step + adsList.length) % adsList.length;
       renderAds();
       resetAdTimer();
@@ -879,27 +809,6 @@
       if(ad.storeId){ openStore(ad.storeId); return; }
       if(ad.link) window.open(ad.link, "_blank");
     };
-
-    let adsTouchStartX = 0;
-    let adsTouchStartY = 0;
-    if(adsSlider){
-      adsSlider.addEventListener("touchstart", (e) => {
-        const touch = e.changedTouches && e.changedTouches[0];
-        if(!touch) return;
-        adsTouchStartX = touch.screenX;
-        adsTouchStartY = touch.screenY;
-      }, { passive: true });
-
-      adsSlider.addEventListener("touchend", (e) => {
-        const touch = e.changedTouches && e.changedTouches[0];
-        if(!touch || !adsList.length) return;
-        const diffX = touch.screenX - adsTouchStartX;
-        const diffY = touch.screenY - adsTouchStartY;
-        if(Math.abs(diffX) < 45 || Math.abs(diffY) > 90) return;
-        if(diffX < 0) window.nextAd();
-        else window.prevAd();
-      }, { passive: true });
-    }
 
     function renderProducts(){
       if(!currentStore) return;
@@ -1005,7 +914,7 @@
       else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""});
       localStorage.setItem("cart", JSON.stringify(cart));
       updateCart();
-      showToast("تمت إضافة المنتج إلى السلة", "success");
+      alert("تمت الاضافة");
     };
 
     function updateCart(){
@@ -1520,6 +1429,8 @@
         currentOrderId = newOrderId;
         localStorage.removeItem("sendingOrder");
 
+        notifyNewDeliveryOrder(orderData).catch(()=>{});
+
         cart = [];
         localStorage.removeItem("cart");
         updateCart();
@@ -1826,7 +1737,7 @@
 
       await set(ref(database, "taxi_orders/" + orderId), orderData);
       notifyTaxiOrder(orderData).catch(()=>{});
-      showToast("تم إرسال طلب التكسي بنجاح", "success");
+      alert("تم ارسال طلب التكسي خلال ساعة اذا لم يتصل بك السائق فسوف يتم حذف طلبك  🚕");
       document.getElementById("taxiPage").style.display = "none";
       showAppPage("homePage", document.querySelector(".bottom-bar .nav-item"));
     };
@@ -1838,8 +1749,6 @@
       document.getElementById("orderPage").style.display = "none";
     }
   </script>
-
-  <div id="appToast" class="app-toast" aria-live="polite"></div>
 
   <div id="mapModal" class="map-modal">
     <div class="map-modal-box">
