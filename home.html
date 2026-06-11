@@ -1426,8 +1426,12 @@ try {
 
   localStorage.setItem("sendingOrder", "true");
 console.log(orderData);
-  await set(ref(database, "orders/" + newOrderId), orderData);
+  
+alert("وصلت قبل حفظ الاوردر");
 
+await set(ref(database, "orders/" + newOrderId), orderData);
+
+alert("تم حفظ الاوردر");
   localStorage.setItem("currentOrderId", newOrderId);
   currentOrderId = newOrderId;
 
