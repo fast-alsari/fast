@@ -1427,11 +1427,21 @@ try {
   localStorage.setItem("sendingOrder", "true");
 console.log(orderData);
   
-alert("وصلت قبل حفظ الاوردر");
+try {
 
-await set(ref(database, "orders/" + newOrderId), orderData);
+  alert("بدأ الإرسال");
 
-alert("تم حفظ الاوردر");
+  await set(ref(database, "orders/" + newOrderId), orderData);
+
+  alert("تم الحفظ في Firebase");
+
+} catch(error) {
+
+  alert("Firebase Error: " + error.message);
+
+  console.log(error);
+
+}
   localStorage.setItem("currentOrderId", newOrderId);
   currentOrderId = newOrderId;
 
