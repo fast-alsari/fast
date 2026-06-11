@@ -7,69 +7,51 @@ firebase.initializeApp({
   projectId: "fast-937c9",
   storageBucket: "fast-937c9.firebasestorage.app",
   messagingSenderId: "221388561840",
-  appId: "1:221388561840:web:ec9d75183ddd7d44be0a75"
+  appId: "1:221388561840:web:ec9d75183ddd7d44be0a75",
 });
 
 const messaging = firebase.messaging();
 
-/* إشعارات الخلفية */
 messaging.onBackgroundMessage((payload) => {
-  console.log("Background Message:", payload);
-
   const title =
-    payload.notification?.title ||
-    payload.data?.title ||
+    payload?.notification?.title ||
+    payload?.data?.title ||
     "عالسريع";
 
   const options = {
-    body:
-      payload.notification?.body ||
-      payload.data?.body ||
-      "",
-    icon: "/icon-192.png",
-    badge: "/icon-192.png",
-    vibrate: [200, 100, 200],
+    body: payload?.notification?.body || payload?.data?.body || "",
+    icon: payload?.notification?.icon || "/Logo.png",
+    badge: payload?.notification?.badge || "/Logo.png",
+    image: payload?.notification?.image || "/Logo.png",
+    data: payload?.data || {},
     requireInteraction: true,
-    data: payload.data || {},
-    tag: payload.data?.orderId || "fast-order"
+    vibrate: [200, 100, 200],
+    tag: payload?.data?.orderId || payload?.data?.type || "fast-notification",
   };
 
   self.registration.showNotification(title, options);
 });
 
-/* فتح التطبيق عند الضغط على الإشعار */
 self.addEventListener("notificationclick", (event) => {
   event.notification.close();
 
-  const orderId = event.notification.data?.orderId || "";
+  const targetUrl =
+    event.notification?.data?.link ||
+    self.location.origin;
 
   event.waitUntil(
-    clients.matchAll({
-      type: "window",
-      includeUncontrolled: true
-    }).then((clientList) => {
-
+    clients.matchAll({ type: "window", includeUncontrolled: true }).then((clientList) => {
       for (const client of clientList) {
         if ("focus" in client) {
           client.focus();
-
-          if (orderId) {
-            client.postMessage({
-              type: "OPEN_ORDER",
-              orderId
-            });
-          }
-
           return;
         }
       }
-
-      return clients.openWindow("/");
+      return clients.openWindow(targetUrl);
     })
   );
 });
 
-/* تحديث Service Worker */
 self.addEventListener("install", () => {
   self.skipWaiting();
 });
