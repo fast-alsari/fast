@@ -878,7 +878,9 @@
         const isActive = index === currentAdIndex;
         const transitionClass = isActive ? `ad-enter-${activeMode}` : "";
         return `
-          <div class="ad-slide ${isActive ? "active" : "prev"} ${transitionClass}" onclick="openAd(${index})">
+      <div class="ad-slide ${isActive ? "active" : "prev"} ${transitionClass}"
+     style="cursor:${(ad.storeId || ad.link) ? 'pointer' : 'default'}"
+     onclick="${(ad.storeId || ad.link) ? `openAd(${index})` : ''}">
             <img src="${ad.image}" onerror="this.src='store.png'" alt="ad" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="store.png">
           </div>
         `;
