@@ -18,13 +18,17 @@ messaging.onBackgroundMessage((payload) => {
     payload?.data?.title ||
     "عالسريع";
 
-  const options = {
-    body: payload?.notification?.body || payload?.data?.body || "",
-    data: payload?.data || {},
-    requireInteraction: true,
-    vibrate: [200, 100, 200],
-    tag: payload?.data?.orderId || payload?.data?.type || "fast-notification",
-  };
+ const options = {
+  body: payload?.notification?.body || payload?.data?.body || "",
+  data: payload?.data || {},
+
+  icon: "/Logo.png",
+  badge: "/Logo.png",
+
+  requireInteraction: true,
+  vibrate: [200, 100, 200],
+  tag: payload?.data?.orderId || payload?.data?.type || "fast-notification",
+};
 
   self.registration.showNotification(title, options);
 });
