@@ -13,26 +13,23 @@ firebase.initializeApp({
 const messaging = firebase.messaging();
 
 messaging.onBackgroundMessage((payload) => {
-
   const title =
     payload?.notification?.title ||
     payload?.data?.title ||
     "عالسريع";
 
-const options = {
-  body: payload?.notification?.body || "",
-
-  icon: "/logo-s.png",
-  badge: "/logo-s.png",
-
-  requireInteraction: true
-};
+  const options = {
+    body: payload?.notification?.body || payload?.data?.body || "",
+    data: payload?.data || {},
+    requireInteraction: true,
+    vibrate: [200, 100, 200],
+    tag: payload?.data?.orderId || payload?.data?.type || "fast-notification",
+  };
 
   self.registration.showNotification(title, options);
 });
 
 self.addEventListener("notificationclick", (event) => {
-
   event.notification.close();
 
   const targetUrl =
@@ -42,9 +39,8 @@ self.addEventListener("notificationclick", (event) => {
   event.waitUntil(
     clients.matchAll({
       type: "window",
-      includeUncontrolled: true
+      includeUncontrolled: true,
     }).then((clientList) => {
-
       for (const client of clientList) {
         if ("focus" in client) {
           return client.focus();
