@@ -19,28 +19,14 @@ messaging.onBackgroundMessage((payload) => {
     payload?.data?.title ||
     "عالسريع";
 
-  const options = {
-    body: payload?.notification?.body || payload?.data?.body || "",
+const options = {
+  body: payload?.notification?.body || "",
 
-    icon: "/logo-s.png",
-    badge: "/logo-s.png",
+  icon: "/logo-s.png",
+  badge: "/logo-s.png",
 
-    image:
-      payload?.notification?.image ||
-      payload?.data?.image ||
-      "/logo-s.png",
-
-    data: payload?.data || {},
-
-    requireInteraction: true,
-
-    vibrate: [200, 100, 200],
-
-    tag:
-      payload?.data?.orderId ||
-      payload?.data?.type ||
-      "fast-notification",
-  };
+  requireInteraction: true
+};
 
   self.registration.showNotification(title, options);
 });
