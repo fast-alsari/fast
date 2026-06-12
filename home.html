@@ -83,6 +83,29 @@
     @keyframes adFlip{from{opacity:0;transform:perspective(900px) rotateY(22deg) scale(.96)}to{opacity:1;transform:perspective(900px) rotateY(0) scale(1)}}
     .ad-controls{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 10px;pointer-events:none}
     .ad-nav-btn{width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,.88);color:#ff6600;font-size:18px;cursor:pointer;pointer-events:auto;box-shadow:0 3px 12px rgba(0,0,0,.12)}
+    .ads-dots{
+  position:absolute;
+  bottom:10px;
+  left:50%;
+  transform:translateX(-50%);
+  display:flex;
+  gap:8px;
+  z-index:20;
+}
+
+.ad-dot{
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  background:rgba(255,255,255,.55);
+  transition:.3s;
+}
+
+.ad-dot.active{
+  width:24px;
+  border-radius:20px;
+  background:#fff;
+}
     .single-store-page{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#f7f7f7;z-index:999;overflow-y:auto;padding-bottom:120px}
     .store-top-bar{background:linear-gradient(135deg,#ff8800,#ff5500);padding:7px 14px 8px;display:flex;align-items:center;gap:12px;color:#fff;position:sticky;top:0;z-index:100;flex-wrap:wrap;box-shadow:0 4px 12px rgba(0,0,0,.08)}
     .back-btn{width:42px;height:42px;border-radius:50%;border:none;background:#fff;color:#ff6600;font-size:18px;cursor:pointer;flex-shrink:0}
@@ -234,13 +257,21 @@
       </div>
     </div>
 
-    <div id="adsSlider" class="ads-slider">
-      <div id="adsTrack" class="ads-track"></div>
-      <div class="ad-controls">
-        <button class="ad-nav-btn" type="button" onclick="prevAd()"><i class="fa-solid fa-chevron-right"></i></button>
-        <button class="ad-nav-btn" type="button" onclick="nextAd()"><i class="fa-solid fa-chevron-left"></i></button>
-      </div>
-    </div>
+   <div id="adsSlider" class="ads-slider">
+  <div id="adsTrack" class="ads-track"></div>
+
+  <div class="ad-controls">
+    <button class="ad-nav-btn" type="button" onclick="prevAd()">
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+
+    <button class="ad-nav-btn" type="button" onclick="nextAd()">
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+  </div>
+
+  <div id="adsDots" class="ads-dots"></div>
+</div>
 
     <div class="filters"></div>
     <div class="filter-note" id="filterNote">   </div>
@@ -505,6 +536,7 @@
     const storesContainer = document.getElementById("storesContainer");
     const adsSlider = document.getElementById("adsSlider");
     const adsTrack = document.getElementById("adsTrack");
+    const adsDots = document.getElementById("adsDots");
     const productSearchInput = document.getElementById("productSearchInput");
     const blockedStatuses = ["waiting_driver","accepted","driver_accepted","going_to_store","driver_to_store","preparing_order","driver_arrived_store","picked_up","on_the_way","arrived","driver_arrived_customer","delivered","customer_rated","failed_no_driver","driver_timeout","delivery_problem","cancelled_by_customer","rejected_by_customer"];
 
@@ -826,6 +858,11 @@
         `;
       }).join("");
       enhanceAllImages();
+      adsDots.innerHTML = adsList.map((_, index)=>`
+  <span class="ad-dot ${index === currentAdIndex ? 'active' : ''}"
+        onclick="goToAd(${index})">
+  </span>
+`).join('');
     }
 
     function stopAdTimer(){ if(adTimer) clearInterval(adTimer); adTimer = null; }
@@ -840,6 +877,11 @@
 
     window.nextAd = function(){ advanceAd(1); };
     window.prevAd = function(){ advanceAd(-1); };
+    window.goToAd = function(index){
+  currentAdIndex = index;
+  renderAds();
+  resetAdTimer();
+};
     window.openAd = function(index){
       const ad = adsList[index];
       if(!ad) return;
