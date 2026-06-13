@@ -858,9 +858,33 @@
       if(digits.startsWith("0")) return "964" + digits.slice(1);
       return digits;
     }
-
-    let bikeRotation = 0;
-    const bikeIcon = L.divIcon({ html:`<div style="width:48px;height:48px;display:flex;justify-content:center;align-items:center;"><img id="bikeImage" src="delivery-bike.png" style="width:48px;height:48px;object-fit:contain;transform:rotate(${bikeRotation}deg);filter:drop-shadow(0 4px 8px rgba(0,0,0,.35));"></div>`, className:"", iconSize:[48,48], iconAnchor:[24,24] });
+    const bikeIcon = L.divIcon({
+  html:`
+  <div style="
+  width:70px;
+  height:70px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  ">
+    <img
+    src="delivery-bike.png"
+    style="
+    width:70px;
+    height:70px;
+    object-fit:contain;
+    filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));
+    "
+    referrerpolicy="no-referrer"
+    crossorigin="anonymous"
+    loading="eager"
+    decoding="async">
+  </div>
+  `,
+  className:"",
+  iconSize:[70,70],
+  iconAnchor:[35,35]
+});
     const customerIcon = L.divIcon({ html:`<div style="font-size:40px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">🚩</div>`, className:"", iconSize:[40,40], iconAnchor:[20,35] });
 
     function createStoreIcon(store){
@@ -925,12 +949,7 @@
       }
     }
 
-    function calculateBearing(lat1,lng1,lat2,lng2){
-      const dLon = (lng2-lng1) * Math.PI/180;
-      const y = Math.sin(dLon) * Math.cos(lat2*Math.PI/180);
-      const x = Math.cos(lat1*Math.PI/180) * Math.sin(lat2*Math.PI/180) - Math.sin(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.cos(dLon);
-      return (Math.atan2(y,x) * 180/Math.PI + 360) % 360;
-    }
+    
 
     function buildWaypointsForStores(order, driverLat, driverLng){
       const stores = Array.isArray(order.storesData) ? [...order.storesData] : [];
@@ -996,7 +1015,7 @@
       const driverLng = Number(order.driverLng);
       if(!window.mapFitted){ fitAllMarkers(driverLat, driverLng, order); window.mapFitted = true; }
 
-      const bikeImg = document.getElementById("bikeImage");
+      
       if(!driverMarker){
         driverMarker = L.marker([driverLat, driverLng], { icon:bikeIcon }).addTo(orderMap).bindPopup("سائق التوصيل");
       }else{
@@ -1010,8 +1029,7 @@
           step++;
           const lat = startLat + ((driverLat - startLat) * step / steps);
           const lng = startLng + ((driverLng - startLng) * step / steps);
-          bikeRotation = calculateBearing(startLat, startLng, driverLat, driverLng);
-          if(bikeImg) bikeImg.style.transform = `rotate(${bikeRotation}deg)`;
+          
           driverMarker.setLatLng([lat,lng]);
           if(step >= steps){ clearInterval(driverAnimation); driverAnimation = null; }
         }, 20);
