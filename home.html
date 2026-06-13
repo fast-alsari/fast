@@ -484,8 +484,12 @@
     let orderTimerInterval = null;
     let orderMap = null;
     let driverMarker = null;
+    let driverAnimation = null;
     let customerMarker = null;
     let routeControl = null;
+    let storeMarker = null;
+let lastRouteKey = "";
+
     let currentRating = 0;
 
     let taxiMap = null;
@@ -1180,9 +1184,18 @@
       const seconds = String(totalSeconds % 60).padStart(2,"0");
       return `${hours}:${minutes}:${seconds}`;
     }
-
+let bikeRotation = 0;
     const bikeIcon = L.divIcon({
-      html:`<div style="width:70px;height:70px;display:flex;justify-content:center;align-items:center;"><img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async"></div>`,
+      html:`<div style="width:70px;height:70px;display:flex;justify-content:center;align-items:center;"><img
+src="delivery-bike.png"
+id="bikeImage"
+style="
+width:70px;
+height:70px;
+object-fit:contain;
+transform:rotate(${bikeRotation}deg);
+filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));
+"> style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async"></div>`,
       className:"", iconSize:[70,70], iconAnchor:[35,35]
     });
 
@@ -1192,16 +1205,57 @@
     });
 
     function createStoreIcon(store){
-      return L.divIcon({
-        html:`<div style="display:flex;flex-direction:column;align-items:center;">
-                <img src="${store.storeImage || 'store.png'}" style="width:58px;height:58px;border-radius:50%;border:3px solid #fff;object-fit:cover;background:#fff;box-shadow:0 4px 10px rgba(0,0,0,.25);" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async">
-                <div style="background:#fff;padding:5px 10px;border-radius:12px;font-size:12px;font-weight:700;margin-top:4px;box-shadow:0 2px 10px rgba(0,0,0,.15);white-space:nowrap;">${store.storeName || "متجر"}</div>
-              </div>`,
-        className:"", iconSize:[60,60], iconAnchor:[30,30]
-      });
-    }
+
+  return L.divIcon({
+    html:`
+      <div style="
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      ">
+
+        <img
+        src="${store.storeImage || 'store.png'}"
+        style="
+        width:70px;
+        height:70px;
+        border-radius:50%;
+        border:4px solid #ff8800;
+        object-fit:cover;
+        background:#fff;
+        box-shadow:0 5px 20px rgba(0,0,0,.35);
+        ">
+
+        <div style="
+        margin-top:6px;
+        background:#fff;
+        padding:6px 12px;
+        border-radius:15px;
+        font-size:13px;
+        font-weight:800;
+        color:#333;
+        box-shadow:0 4px 12px rgba(0,0,0,.18);
+        ">
+          🏪 ${store.storeName}
+        </div>
+
+      </div>
+    `,
+    className:"",
+    iconSize:[80,90],
+    iconAnchor:[40,45]
+  });
+
+}
 
     function drawRoute(fromLat, fromLng, toLat, toLng, color){
+const routeKey =
+`${fromLat}_${fromLng}_${toLat}_${toLng}_${color}`;
+if(lastRouteKey === routeKey){
+  return;
+}
+
+lastRouteKey = routeKey;
       if(!orderMap || !fromLat || !fromLng || !toLat || !toLng) return;
       if(routeControl){
         try{ orderMap.removeControl(routeControl); }catch(e){}
@@ -1213,40 +1267,70 @@
         routeWhileDragging:false,
         addWaypoints:false,
         draggableWaypoints:false,
-        fitSelectedRoutes:true,
+   fitSelectedRoutes:false,
         show:false,
         lineOptions:{ styles:[{ color, weight:7, opacity:.92 }] },
         router:L.Routing.osrmv1({ serviceUrl:"https://router.project-osrm.org/route/v1" }),
         createMarker:()=>null
       }).addTo(orderMap);
 
-      routeControl.on("routesfound", (e) => {
-        if(e.routes && e.routes[0] && e.routes[0].coordinates){
-          try{ orderMap.fitBounds(e.routes[0].coordinates, { padding:[40,40] }); }catch(err){}
-        }
-      });
+      
     }
 
     function initOrderMap(order){
       document.getElementById("orderMap").style.display = "block";
       if(!orderMap){
-        orderMap = L.map("orderMap", {
-          zoomControl:true,
-          scrollWheelZoom:false,
-          doubleClickZoom:false,
-          touchZoom:false,
-          boxZoom:false,
-          keyboard:false
-        }).setView([Number(order.customerLat), Number(order.customerLng)], 15);
+orderMap = L.map("orderMap", {
+  zoomControl:false,
+  dragging:false,
+  scrollWheelZoom:false,
+  doubleClickZoom:false,
+  touchZoom:false,
+  boxZoom:false,
+  keyboard:false
+}).setView([Number(order.customerLat), Number(order.customerLng)], 15);
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19 }).addTo(orderMap);
       }
       if(customerMarker){
         try{ orderMap.removeLayer(customerMarker); }catch(e){}
       }
       customerMarker = L.marker([Number(order.customerLat), Number(order.customerLng)], { icon:customerIcon }).addTo(orderMap).bindPopup("موقع الزبون");
+      const store = getStoreTarget(order);
+
+if(store){
+
+  if(storeMarker){
+    try{
+      orderMap.removeLayer(storeMarker);
+    }catch(e){}
+  }
+
+  storeMarker = createStoreMarker(order);
+
+  if(storeMarker){
+    storeMarker.addTo(orderMap);
+  }
+
+}
       setTimeout(() => { try{ orderMap.invalidateSize(); }catch(e){} }, 400);
     }
+function createStoreMarker(order){
 
+  const store = order.storesData?.[0];
+
+  if(!store) return null;
+
+  return L.marker(
+    [Number(store.storeLat), Number(store.storeLng)],
+    {
+      icon: createStoreIcon({
+        storeName: store.storeName,
+        storeImage: store.storeImage
+      })
+    }
+  );
+
+}
     function getStoreTarget(order){
       if(order.storesData && order.storesData.length > 0){
         const store = order.storesData[0];
@@ -1257,7 +1341,55 @@
       }
       return null;
     }
+function fitAllMarkers(driverLat,driverLng,order){
 
+  const bounds = [];
+
+  bounds.push([
+    Number(order.customerLat),
+    Number(order.customerLng)
+  ]);
+
+  bounds.push([
+    driverLat,
+    driverLng
+  ]);
+
+  const store = getStoreTarget(order);
+
+  if(store){
+    bounds.push([
+      store.lat,
+      store.lng
+    ]);
+  }
+
+  orderMap.fitBounds(bounds,{
+    padding:[80,80],
+    animate:true
+  });
+
+}
+function calculateBearing(lat1,lng1,lat2,lng2){
+
+const dLon = (lng2-lng1) * Math.PI/180;
+
+const y = Math.sin(dLon) * Math.cos(lat2*Math.PI/180);
+
+const x =
+Math.cos(lat1*Math.PI/180) *
+Math.sin(lat2*Math.PI/180)
+-
+Math.sin(lat1*Math.PI/180) *
+Math.cos(lat2*Math.PI/180) *
+Math.cos(dLon);
+
+const brng =
+Math.atan2(y,x);
+
+return (brng * 180/Math.PI + 360) % 360;
+
+}
     function updateDriverLocation(order){
       initOrderMap(order);
 
@@ -1265,19 +1397,89 @@
 
       const driverLat = Number(order.driverLat);
       const driverLng = Number(order.driverLng);
+    if(!window.mapFitted){
+  fitAllMarkers(driverLat,driverLng,order);
+  window.mapFitted = true;
+}
 
       if(!driverMarker){
         driverMarker = L.marker([driverLat, driverLng], { icon:bikeIcon }).addTo(orderMap).bindPopup("سائق التوصيل");
+        
       }else{
-        driverMarker.setLatLng([driverLat, driverLng]);
+        const current =
+driverMarker.getLatLng();
+
+const startLat = current.lat;
+const startLng = current.lng;
+
+const steps = 120;
+let step = 0;
+
+if(driverAnimation){
+  clearInterval(driverAnimation);
+}
+
+driverAnimation = setInterval(() => {
+
+  step++;
+
+  const lat =
+  startLat +
+  ((driverLat - startLat) * step / steps);
+
+  const lng =
+  startLng +
+  ((driverLng - startLng) * step / steps);
+bikeRotation =
+calculateBearing(
+startLat,
+startLng,
+driverLat,
+driverLng
+);
+  driverMarker.setLatLng([lat,lng]);
+  if(step >= steps){
+  
+}
+  if(step >= steps){
+    clearInterval(driverAnimation);
+driverAnimation = null;
+  }
+
+},25);
       }
 
       const storeTarget = getStoreTarget(order);
 
-      if(order.status === "accepted" || order.status === "preparing_order"){
-        if(storeTarget) drawRoute(driverLat, driverLng, storeTarget.lat, storeTarget.lng, "#ff8800");
-      }else if(order.status === "on_the_way" || order.status === "arrived" || order.status === "delivered"){
-        drawRoute(driverLat, driverLng, Number(order.customerLat), Number(order.customerLng), "#1e88e5");
+    if([
+"accepted",
+"driver_accepted",
+"going_to_store",
+"driver_to_store",
+"preparing_order",
+"driver_arrived_store"
+].includes(order.status)){
+        if(storeTarget) drawRoute(
+ driverLat,
+ driverLng,
+ storeTarget.lat,
+ storeTarget.lng,
+ "#ff6600"
+);
+      }else if([
+"picked_up",
+"on_the_way",
+"arrived",
+"driver_arrived_customer",
+"delivered"
+].includes(order.status)){
+       drawRoute(
+ driverLat,
+ driverLng,
+ Number(order.customerLat),
+ Number(order.customerLng),
+"#0066ff"
+);
       }
     }
 
@@ -1801,7 +2003,20 @@
             { color:"#999999", weight:6, opacity:0.7 }
           ]
         },
-        lineOptions:{ styles:[{ color:"#ff5500", weight:8, opacity:1 }] },
+      lineOptions:{
+ styles:[
+   {
+     color,
+     weight:8,
+     opacity:1
+   },
+   {
+     color:"#ffffff",
+     weight:3,
+     opacity:.5
+   }
+ ]
+},
         createMarker:function(){ return null; },
         addWaypoints:false,
         fitSelectedRoutes:true,
