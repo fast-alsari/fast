@@ -1040,28 +1040,13 @@ let lastRouteKey = "";
       const itemsTotal = document.getElementById("itemsTotal");
       const finalTotal = document.getElementById("finalTotal");
       cartContainer.innerHTML = "";
-     if(cart.length === 0){
-
-  cartContainer.innerHTML =
-  `<div class="empty">السلة فارغة</div>`;
-
-  itemsTotal.innerHTML = "0 د.ع";
-  document.getElementById("deliveryPriceText").innerHTML = "0 د.ع";
-  finalTotal.innerHTML = "0 د.ع";
-
-if(cart.length === 0){
-  ...
-  return;
-}
-
-const sendBtn =
-document.getElementById("sendOrderBtn");
-
-sendBtn.disabled = false;
-sendBtn.innerHTML = "طلب توصيل 🚀";
-
-  return;
-}
+      if(cart.length === 0){
+        cartContainer.innerHTML = `<div class="empty">السلة فارغة</div>`;
+        itemsTotal.innerHTML = "0 د.ع";
+        document.getElementById("deliveryPriceText").innerHTML = "0 د.ع";
+        finalTotal.innerHTML = "0 د.ع";
+        return;
+      }
 
       let total = 0;
       cart.forEach(item => {
@@ -1189,16 +1174,6 @@ sendBtn.innerHTML = "طلب توصيل 🚀";
       currentOrderId = "";
       stopOrderTimer();
       stopOrderListener();
-      cart = [];
-localStorage.removeItem("cart");
-
-const sendBtn =
-document.getElementById("sendOrderBtn");
-
-sendBtn.disabled = true;
-sendBtn.innerHTML = "طلب توصيل 🚀";
-
-updateCart();
     }
 
     function formatTime(ms){
