@@ -84,6 +84,7 @@
       text-align:center;
       box-shadow:0 2px 10px rgba(0,0,0,.08);
       line-height:1.5;
+      word-break:break-word;
     }
 
     .header-left{
@@ -254,33 +255,13 @@
       cursor:pointer;
     }
 
-    .accept-btn{
-      background:#00b894;
-    }
-
-    .reject-btn{
-      background:#d63031;
-    }
-
-    .action-btn{
-      width:100%;
-    }
-
-    .done-btn{
-      background:#00b894;
-    }
-
-    .problem-btn{
-      background:#d63031;
-    }
-
-    .extra-btn{
-      background:#ff8800;
-    }
-
-    .whatsapp-btn{
-      background:#25D366;
-    }
+    .accept-btn{ background:#00b894; }
+    .reject-btn{ background:#d63031; }
+    .action-btn{ width:100%; }
+    .done-btn{ background:#00b894; }
+    .problem-btn{ background:#d63031; }
+    .extra-btn{ background:#ff8800; }
+    .whatsapp-btn{ background:#25D366; }
 
     .delivery-page{
       display:none;
@@ -384,8 +365,8 @@
     }
 
     @keyframes radarPulse{
-      0%{box-shadow:0 0 0 0 rgba(255,136,0,.5)}
-      100%{box-shadow:0 0 0 40px rgba(255,136,0,0)}
+      0%{ box-shadow:0 0 0 0 rgba(255,136,0,.5); }
+      100%{ box-shadow:0 0 0 40px rgba(255,136,0,0); }
     }
 
     .radar-text{
@@ -492,13 +473,20 @@
     <div class="driver-info">
       <div class="driver-name" id="driverName">سائق التكسي</div>
       <div class="driver-top-info">
+        <div class="driver-badge">نوع المركبة: <span id="vehicleTypeText">-</span></div>
+        <div class="driver-badge">اللون: <span id="colorText">-</span></div>
+        <div class="driver-badge">رقم المركبة: <span id="plateText">-</span></div>
+        <div class="driver-badge">الحالة: <span id="driverStatusText">-</span></div>
+        <div class="driver-badge">الحساب: <span id="driverAccountType">-</span></div>
+        <div class="driver-badge">تاريخ الاشتراك: <span id="renewDateText">-</span></div>
+        <div class="driver-badge">تاريخ الانتهاء: <span id="expireDateText">-</span></div>
+        <div class="driver-badge">انتهاء VIP: <span id="vipExpireDateText">-</span></div>
         <div class="driver-badge">المكتملة اليوم: <span id="completedCount">0</span></div>
         <div class="driver-badge">أرباح اليوم: <span id="todayProfit">0</span> د.ع</div>
         <div class="driver-badge">الأرباح الشهرية: <span id="monthProfit">0</span> د.ع</div>
         <div class="driver-badge">الطلبات الملغاة: <span id="cancelledCount">0</span></div>
         <div class="driver-badge">التقييم: <span id="driverRating">0.0</span>/10</div>
         <div class="driver-badge">عدد التقييمات: <span id="ratingCount">0</span></div>
-        <div class="driver-badge" id="driverAccountType">تكسي</div>
       </div>
     </div>
 
@@ -590,6 +578,13 @@
       driverName: document.getElementById("driverName"),
       driverAccountType: document.getElementById("driverAccountType"),
       driverProfileImage: document.getElementById("driverProfileImage"),
+      vehicleTypeText: document.getElementById("vehicleTypeText"),
+      colorText: document.getElementById("colorText"),
+      plateText: document.getElementById("plateText"),
+      driverStatusText: document.getElementById("driverStatusText"),
+      renewDateText: document.getElementById("renewDateText"),
+      expireDateText: document.getElementById("expireDateText"),
+      vipExpireDateText: document.getElementById("vipExpireDateText"),
       ordersContainer: document.getElementById("ordersContainer"),
       deliveryPage: document.getElementById("deliveryPage"),
       customerName: document.getElementById("customerName"),
@@ -754,7 +749,6 @@
 
     function isVisibleToDriver(order) {
       if (!order || isClosedOrder(order)) return false;
-
       if (isActiveDriverOrder(order)) return true;
 
       const validPending = ["pending", "waiting_driver"].includes(String(order.status || ""));
@@ -870,9 +864,6 @@
 
         if (remaining === 0 && !state.timerExpired) {
           state.timerExpired = true;
-          await update(ref(db, `${state.driverTable}/${driverProfile.id}`), {
-            lastTimerAlertAt: Date.now()
-          }).catch(() => {});
           await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
             timeExpired: true,
             statusText: "انتهى الوقت، اطلب زيادة وقت",
@@ -1186,429 +1177,6 @@
     }
 
     function renderPendingOrders(ordersObj) {
-      if (state.activeOrderId) {
-        return;
-      }
-
-      const visibleOrders = Object.entries(ordersObj || {})
-        .map(([id, order]) => ({ id, order }))
-        .filter(({ order }) => isVisibleToDriver(order))
-        .sort((a, b) => {
-          const aVip = isVipOrder(a.order) ? 1 : 0;
-          const bVip = isVipOrder(b.order) ? 1 : 0;
-          if (aVip !== bVip) return bVip - aVip;
-          return Number(b.order.createdAt || 0) - Number(a.order.createdAt || 0);
-        });
-
-      if (!visibleOrders.length) {
-        els.ordersContainer.classList.remove("hidden");
-        els.ordersContainer.innerHTML = `
-          <div class="radar-box">
-            <div class="radar"></div>
-            <div class="radar-text">لا توجد طلبات تكسي ظاهرة الآن</div>
-            <div class="radar-text" style="font-size:13px;font-weight:700;color:#999;margin-top:10px;">
-              الطلبات VIP تظهر فوراً، والطلبات العادية تظهر بعد 5 دقائق
-            </div>
-          </div>
-        `;
-        return;
-      }
-
-      els.ordersContainer.classList.remove("hidden");
-      els.ordersContainer.innerHTML = visibleOrders.map(({ id, order }) => {
-        const vip = isVipOrder(order) || driverIsVip();
-        const visibleAt = getVisibleAt(order);
-        const waitLeft = Math.max(0, visibleAt - Date.now());
-        const waitMinutes = Math.ceil(waitLeft / 60000);
-        const total = Number(order.finalPrice || (Number(order.price || 0) + Number(order.tip || 0)));
-        const dist = order.distance != null ? `${Number(order.distance).toFixed(2)} كم` : "—";
-        return `
-          <div class="order-card">
-            <div class="order-title">
-              <div>
-                <div class="order-main-title">🚕 ${escapeHtml(safeValue(order.customerName, "طلب تكسي"))}</div>
-                <div class="mini-text">
-                  📍 المسافة: ${escapeHtml(dist)}<br>
-                  👥 الركاب: ${escapeHtml(Number(order.personsCount || 0) + " شخص")}<br>
-                  💰 السعر: ${escapeHtml(money(order.price))} د.ع<br>
-                  🎁 الإكرامية: ${escapeHtml(money(order.tip))} د.ع<br>
-                  🧾 المجموع: ${escapeHtml(money(total))} د.ع<br>
-                  ⏱️ الظهور: ${vip ? "VIP مباشر" : (waitLeft > 0 ? `بعد ${waitMinutes} دقيقة` : "متاح الآن")}
-                </div>
-                <div class="taxi-badge">${vip ? "🔥 VIP" : "طلب تكسي"}</div>
-              </div>
-              <div class="delivery-price">${escapeHtml(money(total))} د.ع</div>
-            </div>
-
-            <div class="details-box">
-              <div class="details-row">
-                <div class="details-label">الزبون</div>
-                <div class="details-value">${escapeHtml(safeValue(order.customerName, "زبون"))}</div>
-              </div>
-              <div class="details-row">
-                <div class="details-label">الهاتف</div>
-                <div class="details-value">${escapeHtml(safeValue(normalizePhone(order.customerPhone || ""), "—"))}</div>
-              </div>
-              <div class="details-row">
-                <div class="details-label">المسافة</div>
-                <div class="details-value">${escapeHtml(dist)}</div>
-              </div>
-            </div>
-
-            <div class="order-buttons">
-              <button class="accept-btn" onclick="acceptTaxiOrder('${id}')">قبول الطلب</button>
-              <button class="reject-btn" onclick="rejectTaxiOrder('${id}')">رفض الطلب</button>
-            </div>
-          </div>
-        `;
-      }).join("");
-    }
-
-    async function loadDriverProfile() {
-      const primary = await get(ref(db, `taxis/${driverProfile.id}`));
-      if (primary.exists()) {
-        state.driverTable = "taxis";
-        driverProfile = { ...driverProfile, ...primary.val(), id: driverProfile.id };
-      } else {
-        state.driverTable = "taxi_drivers";
-        const fallback = await get(ref(db, `taxi_drivers/${driverProfile.id}`));
-        if (fallback.exists()) {
-          driverProfile = { ...driverProfile, ...fallback.val(), id: driverProfile.id };
-        }
-      }
-
-      const displayName = safeValue(driverProfile.name || driverProfile.owner || "سائق التكسي");
-      els.driverName.textContent = displayName;
-      els.driverAccountType.textContent = safeValue(driverProfile.accountType || driverProfile.type || "تكسي");
-      els.driverProfileImage.src = driverProfile.vehicleImage || driverProfile.image || driverProfile.idImage || "user.png";
-
-      localStorage.setItem("user", JSON.stringify(driverProfile));
-    }
-
-    async function acceptTaxiOrder(id) {
-      if (state.activeOrderId) return alert("عندك طلب نشط حالياً");
-
-      const orderRef = ref(db, `taxi_orders/${id}`);
-      const tx = await runTransaction(orderRef, (current) => {
-        if (!current) return current;
-        if (!["pending", "waiting_driver"].includes(String(current.status || ""))) return;
-
-        const visibleAt = getVisibleAt(current);
-        if (Date.now() < visibleAt) return;
-
-        return {
-          ...current,
-          status: "accepted",
-          statusText: "السائق متجه إلى موقع الزبون",
-          acceptedAt: Date.now(),
-          acceptedDriver: driverProfile.name || "",
-          driverId: driverProfile.id || "",
-          driverPhone: driverProfile.phone || "",
-          driverVehicle: driverProfile.vehicleType || driverProfile.carType || "",
-          driverImage: driverProfile.vehicleImage || driverProfile.image || driverProfile.idImage || "",
-          driverLat: state.driverLat,
-          driverLng: state.driverLng,
-          stage: "to_pickup",
-          stageStartedAt: Date.now(),
-          stageDuration: STAGE_MS,
-          extraTimeUsed: false,
-          timeExpired: false
-        };
-      });
-
-      if (!tx.committed) {
-        alert("الطلب لم يعد متاحاً");
-        return;
-      }
-
-      const snap = await get(orderRef);
-      if (!snap.exists()) {
-        alert("حدث خطأ أثناء فتح الطلب");
-        return;
-      }
-
-      const order = snap.val();
-      await update(ref(db, `taxi_orders/${id}`), {
-        driverId: driverProfile.id || "",
-        acceptedDriver: driverProfile.name || "",
-        driverPhone: driverProfile.phone || ""
-      }).catch(() => {});
-
-      showActiveOrder(order, id);
-    }
-
-    async function rejectTaxiOrder(id) {
-      await update(ref(db, `taxi_orders/${id}/rejectedBy`), {
-        [driverProfile.id]: Date.now()
-      }).catch(() => {});
-
-      alert("تم رفض الطلب، وسيظهر لك مرة ثانية بعد 5 دقائق إذا بقي متاحاً.");
-    }
-
-    async function requestExtraTime() {
-      if (!state.activeOrderId || state.extraTimeUsed) return;
-
-      state.extraTimeUsed = true;
-      state.stageStartedAt = Date.now();
-      state.stageDuration = Number(state.stageDuration || STAGE_MS) + EXTRA_TIME_MS;
-      state.timerExpired = false;
-      els.extraTimeBtn.style.display = "none";
-
-      await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
-        extraTimeUsed: true,
-        timeExpired: false,
-        stageStartedAt: state.stageStartedAt,
-        stageDuration: state.stageDuration,
-        statusText: "تمت إضافة 10 دقائق إضافية"
-      }).catch(() => {});
-
-      startTimer();
-      alert("تمت إضافة 10 دقائق");
-    }
-
-    async function finishTrip() {
-      if (!state.activeOrderId || !state.activeOrder) return;
-      if (state.stage !== "arrived_destination") return alert("لا يمكن إكمال الطلب قبل الوصول");
-
-      const order = state.activeOrder;
-      const earned = Number(order.finalPrice || (Number(order.price || 0) + Number(order.tip || 0)));
-
-      const completedOrder = {
-        ...order,
-        status: "completed",
-        statusText: "تم إكمال رحلة التكسي",
-        completedAt: Date.now(),
-        completedDriverId: driverProfile.id || "",
-        completedDriverName: driverProfile.name || ""
-      };
-
-      await update(ref(db, `taxi_orders/${state.activeOrderId}`), completedOrder).catch(() => {});
-
-      await update(ref(db, `${state.driverTable}/${driverProfile.id}`), {
-        completedOrders: Number(driverProfile.completedOrders || 0) + 1,
-        totalTaxiAmount: Number(driverProfile.totalTaxiAmount || 0) + earned,
-        lastDeliveryAt: Date.now()
-      }).catch(() => {});
-
-      alert(`تمت الرحلة بنجاح. الربح: ${money(earned)} د.ع`);
-      clearActiveOrderUI();
-    }
-
-    async function markProblem() {
-      if (!state.activeOrderId || !state.activeOrder) return;
-
-      const problemOrder = {
-        ...state.activeOrder,
-        status: "pending",
-        statusText: "السائق السابق واجه مشكلة بالتوصيل",
-        previousDriverId: driverProfile.id || "",
-        previousDriverName: driverProfile.name || "",
-        problemAt: Date.now(),
-        driverId: "",
-        acceptedDriver: "",
-        driverPhone: "",
-        driverVehicle: "",
-        driverImage: "",
-        driverLat: "",
-        driverLng: "",
-        stage: "pending",
-        stageStartedAt: "",
-        stageDuration: STAGE_MS,
-        extraTimeUsed: false,
-        timeExpired: false,
-        rejectedBy: {
-          ...(state.activeOrder.rejectedBy || {}),
-          [driverProfile.id]: Date.now()
-        }
-      };
-
-      await update(ref(db, `taxi_orders/${state.activeOrderId}`), problemOrder).catch(() => {});
-      alert("تم إرجاع الطلب للانتظار من جديد");
-      clearActiveOrderUI();
-    }
-
-    function drawRouteControl(waypoints, color) {
-      if (!state.map || !Array.isArray(waypoints) || waypoints.length < 2) return null;
-      return L.Routing.control({
-        waypoints,
-        routeWhileDragging: false,
-        addWaypoints: false,
-        draggableWaypoints: false,
-        fitSelectedRoutes: false,
-        show: false,
-        router: L.Routing.osrmv1({ serviceUrl: "https://router.project-osrm.org/route/v1" }),
-        lineOptions: { styles: [{ color, weight: 7, opacity: 0.92 }] },
-        createMarker: () => null
-      }).addTo(state.map);
-    }
-
-    function clearRoutes() {
-      if (state.routePickupControl && state.map) {
-        try { state.map.removeControl(state.routePickupControl); } catch (_) {}
-      }
-      if (state.routeDropoffControl && state.map) {
-        try { state.map.removeControl(state.routeDropoffControl); } catch (_) {}
-      }
-      state.routePickupControl = null;
-      state.routeDropoffControl = null;
-    }
-
-    function ensureMap(order) {
-      if (!state.map) {
-        state.map = L.map("map", {
-          zoomControl: true,
-          dragging: true,
-          scrollWheelZoom: true,
-          doubleClickZoom: true,
-          touchZoom: true,
-          boxZoom: false,
-          keyboard: true
-        });
-
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom: 19 }).addTo(state.map);
-        state.map.attributionControl.setPrefix(false);
-      }
-
-      const pickup = getPickupLatLng(order);
-      const dropoff = getDropoffLatLng(order);
-      const points = [];
-
-      if (state.driverLat && state.driverLng) points.push([state.driverLat, state.driverLng]);
-      if (pickup.lat && pickup.lng) points.push([pickup.lat, pickup.lng]);
-      if (dropoff.lat && dropoff.lng) points.push([dropoff.lat, dropoff.lng]);
-
-      if (points.length >= 2) {
-        try {
-          state.map.fitBounds(points, { padding: [60, 60], animate: false });
-        } catch (_) {}
-      } else if (pickup.lat && pickup.lng) {
-        state.map.setView([pickup.lat, pickup.lng], 14);
-      }
-
-      setTimeout(() => {
-        try { state.map.invalidateSize(); } catch (_) {}
-      }, 200);
-    }
-
-    function updateMap(order) {
-      ensureMap(order);
-      clearRoutes();
-
-      const pickup = getPickupLatLng(order);
-      const dropoff = getDropoffLatLng(order);
-
-      const taxiIcon = L.divIcon({
-        html: `<div style="width:70px;height:70px;display:flex;align-items:center;justify-content:center;">
-          <img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));" />
-        </div>`,
-        className: "",
-        iconSize: [70, 70],
-        iconAnchor: [35, 35]
-      });
-
-      const pickupIcon = L.divIcon({
-        html: `<div style="font-size:38px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">📍</div>`,
-        className: "",
-        iconSize: [40, 40],
-        iconAnchor: [20, 35]
-      });
-
-      const dropoffIcon = L.divIcon({
-        html: `<div style="font-size:38px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">🏁</div>`,
-        className: "",
-        iconSize: [40, 40],
-        iconAnchor: [20, 35]
-      });
-
-      if (state.driverMarker) {
-        try { state.map.removeLayer(state.driverMarker); } catch (_) {}
-      }
-      if (state.pickupMarker) {
-        try { state.map.removeLayer(state.pickupMarker); } catch (_) {}
-      }
-      if (state.dropoffMarker) {
-        try { state.map.removeLayer(state.dropoffMarker); } catch (_) {}
-      }
-
-      if (state.driverLat && state.driverLng) {
-        state.driverMarker = L.marker([state.driverLat, state.driverLng], { icon: taxiIcon }).addTo(state.map).bindPopup("موقعك الحالي");
-      }
-
-      if (pickup.lat && pickup.lng) {
-        state.pickupMarker = L.marker([pickup.lat, pickup.lng], { icon: pickupIcon }).addTo(state.map).bindPopup("موقع الزبون");
-      }
-
-      if (dropoff.lat && dropoff.lng) {
-        state.dropoffMarker = L.marker([dropoff.lat, dropoff.lng], { icon: dropoffIcon }).addTo(state.map).bindPopup("الوجهة");
-      }
-
-      if (state.driverLat && state.driverLng && pickup.lat && pickup.lng) {
-        state.routePickupControl = drawRouteControl(
-          [L.latLng(state.driverLat, state.driverLng), L.latLng(pickup.lat, pickup.lng)],
-          PICKUP_ROUTE_COLOR
-        );
-      }
-
-      if (pickup.lat && pickup.lng && dropoff.lat && dropoff.lng) {
-        state.routeDropoffControl = drawRouteControl(
-          [L.latLng(pickup.lat, pickup.lng), L.latLng(dropoff.lat, dropoff.lng)],
-          DROPOFF_ROUTE_COLOR
-        );
-      }
-    }
-
-    function setStageFromOrder(order) {
-      if (!order) return;
-
-      if (order.status === "accepted") state.stage = "to_pickup";
-      else if (order.status === "driver_arrived_pickup") state.stage = "at_pickup";
-      else if (order.status === "picked_up" || order.status === "on_the_way") state.stage = "to_destination";
-      else if (order.status === "arrived_destination") state.stage = "arrived_destination";
-      else state.stage = order.stage || state.stage || "to_pickup";
-
-      state.stageStartedAt = Number(order.stageStartedAt || order.acceptedAt || Date.now());
-      state.stageDuration = Number(order.stageDuration || STAGE_MS);
-      state.extraTimeUsed = Boolean(order.extraTimeUsed);
-      state.timerExpired = Boolean(order.timeExpired);
-
-      updateTimerUI();
-      startTimer();
-    }
-
-    function updateContactButtons(order) {
-      const phone = toWhatsAppPhone(order.customerPhone || "");
-      els.whatsappCustomer.style.display = phone ? "block" : "none";
-      els.whatsappCustomer.onclick = () => {
-        if (!phone) return alert("رقم الزبون غير موجود");
-        window.open(`https://wa.me/${phone}`, "_blank");
-      };
-    }
-
-    function showActiveOrder(order, id) {
-      state.activeOrderId = id;
-      state.activeOrder = order;
-      localStorage.setItem("currentTaxiOrderId", id);
-
-      els.ordersContainer.classList.add("hidden");
-      els.deliveryPage.style.display = "block";
-
-      els.customerName.textContent = `👤 الزبون: ${safeValue(order.customerName, "زبون")}`;
-      els.customerPhone.textContent = `📞 الهاتف: ${safeValue(normalizePhone(order.customerPhone || ""), "—")}`;
-      els.tripDistance.textContent = `🛣️ المسافة: ${order.distance != null ? `${Number(order.distance).toFixed(2)} كم` : "—"}`;
-      els.passengersCount.textContent = `👥 عدد الركاب: ${Number(order.personsCount || 0)} شخص`;
-      els.basePrice.textContent = `💰 السعر: ${money(order.price)} د.ع`;
-      els.tipPrice.textContent = `🎁 الإكرامية: ${money(order.tip)} د.ع`;
-      els.finalPrice.textContent = `🧾 المجموع: ${money(order.finalPrice || (Number(order.price || 0) + Number(order.tip || 0)))} د.ع`;
-      els.orderStatusText.textContent = safeValue(order.statusText || order.status, "—");
-
-      els.detailsBlock.innerHTML = buildOrderDetailsHTML(order);
-      updateContactButtons(order);
-      setStageFromOrder(order);
-      updateMap(order);
-      syncActionVisibility();
-    }
-
-    function renderPendingOrders(ordersObj) {
       if (state.activeOrderId) return;
 
       const visibleOrders = Object.entries(ordersObj || {})
@@ -1685,11 +1253,189 @@
       }).join("");
     }
 
-    async function updateDriverLocation(position) {
+    function applyDriverProfileToUI() {
+      const displayName = safeValue(driverProfile.name || driverProfile.owner || "سائق التكسي");
+      els.driverName.textContent = displayName;
+      els.driverAccountType.textContent = safeValue(driverProfile.accountType || driverProfile.type || "normal");
+      els.driverProfileImage.src = driverProfile.vehicleImage || driverProfile.image || driverProfile.idImage || "user.png";
+
+      els.vehicleTypeText.textContent = safeValue(driverProfile.vehicleType || driverProfile.carType || "-");
+      els.colorText.textContent = safeValue(driverProfile.color || driverProfile.carColor || "-");
+      els.plateText.textContent = safeValue(driverProfile.plate || driverProfile.carNumber || "-");
+      els.driverStatusText.textContent = safeValue(driverProfile.status || "inactive");
+      els.renewDateText.textContent = safeValue(driverProfile.renewDate || "-");
+      els.expireDateText.textContent = safeValue(driverProfile.expireDate || "-");
+      els.vipExpireDateText.textContent = safeValue(driverProfile.vipExpireDate || "-");
+
+      localStorage.setItem("user", JSON.stringify(driverProfile));
+    }
+
+    async function loadDriverProfile() {
+      const primary = await get(ref(db, `taxis/${driverProfile.id}`));
+      if (primary.exists()) {
+        state.driverTable = "taxis";
+        driverProfile = { ...driverProfile, ...primary.val(), id: driverProfile.id };
+      } else {
+        state.driverTable = "taxi_drivers";
+        const fallback = await get(ref(db, `taxi_drivers/${driverProfile.id}`));
+        if (fallback.exists()) {
+          driverProfile = { ...driverProfile, ...fallback.val(), id: driverProfile.id };
+        }
+      }
+
+      if (!driverProfile.type) driverProfile.type = "taxi";
+      applyDriverProfileToUI();
+    }
+
+    async function acceptTaxiOrder(id) {
+      if (state.activeOrderId) return alert("عندك طلب نشط حالياً");
+
+      const orderRef = ref(db, `taxi_orders/${id}`);
+      const tx = await runTransaction(orderRef, (current) => {
+        if (!current) return current;
+        if (!["pending", "waiting_driver"].includes(String(current.status || ""))) return;
+
+        const visibleAt = getVisibleAt(current);
+        if (Date.now() < visibleAt) return;
+
+        return {
+          ...current,
+          status: "accepted",
+          statusText: "السائق متجه إلى موقع الزبون",
+          acceptedAt: Date.now(),
+          acceptedDriver: driverProfile.name || "",
+          driverId: driverProfile.id || "",
+          driverPhone: driverProfile.phone || "",
+          driverVehicle: driverProfile.vehicleType || driverProfile.carType || "",
+          driverImage: driverProfile.vehicleImage || driverProfile.image || driverProfile.idImage || "",
+          driverLat: state.driverLat,
+          driverLng: state.driverLng,
+          stage: "to_pickup",
+          stageStartedAt: Date.now(),
+          stageDuration: STAGE_MS,
+          extraTimeUsed: false,
+          timeExpired: false
+        };
+      });
+
+      if (!tx.committed) {
+        alert("الطلب لم يعد متاحاً");
+        return;
+      }
+
+      const snap = await get(orderRef);
+      if (!snap.exists()) {
+        alert("حدث خطأ أثناء فتح الطلب");
+        return;
+      }
+
+      const order = snap.val();
+      await update(ref(db, `taxi_orders/${id}`), {
+        driverId: driverProfile.id || "",
+        acceptedDriver: driverProfile.name || "",
+        driverPhone: driverProfile.phone || "",
+        driverImage: driverProfile.vehicleImage || driverProfile.image || driverProfile.idImage || ""
+      }).catch(() => {});
+
+      showActiveOrder(order, id);
+    }
+
+    async function rejectTaxiOrder(id) {
+      await update(ref(db, `taxi_orders/${id}/rejectedBy`), {
+        [driverProfile.id]: Date.now()
+      }).catch(() => {});
+
+      alert("تم رفض الطلب، وسيظهر لك مرة ثانية بعد 5 دقائق إذا بقي متاحاً.");
+    }
+
+    async function requestExtraTime() {
+      if (!state.activeOrderId || state.extraTimeUsed) return;
+
+      state.extraTimeUsed = true;
+      state.stageStartedAt = Date.now();
+      state.stageDuration = Number(state.stageDuration || STAGE_MS) + EXTRA_TIME_MS;
+      state.timerExpired = false;
+      els.extraTimeBtn.style.display = "none";
+
+      await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+        extraTimeUsed: true,
+        timeExpired: false,
+        stageStartedAt: state.stageStartedAt,
+        stageDuration: state.stageDuration,
+        statusText: "تمت إضافة 10 دقائق إضافية"
+      }).catch(() => {});
+
+      startTimer();
+      alert("تمت إضافة 10 دقائق");
+    }
+
+    async function finishTrip() {
+      if (!state.activeOrderId || !state.activeOrder) return;
+      if (state.stage !== "arrived_destination") return alert("لا يمكن إكمال الطلب قبل الوصول");
+
+      const order = state.activeOrder;
+      const earned = Number(order.finalPrice || (Number(order.price || 0) + Number(order.tip || 0)));
+
+      const completedOrder = {
+        ...order,
+        status: "completed",
+        statusText: "تم إكمال رحلة التكسي",
+        completedAt: Date.now(),
+        completedDriverId: driverProfile.id || "",
+        completedDriverName: driverProfile.name || ""
+      };
+
+      await update(ref(db, `taxi_orders/${state.activeOrderId}`), completedOrder).catch(() => {});
+
+      await update(ref(db, `${state.driverTable}/${driverProfile.id}`), {
+        completedOrders: Number(driverProfile.completedOrders || 0) + 1,
+        totalTaxiAmount: Number(driverProfile.totalTaxiAmount || 0) + earned,
+        totalDeliveryAmount: Number(driverProfile.totalDeliveryAmount || 0) + earned,
+        lastDeliveryAt: Date.now()
+      }).catch(() => {});
+
+      alert(`تمت الرحلة بنجاح. الربح: ${money(earned)} د.ع`);
+      clearActiveOrderUI();
+    }
+
+    async function markProblem() {
+      if (!state.activeOrderId || !state.activeOrder) return;
+
+      const problemOrder = {
+        ...state.activeOrder,
+        status: "pending",
+        statusText: "السائق السابق واجه مشكلة بالتوصيل",
+        previousDriverId: driverProfile.id || "",
+        previousDriverName: driverProfile.name || "",
+        problemAt: Date.now(),
+        driverId: "",
+        acceptedDriver: "",
+        driverPhone: "",
+        driverVehicle: "",
+        driverImage: "",
+        driverLat: "",
+        driverLng: "",
+        stage: "pending",
+        stageStartedAt: "",
+        stageDuration: STAGE_MS,
+        extraTimeUsed: false,
+        timeExpired: false,
+        rejectedBy: {
+          ...(state.activeOrder.rejectedBy || {}),
+          [driverProfile.id]: Date.now()
+        }
+      };
+
+      await update(ref(db, `taxi_orders/${state.activeOrderId}`), problemOrder).catch(() => {});
+      alert("تم إرجاع الطلب للانتظار من جديد");
+      clearActiveOrderUI();
+    }
+
+    function updateDriverLocation(position) {
       state.driverLat = position.coords.latitude;
       state.driverLng = position.coords.longitude;
 
-      await update(ref(db, `${state.driverTable}/${driverProfile.id}`), {
+      update(ref(db, `${state.driverTable}/${driverProfile.id}`), {
         latitude: state.driverLat,
         longitude: state.driverLng,
         status: "active",
@@ -1697,14 +1443,14 @@
       }).catch(() => {});
 
       if (state.activeOrder) {
-        await update(ref(db, `taxi_orders/${state.activeOrderId}`), {
+        update(ref(db, `taxi_orders/${state.activeOrderId}`), {
           driverLat: state.driverLat,
           driverLng: state.driverLng
         }).catch(() => {});
 
         if (state.driverMarker) state.driverMarker.setLatLng([state.driverLat, state.driverLng]);
         updateMap(state.activeOrder);
-        await syncProgressFromGPS(state.activeOrder);
+        syncProgressFromGPS(state.activeOrder);
       } else {
         renderPendingOrders(state.ordersCache);
       }
