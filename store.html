@@ -117,7 +117,7 @@
     .grid-2{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
     .pad{padding:18px}
     .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
-    .search-input,.text-input,.select-input,.time-select,textarea{
+    .text-input,.select-input,.time-select,textarea{
       width:100%;
       border:1px solid #ddd;
       background:#fff;
@@ -127,7 +127,7 @@
       font-size:15px;
       transition:.2s ease
     }
-    .search-input:focus,.text-input:focus,.select-input:focus,.time-select:focus,textarea:focus{
+    .text-input:focus,.select-input:focus,.time-select:focus,textarea:focus{
       border-color:#ff8800;
       box-shadow:0 0 0 4px rgba(255,136,0,.08)
     }
@@ -485,7 +485,6 @@
     <div class="panel" id="productsSection">
       <div class="panel-body" id="productsHeader">
         <div class="section-title"><i class="fa-solid fa-boxes-stacked"></i> منتجات المتجر</div>
-        <div class="toolbar"><input type="text" id="productSearch" class="search-input" placeholder="ابحث عن منتج"></div>
       </div>
       <div class="panel-body" style="padding-top:0">
         <div id="productsContainer" class="schedule-grid"></div>
@@ -524,7 +523,7 @@
 
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-    import { getDatabase, ref, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+    import { getDatabase, ref, set, onValue, update, remove } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
@@ -568,7 +567,6 @@
       expireDate: document.getElementById("expireDate"),
       topStoreImage: document.getElementById("topStoreImage"),
       workingHoursBox: document.getElementById("workingHoursBox"),
-      productSearch: document.getElementById("productSearch"),
       productsContainer: document.getElementById("productsContainer"),
       salesTotal: document.getElementById("salesTotal"),
       lastMonthSales: document.getElementById("lastMonthSales"),
@@ -972,14 +970,9 @@
     };
 
     function renderProducts(){
-      const query = String(ui.productSearch.value || "").trim().toLowerCase();
-      const filtered = state.products.filter(product => {
-        if(product.deleted) return false;
-        if(!query) return true;
-        return [product.name, product.description].some(v => String(v || "").toLowerCase().includes(query));
-      });
+      const filtered = state.products.filter(product => !product.deleted);
 
-      ui.productsTotal.textContent = String(state.products.filter(p => !p.deleted).length);
+      ui.productsTotal.textContent = String(filtered.length);
 
       if(!filtered.length){
         ui.productsContainer.innerHTML = `<div class="summary-box"><div class="summary-title">لا توجد منتجات</div><div class="summary-text">قم برفع أول منتج الآن.</div></div>`;
@@ -1110,10 +1103,10 @@
     window.editProduct = editProduct;
 
     async function deleteProduct(productId){
-      const ok = await askConfirm("هل تريد حذف المنتج نهائياً؟", "تأكيد الحذف");
+      const ok = await askConfirm("هل تريد حذف المنتج نهائياً من قاعدة البيانات؟", "تأكيد الحذف");
       if(!ok) return;
-      await update(ref(database, `store_products/${currentUser.id}/${productId}`), { deleted: true });
-      showNotice("تم حذف المنتج", "تم");
+      await remove(ref(database, `store_products/${currentUser.id}/${productId}`));
+      showNotice("تم حذف المنتج نهائياً", "تم");
     }
     window.deleteProduct = deleteProduct;
 
@@ -1198,8 +1191,6 @@
         updateStats();
       });
     }
-
-    ui.productSearch.addEventListener("input", renderProducts);
 
     function init(){
       loadStoreData();
