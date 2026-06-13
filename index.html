@@ -34,9 +34,80 @@
     body.pending-locked select {
       pointer-events: auto;
     }
+    .ad-modal{
+display:none;
+position:fixed;
+inset:0;
+background:rgba(0,0,0,.35);
+z-index:999999;
+align-items:center;
+justify-content:center;
+padding:18px;
+}
+
+.ad-modal.show{
+display:flex;
+}
+
+.ad-modal-box{
+width:100%;
+max-width:360px;
+background:#fff;
+border-radius:24px;
+padding:20px;
+text-align:center;
+box-shadow:0 14px 40px rgba(0,0,0,.25);
+}
+
+.ad-modal-icon{
+width:58px;
+height:58px;
+border-radius:50%;
+margin:auto auto 12px;
+background:linear-gradient(135deg,#ff8800,#ff5500);
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-size:26px;
+font-weight:800;
+}
+
+.ad-modal-title{
+font-size:18px;
+font-weight:800;
+margin-bottom:8px;
+}
+
+.ad-modal-text{
+font-size:15px;
+line-height:1.8;
+}
+
+.ad-modal-btn{
+margin-top:16px;
+width:100%;
+height:48px;
+border:none;
+border-radius:16px;
+background:#ff8800;
+color:#fff;
+font-size:16px;
+font-weight:800;
+cursor:pointer;
+}
+    
   </style>
 </head>
 <body>
+  <div id="noticeModal" class="ad-modal" aria-hidden="true">
+  <div class="ad-modal-box">
+    <div class="ad-modal-icon">✓</div>
+    <div class="ad-modal-title" id="noticeTitle">تنبيه</div>
+    <div class="ad-modal-text" id="noticeText">...</div>
+    <button class="ad-modal-btn" id="noticeOkBtn">حسنًا</button>
+  </div>
+</div>
   <div class="container">
     <!-- تسجيل الدخول -->
     <div id="loginSection" class="card section active">
@@ -48,7 +119,7 @@
         <input type="password" id="login_password" placeholder="الرمز السري">
         <i class="fa-solid fa-eye" onclick="togglePassword('login_password',this)"></i>
       </div>
-      <button onclick="login()">تسجيل الدخول</button>
+   <button id="loginBtn" onclick="login()">تسجيل الدخول</button>
       <div class="link"><a onclick="showSection('registerSection')">إنشاء حساب</a></div>
     </div>
 
@@ -183,6 +254,25 @@ async function saveTokenToUser(tableName, userId) {
 
     const IMAGE_UPLOAD_WORKER_URL = "https://floral-pine-2aa7.ahmed-a-ahmed00457.workers.dev/";
     const PENDING_CONTACT_URL = "https://wa.me/9647851521585";
+function showNotice(message,title="تنبيه"){
+  document.getElementById("noticeTitle").innerText = title;
+  document.getElementById("noticeText").innerText = message;
+  document.getElementById("noticeModal").classList.add("show");
+}
+
+function hideNotice(){
+  document.getElementById("noticeModal").classList.remove("show");
+}
+
+window.alert = function(message){
+  showNotice(message);
+};
+
+document.addEventListener("click",(e)=>{
+  if(e.target.id==="noticeOkBtn"){
+    hideNotice();
+  }
+});
 
     const state = {
       locked: false,
@@ -203,42 +293,30 @@ async function saveTokenToUser(tableName, userId) {
       setTimeout(() => { toast.style.display = "none"; }, 3000);
     }
 
-    function normalizeIraqiPhone(phone) {
-      let value = String(phone || "").trim().replace(/\D/g, "");
-      if (!value) return "";
-      if (value.startsWith("964")) value = "0" + value.slice(3);
-      if (value.startsWith("7")) value = "0" + value;
-      return value.slice(0, 11);
-    }
+   function normalizeIraqiPhone(phone) {
+  return String(phone || "")
+    .replace(/\D/g, "")
+    .slice(0, 11);
+}
 
-    function validateIraqiPhone(phone) {
-      const normalized = normalizeIraqiPhone(phone);
-      const regex = /^07\d{9}$/;
-      if (!regex.test(normalized)) {
-        alert("رقم الهاتف يجب أن يكون بالشكل 07XXXXXXXXX ويتكون من 11 رقم");
-        return false;
-      }
-      return true;
-    }
+  function validateIraqiPhone(phone) {
+  const normalized = String(phone || "").replace(/\D/g, "");
 
-    function bindPhoneInputs() {
-      document.querySelectorAll('input[type="tel"]').forEach((input) => {
-        input.addEventListener("input", () => {
-          const caretAtStart = input.selectionStart || 0;
-          const oldValue = input.value;
-          let cleaned = oldValue.replace(/\D/g, "").slice(0, 11);
-          if (cleaned.length > 0 && !cleaned.startsWith("07")) {
-            if (cleaned.startsWith("7")) cleaned = "0" + cleaned;
-            if (!cleaned.startsWith("07")) cleaned = "07" + cleaned.replace(/^0+/, "").replace(/^7+/, "");
-            cleaned = cleaned.slice(0, 11);
-          }
-          input.value = cleaned;
-          try {
-            input.setSelectionRange(Math.min(caretAtStart, input.value.length), Math.min(caretAtStart, input.value.length));
-          } catch (_) {}
-        });
-      });
-    }
+  if (normalized.length !== 11) {
+    alert("رقم الهاتف يجب أن يتكون من 11 رقم");
+    return false;
+  }
+
+  return true;
+}
+
+  function bindPhoneInputs() {
+  document.querySelectorAll('input[type="tel"]').forEach((input) => {
+    input.addEventListener("input", () => {
+      input.value = input.value.replace(/\D/g, "").slice(0, 11);
+    });
+  });
+}
 
     async function uploadImage(file) {
       if (!file) return "";
@@ -541,7 +619,7 @@ if (androidToken) {
 
     async function phoneExists(phone) {
       const target = normalizeIraqiPhone(phone);
-      if (!/^07\d{9}$/.test(target)) return false;
+ if (target.length !== 11) return false;
       const tables = ["customers", "stores", "drivers", "taxis", "admins"];
       for (const table of tables) {
         const snapshot = await get(child(ref(database), table));
@@ -771,15 +849,25 @@ if (androidToken) {
     };
 
     window.login = async function() {
+      const loginBtn = document.getElementById("loginBtn");
+
+loginBtn.disabled = true;
+loginBtn.innerText = "جاري تسجيل الدخول...";
       const phoneRaw = document.getElementById("login_phone").value.trim();
       const phone = normalizeIraqiPhone(phoneRaw);
       const password = document.getElementById("login_password").value.trim();
 
-      if (!validateIraqiPhone(phone)) return;
+    if (!validateIraqiPhone(phone)) {
+  loginBtn.disabled = false;
+  loginBtn.innerText = "تسجيل الدخول";
+  return;
+}
       if (password === "") {
-        alert("املأ جميع الحقول");
-        return;
-      }
+  alert("املأ جميع الحقول");
+  loginBtn.disabled = false;
+  loginBtn.innerText = "تسجيل الدخول";
+  return;
+}
 
       try {
         const tables = ["admins", "customers", "stores", "drivers", "taxis"];
@@ -808,13 +896,17 @@ if (androidToken) {
               state.currentUser = user;
 
               if (user.type === "admin") {
-                if (user.status !== "active") {
-                  alert("تم تعطيل حساب الادمن");
-                  return;
-                }
-                window.location.replace("add.html");
-                return;
-              }
+  if (user.status !== "active") {
+    loginBtn.disabled = false;
+    loginBtn.innerText = "تسجيل الدخول";
+
+    alert("تم تعطيل حساب الادمن");
+    return;
+  }
+
+  window.location.replace("add.html");
+  return;
+}
 
               if (user.status === "active") {
                 stopPendingWatcher();
@@ -832,16 +924,27 @@ if (androidToken) {
                 return;
               }
 
-              alert("حالة الحساب غير صالحة");
-              return;
+            loginBtn.disabled = false;
+loginBtn.innerText = "تسجيل الدخول";
+
+alert("حالة الحساب غير صالحة");
+return;
             }
           }
         }
+        loginBtn.disabled = false;
+loginBtn.innerText = "تسجيل الدخول";
         alert("بيانات تسجيل الدخول غير صحيحة");
-      } catch (error) {
-        console.log(error);
-        alert("حدث خطأ");
-      }
+        loginBtn.disabled = false;
+loginBtn.innerText = "تسجيل الدخول";
+     } catch (error) {
+  console.log(error);
+
+  loginBtn.disabled = false;
+  loginBtn.innerText = "تسجيل الدخول";
+
+  alert("حدث خطأ");
+}
     };
 
     window.logout = function() {
