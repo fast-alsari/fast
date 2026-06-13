@@ -1,4 +1,3 @@
-<!-- home.html -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -27,7 +26,7 @@
     html,body{background:#f7f7f7;overflow-x:hidden}
     body{padding-bottom:96px}
     input,textarea,select{font-size:16px!important;touch-action:manipulation}
-    img{image-rendering:auto;-webkit-user-drag:none;user-select:none}
+    img{-webkit-user-drag:none;user-select:none;image-rendering:auto}
     .page{display:none}
     .page.active-page{display:block}
 
@@ -65,27 +64,11 @@
     .open-dot{background:#00c853;box-shadow:0 0 8px #00c853}
     .closed-dot{background:#cfcfcf;opacity:.4;box-shadow:none}
     .closed-store{opacity:.55;filter:grayscale(100%);background:#dcdcdc!important;pointer-events:none}
-    .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.10)}
+    .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.10);isolation:isolate}
     .ads-track{width:100%;height:100%;position:relative}
-.ad-slide{
-    position:absolute;
-    inset:0;
-    opacity:0;
-    overflow:hidden;
-    pointer-events:none;
-    z-index:1;
-}
-.ad-slide img{
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    display:block
-}
-   .ad-slide.active{
-    opacity:1;
-    z-index:2;
-    pointer-events:auto;
-}
+    .ad-slide{position:absolute;inset:0;opacity:0;overflow:hidden;pointer-events:none;z-index:1;will-change:transform,opacity}
+    .ad-slide img{width:100%;height:100%;object-fit:cover;display:block}
+    .ad-slide.active{opacity:1;z-index:2;pointer-events:auto}
     .ad-slide.prev{opacity:0;z-index:1}
     .ad-slide.clickable{cursor:pointer}
     .ad-dots{position:absolute;left:0;right:0;bottom:10px;display:flex;justify-content:center;gap:7px;z-index:4;pointer-events:auto}
@@ -109,38 +92,8 @@
     @keyframes adZoom{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}
     @keyframes adRise{from{opacity:0;transform:translateY(22px) scale(.985)}to{opacity:1;transform:translateY(0) scale(1)}}
     @keyframes adFlip{from{opacity:0;transform:perspective(900px) rotateY(22deg) scale(.96)}to{opacity:1;transform:perspective(900px) rotateY(0) scale(1)}}
-.ad-controls{
-    position:absolute;
-    inset:0;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    padding:0 12px;
-    z-index:999999;
-    pointer-events:none;
-}
-
-.ad-nav-btn{
-    width:42px;
-    height:42px;
-    border:none;
-    border-radius:50%;
-    background:rgba(255,255,255,.95);
-    color:#ff6600;
-    font-size:20px;
-    cursor:pointer;
-    pointer-events:auto;
-    box-shadow:0 5px 15px rgba(0,0,0,.18);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    position:relative;
-    z-index:1000000;
-}
-.ad-controls,
-.ad-nav-btn{
-    transform:translateZ(999px);
-}
+    .ad-controls{position:absolute;inset:0;display:flex;justify-content:space-between;align-items:center;padding:0 10px;pointer-events:none;z-index:999999}
+    .ad-nav-btn{width:36px;height:36px;border:none;border-radius:50%;background:rgba(255,255,255,.88);color:#ff6600;font-size:18px;cursor:pointer;pointer-events:auto;box-shadow:0 3px 12px rgba(0,0,0,.12);position:relative;z-index:1000000;transform:translateZ(999px)}
     .single-store-page{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:#f7f7f7;z-index:999;overflow-y:auto;padding-bottom:120px}
     .store-top-bar{background:linear-gradient(135deg,#ff8800,#ff5500);padding:7px 14px 8px;display:flex;align-items:center;gap:12px;color:#fff;position:sticky;top:0;z-index:100;flex-wrap:wrap;box-shadow:0 4px 12px rgba(0,0,0,.08)}
     .back-btn{width:42px;height:42px;border-radius:50%;border:none;background:#fff;color:#ff6600;font-size:18px;cursor:pointer;flex-shrink:0}
@@ -207,7 +160,6 @@
     .map-modal-box{width:100%;max-width:500px;height:420px;background:#fff;border-radius:24px;overflow:hidden;position:relative;box-shadow:0 10px 30px rgba(0,0,0,.25)}
     .close-map-btn{position:absolute;top:12px;left:12px;width:38px;height:38px;border:none;border-radius:50%;background:red;color:#fff;font-size:18px;font-weight:700;z-index:10;cursor:pointer}
     .map-frame{width:100%;height:100%;border:none}
-
     .order-page{position:fixed;inset:0;background:#f5f5f5;z-index:2000;display:none;overflow-y:auto}
     .order-top-header{background:linear-gradient(135deg,#ff8800,#ff5500);padding:18px 16px 16px;color:#fff;border-bottom-left-radius:28px;border-bottom-right-radius:28px;box-shadow:0 8px 25px rgba(0,0,0,.12)}
     .order-title{font-size:22px;font-weight:800;margin-bottom:8px;line-height:1.3}
@@ -239,6 +191,7 @@
     .rating-submit{width:100%;padding:16px;border:none;border-radius:18px;background:#00b894;color:#fff;font-size:17px;font-weight:800;cursor:pointer;margin-top:14px;opacity:.55;pointer-events:none}
     .rating-submit.enabled{opacity:1;pointer-events:auto}
 
+    /* التكسي كما هو بدون تغيير */
     .taxi-page{position:fixed;inset:0;background:#f7f7f7;z-index:3000;display:none;overflow-y:auto;padding:20px;padding-bottom:120px}
     .taxi-header{background:linear-gradient(135deg,#ff8800,#ff5500);padding:20px;border-radius:25px;color:#fff;margin-bottom:20px;display:flex;align-items:center;gap:15px}
     .taxi-back-btn{width:45px;height:45px;border:none;border-radius:50%;background:#fff;color:#ff6600;font-size:20px;cursor:pointer;flex-shrink:0}
@@ -266,16 +219,12 @@
       .cart-item{align-items:flex-start;flex-direction:column}
       .cart-image{width:100%;height:180px}
       .delete-btn{width:100%}
-  .ads-slider{
-    isolation:isolate;
-}
       .stats-grid{grid-template-columns:1fr 1fr}
       #taxiMap{height:360px}
     }
   </style>
 </head>
 <body>
-
   <div id="homePage" class="page active-page">
     <div class="top-bar">
       <div class="home-top">
@@ -319,12 +268,10 @@
         </div>
       </div>
     </div>
-
     <div class="search-box single-store-search">
       <i class="fa-solid fa-magnifying-glass"></i>
       <input type="text" id="productSearchInput" placeholder="ابحث عن منتج داخل المتجر">
     </div>
-
     <div id="singleProductsContainer" class="products-container"></div>
   </div>
 
@@ -345,7 +292,6 @@
       <div class="app-name">عالسريع</div>
       <div class="app-desc">نوصلك طلبك بأقل من ساعة 🚀</div>
     </div>
-
     <div class="page-content">
       <div class="card">
         <div class="card-title"><i class="fa-solid fa-user"></i> بيانات الحساب</div>
@@ -353,7 +299,6 @@
         <div class="info-line"><div class="info-label">رقم الهاتف</div><div class="info-value" id="userPhone">...</div></div>
         <div class="info-line"><div class="info-label">كلمة المرور</div><div class="info-value" id="userPassword">...</div></div>
       </div>
-
       <div class="card">
         <div class="card-title"><i class="fa-solid fa-chart-column"></i> الإحصائيات</div>
         <div class="stats-grid">
@@ -363,13 +308,11 @@
           <div class="stat-box"><div class="stat-number" id="deliveredOrders">0</div><div class="stat-text">تم التوصيل</div></div>
         </div>
       </div>
-
       <div class="card">
         <div class="card-title"><i class="fa-solid fa-location-dot"></i> موقعك</div>
         <div class="location-box"><iframe id="accountMapFrame" loading="lazy"></iframe></div>
         <div class="location-note">هذا الموقع لا يمكن لأحد مشاهدته، ويظهر فقط عند إرسال طلب باسمك.</div>
       </div>
-
       <div class="card">
         <div class="card-title"><i class="fa-solid fa-gift"></i> توصيلة طلب مجانية</div>
         <div class="info-line">
@@ -379,15 +322,12 @@
             <button class="copy-btn" onclick="copyInviteCode()"><i class="fa-solid fa-copy"></i></button>
           </div>
         </div>
-
         <div class="code-box">
           <input type="text" id="giftCode" class="code-input" placeholder="الصق الكود هنا" inputmode="text" autocomplete="off">
           <button class="copy-btn" onclick="pasteCode()"><i class="fa-solid fa-paste"></i></button>
         </div>
-
         <button class="use-btn" onclick="useInviteCode()">استخدام الكود</button>
       </div>
-
       <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
     </div>
   </div>
@@ -429,7 +369,6 @@
     <div class="bottom-box">
       <h3>حالة الطلب</h3>
       <div class="live-status" id="liveStatus">بانتظار قبول سائق...</div>
-
       <div class="rating-box" id="ratingBox">
         <div class="rating-title">قيم السائق</div>
         <div class="rating-sub">اختر تقييمك من 1 إلى 10 نجوم بعد وصول الطلب.</div>
@@ -440,6 +379,7 @@
     </div>
   </div>
 
+  <!-- التكسي كما هو -->
   <div id="taxiPage" class="taxi-page">
     <div class="taxi-header">
       <button class="taxi-back-btn" onclick="closeTaxiPage()"><i class="fa-solid fa-arrow-right"></i></button>
@@ -448,41 +388,25 @@
         <p style="font-size:14px;opacity:.95;">حدد المكان الذي تريد الذهاب اليه</p>
       </div>
     </div>
-
     <div class="taxi-map-box">
       <h3 style="font-size:18px;margin-bottom:8px;">حدد موقع الوصول</h3>
       <div id="taxiMap"></div>
     </div>
-
     <div class="taxi-info-box">
       <div class="taxi-price-box">
         المسافة: <span id="taxiDistanceText">0</span> كم<br><br>
         السعر: <span id="taxiPriceText">0</span> د.ع
       </div>
-
       <div class="taxi-input-group">
         <label>عدد الاشخاص معك</label>
         <select id="personsCount">
-          <option value="0">0 شخص</option>
-          <option value="1">1 شخص</option>
-          <option value="2">2 اشخاص</option>
-          <option value="3">3 اشخاص</option>
-          <option value="4">4 اشخاص</option>
-          <option value="5">5 اشخاص</option>
-          <option value="6">6 اشخاص</option>
-          <option value="7">7 اشخاص</option>
-          <option value="8">8 اشخاص</option>
-          <option value="9">9 اشخاص</option>
-          <option value="10">10 اشخاص</option>
-          <option value="11">11 شخص</option>
+          <option value="0">0 شخص</option><option value="1">1 شخص</option><option value="2">2 اشخاص</option><option value="3">3 اشخاص</option><option value="4">4 اشخاص</option><option value="5">5 اشخاص</option><option value="6">6 اشخاص</option><option value="7">7 اشخاص</option><option value="8">8 اشخاص</option><option value="9">9 اشخاص</option><option value="10">10 اشخاص</option><option value="11">11 شخص</option>
         </select>
       </div>
-
       <div class="taxi-input-group">
         <label>اكرامية لصاحب التكسي</label>
         <input type="number" id="taxiTipInput" placeholder="اكتب اكرامية للسائق">
       </div>
-
       <button class="taxi-order-btn" onclick="sendTaxiOrder()">طلب تكسي 🚖</button>
     </div>
   </div>
@@ -506,11 +430,8 @@
 
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
-
     const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-    if(!currentUser || !currentUser.id){
-      window.location.href = "index.html";
-    }
+    if(!currentUser || !currentUser.id) window.location.href = "index.html";
 
     let allStores = [];
     let adsList = [];
@@ -535,9 +456,8 @@
     let driverAnimation = null;
     let customerMarker = null;
     let routeControl = null;
-    let storeMarker = null;
-let lastRouteKey = "";
-
+    let storeMarkersLayer = null;
+    let lastRouteKey = "";
     let currentRating = 0;
 
     let taxiMap = null;
@@ -554,6 +474,7 @@ let lastRouteKey = "";
     const noticeText = document.getElementById("noticeText");
     const noticeTitle = document.getElementById("noticeTitle");
     const noticeOkBtn = document.getElementById("noticeOkBtn");
+    const sendOrderBtn = document.getElementById("sendOrderBtn");
 
     function showNotice(message, title = "تنبيه"){
       noticeTitle.textContent = title;
@@ -561,53 +482,33 @@ let lastRouteKey = "";
       noticeModal.classList.add("show");
       noticeModal.setAttribute("aria-hidden", "false");
     }
-
-    function hideNotice(){
-      noticeModal.classList.remove("show");
-      noticeModal.setAttribute("aria-hidden", "true");
-    }
-
+    function hideNotice(){ noticeModal.classList.remove("show"); noticeModal.setAttribute("aria-hidden", "true"); }
     noticeOkBtn.addEventListener("click", hideNotice);
-    noticeModal.addEventListener("click", (e) => {
-      if(e.target === noticeModal) hideNotice();
-    });
-    window.addEventListener("keydown", (e) => {
-      if(e.key === "Escape") hideNotice();
-    });
-    window.alert = function(message){ showNotice(message, "تنبيه"); };
+    noticeModal.addEventListener("click", e => { if(e.target === noticeModal) hideNotice(); });
+    window.addEventListener("keydown", e => { if(e.key === "Escape") hideNotice(); });
+    window.alert = m => showNotice(m, "تنبيه");
 
-    async function notifyNewDeliveryOrder(orderData){
-      if (typeof window.notifyNewDeliveryOrder === "function") {
-        return window.notifyNewDeliveryOrder(orderData);
-      }
-      return Promise.resolve();
+    function restoreSendOrderButton(){
+      const btn = document.getElementById("sendOrderBtn");
+      if(!btn) return;
+      btn.disabled = false;
+      btn.innerHTML = "طلب توصيل 🚀";
+      localStorage.removeItem("sendingOrder");
     }
 
-    async function notifyTaxiOrder(orderData){
-      if (typeof window.notifyTaxiOrder === "function") {
-        return window.notifyTaxiOrder(orderData);
-      }
-      return Promise.resolve();
-    }
+    async function notifyNewDeliveryOrder(orderData){ if(typeof window.notifyNewDeliveryOrder === "function") return window.notifyNewDeliveryOrder(orderData); }
+    async function notifyTaxiOrder(orderData){ if(typeof window.notifyTaxiOrder === "function") return window.notifyTaxiOrder(orderData); }
 
-    function getStoreById(storeId){
-      return allStores.find(store => String(store.id) === String(storeId)) || null;
-    }
-
-    function getStoreToken(storeId){
-      const store = getStoreById(storeId);
-      return store?.fcmToken || store?.token || store?.notificationToken || "";
-    }
-
-    function getMyFcmToken(){
-      return currentUser?.fcmToken || currentUser?.token || localStorage.getItem("fcmToken") || "";
-    }
+    function getStoreById(storeId){ return allStores.find(store => String(store.id) === String(storeId)) || null; }
+    function getStoreToken(storeId){ const store = getStoreById(storeId); return store?.fcmToken || store?.token || store?.notificationToken || ""; }
+    function getMyFcmToken(){ return currentUser?.fcmToken || currentUser?.token || localStorage.getItem("fcmToken") || ""; }
 
     const storesContainer = document.getElementById("storesContainer");
     const adsSlider = document.getElementById("adsSlider");
     const adsTrack = document.getElementById("adsTrack");
     const productSearchInput = document.getElementById("productSearchInput");
     const blockedStatuses = ["waiting_driver","accepted","driver_accepted","going_to_store","driver_to_store","preparing_order","driver_arrived_store","picked_up","on_the_way","arrived","driver_arrived_customer","delivered","customer_rated","failed_no_driver","driver_timeout","delivery_problem","cancelled_by_customer","rejected_by_customer"];
+    const orderLiveStatuses = new Set(["accepted","driver_accepted","going_to_store","driver_to_store","preparing_order","driver_arrived_store","picked_up","on_the_way","arrived","driver_arrived_customer","delivered","customer_rated"]);
 
     function enhanceImage(img){
       if(!img || img.dataset.enhanced === "1") return;
@@ -616,30 +517,13 @@ let lastRouteKey = "";
       img.decoding = "async";
       img.referrerPolicy = "no-referrer";
       img.crossOrigin = "anonymous";
-      img.addEventListener("error", function(){
-        if(this.dataset.fallback && this.src !== this.dataset.fallback){
-          this.src = this.dataset.fallback;
-        }
-      });
+      img.addEventListener("error", function(){ if(this.dataset.fallback && this.src !== this.dataset.fallback) this.src = this.dataset.fallback; });
     }
-
-    function enhanceAllImages(root = document){
-      root.querySelectorAll("img").forEach(enhanceImage);
-    }
+    function enhanceAllImages(root = document){ root.querySelectorAll("img").forEach(enhanceImage); }
 
     const imageObserver = new MutationObserver(() => enhanceAllImages());
-
-    window.addEventListener("DOMContentLoaded", () => {
-      enhanceAllImages();
-      imageObserver.observe(document.body, { childList:true, subtree:true });
-    });
-
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        enhanceAllImages();
-        window.dispatchEvent(new Event("resize"));
-      }, 800);
-    });
+    window.addEventListener("DOMContentLoaded", () => { enhanceAllImages(); imageObserver.observe(document.body, { childList:true, subtree:true }); });
+    window.addEventListener("load", () => { setTimeout(() => { enhanceAllImages(); window.dispatchEvent(new Event("resize")); }, 800); });
 
     function showAppPage(pageId, element){
       document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
@@ -655,10 +539,7 @@ let lastRouteKey = "";
 
     window.showPage = function(pageId, element){
       document.getElementById("singleStorePage").style.display = "none";
-      if(pageId === "orderPage"){
-        openOrderPage();
-        return;
-      }
+      if(pageId === "orderPage"){ openOrderPage(); return; }
       showAppPage(pageId, element);
     };
 
@@ -671,20 +552,14 @@ let lastRouteKey = "";
       initTaxiMap();
       enhanceAllImages();
     };
-
-    window.closeTaxiPage = function(){
-      document.getElementById("taxiPage").style.display = "none";
-      showAppPage("homePage", document.querySelector('.bottom-bar .nav-item'));
-    };
+    window.closeTaxiPage = function(){ document.getElementById("taxiPage").style.display = "none"; showAppPage("homePage", document.querySelector('.bottom-bar .nav-item')); };
 
     window.addEventListener("pageshow", async () => {
       if(currentOrderId){
         const snapshot = await get(ref(database, "orders/" + currentOrderId));
         if(snapshot.exists()){
           const order = snapshot.val();
-          if(blockedStatuses.includes(order.status) || order.status === "delivered"){
-            openOrderPage();
-          }
+          if(blockedStatuses.includes(order.status) || order.status === "delivered") openOrderPage();
         }else{
           localStorage.removeItem("currentOrderId");
           currentOrderId = "";
@@ -699,37 +574,24 @@ let lastRouteKey = "";
       if(currentUser.type === "driver") tableName = "drivers";
       if(currentUser.type === "taxi") tableName = "taxis";
       if(!tableName) return;
-
       const snapshot = await get(ref(database, tableName + "/" + currentUser.id));
-      if(!snapshot.exists()){
-        localStorage.clear();
-        sessionStorage.clear();
-        window.location.href = "index.html";
-        return;
-      }
-
+      if(!snapshot.exists()){ localStorage.clear(); sessionStorage.clear(); window.location.href = "index.html"; return; }
       const userData = snapshot.val();
       userData.id = userData.id || currentUser.id;
       localStorage.setItem("user", JSON.stringify(userData));
-
       const displayName = userData.name || userData.owner || userData.store_name || "مستخدم";
       document.getElementById("welcomeText").innerHTML = `ياهلا ${displayName}`;
       document.getElementById("userName").innerHTML = userData.name || "";
       document.getElementById("userPhone").innerHTML = userData.phone || "";
       document.getElementById("userPassword").innerHTML = userData.password || "";
       document.getElementById("inviteCode").value = userData.id || "";
-
       const userLat = userData.userLat || localStorage.getItem("userLat") || "";
       const userLng = userData.userLng || localStorage.getItem("userLng") || "";
-      if(userLat && userLng){
-        document.getElementById("accountMapFrame").src = `https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
-      }
-
+      if(userLat && userLng) document.getElementById("accountMapFrame").src = `https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
       taxiUserLat = Number(userLat || 0);
       taxiUserLng = Number(userLng || 0);
       enhanceAllImages();
     }
-
     loadCurrentUser();
 
     function calculateDistance(lat1, lon1, lat2, lon2){
@@ -747,11 +609,9 @@ let lastRouteKey = "";
       const currentDay = days[now.getDay()];
       const currentTime = now.getHours() + (now.getMinutes() / 60);
       let todaySchedule = null;
-
       Object.values(store.workingHours).forEach(item => { if(item.day === currentDay) todaySchedule = item; });
       if(!todaySchedule) return false;
       if(todaySchedule.from === "مغلق" || todaySchedule.to === "مغلق") return false;
-
       function convertTo24(time){
         if(!time) return 0;
         const parts = time.trim().split(" ");
@@ -763,7 +623,6 @@ let lastRouteKey = "";
         else if(period === "PM"){ if(hour !== 12) hour += 12; }
         return hour + (minute / 60);
       }
-
       const fromHour = convertTo24(todaySchedule.from);
       const toHour = convertTo24(todaySchedule.to);
       if(fromHour === toHour) return true;
@@ -782,25 +641,9 @@ let lastRouteKey = "";
         return Number(a.distance || 0) - Number(b.distance || 0);
       });
     }
-
-    function normalizeStore(store){
-      return {...store, vip:String(store.accountType || "").toLowerCase() === "vip", distance:store.distance != null ? Number(store.distance) : Number(store.distanceKm || 0)};
-    }
-
-    function homeMatchesQuery(store, query){
-      if(!query) return true;
-      const q = query.toLowerCase();
-      const fields = [store.store_name, store.category, store.owner, store.phone].map(v => String(v || "").toLowerCase());
-      return fields.some(v => v.includes(q));
-    }
-
-    function getVisibleStores(){
-      const filtered = allStores.filter(store => {
-        const categoryMatch = currentFilterCategory === "all" ? true : String(store.category || "") === currentFilterCategory;
-        return categoryMatch && homeMatchesQuery(store, homeSearchQuery);
-      });
-      return sortStores(filtered);
-    }
+    function normalizeStore(store){ return {...store, vip:String(store.accountType || "").toLowerCase() === "vip", distance:store.distance != null ? Number(store.distance) : Number(store.distanceKm || 0)}; }
+    function homeMatchesQuery(store, query){ if(!query) return true; const q = query.toLowerCase(); const fields = [store.store_name, store.category, store.owner, store.phone].map(v => String(v || "").toLowerCase()); return fields.some(v => v.includes(q)); }
+    function getVisibleStores(){ return sortStores(allStores.filter(store => (currentFilterCategory === "all" ? true : String(store.category || "") === currentFilterCategory) && homeMatchesQuery(store, homeSearchQuery))); }
 
     function generateFilters(){
       const filtersContainer = document.querySelector(".filters");
@@ -820,11 +663,7 @@ let lastRouteKey = "";
 
     function renderStores(stores){
       storesContainer.innerHTML = "";
-      if(!stores.length){
-        storesContainer.innerHTML = `<div class="empty">لا توجد نتائج</div>`;
-        return;
-      }
-
+      if(!stores.length){ storesContainer.innerHTML = `<div class="empty">لا توجد نتائج</div>`; return; }
       stores.forEach(store => {
         const isOpen = isStoreOpen(store);
         const storeImage = store.store_image || store.image || "store.png";
@@ -846,8 +685,7 @@ let lastRouteKey = "";
                 </div>
               </div>
             </div>
-          </div>
-        `;
+          </div>`;
       });
       enhanceAllImages();
     }
@@ -855,26 +693,19 @@ let lastRouteKey = "";
     function startLiveStores(){
       onValue(ref(database, "stores"), snapshot => {
         allStores = [];
-        if(!snapshot.exists()){
-          renderStores([]);
-          generateFilters();
-          return;
-        }
+        if(!snapshot.exists()){ renderStores([]); generateFilters(); return; }
         if(userLatitude === null || userLongitude === null) return;
-
         const stores = snapshot.val();
         for(const key in stores){
           let store = normalizeStore(stores[key]);
           store.id = key;
           if(store.status !== "active") continue;
           if(!store.latitude || !store.longitude) continue;
-
           const distance = calculateDistance(userLatitude, userLongitude, Number(store.latitude), Number(store.longitude));
           if(distance > 25) continue;
           store.distance = distance.toFixed(1);
           allStores.push(store);
         }
-
         generateFilters();
         renderStores(getVisibleStores());
       });
@@ -884,22 +715,10 @@ let lastRouteKey = "";
       onValue(ref(database, "ads"), snapshot => {
         adsTrack.innerHTML = "";
         adsList = [];
-        if(!snapshot.exists()){
-          adsSlider.style.display = "none";
-          stopAdTimer();
-          return;
-        }
+        if(!snapshot.exists()){ adsSlider.style.display = "none"; stopAdTimer(); return; }
         const ads = snapshot.val();
-        for(const key in ads){
-          const ad = ads[key];
-          if(ad.status !== "active" || !isValidAdImage(ad.image)) continue;
-          adsList.push({ id:key, ...ad });
-        }
-        if(!adsList.length){
-          adsSlider.style.display = "none";
-          stopAdTimer();
-          return;
-        }
+        for(const key in ads){ const ad = ads[key]; if(ad.status !== "active" || !isValidAdImage(ad.image)) continue; adsList.push({ id:key, ...ad }); }
+        if(!adsList.length){ adsSlider.style.display = "none"; stopAdTimer(); return; }
         adsSlider.style.display = "block";
         if(currentAdIndex >= adsList.length) currentAdIndex = 0;
         renderAds();
@@ -908,130 +727,44 @@ let lastRouteKey = "";
     }
 
     const adTransitionModes = ["slide-left", "slide-right", "zoom", "rise", "flip"];
-
-    function getNextAdTransition(){
-      const mode = adTransitionModes[currentAdTransitionIndex % adTransitionModes.length];
-      currentAdTransitionIndex += 1;
-      return mode;
-    }
-
-    function isValidAdImage(src){
-      if(!src) return false;
-      const value = String(src).trim();
-      if(!value) return false;
-      const lower = value.toLowerCase();
-      return !["store.png","product.png","driver.png","ok.png"].includes(lower);
-    }
-
-    function hasAdDestination(ad){
-      return !!(ad && (String(ad.storeId || "").trim() || String(ad.link || "").trim()));
-    }
-
+    function getNextAdTransition(){ const mode = adTransitionModes[currentAdTransitionIndex % adTransitionModes.length]; currentAdTransitionIndex += 1; return mode; }
+    function isValidAdImage(src){ if(!src) return false; const value = String(src).trim(); if(!value) return false; const lower = value.toLowerCase(); return !["store.png","product.png","driver.png","ok.png"].includes(lower); }
+    function hasAdDestination(ad){ return !!(ad && (String(ad.storeId || "").trim() || String(ad.link || "").trim())); }
     function renderAds(){
       const activeMode = getNextAdTransition();
       const currentAd = adsList[currentAdIndex];
       const dots = document.getElementById("adDots");
-
-      if(!currentAd){
-        adsTrack.innerHTML = "";
-        if(dots) dots.innerHTML = "";
-        return;
-      }
-
+      if(!currentAd){ adsTrack.innerHTML = ""; if(dots) dots.innerHTML = ""; return; }
       const clickable = hasAdDestination(currentAd);
-      adsTrack.innerHTML = `
-        <div class="ad-slide active ${clickable ? "clickable" : ""} ad-enter-${activeMode}" ${clickable ? `onclick="openAd(${currentAdIndex})"` : ""}>
-          <img src="${currentAd.image}" onerror="this.src='store.png'" alt="ad" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="store.png">
-        </div>
-      `;
-
-      if(dots){
-        dots.innerHTML = adsList.map((_, index) => `<span class="ad-dot ${index === currentAdIndex ? "active" : ""}" onclick="goToAd(${index})"></span>`).join("");
-      }
+      adsTrack.innerHTML = `<div class="ad-slide active ${clickable ? "clickable" : ""} ad-enter-${activeMode}" ${clickable ? `onclick="openAd(${currentAdIndex})"` : ""}><img src="${currentAd.image}" onerror="this.src='store.png'" alt="ad" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="store.png"></div>`;
+      if(dots) dots.innerHTML = adsList.map((_, index) => `<span class="ad-dot ${index === currentAdIndex ? "active" : ""}" onclick="goToAd(${index})"></span>`).join("");
       enhanceAllImages();
     }
-
     function stopAdTimer(){ if(adTimer) clearInterval(adTimer); adTimer = null; }
     function startAdTimer(){ stopAdTimer(); if(adsList.length <= 1) return; adTimer = setInterval(() => advanceAd(1), 5000); }
     function resetAdTimer(){ startAdTimer(); }
-    function advanceAd(step = 1){
-      if(!adsList.length) return;
-      currentAdIndex = (currentAdIndex + step + adsList.length) % adsList.length;
-      renderAds();
-      resetAdTimer();
-    }
-
-    window.nextAd = function(){ advanceAd(1); };
-    window.prevAd = function(){ advanceAd(-1); };
-    window.goToAd = function(index){
-      if(index < 0 || index >= adsList.length) return;
-      currentAdIndex = index;
-      renderAds();
-      resetAdTimer();
-    };
-    window.openAd = function(index){
-      const ad = adsList[index];
-      if(!ad || !hasAdDestination(ad)) return;
-      if(ad.storeId){ openStore(ad.storeId); return; }
-      if(ad.link) window.open(ad.link, "_blank");
-    };
+    function advanceAd(step = 1){ if(!adsList.length) return; currentAdIndex = (currentAdIndex + step + adsList.length) % adsList.length; renderAds(); resetAdTimer(); }
+    window.nextAd = () => advanceAd(1);
+    window.prevAd = () => advanceAd(-1);
+    window.goToAd = index => { if(index < 0 || index >= adsList.length) return; currentAdIndex = index; renderAds(); resetAdTimer(); };
+    window.openAd = index => { const ad = adsList[index]; if(!ad || !hasAdDestination(ad)) return; if(ad.storeId){ openStore(ad.storeId); return; } if(ad.link) window.open(ad.link, "_blank"); };
 
     function renderProducts(){
       if(!currentStore) return;
       const container = document.getElementById("singleProductsContainer");
       const query = currentProductSearch.trim().toLowerCase();
-
-      const filtered = currentStoreProducts.filter(product => {
-        if(product.deleted === true) return false;
-        if(!(product.status === "active" || product.status === "approved")) return false;
-        if(!query) return true;
-        const fields = [product.name, product.description, product.category].map(v => String(v || "").toLowerCase());
-        return fields.some(v => v.includes(query));
-      });
-
-      if(!filtered.length){
-        container.innerHTML = `<div class="empty">${currentStoreProducts.length ? "لا توجد منتجات مطابقة" : "لا توجد منتجات حالياً"}</div>`;
-        return;
-      }
-
-      container.innerHTML = filtered.map(product => `
-        <div class="product-card">
-          <img src="${product.image || "product.png"}" class="product-image" onerror="this.src='product.png'" alt="product" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="product.png">
-          <div class="product-content">
-            <div class="product-name">${product.name || ""}</div>
-            <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
-            <div class="product-note">📝 ${product.description || "لا توجد ملاحظات"}</div>
-            <div class="qty-box">
-              <div class="qty-controller">
-                <button class="qty-btn" onclick="decreaseQty('${product.id}')">-</button>
-                <input type="text" readonly value="1" id="qty_${product.id}" class="qty-input">
-                <button class="qty-btn" onclick="increaseQty('${product.id}')">+</button>
-              </div>
-            </div>
-            <button class="add-btn" onclick='addToCart(${JSON.stringify(product)})'>اضافة الى السلة</button>
-          </div>
-        </div>
-      `).join("");
+      const filtered = currentStoreProducts.filter(product => { if(product.deleted === true) return false; if(!(product.status === "active" || product.status === "approved")) return false; if(!query) return true; const fields = [product.name, product.description, product.category].map(v => String(v || "").toLowerCase()); return fields.some(v => v.includes(query)); });
+      if(!filtered.length){ container.innerHTML = `<div class="empty">${currentStoreProducts.length ? "لا توجد منتجات مطابقة" : "لا توجد منتجات حالياً"}</div>`; return; }
+      container.innerHTML = filtered.map(product => `<div class="product-card"><img src="${product.image || "product.png"}" class="product-image" onerror="this.src='product.png'" alt="product" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="product.png"><div class="product-content"><div class="product-name">${product.name || ""}</div><div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div><div class="product-note">📝 ${product.description || "لا توجد ملاحظات"}</div><div class="qty-box"><div class="qty-controller"><button class="qty-btn" onclick="decreaseQty('${product.id}')">-</button><input type="text" readonly value="1" id="qty_${product.id}" class="qty-input"><button class="qty-btn" onclick="increaseQty('${product.id}')">+</button></div></div><button class="add-btn" onclick='addToCart(${JSON.stringify(product)})'>اضافة الى السلة</button></div></div>`).join("");
       enhanceAllImages();
     }
 
-    document.getElementById("searchInput").addEventListener("input", function(){
-      homeSearchQuery = this.value.toLowerCase().trim();
-      renderStores(getVisibleStores());
-    });
-
-    productSearchInput.addEventListener("input", function(){
-      currentProductSearch = this.value;
-      renderProducts();
-    });
+    document.getElementById("searchInput").addEventListener("input", function(){ homeSearchQuery = this.value.toLowerCase().trim(); renderStores(getVisibleStores()); });
+    productSearchInput.addEventListener("input", function(){ currentProductSearch = this.value; renderProducts(); });
 
     window.openStore = async function(storeId){
       const store = allStores.find(s => s.id === storeId);
-      if(!store){
-        alert("المتجر غير موجود");
-        return;
-      }
-
+      if(!store){ alert("المتجر غير موجود"); return; }
       currentStore = store;
       currentProductSearch = "";
       productSearchInput.value = "";
@@ -1041,141 +774,62 @@ let lastRouteKey = "";
       document.getElementById("singleStoreImage").src = store.store_image || store.image || "store.png";
       document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">جاري تحميل المنتجات...</div>`;
       enhanceAllImages();
-
       try{
         const snapshot = await get(ref(database, "store_products/" + storeId));
         currentStoreProducts = [];
         if(snapshot.exists()){
           const products = snapshot.val();
-          for(const key in products){
-            const product = products[key];
-            product.id = key;
-            product.storeId = store.id;
-            product.storeName = store.store_name;
-            currentStoreProducts.push(product);
-          }
+          for(const key in products){ const product = products[key]; product.id = key; product.storeId = store.id; product.storeName = store.store_name; currentStoreProducts.push(product); }
         }
         renderProducts();
-      }catch(error){
-        console.log(error);
-        document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">حدث خطأ أثناء تحميل المنتجات</div>`;
-      }
+      }catch(error){ console.log(error); document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">حدث خطأ أثناء تحميل المنتجات</div>`; }
     };
 
-    window.backHome = function(){
-      document.getElementById("singleStorePage").style.display = "none";
-      currentStore = null;
-      currentStoreProducts = [];
-      currentProductSearch = "";
-      productSearchInput.value = "";
-    };
-
-    window.increaseQty = function(id){ const input = document.getElementById(`qty_${id}`); input.value = Number(input.value) + 1; };
-    window.decreaseQty = function(id){ const input = document.getElementById(`qty_${id}`); if(Number(input.value) > 1) input.value = Number(input.value) - 1; };
-
-    window.addToCart = function(product){
-      const qty = Number(document.getElementById(`qty_${product.id}`).value || 1);
-      const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId);
-      if(existingProduct) existingProduct.qty += qty;
-      else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""});
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCart();
-      alert("تمت الاضافة");
-    };
+    window.backHome = function(){ document.getElementById("singleStorePage").style.display = "none"; currentStore = null; currentStoreProducts = []; currentProductSearch = ""; productSearchInput.value = ""; };
+    window.increaseQty = id => { const input = document.getElementById(`qty_${id}`); input.value = Number(input.value) + 1; };
+    window.decreaseQty = id => { const input = document.getElementById(`qty_${id}`); if(Number(input.value) > 1) input.value = Number(input.value) - 1; };
+    window.addToCart = function(product){ const qty = Number(document.getElementById(`qty_${product.id}`).value || 1); const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId); if(existingProduct) existingProduct.qty += qty; else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""}); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); alert("تمت الاضافة"); };
 
     function updateCart(){
       const cartContainer = document.getElementById("cartContainer");
       const itemsTotal = document.getElementById("itemsTotal");
       const finalTotal = document.getElementById("finalTotal");
       cartContainer.innerHTML = "";
-      if(cart.length === 0){
-        cartContainer.innerHTML = `<div class="empty">السلة فارغة</div>`;
-        itemsTotal.innerHTML = "0 د.ع";
-        document.getElementById("deliveryPriceText").innerHTML = "0 د.ع";
-        finalTotal.innerHTML = "0 د.ع";
-        return;
-      }
-
+      if(cart.length === 0){ cartContainer.innerHTML = `<div class="empty">السلة فارغة</div>`; itemsTotal.innerHTML = "0 د.ع"; document.getElementById("deliveryPriceText").innerHTML = "0 د.ع"; finalTotal.innerHTML = "0 د.ع"; return; }
       let total = 0;
       cart.forEach(item => {
         const itemTotal = Number(item.price) * Number(item.qty);
         total += itemTotal;
-        cartContainer.innerHTML += `
-          <div class="cart-item">
-            <img src="${item.image || "product.png"}" class="cart-image" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" onerror="this.src='product.png'" alt="item" data-fallback="product.png">
-            <div class="cart-info">
-              <h3>${item.name}</h3>
-              <p>🏪 ${item.storeName}</p>
-              <p>💰 ${Number(itemTotal).toLocaleString()} د.ع</p>
-              <div class="cart-note">📝 ${item.description || "لا توجد ملاحظات"}</div>
-              <div class="qty-controller" style="margin-top:10px;width:max-content;">
-                <button class="qty-btn" onclick="decreaseCartQty('${item.id}','${item.storeId}')">-</button>
-                <input type="text" readonly value="${item.qty}" class="qty-input">
-                <button class="qty-btn" onclick="increaseCartQty('${item.id}','${item.storeId}')">+</button>
-              </div>
-            </div>
-            <button class="delete-btn" onclick="removeCartItem('${item.id}','${item.storeId}')">حذف</button>
-          </div>
-        `;
+        cartContainer.innerHTML += `<div class="cart-item"><img src="${item.image || "product.png"}" class="cart-image" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" onerror="this.src='product.png'" alt="item" data-fallback="product.png"><div class="cart-info"><h3>${item.name}</h3><p>🏪 ${item.storeName}</p><p>💰 ${Number(itemTotal).toLocaleString()} د.ع</p><div class="cart-note">📝 ${item.description || "لا توجد ملاحظات"}</div><div class="qty-controller" style="margin-top:10px;width:max-content;"><button class="qty-btn" onclick="decreaseCartQty('${item.id}','${item.storeId}')">-</button><input type="text" readonly value="${item.qty}" class="qty-input"><button class="qty-btn" onclick="increaseCartQty('${item.id}','${item.storeId}')">+</button></div></div><button class="delete-btn" onclick="removeCartItem('${item.id}','${item.storeId}')">حذف</button></div>`;
       });
-
       const tip = Number(document.getElementById("tipInput").value || 0);
       deliveryPrice = 0;
       const uniqueStores = [...new Set(cart.map(item => item.storeId))];
-
       if(uniqueStores.length > 0){
         const firstStore = allStores.find(s => s.id === uniqueStores[0]);
         if(firstStore && userLatitude != null && userLongitude != null){
           const distance = calculateDistance(userLatitude, userLongitude, Number(firstStore.latitude), Number(firstStore.longitude));
-          if(distance <= 1) deliveryPrice = 1500;
-          else if(distance <= 3) deliveryPrice = 2000;
-          else if(distance <= 5) deliveryPrice = 3000;
-          else if(distance <= 8) deliveryPrice = 4000;
-          else if(distance <= 12) deliveryPrice = 5000;
-          else deliveryPrice = 5000 + Math.round((distance - 12) * 250);
+          if(distance <= 1) deliveryPrice = 1500; else if(distance <= 3) deliveryPrice = 2000; else if(distance <= 5) deliveryPrice = 3000; else if(distance <= 8) deliveryPrice = 4000; else if(distance <= 12) deliveryPrice = 5000; else deliveryPrice = 5000 + Math.round((distance - 12) * 250);
           if(deliveryPrice > 10000) deliveryPrice = 10000;
         }
-
         if(uniqueStores.length === 2) deliveryPrice = Math.round(deliveryPrice * 1.6);
         else if(uniqueStores.length === 3) deliveryPrice = Math.round(deliveryPrice * 2);
         else if(uniqueStores.length >= 4) deliveryPrice = Math.round(deliveryPrice * 2.5);
-
         if(total >= 50000) deliveryPrice += 1000;
         if(total >= 100000) deliveryPrice += 2000;
-
         const hour = new Date().getHours();
         if(hour >= 12 || hour <= 6) deliveryPrice += 1000;
-
         if(deliveryPrice < 2000) deliveryPrice = 2000;
         if(deliveryPrice > 15000) deliveryPrice = 15000;
       }
-
       document.getElementById("deliveryPriceText").innerHTML = Number(deliveryPrice).toLocaleString() + " د.ع";
       itemsTotal.innerHTML = `${Number(total).toLocaleString()} د.ع`;
       finalTotal.innerHTML = `${Number(total + deliveryPrice + tip).toLocaleString()} د.ع`;
       enhanceAllImages();
     }
-
-    window.increaseCartQty = function(productId, storeId){
-      const item = cart.find(item => item.id === productId && item.storeId === storeId);
-      if(item) item.qty += 1;
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCart();
-    };
-
-    window.decreaseCartQty = function(productId, storeId){
-      const item = cart.find(item => item.id === productId && item.storeId === storeId);
-      if(item && item.qty > 1) item.qty -= 1;
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCart();
-    };
-
-    window.removeCartItem = function(productId, storeId){
-      cart = cart.filter(item => !(item.id === productId && item.storeId === storeId));
-      localStorage.setItem("cart", JSON.stringify(cart));
-      updateCart();
-    };
-
+    window.increaseCartQty = function(productId, storeId){ const item = cart.find(item => item.id === productId && item.storeId === storeId); if(item) item.qty += 1; localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); };
+    window.decreaseCartQty = function(productId, storeId){ const item = cart.find(item => item.id === productId && item.storeId === storeId); if(item && item.qty > 1) item.qty -= 1; localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); };
+    window.removeCartItem = function(productId, storeId){ cart = cart.filter(item => !(item.id === productId && item.storeId === storeId)); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); };
     document.getElementById("tipInput").addEventListener("input", updateCart);
     updateCart();
 
@@ -1184,402 +838,198 @@ let lastRouteKey = "";
       orderTimerInterval = setInterval(async () => {
         const remaining = Math.max(0, (60 * 60 * 1000) - (Date.now() - createdAt));
         document.getElementById("timerBox").innerHTML = formatTime(remaining);
-
         if(remaining <= 0){
           stopOrderTimer();
-          try{
-            if(currentOrderId) await update(ref(database, "orders/" + currentOrderId), {
-              status:"failed_no_driver",
-              statusText:"الطلب الغي بسبب عدم وجود سائق قبل طلب توصيلك",
-              failedDriverSearch:true,
-              closedAt:Date.now()
-            });
-          }catch(e){}
+          try{ if(currentOrderId) await update(ref(database, "orders/" + currentOrderId), { status:"failed_no_driver", statusText:"الطلب الغي بسبب عدم وجود سائق قبل طلب توصيلك", failedDriverSearch:true, closedAt:Date.now() }); }catch(e){}
           try{ if(currentOrderId) await remove(ref(database, "orders/" + currentOrderId)); }catch(e){}
           openHomeAfterOrder("الطلب الغي بسبب عدم وجود سائق قبل طلب توصيلك");
         }
       }, 1000);
     }
+    function stopOrderTimer(){ if(orderTimerInterval) clearInterval(orderTimerInterval); orderTimerInterval = null; }
+    function stopOrderListener(){ if(orderUnsubscribe){ try{ orderUnsubscribe(); }catch(e){} } orderUnsubscribe = null; }
+    function openHomeAfterOrder(message){ if(message) alert(message); document.getElementById("orderPage").style.display = "none"; document.getElementById("bottomBar").style.display = "flex"; showAppPage("homePage", document.querySelector(".bottom-bar .nav-item")); localStorage.removeItem("currentOrderId"); currentOrderId = ""; stopOrderTimer(); stopOrderListener(); restoreSendOrderButton(); }
+    function formatTime(ms){ if(ms <= 0) return "00:00:00"; const totalSeconds = Math.floor(ms / 1000); const hours = String(Math.floor(totalSeconds / 3600)).padStart(2,"0"); const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,"0"); const seconds = String(totalSeconds % 60).padStart(2,"0"); return `${hours}:${minutes}:${seconds}`; }
 
-    function stopOrderTimer(){
-      if(orderTimerInterval) clearInterval(orderTimerInterval);
-      orderTimerInterval = null;
+    function normalizePhoneForWhatsApp(phone){
+      const digits = String(phone || "").replace(/\D/g, "");
+      if(!digits) return "";
+      if(digits.startsWith("964")) return digits;
+      if(digits.startsWith("0")) return "964" + digits.slice(1);
+      return digits;
     }
 
-    function stopOrderListener(){
-      if(orderUnsubscribe){
-        try{ orderUnsubscribe(); }catch(e){}
-      }
-      orderUnsubscribe = null;
+    let bikeRotation = 0;
+    const bikeIcon = L.divIcon({ html:`<div style="width:48px;height:48px;display:flex;justify-content:center;align-items:center;"><img id="bikeImage" src="delivery-bike.png" style="width:48px;height:48px;object-fit:contain;transform:rotate(${bikeRotation}deg);filter:drop-shadow(0 4px 8px rgba(0,0,0,.35));"></div>`, className:"", iconSize:[48,48], iconAnchor:[24,24] });
+    const customerIcon = L.divIcon({ html:`<div style="font-size:40px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">🚩</div>`, className:"", iconSize:[40,40], iconAnchor:[20,35] });
+
+    function createStoreIcon(store){
+      return L.divIcon({
+        html:`<div style="display:flex;flex-direction:column;align-items:center;transform:translateY(0)"><img src="${store.storeImage || 'store.png'}" style="width:34px;height:34px;border-radius:50%;border:2px solid #ff8800;object-fit:cover;background:#fff;box-shadow:0 3px 8px rgba(0,0,0,.25)"><div style="margin-top:4px;background:#fff;padding:4px 8px;border-radius:12px;font-size:11px;font-weight:800;color:#333;box-shadow:0 3px 8px rgba(0,0,0,.14);max-width:120px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${store.storeName || ''}</div></div>`,
+        className:"",
+        iconSize:[40,58],
+        iconAnchor:[20,54]
+      });
     }
 
-    function openHomeAfterOrder(message){
-      if(message) alert(message);
-      document.getElementById("orderPage").style.display = "none";
-      document.getElementById("bottomBar").style.display = "flex";
-      showAppPage("homePage", document.querySelector(".bottom-bar .nav-item"));
-      localStorage.removeItem("currentOrderId");
-      currentOrderId = "";
-      stopOrderTimer();
-      stopOrderListener();
+    function createStoreMarker(order){
+      const stores = Array.isArray(order.storesData) ? order.storesData : [];
+      if(!stores.length) return null;
+      if(storeMarkersLayer){ try{ orderMap.removeLayer(storeMarkersLayer); }catch(e){} }
+      storeMarkersLayer = L.layerGroup().addTo(orderMap);
+      stores.forEach((store, index) => {
+        const lat = Number(store.storeLat);
+        const lng = Number(store.storeLng);
+        if(!lat || !lng) return;
+        const marker = L.marker([lat, lng], { icon: createStoreIcon({ storeName: store.storeName, storeImage: store.storeImage }) });
+        marker.addTo(storeMarkersLayer);
+        marker.bindPopup(`<div style="text-align:center;min-width:120px"><div style="font-weight:800;margin-bottom:6px">${store.storeName || 'متجر'}</div><img src="${store.storeImage || 'store.png'}" style="width:100px;height:100px;object-fit:cover;border-radius:16px;border:2px solid #ff8800"></div>`);
+        if(index === 0 && !marker._popup) marker.bindTooltip(store.storeName || 'متجر', { permanent:false, direction:'top' });
+      });
+      return storeMarkersLayer;
     }
 
-    function formatTime(ms){
-      if(ms <= 0) return "00:00:00";
-      const totalSeconds = Math.floor(ms / 1000);
-      const hours = String(Math.floor(totalSeconds / 3600)).padStart(2,"0");
-      const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2,"0");
-      const seconds = String(totalSeconds % 60).padStart(2,"0");
-      return `${hours}:${minutes}:${seconds}`;
-    }
-let bikeRotation = 0;
-    const bikeIcon = L.divIcon({
-  html:`
-    <img
-      id="bikeImage"
-      src="delivery-bike.png"
-      style="
-      width:48px;
-      height:48px;
-      object-fit:contain;
-      transform:rotate(${bikeRotation}deg);
-      filter:drop-shadow(0 4px 8px rgba(0,0,0,.35));
-      ">
-  `,
-  className:"",
-  iconSize:[48,48],
-  iconAnchor:[24,24]
-});
-
-    const customerIcon = L.divIcon({
-      html:`<div style="font-size:40px;filter:drop-shadow(0 3px 6px rgba(0,0,0,.35));">🚩</div>`,
-      className:"", iconSize:[40,40], iconAnchor:[20,35]
-    });
-
-function createStoreIcon(store){
-
-return L.divIcon({
-html:`
-<div style="
-display:flex;
-flex-direction:column;
-align-items:center;
-">
-
-<img
-src="${store.storeImage || 'store.png'}"
-style="
-width:42px;
-height:42px;
-border-radius:50%;
-border:3px solid #ff8800;
-background:#fff;
-object-fit:cover;
-box-shadow:0 3px 8px rgba(0,0,0,.3);
-">
-
-<div style="
-margin-top:4px;
-background:#fff;
-padding:3px 8px;
-border-radius:12px;
-font-size:11px;
-font-weight:bold;
-white-space:nowrap;
-box-shadow:0 2px 6px rgba(0,0,0,.15);
-">
-${store.storeName || 'المتجر'}
-</div>
-
-</div>
-`,
-className:"",
-iconSize:[120,60],
-iconAnchor:[21,55]
-});
-
-}
-
-    function drawRoute(fromLat, fromLng, toLat, toLng, color){
-const routeKey =
-`${fromLat}_${fromLng}_${toLat}_${toLng}_${color}`;
-if(lastRouteKey === routeKey){
-  return;
-}
-
-lastRouteKey = routeKey;
-      if(!orderMap || !fromLat || !fromLng || !toLat || !toLng) return;
-      if(routeControl){
-   return;
-}
-      routeControl = L.Routing.control({
-        waypoints:[L.latLng(fromLat, fromLng), L.latLng(toLat, toLng)],
-        routeWhileDragging:false,
-        addWaypoints:false,
-        draggableWaypoints:false,
-   fitSelectedRoutes:false,
-        show:false,
-        lineOptions:{ styles:[{ color, weight:7, opacity:.92 }] },
-        router:L.Routing.osrmv1({ serviceUrl:"https://router.project-osrm.org/route/v1" }),
-        createMarker:()=>null
-      }).addTo(orderMap);
-
-      
-    }
-
-    function initOrderMap(order){
-      document.getElementById("orderMap").style.display = "block";
-      if(!orderMap){
-orderMap = L.map("orderMap", {
-  zoomControl:false,
-  dragging:false,
-  scrollWheelZoom:false,
-  doubleClickZoom:false,
-  touchZoom:false,
-  boxZoom:false,
-  keyboard:false
-}).setView([Number(order.customerLat), Number(order.customerLng)], 15);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19 }).addTo(orderMap);
-      }
-      if(customerMarker){
-        try{ orderMap.removeLayer(customerMarker); }catch(e){}
-      }
-      customerMarker = L.marker([Number(order.customerLat), Number(order.customerLng)], { icon:customerIcon }).addTo(orderMap).addTo(orderMap);
-      const store = getStoreTarget(order);
-
-if(store){
-
-  if(storeMarker){
-    try{
-      orderMap.removeLayer(storeMarker);
-    }catch(e){}
-  }
-
-  storeMarker = createStoreMarker(order);
-
-  if(storeMarker){
-    storeMarker.addTo(orderMap);
-  }
-
-}
-      setTimeout(() => { try{ orderMap.invalidateSize(); }catch(e){} }, 400);
-    }
-function createStoreMarker(order){
-
-  const store = order.storesData?.[0];
-
-  if(!store) return null;
-
-  return L.marker(
-    [Number(store.storeLat), Number(store.storeLng)],
-    {
-      icon: createStoreIcon({
-        storeName: store.storeName,
-        storeImage: store.storeImage
-      })
-    }
-  );
-
-}
     function getStoreTarget(order){
       if(order.storesData && order.storesData.length > 0){
         const store = order.storesData[0];
         return { lat:Number(store.storeLat), lng:Number(store.storeLng) };
       }
-      if(order.storeLat && order.storeLng){
-        return { lat:Number(order.storeLat), lng:Number(order.storeLng) };
-      }
+      if(order.storeLat && order.storeLng) return { lat:Number(order.storeLat), lng:Number(order.storeLng) };
       return null;
     }
-function fitAllMarkers(driverLat,driverLng,order){
 
-  const bounds = [];
+    function getNearestStorePoint(order, driverLat, driverLng){
+      const stores = Array.isArray(order.storesData) ? order.storesData : [];
+      if(!stores.length) return null;
+      let best = null;
+      let bestDist = Infinity;
+      stores.forEach(store => {
+        const lat = Number(store.storeLat);
+        const lng = Number(store.storeLng);
+        if(!lat || !lng) return;
+        const d = calculateDistance(driverLat, driverLng, lat, lng);
+        if(d < bestDist){ bestDist = d; best = { lat, lng, storeName: store.storeName || '', storeImage: store.storeImage || '' }; }
+      });
+      return best;
+    }
 
-  bounds.push([
-    Number(order.customerLat),
-    Number(order.customerLng)
-  ]);
+    function fitAllMarkers(driverLat, driverLng, order){
+      if(!orderMap) return;
+      const bounds = [];
+      if(Number(order.customerLat) && Number(order.customerLng)) bounds.push([Number(order.customerLat), Number(order.customerLng)]);
+      if(driverLat && driverLng) bounds.push([driverLat, driverLng]);
+      const stores = Array.isArray(order.storesData) ? order.storesData : [];
+      stores.forEach(store => { const lat = Number(store.storeLat); const lng = Number(store.storeLng); if(lat && lng) bounds.push([lat, lng]); });
+      if(bounds.length >= 2){
+        orderMap.fitBounds(bounds, { padding:[80,80], animate:false });
+      }
+    }
 
-  bounds.push([
-    driverLat,
-    driverLng
-  ]);
+    function calculateBearing(lat1,lng1,lat2,lng2){
+      const dLon = (lng2-lng1) * Math.PI/180;
+      const y = Math.sin(dLon) * Math.cos(lat2*Math.PI/180);
+      const x = Math.cos(lat1*Math.PI/180) * Math.sin(lat2*Math.PI/180) - Math.sin(lat1*Math.PI/180) * Math.cos(lat2*Math.PI/180) * Math.cos(dLon);
+      return (Math.atan2(y,x) * 180/Math.PI + 360) % 360;
+    }
 
-  const store = getStoreTarget(order);
+    function buildWaypointsForStores(order, driverLat, driverLng){
+      const stores = Array.isArray(order.storesData) ? [...order.storesData] : [];
+      if(!stores.length) return [];
+      stores.sort((a,b) => {
+        const ad = calculateDistance(driverLat, driverLng, Number(a.storeLat), Number(a.storeLng));
+        const bd = calculateDistance(driverLat, driverLng, Number(b.storeLat), Number(b.storeLng));
+        return ad - bd;
+      });
+      const points = [L.latLng(driverLat, driverLng)];
+      stores.forEach(store => {
+        const lat = Number(store.storeLat);
+        const lng = Number(store.storeLng);
+        if(lat && lng) points.push(L.latLng(lat, lng));
+      });
+      return points;
+    }
 
-  if(store){
-    bounds.push([
-      store.lat,
-      store.lng
-    ]);
-  }
+    function drawRoute(waypoints, color){
+      if(!orderMap || !Array.isArray(waypoints) || waypoints.length < 2) return;
+      const key = waypoints.map(p => `${p.lat.toFixed(6)},${p.lng.toFixed(6)}`).join('|') + '|' + color;
+      if(lastRouteKey === key) return;
+      lastRouteKey = key;
+      if(routeControl){ try{ orderMap.removeControl(routeControl); }catch(e){} routeControl = null; }
+      routeControl = L.Routing.control({
+        waypoints,
+        routeWhileDragging:false,
+        addWaypoints:false,
+        draggableWaypoints:false,
+        fitSelectedRoutes:false,
+        show:false,
+        lineOptions:{ styles:[{ color, weight:7, opacity:.95 }] },
+        router:L.Routing.osrmv1({ serviceUrl:"https://router.project-osrm.org/route/v1" }),
+        createMarker:()=>null
+      }).addTo(orderMap);
+    }
 
-  orderMap.fitBounds(bounds,{
-    padding:[120,120],
-   animate:false
-  });
+    function initOrderMap(order){
+      document.getElementById("orderMap").style.display = "block";
+      if(!orderMap){
+        orderMap = L.map("orderMap", {
+          zoomControl:true,
+          dragging:true,
+          scrollWheelZoom:true,
+          doubleClickZoom:true,
+          touchZoom:true,
+          boxZoom:false,
+          keyboard:true
+        }).setView([Number(order.customerLat), Number(order.customerLng)], 15);
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", { maxZoom:19 }).addTo(orderMap);
+        orderMap.attributionControl.setPrefix(false);
+      }
+      if(customerMarker){ try{ orderMap.removeLayer(customerMarker); }catch(e){} }
+      customerMarker = L.marker([Number(order.customerLat), Number(order.customerLng)], { icon:customerIcon }).addTo(orderMap).bindPopup("موقع الزبون");
+      createStoreMarker(order);
+      setTimeout(() => { try{ orderMap.invalidateSize(); }catch(e){} }, 350);
+    }
 
-}
-function calculateBearing(lat1,lng1,lat2,lng2){
-
-const dLon = (lng2-lng1) * Math.PI/180;
-
-const y = Math.sin(dLon) * Math.cos(lat2*Math.PI/180);
-
-const x =
-Math.cos(lat1*Math.PI/180) *
-Math.sin(lat2*Math.PI/180)
--
-Math.sin(lat1*Math.PI/180) *
-Math.cos(lat2*Math.PI/180) *
-Math.cos(dLon);
-
-const brng =
-Math.atan2(y,x);
-
-return (brng * 180/Math.PI + 360) % 360;
-
-}
     function updateDriverLocation(order){
       initOrderMap(order);
-
       if(!order.driverLat || !order.driverLng) return;
-
       const driverLat = Number(order.driverLat);
       const driverLng = Number(order.driverLng);
-    if(!window.mapFitted){
-  fitAllMarkers(driverLat,driverLng,order);
-  window.mapFitted = true;
-}
+      if(!window.mapFitted){ fitAllMarkers(driverLat, driverLng, order); window.mapFitted = true; }
 
+      const bikeImg = document.getElementById("bikeImage");
       if(!driverMarker){
-        driverMarker = L.marker([driverLat, driverLng], { icon:bikeIcon }).addTo(orderMap);
-        
+        driverMarker = L.marker([driverLat, driverLng], { icon:bikeIcon }).addTo(orderMap).bindPopup("سائق التوصيل");
       }else{
-        const current =
-driverMarker.getLatLng();
-
-const startLat = current.lat;
-const startLng = current.lng;
-
-const steps = 120;
-let step = 0;
-
-if(driverAnimation){
-  clearInterval(driverAnimation);
-}
-
-driverAnimation = setInterval(() => {
-
-  step++;
-
-  const lat =
-  startLat +
-  ((driverLat - startLat) * step / steps);
-
-  const lng =
-  startLng +
-  ((driverLng - startLng) * step / steps);
-bikeRotation =
-calculateBearing(
-startLat,
-startLng,
-driverLat,
-driverLng
-);
-const bikeImg =
-document.getElementById("bikeImage");
-
-if(bikeImg){
-  bikeImg.style.transform =
-  `rotate(${bikeRotation}deg)`;
-}
-  driverMarker.setLatLng([lat,lng]);
-  if(step >= steps){
-  
-}
-  if(step >= steps){
-    clearInterval(driverAnimation);
-driverAnimation = null;
-  }
-
-},25);
+        const current = driverMarker.getLatLng();
+        const startLat = current.lat;
+        const startLng = current.lng;
+        const steps = 60;
+        let step = 0;
+        if(driverAnimation) clearInterval(driverAnimation);
+        driverAnimation = setInterval(() => {
+          step++;
+          const lat = startLat + ((driverLat - startLat) * step / steps);
+          const lng = startLng + ((driverLng - startLng) * step / steps);
+          bikeRotation = calculateBearing(startLat, startLng, driverLat, driverLng);
+          if(bikeImg) bikeImg.style.transform = `rotate(${bikeRotation}deg)`;
+          driverMarker.setLatLng([lat,lng]);
+          if(step >= steps){ clearInterval(driverAnimation); driverAnimation = null; }
+        }, 20);
       }
 
-      const storeTarget = getStoreTarget(order);
-
-    if([
-"accepted",
-"driver_accepted",
-"going_to_store",
-"driver_to_store",
-"preparing_order",
-"driver_arrived_store"
-].includes(order.status)){
-        if(storeTarget) drawRoute(
- driverLat,
- driverLng,
- storeTarget.lat,
- storeTarget.lng,
- "#ff6600"
-);
-      }else if([
-"picked_up",
-"on_the_way",
-"arrived",
-"driver_arrived_customer",
-"delivered"
-].includes(order.status)){
-       drawRoute(
- driverLat,
- driverLng,
- Number(order.customerLat),
- Number(order.customerLng),
-"#0066ff"
-);
+      const status = String(order.status || "");
+      if(["accepted","driver_accepted","going_to_store","driver_to_store","preparing_order","driver_arrived_store"].includes(status)){
+        const storeWaypoints = buildWaypointsForStores(order, driverLat, driverLng);
+        if(storeWaypoints.length >= 2) drawRoute(storeWaypoints, "#ff6600");
+      }else if(["picked_up","on_the_way","arrived","driver_arrived_customer","delivered","customer_rated"].includes(status)){
+        drawRoute([L.latLng(driverLat, driverLng), L.latLng(Number(order.customerLat), Number(order.customerLng))], "#0066ff");
       }
     }
 
-    function buildStars(){
-      const starsGrid = document.getElementById("starsGrid");
-      starsGrid.innerHTML = "";
-      for(let i = 1; i <= 10; i++){
-        const btn = document.createElement("button");
-        btn.type = "button";
-        btn.className = "star-btn";
-        btn.dataset.rating = String(i);
-        btn.innerHTML = `<i class="fa-solid fa-star"></i> ${i}`;
-        btn.addEventListener("click", () => selectRating(i));
-        starsGrid.appendChild(btn);
-      }
-    }
-
-    function selectRating(value){
-      currentRating = value;
-      document.getElementById("ratingScore").innerHTML = `تم اختيار تقييم: ${value} من 10`;
-      document.querySelectorAll(".star-btn").forEach(btn => {
-        btn.classList.toggle("active", Number(btn.dataset.rating) <= value);
-      });
-      document.getElementById("ratingSubmit").classList.add("enabled");
-    }
-
-    async function submitRating(){
-      if(!currentOrderId || !currentRating) return;
-      try{
-        await update(ref(database, "orders/" + currentOrderId), {
-          customerRating: currentRating,
-          customerRated: true,
-          customerRatedAt: Date.now(),
-          customerRatedBy: currentUser.id,
-          status: "customer_rated"
-        });
-      }catch(e){}
-      openHomeAfterOrder("تم تقييم السائق بنجاح");
-    }
-
-    document.getElementById("ratingSubmit").addEventListener("click", submitRating);
-    buildStars();
-
+    function buildStars(){ const starsGrid = document.getElementById("starsGrid"); starsGrid.innerHTML = ""; for(let i=1;i<=10;i++){ const btn = document.createElement("button"); btn.type = "button"; btn.className = "star-btn"; btn.dataset.rating = String(i); btn.innerHTML = `<i class="fa-solid fa-star"></i> ${i}`; btn.addEventListener("click", () => selectRating(i)); starsGrid.appendChild(btn); } }
+    function selectRating(value){ currentRating = value; document.getElementById("ratingScore").innerHTML = `تم اختيار تقييم: ${value} من 10`; document.querySelectorAll(".star-btn").forEach(btn => btn.classList.toggle("active", Number(btn.dataset.rating) <= value)); document.getElementById("ratingSubmit").classList.add("enabled"); }
+    async function submitRating(){ if(!currentOrderId || !currentRating) return; try{ await update(ref(database, "orders/" + currentOrderId), { customerRating: currentRating, customerRated: true, customerRatedAt: Date.now(), customerRatedBy: currentUser.id, status: "customer_rated" }); }catch(e){} openHomeAfterOrder("تم تقييم السائق بنجاح"); }
+    document.getElementById("ratingSubmit").addEventListener("click", submitRating); buildStars();
 
     function openOrderPage(){
       document.getElementById("singleStorePage").style.display = "none";
@@ -1587,21 +1037,18 @@ driverAnimation = null;
       document.getElementById("orderPage").style.display = "block";
       document.getElementById("bottomBar").style.display = "none";
       stopOrderListener();
-
-      if(!currentOrderId){
-        currentOrderId = localStorage.getItem("currentOrderId") || "";
-      }
-      if(!currentOrderId){
-        openHomeAfterOrder();
-        return;
-      }
+      window.mapFitted = false;
+      lastRouteKey = "";
+      if(!currentOrderId) currentOrderId = localStorage.getItem("currentOrderId") || "";
+      if(!currentOrderId){ openHomeAfterOrder(); return; }
 
       const setDriverInfo = (order) => {
         document.getElementById("driverName").innerHTML = order.acceptedDriver || order.driverName || "السائق";
         document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
         document.getElementById("driverImage").src = order.driverImage || "driver.png";
         document.getElementById("whatsappBtn").onclick = function(){
-          if(order.driverPhone) window.open(`https://wa.me/${order.driverPhone}`);
+          const waPhone = normalizePhoneForWhatsApp(order.driverPhone || "");
+          if(waPhone) window.open(`https://wa.me/${waPhone}`, "_blank");
           else alert("لا يوجد رقم للسائق");
         };
       };
@@ -1613,15 +1060,10 @@ driverAnimation = null;
         setDriverInfo(order);
         updateDriverLocation(order);
       };
-window.mapFitted = false;
-lastRouteKey = "";
+
       const orderRef = ref(database, "orders/" + currentOrderId);
       orderUnsubscribe = onValue(orderRef, (snapshot) => {
-        if(!snapshot.exists()){
-          openHomeAfterOrder("تم إلغاء الطلب");
-          return;
-        }
-
+        if(!snapshot.exists()){ openHomeAfterOrder("تم إلغاء الطلب"); return; }
         const order = snapshot.val();
         const status = String(order.status || "");
         startOrderTimer(order.createdAt || Date.now());
@@ -1693,9 +1135,7 @@ lastRouteKey = "";
           document.getElementById("liveStatus").innerHTML = order.customerRated ? "تم تقييم السائق مسبقاً" : "قيم السائق الآن ثم ارجع للرئيسية";
           setDriverInfo(order);
           updateDriverLocation(order);
-          if(order.customerRated){
-            setTimeout(() => openHomeAfterOrder(), 1200);
-          }
+          if(order.customerRated){ setTimeout(() => openHomeAfterOrder(), 1200); }
           return;
         }
 
@@ -1706,52 +1146,26 @@ lastRouteKey = "";
       });
     }
 
-
     window.sendOrder = async function(){
-      const sendBtn = document.getElementById("sendOrderBtn");
-      if(sendBtn.disabled || localStorage.getItem("sendingOrder") === "true") return;
-
-      sendBtn.disabled = true;
-      sendBtn.innerHTML = "جاري ارسال الطلب...";
-
-      if(cart.length === 0){
-        alert("السلة فارغة");
-        sendBtn.disabled = false;
-        sendBtn.innerHTML = "طلب توصيل 🚀";
-        return;
-      }
-
-      if(!navigator.geolocation || !navigator.geolocation.getCurrentPosition){
-        alert("المتصفح لا يدعم تحديد الموقع");
-        sendBtn.disabled = false;
-        sendBtn.innerHTML = "طلب توصيل 🚀";
-        return;
-      }
+      if(sendOrderBtn.disabled || localStorage.getItem("sendingOrder") === "true") return;
+      restoreSendOrderButton();
+      sendOrderBtn.disabled = true;
+      sendOrderBtn.innerHTML = "جاري ارسال الطلب...";
+      if(cart.length === 0){ alert("السلة فارغة"); restoreSendOrderButton(); return; }
+      if(!navigator.geolocation || !navigator.geolocation.getCurrentPosition){ alert("المتصفح لا يدعم تحديد الموقع"); restoreSendOrderButton(); return; }
 
       navigator.geolocation.getCurrentPosition(async (position) => {
         let orderSaved = false;
         try{
           localStorage.setItem("sendingOrder", "true");
-
-          let total = 0;
-          cart.forEach(item => { total += Number(item.price) * Number(item.qty); });
+          let total = 0; cart.forEach(item => { total += Number(item.price) * Number(item.qty); });
           const tip = Number(document.getElementById("tipInput").value || 0);
           const newOrderId = "ORDER" + Date.now();
-
           const uniqueStoreIds = [...new Set(cart.map(item => item.storeId).filter(Boolean))];
           const storesData = uniqueStoreIds.map(storeId => {
             const store = getStoreById(storeId);
-            return {
-              storeId: store?.id || "",
-              storeImage: store?.store_image || store?.image || "",
-              storeName: store?.store_name || "",
-              storeLat: store?.latitude || "",
-              storeLng: store?.longitude || "",
-              storePhone: store?.phone || "",
-              storeToken: store ? getStoreToken(store.id) : ""
-            };
+            return { storeId: store?.id || "", storeImage: store?.store_image || store?.image || "", storeName: store?.store_name || "", storeLat: store?.latitude || "", storeLng: store?.longitude || "", storePhone: store?.phone || "", storeToken: store ? getStoreToken(store.id) : "" };
           });
-
           const firstStore = getStoreById(cart[0].storeId);
           const orderData = {
             id: newOrderId,
@@ -1761,17 +1175,7 @@ lastRouteKey = "";
             customerPhone: currentUser.phone || "",
             customerAddress: currentUser.address || "",
             customerToken: getMyFcmToken(),
-            items: cart.map(item => ({
-              id: item.id || "",
-              name: item.name || "",
-              price: Number(item.price || 0),
-              qty: Number(item.qty || 1),
-              totalPrice: Number(item.price || 0) * Number(item.qty || 1),
-              image: item.image || "",
-              description: item.description || "",
-              storeId: item.storeId || "",
-              storeName: item.storeName || ""
-            })),
+            items: cart.map(item => ({ id: item.id || "", name: item.name || "", price: Number(item.price || 0), qty: Number(item.qty || 1), totalPrice: Number(item.price || 0) * Number(item.qty || 1), image: item.image || "", description: item.description || "", storeId: item.storeId || "", storeName: item.storeName || "" })),
             storeId: cart[0].storeId || "",
             storeName: cart[0].storeName || "",
             storeImage: firstStore?.store_image || firstStore?.image || "",
@@ -1795,47 +1199,29 @@ lastRouteKey = "";
             createdTime: new Date().toLocaleTimeString("ar-EG"),
             customerLat: position.coords.latitude,
             customerLng: position.coords.longitude,
-            statusHistory: [{
-              status: "waiting_driver",
-              at: Date.now(),
-              by: currentUser.id
-            }]
+            statusHistory: [{ status: "waiting_driver", at: Date.now(), by: currentUser.id }]
           };
-
-          console.log("ORDER DATA:", orderData);
           await set(ref(database, "orders/" + newOrderId), orderData);
-
           localStorage.setItem("currentOrderId", newOrderId);
           currentOrderId = newOrderId;
           orderSaved = true;
           localStorage.removeItem("sendingOrder");
-
           notifyNewDeliveryOrder(orderData).catch(() => {});
-
           cart = [];
           localStorage.removeItem("cart");
           updateCart();
-
-          sendBtn.disabled = false;
-          sendBtn.innerHTML = "تم ارسال الطلب";
-
+          restoreSendOrderButton();
           document.getElementById("orderPage").style.display = "block";
           document.getElementById("bottomBar").style.display = "none";
           document.querySelectorAll(".page").forEach(page => page.classList.remove("active-page"));
           openOrderPage();
-
           setTimeout(async () => {
             try{
               const checkOrder = await get(ref(database, "orders/" + newOrderId));
               if(checkOrder.exists()){
                 const order = checkOrder.val();
                 if(order.status === "waiting_driver"){
-                  await update(ref(database, "orders/" + newOrderId), {
-                    status: "failed_no_driver",
-                    statusText: "تم رفض الطلب بسبب عدم توفر سائق",
-                    failedDriverSearch: true,
-                    closedAt: Date.now()
-                  });
+                  await update(ref(database, "orders/" + newOrderId), { status:"failed_no_driver", statusText:"تم رفض الطلب بسبب عدم توفر سائق", failedDriverSearch:true, closedAt:Date.now() });
                 }
               }
             }catch(e){}
@@ -1843,43 +1229,24 @@ lastRouteKey = "";
         }catch(error){
           console.error("ORDER ERROR:", error);
           localStorage.removeItem("sendingOrder");
-          sendBtn.disabled = false;
-          sendBtn.innerHTML = "طلب توصيل 🚀";
+          restoreSendOrderButton();
           alert("فشل ارسال الطلب: " + (error?.message || error));
-        }finally{
-          if(!orderSaved){
-            localStorage.removeItem("sendingOrder");
-          }
-        }
-      }, () => {
-        sendBtn.disabled = false;
-        sendBtn.innerHTML = "طلب توصيل 🚀";
-        localStorage.removeItem("sendingOrder");
-        alert("يرجى تشغيل GPS");
-      }, { enableHighAccuracy:true, maximumAge:0, timeout:10000 });
+        }finally{ if(!orderSaved) localStorage.removeItem("sendingOrder"); }
+      }, () => { restoreSendOrderButton(); alert("يرجى تشغيل GPS"); }, { enableHighAccuracy:true, maximumAge:0, timeout:10000 });
     };
 
     navigator.geolocation.watchPosition(
       (position) => {
         userLatitude = position.coords.latitude;
         userLongitude = position.coords.longitude;
-
         set(ref(database, "customers/" + currentUser.id + "/userLat"), userLatitude);
         set(ref(database, "customers/" + currentUser.id + "/userLng"), userLongitude);
-
         localStorage.setItem("userLat", userLatitude);
         localStorage.setItem("userLng", userLongitude);
-
         const savedUser = JSON.parse(localStorage.getItem("user") || "null");
-        if(savedUser){
-          savedUser.userLat = userLatitude;
-          savedUser.userLng = userLongitude;
-          localStorage.setItem("user", JSON.stringify(savedUser));
-        }
-
+        if(savedUser){ savedUser.userLat = userLatitude; savedUser.userLng = userLongitude; localStorage.setItem("user", JSON.stringify(savedUser)); }
         taxiUserLat = userLatitude;
         taxiUserLng = userLongitude;
-
         if(allStores.length === 0) startLiveStores();
       },
       () => { alert("يرجى تشغيل GPS"); },
@@ -1889,38 +1256,18 @@ lastRouteKey = "";
     startAdsSlider();
 
     window.openMap = function(event, latitude, longitude){
-      event.preventDefault();
-      event.stopPropagation();
-      if(!latitude || !longitude){
-        alert("لا يوجد موقع للمتجر");
-        return;
-      }
+      event.preventDefault(); event.stopPropagation();
+      if(!latitude || !longitude){ alert("لا يوجد موقع للمتجر"); return; }
       document.getElementById("mapModal").style.display = "flex";
       document.getElementById("mapFrame").src = `https://maps.google.com/maps?q=${latitude},${longitude}&z=16&output=embed`;
     };
-
-    window.closeMap = function(){
-      document.getElementById("mapModal").style.display = "none";
-      document.getElementById("mapFrame").src = "";
-    };
-
-    window.logout = function(){
-      localStorage.clear();
-      sessionStorage.clear();
-      window.location.href = "index.html";
-    };
+    window.closeMap = function(){ document.getElementById("mapModal").style.display = "none"; document.getElementById("mapFrame").src = ""; };
+    window.logout = function(){ localStorage.clear(); sessionStorage.clear(); window.location.href = "index.html"; };
 
     history.pushState(null, null, location.href);
-    window.onpopstate = function(){
-      const oid = localStorage.getItem("currentOrderId");
-      if(oid){
-        openOrderPage();
-        history.pushState(null, null, location.href);
-      }
-    };
-
-    document.addEventListener("gesturestart", function(e){ e.preventDefault(); });
-    document.addEventListener("dblclick", function(e){ e.preventDefault(); }, { passive:false });
+    window.onpopstate = function(){ const oid = localStorage.getItem("currentOrderId"); if(oid){ openOrderPage(); history.pushState(null, null, location.href); } };
+    document.addEventListener("gesturestart", e => e.preventDefault());
+    document.addEventListener("dblclick", e => e.preventDefault(), { passive:false });
 
     onValue(ref(database, "orders"), (snapshot) => {
       let all = 0, accepted = 0, rejected = 0, delivered = 0;
@@ -1940,42 +1287,21 @@ lastRouteKey = "";
       document.getElementById("deliveredOrders").innerHTML = delivered;
     });
 
-    window.copyInviteCode = async function(){
-      try{
-        const code = document.getElementById("inviteCode").value;
-        await navigator.clipboard.writeText(code);
-        alert("تم نسخ الكود");
-      }catch{
-        alert("فشل نسخ الكود");
-      }
-    };
-
-    window.pasteCode = async function(){
-      try{
-        const text = await navigator.clipboard.readText();
-        document.getElementById("giftCode").value = text;
-      }catch{
-        alert("فشل لصق الكود");
-      }
-    };
-
+    window.copyInviteCode = async function(){ try{ await navigator.clipboard.writeText(document.getElementById("inviteCode").value); alert("تم نسخ الكود"); }catch{ alert("فشل نسخ الكود"); } };
+    window.pasteCode = async function(){ try{ document.getElementById("giftCode").value = await navigator.clipboard.readText(); }catch{ alert("فشل لصق الكود"); } };
     window.useInviteCode = async function(){
       const code = document.getElementById("giftCode").value.trim();
       if(!code){ alert("الصق الكود"); return; }
       if(code === currentUser.id){ alert("لا يمكنك استخدام كودك"); return; }
-
       const myRef = ref(database, "customers/" + currentUser.id);
       const myData = await get(myRef);
       if(!myData.exists()) return;
-
       const myUser = myData.val();
       if(myUser.usedFreeDelivery === true){ alert("لقد استخدمت التوصيلة المجانية مسبقاً"); return; }
       if(myUser.invitedBy){ alert("لا يمكنك استخدام أكثر من كود"); return; }
-
       const inviterRef = ref(database, "customers/" + code);
       const inviterData = await get(inviterRef);
       if(!inviterData.exists()){ alert("الكود غير صحيح"); return; }
-
       await update(myRef, { freeDelivery:true, usedFreeDelivery:true, invitedBy:code, freeDeliveryUsed:false });
       alert("تم الحصول على توصيلة مجانية 🎉");
       document.getElementById("giftCode").value = "";
@@ -1983,182 +1309,47 @@ lastRouteKey = "";
 
     function getTaxiBasePrice(distanceKm){
       let totalBasePrice = 0;
-      if(distanceKm <= 1) totalBasePrice = 500;
-      else if(distanceKm <= 2) totalBasePrice = 1000;
-      else if(distanceKm <= 3) totalBasePrice = 1500;
-      else if(distanceKm <= 4) totalBasePrice = 2000;
-      else if(distanceKm <= 5) totalBasePrice = 2500;
-      else if(distanceKm <= 7) totalBasePrice = 3500;
-      else if(distanceKm <= 10) totalBasePrice = 5000;
-      else if(distanceKm <= 15) totalBasePrice = 8000;
-      else if(distanceKm <= 20) totalBasePrice = 12000;
-      else if(distanceKm <= 30) totalBasePrice = 16000;
-      else if(distanceKm <= 40) totalBasePrice = 20000;
-      else if(distanceKm <= 50) totalBasePrice = 24000;
-      else totalBasePrice = 24000 + ((distanceKm - 50) * 400);
+      if(distanceKm <= 1) totalBasePrice = 500; else if(distanceKm <= 2) totalBasePrice = 1000; else if(distanceKm <= 3) totalBasePrice = 1500; else if(distanceKm <= 4) totalBasePrice = 2000; else if(distanceKm <= 5) totalBasePrice = 2500; else if(distanceKm <= 7) totalBasePrice = 3500; else if(distanceKm <= 10) totalBasePrice = 5000; else if(distanceKm <= 15) totalBasePrice = 8000; else if(distanceKm <= 20) totalBasePrice = 12000; else if(distanceKm <= 30) totalBasePrice = 16000; else if(distanceKm <= 40) totalBasePrice = 20000; else if(distanceKm <= 50) totalBasePrice = 24000; else totalBasePrice = 24000 + ((distanceKm - 50) * 400);
       return totalBasePrice;
     }
-
-    function updateTaxiPrice(distanceKm){
-      const personsCount = Number(document.getElementById("personsCount").value || 0);
-      const base = getTaxiBasePrice(distanceKm);
-      const extraPersonsPrice = personsCount > 0 ? base * (personsCount * 0.10) : 0;
-      taxiPrice = Math.ceil(Math.round(base + extraPersonsPrice) / 250) * 250;
-      document.getElementById("taxiDistanceText").innerHTML = distanceKm.toFixed(2);
-      document.getElementById("taxiPriceText").innerHTML = taxiPrice.toLocaleString();
-    }
-
+    function updateTaxiPrice(distanceKm){ const personsCount = Number(document.getElementById("personsCount").value || 0); const base = getTaxiBasePrice(distanceKm); const extraPersonsPrice = personsCount > 0 ? base * (personsCount * 0.10) : 0; taxiPrice = Math.ceil(Math.round(base + extraPersonsPrice) / 250) * 250; document.getElementById("taxiDistanceText").innerHTML = distanceKm.toFixed(2); document.getElementById("taxiPriceText").innerHTML = taxiPrice.toLocaleString(); }
     function initTaxiMap(){
       if(taxiMap) return;
-
       const savedUser = JSON.parse(localStorage.getItem("user") || "null");
       taxiUserLat = Number(savedUser?.userLat || localStorage.getItem("userLat") || 0);
       taxiUserLng = Number(savedUser?.userLng || localStorage.getItem("userLng") || 0);
-
-      if(!taxiUserLat || !taxiUserLng){
-        alert("لم يتم العثور على موقعك");
-        closeTaxiPage();
-        return;
-      }
-
+      if(!taxiUserLat || !taxiUserLng){ alert("لم يتم العثور على موقعك"); closeTaxiPage(); return; }
       taxiMap = L.map("taxiMap").setView([taxiUserLat, taxiUserLng], 14);
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(taxiMap);
       L.marker([taxiUserLat, taxiUserLng]).addTo(taxiMap).bindPopup("موقعك الحالي").openPopup();
-
-      taxiMap.on("click", function(e){
-        taxiTargetLat = e.latlng.lat;
-        taxiTargetLng = e.latlng.lng;
-        drawTaxiRoute();
-      });
-
-      document.getElementById("personsCount").addEventListener("change", function(){
-        if(taxiTargetLat && taxiTargetLng) drawTaxiRoute();
-      });
+      taxiMap.on("click", e => { taxiTargetLat = e.latlng.lat; taxiTargetLng = e.latlng.lng; drawTaxiRoute(); });
+      document.getElementById("personsCount").addEventListener("change", () => { if(taxiTargetLat && taxiTargetLng) drawTaxiRoute(); });
     }
-
     function drawTaxiRoute(){
       if(!taxiMap || !taxiTargetLat || !taxiTargetLng) return;
-
-      if(taxiRouteControl){
-        try{ taxiMap.removeControl(taxiRouteControl); }catch(e){}
-      }
-
-      if(taxiTargetMarker){
-        try{ taxiMap.removeLayer(taxiTargetMarker); }catch(e){}
-      }
-
+      if(taxiRouteControl){ try{ taxiMap.removeControl(taxiRouteControl); }catch(e){} }
+      if(taxiTargetMarker){ try{ taxiMap.removeLayer(taxiTargetMarker); }catch(e){} }
       taxiTargetMarker = L.marker([taxiTargetLat, taxiTargetLng]).addTo(taxiMap).bindPopup("مكان الوصول");
-
-      taxiRouteControl = L.Routing.control({
-        waypoints:[L.latLng(taxiUserLat, taxiUserLng), L.latLng(taxiTargetLat, taxiTargetLng)],
-        routeWhileDragging:true,
-        showAlternatives:true,
-        selectRoute:true,
-        altLineOptions:{
-          styles:[
-            { color:"#0066ff", weight:6, opacity:0.7 },
-            { color:"#00aa55", weight:6, opacity:0.7 },
-            { color:"#999999", weight:6, opacity:0.7 }
-          ]
-        },
-      lineOptions:{
- styles:[
-   {
-     color,
-     weight:8,
-     opacity:1
-   },
-   {
-     color:"#ffffff",
-     weight:3,
-     opacity:.5
-   }
- ]
-},
-        createMarker:function(){ return null; },
-        addWaypoints:false,
-        fitSelectedRoutes:true,
-        show:false
-      }).addTo(taxiMap);
-
-      taxiRouteControl.on("routesfound", function(e){
-        const routes = e.routes;
-        if(routes.length > 0){
-          let selectedRoute = routes[0];
-          taxiRouteControl.on("routeselected", function(event){
-            selectedRoute = event.route;
-            const selectedDistance = (selectedRoute.summary.totalDistance / 1000).toFixed(2);
-            updateTaxiPrice(Number(selectedDistance));
-          });
-
-          const route = selectedRoute;
-          taxiDistance = Number((route.summary.totalDistance / 1000).toFixed(2));
-          updateTaxiPrice(taxiDistance);
-        }
-      });
-
-      setTimeout(() => {
-        try{ taxiMap.invalidateSize(); }catch(e){}
-      }, 300);
+      taxiRouteControl = L.Routing.control({ waypoints:[L.latLng(taxiUserLat, taxiUserLng), L.latLng(taxiTargetLat, taxiTargetLng)], routeWhileDragging:true, showAlternatives:true, selectRoute:true, altLineOptions:{ styles:[{ color:"#0066ff", weight:6, opacity:0.7 },{ color:"#00aa55", weight:6, opacity:0.7 },{ color:"#999999", weight:6, opacity:0.7 }] }, lineOptions:{ styles:[{ color:"#ff6600", weight:8, opacity:1 },{ color:"#ffffff", weight:3, opacity:.5 }] }, createMarker:function(){ return null; }, addWaypoints:false, fitSelectedRoutes:true, show:false }).addTo(taxiMap);
+      taxiRouteControl.on("routesfound", function(e){ const routes = e.routes; if(routes.length > 0){ let selectedRoute = routes[0]; taxiRouteControl.on("routeselected", function(event){ selectedRoute = event.route; const selectedDistance = (selectedRoute.summary.totalDistance / 1000).toFixed(2); updateTaxiPrice(Number(selectedDistance)); }); taxiDistance = Number((selectedRoute.summary.totalDistance / 1000).toFixed(2)); updateTaxiPrice(taxiDistance); } });
+      setTimeout(() => { try{ taxiMap.invalidateSize(); }catch(e){} }, 300);
     }
-
-
     window.sendTaxiOrder = async function(){
-      if(!taxiTargetLat || !taxiTargetLng){
-        alert("حدد موقع الوصول");
-        return;
-      }
-
+      if(!taxiTargetLat || !taxiTargetLng){ alert("حدد موقع الوصول"); return; }
       try{
         const tip = Number(document.getElementById("taxiTipInput").value || 0);
         const personsCount = Number(document.getElementById("personsCount").value || 0);
         const orderId = "TAXI" + Date.now();
-
-        const orderData = {
-          id: orderId,
-          requestType: "taxi",
-          targetLocation: `${taxiTargetLat},${taxiTargetLng}`,
-          googleMapsLink: `https://www.google.com/maps?q=${taxiTargetLat},${taxiTargetLng}`,
-          customerId: currentUser.id,
-          customerName: currentUser.name || "",
-          customerPhone: currentUser.phone || "",
-          customerToken: getMyFcmToken(),
-          personsCount,
-          customerLat: taxiUserLat,
-          customerLng: taxiUserLng,
-          targetLat: taxiTargetLat,
-          targetLng: taxiTargetLng,
-          distance: taxiDistance,
-          price: taxiPrice,
-          tip,
-          finalPrice: taxiPrice + tip,
-          status: "pending",
-          statusText: "بانتظار قبول تكسي",
-          createdAt: Date.now(),
-          statusHistory: [{
-            status: "pending",
-            at: Date.now(),
-            by: currentUser.id
-          }]
-        };
-
+        const orderData = { id: orderId, requestType: "taxi", targetLocation: `${taxiTargetLat},${taxiTargetLng}`, googleMapsLink: `https://www.google.com/maps?q=${taxiTargetLat},${taxiTargetLng}`, customerId: currentUser.id, customerName: currentUser.name || "", customerPhone: currentUser.phone || "", customerToken: getMyFcmToken(), personsCount, customerLat: taxiUserLat, customerLng: taxiUserLng, targetLat: taxiTargetLat, targetLng: taxiTargetLng, distance: taxiDistance, price: taxiPrice, tip, finalPrice: taxiPrice + tip, status: "pending", statusText: "بانتظار قبول تكسي", createdAt: Date.now(), statusHistory: [{ status: "pending", at: Date.now(), by: currentUser.id }] };
         await set(ref(database, "taxi_orders/" + orderId), orderData);
         notifyTaxiOrder(orderData).catch(()=>{});
         alert("تم ارسال طلب التكسي خلال ساعة اذا لم يتصل بك السائق فسوف يتم حذف طلبك  🚕");
         document.getElementById("taxiPage").style.display = "none";
         showAppPage("homePage", document.querySelector(".bottom-bar .nav-item"));
-      }catch(error){
-        console.error("TAXI ORDER ERROR:", error);
-        alert("فشل ارسال طلب التكسي: " + (error?.message || error));
-      }
+      }catch(error){ console.error("TAXI ORDER ERROR:", error); alert("فشل ارسال طلب التكسي: " + (error?.message || error)); }
     };
 
-    if(currentOrderId){
-      openOrderPage();
-    }else{
-      document.getElementById("bottomBar").style.display = "flex";
-      document.getElementById("orderPage").style.display = "none";
-    }
+    if(currentOrderId) openOrderPage(); else { document.getElementById("bottomBar").style.display = "flex"; document.getElementById("orderPage").style.display = "none"; }
   </script>
 
   <div id="mapModal" class="map-modal">
