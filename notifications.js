@@ -145,14 +145,14 @@ async function notifyNewDeliveryOrder(orderData) {
   await Promise.allSettled([
     sendNotificationToMany(
       storeTokens,
-      `طلب جديد من ${orderData.customerName || "زبون"}`,
+      `اكو طلب جديد من ${orderData.customerName || "زبون"}`,
       "يوجد طلب جديد بانتظار قبول سائق توصيل",
       { orderId: orderData.id, status: orderData.status, type: "delivery" }
     ),
     sendNotificationToMany(
       driverTokens,
-      `طلب جديد من ${orderData.customerName || "زبون"}`,
-      `يوجد طلب جديد من ${orderData.storeName || "متجر"} بانتظار القبول`,
+      `اكو طلب جديد من ${orderData.customerName || "زبون"}`,
+      `يوجد طلب جديد في متجر ${orderData.storeName || "متجر"} بانتظار القبول`,
       { orderId: orderData.id, status: orderData.status, type: "delivery" }
     ),
     sendNotificationToToken(
