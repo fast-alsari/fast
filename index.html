@@ -402,7 +402,17 @@ document.addEventListener("click",(e)=>{
       const status = String(user?.status || "pending");
       if (status === "active") return "";
       if (status === "pending") {
-        return `حسابك قيد المراجعة حالياً.<br><br>انتظر ريثما يتم تفعيل الحساب.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة عبر واتساب للدفع والتفعيل</a>`;
+        return `
+حسابك قيد المراجعة حالياً.<br><br>
+انتظر ريثما يتم تفعيل الحساب.
+
+<br><br>
+
+<a href="${PENDING_CONTACT_URL}" target="_blank" class="contact-admin-btn">
+<i class="fa-brands fa-whatsapp"></i>
+تواصل مع إدارة التطبيق
+</a>
+`;
       }
       if (status === "banned") {
         return `حسابك محظور حالياً.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة</a>`;
