@@ -14,15 +14,16 @@
 
   <style>
     *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
-    body{background:#f5f5f5;color:#222;padding:16px;padding-bottom:120px}
+    body{background:#f5f5f5;color:#222;padding:14px;padding-bottom:120px}
     button,input,select,textarea{font-family:inherit}
     img{max-width:100%;display:block;-webkit-user-drag:none;user-select:none;image-rendering:auto}
-    .wrap{max-width:1180px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+    .wrap{max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
 
     .panel{background:#fff;border-radius:28px;box-shadow:0 10px 28px rgba(0,0,0,.08);overflow:hidden}
     .panel-body{padding:18px}
     .section-title{display:flex;align-items:center;gap:10px;font-size:20px;font-weight:900;color:#ff8800;margin-bottom:12px}
     .muted{color:#777;font-size:13px;line-height:1.9}
+    .small-note{color:#888;font-size:12px;line-height:1.8}
 
     .top-card{padding:18px}
     .top-row{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap}
@@ -51,7 +52,7 @@
     .stat-value{margin-top:10px;font-size:27px;font-weight:900;color:#ff6600;line-height:1.1}
     .stat-sub{margin-top:6px;font-size:12px;color:#888;line-height:1.5}
 
-    .grid-2{display:grid;grid-template-columns:1.1fr .9fr;gap:16px}
+    .grid-2{display:grid;grid-template-columns:1.05fr .95fr;gap:16px}
     .pad{padding:18px}
     .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
     .search-input,.text-input,.select-input,.time-select,textarea{
@@ -72,14 +73,9 @@
     .st-cancel{background:#ffe5e5;color:#d11d1d}
     .st-nodriver{background:#f2f2f2;color:#666}
     .st-pending{background:#fff1dc;color:#b76a00}
+
     .stock-ok{background:#e7fff3;color:#0b8d57}
     .stock-no{background:#ffe5e5;color:#d11d1d}
-
-    .icon-btn{width:40px;height:40px;border:none;border-radius:14px;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;font-size:15px}
-    .icon-btn.edit{background:#fff7ef;color:#ff6600}
-    .icon-btn.del{background:#ffe5e5;color:#d11d1d}
-    .icon-btn.on{background:#e7fff3;color:#0b8d57}
-    .icon-btn.off{background:#f0f0f0;color:#666}
 
     .product-card{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #eee;border-radius:22px;padding:14px;box-shadow:0 4px 14px rgba(0,0,0,.04)}
     .product-image{width:110px;height:110px;border-radius:18px;object-fit:cover;background:#eee;flex-shrink:0}
@@ -90,14 +86,12 @@
     .product-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
 
     .schedule-grid{display:flex;flex-direction:column;gap:12px}
-    .schedule-row{display:grid;grid-template-columns:110px 1fr 1fr;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid #eee}
-    .schedule-day{font-weight:900;color:#444}
     .schedule-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
     .hidden{display:none !important}
 
     .overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99999;align-items:center;justify-content:center;padding:18px}
     .overlay.show{display:flex}
-    .overlay-box{width:100%;max-width:920px;background:#fff;border-radius:26px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.3)}
+    .overlay-box{width:100%;max-width:980px;background:#fff;border-radius:26px;overflow:hidden;box-shadow:0 18px 50px rgba(0,0,0,.3)}
     .overlay-head{padding:16px 18px;background:linear-gradient(135deg,#ff8800,#ff5500);color:#fff;display:flex;justify-content:space-between;align-items:center;gap:12px}
     .overlay-title{font-size:18px;font-weight:900}
     .overlay-close{width:40px;height:40px;border:none;border-radius:50%;background:#fff;color:#ff6600;font-size:18px;cursor:pointer;flex-shrink:0}
@@ -119,7 +113,10 @@
     .notice-icon{width:60px;height:60px;margin:0 auto 12px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#ff8800,#ff5500);color:#fff;font-size:24px;font-weight:900}
     .notice-h{font-size:18px;font-weight:900;margin-bottom:8px}
     .notice-p{font-size:15px;line-height:1.9;color:#555;word-break:break-word}
-    .notice-btn{margin-top:16px;width:100%;height:48px;border:none;border-radius:16px;background:#ff8800;color:#fff;font-weight:900;font-size:16px;cursor:pointer}
+    .notice-actions{display:flex;gap:10px;margin-top:16px}
+    .notice-btn{flex:1;height:48px;border:none;border-radius:16px;font-weight:900;font-size:16px;cursor:pointer}
+    .notice-ok{background:#ff8800;color:#fff}
+    .notice-cancel{background:#f2f2f2;color:#333}
 
     .map-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.52);z-index:99998;align-items:center;justify-content:center;padding:18px}
     .map-modal.show{display:flex}
@@ -134,7 +131,6 @@
       .actions{width:100%;justify-content:stretch}
       .actions .btn{flex:1}
       .stats{grid-template-columns:1fr}
-      .schedule-row{grid-template-columns:1fr}
       .product-card{flex-direction:column}
       .product-image{width:100%;height:220px}
       th,td{font-size:13px}
@@ -165,26 +161,32 @@
     <div class="panel">
       <div class="panel-body">
         <div class="section-title"><i class="fa-solid fa-chart-column"></i> الإحصائيات</div>
-        <div class="muted">كل بطاقة صغيرة ومختصرة، وعند الضغط عليها تظهر التفاصيل الخاصة بهذا المتجر فقط.</div>
+        <div class="muted">كل بطاقة تعرض بيانات هذا المتجر فقط، وعند الضغط عليها تظهر التفاصيل داخل نافذة مرتبة.</div>
       </div>
       <div class="panel-body" style="padding-top:0">
         <div class="stats">
           <div class="stat" onclick="openStatsModal('current')">
             <div class="stat-top"><div class="stat-label">الطلبات الحالية</div><div class="stat-icon"><i class="fa-solid fa-spinner"></i></div></div>
             <div class="stat-value" id="pendingOrders">0</div>
-            <div class="stat-sub">طلبات هذا المتجر فقط</div>
+            <div class="stat-sub">الطلبات الجديدة والجارية</div>
           </div>
 
           <div class="stat" onclick="openStatsModal('delivered')">
             <div class="stat-top"><div class="stat-label">الطلبات المنجزة</div><div class="stat-icon"><i class="fa-solid fa-truck-fast"></i></div></div>
             <div class="stat-value" id="completedOrders">0</div>
-            <div class="stat-sub">الطلبات التي وصلت</div>
+            <div class="stat-sub">الطلبات التي تم توصيلها</div>
           </div>
 
           <div class="stat" onclick="openStatsModal('cancelled_customer')">
             <div class="stat-top"><div class="stat-label">طلبات ملغاة من الزبون</div><div class="stat-icon"><i class="fa-solid fa-circle-xmark"></i></div></div>
             <div class="stat-value" id="cancelledOrders">0</div>
-            <div class="stat-sub">طلبات هذا المتجر فقط</div>
+            <div class="stat-sub">ملغاة من الزبون فقط</div>
+          </div>
+
+          <div class="stat" onclick="openStatsModal('no_driver')">
+            <div class="stat-top"><div class="stat-label">لم يجد سائق</div><div class="stat-icon"><i class="fa-solid fa-user-slash"></i></div></div>
+            <div class="stat-value" id="noDriverOrders">0</div>
+            <div class="stat-sub">الطلبات التي لم تُسند</div>
           </div>
 
           <div class="stat" onclick="openStatsModal('monthly_sales_current')">
@@ -196,7 +198,7 @@
           <div class="stat" onclick="openStatsModal('monthly_sales_previous')">
             <div class="stat-top"><div class="stat-label">مبيعات الشهر السابق</div><div class="stat-icon"><i class="fa-solid fa-calendar-minus"></i></div></div>
             <div class="stat-value" id="lastMonthSales">0 د.ع</div>
-            <div class="stat-sub">شهر كامل سابق</div>
+            <div class="stat-sub">الشهر السابق بالكامل</div>
           </div>
 
           <div class="stat" onclick="scrollToProducts()">
@@ -212,21 +214,21 @@
       <div class="panel">
         <div class="panel-body">
           <div class="section-title"><i class="fa-solid fa-clock"></i> جدول أوقات الدوام</div>
-          <div class="muted">الأيام ثابتة، وكل يوم يملك قائمتين منسدلتين: من / إلى. اضغط تعديل ثم احفظ.</div>
+          <div class="muted">الأيام ثابتة، ولكل يوم قائمتان منسدلتان: من / إلى. اضغط تعديل ثم احفظ.</div>
         </div>
         <div class="pad">
           <div id="workingHoursBox"></div>
           <div class="schedule-actions">
-            <button class="btn btn-primary" onclick="toggleWorkingHoursEdit()"><i class="fa-solid fa-pen-to-square"></i> تعديل الجدول</button>
-            <button class="btn btn-success" onclick="saveWorkingHours()"><i class="fa-solid fa-floppy-disk"></i> حفظ الجدول</button>
+            <button class="btn btn-primary" id="editHoursBtn" onclick="toggleWorkingHoursEdit()"><i class="fa-solid fa-pen-to-square"></i> تعديل الجدول</button>
+            <button class="btn btn-success" id="saveHoursBtn" onclick="saveWorkingHours()"><i class="fa-solid fa-floppy-disk"></i> حفظ الجدول</button>
           </div>
         </div>
       </div>
 
-      <div class="panel" id="quickAddCard">
+      <div class="panel">
         <div class="panel-body">
           <div class="section-title"><i class="fa-solid fa-circle-plus"></i> رفع منتج جديد</div>
-          <div class="muted">بعد الرفع يظهر المنتج هنا، ويمكنك تبديل الحالة بين متوفر وغير متوفر من داخل البطاقة.</div>
+          <div class="muted">بعد الرفع يظهر في قائمة المنتجات، ويمكن تبديل الحالة بين متوفر وغير متوفر من البطاقة نفسها.</div>
         </div>
         <div class="pad">
           <div class="toolbar"><input type="file" id="productImage" accept="image/*" class="text-input"></div>
@@ -254,7 +256,10 @@
       <div class="notice-icon">✓</div>
       <div class="notice-h" id="noticeTitle">تنبيه</div>
       <div class="notice-p" id="noticeText">...</div>
-      <button class="notice-btn" id="noticeOkBtn" type="button">حسنًا</button>
+      <div class="notice-actions">
+        <button class="notice-btn notice-cancel" id="noticeCancelBtn" type="button" style="display:none;">إلغاء</button>
+        <button class="notice-btn notice-ok" id="noticeOkBtn" type="button">حسنًا</button>
+      </div>
     </div>
   </div>
 
@@ -280,7 +285,7 @@
     import { getDatabase, ref, set, onValue, update, get } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
     const firebaseConfig = {
-      apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
+      apiKey: "AIzaSyC7QQTYMSGRV_nraJBneBqDqYGhugF0Pw",
       authDomain: "fast-937c9.firebaseapp.com",
       projectId: "fast-937c9",
       databaseURL: "https://fast-937c9-default-rtdb.europe-west1.firebasedatabase.app"
@@ -289,8 +294,11 @@
     const app = initializeApp(firebaseConfig);
     const database = getDatabase(app);
     const IMAGE_UPLOAD_WORKER_URL = "https://floral-pine-2aa7.ahmed-a-ahmed00457.workers.dev/";
+
     const currentUser = JSON.parse(localStorage.getItem("user") || "null");
-    if(!currentUser || !currentUser.id) window.location.href = "index.html";
+    if(!currentUser || !currentUser.id){
+      window.location.replace("index.html");
+    }
 
     const daysList = ["الأحد", "الاثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت"];
     const timeOptions = ["مغلق", ...Array.from({length:12}, (_,i) => `${i+1} AM`), ...Array.from({length:12}, (_,i) => `${i+1} PM`)];
@@ -305,6 +313,7 @@
       noticeTitle: document.getElementById("noticeTitle"),
       noticeText: document.getElementById("noticeText"),
       noticeOkBtn: document.getElementById("noticeOkBtn"),
+      noticeCancelBtn: document.getElementById("noticeCancelBtn"),
       detailModal: document.getElementById("detailModal"),
       detailTitle: document.getElementById("detailTitle"),
       detailBody: document.getElementById("detailBody"),
@@ -323,6 +332,8 @@
       cancelledOrders: document.getElementById("cancelledOrders"),
       noDriverOrders: document.getElementById("noDriverOrders"),
       productsTotal: document.getElementById("productsTotal"),
+      editHoursBtn: document.getElementById("editHoursBtn"),
+      saveHoursBtn: document.getElementById("saveHoursBtn"),
       storeMapFrame: document.getElementById("storeMapFrame")
     };
 
@@ -338,9 +349,20 @@
       return String(text ?? "").replace(/[&<>\"]/g, s => ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"})[s] || s);
     }
 
+    function formatIqd(value){
+      return `${Number(value || 0).toLocaleString("en-US")} د.ع`;
+    }
+
+    function parsePrice(v){
+      const n = Number(String(v ?? "").replace(/,/g, ""));
+      return Number.isFinite(n) ? n : 0;
+    }
+
     function showNotice(message, title = "تنبيه"){
       ui.noticeTitle.textContent = title;
       ui.noticeText.innerHTML = String(message ?? "");
+      ui.noticeCancelBtn.style.display = "none";
+      ui.noticeOkBtn.textContent = "حسنًا";
       ui.noticeModal.classList.add("show");
       ui.noticeModal.setAttribute("aria-hidden", "false");
     }
@@ -350,28 +372,57 @@
       ui.noticeModal.setAttribute("aria-hidden", "true");
     }
 
-    ui.noticeOkBtn.addEventListener("click", hideNotice);
-    ui.noticeModal.addEventListener("click", (e) => { if(e.target === ui.noticeModal) hideNotice(); });
-    window.addEventListener("keydown", (e) => { if(e.key === "Escape"){ hideNotice(); closeDetailModal(); } });
+    function askConfirm(message, title = "تأكيد"){
+      return new Promise((resolve) => {
+        ui.noticeTitle.textContent = title;
+        ui.noticeText.innerHTML = String(message ?? "");
+        ui.noticeCancelBtn.style.display = "block";
+        ui.noticeOkBtn.textContent = "نعم";
+        ui.noticeModal.classList.add("show");
+        ui.noticeModal.setAttribute("aria-hidden", "false");
+
+        const cleanup = (result) => {
+          ui.noticeCancelBtn.removeEventListener("click", cancelHandler);
+          ui.noticeOkBtn.removeEventListener("click", okHandler);
+          hideNotice();
+          resolve(result);
+        };
+
+        const okHandler = () => cleanup(true);
+        const cancelHandler = () => cleanup(false);
+
+        ui.noticeOkBtn.addEventListener("click", okHandler, { once:true });
+        ui.noticeCancelBtn.addEventListener("click", cancelHandler, { once:true });
+      });
+    }
+
+    ui.noticeOkBtn.addEventListener("click", () => {
+      if(ui.noticeCancelBtn.style.display !== "block") hideNotice();
+    });
+
+    ui.noticeModal.addEventListener("click", (e) => {
+      if(e.target === ui.noticeModal) hideNotice();
+    });
+
+    window.addEventListener("keydown", (e) => {
+      if(e.key === "Escape"){
+        hideNotice();
+        closeDetailModal();
+      }
+    });
+
     window.alert = (message) => showNotice(message, "تنبيه");
 
     function showSaving(message = "جاري الحفظ..."){
-      ui.noticeOkBtn.style.display = "none";
+      ui.noticeCancelBtn.style.display = "none";
+      ui.noticeOkBtn.textContent = "انتظر";
       showNotice(message, "جاري الحفظ");
     }
 
     function showSaved(message = "تم الحفظ بنجاح"){
-      ui.noticeOkBtn.style.display = "block";
+      ui.noticeCancelBtn.style.display = "none";
+      ui.noticeOkBtn.textContent = "حسنًا";
       showNotice(message, "تم الحفظ");
-    }
-
-    function formatIqd(value){
-      return `${Number(value || 0).toLocaleString("en-US")} د.ع`;
-    }
-
-    function parsePrice(v){
-      const n = Number(String(v ?? "").replace(/,/g, ""));
-      return Number.isFinite(n) ? n : 0;
     }
 
     function getStoreIdFromOrder(order){
@@ -383,13 +434,40 @@
     }
 
     function belongsToCurrentStore(order){
-      return getStoreIdFromOrder(order) === String(currentUser.id);
+      if(!order) return false;
+      if(String(order.storeId || "") === String(currentUser.id)) return true;
+      if(Array.isArray(order.items) && order.items.some(item => String(item.storeId || "") === String(currentUser.id))) return true;
+      if(Array.isArray(order.storesData) && order.storesData.some(s => String(s.storeId || "") === String(currentUser.id))) return true;
+      return false;
+    }
+
+    function getRelevantItems(order){
+      const items = Array.isArray(order?.items) ? order.items : [];
+      const storeId = String(currentUser.id);
+      const filtered = items.filter(item => String(item?.storeId || order?.storeId || "") === storeId);
+      if(filtered.length) return filtered;
+      if(String(order?.storeId || "") === storeId) return items;
+      if(Array.isArray(order?.storesData) && order.storesData.some(s => String(s.storeId || "") === storeId)) return items;
+      return [];
+    }
+
+    function orderStoreTotal(order){
+      const items = getRelevantItems(order);
+      if(items.length){
+        return items.reduce((sum, item) => {
+          const qty = Number(item.qty || 1);
+          const price = Number(item.price || 0);
+          const total = Number(item.totalPrice || (qty * price));
+          return sum + total;
+        }, 0);
+      }
+      return Number(order?.totalPrice || order?.productsPrice || 0);
     }
 
     function normalizeWorkingHours(data){
       if(Array.isArray(data) && data.length){
-        return daysList.map((day, idx) => {
-          const found = data[idx] || data.find(x => String(x?.day || "") === day);
+        return daysList.map((day) => {
+          const found = data.find(x => String(x?.day || "") === day);
           return { day, from: found?.from || "مغلق", to: found?.to || "مغلق" };
         });
       }
@@ -440,8 +518,10 @@
       return order?.customerName || "-";
     }
 
-    function getOrderItems(order){
-      return Array.isArray(order?.items) ? order.items : [];
+    function orderMonthKey(order){
+      const d = order?.createdAt ? new Date(order.createdAt) : null;
+      if(!d || Number.isNaN(d.getTime())) return getCurrentMonthKey();
+      return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}`;
     }
 
     function getMonthKeyFromDate(dateObj){
@@ -458,21 +538,12 @@
       return getMonthKeyFromDate(d);
     }
 
-    function orderMonthKey(order){
-      const d = order?.createdAt ? new Date(order.createdAt) : null;
-      if(!d || Number.isNaN(d.getTime())) return getCurrentMonthKey();
-      return getMonthKeyFromDate(d);
-    }
-
-    function orderCompletedValue(order){
-      return Number(order?.totalPrice || order?.productsPrice || 0);
-    }
-
     function orderCardHtml(order){
       const st = normalizeStatus(order.status);
       const created = order.createdTime || order.createdDate || (order.createdAt ? new Date(order.createdAt).toLocaleString("ar-EG") : "-");
-      const total = orderCompletedValue(order);
-      const items = getOrderItems(order);
+      const total = orderStoreTotal(order);
+      const items = getRelevantItems(order);
+
       return `
         <div class="order-item">
           <div class="order-head">
@@ -499,23 +570,6 @@
       `;
     }
 
-    function ordersForView(view){
-      const orders = state.orders.filter(belongsToCurrentStore);
-      if(view === "current") return orders.filter(o => currentStatuses.has(String(o.status || "")));
-      if(view === "delivered") return orders.filter(o => deliveredStatuses.has(String(o.status || "")));
-      if(view === "cancelled_customer") return orders.filter(o => cancelledStatuses.has(String(o.status || "")));
-      if(view === "no_driver") return orders.filter(o => noDriverStatuses.has(String(o.status || "")));
-      if(view === "monthly_sales_current"){
-        const monthKey = getCurrentMonthKey();
-        return orders.filter(o => deliveredStatuses.has(String(o.status || "")) && orderMonthKey(o) === monthKey);
-      }
-      if(view === "monthly_sales_previous"){
-        const monthKey = getPreviousMonthKey();
-        return orders.filter(o => deliveredStatuses.has(String(o.status || "")) && orderMonthKey(o) === monthKey);
-      }
-      return orders;
-    }
-
     function openDetailModal(title, bodyHtml){
       ui.detailTitle.textContent = title;
       ui.detailBody.innerHTML = bodyHtml;
@@ -530,33 +584,58 @@
     window.closeDetailModal = closeDetailModal;
 
     function openStatsModal(view){
-      const orders = ordersForView(view);
+      const orders = state.orders.filter(belongsToCurrentStore);
+
       if(view === "monthly_sales_current" || view === "monthly_sales_previous"){
-        const total = orders.reduce((sum, o) => sum + orderCompletedValue(o), 0);
-        const title = view === "monthly_sales_current" ? "مبيعات هذا الشهر" : "مبيعات الشهر السابق";
-        openDetailModal(title, `
+        const monthKey = view === "monthly_sales_current" ? getCurrentMonthKey() : getPreviousMonthKey();
+        const list = orders.filter(o => deliveredStatuses.has(String(o.status || "")) && orderMonthKey(o) === monthKey);
+        const total = list.reduce((sum, o) => sum + orderStoreTotal(o), 0);
+        openDetailModal(view === "monthly_sales_current" ? "مبيعات هذا الشهر" : "مبيعات الشهر السابق", `
           <div class="summary-box">
             <div class="summary-title">الإجمالي</div>
             <div class="summary-text"><strong>${formatIqd(total)}</strong></div>
           </div>
           <div class="order-list">
-            ${orders.length ? orders.map(orderCardHtml).join("") : `<div class="summary-box"><div class="summary-title">لا توجد مبيعات</div><div class="summary-text">لا توجد طلبات مسلّمة ضمن هذه الفترة.</div></div>`}
+            ${list.length ? list.map(orderCardHtml).join("") : `<div class="summary-box"><div class="summary-title">لا توجد مبيعات</div><div class="summary-text">لا توجد طلبات مسلّمة ضمن هذه الفترة.</div></div>`}
           </div>
         `);
         return;
       }
 
-      const titles = {
-        current: "الطلبات الحالية",
-        delivered: "الطلبات المنجزة",
-        cancelled_customer: "الطلبات الملغاة من قبل الزبون",
-        no_driver: "الطلبات التي لم تجد سائق"
-      };
-      openDetailModal(titles[view] || "التفاصيل", `
-        <div class="order-list">
-          ${orders.length ? orders.map(orderCardHtml).join("") : `<div class="summary-box"><div class="summary-title">لا توجد بيانات</div><div class="summary-text">لا توجد طلبات ضمن هذا القسم لهذا المتجر.</div></div>`}
-        </div>
-      `);
+      if(view === "current"){
+        openDetailModal("الطلبات الحالية", `
+          <div class="order-list">
+            ${orders.filter(o => currentStatuses.has(String(o.status || ""))).length ? orders.filter(o => currentStatuses.has(String(o.status || ""))).map(orderCardHtml).join("") : `<div class="summary-box"><div class="summary-title">لا توجد بيانات</div><div class="summary-text">لا توجد طلبات حالية لهذا المتجر.</div></div>`}
+          </div>
+        `);
+        return;
+      }
+
+      if(view === "delivered"){
+        openDetailModal("الطلبات المنجزة", `
+          <div class="order-list">
+            ${orders.filter(o => deliveredStatuses.has(String(o.status || ""))).length ? orders.filter(o => deliveredStatuses.has(String(o.status || ""))).map(orderCardHtml).join("") : `<div class="summary-box"><div class="summary-title">لا توجد بيانات</div><div class="summary-text">لا توجد طلبات منجزة لهذا المتجر.</div></div>`}
+          </div>
+        `);
+        return;
+      }
+
+      if(view === "cancelled_customer"){
+        openDetailModal("الطلبات الملغاة من قبل الزبون", `
+          <div class="order-list">
+            ${orders.filter(o => cancelledStatuses.has(String(o.status || ""))).length ? orders.filter(o => cancelledStatuses.has(String(o.status || ""))).map(orderCardHtml).join("") : `<div class="summary-box"><div class="summary-title">لا توجد بيانات</div><div class="summary-text">لا توجد طلبات ملغاة من الزبون لهذا المتجر.</div></div>`}
+          </div>
+        `);
+        return;
+      }
+
+      if(view === "no_driver"){
+        openDetailModal("الطلبات التي لم تجد سائق", `
+          <div class="order-list">
+            ${orders.filter(o => noDriverStatuses.has(String(o.status || ""))).length ? orders.filter(o => noDriverStatuses.has(String(o.status || ""))).map(orderCardHtml).join("") : `<div class="summary-box"><div class="summary-title">لا توجد بيانات</div><div class="summary-text">لا توجد طلبات ضمن هذه الحالة.</div></div>`}
+          </div>
+        `);
+      }
     }
     window.openStatsModal = openStatsModal;
 
@@ -572,12 +651,16 @@
       hours.forEach((row, index) => {
         html += `<tr>
           <td><strong>${sanitize(row.day)}</strong></td>
-          <td>${editable ? `<select class="time-select" data-field="from" data-index="${index}">${timeOptions.map(t => `<option value="${sanitize(t)}" ${String(row.from) === t ? "selected" : ""}>${sanitize(t)}</option>`).join("")}</select>` : `<span>${sanitize(row.from)}</span>`}</td>
-          <td>${editable ? `<select class="time-select" data-field="to" data-index="${index}">${timeOptions.map(t => `<option value="${sanitize(t)}" ${String(row.to) === t ? "selected" : ""}>${sanitize(t)}</option>`).join("")}</select>` : `<span>${sanitize(row.to)}</span>`}</td>
+          <td>${editable ? `<select class="time-select" data-field="from" data-index="${index}">${timeOptions.map(t => `<option value="${sanitize(t)}" ${String(row.from) === t ? 'selected' : ''}>${sanitize(t)}</option>`).join("")}</select>` : `<span>${sanitize(row.from)}</span>`}</td>
+          <td>${editable ? `<select class="time-select" data-field="to" data-index="${index}">${timeOptions.map(t => `<option value="${sanitize(t)}" ${String(row.to) === t ? 'selected' : ''}>${sanitize(t)}</option>`).join("")}</select>` : `<span>${sanitize(row.to)}</span>`}</td>
         </tr>`;
       });
       html += `</tbody></table></div>`;
       ui.workingHoursBox.innerHTML = html;
+      ui.editHoursBtn.innerHTML = editable ? '<i class="fa-solid fa-xmark"></i> إلغاء التعديل' : '<i class="fa-solid fa-pen-to-square"></i> تعديل الجدول';
+      ui.saveHoursBtn.disabled = !editable;
+      ui.saveHoursBtn.style.opacity = editable ? "1" : ".6";
+      ui.saveHoursBtn.style.pointerEvents = editable ? "auto" : "none";
     }
 
     window.toggleWorkingHoursEdit = function(){
@@ -586,7 +669,7 @@
     };
 
     window.saveWorkingHours = async function(){
-      if(state.workingHoursSaving) return;
+      if(state.workingHoursSaving || !state.workingHoursEditMode) return;
       state.workingHoursSaving = true;
       showSaving("جاري الحفظ...");
       try{
@@ -601,7 +684,7 @@
         state.workingHoursEditMode = false;
         renderWorkingHours();
         showSaved("تم حفظ جدول أوقات الدوام بنجاح");
-        setTimeout(() => hideNotice(), 900);
+        setTimeout(hideNotice, 900);
       }catch(error){
         console.error(error);
         showNotice("فشل حفظ جدول أوقات الدوام", "تنبيه");
@@ -628,11 +711,15 @@
     function openStoreMap(){
       const lat = state.storeData?.latitude;
       const lng = state.storeData?.longitude;
-      if(!lat || !lng){ showNotice("لا يوجد موقع محفوظ للمتجر"); return; }
+      if(!lat || !lng){
+        showNotice("لا يوجد موقع محفوظ للمتجر");
+        return;
+      }
       ui.storeMapFrame.src = `https://maps.google.com/maps?q=${lat},${lng}&z=16&output=embed`;
       document.getElementById("mapModal").classList.add("show");
       document.getElementById("mapModal").setAttribute("aria-hidden", "false");
     }
+
     function closeStoreMap(){
       document.getElementById("mapModal").classList.remove("show");
       document.getElementById("mapModal").setAttribute("aria-hidden", "true");
@@ -670,7 +757,7 @@
             <div class="product-info">
               <div class="product-top">
                 <h3>${sanitize(product.name || '')}</h3>
-                <span class="status-pill ${active ? 'stock-ok' : 'stock-no'}">${active ? 'متوفر' : 'غير متوفر'}</span>
+                <span class="status-pill ${active ? 'st-delivered' : 'st-cancel'}">${active ? 'متوفر' : 'غير متوفر'}</span>
               </div>
               <p>السعر: <strong>${formatIqd(product.price || 0)}</strong></p>
               <p>الشرح: ${sanitize(product.description || '')}</p>
@@ -690,10 +777,17 @@
       const priceRaw = document.getElementById("productPrice").value.trim();
       const description = document.getElementById("productDescription").value.trim();
       const imageFile = document.getElementById("productImage").files[0];
-      if(!name || !priceRaw || !description || !imageFile){ showNotice("املأ جميع الحقول وأرفق صورة المنتج"); return; }
+
+      if(!name || !priceRaw || !description || !imageFile){
+        showNotice("املأ جميع الحقول وأرفق صورة المنتج");
+        return;
+      }
 
       const price = parsePrice(priceRaw);
-      if(price <= 0){ showNotice("أدخل سعر صحيح"); return; }
+      if(price <= 0){
+        showNotice("أدخل سعر صحيح");
+        return;
+      }
 
       const imageUrl = await uploadImage(imageFile);
       if(!imageUrl) return;
@@ -735,31 +829,39 @@
 
     async function editProduct(productId){
       const product = state.products.find(p => String(p.id) === String(productId));
-      if(!product){ showNotice("المنتج غير موجود"); return; }
+      if(!product){
+        showNotice("المنتج غير موجود");
+        return;
+      }
       const newName = prompt("اسم المنتج الجديد", product.name || "");
       if(newName === null) return;
       const newPrice = prompt("السعر الجديد", String(product.price ?? ""));
       if(newPrice === null) return;
       const newDescription = prompt("الشرح الجديد", product.description || "");
       if(newDescription === null) return;
+
       await update(ref(database, `store_products/${currentUser.id}/${productId}`), {
         name: newName.trim(),
         price: parsePrice(newPrice),
         description: newDescription.trim()
       });
+
       showNotice("تم تعديل المنتج", "تم");
     }
     window.editProduct = editProduct;
 
     async function deleteProduct(productId){
-      if(!confirm("هل تريد حذف المنتج نهائياً؟")) return;
+      const ok = await askConfirm("هل تريد حذف المنتج نهائياً؟", "تأكيد الحذف");
+      if(!ok) return;
       await update(ref(database, `store_products/${currentUser.id}/${productId}`), { deleted: true });
       showNotice("تم حذف المنتج", "تم");
     }
     window.deleteProduct = deleteProduct;
 
     function calcMonthlySales(orders, monthKey){
-      return orders.filter(o => deliveredStatuses.has(String(o.status || "")) && orderMonthKey(o) === monthKey).reduce((sum, o) => sum + orderCompletedValue(o), 0);
+      return orders
+        .filter(o => deliveredStatuses.has(String(o.status || "")) && orderMonthKey(o) === monthKey)
+        .reduce((sum, o) => sum + orderStoreTotal(o), 0);
     }
 
     function updateStats(){
@@ -773,146 +875,34 @@
       ui.productsTotal.textContent = String(state.products.filter(p => !p.deleted).length);
     }
 
-    function renderWorkingHours(){
-      const hours = normalizeWorkingHours(state.storeData?.workingHours);
-      const editable = state.workingHoursEditMode;
-      let html = `<div class="table-wrap"><table><thead><tr><th>اليوم</th><th>من</th><th>إلى</th></tr></thead><tbody>`;
-      hours.forEach((row, index) => {
-        html += `<tr>
-          <td><strong>${sanitize(row.day)}</strong></td>
-          <td>${editable ? `<select class="time-select" data-field="from" data-index="${index}">${timeOptions.map(t => `<option value="${sanitize(t)}" ${String(row.from) === t ? 'selected' : ''}>${sanitize(t)}</option>`).join('')}</select>` : `<span>${sanitize(row.from)}</span>`}</td>
-          <td>${editable ? `<select class="time-select" data-field="to" data-index="${index}">${timeOptions.map(t => `<option value="${sanitize(t)}" ${String(row.to) === t ? 'selected' : ''}>${sanitize(t)}</option>`).join('')}</select>` : `<span>${sanitize(row.to)}</span>`}</td>
-        </tr>`;
-      });
-      html += `</tbody></table></div>`;
-      ui.workingHoursBox.innerHTML = html;
-    }
-
-    window.toggleWorkingHoursEdit = function(){
-      state.workingHoursEditMode = !state.workingHoursEditMode;
-      renderWorkingHours();
-    };
-
-    window.saveWorkingHours = async function(){
-      if(state.workingHoursSaving) return;
-      state.workingHoursSaving = true;
-      showSaving("جاري الحفظ...");
-      try{
-        const rows = [...document.querySelectorAll('#workingHoursBox tbody tr')];
-        const updatedHours = rows.map((row, index) => ({
-          day: daysList[index],
-          from: row.querySelector('[data-field="from"]')?.value || "مغلق",
-          to: row.querySelector('[data-field="to"]')?.value || "مغلق"
-        }));
-        await update(ref(database, `stores/${currentUser.id}`), { workingHours: updatedHours });
-        if(state.storeData) state.storeData.workingHours = updatedHours;
-        state.workingHoursEditMode = false;
-        renderWorkingHours();
-        showSaved("تم حفظ جدول أوقات الدوام بنجاح");
-        setTimeout(() => hideNotice(), 900);
-      }catch(error){
-        console.error(error);
-        showNotice("فشل حفظ جدول أوقات الدوام");
-      }finally{
-        state.workingHoursSaving = false;
-      }
-    };
-
-    function openDetailCard(title, html){
-      ui.detailTitle.textContent = title;
-      ui.detailBody.innerHTML = html;
-      ui.detailModal.classList.add("show");
-      ui.detailModal.setAttribute("aria-hidden", "false");
-    }
-
-    function orderDetailsList(orders){
-      return `<div class="order-list">${orders.length ? orders.map(orderCardHtml).join("") : `<div class="summary-box"><div class="summary-title">لا توجد بيانات</div><div class="summary-text">لا توجد طلبات ضمن هذا القسم لهذا المتجر.</div></div>`}</div>`;
-    }
-
-    function openStatsModal(view){
-      const orders = state.orders.filter(belongsToCurrentStore);
-      if(view === "current"){
-        openDetailCard("الطلبات الحالية", orderDetailsList(orders.filter(o => currentStatuses.has(String(o.status || "")))));
-        return;
-      }
-      if(view === "delivered"){
-        openDetailCard("الطلبات المنجزة", orderDetailsList(orders.filter(o => deliveredStatuses.has(String(o.status || "")))));
-        return;
-      }
-      if(view === "cancelled_customer"){
-        openDetailCard("الطلبات الملغية من قبل الزبون", orderDetailsList(orders.filter(o => cancelledStatuses.has(String(o.status || "")))));
-        return;
-      }
-      if(view === "no_driver"){
-        openDetailCard("الطلبات التي لم تجد سائق", orderDetailsList(orders.filter(o => noDriverStatuses.has(String(o.status || "")))));
-        return;
-      }
-      if(view === "monthly_sales_current"){
-        const monthKey = getCurrentMonthKey();
-        const list = orders.filter(o => deliveredStatuses.has(String(o.status || "")) && orderMonthKey(o) === monthKey);
-        const total = list.reduce((s, o) => s + orderCompletedValue(o), 0);
-        openDetailCard("مبيعات هذا الشهر", `<div class="summary-box"><div class="summary-title">الإجمالي</div><div class="summary-text"><strong>${formatIqd(total)}</strong></div></div>${orderDetailsList(list)}`);
-        return;
-      }
-      if(view === "monthly_sales_previous"){
-        const monthKey = getPreviousMonthKey();
-        const list = orders.filter(o => deliveredStatuses.has(String(o.status || "")) && orderMonthKey(o) === monthKey);
-        const total = list.reduce((s, o) => s + orderCompletedValue(o), 0);
-        openDetailCard("مبيعات الشهر السابق", `<div class="summary-box"><div class="summary-title">الإجمالي</div><div class="summary-text"><strong>${formatIqd(total)}</strong></div></div>${orderDetailsList(list)}`);
-        return;
-      }
-    }
-    window.openStatsModal = openStatsModal;
-
-    function buildOrderCard(order){
-      const st = normalizeStatus(order.status);
-      const created = order.createdTime || order.createdDate || (order.createdAt ? new Date(order.createdAt).toLocaleString("ar-EG") : "-");
-      const total = orderCompletedValue(order);
-      const items = getOrderItems(order);
-      return `
-        <div class="order-item">
-          <div class="order-head">
-            <div>
-              <h4>${sanitize(order.id || "طلب")}</h4>
-              <div class="order-meta">اسم المتجر: <strong>${sanitize(state.storeData?.store_name || currentUser.store_name || "-")}</strong></div>
-              <div class="order-meta">اسم الزبون: ${sanitize(getOrderCustomerName(order))}</div>
-              <div class="order-meta">السائق: ${sanitize(getOrderDriverName(order))}</div>
-              <div class="order-meta">الوقت: ${sanitize(created)}</div>
-            </div>
-            <div><span class="status-pill ${st.cls}">${sanitize(st.text)}</span></div>
-          </div>
-          <div class="order-meta">الحالة: <strong>${sanitize(order.status || "-")}</strong></div>
-          <div class="order-meta">المجموع: <strong>${formatIqd(total)}</strong></div>
-          <div class="item-list">
-            ${items.length ? items.map(item => `
-              <div class="item-row">
-                <span>${sanitize(item.name || "منتج")}</span>
-                <span>الكمية: ${Number(item.qty || 1)} × ${formatIqd(item.price || 0)} = <strong>${formatIqd(item.totalPrice || (Number(item.qty || 1) * Number(item.price || 0)))}</strong></span>
-              </div>
-            `).join("") : `<div class="item-row">لا توجد منتجات</div>`}
-          </div>
-        </div>
-      `;
-    }
-
-    async function loadStoreData(){
+    function loadStoreData(){
       const storeRef = ref(database, `stores/${currentUser.id}`);
       onValue(storeRef, (snapshot) => {
-        if(!snapshot.exists()) return;
+        if(!snapshot.exists()){
+          showNotice("بيانات المتجر غير موجودة");
+          return;
+        }
+
         const storeData = snapshot.val();
         state.storeData = storeData;
+
         ui.topStoreName.textContent = storeData.store_name || "-";
         ui.topOwnerName.textContent = `صاحب المتجر: ${storeData.owner || "-"}`;
         ui.topPhone.textContent = storeData.phone || "-";
         ui.expireDate.textContent = storeData.expireDate || "-";
         if(storeData.store_image) ui.topStoreImage.src = storeData.store_image;
+
         if(!storeData.workingHours){
           const def = normalizeWorkingHours([]);
           update(storeRef, { workingHours: def }).catch(() => {});
           storeData.workingHours = def;
         }
+
         renderWorkingHours();
         updateStats();
+
+        const freshUser = { ...(JSON.parse(localStorage.getItem("user") || "{}")), ...storeData, id: currentUser.id, type: "store" };
+        localStorage.setItem("user", JSON.stringify(freshUser));
       });
     }
 
@@ -951,11 +941,6 @@
     }
 
     ui.productSearch.addEventListener("input", renderProducts);
-
-    window.addProduct = addProduct;
-    window.toggleProductStatus = toggleProductStatus;
-    window.editProduct = editProduct;
-    window.deleteProduct = deleteProduct;
 
     function init(){
       loadStoreData();
