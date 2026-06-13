@@ -224,6 +224,32 @@ color:#ff6600;
 font-size:15px;
 white-space:nowrap;
 }
+.contact-admin-btn{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:8px;
+width:100%;
+max-width:260px;
+margin:18px auto 0;
+padding:14px;
+background:linear-gradient(135deg,#25D366,#128C7E);
+color:#fff !important;
+border-radius:16px;
+font-size:16px;
+font-weight:800;
+text-decoration:none !important;
+box-shadow:0 8px 20px rgba(37,211,102,.25);
+transition:.3s;
+}
+
+.contact-admin-btn:hover{
+transform:translateY(-2px);
+}
+
+.contact-admin-btn i{
+font-size:20px;
+}
 
 button{
 
