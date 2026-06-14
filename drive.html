@@ -343,7 +343,19 @@
       if (p.startsWith("0")) return "964" + p.slice(1);
       return p;
     }
+function openWhatsApp(phone) {
+  const waPhone = toWhatsAppPhone(phone);
 
+  if (!waPhone) {
+    alert("الرقم غير موجود");
+    return;
+  }
+
+  const url = `https://wa.me/${waPhone}`;
+
+  // يعمل على الأندرويد والآيفون والويب
+  window.location.href = url;
+}
     function safeText(v, fallback = "—") {
       const s = String(v ?? "").trim();
       return s || fallback;
@@ -924,10 +936,9 @@
       const customerPhone = toWhatsAppPhone(order.customerPhone || "");
 
       els.whatsappCustomer.style.display = customerPhone ? "block" : "none";
-      els.whatsappCustomer.onclick = () => {
-        if (!customerPhone) return alert("رقم الزبون غير موجود");
-        window.open(`https://wa.me/${customerPhone}`, "_blank");
-      };
+els.whatsappCustomer.onclick = () => {
+  openWhatsApp(customerPhone);
+};
 
       const storePhone = toWhatsAppPhone(
         nearestStore?.storePhone ||
@@ -937,10 +948,9 @@
       );
 
       els.whatsappStore.style.display = storePhone ? "block" : "none";
-      els.whatsappStore.onclick = () => {
-        if (!storePhone) return alert("رقم المتجر غير موجود");
-        window.open(`https://wa.me/${storePhone}`, "_blank");
-      };
+els.whatsappStore.onclick = () => {
+  openWhatsApp(storePhone);
+};
     }
 
     function showActiveOrder(order, id) {
