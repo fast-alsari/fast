@@ -335,26 +335,48 @@
       return p;
     }
 
-    function toWhatsAppPhone(phone) {
-      let p = String(phone || "").replace(/\s+/g, "").replace(/[^0-9+]/g, "");
-      if (!p) return "";
-      if (p.startsWith("+")) p = p.slice(1);
-      if (p.startsWith("964")) return p;
-      if (p.startsWith("0")) return "964" + p.slice(1);
-      return p;
-    }
-function openWhatsApp(phone) {
-  const waPhone = toWhatsAppPhone(phone);
+
+function normalizePhoneForWhatsApp(phone) {
+  let p = String(phone || "").replace(/\D/g, "");
+  if (!p) return "";
+  if (p.startsWith("964")) return p;
+  if (p.startsWith("0")) return "964" + p.slice(1);
+  return p;
+}
+
+function openWhatsAppApp(phone, text = "") {
+  const waPhone = normalizePhoneForWhatsApp(phone);
 
   if (!waPhone) {
     alert("الرقم غير موجود");
     return;
   }
 
-  const url = `https://wa.me/${waPhone}`;
+  const msg = text ? `&text=${encodeURIComponent(text)}` : "";
+  const fallbackUrl = `https://wa.me/${waPhone}${text ? `?text=${encodeURIComponent(text)}` : ""}`;
+  const ua = navigator.userAgent || "";
 
-  // يعمل على الأندرويد والآيفون والويب
-  window.location.href = url;
+  if (/iPhone|iPad|iPod/i.test(ua)) {
+    window.location.href = `whatsapp://send?phone=${waPhone}${msg}`;
+    setTimeout(() => {
+      window.location.href = fallbackUrl;
+    }, 800);
+    return;
+  }
+
+  if (/Android/i.test(ua)) {
+    window.location.href =
+      `intent://send?phone=${waPhone}${msg}` +
+      `#Intent;scheme=whatsapp;package=com.whatsapp;` +
+      `S.browser_fallback_url=${encodeURIComponent(fallbackUrl)};end`;
+
+    setTimeout(() => {
+      window.location.href = fallbackUrl;
+    }, 800);
+    return;
+  }
+
+  window.location.href = fallbackUrl;
 }
     function safeText(v, fallback = "—") {
       const s = String(v ?? "").trim();
@@ -931,27 +953,30 @@ function openWhatsApp(phone) {
       }).addTo(state.map);
     }
 
-    function updateContactButtons(order) {
-      const nearestStore = getNearestStore(order);
-      const customerPhone = toWhatsAppPhone(order.customerPhone || "");
+function updateContactButtons(order) {
+  const nearestStore = getNearestStore(order);
 
-      els.whatsappCustomer.style.display = customerPhone ? "block" : "none";
-els.whatsappCustomer.onclick = () => {
-  openWhatsApp(customerPhone);
-};
+  const customerPhone = order.customerPhone || "";
+  els.whatsappCustomer.style.display =
+    customerPhone ? "block" : "none";
 
-      const storePhone = toWhatsAppPhone(
-        nearestStore?.storePhone ||
-        order?.storePhone ||
-        order?.phone ||
-        ""
-      );
+  els.whatsappCustomer.onclick = () => {
+    openWhatsAppApp(customerPhone, "السلام عليكم");
+  };
 
-      els.whatsappStore.style.display = storePhone ? "block" : "none";
-els.whatsappStore.onclick = () => {
-  openWhatsApp(storePhone);
-};
-    }
+  const storePhone =
+    nearestStore?.storePhone ||
+    order?.storePhone ||
+    order?.phone ||
+    "";
+
+  els.whatsappStore.style.display =
+    storePhone ? "block" : "none";
+
+  els.whatsappStore.onclick = () => {
+    openWhatsAppApp(storePhone, "السلام عليكم");
+  };
+}
 
     function showActiveOrder(order, id) {
       state.activeOrderId = id;
