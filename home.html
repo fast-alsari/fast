@@ -1100,11 +1100,16 @@
         document.getElementById("driverName").innerHTML = order.acceptedDriver || order.driverName || "السائق";
         document.getElementById("driverPhone").innerHTML = order.driverPhone || "";
         document.getElementById("driverImage").src = order.driverImage || "driver.png";
-        document.getElementById("whatsappBtn").onclick = function(){
-          const waPhone = normalizePhoneForWhatsApp(order.driverPhone || "");
-          if(waPhone) window.open(`https://wa.me/${waPhone}`, "_blank");
-          else alert("لا يوجد رقم للسائق");
-        };
+document.getElementById("whatsappBtn").onclick = function () {
+  const waPhone = normalizePhoneForWhatsApp(order.driverPhone || "");
+
+  if (!waPhone) {
+    alert("لا يوجد رقم للسائق");
+    return;
+  }
+
+  window.location.href = `https://wa.me/${waPhone}`;
+};
       };
 
       const showDriverCard = (order) => {
