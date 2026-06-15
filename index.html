@@ -255,17 +255,21 @@ async function saveTokenToUser(tableName, userId) {
     const IMAGE_UPLOAD_WORKER_URL = "https://floral-pine-2aa7.ahmed-a-ahmed00457.workers.dev/";
     const PENDING_CONTACT_URL = "https://wa.me/9647851521585";
     function openWhatsApp(phone = "9647851521585") {
-  const text = encodeURIComponent("السلام عليكم اريد افعل الحساب مالي ");
+  const text = encodeURIComponent("السلام عليكم، أريد تفعيل حسابي.");
 
   const appUrl = `whatsapp://send?phone=${phone}&text=${text}`;
   const webUrl = `https://wa.me/${phone}?text=${text}`;
 
-  window.location.href = appUrl;
+  try {
+    window.location.href = appUrl;
+  } catch (e) {}
 
   setTimeout(() => {
-    window.open(webUrl, "_blank");
+    window.location.href = webUrl;
   }, 1500);
 }
+
+window.openWhatsApp = openWhatsApp;
 
 window.openWhatsApp = openWhatsApp;
 function showNotice(message,title="تنبيه"){
@@ -422,24 +426,46 @@ document.addEventListener("click",(e)=>{
 
 <br><br>
 
-<a href="${PENDING_CONTACT_URL}" target="_blank" class="contact-admin-btn">
-<i class="fa-brands fa-whatsapp"></i>
-تواصل مع إدارة التطبيق
+<a href="javascript:void(0)"
+   onclick="openWhatsApp('9647851521585')"
+   class="contact-admin-btn">
+   <i class="fa-brands fa-whatsapp"></i>
+   تواصل مع إدارة التطبيق
 </a>
 `;
       }
       if (status === "banned") {
-        return `حسابك محظور حالياً.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة</a>`;
-      }
-      if (status === "expired") {
-        return `انتهت صلاحية حسابك.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة لتجديد الاشتراك</a>`;
-      }
-      if (status === "inactive") {
-        return `حسابك غير فعال حالياً.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة</a>`;
-      }
-      return `حسابك قيد المراجعة حالياً.<br><br><a href="${PENDING_CONTACT_URL}" target="_blank">تواصل مع الإدارة عبر واتساب</a>`;
-    }
+  return `
+  حسابك محظور حالياً.<br><br>
+  <a href="javascript:void(0)"
+     onclick="openWhatsApp('9647851521585')">
+     تواصل مع الإدارة
+  </a>`;
+}
 
+if (status === "expired") {
+  return `
+  انتهت صلاحية حسابك.<br><br>
+  <a href="javascript:void(0)"
+     onclick="openWhatsApp('9647851521585')">
+     تواصل مع الإدارة لتجديد الاشتراك
+  </a>`;
+}
+
+if (status === "inactive") {
+  return `
+  حسابك غير فعال حالياً.<br><br>
+  <a href="javascript:void(0)"
+     onclick="openWhatsApp('9647851521585')">
+     تواصل مع الإدارة
+  </a>`;
+}
+      return `
+حسابك قيد المراجعة حالياً.<br><br>
+<a href="javascript:void(0)"
+   onclick="openWhatsApp('9647851521585')">
+   تواصل مع الإدارة عبر واتساب
+</a>`;
     function normalizeIncomingUser(data, key) {
       if (!data) return null;
       return { ...data, id: data.id || key };
