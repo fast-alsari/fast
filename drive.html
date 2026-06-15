@@ -89,7 +89,7 @@
 
     .delivery-page{display:none}
     #map{
-      width:100%;height:38vh;border-bottom-left-radius:30px;border-bottom-right-radius:30px;
+      width:100%;height:28vh;border-bottom-left-radius:30px;border-bottom-right-radius:30px;
       overflow:hidden;border:3px solid #fff;box-shadow:0 5px 20px rgba(0,0,0,.12)
     }
 
@@ -303,7 +303,9 @@
       timerHandle: null,
       timerExpired: false,
       loadedOnce: false,
-      ordersCache: {}
+ordersCache: {},
+lastRouteTarget: null,
+lastRouteStage: null
     };
 
     const STORE_ROUTE_COLOR = "#ff8800";
@@ -723,10 +725,9 @@ function openWhatsAppApp(phone, text = "") {
             🧾 الكلي: ${money(order.totalPrice)} د.ع
           </div>
 
-          <div class="map-box">
-            <iframe width="100%" height="100%" style="border:none;" loading="lazy"
-              src="https://maps.google.com/maps?q=${Number(order.customerLat || 0)},${Number(order.customerLng || 0)}&z=14&output=embed"></iframe>
-          </div>
+        <div class="map-box">
+   <div id="order-map-${id}" style="width:100%;height:100%;"></div>
+</div>
 
           <div class="order-buttons">
             <button class="accept-btn" onclick="acceptOrder('${id}')">قبول الطلب</button>
@@ -753,6 +754,11 @@ function openWhatsAppApp(phone, text = "") {
       }
 
       els.ordersContainer.innerHTML = orders.map(({ id, order }) => renderOrderCard(order, id)).join("");
+      setTimeout(() => {
+  orders.forEach(({ id, order }) => {
+    createPreviewMap(id, order);
+  });
+}, 100);
     }
 
     function buildOrderDetailsHTML(order) {
@@ -919,11 +925,7 @@ function openWhatsAppApp(phone, text = "") {
     function updateRoute(order) {
       if (!state.map || state.driverLat == null || state.driverLng == null || !order) return;
 
-      if (state.routeControl) {
-        try { state.map.removeControl(state.routeControl); } catch (_) {}
-        state.routeControl = null;
-      }
-
+      
       let destination = null;
       let color = STORE_ROUTE_COLOR;
 
@@ -940,6 +942,21 @@ function openWhatsAppApp(phone, text = "") {
 
       if (!destination) return;
 
+const routeKey =
+  `${state.stage}_${destination.lat}_${destination.lng}`;
+
+if (state.lastRouteTarget === routeKey) {
+  return;
+}
+
+state.lastRouteTarget = routeKey;
+
+if (state.routeControl) {
+  try {
+    state.map.removeControl(state.routeControl);
+  } catch (_) {}
+}
+
       state.routeControl = L.Routing.control({
         waypoints: [L.latLng(state.driverLat, state.driverLng), destination],
         routeWhileDragging: false,
@@ -947,6 +964,7 @@ function openWhatsAppApp(phone, text = "") {
         draggableWaypoints: false,
         fitSelectedRoutes: false,
         show: false,
+        
         router: L.Routing.osrmv1({ serviceUrl: "https://router.project-osrm.org/route/v1" }),
         lineOptions: { styles: [{ color, weight: 7, opacity: 0.9 }] },
         createMarker: () => null
@@ -1120,11 +1138,19 @@ ${
       }
 
       if (state.map && state.driverMarker) {
-        state.driverMarker.setLatLng([state.driverLat, state.driverLng]);
+        const current = state.driverMarker.getLatLng();
+
+const newLat =
+  current.lat + (state.driverLat - current.lat) * 0.2;
+
+const newLng =
+  current.lng + (state.driverLng - current.lng) * 0.2;
+
+state.driverMarker.setLatLng([newLat, newLng]);
         if (state.customerMarker && order.customerLat != null && order.customerLng != null) {
           state.customerMarker.setLatLng([Number(order.customerLat), Number(order.customerLng)]);
         }
-        try { state.map.panTo([state.driverLat, state.driverLng], { animate: true, duration: 0.7 }); } catch (_) {}
+        try {  } catch (_) {}
       }
 
       updateRoute(order);
@@ -1275,7 +1301,6 @@ ${
           driverLng: state.driverLng
         }).catch(() => {});
 
-        if (state.driverMarker) state.driverMarker.setLatLng([state.driverLat, state.driverLng]);
         await syncProgressFromGPS(state.activeOrder);
       }
     }
@@ -1298,7 +1323,139 @@ ${
 
       renderOrders(ordersObj);
     }
+function createPreviewMap(id, order) {
+  const mapEl = document.getElementById(`order-map-${id}`);
+  if (!mapEl) return;
+if (mapEl.dataset.loaded === "1") {
+  return;
+}
 
+mapEl.dataset.loaded = "1";
+  const map = L.map(mapEl, {
+    zoomControl: false,
+    attributionControl: false
+  });
+
+  L.tileLayer(
+    "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+    { maxZoom: 19 }
+  ).addTo(map);
+
+  const bounds = [];
+
+  // السائق
+  if (state.driverLat && state.driverLng) {
+    const driverPos = L.latLng(
+      state.driverLat,
+      state.driverLng
+    );
+
+    bounds.push(driverPos);
+
+    L.marker(driverPos, {
+      icon: L.divIcon({
+        html: "🛵",
+        className: "",
+        iconSize: [30, 30]
+      })
+    }).addTo(map);
+  }
+
+  // الزبون
+  if (order.customerLat && order.customerLng) {
+    const customerPos = L.latLng(
+      Number(order.customerLat),
+      Number(order.customerLng)
+    );
+
+    bounds.push(customerPos);
+
+    L.marker(customerPos, {
+      icon: L.divIcon({
+        html: "🚩",
+        className: "",
+        iconSize: [30, 30]
+      })
+    }).addTo(map);
+  }
+
+  // جميع المتاجر
+  getStores(order).forEach(store => {
+
+    const pos = L.latLng(
+      Number(store.storeLat),
+      Number(store.storeLng)
+    );
+
+    bounds.push(pos);
+
+   L.marker(pos, {
+  icon: L.divIcon({
+    html: `
+      <div style="display:flex;flex-direction:column;align-items:center;">
+        <div style="
+          background:#fff;
+          padding:5px;
+          border-radius:50%;
+          box-shadow:0 2px 8px rgba(0,0,0,.2);
+          font-size:22px;
+        ">🏪</div>
+
+        <div style="
+          background:white;
+          padding:3px 8px;
+          border-radius:10px;
+          margin-top:4px;
+          font-size:11px;
+          font-weight:700;
+          white-space:nowrap;
+          box-shadow:0 2px 8px rgba(0,0,0,.15);
+        ">
+          ${store.storeName || "متجر"}
+        </div>
+      </div>
+    `,
+    className: "",
+    iconSize: [80, 60],
+    iconAnchor: [40, 30]
+  })
+}).addTo(map);
+    // رسم طريق من السائق إلى كل متجر
+    if (state.driverLat && state.driverLng) {
+      L.Routing.control({
+        waypoints: [
+          L.latLng(
+            state.driverLat,
+            state.driverLng
+          ),
+          pos
+        ],
+        createMarker: () => null,
+        addWaypoints: false,
+        draggableWaypoints: false,
+        routeWhileDragging: false,
+        fitSelectedRoutes: false,
+        show: false,
+        router: L.Routing.osrmv1({
+  serviceUrl: "https://router.project-osrm.org/route/v1"
+}),
+        lineOptions: {
+          styles: [{
+            color: "#ff8800",
+            weight: 4,
+            opacity: 0.7
+          }]
+        }
+      }).addTo(map);
+    }
+  });
+
+  if (bounds.length) {
+    map.fitBounds(bounds, {
+      padding: [25, 25]
+    });
+  }
+}
     window.acceptOrder = acceptOrder;
     window.rejectOrder = rejectOrder;
 
