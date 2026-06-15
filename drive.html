@@ -957,24 +957,68 @@ function updateContactButtons(order) {
   const nearestStore = getNearestStore(order);
 
   const customerPhone = order.customerPhone || "";
+
+  const customerMessage = `
+السلام عليكم ${order.customerName || "عزيزي الزبون"} 🌹
+
+أنا السائق ${currentDriver.name || "السائق"} وقد قبلت طلبك بنجاح.
+
+🏪 المتجر: ${nearestStore?.storeName || order.storeName || "المتجر"}
+
+📦 تفاصيل الطلب:
+${
+  (order.items || []).map(item =>
+    `• ${item.name} × ${item.qty}`
+  ).join("\n")
+}
+
+💰 سعر المنتجات: ${money(order.productsPrice)} د.ع
+🚚 أجور التوصيل: ${money(order.deliveryPrice)} د.ع
+🧾 السعر الكلي: ${money(order.totalPrice)} د.ع
+
+🚗 أنا الآن متجه إلى المتجر لاستلام طلبك وسيصلك بأسرع وقت.
+
+شكراً لاستخدام تطبيق عالسريع ❤️
+`;
+
   els.whatsappCustomer.style.display =
     customerPhone ? "block" : "none";
 
   els.whatsappCustomer.onclick = () => {
-    openWhatsAppApp(customerPhone, "السلام عليكم");
+    openWhatsAppApp(customerPhone, customerMessage);
   };
 
   const storePhone =
     nearestStore?.storePhone ||
-    order?.storePhone ||
-    order?.phone ||
+    order.storePhone ||
     "";
+
+  const storeMessage = `
+السلام عليكم 🌹
+
+أنا السائق ${currentDriver.name || "السائق"}.
+
+تم قبول طلب الزبون ${order.customerName || "الزبون"} من متجركم.
+
+📦 الطلب:
+${
+  (order.items || []).map(item =>
+    `• ${item.name} × ${item.qty}`
+  ).join("\n")
+}
+
+💰 السعر الكلي: ${money(order.totalPrice)} د.ع
+
+🚗 سأصل إلى المتجر خلال أقل من 15 دقيقة، يرجى تجهيز الطلب.
+
+شكراً لتعاونكم ❤️
+`;
 
   els.whatsappStore.style.display =
     storePhone ? "block" : "none";
 
   els.whatsappStore.onclick = () => {
-    openWhatsAppApp(storePhone, "السلام عليكم");
+    openWhatsAppApp(storePhone, storeMessage);
   };
 }
 
