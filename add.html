@@ -1204,11 +1204,17 @@ window.deleteStore = async function(id){
 
   box.innerHTML = "جاري التحميل...";
   notificationUsers = [];
+  document.getElementById("selectedCount")
+  .innerText = "المحدد: 0";
 
-  if(type === "all"){
-    box.innerHTML = "<p>سيتم الإرسال إلى الجميع.</p>";
-    return;
-  }
+ if(type === "all"){
+  box.innerHTML = "<p>سيتم الإرسال إلى الجميع.</p>";
+
+  document.getElementById("selectedCount")
+    .innerText = "المحدد: الجميع";
+
+  return;
+}
 
   const snap = await get(ref(database,type));
 
@@ -1248,19 +1254,7 @@ window.deleteStore = async function(id){
     `;
   }
 }
-window.toggleAllUsers = function(){
 
-  const checks =
-    document.querySelectorAll(".notify-user");
-
-  const allChecked =
-    [...checks].every(x => x.checked);
-
-  checks.forEach(x=>{
-    x.checked = !allChecked;
-  });
-
-};
 window.sendManualNotification = async function(){
 
   const type = document.getElementById("notifyType").value;
