@@ -269,7 +269,7 @@ async function saveTokenToUser(tableName, userId) {
   }, 1500);
 }
 
-window.openWhatsApp = openWhatsApp;
+
 
 window.openWhatsApp = openWhatsApp;
 function showNotice(message,title="تنبيه"){
@@ -460,12 +460,13 @@ if (status === "inactive") {
      تواصل مع الإدارة
   </a>`;
 }
-      return `
+return `
 حسابك قيد المراجعة حالياً.<br><br>
 <a href="javascript:void(0)"
    onclick="openWhatsApp('9647851521585')">
    تواصل مع الإدارة عبر واتساب
 </a>`;
+}
     function normalizeIncomingUser(data, key) {
       if (!data) return null;
       return { ...data, id: data.id || key };
