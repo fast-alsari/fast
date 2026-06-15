@@ -402,13 +402,33 @@
   <h2 class="section-title">إرسال الإشعارات</h2>
 
   <div class="item">
-    <select id="notifyType" style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:12px;">
-      <option value="all">الجميع</option>
-      <option value="customers">المستخدمين</option>
-      <option value="stores">المتاجر</option>
-      <option value="drivers">سواق التوصيل</option>
-      <option value="taxis">سواق التكسي</option>
-    </select>
+<select id="notifyType"
+style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:12px;">
+
+  <option value="all">الجميع</option>
+  <option value="customers">المستخدمين</option>
+  <option value="stores">المتاجر</option>
+  <option value="drivers">سواق التوصيل</option>
+  <option value="taxis">سواق التكسي</option>
+
+</select>
+
+<button
+  onclick="toggleAllUsers()"
+  style="width:100%;padding:12px;border:none;border-radius:12px;background:#0066ff;color:#fff;margin-bottom:10px;">
+  تحديد الكل / إلغاء الكل
+</button>
+
+<div id="usersList"
+style="
+max-height:250px;
+overflow:auto;
+border:1px solid #ddd;
+padding:10px;
+border-radius:12px;
+margin-bottom:12px;
+background:#fff;">
+</div>
 
     <input
       id="notifyTitle"
@@ -468,6 +488,7 @@ const NOTIFICATION_WEBHOOK_URL =
     let allStoresData = {};
     let allProductsData = {};
     let allAdsData = {};
+    let notificationUsers = [];
 
     function safeText(v, fallback = "-"){
       const s = String(v ?? "").trim();
@@ -1167,18 +1188,84 @@ window.deleteStore = async function(id){
       await remove(ref(database,"ads/" + id));
       alert("تم حذف الإعلان");
     };
+    async function loadNotificationUsers(){
+
+  const type = document.getElementById("notifyType").value;
+  const box = document.getElementById("usersList");
+
+  box.innerHTML = "جاري التحميل...";
+  notificationUsers = [];
+
+  if(type === "all"){
+    box.innerHTML = "<p>سيتم الإرسال إلى الجميع.</p>";
+    return;
+  }
+
+  const snap = await get(ref(database,type));
+
+  if(!snap.exists()){
+    box.innerHTML = "لا توجد بيانات";
+    return;
+  }
+
+  const data = snap.val();
+
+  box.innerHTML = "";
+
+  for(const id in data){
+
+    const user = data[id];
+
+    const name =
+      user.name ||
+      user.store_name ||
+      user.owner ||
+      ("مستخدم " + id);
+
+    notificationUsers.push({
+      id,
+      token: user.fcmToken || "",
+      name
+    });
+
+    box.innerHTML += `
+      <label style="display:block;padding:8px;">
+        <input
+          type="checkbox"
+          class="notify-user"
+          value="${user.fcmToken || ""}">
+        ${name}
+      </label>
+    `;
+  }
+}
+window.toggleAllUsers = function(){
+
+  const checks =
+    document.querySelectorAll(".notify-user");
+
+  const allChecked =
+    [...checks].every(x => x.checked);
+
+  checks.forEach(x=>{
+    x.checked = !allChecked;
+  });
+
+};
 window.sendManualNotification = async function(){
 
   const type = document.getElementById("notifyType").value;
   const title = document.getElementById("notifyTitle").value.trim();
   const body = document.getElementById("notifyBody").value.trim();
-
+let tokens = [];
   if(!title || !body){
     alert("اكتب عنوان ونص الإشعار");
     return;
   }
 
-  let tokens = [];
+
+
+ if(type === "all"){
 
   async function collect(path){
     const snap = await get(ref(database,path));
@@ -1190,36 +1277,29 @@ window.sendManualNotification = async function(){
       .filter(Boolean);
   }
 
-  if(type === "customers"){
-    tokens = await collect("customers");
-  }
+  tokens = [
+    ...(await collect("customers")),
+    ...(await collect("stores")),
+    ...(await collect("drivers")),
+    ...(await collect("taxis"))
+  ];
 
-  else if(type === "stores"){
-    tokens = await collect("stores");
-  }
+}else{
 
-  else if(type === "drivers"){
-    tokens = await collect("drivers");
-  }
+  tokens = [
+    ...document.querySelectorAll(".notify-user:checked")
+  ].map(x => x.value)
+   .filter(Boolean);
 
-  else if(type === "taxis"){
-    tokens = await collect("taxis");
-  }
+}
 
-  else if(type === "all"){
-    tokens = [
-      ...(await collect("customers")),
-      ...(await collect("stores")),
-      ...(await collect("drivers")),
-      ...(await collect("taxis"))
-    ];
-  }
+  
 
   tokens = [...new Set(tokens)];
 
-  for(const token of tokens){
-
-    await fetch(NOTIFICATION_WEBHOOK_URL,{
+  const results = await Promise.allSettled(
+  tokens.map(token =>
+    fetch(NOTIFICATION_WEBHOOK_URL,{
       method:"POST",
       headers:{
         "Content-Type":"application/json"
@@ -1232,14 +1312,23 @@ window.sendManualNotification = async function(){
           type:"manual"
         }
       })
-    });
+    })
+  )
+);
 
-  }
+const success =
+  results.filter(r => r.status === "fulfilled").length;
 
-  alert("تم إرسال الإشعار إلى " + tokens.length + " جهاز");
-
+alert(`تم إرسال الإشعار إلى ${success} جهاز`);
 };
+
+document
+.getElementById("notifyType")
+.addEventListener("change", loadNotificationUsers);
+    
     loadDashboard();
+loadNotificationUsers();
+    
   </script>
 </body>
 </html>
