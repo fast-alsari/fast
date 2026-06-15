@@ -138,7 +138,27 @@
     .qty-btn{width:30px;height:30px;border:none;border-radius:9px;background:#ff8800;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
     .qty-input{width:40px;height:30px;text-align:center;border:none;background:#fff;border-radius:9px;font-size:14px;font-weight:700}
     .add-btn{width:100%;padding:11px;border:none;border-radius:12px;background:#00b894;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+.product-likes{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:8px;
+}
 
+.like-btn{
+  border:none;
+  background:#eee;
+  width:35px;
+  height:35px;
+  border-radius:50%;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.like-btn.liked{
+  background:#ff4d6d;
+  color:#fff;
+}
     .cart-item{background:#fff;padding:12px;border-radius:20px;display:flex;gap:12px;align-items:center;box-shadow:0 5px 18px rgba(0,0,0,.06)}
     .cart-image{width:75px;height:75px;border-radius:16px;object-fit:cover;background:#eee;flex-shrink:0}
     .cart-info{flex:1;min-width:0}
@@ -790,6 +810,10 @@
         const fields = [product.name, product.description, product.category].map(v => String(v || "").toLowerCase());
         return fields.some(v => v.includes(query));
       });
+      
+      filtered.sort((a, b) => {
+  return Number(b.likesCount || 0) - Number(a.likesCount || 0);
+});
 
       if(!filtered.length){
         container.innerHTML = `<div class="empty">${currentStoreProducts.length ? "لا توجد منتجات مطابقة" : "لا توجد منتجات حالياً"}</div>`;
@@ -802,6 +826,14 @@
           <div class="product-content">
             <div class="product-name">${product.name || ""}</div>
             <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
+            <div class="product-likes">
+  <button class="like-btn ${product.likedUsers?.[currentUser.id] ? 'liked' : ''}"
+          onclick="toggleLike(event,'${product.storeId}','${product.id}')">
+    ❤️
+  </button>
+
+  <span>${Number(product.likesCount || 0)} إعجاب</span>
+</div>
             <div class="product-note">📝 ${product.description || "لا توجد ملاحظات"}</div>
             <div class="qty-box">
               <div class="qty-controller">
@@ -846,6 +878,52 @@
     window.backHome = function(){ document.getElementById("singleStorePage").style.display = "none"; currentStore = null; currentStoreProducts = []; currentProductSearch = ""; productSearchInput.value = ""; };
     window.increaseQty = id => { const input = document.getElementById(`qty_${id}`); input.value = Number(input.value) + 1; };
     window.decreaseQty = id => { const input = document.getElementById(`qty_${id}`); if(Number(input.value) > 1) input.value = Number(input.value) - 1; };
+    window.toggleLike = async function(event, storeId, productId){
+  event.stopPropagation();
+
+  const productRef = ref(database, `store_products/${storeId}/${productId}`);
+  const snapshot = await get(productRef);
+
+  if(!snapshot.exists()) return;
+
+  const product = snapshot.val();
+
+  let likedUsers = product.likedUsers || {};
+  let likesCount = Number(product.likesCount || 0);
+
+  if(likedUsers[currentUser.id]){
+    delete likedUsers[currentUser.id];
+    likesCount = Math.max(0, likesCount - 1);
+  }else{
+    likedUsers[currentUser.id] = true;
+    likesCount++;
+  }
+
+  runTransaction(productRef, (product) => {
+   if(product){
+      product.likedUsers ??= {};
+      product.likesCount ??= 0;
+
+      if(product.likedUsers[currentUser.id]){
+         delete product.likedUsers[currentUser.id];
+         product.likesCount--;
+      }else{
+         product.likedUsers[currentUser.id] = true;
+         product.likesCount++;
+      }
+   }
+   return product;
+});
+
+  const localProduct = currentStoreProducts.find(p => p.id === productId);
+
+  if(localProduct){
+    localProduct.likedUsers = likedUsers;
+    localProduct.likesCount = likesCount;
+  }
+
+  renderProducts();
+};
     window.addToCart = function(product){ const qty = Number(document.getElementById(`qty_${product.id}`).value || 1); const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId); if(existingProduct) existingProduct.qty += qty; else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""}); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); alert("تمت الاضافة"); };
 
     function updateCart(){
@@ -1298,9 +1376,11 @@ document.getElementById("whatsappBtn").onclick = function () {
       (position) => {
         userLatitude = position.coords.latitude;
         userLongitude = position.coords.longitude;
-        set(ref(database, "customers/" + currentUser.id + "/userLat"), userLatitude);
-        set(ref(database, "customers/" + currentUser.id + "/userLng"), userLongitude);
-        localStorage.setItem("userLat", userLatitude);
+        update(ref(database, "customers/" + currentUser.id), {
+  userLat:userLatitude,
+  userLng:userLongitude
+});
+         localStorage.setItem("userLat", userLatitude);
         localStorage.setItem("userLng", userLongitude);
         const savedUser = JSON.parse(localStorage.getItem("user") || "null");
         if(savedUser){ savedUser.userLat = userLatitude; savedUser.userLng = userLongitude; localStorage.setItem("user", JSON.stringify(savedUser)); }
