@@ -960,7 +960,7 @@ window.deactivateStore = async function(id){
       nextMonth.setMonth(nextMonth.getMonth()+1);
 
       await update(ref(database,"stores/"+id), {
-        accountType:"vip",
+        accountType:"VIP",
         vipExpireDate: nextMonth.toISOString().split("T")[0]
       });
 
