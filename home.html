@@ -104,7 +104,29 @@
     .store-title-wrap h2{font-size:18px;line-height:1.4;word-break:break-word}
     .store-title-wrap p{font-size:13px;opacity:.95}
     .single-store-search{margin:12px 15px 0;display:flex}
+.image-viewer{
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background:rgba(0,0,0,.9);
+  display:none;
+  justify-content:center;
+  align-items:center;
+  z-index:999999;
+}
 
+.image-viewer.show{
+  display:flex;
+}
+
+.image-viewer img{
+  max-width:95%;
+  max-height:95%;
+  border-radius:20px;
+  object-fit:contain;
+}
     .products-container{
       padding:15px;
       display:grid;
@@ -467,6 +489,16 @@
   </div>
 
   <script type="module">
+  
+  window.openImageViewer = function(src){
+  document.getElementById("viewerImage").src = src;
+  document.getElementById("imageViewer").classList.add("show");
+};
+
+window.closeImageViewer = function(){
+  document.getElementById("imageViewer").classList.remove("show");
+};
+
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
     import {
   getDatabase,
@@ -831,7 +863,9 @@
 
       container.innerHTML = filtered.map(product => `
         <div class="product-card">
-          <img src="${product.image || "product.png"}" class="product-image" onerror="this.src='product.png'" alt="product" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="product.png">
+          <img src="${product.image || "product.png"}"
+     class="product-image"
+     onclick="openImageViewer('${product.image || "product.png"}')" onerror="this.src='product.png'" alt="product" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="product.png">
           <div class="product-content">
             <div class="product-name">${product.name || ""}</div>
             <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
@@ -891,47 +925,38 @@
   event.stopPropagation();
 
   const productRef = ref(database, `store_products/${storeId}/${productId}`);
-  const snapshot = await get(productRef);
 
-  if(!snapshot.exists()) return;
-
-  const product = snapshot.val();
-
-  let likedUsers = product.likedUsers || {};
-  let likesCount = Number(product.likesCount || 0);
-
-  if(likedUsers[currentUser.id]){
-    delete likedUsers[currentUser.id];
-    likesCount = Math.max(0, likesCount - 1);
-  }else{
-    likedUsers[currentUser.id] = true;
-    likesCount++;
-  }
-
-  runTransaction(productRef, (product) => {
-   if(product){
+  const result = await runTransaction(productRef, (product) => {
+    if(product){
       product.likedUsers ??= {};
       product.likesCount ??= 0;
 
       if(product.likedUsers[currentUser.id]){
-         delete product.likedUsers[currentUser.id];
-         product.likesCount--;
-      }else{
-         product.likedUsers[currentUser.id] = true;
-         product.likesCount++;
+        delete product.likedUsers[currentUser.id];
+        product.likesCount--;
+      } else {
+        product.likedUsers[currentUser.id] = true;
+        product.likesCount++;
       }
-   }
-   return product;
-});
+    }
 
-  const localProduct = currentStoreProducts.find(p => p.id === productId);
+    return product;
+  });
 
-  if(localProduct){
-    localProduct.likedUsers = likedUsers;
-    localProduct.likesCount = likesCount;
+  if(result.committed){
+    const updated = result.snapshot.val();
+
+    const localProduct = currentStoreProducts.find(
+      p => p.id === productId
+    );
+
+    if(localProduct){
+      localProduct.likedUsers = updated.likedUsers || {};
+      localProduct.likesCount = updated.likesCount || 0;
+    }
+
+    renderProducts();
   }
-
-  renderProducts();
 };
     window.addToCart = function(product){ const qty = Number(document.getElementById(`qty_${product.id}`).value || 1); const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId); if(existingProduct) existingProduct.qty += qty; else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""}); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); alert("تمت الاضافة"); };
 
@@ -1507,5 +1532,10 @@ document.getElementById("whatsappBtn").onclick = function () {
     </div>
   </div>
   <script type="module" src="notifications.js"></script>
+
+<div id="imageViewer" class="image-viewer" onclick="closeImageViewer()">
+  <img id="viewerImage" src="">
+</div>
+
 </body>
 </html>
