@@ -340,6 +340,9 @@
     <button class="tab-btn" onclick="showSection('taxiSection',this)">سواق التكسي</button>
     <button class="tab-btn" onclick="showSection('productsSection',this)">المنتجات</button>
     <button class="tab-btn" onclick="showSection('adsSection',this)">الإعلانات</button>
+    <button class="tab-btn" onclick="showSection('notificationsSection',this)">
+  الإشعارات
+</button>
   </div>
 
   <div id="customersSection" class="section active-section">
@@ -395,17 +398,50 @@
 
     <div id="adsContainer"></div>
   </div>
+<div id="notificationsSection" class="section">
+  <h2 class="section-title">إرسال الإشعارات</h2>
 
+  <div class="item">
+    <select id="notifyType" style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:12px;">
+      <option value="all">الجميع</option>
+      <option value="customers">المستخدمين</option>
+      <option value="stores">المتاجر</option>
+      <option value="drivers">سواق التوصيل</option>
+      <option value="taxis">سواق التكسي</option>
+    </select>
+
+    <input
+      id="notifyTitle"
+      type="text"
+      placeholder="عنوان الإشعار"
+      style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:12px;"
+    >
+
+    <textarea
+      id="notifyBody"
+      placeholder="نص الإشعار"
+      style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-bottom:12px;height:120px;"
+    ></textarea>
+
+    <button
+      onclick="sendManualNotification()"
+      style="width:100%;padding:14px;border:none;border-radius:14px;background:#00b894;color:#fff;font-size:16px;font-weight:bold;"
+    >
+      إرسال الإشعار
+    </button>
+  </div>
+</div>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
     import {
-      getDatabase,
-      ref,
-      onValue,
-      update,
-      remove,
-      set
-    } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
+  getDatabase,
+  ref,
+  onValue,
+  update,
+  remove,
+  set,
+  get
+} from "https://www.gstatic.com/firebasejs/12.13.0/firebase-database.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyC7QzQTYMSGRV_nraJBneBqDqYGhugF0Pw",
@@ -422,7 +458,8 @@
     const database = getDatabase(app);
 
     const IMAGE_UPLOAD_WORKER_URL = "https://floral-pine-2aa7.ahmed-a-ahmed00457.workers.dev/";
-
+const NOTIFICATION_WEBHOOK_URL =
+"https://purple-heart-d6d6.ahmed-a-ahmed00457.workers.dev/";
     const currentUser = JSON.parse(localStorage.getItem("user") || "null");
     if(!currentUser || currentUser.type !== "admin"){
       window.location.href = "index.html";
@@ -1130,7 +1167,78 @@ window.deleteStore = async function(id){
       await remove(ref(database,"ads/" + id));
       alert("تم حذف الإعلان");
     };
+window.sendManualNotification = async function(){
 
+  const type = document.getElementById("notifyType").value;
+  const title = document.getElementById("notifyTitle").value.trim();
+  const body = document.getElementById("notifyBody").value.trim();
+
+  if(!title || !body){
+    alert("اكتب عنوان ونص الإشعار");
+    return;
+  }
+
+  let tokens = [];
+
+  async function collect(path){
+    const snap = await get(ref(database,path));
+
+    if(!snap.exists()) return [];
+
+    return Object.values(snap.val())
+      .map(x => x.fcmToken)
+      .filter(Boolean);
+  }
+
+  if(type === "customers"){
+    tokens = await collect("customers");
+  }
+
+  else if(type === "stores"){
+    tokens = await collect("stores");
+  }
+
+  else if(type === "drivers"){
+    tokens = await collect("drivers");
+  }
+
+  else if(type === "taxis"){
+    tokens = await collect("taxis");
+  }
+
+  else if(type === "all"){
+    tokens = [
+      ...(await collect("customers")),
+      ...(await collect("stores")),
+      ...(await collect("drivers")),
+      ...(await collect("taxis"))
+    ];
+  }
+
+  tokens = [...new Set(tokens)];
+
+  for(const token of tokens){
+
+    await fetch(NOTIFICATION_WEBHOOK_URL,{
+      method:"POST",
+      headers:{
+        "Content-Type":"application/json"
+      },
+      body: JSON.stringify({
+        token,
+        title,
+        body,
+        data:{
+          type:"manual"
+        }
+      })
+    });
+
+  }
+
+  alert("تم إرسال الإشعار إلى " + tokens.length + " جهاز");
+
+};
     loadDashboard();
   </script>
 </body>
