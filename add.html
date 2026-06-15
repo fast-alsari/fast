@@ -530,6 +530,9 @@
           <p><strong>تاريخ التجديد:</strong> ${safeText(store.renewDate)}</p>
 
           <div class="actions">
+          <button class="reject" onclick="deleteStore('${id}')">
+  حذف المتجر
+</button>
             <button class="accept" onclick="activateStore('${id}')">تفعيل شهر</button>
             <button class="reject" onclick="deactivateStore('${id}')">الغاء التفعيل</button>
             <button class="vip-btn" onclick="activateVipStore('${id}')">تفعيل VIP</button>
@@ -872,10 +875,18 @@
       alert("تم تفعيل المتجر");
     };
 
-    window.deactivateStore = async function(id){
-      await update(ref(database,"stores/"+id), { status:"inactive" });
-      alert("تم إلغاء تفعيل المتجر");
-    };
+window.deactivateStore = async function(id){
+
+  await update(ref(database,"stores/"+id), {
+    status: "inactive",
+    renewDate: "",
+    expireDate: "2000-01-01",
+    accountType: "normal",
+    vipExpireDate: "2000-01-01"
+  });
+
+  alert("تم إلغاء تفعيل المتجر");
+};
 
     window.activateVipStore = async function(id){
       const nextMonth = new Date();
@@ -890,6 +901,7 @@
     };
 
     window.removeVipStore = async function(id){
+      
       await update(ref(database,"stores/"+id), {
         accountType:"normal",
         vipExpireDate:""
@@ -897,7 +909,31 @@
 
       alert("تم إلغاء VIP");
     };
+window.deleteStore = async function(id){
 
+  if(!confirm("هل أنت متأكد من حذف المتجر نهائياً؟")){
+    return;
+  }
+
+  try{
+
+    await remove(ref(database, "stores/" + id));
+
+    await remove(ref(database, "store_products/" + id));
+
+    for(const adId in allAdsData){
+      if(allAdsData[adId].storeId === id){
+        await remove(ref(database, "ads/" + adId));
+      }
+    }
+
+    alert("تم حذف المتجر بنجاح");
+
+  }catch(error){
+    console.error(error);
+    alert("فشل حذف المتجر");
+  }
+};
     window.activateDriver = async function(id){
       const today = new Date();
       const nextMonth = new Date();
