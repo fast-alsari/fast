@@ -497,6 +497,7 @@ const NOTIFICATION_WEBHOOK_URL =
     let allProductsData = {};
     let allAdsData = {};
     let notificationUsers = [];
+    
 
     function safeText(v, fallback = "-"){
       const s = String(v ?? "").trim();
@@ -1343,6 +1344,24 @@ document
       .innerText = `المحدد: ${count}`;
   }
 });
+window.toggleAllUsers = function(){
+
+  const checks =
+    document.querySelectorAll(".notify-user");
+
+  const allChecked =
+    [...checks].every(x => x.checked);
+
+  checks.forEach(x=>{
+    x.checked = !allChecked;
+  });
+
+  const count =
+    document.querySelectorAll(".notify-user:checked").length;
+
+  document.getElementById("selectedCount")
+    .innerText = `المحدد: ${count}`;
+};
     
     loadDashboard();
 loadNotificationUsers();
