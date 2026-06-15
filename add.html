@@ -419,6 +419,14 @@ style="width:100%;padding:14px;border-radius:12px;border:1px solid #ddd;margin-b
   تحديد الكل / إلغاء الكل
 </button>
 
+<p id="selectedCount"
+
+style="margin-bottom:10px;font-weight:bold;">
+
+  المحدد: 0
+
+</p>
+
 <div id="usersList"
 style="
 max-height:250px;
@@ -1325,6 +1333,16 @@ alert(`تم إرسال الإشعار إلى ${success} جهاز`);
 document
 .getElementById("notifyType")
 .addEventListener("change", loadNotificationUsers);
+    
+    document.addEventListener("change", e => {
+  if(e.target.classList.contains("notify-user")){
+    const count =
+      document.querySelectorAll(".notify-user:checked").length;
+
+    document.getElementById("selectedCount")
+      .innerText = `المحدد: ${count}`;
+  }
+});
     
     loadDashboard();
 loadNotificationUsers();
