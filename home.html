@@ -276,6 +276,49 @@
     .taxi-price-box{background:#fff4e8;padding:15px;border-radius:18px;margin-bottom:15px;font-size:18px;font-weight:800;color:#ff6600;text-align:center}
     .taxi-order-btn{width:100%;padding:16px;border:none;border-radius:18px;background:#00b894;color:#fff;font-size:17px;font-weight:800;cursor:pointer}
 
+.best-products-box{
+  margin:12px 15px 0;
+  display:none;
+}
+
+.best-products-title{
+  font-size:17px;
+  font-weight:800;
+  margin-bottom:10px;
+  color:#222;
+}
+
+.best-products-scroll{
+  display:flex;
+  gap:10px;
+  overflow-x:auto;
+  scrollbar-width:none;
+}
+
+.best-products-scroll::-webkit-scrollbar{
+  display:none;
+}
+
+.best-product-item{
+  width:90px;
+  flex-shrink:0;
+  cursor:pointer;
+}
+
+.best-product-img{
+  width:90px;
+  height:90px;
+  border-radius:18px;
+  object-fit:cover;
+  border:2px solid #fff;
+  box-shadow:0 5px 15px rgba(0,0,0,.08);
+  transition:.2s;
+}
+
+.best-product-img:active{
+  transform:scale(.96);
+}
+
     @media (max-width:480px){
       body{padding-bottom:94px}
       .home-top{gap:8px}
@@ -294,7 +337,12 @@
       .delete-btn{width:100%}
       .stats-grid{grid-template-columns:1fr 1fr}
       #taxiMap{height:360px}
-    }
+      .best-products-box{
+  margin:12px 15px 0;
+  display:none;
+}
+}
+
   </style>
 </head>
 <body>
@@ -324,7 +372,15 @@
       </div>
       <div id="adDots" class="ad-dots"></div>
     </div>
+<div id="bestProductsBox" class="best-products-box">
+  <div class="best-products-title">
+    ⭐ أفضل المنتجات
+  </div>
 
+  <div id="bestProductsContainer"
+       class="best-products-scroll">
+  </div>
+</div>
     <div class="filters"></div>
     <div class="filter-note" id="filterNote">   </div>
     <div id="storesContainer" class="stores-container"></div>
@@ -526,6 +582,7 @@ window.closeImageViewer = function(){
 
     let allStores = [];
     let adsList = [];
+    let bestProducts = [];
     let currentAdIndex = 0;
     let currentAdTransitionIndex = 0;
     let adTimer = null;
@@ -751,7 +808,31 @@ window.closeImageViewer = function(){
         });
       });
     }
+function renderBestProducts(){
+  const box = document.getElementById("bestProductsBox");
+  const container = document.getElementById("bestProductsContainer");
 
+  if(!bestProducts.length){
+    box.style.display = "none";
+    return;
+  }
+
+  box.style.display = "block";
+
+  container.innerHTML = bestProducts.map(product => `
+    <div class="best-product-item"
+         onclick="openStore('${product.storeId}')">
+
+      <img
+        src="${product.image || 'product.png'}"
+        class="best-product-img"
+        onerror="this.src='product.png'">
+
+    </div>
+  `).join("");
+
+  enhanceAllImages();
+}
     function renderStores(stores){
       storesContainer.innerHTML = "";
       if(!stores.length){ storesContainer.innerHTML = `<div class="empty">لا توجد نتائج</div>`; return; }
@@ -791,7 +872,7 @@ window.closeImageViewer = function(){
           let store = normalizeStore(stores[key]);
           store.id = key;
           if(store.status !== "active") continue;
-          if(!isStoreOpen(store)) continue;
+          
           if(!store.latitude || !store.longitude) continue;
           const distance = calculateDistance(userLatitude, userLongitude, Number(store.latitude), Number(store.longitude));
           if(distance > 25) continue;
@@ -866,7 +947,7 @@ window.closeImageViewer = function(){
         <div class="product-card">
           <img src="${product.image || "product.png"}"
      class="product-image"
-     onclick="openImageViewer('${product.image || "product.png"}')" onerror="this.src='product.png'" alt="product" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="product.png">
+     onclick='openImageViewer(${JSON.stringify(product.image || "product.png")})'
           <div class="product-content">
             <div class="product-name">${product.name || ""}</div>
             <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
@@ -934,7 +1015,7 @@ window.closeImageViewer = function(){
 
       if(product.likedUsers[currentUser.id]){
         delete product.likedUsers[currentUser.id];
-        product.likesCount--;
+        product.likesCount = Math.max(0, product.likesCount - 1);
       } else {
         product.likedUsers[currentUser.id] = true;
         product.likesCount++;
@@ -1404,7 +1485,7 @@ document.getElementById("whatsappBtn").onclick = function () {
           restoreSendOrderButton();
           alert("فشل ارسال الطلب: " + (error?.message || error));
         }finally{ if(!orderSaved) localStorage.removeItem("sendingOrder"); }
-      }, () => { restoreSendOrderButton(); alert("يرجى تشغيل GPS"); }, { enableHighAccuracy:true, maximumAge:0, timeout:10000 });
+      }, () => { restoreSendOrderButton(); alert("يرجى تشغيل GPS"); }, { enableHighAccuracy:true, maximumAge:10000, timeout:10000 });
     };
 
     navigator.geolocation.watchPosition(
@@ -1424,10 +1505,66 @@ document.getElementById("whatsappBtn").onclick = function () {
         if(allStores.length === 0) startLiveStores();
       },
       () => { alert("يرجى تشغيل GPS"); },
-      { enableHighAccuracy:true, maximumAge:0, timeout:10000 }
+      { enableHighAccuracy:true, maximumAge:10000, timeout:10000 }
     );
 
+function startBestProducts(){
+
+  onValue(ref(database,"store_products"), snapshot => {
+
+    bestProducts = [];
+
+    if(!snapshot.exists()){
+      renderBestProducts();
+      return;
+    }
+
+    const stores = snapshot.val();
+
+    for(const storeId in stores){
+
+      const products = stores[storeId];
+
+      for(const productId in products){
+
+        const product = products[productId];
+
+        if(
+          product.deleted === true ||
+          !(product.status === "active" ||
+            product.status === "approved")
+        ){
+          continue;
+        }
+
+        if(Number(product.likesCount || 0) <= 0){
+          continue;
+        }
+
+        bestProducts.push({
+          ...product,
+          storeId
+        });
+
+      }
+
+    }
+
+    bestProducts.sort(
+      (a,b)=>
+        Number(b.likesCount || 0) -
+        Number(a.likesCount || 0)
+    );
+
+    bestProducts = bestProducts.slice(0,4);
+
+    renderBestProducts();
+
+  });
+
+}
     startAdsSlider();
+    startBestProducts();
 
     window.openMap = function(event, latitude, longitude){
       event.preventDefault(); event.stopPropagation();
