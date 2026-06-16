@@ -978,9 +978,9 @@ function renderBestProducts(){
 
       container.innerHTML = filtered.map(product => `
         <div class="product-card">
-          <img src="${product.image || "product.png"}"
+        <img src="${product.image || "product.png"}"
      class="product-image"
-     onclick='openImageViewer(${JSON.stringify(product.image || "product.png")})'
+     onclick='openImageViewer(${JSON.stringify(product.image || "product.png")})'>
           <div class="product-content">
             <div class="product-name">${product.name || ""}</div>
             <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
@@ -1070,7 +1070,21 @@ if(localProduct){
   localProduct.likesCount = updated.likesCount || 0;
 }
 
-renderProducts();
+// تحديث القلب فقط
+const btn = event.currentTarget;
+
+if(updated.likedUsers?.[currentUser.id]){
+  btn.classList.add("liked");
+}else{
+  btn.classList.remove("liked");
+}
+
+// تحديث العدد فقط
+const countSpan = btn.nextElementSibling;
+if(countSpan){
+  countSpan.textContent =
+    `${updated.likesCount || 0} إعجاب`;
+}
   }
 };
     window.addToCart = function(product){ const qty = Number(document.getElementById(`qty_${product.id}`).value || 1); const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId); if(existingProduct) existingProduct.qty += qty; else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""}); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); alert("تمت الاضافة"); };
