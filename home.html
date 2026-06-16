@@ -1169,8 +1169,8 @@ window.openBestProduct = async function(storeId, productId){
     return product;
   });
 
-  if(result.committed){
-    const updated = result.snapshot.val();
+if(result.committed && result.snapshot.exists()){
+  const updated = result.snapshot.val();
 
     const localProduct = currentStoreProducts.find(
       p => p.id === productId
@@ -1200,6 +1200,7 @@ const countSpan = btn.nextElementSibling;
 if(countSpan){
   countSpan.textContent =
     `${updated.likesCount || 0} إعجاب`;
+    
 }
   }
 };
