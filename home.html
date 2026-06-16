@@ -909,6 +909,7 @@ function renderBestProducts(){
           const distance = calculateDistance(userLatitude, userLongitude, Number(store.latitude), Number(store.longitude));
           if(distance > 25) continue;
           store.distance = distance.toFixed(1);
+          if(!isStoreOpen(store)) continue;
           allStores.push(store);
         }
         generateFilters();
