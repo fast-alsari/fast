@@ -23,7 +23,14 @@
   <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;font-family:'Cairo',sans-serif}
+    *{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Cairo',sans-serif;
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+}
     html,body{background:#f7f7f7;overflow-x:hidden}
     body{padding-bottom:96px}
     input,textarea,select{font-size:16px!important;touch-action:manipulation}
@@ -1556,7 +1563,7 @@ function startBestProducts(){
         Number(a.likesCount || 0)
     );
 
-    bestProducts = bestProducts.slice(0,4);
+    bestProducts = bestProducts.slice(0,3);
 
     renderBestProducts();
 
