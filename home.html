@@ -1070,17 +1070,7 @@ if(localProduct){
   localProduct.likesCount = updated.likesCount || 0;
 }
 
-const btn = event.currentTarget;
-btn.classList.toggle(
-  "liked",
-  !!updated.likedUsers?.[currentUser.id]
-);
-
-const countSpan = btn.nextElementSibling;
-if(countSpan){
-  countSpan.textContent =
-    `${Number(updated.likesCount || 0)} إعجاب`;
-}
+renderProducts();
   }
 };
     window.addToCart = function(product){ const qty = Number(document.getElementById(`qty_${product.id}`).value || 1); const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId); if(existingProduct) existingProduct.qty += qty; else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""}); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); alert("تمت الاضافة"); };
