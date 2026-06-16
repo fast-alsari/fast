@@ -142,15 +142,16 @@
       gap:12px;
     }
     .product-card{
-      background:#fff;
-      padding:10px;
-      border-radius:18px;
-      box-shadow:0 5px 16px rgba(0,0,0,.06);
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-      align-items:stretch;
-    }
+  background:#fff;
+  padding:10px;
+  border-radius:18px;
+  box-shadow:0 5px 16px rgba(0,0,0,.06);
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  align-items:stretch;
+  height:100%;
+}
     .product-image{
       width:100%;
       height:140px;
@@ -159,15 +160,39 @@
       background:#eee;
       flex-shrink:0
     }
-    .product-content{flex:1;min-width:0}
+   .product-content{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+}
     .product-name{font-size:15px;font-weight:800;margin-bottom:4px;word-break:break-word;line-height:1.5}
     .product-price{font-size:16px;font-weight:800;color:#ff8800;margin-bottom:4px}
-    .product-note{font-size:12px;color:#666;margin-bottom:8px;line-height:1.5;word-break:break-word;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+   .product-note{
+  font-size:12px;
+  color:#666;
+  margin-bottom:8px;
+  line-height:1.7;
+  word-break:break-word;
+  white-space:normal;
+  overflow:visible;
+}
     .qty-box{display:flex;justify-content:flex-start;margin-bottom:8px}
     .qty-controller{display:flex;align-items:center;gap:6px;background:#f2f2f2;padding:4px 6px;border-radius:12px}
     .qty-btn{width:30px;height:30px;border:none;border-radius:9px;background:#ff8800;color:#fff;font-size:16px;font-weight:700;cursor:pointer}
     .qty-input{width:40px;height:30px;text-align:center;border:none;background:#fff;border-radius:9px;font-size:14px;font-weight:700}
-    .add-btn{width:100%;padding:11px;border:none;border-radius:12px;background:#00b894;color:#fff;font-size:14px;font-weight:700;cursor:pointer}
+   .add-btn{
+  width:100%;
+  padding:11px;
+  border:none;
+  border-radius:12px;
+  background:#00b894;
+  color:#fff;
+  font-size:14px;
+  font-weight:700;
+  cursor:pointer;
+  margin-top:auto;
+}
 .product-likes{
   display:flex;
   align-items:center;
@@ -381,7 +406,7 @@
     </div>
 <div id="bestProductsBox" class="best-products-box">
   <div class="best-products-title">
-    ⭐ أفضل المنتجات
+     أفضل المنتجات
   </div>
 
   <div id="bestProductsContainer"
