@@ -208,11 +208,29 @@
   border-radius:50%;
   cursor:pointer;
   font-size:18px;
+  transition:.25s;
 }
 
 .like-btn.liked{
   background:#ff4d6d;
   color:#fff;
+  transform:scale(1.15);
+}
+
+.like-btn.animate{
+  animation:likePop .35s ease;
+}
+
+@keyframes likePop{
+  0%{
+    transform:scale(1);
+  }
+  50%{
+    transform:scale(1.35);
+  }
+  100%{
+    transform:scale(1.15);
+  }
 }
     .cart-item{background:#fff;padding:12px;border-radius:20px;display:flex;gap:12px;align-items:center;box-shadow:0 5px 18px rgba(0,0,0,.06)}
     .cart-image{width:75px;height:75px;border-radius:16px;object-fit:cover;background:#eee;flex-shrink:0}
@@ -1171,6 +1189,11 @@ if(updated.likedUsers?.[currentUser.id]){
 }else{
   btn.classList.remove("liked");
 }
+requestAnimationFrame(() => {
+  btn.classList.remove("animate");
+  void btn.offsetWidth;
+  btn.classList.add("animate");
+});
 
 // تحديث العدد فقط
 const countSpan = btn.nextElementSibling;
