@@ -679,7 +679,7 @@ window.closeImageViewer = function(){
     let storeMarkersLayer = null;
     let lastRouteKey = "";
     let currentRating = 0;
-
+let mapFitted = false;
     let taxiMap = null;
     let taxiTargetMarker = null;
     let taxiRouteControl = null;
@@ -1073,7 +1073,9 @@ function renderBestProducts(){
        <div class="product-card" id="product_${product.id}">
         <img src="${product.image || "product.png"}"
      class="product-image"
-     onclick='openImageViewer(${JSON.stringify(product.image || "product.png")})'>
+     <img src="${product.image || "product.png"}"
+     class="product-image"
+     onclick="openImageViewer(this.src)">>
           <div class="product-content">
             <div class="product-name">${product.name || ""}</div>
             <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
@@ -1139,7 +1141,7 @@ window.openBestProduct = async function(storeId, productId){
       document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">جاري تحميل المنتجات...</div>`;
       enhanceAllImages();
       try{
-        let productsUnsubscribe = null;
+     
    if(productsUnsubscribe){
   productsUnsubscribe();
 }
@@ -1304,7 +1306,7 @@ if(likesBox){
     const bikeIcon = L.divIcon({
       html:`
       <div style="width:70px;height:70px;display:flex;justify-content:center;align-items:center;">
-        <img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async">
+        <img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));" referrerpolicy="no-referrer" crossorigin="anonymous" loading="lazy" decoding="async">
       </div>`,
       className:"",
       iconSize:[70,70],
@@ -1436,7 +1438,10 @@ if(likesBox){
       if(!order.driverLat || !order.driverLng) return;
       const driverLat = Number(order.driverLat);
       const driverLng = Number(order.driverLng);
-      if(!window.mapFitted){ fitAllMarkers(driverLat, driverLng, order); window.mapFitted = true; }
+      if(!mapFitted){
+  fitAllMarkers(driverLat, driverLng, order);
+  mapFitted = true;
+}
 
       if(!driverMarker){
         driverMarker = L.marker([driverLat, driverLng], { icon:bikeIcon }).addTo(orderMap).bindPopup("سائق التوصيل");
@@ -1476,7 +1481,7 @@ if(likesBox){
       document.getElementById("orderPage").style.display = "block";
       document.getElementById("bottomBar").style.display = "none";
       stopOrderListener();
-      window.mapFitted = false;
+      mapFitted = false;
       lastRouteKey = "";
       if(!currentOrderId) currentOrderId = localStorage.getItem("currentOrderId") || "";
       if(!currentOrderId){ openHomeAfterOrder(); return; }
@@ -1679,7 +1684,7 @@ document.getElementById("whatsappBtn").onclick = function () {
       }, () => { restoreSendOrderButton(); alert("يرجى تشغيل GPS"); }, { enableHighAccuracy:true, maximumAge:10000, timeout:10000 });
     };
 
-    navigator.geolocation.watchPosition(
+    const geoWatchId = navigator.geolocation.watchPosition(
       (position) => {
         userLatitude = position.coords.latitude;
         userLongitude = position.coords.longitude;
@@ -1758,7 +1763,7 @@ function startBestProducts(){
     startBestProducts();
     setTimeout(animateBestProducts,100);
 
-setInterval(() => {
+const bestProductsInterval = setInterval(() => {
   const total =
     document.querySelectorAll(
       ".best-product-item"
@@ -1780,7 +1785,16 @@ setInterval(() => {
       document.getElementById("mapFrame").src = `https://maps.google.com/maps?q=${latitude},${longitude}&z=16&output=embed`;
     };
     window.closeMap = function(){ document.getElementById("mapModal").style.display = "none"; document.getElementById("mapFrame").src = ""; };
-    window.logout = function(){ localStorage.clear(); sessionStorage.clear(); window.location.href = "index.html"; };
+   window.logout = function(){
+
+  if(geoWatchId){
+    navigator.geolocation.clearWatch(geoWatchId);
+  }
+
+  localStorage.clear();
+  sessionStorage.clear();
+  window.location.href = "index.html";
+};
 
     history.pushState(null, null, location.href);
     window.onpopstate = function(){ const oid = localStorage.getItem("currentOrderId"); if(oid){ openOrderPage(); history.pushState(null, null, location.href); } };
