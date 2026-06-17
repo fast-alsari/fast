@@ -45,6 +45,18 @@ justify-content:center;
 padding:18px;
 }
 
+body{
+  opacity:0;
+ 
+}
+
+body.loaded{
+  opacity:1;
+  transition:opacity .15s;
+}
+
+
+
 .ad-modal.show{
 display:flex;
 }
@@ -396,7 +408,7 @@ document.addEventListener("click",(e)=>{
         return;
       }
       if (user.type === "admin") {
-        window.location.replace("add.html");
+      window.location.replace("add.html");
         return;
       }
       if (user.type === "store") {
@@ -404,7 +416,7 @@ document.addEventListener("click",(e)=>{
         return;
       }
       if (user.type === "driver") {
-        window.location.replace("drive.html");
+     window.location.replace("drive.html");
         return;
       }
       if (user.type === "taxi") {
@@ -521,8 +533,11 @@ return `
     }
 
     async function autoLogin() {
-      const currentUser = getStoredUser();
-      if (!currentUser) return;
+    const currentUser = getStoredUser();
+
+if (!currentUser) {
+  return;
+}
       const tableName = getTableName(currentUser.type);
       if (!tableName) return;
 
@@ -1006,7 +1021,10 @@ loginBtn.innerText = "تسجيل الدخول";
     };
 
     bindPhoneInputs();
-    autoLogin();
+
+autoLogin().finally(() => {
+  document.body.classList.add("loaded");
+});
   </script>
 
   <div id="toast"></div>
