@@ -1306,7 +1306,7 @@ if(likesBox){
     const bikeIcon = L.divIcon({
       html:`
       <div style="width:70px;height:70px;display:flex;justify-content:center;align-items:center;">
-        <img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));" referrerpolicy="no-referrer" crossorigin="anonymous" loading="lazy" decoding="async">
+        <img src="delivery-bike.png" style="width:70px;height:70px;object-fit:contain;filter:drop-shadow(0 4px 10px rgba(0,0,0,.35));" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async">
       </div>`,
       className:"",
       iconSize:[70,70],
@@ -1887,7 +1887,7 @@ const bestProductsInterval = setInterval(() => {
   <div id="mapModal" class="map-modal">
     <div class="map-modal-box">
       <button onclick="closeMap()" class="close-map-btn">✕</button>
-      <iframe id="mapFrame" class="map-frame" loading="lazy"></iframe>
+      <iframe id="mapFrame" class="map-frame" loading="eager"></iframe>
     </div>
   </div>
   <script type="module" src="notifications.js"></script>
