@@ -21,7 +21,11 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css">
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
-
+<link rel="preload" as="image" href="store.png">
+<link rel="preload" as="image" href="product.png">
+<link rel="preload" as="image" href="ok.png">
+<link rel="preload" as="image" href="driver.png">
+<link rel="preload" as="image" href="delivery-bike.png">
   <style>
     *{
   margin:0;
@@ -737,6 +741,7 @@ let mapFitted = false;
       img.dataset.enhanced = "1";
       img.loading = "eager";
       img.decoding = "async";
+      img.fetchPriority = "high";
       img.referrerPolicy = "no-referrer";
       img.crossOrigin = "anonymous";
       img.addEventListener("error", function(){ if(this.dataset.fallback && this.src !== this.dataset.fallback) this.src = this.dataset.fallback; });
@@ -971,7 +976,7 @@ function renderBestProducts(){
             ${store.vip ? `<div class="vip-badge">🔥 VIP</div>` : ""}
             <div class="store-status"><div class="status-dot ${isOpen ? "open-dot" : "closed-dot"}"></div></div>
             <div class="store-header">
-              <img src="${storeImage}" class="store-image" onerror="this.src='store.png'" alt="store" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="store.png">
+              <img src="${storeImage}" class="store-image" onerror="this.src='store.png'" alt="store" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" fetchpriority="high" decoding="async" data-fallback="store.png">
               <div class="store-info">
                 <div class="store-name">
                   <h3>${store.store_name || "متجر"}</h3>
@@ -1077,9 +1082,10 @@ function renderBestProducts(){
        <div class="product-card" id="product_${product.id}">
         <img src="${product.image || "product.png"}"
      class="product-image"
-     <img src="${product.image || "product.png"}"
+   <img src="${product.image || "product.png"}"
      class="product-image"
-     onclick="openImageViewer(this.src)">>
+     onclick="openImageViewer(this.src)"
+     onerror="this.src='product.png'">
           <div class="product-content">
             <div class="product-name">${product.name || ""}</div>
             <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
