@@ -652,6 +652,7 @@ window.closeImageViewer = function(){
     let allStores = [];
     let adsList = [];
     let bestProducts = [];
+    let freezeProductsOrder = false;
     let bestProductsIndex = 0;
     let currentAdIndex = 0;
     let currentAdTransitionIndex = 0;
@@ -661,6 +662,7 @@ window.closeImageViewer = function(){
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
     let currentStore = null;
     let currentStoreProducts = [];
+    let productsUnsubscribe = null;
     let currentProductSearch = "";
     let homeSearchQuery = "";
     let currentFilterCategory = "all";
@@ -1056,9 +1058,11 @@ function renderBestProducts(){
         return fields.some(v => v.includes(query));
       });
       
-      filtered.sort((a, b) => {
-  return Number(b.likesCount || 0) - Number(a.likesCount || 0);
-});
+      if(!freezeProductsOrder){
+  filtered.sort((a, b) => {
+    return Number(b.likesCount || 0) - Number(a.likesCount || 0);
+  });
+}
 
       if(!filtered.length){
         container.innerHTML = `<div class="empty">${currentStoreProducts.length ? "لا توجد منتجات مطابقة" : "لا توجد منتجات حالياً"}</div>`;
@@ -1122,6 +1126,7 @@ window.openBestProduct = async function(storeId, productId){
 
 
     window.openStore = async function(storeId){
+      freezeProductsOrder = false;
       const store = allStores.find(s => s.id === storeId);
       if(!store){ alert("المتجر غير موجود"); return; }
       currentStore = store;
@@ -1134,7 +1139,12 @@ window.openBestProduct = async function(storeId, productId){
       document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">جاري تحميل المنتجات...</div>`;
       enhanceAllImages();
       try{
-        onValue(
+        let productsUnsubscribe = null;
+   if(productsUnsubscribe){
+  productsUnsubscribe();
+}
+
+productsUnsubscribe = onValue(
   ref(database, "store_products/" + storeId),
   snapshot => {
 
@@ -1162,10 +1172,14 @@ window.openBestProduct = async function(storeId, productId){
       }catch(error){ console.log(error); document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">حدث خطأ أثناء تحميل المنتجات</div>`; }
     };
 
-    window.backHome = function(){ document.getElementById("singleStorePage").style.display = "none"; currentStore = null; currentStoreProducts = []; currentProductSearch = ""; productSearchInput.value = ""; };
+    window.backHome = function(){ if(productsUnsubscribe){
+  productsUnsubscribe();
+  productsUnsubscribe = null;
+} freezeProductsOrder = false; document.getElementById("singleStorePage").style.display = "none"; currentStore = null; currentStoreProducts = []; currentProductSearch = ""; productSearchInput.value = ""; };
     window.increaseQty = id => { const input = document.getElementById(`qty_${id}`); input.value = Number(input.value) + 1; };
     window.decreaseQty = id => { const input = document.getElementById(`qty_${id}`); if(Number(input.value) > 1) input.value = Number(input.value) - 1; };
     window.toggleLike = async function(event, storeId, productId){
+      freezeProductsOrder = true;
   event.stopPropagation();
   
 const btn = event.currentTarget;
@@ -1247,7 +1261,7 @@ if(likesBox){
         if(total >= 50000) deliveryPrice += 1000;
         if(total >= 100000) deliveryPrice += 2000;
         const hour = new Date().getHours();
-        if(hour >= 12 || hour <= 6) deliveryPrice += 1000;
+        if(hour >= 22 || hour <= 6) deliveryPrice += 1000;
         if(deliveryPrice < 2000) deliveryPrice = 2000;
         if(deliveryPrice > 15000) deliveryPrice = 15000;
       }
