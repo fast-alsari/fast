@@ -70,13 +70,13 @@
     .store-name{display:flex;align-items:center;gap:5px;margin-bottom:5px;flex-wrap:wrap}
     .store-name h3{font-size:17px;word-break:break-word}
     .ok-icon{width:17px;height:17px;object-fit:contain;flex-shrink:0}
- .store-info p{
+.store-info p{
   font-size:13px;
   color:#666;
-  position:absolute;
-  top:52px;
-  right:0;
   margin:0;
+  position:absolute;
+  top:8px;
+  right:0;
 }
     .store-status{margin-top:10px;display:flex;align-items:center;gap:7px;width:max-content;padding:5px 10px;border-radius:12px;background:#f3f3f3}
     .status-dot{width:10px;height:10px;border-radius:50%;transition:.2s ease}
@@ -964,7 +964,7 @@ function renderBestProducts(){
         const storeImage = store.store_image || store.image || "store.png";
         storesContainer.innerHTML += `
           <div class="store-card ${store.vip ? "vip-store" : ""}" onclick="${isOpen ? `openStore('${store.id}')` : ""}">
-            ${store.vip ? `<div class="vip-badge">🔥 VIP</div>` : ""}
+            ${store.vip ? `<div class="vip-badge"> VIP</div>` : ""}
             <div class="store-status"><div class="status-dot ${isOpen ? "open-dot" : "closed-dot"}"></div></div>
             <div class="store-header">
               <img src="${storeImage}" class="store-image" onerror="this.src='store.png'" alt="store" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" fetchpriority="high" decoding="async" data-fallback="store.png">
@@ -975,7 +975,7 @@ function renderBestProducts(){
                   <img src="ok.png" class="ok-icon" alt="ok" referrerpolicy="no-referrer" crossorigin="anonymous" loading="eager" decoding="async" data-fallback="ok.png">
                 </div>
                 <p>${store.category || ""}</p>
-              <div style="position:absolute;left:12px;top:62%;transform:translateY(-50%);">
+           <div style="position:absolute;left:12px;top:72%;transform:translateY(-50%);">
                   <button onclick="openMap(event,'${store.latitude}','${store.longitude}')" style="padding:7px 12px;border:none;border-radius:12px;background:#ff8800;color:#fff;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;">📍 الموقع</button>
                 </div>
               </div>
