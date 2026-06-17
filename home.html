@@ -517,21 +517,6 @@
         <div class="location-box"><iframe id="accountMapFrame" loading="eager"></iframe></div>
         <div class="location-note">هذا الموقع لا يمكن لأحد مشاهدته، ويظهر فقط عند إرسال طلب باسمك.</div>
       </div>
-      <div class="card">
-        <div class="card-title"><i class="fa-solid fa-gift"></i> توصيلة طلب مجانية</div>
-        <div class="info-line">
-          <div class="info-label">رمز الدعوة الخاص بك</div>
-          <div style="display:flex;gap:10px;margin-top:10px;">
-            <input type="text" readonly id="inviteCode" class="code-input" style="background:#fff7ef;font-size:17px;font-weight:bold;">
-            <button class="copy-btn" onclick="copyInviteCode()"><i class="fa-solid fa-copy"></i></button>
-          </div>
-        </div>
-        <div class="code-box">
-          <input type="text" id="giftCode" class="code-input" placeholder="الصق الكود هنا" inputmode="text" autocomplete="off">
-          <button class="copy-btn" onclick="pasteCode()"><i class="fa-solid fa-paste"></i></button>
-        </div>
-        <button class="use-btn" onclick="useInviteCode()">استخدام الكود</button>
-      </div>
       <button class="logout-btn" onclick="logout()">تسجيل الخروج</button>
     </div>
   </div>
@@ -739,7 +724,7 @@ let mapFitted = false;
     function enhanceImage(img){
       if(!img || img.dataset.enhanced === "1") return;
       img.dataset.enhanced = "1";
-      img.loading = "eager";
+      img.loading = "lazy";
       img.decoding = "async";
       img.fetchPriority = "high";
       img.referrerPolicy = "no-referrer";
@@ -811,7 +796,6 @@ let mapFitted = false;
       document.getElementById("userName").innerHTML = userData.name || "";
       document.getElementById("userPhone").innerHTML = userData.phone || "";
       document.getElementById("userPassword").innerHTML = userData.password || "";
-      document.getElementById("inviteCode").value = userData.id || "";
       const userLat = userData.userLat || localStorage.getItem("userLat") || "";
       const userLng = userData.userLng || localStorage.getItem("userLng") || "";
       if(userLat && userLng) document.getElementById("accountMapFrame").src = `https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
@@ -1080,12 +1064,13 @@ function renderBestProducts(){
 
       container.innerHTML = filtered.map(product => `
        <div class="product-card" id="product_${product.id}">
-        <img src="${product.image || "product.png"}"
-     class="product-image"
-   <img src="${product.image || "product.png"}"
+      <img src="${product.image || 'product.png'}"
      class="product-image"
      onclick="openImageViewer(this.src)"
-     onerror="this.src='product.png'">
+     onerror="this.src='product.png'"
+     loading="eager"
+     fetchpriority="high"
+     decoding="async">
           <div class="product-content">
             <div class="product-name">${product.name || ""}</div>
             <div class="product-price">${Number(product.price || 0).toLocaleString()} د.ع</div>
@@ -1829,25 +1814,6 @@ const bestProductsInterval = setInterval(() => {
       document.getElementById("deliveredOrders").innerHTML = delivered;
     });
 
-    window.copyInviteCode = async function(){ try{ await navigator.clipboard.writeText(document.getElementById("inviteCode").value); alert("تم نسخ الكود"); }catch{ alert("فشل نسخ الكود"); } };
-    window.pasteCode = async function(){ try{ document.getElementById("giftCode").value = await navigator.clipboard.readText(); }catch{ alert("فشل لصق الكود"); } };
-    window.useInviteCode = async function(){
-      const code = document.getElementById("giftCode").value.trim();
-      if(!code){ alert("الصق الكود"); return; }
-      if(code === currentUser.id){ alert("لا يمكنك استخدام كودك"); return; }
-      const myRef = ref(database, "customers/" + currentUser.id);
-      const myData = await get(myRef);
-      if(!myData.exists()) return;
-      const myUser = myData.val();
-      if(myUser.usedFreeDelivery === true){ alert("لقد استخدمت التوصيلة المجانية مسبقاً"); return; }
-      if(myUser.invitedBy){ alert("لا يمكنك استخدام أكثر من كود"); return; }
-      const inviterRef = ref(database, "customers/" + code);
-      const inviterData = await get(inviterRef);
-      if(!inviterData.exists()){ alert("الكود غير صحيح"); return; }
-      await update(myRef, { freeDelivery:true, usedFreeDelivery:true, invitedBy:code, freeDeliveryUsed:false });
-      alert("تم الحصول على توصيلة مجانية 🎉");
-      document.getElementById("giftCode").value = "";
-    };
 
     function getTaxiBasePrice(distanceKm){
       let totalBasePrice = 0;
