@@ -122,7 +122,7 @@ cursor:pointer;
 </div>
   <div class="container">
     <!-- تسجيل الدخول -->
-    <div id="loginSection" class="card section active">
+   <div id="loginSection" class="card section">
       <div class="logo"><img src="Logo.png" alt="Logo"></div>
       <p class="app-text">نوصلك طلبك عالسريع</p>
       <h2 class="title">تسجيل الدخول</h2>
@@ -536,6 +536,8 @@ return `
     const currentUser = getStoredUser();
 
 if (!currentUser) {
+  showSection("loginSection");
+  document.body.classList.add("loaded");
   return;
 }
       const tableName = getTableName(currentUser.type);
@@ -544,10 +546,13 @@ if (!currentUser) {
       try {
         const snapshot = await get(ref(database, `${tableName}/${currentUser.id}`));
         if (!snapshot.exists()) {
-          localStorage.removeItem("user");
-          sessionStorage.removeItem("user");
-          return;
-        }
+  localStorage.removeItem("user");
+  sessionStorage.removeItem("user");
+
+  showSection("loginSection");
+  document.body.classList.add("loaded");
+  return;
+}
 
         const freshUser = normalizeIncomingUser(snapshot.val(), snapshot.key);
         const androidToken = getAndroidFcmToken();
@@ -583,8 +588,11 @@ if (androidToken) {
           }
         }
       } catch (error) {
-        console.log(error);
-      }
+  console.log(error);
+
+  showSection("loginSection");
+  document.body.classList.add("loaded");
+}
     }
 
     window.addEventListener("popstate", () => {
@@ -1023,7 +1031,6 @@ loginBtn.innerText = "تسجيل الدخول";
     bindPhoneInputs();
 
 await autoLogin();
-document.body.classList.add("loaded");
   </script>
 
   <div id="toast"></div>
