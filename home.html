@@ -1134,13 +1134,31 @@ window.openBestProduct = async function(storeId, productId){
       document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">جاري تحميل المنتجات...</div>`;
       enhanceAllImages();
       try{
-        const snapshot = await get(ref(database, "store_products/" + storeId));
-        currentStoreProducts = [];
-        if(snapshot.exists()){
-          const products = snapshot.val();
-          for(const key in products){ const product = products[key]; product.id = key; product.storeId = store.id; product.storeName = store.store_name; currentStoreProducts.push(product); }
-        }
-        renderProducts();
+        onValue(
+  ref(database, "store_products/" + storeId),
+  snapshot => {
+
+    currentStoreProducts = [];
+
+    if(snapshot.exists()){
+
+      const products = snapshot.val();
+
+      for(const key in products){
+
+        const product = products[key];
+
+        product.id = key;
+        product.storeId = store.id;
+        product.storeName = store.store_name;
+
+        currentStoreProducts.push(product);
+      }
+    }
+
+    renderProducts();
+  }
+);
       }catch(error){ console.log(error); document.getElementById("singleProductsContainer").innerHTML = `<div class="empty">حدث خطأ أثناء تحميل المنتجات</div>`; }
     };
 
@@ -1149,6 +1167,8 @@ window.openBestProduct = async function(storeId, productId){
     window.decreaseQty = id => { const input = document.getElementById(`qty_${id}`); if(Number(input.value) > 1) input.value = Number(input.value) - 1; };
     window.toggleLike = async function(event, storeId, productId){
   event.stopPropagation();
+  
+const btn = event.currentTarget;
 
   const productRef = ref(database, `store_products/${storeId}/${productId}`);
 
@@ -1172,35 +1192,28 @@ window.openBestProduct = async function(storeId, productId){
 if(result.committed && result.snapshot.exists()){
   const updated = result.snapshot.val();
 
-    const localProduct = currentStoreProducts.find(
-      p => p.id === productId
-    );
 
-if(localProduct){
-  localProduct.likedUsers = updated.likedUsers || {};
-  localProduct.likesCount = updated.likesCount || 0;
-}
 
-// تحديث القلب فقط
-const btn = event.currentTarget;
+btn.classList.toggle(
+  "liked",
+  !!updated.likedUsers?.[currentUser.id]
+);
 
-if(updated.likedUsers?.[currentUser.id]){
-  btn.classList.add("liked");
-}else{
-  btn.classList.remove("liked");
-}
-requestAnimationFrame(() => {
-  btn.classList.remove("animate");
-  void btn.offsetWidth;
-  btn.classList.add("animate");
-});
+// حركة القلب
+btn.classList.remove("animate");
+void btn.offsetWidth;
+btn.classList.add("animate");
 
-// تحديث العدد فقط
-const countSpan = btn.nextElementSibling;
-if(countSpan){
-  countSpan.textContent =
-    `${updated.likesCount || 0} إعجاب`;
-    
+// تحديث العدد
+const likesBox = btn.parentElement;
+
+if(likesBox){
+  const countSpan = likesBox.querySelector("span");
+
+  if(countSpan){
+    countSpan.textContent =
+      `${updated.likesCount || 0} إعجاب`;
+  }
 }
   }
 };
