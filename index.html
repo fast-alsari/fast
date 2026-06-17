@@ -1022,9 +1022,8 @@ loginBtn.innerText = "تسجيل الدخول";
 
     bindPhoneInputs();
 
-autoLogin().finally(() => {
-  document.body.classList.add("loaded");
-});
+await autoLogin();
+document.body.classList.add("loaded");
   </script>
 
   <div id="toast"></div>
