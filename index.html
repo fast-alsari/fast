@@ -108,6 +108,127 @@ font-weight:800;
 cursor:pointer;
 }
     
+    
+    .login-top{
+text-align:center;
+margin-bottom:35px;
+}
+
+.modern-logo img{
+width:120px;
+height:120px;
+object-fit:contain;
+border-radius:25px;
+}
+
+.welcome-title{
+color:#1547a8;
+font-size:40px;
+font-weight:800;
+margin:15px 0 8px;
+}
+
+.welcome-subtitle{
+color:#666;
+font-size:20px;
+}
+
+.input-group{
+position:relative;
+margin-bottom:18px;
+}
+
+.input-group input{
+width:100%;
+height:62px;
+padding:0 55px;
+border:2px solid #ececec;
+border-radius:18px;
+font-size:18px;
+box-sizing:border-box;
+}
+
+.input-group > i{
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+color:#777;
+font-size:22px;
+}
+
+.show-pass{
+position:absolute;
+left:18px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+color:#777;
+}
+
+.forgot-password{
+text-align:left;
+margin-bottom:20px;
+}
+
+.forgot-password a{
+color:#1547a8;
+font-weight:700;
+text-decoration:none;
+}
+
+.login-modern-btn{
+width:100%;
+height:65px;
+border:none;
+border-radius:18px;
+background:#ff7a00;
+color:#fff;
+font-size:24px;
+font-weight:800;
+cursor:pointer;
+}
+
+.divider{
+display:flex;
+align-items:center;
+margin:25px 0;
+}
+
+.divider::before,
+.divider::after{
+content:"";
+flex:1;
+height:1px;
+background:#ddd;
+}
+
+.divider span{
+margin:0 15px;
+font-size:22px;
+font-weight:700;
+}
+
+.create-account-btn{
+width:100%;
+height:65px;
+border:2px solid #ffd4a5;
+background:#fff;
+border-radius:18px;
+font-size:22px;
+font-weight:700;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+cursor:pointer;
+}
+
+.create-account-btn i{
+color:#ff7a00;
+}
+
+
   </style>
 </head>
 <body>
@@ -122,16 +243,59 @@ cursor:pointer;
   <div class="container">
     <!-- تسجيل الدخول -->
    <div id="loginSection" class="card section">
-      <div class="logo"><img src="Logo.png" alt="Logo"></div>
-      <p class="app-text">نوصلك طلبك عالسريع</p>
-      <h2 class="title">تسجيل الدخول</h2>
-      <input type="tel" id="login_phone" placeholder="رقم الهاتف" inputmode="numeric" maxlength="11">
-      <div class="password-box">
-        <input type="password" id="login_password" placeholder="الرمز السري">
-        <i class="fa-solid fa-eye" onclick="togglePassword('login_password',this)"></i>
-      </div>
-   <button id="loginBtn" onclick="login()">تسجيل الدخول</button>
-      <div class="link"><a onclick="showSection('registerSection')">إنشاء حساب</a></div>
+      <div class="login-top">
+
+  <div class="logo modern-logo">
+    <img src="Logo.png" alt="Logo">
+  </div>
+
+  <h1 class="welcome-title">مرحباً بك</h1>
+
+  <p class="welcome-subtitle">
+    سجل دخولك للمتابعة
+  </p>
+
+</div>
+      <div class="input-group">
+  <i class="fa-solid fa-phone"></i>
+  <input type="tel"
+         id="login_phone"
+         placeholder="رقم الهاتف"
+         inputmode="numeric"
+         maxlength="11">
+</div>
+      <div class="input-group password-group">
+
+  <i class="fa-solid fa-lock"></i>
+
+  <input type="password"
+         id="login_password"
+         placeholder="كلمة السر">
+
+  <span class="show-pass">
+    <i class="fa-solid fa-eye"
+       onclick="togglePassword('login_password',this)">
+    </i>
+  </span>
+
+</div>
+  <div class="forgot-password">
+  <a href="javascript:void(0)">نسيت كلمة السر؟</a>
+</div>
+
+<button id="loginBtn" class="login-modern-btn" onclick="login()">
+  تسجيل الدخول
+</button>
+
+<div class="divider">
+  <span>أو</span>
+</div>
+
+<button class="create-account-btn"
+        onclick="showSection('registerSection')">
+  <i class="fa-solid fa-user-plus"></i>
+  <span>إنشاء حساب جديد</span>
+</button>
     </div>
 
     <!-- إنشاء حساب -->
