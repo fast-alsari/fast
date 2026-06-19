@@ -107,73 +107,32 @@ font-size:16px;
 font-weight:800;
 cursor:pointer;
 }
-.start-login-btn{
-width:100%;
-height:105px;
-border:none;
-border-radius:38px;
-background:#ff7a00;
-color:#fff;
-font-size:34px;
-font-weight:800;
-cursor:pointer;
-box-shadow:0 6px 18px rgba(255,122,0,.20);
-}
-
-.or-divider{
-display:flex;
-align-items:center;
-justify-content:center;
-gap:30px;
-margin:60px 0;
-font-size:46px;
-font-weight:800;
-color:#000;
-}
-
-.or-divider::before,
-.or-divider::after{
-content:"";
-flex:1;
-height:2px;
-background:#d9d9d9;
-}
-
-.start-register-btn{
-width:100%;
-height:110px;
-border:4px solid #e5d5ab;
-background:#fff;
-border-radius:38px;
-font-size:30px;
-font-weight:800;
-display:flex;
-align-items:center;
-justify-content:center;
-gap:18px;
-cursor:pointer;
-color:#111;
-}
-
-.start-register-btn i{
-color:#ff7a00;
-font-size:36px;
-}
 
 .account-card{
 display:flex;
 align-items:center;
 gap:15px;
 padding:18px;
-border-radius:20px;
-margin-bottom:14px;
+border-radius:24px;
+margin-bottom:16px;
 cursor:pointer;
+border:none;
+box-shadow:0 3px 12px rgba(0,0,0,.05);
+transition:.2s;
+}
+
+.account-card:active{
+transform:scale(.98);
 }
 
 .account-icon{
-font-size:40px;
-width:60px;
-text-align:center;
+width:70px;
+height:70px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:34px;
 }
 
 .account-info{
@@ -182,38 +141,54 @@ flex:1;
 
 .account-info h3{
 margin:0;
-font-size:22px;
+font-size:24px;
 font-weight:800;
 }
 
 .account-info p{
-margin-top:5px;
-font-size:14px;
-line-height:1.6;
+margin:6px 0 0;
+font-size:15px;
+line-height:1.7;
 }
 
 .account-arrow{
-font-size:20px;
+font-size:22px;
+opacity:.8;
 }
 
 .customer-card{
 background:#eef3ff;
 }
 
+.customer-card .account-icon{
+background:#dfe8ff;
+color:#2563eb;
+}
+
 .customer-card h3{
-color:#2155d6;
+color:#2563eb;
 }
 
 .store-card{
 background:#eefaf2;
 }
 
+.store-card .account-icon{
+background:#ddf8e7;
+color:#16a34a;
+}
+
 .store-card h3{
-color:#0f9f3a;
+color:#16a34a;
 }
 
 .driver-card{
 background:#fff6ec;
+}
+
+.driver-card .account-icon{
+background:#ffedd5;
+color:#f97316;
 }
 
 .driver-card h3{
@@ -221,13 +196,24 @@ color:#f97316;
 }
 
 .taxi-card{
-background:#f7efff;
+background:#f6efff;
+}
+
+.taxi-card .account-icon{
+background:#eee0ff;
+color:#9333ea;
 }
 
 .taxi-card h3{
-color:#7e22ce;
+color:#9333ea;
 }
-
+.register-subtitle{
+text-align:center;
+color:#777;
+font-size:15px;
+margin-top:-8px;
+margin-bottom:25px;
+}
     
   </style>
 </head>
@@ -241,33 +227,8 @@ color:#7e22ce;
   </div>
 </div>
   <div class="container">
-    <div id="startSection" class="card section active">
-
-  <div class="logo">
-    <img src="Logo.png" alt="Logo">
-  </div>
-
-  <button class="start-login-btn"
-          onclick="showSection('loginSection')">
-    تسجيل الدخول
-  </button>
-
-  <div class="or-divider">
-    <span>أو</span>
-  </div>
-
-<button class="start-register-btn"
-onclick="showSection('registerSection')">
-
-<span>إنشاء حساب جديد</span>
-
-<i class="fa-solid fa-user-plus"></i>
-
-</button>
-
-</div>
     <!-- تسجيل الدخول -->
-   <div id="loginSection" class="card section">
+<div id="loginSection" class="card section active">
       <div class="logo"><img src="Logo.png" alt="Logo"></div>
       <p class="app-text">نوصلك طلبك عالسريع</p>
       <h2 class="title">تسجيل الدخول</h2>
@@ -277,23 +238,24 @@ onclick="showSection('registerSection')">
         <i class="fa-solid fa-eye" onclick="togglePassword('login_password',this)"></i>
       </div>
    <button id="loginBtn" onclick="login()">تسجيل الدخول</button>
-<div class="link">
-<a onclick="showSection('startSection')">
-العودة
-</a>
-</div>
+      <div class="link"><a onclick="showSection('registerSection')">إنشاء حساب</a></div>
     </div>
 
     <!-- إنشاء حساب -->
     <div id="registerSection" class="card section">
       <div class="logo"><img src="Logo.png" alt="Logo"></div>
-      <h2 class="title">إنشاء حساب</h2>
+  <p class="register-subtitle">
+اختر نوع الحساب المناسب لك
+</p>
 
-<div id="accountCards">
+    <div id="accountCards">
 
 <div class="account-card customer-card"
 onclick="selectAccount('customer')">
-<div class="account-icon">👤</div>
+
+<div class="account-icon">
+<i class="fa-solid fa-user"></i>
+</div>
 
 <div class="account-info">
 <h3>حساب زبون</h3>
@@ -303,11 +265,15 @@ onclick="selectAccount('customer')">
 <div class="account-arrow">
 <i class="fa-solid fa-chevron-left"></i>
 </div>
+
 </div>
 
 <div class="account-card store-card"
 onclick="selectAccount('store')">
-<div class="account-icon">🏪</div>
+
+<div class="account-icon">
+<i class="fa-solid fa-store"></i>
+</div>
 
 <div class="account-info">
 <h3>حساب متجر</h3>
@@ -317,11 +283,15 @@ onclick="selectAccount('store')">
 <div class="account-arrow">
 <i class="fa-solid fa-chevron-left"></i>
 </div>
+
 </div>
 
 <div class="account-card driver-card"
 onclick="selectAccount('driver')">
-<div class="account-icon">🛵</div>
+
+<div class="account-icon">
+<i class="fa-solid fa-motorcycle"></i>
+</div>
 
 <div class="account-info">
 <h3>حساب سائق توصيل</h3>
@@ -331,20 +301,25 @@ onclick="selectAccount('driver')">
 <div class="account-arrow">
 <i class="fa-solid fa-chevron-left"></i>
 </div>
+
 </div>
 
 <div class="account-card taxi-card"
 onclick="selectAccount('taxi')">
-<div class="account-icon">🚕</div>
+
+<div class="account-icon">
+<i class="fa-solid fa-taxi"></i>
+</div>
 
 <div class="account-info">
 <h3>حساب سائق تكسي</h3>
-<p>قدم خدمة التوصيل واكسب الدخل بسهولة</p>
+<p>قدم خدمة التكسي واكسب الدخل</p>
 </div>
 
 <div class="account-arrow">
 <i class="fa-solid fa-chevron-left"></i>
 </div>
+
 </div>
 
 </div>
@@ -421,16 +396,12 @@ onclick="selectAccount('taxi')">
         <input type="file" id="driver_vehicle_image" accept="image/*">
       </div>
 
-     <button id="registerBtnMain"
+   <button
 onclick="registerAccount()"
 style="display:none;">
 إنشاء الحساب
 </button>
-<div class="link">
-<a onclick="showSection('startSection')">
-العودة
-</a>
-</div>
+      <div class="link"><a onclick="showSection('loginSection')">العودة لتسجيل الدخول</a></div>
     </div>
 
     <!-- صفحة الانتظار -->
@@ -864,15 +835,21 @@ if (androidToken) {
       document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
       document.getElementById(sectionId).classList.add("active");
     };
+    
 window.selectAccount = function(type){
 
 document.getElementById("account_type").value = type;
 
 document.getElementById("accountCards").style.display = "none";
 
-document.getElementById("registerBtnMain").style.display = "block";
+document.querySelector(
+'button[onclick="registerAccount()"]'
+).style.display = "block";
+
 changeRegisterForm();
+
 };
+
     window.changeRegisterForm = function() {
       const type = document.getElementById("account_type").value;
       if (type === "") {
