@@ -415,10 +415,7 @@ z-index:10;
         ">
     <i class="fa-solid fa-arrow-right"></i>
 </button>
-        onclick="backToAccountChooser()"
-        style="display:none;margin-bottom:15px;background:none;border:none;font-size:22px;cursor:pointer;">
-    <i class="fa-solid fa-arrow-right"></i>
-</button>
+
 
      <div id="accountChooser">
 
@@ -1021,7 +1018,9 @@ document.getElementById("customerForm").style.display = "none";
 document.getElementById("storeForm").style.display = "none";
 document.getElementById("driverForm").style.display = "none";
 document.getElementById("taxiForm").style.display = "none";
+
 document.getElementById("registerBtn").style.display = "none";
+
 };
     window.changeRegisterForm = function() {
       const type = document.getElementById("account_type").value;
