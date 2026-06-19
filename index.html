@@ -230,6 +230,102 @@ color:#ff7a00;
 }
 
 
+.chooser-subtitle{
+text-align:center;
+margin-bottom:25px;
+color:#777;
+}
+
+.account-card{
+display:flex;
+align-items:center;
+gap:15px;
+padding:18px;
+border-radius:22px;
+margin-bottom:15px;
+cursor:pointer;
+border:1px solid #eee;
+}
+
+.customer-card{
+background:#eef4ff;
+}
+
+.store-card{
+background:#effaf3;
+}
+
+.driver-card{
+background:#fff5eb;
+}
+
+.taxi-card{
+background:#f6efff;
+}
+
+.account-icon{
+width:65px;
+height:65px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+background:#fff;
+}
+
+.customer-card .account-icon{
+color:#1d4ed8;
+}
+
+.store-card .account-icon{
+color:#16a34a;
+}
+
+.driver-card .account-icon{
+color:#ea580c;
+}
+
+.taxi-card .account-icon{
+color:#7e22ce;
+}
+
+.account-info{
+flex:1;
+}
+
+.account-info h3{
+margin:0 0 6px;
+font-size:20px;
+}
+
+.account-info p{
+margin:0;
+font-size:14px;
+}
+
+.arrow{
+font-size:18px;
+}
+
+
+.account-card{
+display:flex;
+align-items:center;
+gap:15px;
+padding:20px;
+border-radius:24px;
+margin-bottom:18px;
+cursor:pointer;
+border:none;
+box-shadow:0 4px 15px rgba(0,0,0,.06);
+transition:.2s;
+}
+
+.account-card:hover{
+transform:translateY(-2px);
+}
+
   </style>
 </head>
 <body>
@@ -281,7 +377,7 @@ color:#ff7a00;
 
 </div>
 
-</div>
+
 
 <button id="loginBtn" class="login-modern-btn" onclick="login()">
   تسجيل الدخول
@@ -300,16 +396,81 @@ color:#ff7a00;
 
     <!-- إنشاء حساب -->
     <div id="registerSection" class="card section">
-      <div class="logo"><img src="Logo.png" alt="Logo"></div>
-      <h2 class="title">إنشاء حساب</h2>
+ 
+<button id="backToChooserBtn"
+        onclick="backToAccountChooser()"
+        style="display:none;margin-bottom:15px;background:none;border:none;font-size:22px;cursor:pointer;">
+    <i class="fa-solid fa-arrow-right"></i>
+</button>
 
-      <select id="account_type" onchange="changeRegisterForm()">
-        <option value="">اختر نوع الحساب</option>
-        <option value="customer">زبون</option>
-        <option value="taxi">تكسي</option>
-        <option value="store">متجر</option>
-        <option value="driver">سائق توصيل</option>
-      </select>
+     <div id="accountChooser">
+
+    <h2 class="title">إنشاء حساب</h2>
+    <p class="chooser-subtitle">اختر نوع الحساب المناسب لك</p>
+
+    <div class="account-card customer-card"
+         onclick="selectAccountType('customer')">
+
+        <div class="account-icon">
+            <i class="fa-solid fa-user"></i>
+        </div>
+
+        <div class="account-info">
+            <h3>حساب زبون</h3>
+            <p>اطلب من أي متجر واستمتع بتجربة مريحة</p>
+        </div>
+
+        <i class="fa-solid fa-chevron-left arrow"></i>
+    </div>
+
+    <div class="account-card store-card"
+         onclick="selectAccountType('store')">
+
+        <div class="account-icon">
+            <i class="fa-solid fa-store"></i>
+        </div>
+
+        <div class="account-info">
+            <h3>حساب متجر</h3>
+            <p>أدر متجرك واعرض منتجاتك داخل التطبيق</p>
+        </div>
+
+        <i class="fa-solid fa-chevron-left arrow"></i>
+    </div>
+
+    <div class="account-card driver-card"
+         onclick="selectAccountType('driver')">
+
+        <div class="account-icon">
+            <i class="fa-solid fa-motorcycle"></i>
+        </div>
+
+        <div class="account-info">
+            <h3>حساب سائق توصيل</h3>
+            <p>قم بتوصيل الطلبات وكسب الأرباح</p>
+        </div>
+
+        <i class="fa-solid fa-chevron-left arrow"></i>
+    </div>
+
+    <div class="account-card taxi-card"
+         onclick="selectAccountType('taxi')">
+
+        <div class="account-icon">
+            <i class="fa-solid fa-taxi"></i>
+        </div>
+
+        <div class="account-info">
+            <h3>حساب سائق تكسي</h3>
+            <p>استقبل طلبات النقل داخل التطبيق</p>
+        </div>
+
+        <i class="fa-solid fa-chevron-left arrow"></i>
+    </div>
+
+</div>
+
+<input type="hidden" id="account_type">
 
       <!-- الزبون -->
       <div id="customerForm" style="display:none;">
@@ -381,8 +542,16 @@ color:#ff7a00;
         <input type="file" id="driver_vehicle_image" accept="image/*">
       </div>
 
-      <button onclick="registerAccount()">إنشاء الحساب</button>
-      <div class="link"><a onclick="showSection('loginSection')">العودة لتسجيل الدخول</a></div>
+    <button id="registerBtn"
+        onclick="registerAccount()"
+        style="display:none;">
+  إنشاء الحساب
+</button>
+     <div class="link" style="margin-top:20px;">
+<a onclick="showSection('loginSection')">
+العودة لتسجيل الدخول
+</a>
+</div>
     </div>
 
     <!-- صفحة الانتظار -->
@@ -816,13 +985,39 @@ if (androidToken) {
       document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
       document.getElementById(sectionId).classList.add("active");
     };
+window.selectAccountType = function(type){
 
+document.getElementById("account_type").value = type;
+
+document.getElementById("accountChooser").style.display = "none";
+document.getElementById("backToChooserBtn").style.display = "block";
+
+changeRegisterForm();
+
+};
+
+window.backToAccountChooser = function(){
+
+document.getElementById("account_type").value = "";
+
+document.getElementById("accountChooser").style.display = "block";
+
+document.getElementById("backToChooserBtn").style.display = "none";
+
+document.getElementById("customerForm").style.display = "none";
+document.getElementById("storeForm").style.display = "none";
+document.getElementById("driverForm").style.display = "none";
+document.getElementById("taxiForm").style.display = "none";
+
+};
     window.changeRegisterForm = function() {
       const type = document.getElementById("account_type").value;
-      if (type === "") {
-        alert("اختر نوع الحساب");
-        return;
-      }
+      document.getElementById("registerBtn").style.display =
+type ? "block" : "none";
+      if(type===""){
+document.getElementById("accountChooser").style.display="block";
+return;
+}
 
       document.getElementById("customerForm").style.display = "none";
       document.getElementById("storeForm").style.display = "none";
