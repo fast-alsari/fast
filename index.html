@@ -433,24 +433,6 @@ box-shadow:0 0 0 0 rgba(21,71,168,0);
     <!-- إنشاء حساب -->
     <div id="registerSection" class="card section" style="position:relative;">
  
-<button id="backToChooserBtn"
-        onclick="backToAccountChooser()"
-  style="
-display:none;
-position:absolute;
-top:15px;
-right:15px;
-background:none;
-border:none;
-font-size:26px;
-cursor:pointer;
-color:#1547a8;
-z-index:10;
-"
-    
-        ">
-    <i class="fa-solid fa-arrow-right"></i>
-</button>
 
 
      <div id="accountChooser">
@@ -603,10 +585,28 @@ z-index:10;
         <input type="file" id="driver_vehicle_image" accept="image/*">
       </div>
 
-    <button id="registerBtn"
+<button id="registerBtn"
         onclick="registerAccount()"
         style="display:none;">
   إنشاء الحساب
+</button>
+
+<button id="backToChooserBtn"
+        onclick="backToAccountChooser()"
+        style="
+display:none;
+width:100%;
+height:58px;
+margin-top:12px;
+border:none;
+border-radius:18px;
+background:#1547a8;
+color:#fff;
+font-size:20px;
+font-weight:800;
+cursor:pointer;
+">
+رجوع
 </button>
    
     </div>
@@ -1067,11 +1067,14 @@ document.getElementById("driverForm").style.display = "none";
 document.getElementById("taxiForm").style.display = "none";
 
 document.getElementById("registerBtn").style.display = "none";
-
+document.getElementById("backToChooserBtn").style.display = "none";
 };
     window.changeRegisterForm = function() {
       const type = document.getElementById("account_type").value;
       document.getElementById("registerBtn").style.display =
+type ? "block" : "none";
+
+document.getElementById("backToChooserBtn").style.display =
 type ? "block" : "none";
       if(type===""){
 document.getElementById("accountChooser").style.display="block";
