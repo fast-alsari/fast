@@ -107,6 +107,57 @@ font-size:16px;
 font-weight:800;
 cursor:pointer;
 }
+.start-login-btn{
+width:100%;
+height:58px;
+border:none;
+border-radius:18px;
+background:#ff7a00;
+color:#fff;
+font-size:22px;
+font-weight:700;
+cursor:pointer;
+margin-top:15px;
+}
+
+.or-divider{
+display:flex;
+align-items:center;
+justify-content:center;
+gap:15px;
+margin:28px 0;
+font-size:24px;
+font-weight:700;
+}
+
+.or-divider::before,
+.or-divider::after{
+content:"";
+flex:1;
+height:1px;
+background:#ddd;
+}
+
+.start-register-btn{
+width:100%;
+height:65px;
+border:2px solid #f2d9a9;
+background:#fff;
+border-radius:20px;
+font-size:22px;
+font-weight:700;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:12px;
+cursor:pointer;
+color:#111;
+}
+
+.start-register-btn i{
+color:#ff7a00;
+font-size:24px;
+}
     
   </style>
 </head>
@@ -120,6 +171,28 @@ cursor:pointer;
   </div>
 </div>
   <div class="container">
+    <div id="startSection" class="card section active">
+
+  <div class="logo">
+    <img src="Logo.png" alt="Logo">
+  </div>
+
+  <button class="start-login-btn"
+          onclick="showSection('loginSection')">
+    تسجيل الدخول
+  </button>
+
+  <div class="or-divider">
+    <span>أو</span>
+  </div>
+
+  <button class="start-register-btn"
+          onclick="showSection('registerSection')">
+    <i class="fa-solid fa-user-plus"></i>
+    إنشاء حساب جديد
+  </button>
+
+</div>
     <!-- تسجيل الدخول -->
    <div id="loginSection" class="card section">
       <div class="logo"><img src="Logo.png" alt="Logo"></div>
@@ -131,7 +204,11 @@ cursor:pointer;
         <i class="fa-solid fa-eye" onclick="togglePassword('login_password',this)"></i>
       </div>
    <button id="loginBtn" onclick="login()">تسجيل الدخول</button>
-      <div class="link"><a onclick="showSection('registerSection')">إنشاء حساب</a></div>
+<div class="link">
+<a onclick="showSection('startSection')">
+العودة
+</a>
+</div>
     </div>
 
     <!-- إنشاء حساب -->
@@ -218,7 +295,11 @@ cursor:pointer;
       </div>
 
       <button onclick="registerAccount()">إنشاء الحساب</button>
-      <div class="link"><a onclick="showSection('loginSection')">العودة لتسجيل الدخول</a></div>
+<div class="link">
+<a onclick="showSection('startSection')">
+العودة
+</a>
+</div>
     </div>
 
     <!-- صفحة الانتظار -->
