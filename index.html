@@ -395,9 +395,26 @@ transform:translateY(-2px);
     </div>
 
     <!-- إنشاء حساب -->
-    <div id="registerSection" class="card section">
+    <div id="registerSection" class="card section" style="position:relative;">
  
 <button id="backToChooserBtn"
+        onclick="backToAccountChooser()"
+  style="
+display:none;
+position:absolute;
+top:15px;
+right:15px;
+background:none;
+border:none;
+font-size:26px;
+cursor:pointer;
+color:#1547a8;
+z-index:10;
+"
+    
+        ">
+    <i class="fa-solid fa-arrow-right"></i>
+</button>
         onclick="backToAccountChooser()"
         style="display:none;margin-bottom:15px;background:none;border:none;font-size:22px;cursor:pointer;">
     <i class="fa-solid fa-arrow-right"></i>
@@ -547,11 +564,7 @@ transform:translateY(-2px);
         style="display:none;">
   إنشاء الحساب
 </button>
-     <div class="link" style="margin-top:20px;">
-<a onclick="showSection('loginSection')">
-العودة لتسجيل الدخول
-</a>
-</div>
+   
     </div>
 
     <!-- صفحة الانتظار -->
@@ -1008,7 +1021,7 @@ document.getElementById("customerForm").style.display = "none";
 document.getElementById("storeForm").style.display = "none";
 document.getElementById("driverForm").style.display = "none";
 document.getElementById("taxiForm").style.display = "none";
-
+document.getElementById("registerBtn").style.display = "none";
 };
     window.changeRegisterForm = function() {
       const type = document.getElementById("account_type").value;
