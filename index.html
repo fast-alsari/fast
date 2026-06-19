@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
@@ -108,6 +109,259 @@ font-weight:800;
 cursor:pointer;
 }
     
+    
+    .login-top{
+text-align:center;
+margin-bottom:35px;
+}
+
+.modern-logo img{
+width:120px;
+height:120px;
+object-fit:contain;
+border-radius:25px;
+}
+
+.welcome-title{
+color:#1547a8;
+font-size:40px;
+font-weight:800;
+margin:15px 0 8px;
+}
+
+.welcome-subtitle{
+color:#666;
+font-size:20px;
+}
+
+.input-group{
+position:relative;
+margin-bottom:18px;
+}
+
+.input-group input{
+width:100%;
+height:62px;
+padding:0 55px;
+border:2px solid #ececec;
+border-radius:18px;
+font-size:18px;
+box-sizing:border-box;
+}
+
+.input-group > i{
+position:absolute;
+right:18px;
+top:50%;
+transform:translateY(-50%);
+color:#777;
+font-size:22px;
+}
+
+.show-pass{
+position:absolute;
+left:18px;
+top:50%;
+transform:translateY(-50%);
+cursor:pointer;
+color:#777;
+}
+
+.forgot-password{
+text-align:left;
+margin-bottom:20px;
+}
+
+.forgot-password a{
+color:#1547a8;
+font-weight:700;
+text-decoration:none;
+}
+
+.login-modern-btn{
+width:100%;
+height:65px;
+border:none;
+border-radius:18px;
+background:#ff7a00;
+color:#fff;
+font-size:24px;
+font-weight:800;
+cursor:pointer;
+}
+
+.divider{
+display:flex;
+align-items:center;
+margin:25px 0;
+}
+
+.divider::before,
+.divider::after{
+content:"";
+flex:1;
+height:1px;
+background:#ddd;
+}
+
+.divider span{
+margin:0 15px;
+font-size:22px;
+font-weight:700;
+}
+
+.create-account-btn{
+width:100%;
+height:65px;
+border:2px solid #ffd4a5;
+background:#fff;
+border-radius:18px;
+font-size:22px;
+font-weight:700;
+display:flex;
+align-items:center;
+justify-content:center;
+gap:10px;
+cursor:pointer;
+color:#000;
+}
+
+.create-account-btn i{
+color:#ff7a00;
+}
+
+
+.chooser-subtitle{
+text-align:center;
+margin-bottom:25px;
+color:#777;
+}
+
+.account-card{
+display:flex;
+align-items:center;
+gap:15px;
+padding:18px;
+border-radius:22px;
+margin-bottom:15px;
+cursor:pointer;
+border:1px solid #eee;
+}
+
+.customer-card{
+background:#eef4ff;
+}
+
+.store-card{
+background:#effaf3;
+}
+
+.driver-card{
+background:#fff5eb;
+}
+
+.taxi-card{
+background:#f6efff;
+}
+
+.account-icon{
+width:65px;
+height:65px;
+border-radius:50%;
+display:flex;
+align-items:center;
+justify-content:center;
+font-size:28px;
+background:#fff;
+}
+
+.customer-card .account-icon{
+color:#1d4ed8;
+}
+
+.store-card .account-icon{
+color:#16a34a;
+}
+
+.driver-card .account-icon{
+color:#ea580c;
+}
+
+.taxi-card .account-icon{
+color:#7e22ce;
+}
+
+.account-info{
+flex:1;
+}
+
+.account-info h3{
+margin:0 0 6px;
+font-size:20px;
+}
+
+.account-info p{
+margin:0;
+font-size:14px;
+}
+
+.arrow{
+font-size:18px;
+}
+
+
+.account-card{
+display:flex;
+align-items:center;
+gap:15px;
+padding:20px;
+border-radius:24px;
+margin-bottom:18px;
+cursor:pointer;
+border:none;
+box-shadow:0 4px 15px rgba(0,0,0,.06);
+transition:.2s;
+}
+
+.account-card:hover{
+transform:translateY(-2px);
+}
+.back-login-wrap{
+text-align:center;
+margin-top:25px;
+}
+
+.back-login-btn{
+width:100%;
+height:60px;
+border:none;
+border-radius:18px;
+background:#1547a8;
+color:#fff;
+font-size:20px;
+font-weight:800;
+cursor:pointer;
+animation:pulseBlue 1.5s infinite;
+box-shadow:0 0 0 rgba(21,71,168,.5);
+}
+
+@keyframes pulseBlue{
+0%{
+transform:scale(1);
+box-shadow:0 0 0 0 rgba(21,71,168,.5);
+}
+
+70%{
+transform:scale(1.03);
+box-shadow:0 0 0 18px rgba(21,71,168,0);
+}
+
+100%{
+transform:scale(1);
+box-shadow:0 0 0 0 rgba(21,71,168,0);
+}
+}
+
   </style>
 </head>
 <body>
@@ -122,33 +376,165 @@ cursor:pointer;
   <div class="container">
     <!-- تسجيل الدخول -->
    <div id="loginSection" class="card section">
-      <div class="logo"><img src="Logo.png" alt="Logo"></div>
-      <p class="app-text">نوصلك طلبك عالسريع</p>
-      <h2 class="title">تسجيل الدخول</h2>
-      <input type="tel" id="login_phone" placeholder="رقم الهاتف" inputmode="numeric" maxlength="11">
-      <div class="password-box">
-        <input type="password" id="login_password" placeholder="الرمز السري">
-        <i class="fa-solid fa-eye" onclick="togglePassword('login_password',this)"></i>
-      </div>
-   <button id="loginBtn" onclick="login()">تسجيل الدخول</button>
-      <div class="link"><a onclick="showSection('registerSection')">إنشاء حساب</a></div>
+      <div class="login-top">
+
+  <div class="logo modern-logo">
+    <img src="Logo.png" alt="Logo">
+  </div>
+
+  <h1 class="welcome-title">مرحباً بك</h1>
+
+  <p class="welcome-subtitle">
+    سجل دخولك للمتابعة
+  </p>
+
+</div>
+      <div class="input-group">
+  <i class="fa-solid fa-phone"></i>
+  <input type="tel"
+         id="login_phone"
+         placeholder="رقم الهاتف"
+         inputmode="numeric"
+         maxlength="11">
+</div>
+      <div class="input-group password-group">
+
+  <i class="fa-solid fa-lock"></i>
+
+  <input type="password"
+         id="login_password"
+         placeholder="كلمة السر">
+
+  <span class="show-pass">
+    <i class="fa-solid fa-eye"
+       onclick="togglePassword('login_password',this)">
+    </i>
+  </span>
+
+</div>
+
+
+
+<button id="loginBtn" class="login-modern-btn" onclick="login()">
+  تسجيل الدخول
+</button>
+
+<div class="divider">
+  <span>أو</span>
+</div>
+
+<button class="create-account-btn"
+        onclick="showSection('registerSection')">
+  <i class="fa-solid fa-user-plus"></i>
+  <span>إنشاء حساب جديد</span>
+</button>
     </div>
 
     <!-- إنشاء حساب -->
-    <div id="registerSection" class="card section">
-      <div class="logo"><img src="Logo.png" alt="Logo"></div>
-      <h2 class="title">إنشاء حساب</h2>
+    <div id="registerSection" class="card section" style="position:relative;">
+ 
+<button id="backToChooserBtn"
+        onclick="backToAccountChooser()"
+  style="
+display:none;
+position:absolute;
+top:15px;
+right:15px;
+background:none;
+border:none;
+font-size:26px;
+cursor:pointer;
+color:#1547a8;
+z-index:10;
+"
+    
+        ">
+    <i class="fa-solid fa-arrow-right"></i>
+</button>
 
-      <select id="account_type" onchange="changeRegisterForm()">
-        <option value="">اختر نوع الحساب</option>
-        <option value="customer">زبون</option>
-        <option value="taxi">تكسي</option>
-        <option value="store">متجر</option>
-        <option value="driver">سائق توصيل</option>
-      </select>
 
-      <!-- الزبون -->
-      <div id="customerForm" style="display:none;">
+     <div id="accountChooser">
+
+    <h2 class="title">إنشاء حساب</h2>
+    <p class="chooser-subtitle">اختر نوع الحساب المناسب لك</p>
+
+    <div class="account-card customer-card"
+         onclick="selectAccountType('customer')">
+
+        <div class="account-icon">
+            <i class="fa-solid fa-user"></i>
+        </div>
+
+        <div class="account-info">
+            <h3>حساب زبون</h3>
+            <p>اطلب من أي متجر واستمتع بتجربة مريحة</p>
+        </div>
+
+        <i class="fa-solid fa-chevron-left arrow"></i>
+    </div>
+
+    <div class="account-card store-card"
+         onclick="selectAccountType('store')">
+
+        <div class="account-icon">
+            <i class="fa-solid fa-store"></i>
+        </div>
+
+        <div class="account-info">
+            <h3>حساب متجر</h3>
+            <p>أدر متجرك واعرض منتجاتك داخل التطبيق</p>
+        </div>
+
+        <i class="fa-solid fa-chevron-left arrow"></i>
+    </div>
+
+    <div class="account-card driver-card"
+         onclick="selectAccountType('driver')">
+
+        <div class="account-icon">
+            <i class="fa-solid fa-motorcycle"></i>
+        </div>
+
+        <div class="account-info">
+            <h3>حساب سائق توصيل</h3>
+            <p>قم بتوصيل الطلبات وكسب الأرباح</p>
+        </div>
+
+        <i class="fa-solid fa-chevron-left arrow"></i>
+    </div>
+
+    <div class="account-card taxi-card"
+         onclick="selectAccountType('taxi')">
+
+        <div class="account-icon">
+            <i class="fa-solid fa-taxi"></i>
+        </div>
+
+        <div class="account-info">
+            <h3>حساب سائق تكسي</h3>
+            <p>استقبل طلبات النقل داخل التطبيق</p>
+        </div>
+
+        <i class="fa-solid fa-chevron-left arrow"></i>
+    </div>
+
+<div class="back-login-wrap">
+
+  <button class="back-login-btn"
+
+          onclick="showSection('loginSection')">
+
+    العودة لتسجيل الدخول
+
+  </button>
+
+</div>
+
+</div> <!-- اغلاق accountChooser -->
+<input type="hidden" id="account_type" value="">
+<!-- الزبون -->
+
+<div id="customerForm" style="display:none;">
         <input type="text" id="customer_name" placeholder="الاسم الكامل">
         <input type="tel" id="customer_phone" placeholder="رقم الهاتف واتساب" inputmode="numeric" maxlength="11">
         <div class="password-box">
@@ -217,8 +603,12 @@ cursor:pointer;
         <input type="file" id="driver_vehicle_image" accept="image/*">
       </div>
 
-      <button onclick="registerAccount()">إنشاء الحساب</button>
-      <div class="link"><a onclick="showSection('loginSection')">العودة لتسجيل الدخول</a></div>
+    <button id="registerBtn"
+        onclick="registerAccount()"
+        style="display:none;">
+  إنشاء الحساب
+</button>
+   
     </div>
 
     <!-- صفحة الانتظار -->
@@ -652,13 +1042,41 @@ if (androidToken) {
       document.querySelectorAll(".section").forEach(section => section.classList.remove("active"));
       document.getElementById(sectionId).classList.add("active");
     };
+window.selectAccountType = function(type){
 
+document.getElementById("account_type").value = type;
+
+document.getElementById("accountChooser").style.display = "none";
+document.getElementById("backToChooserBtn").style.display = "block";
+
+changeRegisterForm();
+
+};
+
+window.backToAccountChooser = function(){
+
+document.getElementById("account_type").value = "";
+
+document.getElementById("accountChooser").style.display = "block";
+
+document.getElementById("backToChooserBtn").style.display = "none";
+
+document.getElementById("customerForm").style.display = "none";
+document.getElementById("storeForm").style.display = "none";
+document.getElementById("driverForm").style.display = "none";
+document.getElementById("taxiForm").style.display = "none";
+
+document.getElementById("registerBtn").style.display = "none";
+
+};
     window.changeRegisterForm = function() {
       const type = document.getElementById("account_type").value;
-      if (type === "") {
-        alert("اختر نوع الحساب");
-        return;
-      }
+      document.getElementById("registerBtn").style.display =
+type ? "block" : "none";
+      if(type===""){
+document.getElementById("accountChooser").style.display="block";
+return;
+}
 
       document.getElementById("customerForm").style.display = "none";
       document.getElementById("storeForm").style.display = "none";
