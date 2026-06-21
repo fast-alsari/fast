@@ -403,28 +403,7 @@
 .best-products-scroll::-webkit-scrollbar{
   display:none;
 }
-.best-product-item{
-  width:160px;
-  text-align:center;
-}
 
-.best-product-price{
-  margin-top:10px;
-  background:#fff4e8;
-  color:#ff8800;
-  font-size:18px;
-  font-weight:800;
-  padding:8px;
-  border-radius:12px;
-}
-
-.best-product-name{
-  margin-top:8px;
-  font-size:18px;
-  font-weight:800;
-  color:#222;
-  line-height:1.5;
-}
 .best-product-item{
   width:90px;
   flex-shrink:0;
@@ -432,8 +411,8 @@
 }
 
 .best-product-img{
-  width:160px;
-  height:160px;
+  width:90px;
+  height:90px;
   border-radius:18px;
   object-fit:cover;
   border:2px solid #fff;
@@ -973,40 +952,23 @@ function renderBestProducts(){
   const box = document.getElementById("bestProductsBox");
   const container = document.getElementById("bestProductsContainer");
 
- const visibleProducts = bestProducts.filter(product => {
-  const store = allStores.find(
-    s => String(s.id) === String(product.storeId)
-  );
-
-  return store && isStoreOpen(store);
-});
-
-if(!visibleProducts.length){
-  box.style.display = "none";
-  return;
-}
+  if(!bestProducts.length){
+    box.style.display = "none";
+    return;
+  }
 
   box.style.display = "block";
 
-container.innerHTML = visibleProducts.map(product => `
-<div class="best-product-item"
-     onclick="openBestProduct('${product.storeId}','${product.id}')">
+  container.innerHTML = bestProducts.map(product => `
+    <div class="best-product-item"
+         onclick="openBestProduct('${product.storeId}','${product.id}')">
 
-  <img
-    src="${product.image || 'product.png'}"
-    class="best-product-img"
-    onerror="this.src='product.png'">
+      <img
+        src="${product.image || 'product.png'}"
+        class="best-product-img"
+        onerror="this.src='product.png'">
 
-  <div class="best-product-price">
-    ${Number(product.price || 0).toLocaleString()} د.ع
-  </div>
-
-  <div class="best-product-name">
-    ${product.name || "منتج"}
-  </div>
-
-</div>
-`
+    </div>
   `).join("");
 
   enhanceAllImages();
