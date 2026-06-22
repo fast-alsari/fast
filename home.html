@@ -631,7 +631,35 @@
 
   <div class="bottom-bar" id="bottomBar">
     <div class="nav-item active" onclick="showPage('homePage',this)"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div>
-    <div class="nav-item" onclick="showPage('cartPage',this)"><i class="fa-solid fa-cart-shopping"></i><span>السلة</span></div>
+<div class="nav-item"
+onclick="showPage('cartPage',this)"
+style="position:relative">
+
+<i class="fa-solid fa-cart-shopping"></i>
+
+<div id="cartCount"
+style="
+position:absolute;
+top:-2px;
+right:10px;
+min-width:20px;
+height:20px;
+background:red;
+color:#fff;
+border-radius:50%;
+display:none;
+align-items:center;
+justify-content:center;
+font-size:11px;
+font-weight:800;
+padding:0 5px;
+">
+0
+</div>
+
+<span>السلة</span>
+
+</div>
     <div class="nav-item" onclick="showPage('accountPage',this)"><i class="fa-solid fa-user"></i><span>الحساب</span></div>
   </div>
 
@@ -681,6 +709,33 @@ window.closeImageViewer = function(){
     let userLatitude = null;
     let userLongitude = null;
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+    function updateCartBadge(){
+
+const badge =
+document.getElementById("cartCount");
+
+if(!badge) return;
+
+const total =
+cart.reduce(
+(a,b)=>
+a + Number(b.qty||1),
+0
+);
+
+badge.innerText = total;
+
+badge.style.display =
+total > 0
+? "flex"
+: "none";
+
+}
+
+setTimeout(
+updateCartBadge,
+300
+);
     let currentStore = null;
     let currentStoreProducts = [];
     let productsUnsubscribe = null;
@@ -952,24 +1007,67 @@ function renderBestProducts(){
   const box = document.getElementById("bestProductsBox");
   const container = document.getElementById("bestProductsContainer");
 
-  if(!bestProducts.length){
+bestProducts = bestProducts.filter(product => {
+
+  const store =
+    allStores.find(
+      s => String(s.id) === String(product.storeId)
+    );
+
+  if(!store) return false;
+
+  return isStoreOpen(store);
+
+});
+
+if(!bestProducts.length){
+  
     box.style.display = "none";
     return;
   }
 
   box.style.display = "block";
 
-  container.innerHTML = bestProducts.map(product => `
-    <div class="best-product-item"
-         onclick="openBestProduct('${product.storeId}','${product.id}')">
+container.innerHTML = bestProducts.map(product => `
 
-      <img
-        src="${product.image || 'product.png'}"
-        class="best-product-img"
-        onerror="this.src='product.png'">
+<div class="best-product-item"
+onclick="openBestProduct('${product.storeId}','${product.id}')">
 
-    </div>
-  `).join("");
+<img
+src="${product.image || 'product.png'}"
+class="best-product-img"
+onerror="this.src='product.png'">
+
+<div style="
+margin-top:8px;
+text-align:center;
+">
+
+<div style="
+font-size:12px;
+font-weight:800;
+color:#222;
+overflow:hidden;
+text-overflow:ellipsis;
+white-space:nowrap;
+">
+${product.name || ""}
+</div>
+
+<div style="
+font-size:12px;
+color:#ff8800;
+font-weight:800;
+margin-top:3px;
+">
+${Number(product.price||0).toLocaleString()} د.ع
+</div>
+
+</div>
+
+</div>
+
+`).join("");
 
   enhanceAllImages();
 
@@ -1269,7 +1367,7 @@ if(likesBox){
 }
   }
 };
-    window.addToCart = function(product){ const qty = Number(document.getElementById(`qty_${product.id}`).value || 1); const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId); if(existingProduct) existingProduct.qty += qty; else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""}); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); alert("تمت الاضافة"); };
+    window.addToCart = function(product){ const qty = Number(document.getElementById(`qty_${product.id}`).value || 1); const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId); if(existingProduct) existingProduct.qty += qty; else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""}); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); updateCartBadge(); alert("تمت الاضافة"); };
 
     function updateCart(){
       const cartContainer = document.getElementById("cartContainer");
