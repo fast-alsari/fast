@@ -360,10 +360,10 @@
     .taxi-order-btn{width:100%;padding:16px;border:none;border-radius:18px;background:#00b894;color:#fff;font-size:17px;font-weight:800;cursor:pointer}
 
 .best-products-box{
-  margin:12px 15px 0;
-  display:none;
+margin:2px 15px 0;
+padding-bottom:2px;
+display:none;
 }
-
 .best-products-title{
   font-size:17px;
   font-weight:800;
@@ -1867,7 +1867,10 @@ return 0;
 
 });
 
-bestProducts = bestProducts.filter(product => {
+if(allStores.length){
+
+bestProducts =
+bestProducts.filter(product => {
 
 const store =
 allStores.find(
@@ -1878,6 +1881,8 @@ return store &&
 isStoreOpen(store);
 
 });
+
+}
 
 bestProducts =
 bestProducts
@@ -1895,9 +1900,16 @@ animateBestProducts();
   });
 
 }
-    startAdsSlider();
-    startBestProducts();
-    setTimeout(animateBestProducts,100);
+startAdsSlider();
+
+setTimeout(() => {
+startBestProducts();
+},300);
+
+setTimeout(
+animateBestProducts,
+500
+);
 
 const bestProductsInterval = setInterval(() => {
   const total =
