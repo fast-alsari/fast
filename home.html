@@ -372,15 +372,28 @@
 }
 
 .best-products-scroll{
-  position:relative;
-  width:100%;
-height:190px;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+display:flex;
+
+gap:12px;
+
+overflow-x:auto;
+
+overflow-y:hidden;
+
+scroll-behavior:smooth;
+
+padding:8px 12px;
+
+white-space:nowrap;
+
+-webkit-overflow-scrolling:touch;
+
+scrollbar-width:none;
 }
 
+.best-products-scroll::-webkit-scrollbar{
+display:none;
+}
 .best-product-item{
 width:110px;
 min-width:110px;
@@ -454,6 +467,7 @@ overflow:hidden;
   width:90px;
   flex-shrink:0;
   cursor:pointer;
+  flex:0 0 auto;
 }
 
 .best-product-img{
