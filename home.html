@@ -1847,10 +1847,10 @@ function startBestProducts(){
           continue;
         }
 
-        if(Number(product.likesCount || 0) <= 0){
-          continue;
-        }
-
+    
+if(!product.likesCount){
+product.likesCount = 0;
+}
         bestProducts.push({
           ...product,
           storeId
@@ -1860,11 +1860,19 @@ function startBestProducts(){
 
     }
 
-    bestProducts.sort(
-      (a,b)=>
-        Number(b.likesCount || 0) -
-        Number(a.likesCount || 0)
-    );
+   bestProducts.sort((a,b)=>{
+
+const likes =
+Number(b.likesCount||0)
+-
+Number(a.likesCount||0);
+
+if(likes!==0)
+return likes;
+
+return 0;
+
+});
 
 bestProducts = bestProducts.filter(product => {
 
@@ -1882,6 +1890,13 @@ bestProducts =
 bestProducts
 .slice(0,6);
     renderBestProducts();
+    setTimeout(()=>{
+
+renderBestProducts();
+
+animateBestProducts();
+
+},200);
 
   });
 
