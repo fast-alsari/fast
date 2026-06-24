@@ -1264,7 +1264,7 @@ window.openBestProduct = async function(storeId, productId){
     window.openStore = async function(storeId){
       freezeProductsOrder = false;
       const store = allStores.find(s => s.id === storeId);
-      if(!store){ alert("المتجر غير موجود"); return; }
+      if(!store){ alert("المتجر مغلق حاليا جرب في وقت اخر "); return; }
       currentStore = store;
       currentProductSearch = "";
       productSearchInput.value = "";
