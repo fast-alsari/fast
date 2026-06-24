@@ -374,7 +374,7 @@
 .best-products-scroll{
   position:relative;
   width:100%;
-  height:130px;
+height:190px;
   overflow:hidden;
   display:flex;
   align-items:center;
@@ -397,6 +397,26 @@
   object-fit:cover;
   border:2px solid #fff;
   box-shadow:0 8px 25px rgba(0,0,0,.15);
+}
+    .best-product-name{
+margin-top:8px;
+font-size:13px;
+font-weight:800;
+color:#222;
+text-align:center;
+
+display:-webkit-box;
+-webkit-line-clamp:2;
+-webkit-box-orient:vertical;
+overflow:hidden;
+}
+
+.best-product-price{
+margin-top:4px;
+font-size:14px;
+font-weight:900;
+color:#ff6600;
+text-align:center;
 }
 
 .best-products-scroll::-webkit-scrollbar{
@@ -958,17 +978,25 @@ function renderBestProducts(){
 
   box.style.display = "block";
 
-  container.innerHTML = bestProducts.map(product => `
-    <div class="best-product-item"
-         onclick="openBestProduct('${product.storeId}','${product.id}')">
+container.innerHTML = bestProducts.map(product => `
+<div class="best-product-item"
+onclick="openBestProduct('${product.storeId}','${product.id}')">
 
-      <img
-        src="${product.image || 'product.png'}"
-        class="best-product-img"
-        onerror="this.src='product.png'">
+<img
+src="${product.image || 'product.png'}"
+class="best-product-img"
+onerror="this.src='product.png'">
 
-    </div>
-  `).join("");
+<div class="best-product-name">
+${product.name || "منتج"}
+</div>
+
+<div class="best-product-price">
+${Number(product.price || 0).toLocaleString()} د.ع
+</div>
+
+</div>
+`).join("");
 
   enhanceAllImages();
 
