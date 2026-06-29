@@ -67,8 +67,29 @@
     .page{display:none}
     .page.active-page{display:block}
 
-    .top-bar{background:linear-gradient(135deg,#ff8800,#ff5500);padding:7px 14px 8px;border-bottom-left-radius:18px;border-bottom-right-radius:18px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-    .home-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:nowrap}
+.top-bar{
+background:linear-gradient(135deg,#ff8800,#ff5500);
+
+position:fixed;
+top:0;
+left:0;
+right:0;
+
+z-index:999999;
+
+padding:7px 14px 8px;
+
+border-bottom-left-radius:18px;
+border-bottom-right-radius:18px;
+
+color:#fff;
+
+box-shadow:0 4px 12px rgba(0,0,0,.08);
+}
+    #homePage{
+padding-top:95px;
+}
+        .home-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:nowrap}
     .home-title{flex:1;min-width:0}
     .home-title h2{font-size:17px;line-height:1.25;margin-bottom:2px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .home-title p{font-size:13px;opacity:.96;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
