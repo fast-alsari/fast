@@ -66,30 +66,9 @@
     img{-webkit-user-drag:none;user-select:none;image-rendering:auto}
     .page{display:none}
     .page.active-page{display:block}
-.top-bar{
-background:linear-gradient(135deg,#ff8800,#ff5500);
 
-position:fixed;
-top:0;
-left:0;
-right:0;
-
-z-index:900;
-
-padding:7px 14px 8px;
-
-border-bottom-left-radius:18px;
-border-bottom-right-radius:18px;
-
-color:#fff;
-
-box-shadow:0 4px 12px rgba(0,0,0,.08);
-}
-
-#homePage{
-padding-top:0;
-}
-        .home-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:nowrap}
+    .top-bar{background:linear-gradient(135deg,#ff8800,#ff5500);padding:7px 14px 8px;border-bottom-left-radius:18px;border-bottom-right-radius:18px;color:#fff;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+    .home-top{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:nowrap}
     .home-title{flex:1;min-width:0}
     .home-title h2{font-size:17px;line-height:1.25;margin-bottom:2px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .home-title p{font-size:13px;opacity:.96;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -157,31 +136,7 @@ margin-top:-8px !important;
     .open-dot{background:#00c853;box-shadow:0 0 8px #00c853}
     .closed-dot{background:#cfcfcf;opacity:.4;box-shadow:none}
 
-    .ads-slider{
-margin:-22px 15px 0 !important;
-
-height:150px;
-
-border-radius:24px;
-
-overflow:hidden;
-
-position:relative;
-
-display:none;
-
-background:#fff;
-
-box-shadow:0 6px 20px rgba(0,0,0,.10);
-
-isolation:isolate;
-
-z-index:1;
-}
-    #singleStorePage{
-position:relative;
-z-index:9999;
-}
+    .ads-slider{margin:12px 15px 0;height:150px;border-radius:24px;overflow:hidden;position:relative;display:none;background:#fff;box-shadow:0 6px 20px rgba(0,0,0,.10);isolation:isolate}
     .ads-track{width:100%;height:100%;position:relative}
     .ad-slide{position:absolute;inset:0;opacity:0;overflow:hidden;pointer-events:none;z-index:1;will-change:transform,opacity}
     .ad-slide img{width:100%;height:100%;object-fit:cover;display:block}
@@ -447,17 +402,23 @@ line-height:1 !important;
 }
 
 .best-products-scroll{
+
 position:relative;
+
 display:flex;
+
 justify-content:center;
+
 align-items:center;
 
-height:170px; /* كان 240 */
+height:240px;
 
 overflow:hidden;
 
 padding:0;
-margin:0 auto -12px auto; /* ينزل الصور قرب الفلتر */
+
+margin:0 auto;
+
 }
 
 .best-products-scroll::-webkit-scrollbar{
@@ -583,7 +544,9 @@ overflow:hidden;
       <div id="adDots" class="ad-dots"></div>
     </div>
 <div id="bestProductsBox" class="best-products-box">
-
+  <div class="best-products-title">
+     أفضل المنتجات
+  </div>
 
   <div id="bestProductsContainer"
        class="best-products-scroll">
