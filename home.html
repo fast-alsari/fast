@@ -336,6 +336,28 @@ margin-top:-8px !important;
     .logout-btn{width:100%;height:58px;border:none;border-radius:20px;background:red;color:#fff;font-size:17px;font-weight:700;cursor:pointer;margin-top:10px}
 
     .bottom-bar{position:fixed;bottom:0;left:0;right:0;height:82px;background:#fff;display:flex;justify-content:space-around;align-items:center;box-shadow:0 -5px 18px rgba(0,0,0,.08);z-index:1000}
+    .cart-nav{
+    position:relative;
+}
+
+.cart-badge{
+    position:absolute;
+    top:6px;
+    right:10px;
+    min-width:20px;
+    height:20px;
+    padding:0 6px;
+    border-radius:20px;
+    background:red;
+    color:#fff;
+    font-size:11px;
+    font-weight:700;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    border:2px solid #fff;
+    z-index:100;
+}
     .nav-item{display:flex;flex-direction:column;align-items:center;color:#888;cursor:pointer;min-width:64px}
     .nav-item.active{color:#ff8800}
     .nav-item i{font-size:21px;margin-bottom:5px}
@@ -689,8 +711,12 @@ overflow:hidden;
 
   <div class="bottom-bar" id="bottomBar">
     <div class="nav-item active" onclick="showPage('homePage',this)"><i class="fa-solid fa-house"></i><span>الرئيسية</span></div>
-    <div class="nav-item" onclick="showPage('cartPage',this)"><i class="fa-solid fa-cart-shopping"></i><span>السلة</span></div>
-    <div class="nav-item" onclick="showPage('accountPage',this)"><i class="fa-solid fa-user"></i><span>الحساب</span></div>
+<div class="nav-item cart-nav" onclick="showPage('cartPage',this)">
+    <span id="cartBadge" class="cart-badge">0</span>
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span>السلة</span>
+</div>
+        <div class="nav-item" onclick="showPage('accountPage',this)"><i class="fa-solid fa-user"></i><span>الحساب</span></div>
   </div>
 
   <script type="module">
@@ -738,7 +764,27 @@ window.closeImageViewer = function(){
     let adTimer = null;
     let userLatitude = null;
     let userLongitude = null;
+   
     let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+   function updateCartBadge(){
+
+    const badge = document.getElementById("cartBadge");
+
+    if(!badge) return;
+
+    let count = 0;
+
+    cart.forEach(item=>{
+        count += Number(item.qty || 1);
+    });
+
+    if(count===0){
+        badge.style.display="none";
+    }else{
+        badge.style.display="flex";
+        badge.textContent=count;
+    }
+}
     let currentStore = null;
     let currentStoreProducts = [];
     let productsUnsubscribe = null;
@@ -892,6 +938,7 @@ let mapFitted = false;
       enhanceAllImages();
     }
     loadCurrentUser();
+    updateCartBadge();
 
     function calculateDistance(lat1, lon1, lat2, lon2){
       const R = 6371;
@@ -1405,8 +1452,8 @@ if(likesBox){
       finalTotal.innerHTML = `${Number(total + deliveryPrice + tip).toLocaleString()} د.ع`;
       enhanceAllImages();
     }
-    window.increaseCartQty = function(productId, storeId){ const item = cart.find(item => item.id === productId && item.storeId === storeId); if(item) item.qty += 1; localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); };
-    window.decreaseCartQty = function(productId, storeId){ const item = cart.find(item => item.id === productId && item.storeId === storeId); if(item && item.qty > 1) item.qty -= 1; localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); };
+    window.increaseCartQty = function(productId, storeId){ const item = cart.find(item => item.id === productId && item.storeId === storeId); if(item) item.qty += 1; localStorage.setItem("cart", JSON.stringify(cart)); updateCartBadge(); updateCart(); };
+    window.decreaseCartQty = function(productId, storeId){ const item = cart.find(item => item.id === productId && item.storeId === storeId); if(item && item.qty > 1) item.qty -= 1; localStorage.setItem("cart", JSON.stringify(cart)); updateCartBadge(); updateCart(); };
     window.removeCartItem = function(productId, storeId){ cart = cart.filter(item => !(item.id === productId && item.storeId === storeId)); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); };
     document.getElementById("tipInput").addEventListener("input", updateCart);
     updateCart();
