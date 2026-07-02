@@ -1413,7 +1413,36 @@ if(likesBox){
 }
   }
 };
-    window.addToCart = function(product){ const qty = Number(document.getElementById(`qty_${product.id}`).value || 1); const existingProduct = cart.find(item => item.id === product.id && item.storeId === product.storeId); if(existingProduct) existingProduct.qty += qty; else cart.push({...product, qty, storeId: product.storeId || "", storeName: product.storeName || ""}); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); alert("تمت الاضافة"); };
+
+    window.addToCart = function(product){
+
+const qty = Number(document.getElementById(`qty_${product.id}`).value || 1);
+
+const existingProduct = cart.find(item =>
+item.id === product.id &&
+item.storeId === product.storeId
+);
+
+if(existingProduct){
+    existingProduct.qty += qty;
+}else{
+    cart.push({
+        ...product,
+        qty,
+        storeId: product.storeId || "",
+        storeName: product.storeName || ""
+    });
+}
+
+localStorage.setItem("cart", JSON.stringify(cart));
+
+updateCartBadge();
+
+updateCart();
+
+alert("تمت الاضافة");
+
+};
 
     function updateCart(){
       const cartContainer = document.getElementById("cartContainer");
@@ -1454,7 +1483,7 @@ if(likesBox){
     }
     window.increaseCartQty = function(productId, storeId){ const item = cart.find(item => item.id === productId && item.storeId === storeId); if(item) item.qty += 1; localStorage.setItem("cart", JSON.stringify(cart)); updateCartBadge(); updateCart(); };
     window.decreaseCartQty = function(productId, storeId){ const item = cart.find(item => item.id === productId && item.storeId === storeId); if(item && item.qty > 1) item.qty -= 1; localStorage.setItem("cart", JSON.stringify(cart)); updateCartBadge(); updateCart(); };
-    window.removeCartItem = function(productId, storeId){ cart = cart.filter(item => !(item.id === productId && item.storeId === storeId)); localStorage.setItem("cart", JSON.stringify(cart)); updateCart(); };
+    window.removeCartItem = function(productId, storeId){ cart = cart.filter(item => !(item.id === productId && item.storeId === storeId)); localStorage.setItem("cart", JSON.stringify(cart)); updateCartBadge(); updateCart(); };
     document.getElementById("tipInput").addEventListener("input", updateCart);
     updateCart();
 
