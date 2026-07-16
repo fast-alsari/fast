@@ -1462,7 +1462,7 @@ alert("تمت الاضافة");
         const firstStore = allStores.find(s => s.id === uniqueStores[0]);
         if(firstStore && userLatitude != null && userLongitude != null){
           const distance = calculateDistance(userLatitude, userLongitude, Number(firstStore.latitude), Number(firstStore.longitude));
-          if(distance <= 1) deliveryPrice = 1500; else if(distance <= 3) deliveryPrice = 2000; else if(distance <= 5) deliveryPrice = 3000; else if(distance <= 8) deliveryPrice = 4000; else if(distance <= 12) deliveryPrice = 5000; else deliveryPrice = 5000 + Math.round((distance - 12) * 250);
+          if(distance <= 1) deliveryPrice = 1000; else if(distance <= 3) deliveryPrice = 1500; else if(distance <= 5) deliveryPrice = 2000; else if(distance <= 8) deliveryPrice = 3500; else if(distance <= 12) deliveryPrice = 4500; else deliveryPrice = 5000 + Math.round((distance - 12) * 250);
           if(deliveryPrice > 10000) deliveryPrice = 10000;
         }
         if(uniqueStores.length === 2) deliveryPrice = Math.round(deliveryPrice * 1.6);
