@@ -931,14 +931,7 @@ let mapFitted = false;
       document.getElementById("userPassword").innerHTML = userData.password || "";
       const userLat = userData.userLat || localStorage.getItem("userLat") || "";
       const userLng = userData.userLng || localStorage.getItem("userLng") || "";
-      if(userLat && userLng) 
-        const mapFrame = document.getElementById("accountMapFrame");
-
-if(userLat && userLng){
-    mapFrame.src = `https://www.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
-}else{
-    mapFrame.removeAttribute("src");
-}
+      if(userLat && userLng) document.getElementById("accountMapFrame").src = `https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
       taxiUserLat = Number(userLat || 0);
       taxiUserLng = Number(userLng || 0);
       enhanceAllImages();
