@@ -928,7 +928,6 @@ let mapFitted = false;
       document.getElementById("welcomeText").innerHTML = `ياهلا ${displayName}`;
       document.getElementById("userName").innerHTML = userData.name || "";
       document.getElementById("userPhone").innerHTML = userData.phone || "";
-      document.getElementById("userPassword").innerHTML = userData.password || "";
       const userLat = userData.userLat || localStorage.getItem("userLat") || "";
       const userLng = userData.userLng || localStorage.getItem("userLng") || "";
       if(userLat && userLng) document.getElementById("accountMapFrame").src = `https://maps.google.com/maps?q=${userLat},${userLng}&z=15&output=embed`;
