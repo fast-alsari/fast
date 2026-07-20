@@ -1306,6 +1306,7 @@ state.driverMarker.setLatLng([newLat, newLng]);
         }).catch(() => {});
 
         await syncProgressFromGPS(state.activeOrder);
+        updateRoute(state.activeOrder);
       }
     }
 
@@ -1482,6 +1483,19 @@ mapEl.dataset.loaded = "1";
       },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     );
+    document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && state.activeOrder) {
+    buildMap(state.activeOrder);
+    updateRoute(state.activeOrder);
+  }
+});
+
+window.addEventListener("pageshow", () => {
+  if (state.activeOrder) {
+    buildMap(state.activeOrder);
+    updateRoute(state.activeOrder);
+  }
+});
 
     onValue(ref(db, "orders"), (snapshot) => {
       const ordersObj = snapshot.exists() ? snapshot.val() : {};
