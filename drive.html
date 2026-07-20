@@ -322,11 +322,8 @@ lastRouteStage: null
 
     els.driverName.textContent = currentDriver.name || "سائق";
     els.driverAccountType.textContent = String(currentDriver.accountType || "عادي");
-els.driverProfileImage.src =
-    currentDriver.vehicleImage ||
-    currentDriver.vehicle_image ||
-    currentDriver.image ||
-    "user.png";
+    els.driverProfileImage.src = currentDriver.vehicle_image || currentDriver.image || "user.png";
+
     function money(value) {
       const num = Number(value || 0);
       return num.toLocaleString("en-US");
@@ -1306,7 +1303,6 @@ state.driverMarker.setLatLng([newLat, newLng]);
         }).catch(() => {});
 
         await syncProgressFromGPS(state.activeOrder);
-        updateRoute(state.activeOrder);
       }
     }
 
@@ -1483,19 +1479,6 @@ mapEl.dataset.loaded = "1";
       },
       { enableHighAccuracy: true, maximumAge: 0, timeout: 10000 }
     );
-    document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && state.activeOrder) {
-    buildMap(state.activeOrder);
-    updateRoute(state.activeOrder);
-  }
-});
-
-window.addEventListener("pageshow", () => {
-  if (state.activeOrder) {
-    buildMap(state.activeOrder);
-    updateRoute(state.activeOrder);
-  }
-});
 
     onValue(ref(db, "orders"), (snapshot) => {
       const ordersObj = snapshot.exists() ? snapshot.val() : {};
