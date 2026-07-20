@@ -322,8 +322,11 @@ lastRouteStage: null
 
     els.driverName.textContent = currentDriver.name || "سائق";
     els.driverAccountType.textContent = String(currentDriver.accountType || "عادي");
-    els.driverProfileImage.src = currentDriver.vehicle_image || currentDriver.image || "user.png";
-
+els.driverProfileImage.src =
+    currentDriver.vehicleImage ||
+    currentDriver.vehicle_image ||
+    currentDriver.image ||
+    "user.png";
     function money(value) {
       const num = Number(value || 0);
       return num.toLocaleString("en-US");
