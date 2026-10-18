@@ -1,0 +1,4393 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+>
+
+<meta name="theme-color" content="#075fcf">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<title>منصة التحدي | مدرسة التحدي الأهلية المختلطة</title>
+
+<style>
+
+:root{
+    --blue:#075fcf;
+    --blue-dark:#06469c;
+    --blue-deep:#053978;
+    --blue-soft:#edf5ff;
+    --white:#fff;
+    --bg:#f4f8fd;
+    --text:#172033;
+    --muted:#667085;
+    --border:#e3e9f1;
+    --danger:#c62828;
+    --danger-bg:#fff1f1;
+    --success:#078746;
+    --success-bg:#ecfdf3;
+    --shadow:0 25px 70px rgba(21,43,74,.14);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    font-family:Tahoma,Arial,sans-serif;
+    color:var(--text);
+    background:var(--bg);
+    overflow-x:hidden;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+.login-page{
+    display:none;
+
+    position:relative;
+
+    width:100%;
+
+    min-height:100vh;
+    min-height:100dvh;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:
+        max(26px,env(safe-area-inset-top))
+        16px
+        max(26px,env(safe-area-inset-bottom));
+
+    overflow:hidden;
+
+    background:
+        radial-gradient(
+            circle at 85% 5%,
+            rgba(7,95,207,.17),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 3% 90%,
+            rgba(7,95,207,.09),
+            transparent 33%
+        ),
+        linear-gradient(
+            180deg,
+            #f8fbff,
+            #f1f6fc
+        );
+}
+
+.login-page.show{
+    display:flex;
+
+    animation:
+        loginReveal .9s
+        cubic-bezier(.16,1,.3,1)
+        both;
+}
+
+.bg-grid{
+    position:absolute;
+    inset:0;
+
+    opacity:.3;
+
+    pointer-events:none;
+
+    background-image:
+        linear-gradient(
+            rgba(7,95,207,.04) 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            rgba(7,95,207,.04) 1px,
+            transparent 1px
+        );
+
+    background-size:35px 35px;
+
+    mask-image:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.4),
+            transparent 80%
+        );
+
+    -webkit-mask-image:
+        linear-gradient(
+            to bottom,
+            rgba(0,0,0,.4),
+            transparent 80%
+        );
+}
+
+.orb{
+    position:absolute;
+    border-radius:50%;
+    pointer-events:none;
+}
+
+.orb.one{
+    width:250px;
+    height:250px;
+
+    top:-110px;
+    right:-110px;
+
+    background:rgba(7,95,207,.07);
+}
+
+.orb.two{
+    width:180px;
+    height:180px;
+
+    bottom:-80px;
+    left:-70px;
+
+    background:rgba(7,95,207,.06);
+}
+
+.login-container{
+    position:relative;
+    z-index:2;
+
+    width:min(430px,100%);
+}
+
+
+/* =========================================================
+   LOGIN BRAND
+========================================================= */
+
+.brand-area{
+    text-align:center;
+    margin-bottom:22px;
+}
+
+.logo-shell{
+    position:relative;
+
+    width:132px;
+    height:132px;
+
+    margin:
+        0 auto
+        15px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+.logo-ring{
+    position:absolute;
+
+    inset:8px;
+
+    border-radius:50%;
+
+    border:
+        1px solid
+        rgba(7,95,207,.14);
+
+    background:
+        rgba(255,255,255,.62);
+
+    box-shadow:
+        0 12px 35px rgba(7,95,207,.1),
+        inset 0 0 0 9px rgba(7,95,207,.035);
+
+    animation:
+        ringPulse
+        2.5s
+        ease-in-out
+        infinite;
+}
+
+.logo-glow{
+    position:absolute;
+
+    width:88px;
+    height:88px;
+
+    border-radius:50%;
+
+    background:
+        rgba(7,95,207,.12);
+
+    filter:
+        blur(14px);
+}
+
+.main-logo{
+    position:relative;
+
+    z-index:2;
+
+    width:112px;
+    height:112px;
+
+    object-fit:contain;
+
+    filter:
+        drop-shadow(
+            0 13px 22px
+            rgba(7,95,207,.16)
+        );
+}
+
+.school-name{
+    font-size:22px;
+    line-height:1.65;
+
+    font-weight:900;
+
+    letter-spacing:-.3px;
+}
+
+.governance{
+    margin-top:3px;
+
+    color:var(--blue);
+
+    font-size:13px;
+
+    font-weight:900;
+}
+
+.year-badge{
+    width:max-content;
+
+    margin:
+        13px auto
+        0;
+
+    padding:
+        8px 18px;
+
+    display:flex;
+    align-items:center;
+
+    gap:8px;
+
+    border-radius:999px;
+
+    color:var(--blue-dark);
+
+    background:
+        rgba(255,255,255,.9);
+
+    border:
+        1px solid
+        rgba(7,95,207,.13);
+
+    box-shadow:
+        0 8px 24px
+        rgba(7,95,207,.08);
+}
+
+.year-badge span{
+    font-size:9px;
+
+    color:var(--muted);
+
+    font-weight:800;
+}
+
+.year-badge strong{
+    direction:ltr;
+
+    font-size:15px;
+
+    letter-spacing:1px;
+
+    font-weight:900;
+}
+
+
+/* =========================================================
+   LOGIN CARD
+========================================================= */
+
+.login-card{
+    width:100%;
+
+    padding:
+        24px 20px
+        21px;
+
+    border-radius:26px;
+
+    border:
+        1px solid
+        rgba(255,255,255,.9);
+
+    background:
+        rgba(255,255,255,.93);
+
+    backdrop-filter:
+        blur(18px);
+
+    -webkit-backdrop-filter:
+        blur(18px);
+
+    box-shadow:
+        var(--shadow);
+}
+
+.welcome{
+    text-align:center;
+
+    margin-bottom:20px;
+}
+
+.welcome-badge{
+    display:inline-flex;
+
+    align-items:center;
+    justify-content:center;
+
+    min-height:27px;
+
+    padding:
+        0 10px;
+
+    margin-bottom:8px;
+
+    border-radius:99px;
+
+    color:var(--blue);
+
+    background:var(--blue-soft);
+
+    font-size:8px;
+
+    font-weight:900;
+}
+
+.welcome h2{
+    font-size:20px;
+    font-weight:900;
+}
+
+.welcome p{
+    margin-top:7px;
+
+    color:var(--muted);
+
+    font-size:12px;
+
+    line-height:1.75;
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+.message{
+    display:none;
+
+    width:100%;
+
+    margin-bottom:12px;
+
+    padding:
+        11px 12px;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    font-size:11px;
+
+    line-height:1.7;
+
+    font-weight:800;
+}
+
+.message.show{
+    display:block;
+
+    animation:
+        messageIn .2s
+        ease
+        both;
+}
+
+.message.error{
+    color:var(--danger);
+
+    background:var(--danger-bg);
+
+    border:
+        1px solid
+        #ffd3d3;
+}
+
+.message.success{
+    color:var(--success);
+
+    background:var(--success-bg);
+
+    border:
+        1px solid
+        #bceccb;
+}
+
+
+/* =========================================================
+   INPUT
+========================================================= */
+
+.input-label{
+    display:block;
+
+    margin:
+        0 4px
+        7px;
+
+    color:#344054;
+
+    font-size:9px;
+
+    font-weight:900;
+}
+
+.code-input{
+    width:100%;
+
+    height:60px;
+
+    padding:
+        0 16px;
+
+    border:
+        1.5px solid
+        var(--border);
+
+    border-radius:17px;
+
+    outline:none;
+
+    color:var(--text);
+
+    background:#fff;
+
+    direction:ltr;
+
+    text-align:center;
+
+    text-transform:uppercase;
+
+    letter-spacing:1.8px;
+
+    font-size:18px;
+
+    font-weight:900;
+
+    transition:.2s;
+}
+
+.code-input::placeholder{
+    direction:rtl;
+
+    letter-spacing:0;
+
+    color:#98a2b3;
+
+    font-size:13px;
+
+    font-weight:500;
+}
+
+.code-input:focus{
+    border-color:
+        var(--blue);
+
+    box-shadow:
+        0 0 0 4px
+        rgba(7,95,207,.07);
+
+    transform:
+        translateY(-1px);
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+.login-btn{
+    width:100%;
+
+    height:58px;
+
+    margin-top:14px;
+
+    border:0;
+
+    border-radius:17px;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+
+    gap:8px;
+
+    color:#fff;
+
+    background:
+        linear-gradient(
+            135deg,
+            #0870e8,
+            #0757c8
+        );
+
+    box-shadow:
+        0 14px 30px
+        rgba(7,95,207,.25);
+
+    font-size:15px;
+
+    font-weight:900;
+
+    cursor:pointer;
+}
+
+.login-btn:active{
+    transform:
+        scale(.985);
+}
+
+.login-btn:disabled{
+    opacity:.72;
+
+    cursor:not-allowed;
+}
+
+.spinner{
+    display:none;
+
+    width:18px;
+    height:18px;
+
+    border:
+        2px solid
+        rgba(255,255,255,.35);
+
+    border-top-color:#fff;
+
+    border-radius:50%;
+
+    animation:
+        spin .7s
+        linear
+        infinite;
+}
+
+.security-note{
+    margin-top:14px;
+
+    padding-top:13px;
+
+    border-top:
+        1px solid
+        #eef1f5;
+
+    text-align:center;
+
+    color:#98a2b3;
+
+    font-size:8px;
+}
+
+.footer{
+    margin-top:18px;
+
+    text-align:center;
+
+    color:#98a2b3;
+
+    font-size:9px;
+
+    line-height:1.8;
+}
+
+.footer strong{
+    color:#667085;
+}
+
+
+/* =========================================================
+   CINEMATIC SKY
+========================================================= */
+
+.splash{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:10000;
+
+    overflow:hidden;
+
+    background:
+        linear-gradient(
+            180deg,
+            #3999e9 0%,
+            #61b6ee 35%,
+            #8ed1f5 65%,
+            #d9f1ff 100%
+        );
+
+    perspective:1000px;
+}
+
+.splash.show{
+    display:block;
+}
+
+.sky-light{
+    position:absolute;
+
+    inset:0;
+
+    background:
+        radial-gradient(
+            circle at 50% 44%,
+            rgba(255,255,255,.65),
+            rgba(255,255,255,.16) 24%,
+            transparent 55%
+        );
+}
+
+
+/* =========================================================
+   CLOUDS
+========================================================= */
+
+.cloud-layer{
+    position:absolute;
+
+    inset:-15%;
+
+    pointer-events:none;
+
+    transform-style:
+        preserve-3d;
+}
+
+.cloud{
+    position:absolute;
+
+    width:250px;
+    height:88px;
+
+    border-radius:999px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(255,255,255,.98),
+            rgba(235,247,255,.93)
+        );
+
+    box-shadow:
+        0 18px 45px
+        rgba(28,111,169,.12);
+}
+
+.cloud:before,
+.cloud:after{
+    content:"";
+
+    position:absolute;
+
+    border-radius:50%;
+
+    background:inherit;
+}
+
+.cloud:before{
+    width:120px;
+    height:120px;
+
+    left:35px;
+    bottom:20px;
+}
+
+.cloud:after{
+    width:150px;
+    height:150px;
+
+    right:30px;
+    bottom:10px;
+}
+
+
+/* =========================================================
+   CLOUDS BACK
+========================================================= */
+
+.back .c1{
+    width:220px;
+    height:72px;
+
+    top:10%;
+    left:-70px;
+
+    opacity:.45;
+
+    animation:
+        cloudRight
+        15s linear
+        infinite;
+}
+
+.back .c2{
+    width:260px;
+    height:78px;
+
+    top:24%;
+    right:-100px;
+
+    opacity:.42;
+
+    animation:
+        cloudLeft
+        19s linear
+        infinite;
+}
+
+.back .c3{
+    width:200px;
+    height:65px;
+
+    bottom:23%;
+    left:8%;
+
+    opacity:.38;
+
+    animation:
+        cloudDrift
+        11s ease-in-out
+        infinite alternate;
+}
+
+
+/* =========================================================
+   CLOUDS MIDDLE
+========================================================= */
+
+.middle .c1{
+    width:330px;
+    height:105px;
+
+    top:15%;
+    left:-145px;
+
+    opacity:.82;
+
+    animation:
+        cloudRight
+        11s linear
+        infinite;
+}
+
+.middle .c2{
+    width:350px;
+    height:108px;
+
+    top:40%;
+    right:-190px;
+
+    opacity:.84;
+
+    animation:
+        cloudLeft
+        13s linear
+        infinite;
+}
+
+.middle .c3{
+    width:310px;
+    height:96px;
+
+    bottom:10%;
+    left:-120px;
+
+    opacity:.76;
+
+    animation:
+        cloudRight
+        14s linear
+        infinite;
+}
+
+
+/* =========================================================
+   CLOUDS FRONT
+========================================================= */
+
+.front .cloud{
+    filter:
+        blur(.6px);
+}
+
+.front .c1{
+    width:430px;
+    height:135px;
+
+    top:2%;
+    left:-250px;
+
+    opacity:.96;
+
+    animation:
+        frontCloud1
+        9s ease-in-out
+        infinite alternate;
+}
+
+.front .c2{
+    width:430px;
+    height:135px;
+
+    top:15%;
+    right:-280px;
+
+    opacity:.96;
+
+    animation:
+        frontCloud2
+        10s ease-in-out
+        infinite alternate;
+}
+
+.front .c3{
+    width:470px;
+    height:145px;
+
+    bottom:-15px;
+    left:-270px;
+
+    opacity:.97;
+
+    animation:
+        frontCloud3
+        11s ease-in-out
+        infinite alternate;
+}
+
+.front .c4{
+    width:450px;
+    height:140px;
+
+    bottom:4%;
+    right:-280px;
+
+    opacity:.97;
+
+    animation:
+        frontCloud4
+        9.5s ease-in-out
+        infinite alternate;
+}
+
+
+/* =========================================================
+   CENTER
+========================================================= */
+
+.cloud-center{
+    position:absolute;
+
+    z-index:3;
+
+    top:50%;
+    left:50%;
+
+    width:40vw;
+    height:40vw;
+
+    max-width:330px;
+    max-height:330px;
+
+    min-width:210px;
+    min-height:210px;
+
+    transform:
+        translate(-50%,-50%)
+        scale(.72);
+
+    border-radius:50%;
+
+    opacity:0;
+
+    background:
+        radial-gradient(
+            circle,
+            rgba(255,255,255,.95) 0%,
+            rgba(224,246,255,.6) 35%,
+            rgba(180,226,252,.15) 62%,
+            transparent 72%
+        );
+
+    filter:
+        blur(4px);
+
+    box-shadow:
+        0 0 90px
+        rgba(255,255,255,.75);
+}
+
+
+/* =========================================================
+   SPLASH BRAND
+========================================================= */
+
+.splash-brand{
+    position:absolute;
+
+    z-index:6;
+
+    top:50%;
+    left:50%;
+
+    width:min(430px,88%);
+
+    text-align:center;
+
+    transform:
+        translate(-50%,-50%)
+        scale(.55);
+
+    opacity:0;
+
+    pointer-events:none;
+}
+
+.splash-logo-box{
+    position:relative;
+
+    width:165px;
+    height:165px;
+
+    margin:auto;
+
+    display:flex;
+
+    align-items:center;
+    justify-content:center;
+}
+
+.splash-logo-glow{
+    position:absolute;
+
+    width:150px;
+    height:150px;
+
+    border-radius:50%;
+
+    background:
+        rgba(255,255,255,.25);
+
+    box-shadow:
+        0 0 55px
+        rgba(255,255,255,.35),
+        0 0 110px
+        rgba(126,205,255,.3);
+}
+
+.splash-logo{
+    position:relative;
+
+    z-index:2;
+
+    width:132px;
+    height:132px;
+
+    object-fit:contain;
+
+    filter:
+        drop-shadow(
+            0 18px 30px
+            rgba(0,57,117,.18)
+        );
+}
+
+.splash-brand h1{
+    margin-top:18px;
+
+    color:#fff;
+
+    font-size:23px;
+
+    line-height:1.65;
+
+    font-weight:900;
+
+    text-shadow:
+        0 4px 15px
+        rgba(4,57,108,.3);
+}
+
+.splash-brand p{
+    margin-top:5px;
+
+    color:
+        rgba(255,255,255,.95);
+
+    font-size:12px;
+
+    font-weight:800;
+}
+
+.splash-year{
+    width:max-content;
+
+    margin:
+        14px auto
+        0;
+
+    padding:
+        8px 18px;
+
+    direction:ltr;
+
+    border-radius:99px;
+
+    color:#fff;
+
+    border:
+        1px solid
+        rgba(255,255,255,.32);
+
+    background:
+        rgba(255,255,255,.14);
+
+    backdrop-filter:
+        blur(8px);
+
+    -webkit-backdrop-filter:
+        blur(8px);
+
+    font-size:16px;
+
+    letter-spacing:1px;
+
+    font-weight:900;
+}
+
+
+/* =========================================================
+   SPLASH SEQUENCES
+========================================================= */
+
+.splash.focus .cloud-center{
+    animation:
+        centerAppear
+        1.5s ease
+        forwards;
+}
+
+.splash.focus .back{
+    animation:
+        backZoom
+        5.7s
+        cubic-bezier(.4,0,.15,1)
+        forwards;
+}
+
+.splash.focus .middle{
+    animation:
+        middleZoom
+        5.7s
+        cubic-bezier(.4,0,.15,1)
+        forwards;
+}
+
+.splash.focus .front{
+    animation:
+        frontZoom
+        5.7s
+        cubic-bezier(.4,0,.15,1)
+        forwards;
+}
+
+.splash.focus .splash-brand{
+    animation:
+        brandReveal
+        1.5s .9s
+        cubic-bezier(.16,1,.3,1)
+        forwards;
+}
+
+.splash.final-zoom .splash-brand{
+    animation:
+        brandFinalZoom
+        1.25s
+        cubic-bezier(.7,0,.2,1)
+        forwards;
+}
+
+.splash.final-zoom .cloud-center{
+    animation:
+        centerFinalZoom
+        1.25s
+        ease
+        forwards;
+}
+
+.splash.final-zoom{
+    animation:
+        splashWhiteOut
+        1.3s
+        ease
+        forwards;
+}
+
+
+/* =========================================================
+   OFFLINE
+========================================================= */
+
+.offline-screen{
+    display:none;
+
+    position:fixed;
+
+    inset:0;
+
+    z-index:20000;
+
+    align-items:center;
+    justify-content:center;
+
+    padding:24px;
+
+    background:#fff;
+}
+
+.offline-screen.show{
+    display:flex;
+}
+
+.offline-box{
+    width:min(390px,100%);
+
+    text-align:center;
+}
+
+.offline-image{
+    width:210px;
+
+    max-width:72%;
+
+    height:auto;
+
+    object-fit:contain;
+
+    margin-bottom:20px;
+}
+
+.offline-box h2{
+    font-size:20px;
+
+    font-weight:900;
+}
+
+.offline-box p{
+    margin-top:7px;
+
+    color:var(--muted);
+
+    font-size:12px;
+
+    line-height:1.8;
+}
+
+.network-spinner{
+    width:27px;
+    height:27px;
+
+    margin:
+        20px auto
+        0;
+
+    border:
+        3px solid
+        #e7ebf0;
+
+    border-top-color:
+        var(--blue);
+
+    border-radius:50%;
+
+    animation:
+        spin .8s
+        linear
+        infinite;
+}
+
+.waiting-text{
+    margin-top:8px!important;
+
+    color:#98a2b3!important;
+
+    font-size:9px!important;
+}
+
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes spin{
+
+    to{
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+@keyframes messageIn{
+
+    from{
+        opacity:0;
+
+        transform:
+            translateY(-5px);
+    }
+
+    to{
+        opacity:1;
+
+        transform:none;
+    }
+
+}
+
+@keyframes loginReveal{
+
+    0%{
+        opacity:0;
+
+        filter:
+            blur(10px);
+
+        transform:
+            scale(1.12);
+    }
+
+    100%{
+        opacity:1;
+
+        filter:
+            blur(0);
+
+        transform:
+            scale(1);
+    }
+
+}
+
+@keyframes ringPulse{
+
+    0%,
+    100%{
+        transform:
+            scale(.96);
+
+        opacity:.7;
+    }
+
+    50%{
+        transform:
+            scale(1.05);
+
+        opacity:1;
+    }
+
+}
+
+@keyframes cloudRight{
+
+    from{
+        transform:
+            translateX(-35px);
+    }
+
+    to{
+        transform:
+            translateX(90px);
+    }
+
+}
+
+@keyframes cloudLeft{
+
+    from{
+        transform:
+            translateX(45px);
+    }
+
+    to{
+        transform:
+            translateX(-90px);
+    }
+
+}
+
+@keyframes cloudDrift{
+
+    from{
+        transform:
+            translate(-20px,6px);
+    }
+
+    to{
+        transform:
+            translate(28px,-12px);
+    }
+
+}
+
+@keyframes frontCloud1{
+
+    from{
+        transform:
+            translate(-20px,-10px)
+            scale(1);
+    }
+
+    to{
+        transform:
+            translate(55px,20px)
+            scale(1.08);
+    }
+
+}
+
+@keyframes frontCloud2{
+
+    from{
+        transform:
+            translate(20px,0)
+            scale(1);
+    }
+
+    to{
+        transform:
+            translate(-55px,18px)
+            scale(1.08);
+    }
+
+}
+
+@keyframes frontCloud3{
+
+    from{
+        transform:
+            translate(-15px,10px)
+            scale(1);
+    }
+
+    to{
+        transform:
+            translate(60px,-12px)
+            scale(1.09);
+    }
+
+}
+
+@keyframes frontCloud4{
+
+    from{
+        transform:
+            translate(20px,8px)
+            scale(1);
+    }
+
+    to{
+        transform:
+            translate(-60px,-16px)
+            scale(1.09);
+    }
+
+}
+
+@keyframes centerAppear{
+
+    from{
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(.55);
+    }
+
+    to{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+    }
+
+}
+
+@keyframes backZoom{
+
+    from{
+        transform:
+            scale(1);
+
+        filter:
+            blur(0);
+    }
+
+    to{
+        transform:
+            scale(1.45);
+
+        filter:
+            blur(2px);
+    }
+
+}
+
+@keyframes middleZoom{
+
+    from{
+        transform:
+            scale(1);
+    }
+
+    to{
+        transform:
+            scale(2);
+    }
+
+}
+
+@keyframes frontZoom{
+
+    0%{
+        transform:
+            scale(1);
+
+        opacity:1;
+    }
+
+    100%{
+        transform:
+            scale(3.1);
+
+        opacity:.28;
+
+        filter:
+            blur(4px);
+    }
+
+}
+
+@keyframes brandReveal{
+
+    0%{
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(.5);
+
+        filter:
+            blur(12px);
+    }
+
+    55%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+
+        filter:
+            blur(0);
+    }
+
+}
+
+@keyframes brandFinalZoom{
+
+    0%{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+
+        filter:
+            blur(0);
+    }
+
+    55%{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1.7);
+    }
+
+    100%{
+        opacity:0;
+
+        transform:
+            translate(-50%,-50%)
+            scale(7);
+
+        filter:
+            blur(13px);
+    }
+
+}
+
+@keyframes centerFinalZoom{
+
+    from{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(1);
+    }
+
+    to{
+        opacity:1;
+
+        transform:
+            translate(-50%,-50%)
+            scale(9);
+    }
+
+}
+
+@keyframes splashWhiteOut{
+
+    0%,
+    45%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:0;
+
+        visibility:hidden;
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:390px){
+
+    .login-page{
+        padding-left:13px;
+        padding-right:13px;
+    }
+
+    .logo-shell{
+        width:115px;
+        height:115px;
+    }
+
+    .main-logo{
+        width:97px;
+        height:97px;
+    }
+
+    .school-name{
+        font-size:19px;
+    }
+
+    .login-card{
+        padding:
+            21px 16px
+            18px;
+
+        border-radius:22px;
+    }
+
+    .welcome h2{
+        font-size:18px;
+    }
+
+    .code-input{
+        height:57px;
+
+        font-size:17px;
+    }
+
+    .login-btn{
+        height:55px;
+    }
+
+    .splash-logo-box{
+        width:145px;
+        height:145px;
+    }
+
+    .splash-logo{
+        width:115px;
+        height:115px;
+    }
+
+    .splash-brand h1{
+        font-size:20px;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     OFFLINE
+========================================================= -->
+
+<div
+    id="offlineScreen"
+    class="offline-screen"
+>
+
+    <div class="offline-box">
+
+        <img
+            src="no-internet.png"
+            class="offline-image"
+            alt="لا يوجد اتصال بالإنترنت"
+            onerror="this.style.display='none'"
+        >
+
+        <h2>
+            لا يوجد اتصال بالإنترنت
+        </h2>
+
+        <p>
+            تحقق من اتصال الجهاز بالإنترنت،
+            وسيتم فتح المنصة تلقائياً عند عودة الاتصال.
+        </p>
+
+        <div class="network-spinner"></div>
+
+        <p class="waiting-text">
+            بانتظار عودة الاتصال
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     SPLASH
+========================================================= -->
+
+<div
+    id="splashScreen"
+    class="splash"
+>
+
+    <div class="sky-light"></div>
+
+
+    <div class="cloud-layer back">
+
+        <div class="cloud c1"></div>
+
+        <div class="cloud c2"></div>
+
+        <div class="cloud c3"></div>
+
+    </div>
+
+
+    <div class="cloud-layer middle">
+
+        <div class="cloud c1"></div>
+
+        <div class="cloud c2"></div>
+
+        <div class="cloud c3"></div>
+
+    </div>
+
+
+    <div class="cloud-layer front">
+
+        <div class="cloud c1"></div>
+
+        <div class="cloud c2"></div>
+
+        <div class="cloud c3"></div>
+
+        <div class="cloud c4"></div>
+
+    </div>
+
+
+    <div class="cloud-center"></div>
+
+
+    <div class="splash-brand">
+
+        <div class="splash-logo-box">
+
+            <div class="splash-logo-glow"></div>
+
+            <img
+                src="logo.png"
+                class="splash-logo"
+                alt="شعار مدرسة التحدي"
+            >
+
+        </div>
+
+        <h1>
+            مدرسة التحدي الأهلية المختلطة
+        </h1>
+
+        <p>
+            منصة الحوكمة الإلكترونية
+        </p>
+
+        <div class="splash-year">
+            2026-2027
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     LOGIN
+========================================================= -->
+
+<main
+    id="loginPage"
+    class="login-page"
+>
+
+    <div class="bg-grid"></div>
+
+    <div class="orb one"></div>
+
+    <div class="orb two"></div>
+
+
+    <div class="login-container">
+
+
+        <section class="brand-area">
+
+
+            <div class="logo-shell">
+
+                <div class="logo-ring"></div>
+
+                <div class="logo-glow"></div>
+
+                <img
+                    src="logo.png"
+                    class="main-logo"
+                    alt="شعار مدرسة التحدي"
+                >
+
+            </div>
+
+
+            <h1 class="school-name">
+                مدرسة التحدي الأهلية المختلطة
+            </h1>
+
+
+            <div class="governance">
+                قسم الحوكمة
+            </div>
+
+
+            <div class="year-badge">
+
+                <span>
+                    العام الدراسي
+                </span>
+
+                <strong>
+                    2026-2027
+                </strong>
+
+            </div>
+
+
+        </section>
+
+
+        <section class="login-card">
+
+
+            <div class="welcome">
+
+                <div class="welcome-badge">
+                    أهلاً بكم في منصة التحدي
+                </div>
+
+                <h2>
+                    تسجيل الدخول
+                </h2>
+
+                <p>
+                    أدخل الكود الخاص بحسابك للوصول إلى المنصة
+                </p>
+
+            </div>
+
+
+            <div
+                id="messageBox"
+                class="message"
+            ></div>
+
+
+            <label
+                for="userCode"
+                class="input-label"
+            >
+                الكود الخاص بك
+            </label>
+
+
+            <input
+                id="userCode"
+                class="code-input"
+                type="text"
+                placeholder="مثال: ST42B781"
+                autocomplete="off"
+                autocorrect="off"
+                autocapitalize="characters"
+                spellcheck="false"
+                maxlength="30"
+            >
+
+
+            <button
+                id="loginButton"
+                class="login-btn"
+                type="button"
+            >
+
+                <span id="loginButtonText">
+                    الدخول إلى المنصة
+                </span>
+
+                <span
+                    id="loginSpinner"
+                    class="spinner"
+                ></span>
+
+            </button>
+
+
+            <div class="security-note">
+                استخدم الكود المخصص لك فقط ولا تشاركه مع الآخرين
+            </div>
+
+
+        </section>
+
+
+        <footer class="footer">
+
+            <strong>
+                نظام الحوكمة الإلكتروني
+            </strong>
+
+            <br>
+
+            مدرسة التحدي الأهلية المختلطة
+
+        </footer>
+
+
+    </div>
+
+</main>
+
+
+<!-- =========================================================
+     AUDIO
+========================================================= -->
+
+<audio
+    id="startupSound"
+    preload="auto"
+>
+
+    <source
+        src="start.mp3"
+        type="audio/mpeg"
+    >
+
+</audio>
+
+
+<script>
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+const DATABASE_URL =
+    "https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
+
+const USERS_PATH =
+    "users";
+
+
+/* =========================================================
+   STORAGE
+========================================================= */
+
+/*
+    sessionStorage:
+    تستخدمها الصفحات الحالية لمعرفة المستخدم المسجل.
+
+    localStorage:
+    تحفظ الحساب على نفس المتصفح والجهاز حتى بعد
+    إغلاق الصفحة أو المتصفح بالكامل.
+*/
+
+const SESSION_KEY =
+    "tahadi_session";
+
+const CODE_KEY =
+    "tahadi_code";
+
+const ROLE_KEY =
+    "tahadi_role";
+
+const REMEMBERED_LOGIN_KEY =
+    "tahadi_remembered_login";
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const offlineScreen =
+    document.getElementById(
+        "offlineScreen"
+    );
+
+const splashScreen =
+    document.getElementById(
+        "splashScreen"
+    );
+
+const loginPage =
+    document.getElementById(
+        "loginPage"
+    );
+
+const userCodeInput =
+    document.getElementById(
+        "userCode"
+    );
+
+const loginButton =
+    document.getElementById(
+        "loginButton"
+    );
+
+const loginButtonText =
+    document.getElementById(
+        "loginButtonText"
+    );
+
+const loginSpinner =
+    document.getElementById(
+        "loginSpinner"
+    );
+
+const messageBox =
+    document.getElementById(
+        "messageBox"
+    );
+
+const startupSound =
+    document.getElementById(
+        "startupSound"
+    );
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let splashPlayed =
+    false;
+
+let loginRunning =
+    false;
+
+let autoLoginRunning =
+    false;
+
+
+/* =========================================================
+   NUMBERS
+========================================================= */
+
+function normalizeNumbers(value){
+
+    const arabic =
+        "٠١٢٣٤٥٦٧٨٩";
+
+    const persian =
+        "۰۱۲۳۴۵۶۷۸۹";
+
+
+    return String(
+        value || ""
+    )
+
+    .replace(
+        /[٠-٩]/g,
+        number =>
+            arabic.indexOf(
+                number
+            )
+    )
+
+    .replace(
+        /[۰-۹]/g,
+        number =>
+            persian.indexOf(
+                number
+            )
+    );
+
+}
+
+
+/* =========================================================
+   CODE
+========================================================= */
+
+function cleanCode(value){
+
+    return normalizeNumbers(
+        value
+    )
+
+    .trim()
+
+    .replace(
+        /\s+/g,
+        ""
+    )
+
+    .toUpperCase();
+
+}
+
+
+/* =========================================================
+   ROLE NORMALIZATION
+========================================================= */
+
+function cleanRole(value){
+
+    return String(
+        value || ""
+    )
+
+    .trim()
+
+    .toLowerCase();
+
+}
+
+
+/* =========================================================
+   ALLOWED ROLES
+========================================================= */
+
+const ALLOWED_ROLES = [
+
+    /* الإدارة */
+
+    "admin",
+    "administrator",
+    "add",
+
+
+    /* الطالب */
+
+    "student",
+    "st",
+
+
+    /* الأستاذ */
+
+    "teacher",
+    "th",
+
+
+    /* المحاسب */
+
+    "accountant",
+    "accounting",
+    "accountant_user",
+    "mn",
+
+
+    /* مشرف الحضور */
+
+    "attendance",
+    "attendance_supervisor",
+    "attendance_supervisor_user",
+    "supervisor",
+    "msh"
+
+];
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(
+    text,
+    type = "error"
+){
+
+    messageBox.textContent =
+        text;
+
+
+    messageBox.className =
+        "message show " +
+        type;
+
+}
+
+
+function hideMessage(){
+
+    messageBox.textContent =
+        "";
+
+
+    messageBox.className =
+        "message";
+
+}
+
+
+/* =========================================================
+   BUTTON
+========================================================= */
+
+function setLoginLoading(status){
+
+    loginRunning =
+        status;
+
+
+    loginButton.disabled =
+        status;
+
+
+    loginButtonText.textContent =
+        status
+            ? "جاري التحقق من الحساب"
+            : "الدخول إلى المنصة";
+
+
+    loginSpinner.style.display =
+        status
+            ? "inline-block"
+            : "none";
+
+}
+
+
+/* =========================================================
+   OFFLINE
+========================================================= */
+
+function showOfflineScreen(){
+
+    offlineScreen.classList.add(
+        "show"
+    );
+
+
+    loginPage.classList.remove(
+        "show"
+    );
+
+
+    splashScreen.classList.remove(
+        "show"
+    );
+
+
+    splashScreen.classList.remove(
+        "focus"
+    );
+
+
+    splashScreen.classList.remove(
+        "final-zoom"
+    );
+
+}
+
+
+function hideOfflineScreen(){
+
+    offlineScreen.classList.remove(
+        "show"
+    );
+
+}
+
+
+/* =========================================================
+   SOUND
+========================================================= */
+
+function playStartupSound(){
+
+    if(
+        !startupSound
+    ){
+        return;
+    }
+
+
+    try{
+
+        startupSound.pause();
+
+
+        startupSound.currentTime =
+            0;
+
+
+        startupSound.volume =
+            .48;
+
+
+        const request =
+            startupSound.play();
+
+
+        if(
+            request &&
+            typeof request.catch ===
+            "function"
+        ){
+
+            request.catch(
+                () => {}
+            );
+
+        }
+
+
+    }catch(error){
+
+        console.log(
+            "Audio not available",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   LOGIN PAGE
+========================================================= */
+
+function showLoginPage(){
+
+    hideOfflineScreen();
+
+
+    loginPage.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        () => {
+
+            if(
+                !userCodeInput.value
+            ){
+
+                userCodeInput.focus();
+
+            }
+
+        },
+        500
+    );
+
+}
+
+
+/* =========================================================
+   SPLASH
+========================================================= */
+
+function playSplash(){
+
+    if(
+        !navigator.onLine
+    ){
+
+        showOfflineScreen();
+
+        return;
+
+    }
+
+
+    hideOfflineScreen();
+
+
+    if(
+        splashPlayed
+    ){
+
+        showLoginPage();
+
+        return;
+
+    }
+
+
+    splashPlayed =
+        true;
+
+
+    loginPage.classList.remove(
+        "show"
+    );
+
+
+    splashScreen.classList.add(
+        "show"
+    );
+
+
+    setTimeout(
+        () => {
+
+            splashScreen.classList.add(
+                "focus"
+            );
+
+
+            playStartupSound();
+
+        },
+        1700
+    );
+
+
+    setTimeout(
+        () => {
+
+            splashScreen.classList.add(
+                "final-zoom"
+            );
+
+
+            loginPage.classList.add(
+                "show"
+            );
+
+        },
+        6800
+    );
+
+
+    setTimeout(
+        () => {
+
+            splashScreen.classList.remove(
+                "show"
+            );
+
+
+            splashScreen.classList.remove(
+                "focus"
+            );
+
+
+            splashScreen.classList.remove(
+                "final-zoom"
+            );
+
+
+            if(
+                !userCodeInput.value
+            ){
+
+                userCodeInput.focus();
+
+            }
+
+        },
+        8050
+    );
+
+}
+
+
+/* =========================================================
+   FIREBASE USER
+========================================================= */
+
+async function readUser(code){
+
+    const response =
+        await fetch(
+            `${DATABASE_URL}/${USERS_PATH}/${encodeURIComponent(code)}.json`,
+            {
+                method:
+                    "GET",
+
+                cache:
+                    "no-store",
+
+                headers:{
+                    Accept:
+                        "application/json"
+                }
+            }
+        );
+
+
+    if(
+        !response.ok
+    ){
+
+        throw new Error(
+            "FIREBASE_READ_FAILED"
+        );
+
+    }
+
+
+    return response.json();
+
+}
+
+
+/* =========================================================
+   ACCOUNT STATUS
+========================================================= */
+
+function isAccountDisabled(user){
+
+    /*
+        فقط active=false يعني الحساب معطل.
+    */
+
+    if(
+        user.active === false
+    ){
+        return true;
+    }
+
+
+    /*
+        الحساب المخفي أيضاً لا يسمح بالدخول.
+    */
+
+    if(
+        user.hidden === true
+    ){
+        return true;
+    }
+
+
+    const status =
+        cleanRole(
+            user.status
+        );
+
+
+    return [
+
+        "inactive",
+
+        "disabled",
+
+        "blocked",
+
+        "banned",
+
+        "suspended"
+
+    ].includes(
+        status
+    );
+
+}
+
+
+/* =========================================================
+   VALIDATE USER
+========================================================= */
+
+function validateUser(user){
+
+    /*
+        المستخدم غير موجود.
+    */
+
+    if(
+        !user ||
+        typeof user !==
+        "object"
+    ){
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "NOT_FOUND"
+
+        };
+
+    }
+
+
+    /*
+        المستخدم معطل.
+    */
+
+    if(
+        isAccountDisabled(
+            user
+        )
+    ){
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "DISABLED"
+
+        };
+
+    }
+
+
+    /*
+        لا يوجد role.
+    */
+
+    if(
+        !user.role
+    ){
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "NO_ROLE"
+
+        };
+
+    }
+
+
+    const role =
+        cleanRole(
+            user.role
+        );
+
+
+    /*
+        الدور غير مدعوم.
+    */
+
+    if(
+        !ALLOWED_ROLES.includes(
+            role
+        )
+    ){
+
+        return {
+
+            valid:
+                false,
+
+            reason:
+                "UNKNOWN_ROLE",
+
+            role:
+                role
+
+        };
+
+    }
+
+
+    /*
+        كل شيء صحيح.
+    */
+
+    return {
+
+        valid:
+            true,
+
+        role:
+            role
+
+    };
+
+}
+
+
+/* =========================================================
+   SAVE SESSION
+========================================================= */
+
+function saveSession(
+    code,
+    user
+){
+
+    const normalizedRole =
+        cleanRole(
+            user.role
+        );
+
+
+    const sessionData = {
+
+        code:
+            code,
+
+        role:
+            normalizedRole,
+
+        name:
+            user.name || "",
+
+        loginTime:
+            Date.now()
+
+    };
+
+
+    /*
+        حفظ بيانات الجلسة الحالية.
+    */
+
+    try{
+
+        sessionStorage.setItem(
+            SESSION_KEY,
+            JSON.stringify(
+                sessionData
+            )
+        );
+
+
+        sessionStorage.setItem(
+            CODE_KEY,
+            code
+        );
+
+
+        sessionStorage.setItem(
+            ROLE_KEY,
+            normalizedRole
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "SessionStorage Error:",
+            error
+        );
+
+    }
+
+
+    /*
+        حفظ الحساب بشكل دائم على نفس الجهاز.
+    */
+
+    const rememberedData = {
+
+        code:
+            code,
+
+        role:
+            normalizedRole,
+
+        name:
+            user.name || "",
+
+        savedAt:
+            Date.now()
+
+    };
+
+
+    try{
+
+        localStorage.setItem(
+            REMEMBERED_LOGIN_KEY,
+            JSON.stringify(
+                rememberedData
+            )
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "LocalStorage Error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   READ SAVED LOGIN
+========================================================= */
+
+function getRememberedLogin(){
+
+    try{
+
+        const raw =
+            localStorage.getItem(
+                REMEMBERED_LOGIN_KEY
+            );
+
+
+        if(
+            !raw
+        ){
+
+            return null;
+
+        }
+
+
+        const data =
+            JSON.parse(
+                raw
+            );
+
+
+        if(
+            !data ||
+            typeof data !==
+            "object"
+        ){
+
+            return null;
+
+        }
+
+
+        const code =
+            cleanCode(
+                data.code || ""
+            );
+
+
+        if(
+            !code
+        ){
+
+            return null;
+
+        }
+
+
+        return {
+
+            ...data,
+
+            code:
+                code
+
+        };
+
+
+    }catch(error){
+
+        console.error(
+            "Saved Login Error:",
+            error
+        );
+
+
+        return null;
+
+    }
+
+}
+
+
+/* =========================================================
+   CLEAR SESSION ONLY
+========================================================= */
+
+function clearSessionOnly(){
+
+    try{
+
+        sessionStorage.removeItem(
+            SESSION_KEY
+        );
+
+
+        sessionStorage.removeItem(
+            CODE_KEY
+        );
+
+
+        sessionStorage.removeItem(
+            ROLE_KEY
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Clear Session Error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   CLEAR SAVED LOGIN
+========================================================= */
+
+function clearSavedLogin(){
+
+    /*
+        حذف الجلسة.
+    */
+
+    clearSessionOnly();
+
+
+    /*
+        حذف الحساب المحفوظ نهائياً من هذا الجهاز.
+    */
+
+    try{
+
+        localStorage.removeItem(
+            REMEMBERED_LOGIN_KEY
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Clear LocalStorage Error:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   ROUTING
+========================================================= */
+
+function getRoleRoute(role){
+
+    const value =
+        cleanRole(
+            role
+        );
+
+
+    const routes = {
+
+
+        /* ===============================
+           الإدارة
+        =============================== */
+
+        admin:
+            "add.html",
+
+        administrator:
+            "add.html",
+
+        add:
+            "add.html",
+
+
+        /* ===============================
+           الطالب
+        =============================== */
+
+        student:
+            "st.html",
+
+        st:
+            "st.html",
+
+
+        /* ===============================
+           الأستاذ
+        =============================== */
+
+        teacher:
+            "th.html",
+
+        th:
+            "th.html",
+
+
+        /* ===============================
+           المحاسب
+        =============================== */
+
+        accountant:
+            "mn.html",
+
+        accounting:
+            "mn.html",
+
+        accountant_user:
+            "mn.html",
+
+        mn:
+            "mn.html",
+
+
+        /* ===============================
+           مشرف الحضور
+        =============================== */
+
+        attendance:
+            "msh.html",
+
+        attendance_supervisor:
+            "msh.html",
+
+        attendance_supervisor_user:
+            "msh.html",
+
+        supervisor:
+            "msh.html",
+
+        msh:
+            "msh.html"
+
+    };
+
+
+    return routes[
+        value
+    ] || null;
+
+}
+
+
+/* =========================================================
+   REDIRECT
+========================================================= */
+
+function redirectByRole(role){
+
+    const route =
+        getRoleRoute(
+            role
+        );
+
+
+    if(
+        !route
+    ){
+
+        console.error(
+            "Unknown account role:",
+            role
+        );
+
+
+        throw new Error(
+            "UNKNOWN_ROLE"
+        );
+
+    }
+
+
+    window.location.replace(
+        route
+    );
+
+}
+
+
+/* =========================================================
+   MANUAL LOGIN
+========================================================= */
+
+async function login(){
+
+    if(
+        loginRunning ||
+        autoLoginRunning
+    ){
+
+        return;
+
+    }
+
+
+    hideMessage();
+
+
+    /*
+        فحص الإنترنت.
+    */
+
+    if(
+        !navigator.onLine
+    ){
+
+        showOfflineScreen();
+
+        return;
+
+    }
+
+
+    /*
+        تنظيف الكود.
+    */
+
+    const code =
+        cleanCode(
+            userCodeInput.value
+        );
+
+
+    /*
+        لا يوجد كود.
+    */
+
+    if(
+        !code
+    ){
+
+        showMessage(
+            "يرجى إدخال الكود الخاص بك"
+        );
+
+
+        userCodeInput.focus();
+
+
+        return;
+
+    }
+
+
+    /*
+        إظهار الكود بعد تنظيفه.
+    */
+
+    userCodeInput.value =
+        code;
+
+
+    /*
+        تشغيل التحميل.
+    */
+
+    setLoginLoading(
+        true
+    );
+
+
+    try{
+
+
+        /* =================================================
+           قراءة المستخدم من Firebase
+        ================================================= */
+
+        const user =
+            await readUser(
+                code
+            );
+
+
+        /* =================================================
+           فحص الحساب
+        ================================================= */
+
+        const check =
+            validateUser(
+                user
+            );
+
+
+        /*
+            الحساب غير موجود.
+        */
+
+        if(
+            !check.valid &&
+            check.reason ===
+            "NOT_FOUND"
+        ){
+
+            /*
+                إذا كان هذا نفسه الحساب المحفوظ،
+                نحذفه لأنه لم يعد موجوداً.
+            */
+
+            const remembered =
+                getRememberedLogin();
+
+
+            if(
+                remembered &&
+                remembered.code ===
+                code
+            ){
+
+                clearSavedLogin();
+
+            }
+
+
+            showMessage(
+                "الكود الذي أدخلته غير صحيح"
+            );
+
+
+            userCodeInput.select();
+
+
+            return;
+
+        }
+
+
+        /*
+            الحساب معطل.
+        */
+
+        if(
+            !check.valid &&
+            check.reason ===
+            "DISABLED"
+        ){
+
+            const remembered =
+                getRememberedLogin();
+
+
+            if(
+                remembered &&
+                remembered.code ===
+                code
+            ){
+
+                clearSavedLogin();
+
+            }
+
+
+            showMessage(
+                "هذا الحساب غير فعال، يرجى مراجعة إدارة المدرسة"
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+            لا يوجد role.
+        */
+
+        if(
+            !check.valid &&
+            check.reason ===
+            "NO_ROLE"
+        ){
+
+            const remembered =
+                getRememberedLogin();
+
+
+            if(
+                remembered &&
+                remembered.code ===
+                code
+            ){
+
+                clearSavedLogin();
+
+            }
+
+
+            showMessage(
+                "بيانات الحساب غير مكتملة، يرجى مراجعة الإدارة"
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+            الدور غير معروف.
+        */
+
+        if(
+            !check.valid &&
+            check.reason ===
+            "UNKNOWN_ROLE"
+        ){
+
+            console.error(
+                "Unsupported role:",
+                check.role,
+                user
+            );
+
+
+            const remembered =
+                getRememberedLogin();
+
+
+            if(
+                remembered &&
+                remembered.code ===
+                code
+            ){
+
+                clearSavedLogin();
+
+            }
+
+
+            showMessage(
+                "نوع الحساب غير معرف في النظام، يرجى مراجعة الإدارة"
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+            role الصحيح.
+        */
+
+        const role =
+            check.role;
+
+
+        /* =================================================
+           حفظ الحساب
+        ================================================= */
+
+        saveSession(
+            code,
+            {
+                ...user,
+                role
+            }
+        );
+
+
+        /* =================================================
+           نجاح
+        ================================================= */
+
+        showMessage(
+            user.name
+                ? `مرحباً ${user.name}، تم تسجيل الدخول بنجاح`
+                : "تم تسجيل الدخول بنجاح",
+            "success"
+        );
+
+
+        /*
+            انتظار بسيط حتى تظهر رسالة النجاح.
+        */
+
+        await new Promise(
+            resolve =>
+                setTimeout(
+                    resolve,
+                    350
+                )
+        );
+
+
+        /* =================================================
+           توجيه
+        ================================================= */
+
+        redirectByRole(
+            role
+        );
+
+
+    }catch(error){
+
+
+        console.error(
+            "Login Error:",
+            error
+        );
+
+
+        if(
+            !navigator.onLine
+        ){
+
+            showOfflineScreen();
+
+        }
+
+        else if(
+            error.message ===
+            "UNKNOWN_ROLE"
+        ){
+
+            showMessage(
+                "نوع الحساب غير مربوط بصفحة داخل المنصة، يرجى مراجعة الإدارة"
+            );
+
+        }
+
+        else{
+
+            showMessage(
+                "تعذر الاتصال بالنظام، حاول مرة أخرى"
+            );
+
+        }
+
+
+    }finally{
+
+
+        setLoginLoading(
+            false
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   AUTO LOGIN
+========================================================= */
+
+async function autoLogin(){
+
+    /*
+        منع التكرار.
+    */
+
+    if(
+        autoLoginRunning ||
+        loginRunning
+    ){
+
+        return false;
+
+    }
+
+
+    /*
+        قراءة الحساب المحفوظ.
+    */
+
+    const remembered =
+        getRememberedLogin();
+
+
+    /*
+        لا يوجد حساب محفوظ.
+    */
+
+    if(
+        !remembered
+    ){
+
+        return false;
+
+    }
+
+
+    /*
+        استخراج الكود.
+    */
+
+    const code =
+        cleanCode(
+            remembered.code
+        );
+
+
+    /*
+        بيانات غير صحيحة.
+    */
+
+    if(
+        !code
+    ){
+
+        clearSavedLogin();
+
+        return false;
+
+    }
+
+
+    /*
+        وضع الكود داخل الحقل.
+    */
+
+    userCodeInput.value =
+        code;
+
+
+    /*
+        إذا لا يوجد إنترنت نبقي الحساب محفوظاً.
+    */
+
+    if(
+        !navigator.onLine
+    ){
+
+        showOfflineScreen();
+
+        return true;
+
+    }
+
+
+    /*
+        بدء تسجيل الدخول التلقائي.
+    */
+
+    autoLoginRunning =
+        true;
+
+
+    loginButton.disabled =
+        true;
+
+
+    loginButtonText.textContent =
+        "جاري تسجيل الدخول تلقائياً";
+
+
+    loginSpinner.style.display =
+        "inline-block";
+
+
+    try{
+
+
+        /* =================================================
+           التحقق من Firebase
+        ================================================= */
+
+        const user =
+            await readUser(
+                code
+            );
+
+
+        /* =================================================
+           فحص الحساب
+        ================================================= */
+
+        const check =
+            validateUser(
+                user
+            );
+
+
+        /*
+            الحساب غير موجود.
+        */
+
+        if(
+            !check.valid &&
+            check.reason ===
+            "NOT_FOUND"
+        ){
+
+            clearSavedLogin();
+
+
+            userCodeInput.value =
+                "";
+
+
+            showLoginPage();
+
+
+            showMessage(
+                "الحساب المحفوظ لم يعد موجوداً، يرجى تسجيل الدخول من جديد"
+            );
+
+
+            return false;
+
+        }
+
+
+        /*
+            الحساب معطل.
+        */
+
+        if(
+            !check.valid &&
+            check.reason ===
+            "DISABLED"
+        ){
+
+            clearSavedLogin();
+
+
+            userCodeInput.value =
+                code;
+
+
+            showLoginPage();
+
+
+            showMessage(
+                "هذا الحساب غير فعال، يرجى مراجعة إدارة المدرسة"
+            );
+
+
+            return false;
+
+        }
+
+
+        /*
+            role مفقود.
+        */
+
+        if(
+            !check.valid &&
+            check.reason ===
+            "NO_ROLE"
+        ){
+
+            clearSavedLogin();
+
+
+            userCodeInput.value =
+                code;
+
+
+            showLoginPage();
+
+
+            showMessage(
+                "بيانات الحساب غير مكتملة، يرجى مراجعة الإدارة"
+            );
+
+
+            return false;
+
+        }
+
+
+        /*
+            role غير معروف.
+        */
+
+        if(
+            !check.valid &&
+            check.reason ===
+            "UNKNOWN_ROLE"
+        ){
+
+            console.error(
+                "Unsupported remembered role:",
+                check.role
+            );
+
+
+            clearSavedLogin();
+
+
+            userCodeInput.value =
+                code;
+
+
+            showLoginPage();
+
+
+            showMessage(
+                "نوع الحساب غير معرف في النظام، يرجى مراجعة الإدارة"
+            );
+
+
+            return false;
+
+        }
+
+
+        /*
+            role صحيح.
+        */
+
+        const role =
+            check.role;
+
+
+        /*
+            إعادة بناء sessionStorage.
+            لأن sessionStorage يختفي بعد إغلاق المتصفح.
+        */
+
+        saveSession(
+            code,
+            {
+                ...user,
+                role
+            }
+        );
+
+
+        /*
+            التوجيه مباشرة.
+        */
+
+        redirectByRole(
+            role
+        );
+
+
+        return true;
+
+
+    }catch(error){
+
+
+        console.error(
+            "Auto Login Error:",
+            error
+        );
+
+
+        /*
+            إذا انقطع الإنترنت لا نحذف الحساب.
+        */
+
+        if(
+            !navigator.onLine
+        ){
+
+            showOfflineScreen();
+
+            return true;
+
+        }
+
+
+        /*
+            إذا Firebase تعطل مؤقتاً:
+            لا نحذف الحساب المحفوظ.
+        */
+
+        showLoginPage();
+
+
+        showMessage(
+            "تعذر التحقق من الحساب المحفوظ، حاول مرة أخرى"
+        );
+
+
+        return false;
+
+
+    }finally{
+
+
+        autoLoginRunning =
+            false;
+
+
+        loginButton.disabled =
+            false;
+
+
+        loginButtonText.textContent =
+            "الدخول إلى المنصة";
+
+
+        loginSpinner.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   INPUT BUTTON
+========================================================= */
+
+loginButton.addEventListener(
+    "click",
+    login
+);
+
+
+/* =========================================================
+   ENTER
+========================================================= */
+
+userCodeInput.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key ===
+            "Enter"
+        ){
+
+            event.preventDefault();
+
+
+            login();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INPUT NORMALIZE
+========================================================= */
+
+userCodeInput.addEventListener(
+    "input",
+    function(){
+
+        hideMessage();
+
+
+        this.value =
+            cleanCode(
+                this.value
+            );
+
+    }
+);
+
+
+/* =========================================================
+   QR LOGIN
+========================================================= */
+
+async function handleQRLogin(){
+
+    /*
+        قراءة URL.
+    */
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+
+    /*
+        استخراج code.
+    */
+
+    const code =
+        cleanCode(
+            params.get("code") ||
+            ""
+        );
+
+
+    /*
+        لا يوجد كود.
+    */
+
+    if(
+        !code
+    ){
+
+        return false;
+
+    }
+
+
+    /*
+        وضع الكود داخل الحقل.
+    */
+
+    userCodeInput.value =
+        code;
+
+
+    /*
+        حذف code من رابط المتصفح بعد قراءته.
+    */
+
+    try{
+
+        history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+
+    }catch(error){
+
+        console.log(
+            "Unable to clean URL",
+            error
+        );
+
+    }
+
+
+    /*
+        انتظار بسيط.
+    */
+
+    await new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                180
+            )
+    );
+
+
+    /*
+        تسجيل الدخول.
+        login() سيحفظ الحساب في localStorage تلقائياً.
+    */
+
+    await login();
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   NETWORK OFFLINE
+========================================================= */
+
+window.addEventListener(
+    "offline",
+    () => {
+
+        loginRunning =
+            false;
+
+
+        autoLoginRunning =
+            false;
+
+
+        loginButton.disabled =
+            false;
+
+
+        loginButtonText.textContent =
+            "الدخول إلى المنصة";
+
+
+        loginSpinner.style.display =
+            "none";
+
+
+        showOfflineScreen();
+
+    }
+);
+
+
+/* =========================================================
+   NETWORK ONLINE
+========================================================= */
+
+window.addEventListener(
+    "online",
+    async () => {
+
+
+        hideOfflineScreen();
+
+
+        hideMessage();
+
+
+        /*
+            عند رجوع الإنترنت نفحص هل يوجد حساب محفوظ.
+        */
+
+        const remembered =
+            getRememberedLogin();
+
+
+        /*
+            يوجد حساب محفوظ.
+        */
+
+        if(
+            remembered
+        ){
+
+            userCodeInput.value =
+                remembered.code;
+
+
+            showLoginPage();
+
+
+            /*
+                تسجيل الدخول تلقائياً.
+            */
+
+            const handled =
+                await autoLogin();
+
+
+            if(
+                handled
+            ){
+
+                return;
+
+            }
+
+        }
+
+
+        /*
+            لا يوجد حساب محفوظ.
+        */
+
+        showLoginPage();
+
+    }
+);
+
+
+/* =========================================================
+   AUDIO UNLOCK
+========================================================= */
+
+let audioUnlocked =
+    false;
+
+
+function unlockAudio(){
+
+    if(
+        audioUnlocked
+    ){
+
+        return;
+
+    }
+
+
+    audioUnlocked =
+        true;
+
+
+    if(
+        !startupSound
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+
+        startupSound.volume =
+            .01;
+
+
+        const request =
+            startupSound.play();
+
+
+        if(
+            request
+        ){
+
+            request
+
+            .then(
+                () => {
+
+                    startupSound.pause();
+
+
+                    startupSound.currentTime =
+                        0;
+
+
+                    startupSound.volume =
+                        .48;
+
+                }
+            )
+
+            .catch(
+                () => {}
+            );
+
+        }
+
+
+    }catch(error){
+
+        console.log(
+            "Audio unlock error",
+            error
+        );
+
+    }
+
+}
+
+
+document.addEventListener(
+    "touchstart",
+    unlockAudio,
+    {
+        once:true
+    }
+);
+
+
+document.addEventListener(
+    "click",
+    unlockAudio,
+    {
+        once:true
+    }
+);
+
+
+/* =========================================================
+   GLOBAL LOGOUT
+========================================================= */
+
+/*
+    هذه الدالة تقدر تستخدمها إذا كانت صفحة index مفتوحة.
+
+    وفي صفحات:
+    add.html
+    st.html
+    th.html
+    mn.html
+    msh.html
+
+    يجب أن تجعل زر تسجيل الخروج يحذف أيضاً:
+    tahadi_remembered_login
+*/
+
+window.logoutTahadi =
+    function(){
+
+        clearSavedLogin();
+
+
+        window.location.replace(
+            "index.html"
+        );
+
+    };
+
+
+/* =========================================================
+   CHECK SAVED CODE
+========================================================= */
+
+/*
+    هذه الدالة فقط تملأ الكود المحفوظ داخل الحقل
+    بدون تسجيل الدخول.
+*/
+
+function fillSavedCode(){
+
+    const remembered =
+        getRememberedLogin();
+
+
+    if(
+        !remembered
+    ){
+
+        return false;
+
+    }
+
+
+    userCodeInput.value =
+        remembered.code;
+
+
+    return true;
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+window.addEventListener(
+    "load",
+    async () => {
+
+
+        /* =================================================
+           قراءة QR أولاً
+        ================================================= */
+
+        const params =
+            new URLSearchParams(
+                window.location.search
+            );
+
+
+        const qrCode =
+            cleanCode(
+                params.get("code") ||
+                ""
+            );
+
+
+        /* =================================================
+           إذا لا يوجد إنترنت
+        ================================================= */
+
+        if(
+            !navigator.onLine
+        ){
+
+            /*
+                إذا يوجد حساب محفوظ نضع الكود بالحقل
+                حتى يكون جاهزاً عند رجوع الإنترنت.
+            */
+
+            fillSavedCode();
+
+
+            showOfflineScreen();
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           QR له الأولوية
+        ================================================= */
+
+        if(
+            qrCode
+        ){
+
+            /*
+                لا نشغل Splash في QR.
+            */
+
+            splashPlayed =
+                true;
+
+
+            showLoginPage();
+
+
+            await handleQRLogin();
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           فحص الحساب المحفوظ
+        ================================================= */
+
+        const remembered =
+            getRememberedLogin();
+
+
+        /*
+            يوجد حساب محفوظ.
+        */
+
+        if(
+            remembered
+        ){
+
+            /*
+                لا نحتاج مشهد البداية في كل مرة.
+            */
+
+            splashPlayed =
+                true;
+
+
+            /*
+                وضع الكود المحفوظ.
+            */
+
+            userCodeInput.value =
+                remembered.code;
+
+
+            /*
+                إظهار صفحة الدخول أثناء الفحص.
+            */
+
+            showLoginPage();
+
+
+            /*
+                تسجيل الدخول تلقائياً.
+            */
+
+            await autoLogin();
+
+
+            return;
+
+        }
+
+
+        /* =================================================
+           لا يوجد حساب محفوظ
+        ================================================= */
+
+        playSplash();
+
+    }
+);
+
+</script>
+
+</body>
+</html>

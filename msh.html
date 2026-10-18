@@ -1,0 +1,4565 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+>
+
+<meta name="theme-color" content="#075fcf">
+
+<title>الحضور والغياب | مدرسة التحدي الأهلية المختلطة</title>
+
+<script
+    src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"
+></script>
+
+<style>
+
+:root{
+    --blue:#075fcf;
+    --blue-dark:#06469c;
+    --green:#087c45;
+    --green-bg:#eafaf1;
+    --red:#c62828;
+    --red-bg:#fff0f0;
+    --orange:#dc7500;
+    --orange-bg:#fff6e9;
+    --bg:#f4f7fb;
+    --text:#172033;
+    --muted:#667085;
+    --border:#e2e8f0;
+    --shadow:0 12px 35px rgba(24,45,75,.09);
+}
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,
+body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    font-family:Tahoma,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+}
+
+button,
+select,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* =========================================================
+   LOADER
+========================================================= */
+
+.loader-screen{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#fff;
+}
+
+.loader-box{
+    width:90%;
+    max-width:420px;
+    text-align:center;
+}
+
+.loader-logo{
+    width:85px;
+    height:85px;
+    object-fit:contain;
+    margin-bottom:15px;
+}
+
+.spinner{
+    width:38px;
+    height:38px;
+    margin:auto;
+    border-radius:50%;
+    border:4px solid #e7edf5;
+    border-top-color:var(--blue);
+    animation:spin .8s linear infinite;
+}
+
+.loader-box p{
+    margin-top:12px;
+    color:var(--muted);
+    font-size:10px;
+    line-height:1.9;
+    font-weight:900;
+}
+
+.loader-error{
+    display:none;
+    margin-top:15px;
+    padding:12px;
+    border-radius:14px;
+    background:var(--red-bg);
+    color:var(--red);
+    font-size:9px;
+    line-height:1.9;
+    font-weight:900;
+    white-space:pre-wrap;
+}
+
+.loader-error.show{
+    display:block;
+}
+
+.loader-retry{
+    display:none;
+    width:100%;
+    height:48px;
+    margin-top:12px;
+    border:0;
+    border-radius:14px;
+    color:#fff;
+    background:var(--blue);
+    font-size:10px;
+    font-weight:900;
+}
+
+.loader-retry.show{
+    display:block;
+}
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.header{
+    position:sticky;
+    top:0;
+    z-index:100;
+    min-height:72px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    padding:max(10px,env(safe-area-inset-top)) 14px 10px;
+    background:rgba(255,255,255,.96);
+    backdrop-filter:blur(15px);
+    -webkit-backdrop-filter:blur(15px);
+    border-bottom:1px solid var(--border);
+}
+
+.brand{
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:9px;
+}
+
+.logo{
+    width:49px;
+    height:49px;
+    flex:none;
+    object-fit:contain;
+}
+
+.brand-info{
+    min-width:0;
+}
+
+.brand h1{
+    font-size:13px;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.brand p{
+    margin-top:3px;
+    color:var(--blue);
+    font-size:8px;
+    font-weight:900;
+}
+
+.logout{
+    flex:none;
+    border:0;
+    padding:9px 11px;
+    border-radius:12px;
+    background:#f0f3f7;
+    color:#475467;
+    font-size:8px;
+    font-weight:900;
+}
+
+/* =========================================================
+   CONTAINER
+========================================================= */
+
+.container{
+    width:100%;
+    max-width:980px;
+    margin:auto;
+    padding:14px 12px calc(30px + env(safe-area-inset-bottom));
+}
+
+/* =========================================================
+   CARD
+========================================================= */
+
+.card{
+    margin-bottom:12px;
+    padding:15px;
+    border-radius:20px;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+}
+
+.card-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:13px;
+}
+
+.card-title h2{
+    font-size:14px;
+    font-weight:900;
+}
+
+.card-title p{
+    color:var(--muted);
+    font-size:8px;
+}
+
+/* =========================================================
+   SYSTEM STATUS
+========================================================= */
+
+.system-status{
+    padding:12px;
+    border-radius:15px;
+    background:var(--green-bg);
+    color:var(--green);
+    font-size:9px;
+    line-height:1.8;
+    font-weight:900;
+}
+
+.system-status.warning{
+    background:var(--orange-bg);
+    color:var(--orange);
+}
+
+.system-status.error{
+    background:var(--red-bg);
+    color:var(--red);
+}
+
+/* =========================================================
+   FILTERS
+========================================================= */
+
+.filters{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:8px;
+}
+
+.field{
+    min-width:0;
+}
+
+.field label{
+    display:block;
+    margin:0 3px 6px;
+    color:#475467;
+    font-size:8px;
+    font-weight:900;
+}
+
+.field select{
+    width:100%;
+    height:48px;
+    padding:0 10px;
+    outline:none;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:#fff;
+    color:var(--text);
+    font-size:11px;
+    font-weight:700;
+}
+
+.field select:focus{
+    border-color:var(--blue);
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:12px;
+}
+
+.btn{
+    min-height:48px;
+    flex:1 1 150px;
+    border:0;
+    border-radius:14px;
+    padding:0 14px;
+    font-size:9px;
+    font-weight:900;
+}
+
+.btn-primary{
+    color:#fff;
+    background:linear-gradient(135deg,#0873e8,#0757bc);
+}
+
+.btn-red{
+    color:#fff;
+    background:var(--red);
+}
+
+.btn-green{
+    color:#fff;
+    background:var(--green);
+}
+
+.btn-soft{
+    color:var(--blue);
+    background:#edf5ff;
+}
+
+.btn:disabled{
+    opacity:.55;
+    cursor:not-allowed;
+}
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+.camera-container{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    border-radius:18px;
+    background:#111;
+    aspect-ratio:16 / 9;
+}
+
+#camera{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+}
+
+#overlay{
+    position:absolute;
+    inset:0;
+    z-index:5;
+    width:100%;
+    height:100%;
+    pointer-events:none;
+}
+
+.camera-top{
+    position:absolute;
+    z-index:10;
+    top:10px;
+    right:10px;
+    left:10px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:7px;
+    pointer-events:none;
+}
+
+.camera-badge{
+    padding:7px 9px;
+    border-radius:999px;
+    color:#fff;
+    background:rgba(0,0,0,.55);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    font-size:8px;
+    font-weight:900;
+}
+
+.camera-badge.live::before{
+    content:"";
+    display:inline-block;
+    width:7px;
+    height:7px;
+    margin-left:5px;
+    border-radius:50%;
+    background:#22d56d;
+}
+
+.camera-status{
+    margin-top:10px;
+    padding:10px 12px;
+    border-radius:13px;
+    background:#f7f9fc;
+    color:#475467;
+    text-align:center;
+    font-size:9px;
+    line-height:1.7;
+    font-weight:800;
+}
+
+.detection-box{
+    margin-top:10px;
+    padding:12px;
+    border-radius:15px;
+    background:var(--green-bg);
+    color:var(--green);
+    text-align:center;
+    font-size:9px;
+    line-height:1.8;
+    font-weight:900;
+}
+
+.detection-box.warning{
+    background:var(--orange-bg);
+    color:var(--orange);
+}
+
+.detection-box.red{
+    background:var(--red-bg);
+    color:var(--red);
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(5,minmax(0,1fr));
+    gap:7px;
+}
+
+.stat{
+    min-width:0;
+    padding:12px 5px;
+    text-align:center;
+    border-radius:15px;
+    background:#f8fafc;
+    border:1px solid #edf1f5;
+}
+
+.stat strong{
+    display:block;
+    font-size:20px;
+    font-weight:900;
+}
+
+.stat span{
+    display:block;
+    margin-top:4px;
+    color:var(--muted);
+    font-size:7px;
+    line-height:1.4;
+}
+
+.stat.blue strong{
+    color:var(--blue);
+}
+
+.stat.green strong{
+    color:var(--green);
+}
+
+.stat.red strong{
+    color:var(--red);
+}
+
+.stat.orange strong{
+    color:var(--orange);
+}
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+.progress-wrap{
+    margin-top:12px;
+}
+
+.progress-info{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:6px;
+    font-size:8px;
+    font-weight:900;
+}
+
+.progress-track{
+    width:100%;
+    height:10px;
+    overflow:hidden;
+    border-radius:999px;
+    background:#edf1f5;
+}
+
+.progress-bar{
+    width:0%;
+    height:100%;
+    border-radius:999px;
+    background:linear-gradient(90deg,#08a75a,#16ca72);
+    transition:width .25s ease;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.search{
+    position:relative;
+    margin-bottom:10px;
+}
+
+.search input{
+    width:100%;
+    height:47px;
+    padding:0 13px;
+    outline:none;
+    border:1px solid var(--border);
+    border-radius:13px;
+    background:#f9fbfd;
+    font-size:11px;
+}
+
+.search input:focus{
+    border-color:var(--blue);
+}
+
+/* =========================================================
+   STUDENTS
+========================================================= */
+
+.student-list{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:8px;
+}
+
+.student{
+    position:relative;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:9px;
+    padding:9px;
+    border:1px solid var(--border);
+    border-radius:15px;
+    background:#fff;
+    transition:.2s;
+}
+
+.student.selected-absent{
+    border-color:#efaaaa;
+    background:var(--red-bg);
+}
+
+.student.present-preview{
+    border-color:#b2e4c8;
+    background:var(--green-bg);
+}
+
+.student-image{
+    width:47px;
+    height:47px;
+    flex:0 0 47px;
+    overflow:hidden;
+    border-radius:50%;
+    background:#e8f3ff;
+}
+
+.student-image img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+}
+
+.student-letter{
+    width:100%;
+    height:100%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--blue);
+    font-size:15px;
+    font-weight:900;
+}
+
+.student-info{
+    min-width:0;
+    flex:1;
+}
+
+.student-name{
+    font-size:10px;
+    line-height:1.5;
+    font-weight:900;
+}
+
+.student-meta{
+    margin-top:3px;
+    color:var(--muted);
+    font-size:7px;
+    line-height:1.5;
+}
+
+.absent-toggle{
+    flex:none;
+    min-width:59px;
+    height:35px;
+    border:0;
+    border-radius:10px;
+    color:var(--red);
+    background:var(--red-bg);
+    font-size:7px;
+    font-weight:900;
+}
+
+.student.selected-absent .absent-toggle{
+    color:#fff;
+    background:var(--red);
+}
+
+/* =========================================================
+   WARNING
+========================================================= */
+
+.selection-warning{
+    margin-bottom:10px;
+    padding:11px;
+    border-radius:13px;
+    text-align:center;
+    font-size:8px;
+    line-height:1.8;
+    font-weight:900;
+    background:var(--orange-bg);
+    color:var(--orange);
+}
+
+.selection-warning.ok{
+    background:var(--green-bg);
+    color:var(--green);
+}
+
+.selection-warning.bad{
+    background:var(--red-bg);
+    color:var(--red);
+}
+
+/* =========================================================
+   REPORT
+========================================================= */
+
+.report-head{
+    padding:13px;
+    margin-bottom:10px;
+    border-radius:15px;
+    background:#f8fafc;
+    line-height:1.9;
+    font-size:9px;
+}
+
+.report-table-wrap{
+    width:100%;
+    overflow:auto;
+    border:1px solid var(--border);
+    border-radius:15px;
+}
+
+.report-table{
+    width:100%;
+    min-width:720px;
+    border-collapse:collapse;
+}
+
+.report-table th,
+.report-table td{
+    padding:10px 8px;
+    text-align:center;
+    border-bottom:1px solid #edf0f4;
+    font-size:8px;
+}
+
+.report-table th{
+    background:#f7f9fc;
+    color:#475467;
+    font-weight:900;
+}
+
+.report-present{
+    color:var(--green);
+    font-weight:900;
+}
+
+.report-absent{
+    color:var(--red);
+    font-weight:900;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+    z-index:99999;
+    left:15px;
+    right:15px;
+    bottom:max(18px,env(safe-area-inset-bottom));
+    max-width:430px;
+    margin:auto;
+    padding:12px 14px;
+    border-radius:14px;
+    text-align:center;
+    color:#fff;
+    background:#172033;
+    font-size:9px;
+    line-height:1.7;
+    font-weight:900;
+    opacity:0;
+    pointer-events:none;
+    transform:translateY(10px);
+    transition:.2s;
+}
+
+.toast.show{
+    opacity:1;
+    transform:none;
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media(max-width:700px){
+
+    .filters{
+        grid-template-columns:1fr;
+    }
+
+    .stats{
+        grid-template-columns:repeat(2,minmax(0,1fr));
+    }
+
+    .stat:first-child{
+        grid-column:span 2;
+    }
+
+    .student-list{
+        grid-template-columns:1fr;
+    }
+
+}
+
+@media(max-width:430px){
+
+    .container{
+        padding:10px 8px 25px;
+    }
+
+    .card{
+        padding:12px;
+        border-radius:17px;
+    }
+
+    .camera-container{
+        aspect-ratio:4 / 3;
+    }
+
+    .student-image{
+        width:43px;
+        height:43px;
+        flex-basis:43px;
+    }
+
+}
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+@media print{
+
+    body{
+        background:#fff;
+    }
+
+    .header,
+    #selectionCard,
+    #systemCard,
+    #cameraCard,
+    #statsCard,
+    #studentsCard,
+    .report-actions,
+    .toast{
+        display:none!important;
+    }
+
+    #reportCard{
+        display:block!important;
+        border:0;
+        box-shadow:none;
+        margin:0;
+        padding:0;
+    }
+
+    .container{
+        max-width:none;
+        padding:0;
+    }
+
+    .report-table{
+        min-width:0;
+    }
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- =========================================================
+     LOADER
+========================================================= -->
+
+<div
+    id="loaderScreen"
+    class="loader-screen"
+>
+
+    <div class="loader-box">
+
+        <img
+            src="logo.png"
+            class="loader-logo"
+            alt="الشعار"
+        >
+
+        <div
+            id="loaderSpinner"
+            class="spinner"
+        ></div>
+
+        <p id="loaderText">
+            جاري تحميل نظام الحضور
+        </p>
+
+        <div
+            id="loaderError"
+            class="loader-error"
+        ></div>
+
+        <button
+            id="loaderRetry"
+            class="loader-retry"
+            type="button"
+        >
+            إعادة المحاولة
+        </button>
+
+    </div>
+
+</div>
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <div class="brand">
+
+        <img
+            src="logo.png"
+            class="logo"
+            alt=""
+        >
+
+        <div class="brand-info">
+
+            <h1>
+                مدرسة التحدي الأهلية المختلطة
+            </h1>
+
+            <p id="supervisorName">
+                مشرف الحضور والغياب
+            </p>
+
+        </div>
+
+    </div>
+
+    <button
+        id="logoutBtn"
+        class="logout"
+        type="button"
+    >
+        خروج
+    </button>
+
+</header>
+
+<main class="container">
+
+<!-- =========================================================
+     SYSTEM
+========================================================= -->
+
+<section
+    id="systemCard"
+    class="card"
+>
+
+    <div class="card-title">
+
+        <div>
+
+            <h2>
+                حالة نظام اكتشاف الوجوه
+            </h2>
+
+            <p>
+                فحص ملفات النظام
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        id="systemStatus"
+        class="system-status warning"
+    >
+        جاري فحص النظام...
+    </div>
+
+</section>
+
+<!-- =========================================================
+     SELECT
+========================================================= -->
+
+<section
+    id="selectionCard"
+    class="card"
+>
+
+    <div class="card-title">
+
+        <div>
+
+            <h2>
+                بدء تسجيل الحضور
+            </h2>
+
+            <p>
+                اختر الصف والقاعة والجنس
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="filters">
+
+        <div class="field">
+
+            <label for="classSelect">
+                الصف
+            </label>
+
+            <select id="classSelect">
+
+                <option value="">
+                    جميع الصفوف
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="field">
+
+            <label for="roomSelect">
+                القاعة
+            </label>
+
+            <select id="roomSelect">
+
+                <option value="">
+                    جميع القاعات
+                </option>
+
+            </select>
+
+        </div>
+
+        <div class="field">
+
+            <label for="genderSelect">
+                الجنس
+            </label>
+
+            <select id="genderSelect">
+
+                <option value="">
+                    الجميع
+                </option>
+
+                <option value="male">
+                    بنين
+                </option>
+
+                <option value="female">
+                    بنات
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+    <div class="actions">
+
+        <button
+            id="startBtn"
+            class="btn btn-primary"
+            type="button"
+            disabled
+        >
+            جاري تحميل نظام الوجوه...
+        </button>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     CAMERA
+========================================================= -->
+
+<section
+    id="cameraCard"
+    class="card hidden"
+>
+
+    <div class="card-title">
+
+        <div>
+
+            <h2>
+                الكامرة المباشرة
+            </h2>
+
+            <p>
+                وجّه الكامرة حتى تظهر الوجوه بوضوح
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="camera-container">
+
+        <video
+            id="camera"
+            autoplay
+            muted
+            playsinline
+        ></video>
+
+        <canvas
+            id="overlay"
+        ></canvas>
+
+        <div class="camera-top">
+
+            <span
+                class="camera-badge live"
+            >
+                مباشر
+            </span>
+
+            <span
+                id="faceCountBadge"
+                class="camera-badge"
+            >
+                0 وجه
+            </span>
+
+        </div>
+
+    </div>
+
+    <div
+        id="cameraStatus"
+        class="camera-status"
+    >
+        جاري تشغيل الكامرة...
+    </div>
+
+    <div
+        id="detectionMessage"
+        class="detection-box"
+    >
+        انتظر حتى يستقر عدّ الوجوه.
+    </div>
+
+    <div class="actions">
+
+        <button
+            id="switchCameraBtn"
+            class="btn btn-soft"
+            type="button"
+        >
+            تبديل الكامرة
+        </button>
+
+        <button
+            id="stopCameraBtn"
+            class="btn btn-red"
+            type="button"
+        >
+            إيقاف الكامرة
+        </button>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     STATS
+========================================================= -->
+
+<section
+    id="statsCard"
+    class="card hidden"
+>
+
+    <div class="card-title">
+
+        <div>
+
+            <h2>
+                إحصائيات المسح
+            </h2>
+
+            <p>
+                مقارنة عدد الوجوه بعدد الطلاب
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="stats">
+
+        <div class="stat blue">
+            <strong id="totalStudents">0</strong>
+            <span>الطلاب المسجلون</span>
+        </div>
+
+        <div class="stat green">
+            <strong id="currentFaces">0</strong>
+            <span>الوجوه الآن</span>
+        </div>
+
+        <div class="stat green">
+            <strong id="bestFaces">0</strong>
+            <span>أعلى عدد مثبت</span>
+        </div>
+
+        <div class="stat red">
+            <strong id="missingCount">0</strong>
+            <span>النقص المتوقع</span>
+        </div>
+
+        <div class="stat orange">
+            <strong id="attendanceRate">0%</strong>
+            <span>نسبة الحضور</span>
+        </div>
+
+    </div>
+
+    <div class="progress-wrap">
+
+        <div class="progress-info">
+
+            <span>
+                نسبة الموجودين
+            </span>
+
+            <span id="progressText">
+                0%
+            </span>
+
+        </div>
+
+        <div class="progress-track">
+
+            <div
+                id="progressBar"
+                class="progress-bar"
+            ></div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     STUDENTS
+========================================================= -->
+
+<section
+    id="studentsCard"
+    class="card hidden"
+>
+
+    <div class="card-title">
+
+        <div>
+
+            <h2>
+                تحديد الطلاب الغائبين
+            </h2>
+
+            <p>
+                حدد أسماء الغائبين من القائمة
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        id="selectionWarning"
+        class="selection-warning"
+    >
+        لم يتم تثبيت عدد الحضور بعد.
+    </div>
+
+    <div class="search">
+
+        <input
+            id="studentSearch"
+            type="search"
+            placeholder="ابحث عن اسم الطالب..."
+            autocomplete="off"
+        >
+
+    </div>
+
+    <div
+        id="studentList"
+        class="student-list"
+    ></div>
+
+    <div class="actions">
+
+        <button
+            id="finishBtn"
+            class="btn btn-green"
+            type="button"
+        >
+            إنهاء وحفظ الحضور والغياب
+        </button>
+
+    </div>
+
+</section>
+
+<!-- =========================================================
+     REPORT
+========================================================= -->
+
+<section
+    id="reportCard"
+    class="card hidden"
+>
+
+    <div class="card-title">
+
+        <div>
+
+            <h2>
+                تقرير الحضور والغياب
+            </h2>
+
+            <p id="reportDateText">
+                —
+            </p>
+
+        </div>
+
+    </div>
+
+    <div
+        id="reportHead"
+        class="report-head"
+    ></div>
+
+    <div class="report-table-wrap">
+
+        <table class="report-table">
+
+            <thead>
+
+                <tr>
+                    <th>#</th>
+                    <th>اسم الطالب</th>
+                    <th>الكود</th>
+                    <th>الصف</th>
+                    <th>القاعة</th>
+                    <th>الجنس</th>
+                    <th>الحالة</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="reportBody"></tbody>
+
+        </table>
+
+    </div>
+
+    <div class="actions report-actions">
+
+        <button
+            id="printBtn"
+            class="btn btn-soft"
+            type="button"
+        >
+            طباعة / حفظ PDF
+        </button>
+
+        <button
+            id="newSessionBtn"
+            class="btn btn-primary"
+            type="button"
+        >
+            تسجيل حضور جديد
+        </button>
+
+    </div>
+
+</section>
+
+</main>
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+<script>
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+const DB =
+    "https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
+
+
+/* =========================================================
+   FACE MODEL
+
+   هذا هو رابط مشروعك الثابت
+========================================================= */
+
+const FACE_MODEL_PATH =
+    "https://altahdi-school.github.io/student-AhLtahadi/models/";
+
+
+/* =========================================================
+   FACE DETECTOR OPTIONS
+========================================================= */
+
+const FACE_OPTIONS = {
+    inputSize:320,
+    scoreThreshold:0.45
+};
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let session = {};
+
+let supervisor = {};
+
+let allStudents = [];
+
+let classesData = {};
+
+let selectedStudents = [];
+
+let selectedAbsentCodes =
+    new Set();
+
+let cameraStream =
+    null;
+
+let currentFacingMode =
+    "environment";
+
+let cameraRunning =
+    false;
+
+let detectionRunning =
+    false;
+
+let modelsReady =
+    false;
+
+let currentFaceCount =
+    0;
+
+let bestStableFaceCount =
+    0;
+
+let faceSamples =
+    [];
+
+const FACE_SAMPLE_SIZE =
+    8;
+
+let lastDetectionAt =
+    0;
+
+const DETECTION_INTERVAL =
+    300;
+
+let detectionAnimationId =
+    null;
+
+let savingAttendance =
+    false;
+
+
+/* =========================================================
+   DOM
+========================================================= */
+
+const $ =
+    id =>
+        document.getElementById(id);
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function esc(value){
+
+    return String(
+        value ?? ""
+    )
+    .replace(
+        /[&<>"']/g,
+        char => ({
+            "&":"&amp;",
+            "<":"&lt;",
+            ">":"&gt;",
+            '"':"&quot;",
+            "'":"&#039;"
+        })[char]
+    );
+
+}
+
+
+function norm(value){
+
+    return String(
+        value ?? ""
+    )
+    .trim()
+    .toLowerCase();
+
+}
+
+
+function sleep(ms){
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
+
+}
+
+
+function toast(text){
+
+    $("toast").textContent =
+        text;
+
+    $("toast")
+        .classList.add(
+            "show"
+        );
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+    window.toastTimer =
+        setTimeout(
+            () => {
+
+                $("toast")
+                    .classList.remove(
+                        "show"
+                    );
+
+            },
+            2500
+        );
+
+}
+
+
+/* =========================================================
+   STATUS
+========================================================= */
+
+function setSystemStatus(
+    text,
+    type = "ok"
+){
+
+    const box =
+        $("systemStatus");
+
+    box.className =
+        "system-status";
+
+    if(
+        type ===
+        "warning"
+    ){
+        box.classList.add(
+            "warning"
+        );
+    }
+
+    if(
+        type ===
+        "error"
+    ){
+        box.classList.add(
+            "error"
+        );
+    }
+
+    box.textContent =
+        text;
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function getIraqDateParts(){
+
+    const formatter =
+        new Intl.DateTimeFormat(
+            "en-CA",
+            {
+                timeZone:"Asia/Baghdad",
+                year:"numeric",
+                month:"2-digit",
+                day:"2-digit"
+            }
+        );
+
+    const parts =
+        formatter.formatToParts(
+            new Date()
+        );
+
+    const values = {};
+
+    parts.forEach(
+        item => {
+            values[item.type] =
+                item.value;
+        }
+    );
+
+    return {
+        year:values.year,
+        month:values.month,
+        day:values.day
+    };
+
+}
+
+
+function todayKey(){
+
+    const date =
+        getIraqDateParts();
+
+    return `${date.year}-${date.month}-${date.day}`;
+
+}
+
+
+function dateArabic(){
+
+    return new Intl.DateTimeFormat(
+        "ar-IQ",
+        {
+            timeZone:"Asia/Baghdad",
+            year:"numeric",
+            month:"long",
+            day:"numeric"
+        }
+    )
+    .format(
+        new Date()
+    );
+
+}
+
+
+/* =========================================================
+   FIREBASE
+========================================================= */
+
+async function dbGet(path){
+
+    const response =
+        await fetch(
+            `${DB}/${path}.json`,
+            {
+                cache:"no-store"
+            }
+        );
+
+    if(!response.ok){
+
+        throw new Error(
+            "DATABASE_GET_FAILED"
+        );
+
+    }
+
+    return response.json();
+
+}
+
+
+async function dbPut(
+    path,
+    data
+){
+
+    const response =
+        await fetch(
+            `${DB}/${path}.json`,
+            {
+                method:"PUT",
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+                body:
+                    JSON.stringify(data)
+            }
+        );
+
+    if(!response.ok){
+
+        throw new Error(
+            "DATABASE_PUT_FAILED"
+        );
+
+    }
+
+    return response.json();
+
+}
+
+
+async function dbPost(
+    path,
+    data
+){
+
+    const response =
+        await fetch(
+            `${DB}/${path}.json`,
+            {
+                method:"POST",
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+                body:
+                    JSON.stringify(data)
+            }
+        );
+
+    if(!response.ok){
+
+        throw new Error(
+            "DATABASE_POST_FAILED"
+        );
+
+    }
+
+    return response.json();
+
+}
+
+
+/* =========================================================
+   SESSION
+========================================================= */
+
+function loadSession(){
+
+    try{
+
+        session =
+            JSON.parse(
+                sessionStorage.getItem(
+                    "tahadi_session"
+                ) || "{}"
+            );
+
+    }catch{
+
+        session = {};
+
+    }
+
+    if(!session.code){
+
+        location.replace(
+            "index.html"
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+/* =========================================================
+   GENDER
+========================================================= */
+
+function normalizeGender(value){
+
+    const text =
+        norm(value);
+
+    if(
+        text === "female" ||
+        text === "f" ||
+        text === "انثى" ||
+        text === "أنثى" ||
+        text === "بنت" ||
+        text === "بنات"
+    ){
+
+        return "female";
+
+    }
+
+    return "male";
+
+}
+
+
+function genderText(value){
+
+    return normalizeGender(
+        value
+    ) === "female"
+        ? "بنات"
+        : "بنين";
+
+}
+
+
+/* =========================================================
+   CLASS
+========================================================= */
+
+function getClassName(classId){
+
+    if(!classId){
+
+        return "—";
+
+    }
+
+    return (
+        classesData[classId]?.name ||
+        classesData[classId]?.title ||
+        classId
+    );
+
+}
+
+
+/* =========================================================
+   LOADER ERROR
+========================================================= */
+
+function showLoaderError(message){
+
+    $("loaderSpinner")
+        .classList.add(
+            "hidden"
+        );
+
+    $("loaderError").textContent =
+        message;
+
+    $("loaderError")
+        .classList.add(
+            "show"
+        );
+
+    $("loaderRetry")
+        .classList.add(
+            "show"
+        );
+
+}
+
+
+function clearLoaderError(){
+
+    $("loaderSpinner")
+        .classList.remove(
+            "hidden"
+        );
+
+    $("loaderError")
+        .classList.remove(
+            "show"
+        );
+
+    $("loaderRetry")
+        .classList.remove(
+            "show"
+        );
+
+}
+
+
+/* =========================================================
+   LOAD FACE MODEL
+========================================================= */
+
+async function loadFaceModel(){
+
+    modelsReady =
+        false;
+
+    setSystemStatus(
+        "جاري فحص مكتبة face-api.js...",
+        "warning"
+    );
+
+    $("loaderText").textContent =
+        "جاري فحص مكتبة face-api.js...";
+
+
+    /* ==============================
+       FACE API
+    ============================== */
+
+    let tries = 0;
+
+    while(
+        typeof window.faceapi ===
+        "undefined" &&
+        tries < 100
+    ){
+
+        await sleep(
+            100
+        );
+
+        tries++;
+
+    }
+
+    if(
+        typeof window.faceapi ===
+        "undefined"
+    ){
+
+        throw new Error(
+            "FACE_API_NOT_LOADED"
+        );
+
+    }
+
+
+    /* ==============================
+       MANIFEST
+    ============================== */
+
+    const manifestUrl =
+        FACE_MODEL_PATH +
+        "tiny_face_detector_model-weights_manifest.json";
+
+
+    console.log(
+        "MANIFEST URL:",
+        manifestUrl
+    );
+
+
+    setSystemStatus(
+        "جاري فحص ملف manifest...",
+        "warning"
+    );
+
+    $("loaderText").textContent =
+        "جاري فحص ملف manifest...";
+
+
+    const manifestResponse =
+        await fetch(
+            manifestUrl,
+            {
+                cache:"no-store"
+            }
+        );
+
+
+    console.log(
+        "MANIFEST STATUS:",
+        manifestResponse.status
+    );
+
+
+    if(
+        !manifestResponse.ok
+    ){
+
+        throw new Error(
+            "MANIFEST_NOT_FOUND_" +
+            manifestResponse.status
+        );
+
+    }
+
+
+    const manifestText =
+        await manifestResponse.text();
+
+
+    if(
+        manifestText
+        .trim()
+        .toLowerCase()
+        .startsWith("<")
+    ){
+
+        throw new Error(
+            "MANIFEST_IS_HTML"
+        );
+
+    }
+
+
+    let manifestData;
+
+    try{
+
+        manifestData =
+            JSON.parse(
+                manifestText
+            );
+
+    }catch{
+
+        throw new Error(
+            "MANIFEST_INVALID"
+        );
+
+    }
+
+
+    const shardName =
+        manifestData?.[0]
+        ?.paths?.[0];
+
+
+    if(!shardName){
+
+        throw new Error(
+            "SHARD_NAME_MISSING"
+        );
+
+    }
+
+
+    /* ==============================
+       SHARD
+    ============================== */
+
+    const shardUrl =
+        FACE_MODEL_PATH +
+        shardName;
+
+
+    console.log(
+        "SHARD URL:",
+        shardUrl
+    );
+
+
+    setSystemStatus(
+        "جاري فحص ملف shard1...",
+        "warning"
+    );
+
+    $("loaderText").textContent =
+        "جاري فحص ملف shard1...";
+
+
+    const shardResponse =
+        await fetch(
+            shardUrl,
+            {
+                cache:"no-store"
+            }
+        );
+
+
+    console.log(
+        "SHARD STATUS:",
+        shardResponse.status
+    );
+
+
+    if(
+        !shardResponse.ok
+    ){
+
+        throw new Error(
+            "SHARD_NOT_FOUND_" +
+            shardResponse.status
+        );
+
+    }
+
+
+    const shardBuffer =
+        await shardResponse
+        .arrayBuffer();
+
+
+    console.log(
+        "SHARD SIZE:",
+        shardBuffer.byteLength
+    );
+
+
+    if(
+        shardBuffer.byteLength <
+        100000
+    ){
+
+        throw new Error(
+            "SHARD_INVALID"
+        );
+
+    }
+
+
+    /* ==============================
+       LOAD MODEL
+    ============================== */
+
+    setSystemStatus(
+        "تم العثور على الملفات. جاري تشغيل النموذج...",
+        "warning"
+    );
+
+    $("loaderText").textContent =
+        "جاري تشغيل نموذج اكتشاف الوجوه...";
+
+
+    await faceapi.nets
+        .tinyFaceDetector
+        .loadFromUri(
+            FACE_MODEL_PATH
+        );
+
+
+    if(
+        !faceapi.nets
+        .tinyFaceDetector
+        .isLoaded
+    ){
+
+        throw new Error(
+            "MODEL_NOT_READY"
+        );
+
+    }
+
+
+    modelsReady =
+        true;
+
+
+    setSystemStatus(
+        "نظام اكتشاف الوجوه جاهز للعمل."
+    );
+
+
+    $("startBtn").disabled =
+        false;
+
+
+    $("startBtn").textContent =
+        "بدء تسجيل الحضور بالكامرة";
+
+
+    console.log(
+        "FACE MODEL READY"
+    );
+
+}
+
+
+/* =========================================================
+   ERROR MESSAGE
+========================================================= */
+
+function getFaceErrorMessage(error){
+
+    const code =
+        error?.message ||
+        "";
+
+
+    if(
+        code ===
+        "FACE_API_NOT_LOADED"
+    ){
+
+        return "مكتبة face-api.js لم يتم تحميلها.";
+
+    }
+
+
+    if(
+        code.startsWith(
+            "MANIFEST_NOT_FOUND"
+        )
+    ){
+
+        return (
+            "ملف manifest غير موجود.\n\n" +
+            FACE_MODEL_PATH +
+            "tiny_face_detector_model-weights_manifest.json"
+        );
+
+    }
+
+
+    if(
+        code ===
+        "MANIFEST_IS_HTML"
+    ){
+
+        return (
+            "رابط manifest يفتح صفحة HTML بدل ملف JSON."
+        );
+
+    }
+
+
+    if(
+        code ===
+        "MANIFEST_INVALID"
+    ){
+
+        return (
+            "ملف manifest غير صحيح."
+        );
+
+    }
+
+
+    if(
+        code ===
+        "SHARD_NAME_MISSING"
+    ){
+
+        return (
+            "ملف manifest لا يحتوي اسم shard1."
+        );
+
+    }
+
+
+    if(
+        code.startsWith(
+            "SHARD_NOT_FOUND"
+        )
+    ){
+
+        return (
+            "ملف tiny_face_detector_model-shard1 غير موجود داخل models."
+        );
+
+    }
+
+
+    if(
+        code ===
+        "SHARD_INVALID"
+    ){
+
+        return (
+            "ملف shard1 غير صحيح أو ناقص. يجب رفع الملف الأصلي binary بواسطة Upload files."
+        );
+
+    }
+
+
+    if(
+        code ===
+        "MODEL_NOT_READY"
+    ){
+
+        return (
+            "تم تحميل الملفات لكن النموذج لم يصبح جاهزاً."
+        );
+
+    }
+
+
+    return (
+        "حدث خطأ أثناء تحميل نظام اكتشاف الوجوه.\n\n" +
+        code
+    );
+
+}
+
+
+/* =========================================================
+   INIT
+========================================================= */
+
+async function init(){
+
+    clearLoaderError();
+
+
+    try{
+
+        if(
+            !loadSession()
+        ){
+
+            return;
+
+        }
+
+
+        $("loaderText").textContent =
+            "جاري التحقق من صلاحية المشرف...";
+
+
+        supervisor =
+            await dbGet(
+                `users/${encodeURIComponent(session.code)}`
+            );
+
+
+        if(
+            !supervisor ||
+            ![
+                "msh",
+                "attendance",
+                "supervisor",
+                "attendance_supervisor"
+            ].includes(
+                norm(
+                    supervisor.role
+                )
+            )
+        ){
+
+            throw new Error(
+                "NO_PERMISSION"
+            );
+
+        }
+
+
+        if(
+            supervisor.active ===
+            false
+        ){
+
+            throw new Error(
+                "ACCOUNT_DISABLED"
+            );
+
+        }
+
+
+        $("supervisorName").textContent =
+            supervisor.name ||
+            "مشرف الحضور والغياب";
+
+
+        $("loaderText").textContent =
+            "جاري تحميل الطلاب والصفوف...";
+
+
+        const [
+            studentsData,
+            classes
+        ] =
+            await Promise.all([
+
+                dbGet(
+                    "students"
+                ),
+
+                dbGet(
+                    "classes"
+                )
+
+            ]);
+
+
+        classesData =
+            classes ||
+            {};
+
+
+        allStudents =
+            Object.entries(
+                studentsData ||
+                {}
+            )
+
+            .map(
+                ([code,data]) => ({
+                    code,
+                    ...(data || {})
+                })
+            )
+
+            .filter(
+                student =>
+                    student.hidden !==
+                    true
+            );
+
+
+        buildClassOptions();
+
+        buildRoomOptions();
+
+
+        try{
+
+            await loadFaceModel();
+
+        }catch(error){
+
+            console.error(
+                "FACE MODEL ERROR:",
+                error
+            );
+
+
+            setSystemStatus(
+                getFaceErrorMessage(
+                    error
+                ),
+                "error"
+            );
+
+
+            showLoaderError(
+                getFaceErrorMessage(
+                    error
+                )
+            );
+
+
+            return;
+
+        }
+
+
+        $("loaderScreen")
+            .classList.add(
+                "hidden"
+            );
+
+    }
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        if(
+            error.message ===
+            "NO_PERMISSION"
+        ){
+
+            alert(
+                "ليس لديك صلاحية دخول صفحة مشرف الحضور."
+            );
+
+            location.replace(
+                "index.html"
+            );
+
+            return;
+
+        }
+
+
+        if(
+            error.message ===
+            "ACCOUNT_DISABLED"
+        ){
+
+            alert(
+                "حساب مشرف الحضور غير فعال."
+            );
+
+            location.replace(
+                "index.html"
+            );
+
+            return;
+
+        }
+
+
+        showLoaderError(
+            "تعذر تحميل بيانات النظام."
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   RETRY
+========================================================= */
+
+$("loaderRetry")
+.addEventListener(
+    "click",
+    () => {
+
+        location.reload();
+
+    }
+);
+
+
+/* =========================================================
+   CLASSES
+========================================================= */
+
+function buildClassOptions(){
+
+    const ids =
+        [
+            ...new Set(
+                allStudents
+
+                .map(
+                    student =>
+                        String(
+                            student.classId ||
+                            ""
+                        ).trim()
+                )
+
+                .filter(Boolean)
+            )
+        ];
+
+
+    ids.sort(
+        (a,b) =>
+            getClassName(a)
+            .localeCompare(
+                getClassName(b),
+                "ar"
+            )
+    );
+
+
+    $("classSelect").innerHTML =
+        `
+
+        <option value="">
+            جميع الصفوف
+        </option>
+
+        ${
+            ids
+            .map(
+                id => `
+
+                <option
+                    value="${esc(id)}"
+                >
+                    ${esc(
+                        getClassName(id)
+                    )}
+                </option>
+
+                `
+            )
+            .join("")
+        }
+
+        `;
+
+}
+
+
+/* =========================================================
+   ROOMS
+========================================================= */
+
+function buildRoomOptions(){
+
+    const selectedClass =
+        $("classSelect").value;
+
+
+    const rooms =
+        [
+            ...new Set(
+                allStudents
+
+                .filter(
+                    student =>
+                        !selectedClass ||
+                        String(
+                            student.classId ||
+                            ""
+                        ) === selectedClass
+                )
+
+                .map(
+                    student =>
+                        String(
+                            student.roomNumber ||
+                            ""
+                        ).trim()
+                )
+
+                .filter(Boolean)
+            )
+        ];
+
+
+    rooms.sort(
+        (a,b) =>
+            a.localeCompare(
+                b,
+                "ar",
+                {
+                    numeric:true
+                }
+            )
+    );
+
+
+    $("roomSelect").innerHTML =
+        `
+
+        <option value="">
+            جميع القاعات
+        </option>
+
+        ${
+            rooms
+            .map(
+                room => `
+
+                <option
+                    value="${esc(room)}"
+                >
+                    القاعة ${esc(room)}
+                </option>
+
+                `
+            )
+            .join("")
+        }
+
+        `;
+
+}
+
+
+$("classSelect")
+.addEventListener(
+    "change",
+    buildRoomOptions
+);
+
+
+/* =========================================================
+   FILTER
+========================================================= */
+
+function getFilteredStudents(){
+
+    const classId =
+        $("classSelect").value;
+
+    const room =
+        $("roomSelect").value;
+
+    const gender =
+        $("genderSelect").value;
+
+
+    return allStudents
+        .filter(
+            student => {
+
+                if(
+                    classId &&
+                    String(
+                        student.classId ||
+                        ""
+                    ) !== classId
+                ){
+
+                    return false;
+
+                }
+
+
+                if(
+                    room &&
+                    String(
+                        student.roomNumber ||
+                        ""
+                    ) !== room
+                ){
+
+                    return false;
+
+                }
+
+
+                if(
+                    gender &&
+                    normalizeGender(
+                        student.gender
+                    ) !== gender
+                ){
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            }
+        )
+
+        .sort(
+            (a,b) =>
+                String(
+                    a.name ||
+                    ""
+                )
+                .localeCompare(
+                    String(
+                        b.name ||
+                        ""
+                    ),
+                    "ar"
+                )
+        );
+
+}
+
+
+/* =========================================================
+   START
+========================================================= */
+
+$("startBtn")
+.addEventListener(
+    "click",
+    async () => {
+
+        if(
+            !modelsReady
+        ){
+
+            toast(
+                "نظام اكتشاف الوجوه غير جاهز"
+            );
+
+            return;
+
+        }
+
+
+        selectedStudents =
+            getFilteredStudents();
+
+
+        if(
+            !selectedStudents.length
+        ){
+
+            toast(
+                "لا يوجد طلاب ضمن هذا الاختيار"
+            );
+
+            return;
+
+        }
+
+
+        selectedAbsentCodes
+            .clear();
+
+
+        currentFaceCount =
+            0;
+
+
+        bestStableFaceCount =
+            0;
+
+
+        faceSamples =
+            [];
+
+
+        renderStudents();
+
+        updateStats();
+
+        updateSelectionWarning();
+
+
+        $("cameraCard")
+            .classList.remove(
+                "hidden"
+            );
+
+
+        $("statsCard")
+            .classList.remove(
+                "hidden"
+            );
+
+
+        $("studentsCard")
+            .classList.remove(
+                "hidden"
+            );
+
+
+        $("reportCard")
+            .classList.add(
+                "hidden"
+            );
+
+
+        $("classSelect").disabled =
+            true;
+
+
+        $("roomSelect").disabled =
+            true;
+
+
+        $("genderSelect").disabled =
+            true;
+
+
+        $("startBtn").disabled =
+            true;
+
+
+        await startCamera();
+
+    }
+);
+
+
+/* =========================================================
+   CAMERA
+========================================================= */
+
+async function startCamera(){
+
+    stopCamera();
+
+
+    try{
+
+        if(
+            !navigator.mediaDevices ||
+            !navigator.mediaDevices.getUserMedia
+        ){
+
+            throw new Error(
+                "CAMERA_NOT_SUPPORTED"
+            );
+
+        }
+
+
+        $("cameraStatus").textContent =
+            "جاري طلب صلاحية الكامرة...";
+
+
+        cameraStream =
+            await navigator.mediaDevices
+            .getUserMedia({
+
+                audio:false,
+
+                video:{
+
+                    facingMode:{
+                        ideal:
+                            currentFacingMode
+                    },
+
+                    width:{
+                        ideal:1280
+                    },
+
+                    height:{
+                        ideal:720
+                    }
+
+                }
+
+            });
+
+
+        const video =
+            $("camera");
+
+
+        video.srcObject =
+            cameraStream;
+
+
+        await new Promise(
+            resolve => {
+
+                if(
+                    video.readyState >=
+                    2
+                ){
+
+                    resolve();
+
+                    return;
+
+                }
+
+
+                video.onloadedmetadata =
+                    () =>
+                        resolve();
+
+            }
+        );
+
+
+        await video.play();
+
+
+        cameraRunning =
+            true;
+
+
+        $("cameraStatus").textContent =
+            "الكامرة تعمل. حرّكها ببطء حتى تظهر جميع الوجوه.";
+
+
+        startDetectionLoop();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "CAMERA ERROR:",
+            error
+        );
+
+
+        cameraRunning =
+            false;
+
+
+        $("cameraStatus").textContent =
+            "تعذر تشغيل الكامرة.";
+
+
+        if(
+            error.name ===
+            "NotAllowedError"
+        ){
+
+            toast(
+                "يرجى السماح للموقع باستخدام الكامرة."
+            );
+
+        }else{
+
+            toast(
+                "تعذر تشغيل الكامرة."
+            );
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   STOP CAMERA
+========================================================= */
+
+function stopCamera(){
+
+    cameraRunning =
+        false;
+
+
+    detectionRunning =
+        false;
+
+
+    if(
+        detectionAnimationId
+    ){
+
+        cancelAnimationFrame(
+            detectionAnimationId
+        );
+
+
+        detectionAnimationId =
+            null;
+
+    }
+
+
+    if(
+        cameraStream
+    ){
+
+        cameraStream
+            .getTracks()
+            .forEach(
+                track =>
+                    track.stop()
+            );
+
+
+        cameraStream =
+            null;
+
+    }
+
+
+    $("camera").srcObject =
+        null;
+
+
+    clearCanvas();
+
+}
+
+
+/* =========================================================
+   SWITCH CAMERA
+========================================================= */
+
+$("switchCameraBtn")
+.addEventListener(
+    "click",
+    async () => {
+
+        currentFacingMode =
+            currentFacingMode ===
+            "environment"
+
+                ? "user"
+
+                : "environment";
+
+
+        await startCamera();
+
+    }
+);
+
+
+$("stopCameraBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        stopCamera();
+
+
+        $("cameraStatus").textContent =
+            "تم إيقاف الكامرة. حدد الغائبين ثم احفظ التقرير.";
+
+    }
+);
+
+
+/* =========================================================
+   DETECTION LOOP
+========================================================= */
+
+function startDetectionLoop(){
+
+    if(
+        detectionRunning
+    ){
+
+        return;
+
+    }
+
+
+    detectionRunning =
+        true;
+
+
+    lastDetectionAt =
+        0;
+
+
+    async function loop(timestamp){
+
+        if(
+            !cameraRunning
+        ){
+
+            detectionRunning =
+                false;
+
+            return;
+
+        }
+
+
+        if(
+            timestamp -
+            lastDetectionAt >=
+            DETECTION_INTERVAL
+        ){
+
+            lastDetectionAt =
+                timestamp;
+
+
+            await runFaceDetection();
+
+        }
+
+
+        detectionAnimationId =
+            requestAnimationFrame(
+                loop
+            );
+
+    }
+
+
+    detectionAnimationId =
+        requestAnimationFrame(
+            loop
+        );
+
+}
+
+
+/* =========================================================
+   DETECT FACES
+========================================================= */
+
+async function runFaceDetection(){
+
+    const video =
+        $("camera");
+
+
+    if(
+        !video.videoWidth ||
+        !video.videoHeight ||
+        !modelsReady
+    ){
+
+        return;
+
+    }
+
+
+    try{
+
+        const detections =
+            await faceapi.detectAllFaces(
+
+                video,
+
+                new faceapi
+                    .TinyFaceDetectorOptions(
+                        FACE_OPTIONS
+                    )
+
+            );
+
+
+        currentFaceCount =
+            detections.length;
+
+
+        $("faceCountBadge").textContent =
+            `${currentFaceCount} وجه`;
+
+
+        drawDetections(
+            detections
+        );
+
+
+        addFaceSample(
+            currentFaceCount
+        );
+
+
+        updateStats();
+
+        updateDetectionMessage();
+
+    }
+
+    catch(error){
+
+        console.error(
+            "FACE DETECTION ERROR:",
+            error
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   DRAW
+========================================================= */
+
+function drawDetections(detections){
+
+    const video =
+        $("camera");
+
+    const canvas =
+        $("overlay");
+
+    const rect =
+        video.getBoundingClientRect();
+
+
+    const displaySize = {
+        width:
+            Math.round(
+                rect.width
+            ),
+        height:
+            Math.round(
+                rect.height
+            )
+    };
+
+
+    faceapi.matchDimensions(
+        canvas,
+        displaySize
+    );
+
+
+    const resized =
+        faceapi.resizeResults(
+            detections,
+            displaySize
+        );
+
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    resized.forEach(
+        detection => {
+
+            const box =
+                detection.box;
+
+
+            ctx.lineWidth =
+                3;
+
+
+            ctx.strokeStyle =
+                "#20df79";
+
+
+            ctx.fillStyle =
+                "rgba(32,223,121,.08)";
+
+
+            ctx.strokeRect(
+                box.x,
+                box.y,
+                box.width,
+                box.height
+            );
+
+
+            ctx.fillRect(
+                box.x,
+                box.y,
+                box.width,
+                box.height
+            );
+
+
+            const text =
+                "وجه";
+
+
+            ctx.font =
+                "bold 13px Tahoma";
+
+
+            const width =
+                ctx.measureText(
+                    text
+                ).width;
+
+
+            const y =
+                Math.max(
+                    20,
+                    box.y
+                );
+
+
+            ctx.fillStyle =
+                "#20df79";
+
+
+            ctx.fillRect(
+                box.x,
+                y - 20,
+                width + 14,
+                20
+            );
+
+
+            ctx.fillStyle =
+                "#ffffff";
+
+
+            ctx.fillText(
+                text,
+                box.x + 7,
+                y - 6
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearCanvas(){
+
+    const canvas =
+        $("overlay");
+
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+}
+
+
+/* =========================================================
+   STABLE COUNT
+========================================================= */
+
+function addFaceSample(count){
+
+    faceSamples.push(
+        count
+    );
+
+
+    if(
+        faceSamples.length >
+        FACE_SAMPLE_SIZE
+    ){
+
+        faceSamples.shift();
+
+    }
+
+
+    if(
+        faceSamples.length <
+        4
+    ){
+
+        return;
+
+    }
+
+
+    const frequencies = {};
+
+
+    faceSamples.forEach(
+        number => {
+
+            frequencies[number] =
+                (
+                    frequencies[number] ||
+                    0
+                ) + 1;
+
+        }
+    );
+
+
+    let stableValue =
+        0;
+
+    let stableFrequency =
+        0;
+
+
+    Object.entries(
+        frequencies
+    )
+    .forEach(
+        ([number,frequency]) => {
+
+            const numeric =
+                Number(number);
+
+
+            if(
+                frequency >
+                stableFrequency
+            ){
+
+                stableFrequency =
+                    frequency;
+
+                stableValue =
+                    numeric;
+
+            }
+
+            else if(
+                frequency ===
+                stableFrequency &&
+                numeric >
+                stableValue
+            ){
+
+                stableValue =
+                    numeric;
+
+            }
+
+        }
+    );
+
+
+    stableValue =
+        Math.min(
+            stableValue,
+            selectedStudents.length
+        );
+
+
+    if(
+        stableValue >
+        bestStableFaceCount
+    ){
+
+        bestStableFaceCount =
+            stableValue;
+
+
+        updateSelectionWarning();
+
+    }
+
+}
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function expectedMissingCount(){
+
+    return Math.max(
+        0,
+        selectedStudents.length -
+        bestStableFaceCount
+    );
+
+}
+
+
+function updateStats(){
+
+    const total =
+        selectedStudents.length;
+
+
+    const missing =
+        expectedMissingCount();
+
+
+    const rate =
+        total
+            ? Math.round(
+                (
+                    bestStableFaceCount /
+                    total
+                ) *
+                100
+            )
+            : 0;
+
+
+    $("totalStudents").textContent =
+        total;
+
+    $("currentFaces").textContent =
+        currentFaceCount;
+
+    $("bestFaces").textContent =
+        bestStableFaceCount;
+
+    $("missingCount").textContent =
+        missing;
+
+    $("attendanceRate").textContent =
+        `${rate}%`;
+
+    $("progressText").textContent =
+        `${rate}%`;
+
+    $("progressBar").style.width =
+        `${Math.min(100,rate)}%`;
+
+}
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function updateDetectionMessage(){
+
+    const total =
+        selectedStudents.length;
+
+    const current =
+        currentFaceCount;
+
+    const best =
+        bestStableFaceCount;
+
+    const missing =
+        expectedMissingCount();
+
+    const box =
+        $("detectionMessage");
+
+
+    box.className =
+        "detection-box";
+
+
+    if(
+        current === 0
+    ){
+
+        box.classList.add(
+            "red"
+        );
+
+
+        box.textContent =
+            "لا توجد وجوه واضحة أمام الكامرة حالياً.";
+
+        return;
+
+    }
+
+
+    if(
+        best >= total &&
+        total > 0
+    ){
+
+        box.textContent =
+            `تم اكتشاف ${total} وجه وهو مطابق لعدد الطلاب المسجلين.`;
+
+        return;
+
+    }
+
+
+    box.classList.add(
+        "warning"
+    );
+
+
+    box.textContent =
+        `أعلى عدد ثابت هو ${best} من أصل ${total}. النقص المتوقع ${missing}.`;
+
+}
+
+
+/* =========================================================
+   STUDENT LIST
+========================================================= */
+
+function renderStudents(){
+
+    const search =
+        norm(
+            $("studentSearch").value
+        );
+
+
+    const filtered =
+        selectedStudents
+        .filter(
+            student =>
+                !search ||
+                norm(
+                    student.name
+                )
+                .includes(
+                    search
+                ) ||
+                norm(
+                    student.code
+                )
+                .includes(
+                    search
+                )
+        );
+
+
+    $("studentList").innerHTML =
+        filtered
+        .map(
+            student => {
+
+                const absent =
+                    selectedAbsentCodes
+                    .has(
+                        student.code
+                    );
+
+
+                const image =
+                    student.profileImage ||
+                    "";
+
+
+                return `
+
+                <div
+                    class="student ${absent ? "selected-absent" : "present-preview"}"
+                >
+
+                    <div class="student-image">
+
+                        ${
+                            image
+
+                            ? `
+
+                            <img
+                                src="${esc(image)}"
+                                alt="${esc(student.name || "")}"
+                            >
+
+                            `
+
+                            : `
+
+                            <div class="student-letter">
+
+                                ${esc(
+                                    String(
+                                        student.name ||
+                                        "ط"
+                                    )
+                                    .trim()
+                                    .charAt(0) ||
+                                    "ط"
+                                )}
+
+                            </div>
+
+                            `
+                        }
+
+                    </div>
+
+
+                    <div class="student-info">
+
+                        <div class="student-name">
+
+                            ${esc(
+                                student.name ||
+                                "طالب"
+                            )}
+
+                        </div>
+
+
+                        <div class="student-meta">
+
+                            ${esc(
+                                getClassName(
+                                    student.classId
+                                )
+                            )}
+
+                            -
+
+                            القاعة
+
+                            ${esc(
+                                student.roomNumber ||
+                                "—"
+                            )}
+
+                            -
+
+                            ${genderText(
+                                student.gender
+                            )}
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        class="absent-toggle"
+                        data-code="${esc(student.code)}"
+                    >
+
+                        ${
+                            absent
+                                ? "تم تحديده غائب"
+                                : "تحديد غائب"
+                        }
+
+                    </button>
+
+                </div>
+
+                `;
+
+            }
+        )
+        .join("");
+
+
+    document
+        .querySelectorAll(
+            ".absent-toggle"
+        )
+        .forEach(
+            button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        toggleAbsent(
+                            button.dataset.code
+                        );
+
+                    }
+                );
+
+            }
+        );
+
+}
+
+
+$("studentSearch")
+.addEventListener(
+    "input",
+    renderStudents
+);
+
+
+/* =========================================================
+   ABSENT
+========================================================= */
+
+function toggleAbsent(code){
+
+    if(
+        selectedAbsentCodes
+        .has(code)
+    ){
+
+        selectedAbsentCodes
+            .delete(
+                code
+            );
+
+    }else{
+
+        selectedAbsentCodes
+            .add(
+                code
+            );
+
+    }
+
+
+    renderStudents();
+
+    updateSelectionWarning();
+
+}
+
+
+/* =========================================================
+   SELECTION WARNING
+========================================================= */
+
+function updateSelectionWarning(){
+
+    const expected =
+        expectedMissingCount();
+
+    const selected =
+        selectedAbsentCodes.size;
+
+    const box =
+        $("selectionWarning");
+
+
+    box.className =
+        "selection-warning";
+
+
+    if(
+        bestStableFaceCount === 0
+    ){
+
+        box.textContent =
+            "وجّه الكامرة نحو الطلاب حتى يتم حساب العدد.";
+
+        return;
+
+    }
+
+
+    if(
+        selected === expected
+    ){
+
+        box.classList.add(
+            "ok"
+        );
+
+
+        box.textContent =
+            expected === 0
+                ? "لم يتم رصد نقص في العدد."
+                : `تم تحديد ${selected} طالب غائب وهو مطابق للنقص المتوقع.`;
+
+        return;
+
+    }
+
+
+    if(
+        selected > expected
+    ){
+
+        box.classList.add(
+            "bad"
+        );
+
+
+        box.textContent =
+            `النقص المتوقع ${expected} لكن تم تحديد ${selected} غائب.`;
+
+        return;
+
+    }
+
+
+    box.textContent =
+        `النقص المتوقع ${expected}. تم تحديد ${selected}. بقي ${expected - selected}.`;
+
+}
+
+
+/* =========================================================
+   FINISH
+========================================================= */
+
+$("finishBtn")
+.addEventListener(
+    "click",
+    async () => {
+
+        if(
+            savingAttendance
+        ){
+
+            return;
+
+        }
+
+
+        if(
+            !selectedStudents.length
+        ){
+
+            return;
+
+        }
+
+
+        const expected =
+            expectedMissingCount();
+
+        const selected =
+            selectedAbsentCodes.size;
+
+
+        if(
+            bestStableFaceCount > 0 &&
+            selected !== expected
+        ){
+
+            const yes =
+                confirm(
+                    `الكامرة تتوقع ${expected} غائب بينما حددت ${selected}.\nهل تريد الحفظ رغم ذلك؟`
+                );
+
+
+            if(!yes){
+
+                return;
+
+            }
+
+        }
+
+
+        await saveAttendance();
+
+    }
+);
+
+
+/* =========================================================
+   SAVE
+========================================================= */
+
+async function saveAttendance(){
+
+    savingAttendance =
+        true;
+
+
+    $("finishBtn").disabled =
+        true;
+
+
+    $("finishBtn").textContent =
+        "جاري حفظ الحضور...";
+
+
+    try{
+
+        const date =
+            todayKey();
+
+        const now =
+            Date.now();
+
+
+        const tasks =
+            selectedStudents
+            .map(
+                student => {
+
+                    const absent =
+                        selectedAbsentCodes
+                        .has(
+                            student.code
+                        );
+
+
+                    const record = {
+
+                        status:
+                            absent
+                                ? "absent"
+                                : "present",
+
+                        present:
+                            !absent,
+
+                        absent,
+
+                        isAbsent:
+                            absent,
+
+                        date,
+
+                        classId:
+                            student.classId ||
+                            "",
+
+                        className:
+                            getClassName(
+                                student.classId
+                            ),
+
+                        roomNumber:
+                            student.roomNumber ||
+                            "",
+
+                        gender:
+                            normalizeGender(
+                                student.gender
+                            ),
+
+                        studentName:
+                            student.name ||
+                            "",
+
+                        studentCode:
+                            student.code,
+
+                        profileImage:
+                            student.profileImage ||
+                            "",
+
+                        recordedAt:
+                            now,
+
+                        recordedBy:
+                            session.code,
+
+                        recordedByName:
+                            supervisor.name ||
+                            "",
+
+                        method:
+                            "camera_face_count_supervisor",
+
+                        cameraSession:{
+
+                            totalStudents:
+                                selectedStudents.length,
+
+                            highestStableFaceCount:
+                                bestStableFaceCount,
+
+                            expectedMissingCount:
+                                expectedMissingCount(),
+
+                            manuallySelectedAbsent:
+                                selectedAbsentCodes.size
+
+                        }
+
+                    };
+
+
+                    return dbPut(
+
+                        `attendance/${encodeURIComponent(student.code)}/${date}`,
+
+                        record
+
+                    );
+
+                }
+            );
+
+
+        await Promise.all(
+            tasks
+        );
+
+
+        await dbPost(
+            `attendanceSessions/${date}`,
+            {
+
+                date,
+
+                recordedAt:
+                    now,
+
+                recordedBy:
+                    session.code,
+
+                recordedByName:
+                    supervisor.name ||
+                    "",
+
+                classId:
+                    $("classSelect").value ||
+                    "all",
+
+                roomNumber:
+                    $("roomSelect").value ||
+                    "all",
+
+                gender:
+                    $("genderSelect").value ||
+                    "all",
+
+                totalStudents:
+                    selectedStudents.length,
+
+                presentCount:
+                    selectedStudents.length -
+                    selectedAbsentCodes.size,
+
+                absentCount:
+                    selectedAbsentCodes.size,
+
+                highestStableFaceCount:
+                    bestStableFaceCount,
+
+                expectedMissingCount:
+                    expectedMissingCount(),
+
+                method:
+                    "camera_face_count_supervisor"
+
+            }
+        );
+
+
+        stopCamera();
+
+
+        renderReport();
+
+
+        $("cameraCard")
+            .classList.add(
+                "hidden"
+            );
+
+
+        $("statsCard")
+            .classList.add(
+                "hidden"
+            );
+
+
+        $("studentsCard")
+            .classList.add(
+                "hidden"
+            );
+
+
+        $("reportCard")
+            .classList.remove(
+                "hidden"
+            );
+
+
+        toast(
+            "تم حفظ الحضور والغياب بنجاح"
+        );
+
+    }
+
+    catch(error){
+
+        console.error(
+            "SAVE ERROR:",
+            error
+        );
+
+
+        toast(
+            "تعذر حفظ الحضور والغياب"
+        );
+
+    }
+
+    finally{
+
+        savingAttendance =
+            false;
+
+
+        $("finishBtn").disabled =
+            false;
+
+
+        $("finishBtn").textContent =
+            "إنهاء وحفظ الحضور والغياب";
+
+    }
+
+}
+
+
+/* =========================================================
+   REPORT
+========================================================= */
+
+function renderReport(){
+
+    const total =
+        selectedStudents.length;
+
+    const absent =
+        selectedAbsentCodes.size;
+
+    const present =
+        total -
+        absent;
+
+    const rate =
+        total
+            ? Math.round(
+                (
+                    present /
+                    total
+                ) *
+                100
+            )
+            : 0;
+
+
+    $("reportDateText").textContent =
+        dateArabic();
+
+
+    $("reportHead").innerHTML =
+        `
+
+        <strong>
+            مدرسة التحدي الأهلية المختلطة
+        </strong>
+
+        <br>
+
+        التاريخ:
+        ${esc(dateArabic())}
+
+        <br>
+
+        مشرف الحضور:
+        ${esc(
+            supervisor.name ||
+            session.code
+        )}
+
+        <br>
+
+        عدد الطلاب:
+        ${total}
+
+        &nbsp; | &nbsp;
+
+        الحضور:
+        ${present}
+
+        &nbsp; | &nbsp;
+
+        الغياب:
+        ${absent}
+
+        &nbsp; | &nbsp;
+
+        نسبة الحضور:
+        ${rate}%
+
+        <br>
+
+        أعلى عدد وجوه رصدته الكامرة:
+        ${bestStableFaceCount}
+
+        `;
+
+
+    $("reportBody").innerHTML =
+        selectedStudents
+        .map(
+            (student,index) => {
+
+                const absent =
+                    selectedAbsentCodes
+                    .has(
+                        student.code
+                    );
+
+
+                return `
+
+                <tr>
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        ${esc(
+                            student.name ||
+                            ""
+                        )}
+                    </td>
+
+                    <td>
+                        ${esc(
+                            student.code
+                        )}
+                    </td>
+
+                    <td>
+                        ${esc(
+                            getClassName(
+                                student.classId
+                            )
+                        )}
+                    </td>
+
+                    <td>
+                        ${esc(
+                            student.roomNumber ||
+                            "—"
+                        )}
+                    </td>
+
+                    <td>
+                        ${genderText(
+                            student.gender
+                        )}
+                    </td>
+
+                    <td
+                        class="${absent ? "report-absent" : "report-present"}"
+                    >
+                        ${absent ? "غائب" : "حاضر"}
+                    </td>
+
+                </tr>
+
+                `;
+
+            }
+        )
+        .join("");
+
+}
+
+
+/* =========================================================
+   PRINT
+========================================================= */
+
+$("printBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        window.print();
+
+    }
+);
+
+
+/* =========================================================
+   NEW
+========================================================= */
+
+$("newSessionBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        selectedStudents =
+            [];
+
+
+        selectedAbsentCodes
+            .clear();
+
+
+        currentFaceCount =
+            0;
+
+
+        bestStableFaceCount =
+            0;
+
+
+        faceSamples =
+            [];
+
+
+        $("classSelect").disabled =
+            false;
+
+
+        $("roomSelect").disabled =
+            false;
+
+
+        $("genderSelect").disabled =
+            false;
+
+
+        $("startBtn").disabled =
+            !modelsReady;
+
+
+        $("reportCard")
+            .classList.add(
+                "hidden"
+            );
+
+
+        $("selectionCard")
+            .scrollIntoView({
+                behavior:"smooth",
+                block:"start"
+            });
+
+    }
+);
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+$("logoutBtn")
+.addEventListener(
+    "click",
+    () => {
+
+        stopCamera();
+
+
+        sessionStorage.clear();
+
+
+        location.replace(
+            "index.html"
+        );
+
+    }
+);
+
+
+/* =========================================================
+   VISIBILITY
+========================================================= */
+
+document.addEventListener(
+    "visibilitychange",
+    () => {
+
+        if(
+            document.hidden &&
+            cameraRunning
+        ){
+
+            stopCamera();
+
+
+            $("cameraStatus").textContent =
+                "تم إيقاف الكامرة لأن التطبيق أصبح بالخلفية.";
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   UNLOAD
+========================================================= */
+
+window.addEventListener(
+    "beforeunload",
+    stopCamera
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+window.addEventListener(
+    "load",
+    init
+);
+
+</script>
+
+</body>
+</html>

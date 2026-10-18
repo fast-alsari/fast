@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#075fcf">
+<title>سجلات الدرجات | مدرسة التحدي الأهلية المختلطة</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<style>
+:root{
+ --blue:#075fcf;--blue2:#064aa7;--bg:#f4f7fb;--card:#fff;--text:#182230;--muted:#667085;
+ --border:#dfe6ee;--green:#078746;--red:#c62828;--orange:#d56c00;--shadow:0 18px 55px rgba(30,54,88,.11)
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{min-height:100%;background:var(--bg);color:var(--text);font-family:"Times New Roman",Times,serif}
+button,input,select{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+.loader{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff}
+.loader-card{text-align:center}
+.spinner{width:42px;height:42px;margin:auto;border-radius:50%;border:4px solid #e6edf7;border-top-color:var(--blue);animation:spin .75s linear infinite}
+.loader p{margin-top:12px;color:var(--muted);font-size:12px;font-weight:800}
+@keyframes spin{to{transform:rotate(360deg)}}
+.app{min-height:100vh}
+.topbar{position:sticky;top:0;z-index:30;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 18px;background:rgba(255,255,255,.95);border-bottom:1px solid var(--border);backdrop-filter:blur(18px);box-shadow:0 4px 18px rgba(30,54,88,.04)}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{width:46px;height:46px;object-fit:contain}
+.brand h1{font-size:15px;font-weight:900}
+.brand p{margin-top:3px;color:var(--blue);font-size:9px;font-weight:900}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.admin-back,.logout{border:0;border-radius:12px;padding:10px 13px;font-size:9px;font-weight:900;transition:.18s}
+.admin-back{background:#edf5ff;color:#075fcf;border:1px solid #cfe1fb}
+.admin-back:hover{background:#dfeeff}
+.logout{background:#eef2f6;color:#475467}
+.admin-back:active,.logout:active{transform:scale(.98)}
+.layout{width:min(1420px,100%);margin:auto;padding:18px;display:grid;grid-template-columns:390px minmax(0,1fr);gap:16px}
+.panel{position:sticky;top:88px;align-self:start;padding:17px;border:1px solid var(--border);border-radius:23px;background:#fff;box-shadow:var(--shadow);animation:panelIn .45s cubic-bezier(.16,1,.3,1)}
+@keyframes panelIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.panel-head{margin-bottom:15px;padding-bottom:13px;border-bottom:1px solid #eef1f4}
+.panel-head h2{font-size:16px;font-weight:900}
+.panel-head p{margin-top:5px;color:var(--muted);font-size:9px;line-height:1.8}
+.form-grid{display:grid;gap:10px}
+.field label{display:block;margin:0 3px 6px;color:#475467;font-size:8px;font-weight:900}
+.field input,.field select{width:100%;height:45px;padding:0 11px;border:1px solid var(--border);border-radius:12px;outline:none;background:#fff;color:var(--text);font-size:11px}
+.field input:focus,.field select:focus{border-color:var(--blue);box-shadow:0 0 0 4px rgba(7,95,207,.07)}
+.field small{display:block;margin:5px 3px 0;color:#7c8797;font-size:7px;line-height:1.6}
+.inline{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.mode-box{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.mode-option{position:relative}
+.mode-option input{position:absolute;opacity:0;pointer-events:none}
+.mode-option label{height:44px;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:12px;background:#f9fbfd;color:#667085;font-size:9px;font-weight:900;transition:.2s}
+.mode-option input:checked+label{border-color:var(--blue);color:var(--blue);background:#edf5ff;box-shadow:0 0 0 3px rgba(7,95,207,.06)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+.btn{height:49px;border:0;border-radius:14px;font-size:10px;font-weight:900;transition:transform .15s,opacity .2s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.5}
+.btn-preview{color:#075fcf;background:#edf5ff}
+.btn-print{color:#fff;background:linear-gradient(135deg,#0872e7,#06499e);box-shadow:0 10px 25px rgba(7,95,207,.22)}
+.status{margin-top:12px;padding:10px 11px;border-radius:12px;color:#075fcf;background:#edf5ff;font-size:8px;font-weight:800;line-height:1.7}
+.status.error{color:#b42318;background:#fff1f1}
+.status.ok{color:#067647;background:#ecfdf3}
+.preview-shell{min-width:0}
+.preview-toolbar{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:11px;padding:11px 13px;border:1px solid var(--border);border-radius:16px;background:#fff;box-shadow:0 7px 22px rgba(30,54,88,.05)}
+.preview-toolbar strong{font-size:11px}
+.preview-toolbar span{color:var(--muted);font-size:8px}
+.preview-area{overflow:auto;display:grid;justify-items:center;gap:16px;padding:18px 10px 35px;border:1px solid var(--border);border-radius:22px;background:#e8edf3;min-height:650px}
+.empty-preview{margin:auto;padding:35px;text-align:center;color:#7d8898}
+.empty-preview h3{font-size:16px}
+.empty-preview p{margin-top:6px;font-size:9px;line-height:1.8}
+.print-page{
+ --page-scale:1;
+ position:relative;width:210mm;height:297mm;overflow:hidden;background:#fff;color:#111;
+ border:1px solid #c9ced5;box-shadow:0 13px 35px rgba(30,50,70,.14);font-family:"Times New Roman",Times,serif;
+ animation:pageReveal .42s cubic-bezier(.16,1,.3,1)
+}
+@keyframes pageReveal{from{opacity:0;transform:translateY(12px) scale(.99)}to{opacity:1;transform:none}}
+.page-inner{position:relative;z-index:2;height:100%;padding:7.5mm 7mm 7mm;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+.watermark-logo{position:absolute;z-index:0;top:52%;left:50%;width:125mm;height:125mm;transform:translate(-50%,-50%);object-fit:contain;opacity:.075;filter:none!important;mix-blend-mode:normal;pointer-events:none;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+.page-frame{position:absolute;inset:4.2mm;border:6px double #111;outline:1.2px solid #333;outline-offset:-3mm;pointer-events:none}
+.page-frame:before,.page-frame:after{content:"◆";position:absolute;width:8mm;height:8mm;display:flex;align-items:center;justify-content:center;background:#fff;color:#111;font-size:11px;font-weight:900}
+.page-frame:before{top:-4mm;right:-4mm}.page-frame:after{bottom:-4mm;left:-4mm}
+.page-corner{position:absolute;z-index:1;width:8mm;height:8mm;display:flex;align-items:center;justify-content:center;background:#fff;color:#111;font-size:11px;font-weight:900;pointer-events:none}
+.page-corner.bl{left:1mm;bottom:1mm}.page-corner.tr{right:1mm;top:1mm}
+.record-head{position:relative;min-height:46mm;display:grid;grid-template-columns:1fr 78mm 1fr;align-items:start;gap:3mm;padding:0 4mm 1.5mm;font-size:16px;font-weight:700}
+.head-side{padding-top:2.5mm;text-align:center;font-size:16px;font-weight:700;line-height:1.2}
+.head-side .small{font-size:16px;font-weight:700;line-height:1.25}
+.head-center{text-align:center;font-size:16px;font-weight:700}
+.ministry-logo{width:24mm;height:24mm;display:block;margin:0 auto 0;object-fit:contain}
+.head-center h2{margin-top:.2mm;font-size:20px;font-weight:700;line-height:1.15}
+.head-center h3{margin-top:.7mm;font-size:18px;font-weight:700}
+.head-center .gender-line{margin-top:.6mm;font-size:17px;font-weight:700}
+.head-center p{margin-top:.6mm;font-size:17px;font-weight:700}
+.record-meta{display:flex;align-items:center;justify-content:center;gap:5mm;margin-top:.6mm;font-size:17px;font-weight:700}
+.record-meta span{padding:.5mm 2mm;border-bottom:1.2px solid #222}
+.record-table{width:100%;border-collapse:collapse;table-layout:fixed;direction:rtl}
+.record-table th,.record-table td{border:.8px solid #333;text-align:center;vertical-align:middle;font-size:15px;font-weight:700}
+.record-table thead th{height:24.5mm;padding:.9mm;font-size:15px;font-weight:700;line-height:1.15}
+.record-table thead th.vertical{position:relative;width:13.5mm;height:24.5mm;padding:0;overflow:hidden;font-size:15px;line-height:1;direction:rtl}.record-table thead th.vertical .vlabel{position:absolute;top:50%;left:50%;display:block;white-space:nowrap;direction:rtl;unicode-bidi:plaintext;font-family:"Times New Roman",Times,serif;font-size:15px;font-weight:700;line-height:1;transform:translate(-50%,-50%) rotate(-90deg);transform-origin:center}
+.record-table th.seq{width:8mm}
+.record-table th.name{width:64mm;font-size:15px}
+.record-table th.note{width:16mm}
+.record-table tbody td{height:6.85mm;padding:.4mm .65mm;font-size:15px;line-height:1.08;border-bottom:1.15px solid #222}
+.record-table tbody td.seq{font-size:15px;font-weight:700}
+.record-table tbody td.name{text-align:right;padding:0 1.4mm;font-size:15px;font-weight:700;white-space:nowrap;overflow:visible;text-overflow:clip;line-height:1.02}
+.record-table tbody td.grade{font-size:15px;font-weight:700}
+.record-table tbody td.grade.fail{color:#d00000;text-decoration:underline;text-decoration-thickness:1.7px;text-underline-offset:2px;font-weight:700}
+.record-table tbody tr.blank-row td{color:transparent}
+.record-footer{position:absolute;right:10mm;left:10mm;bottom:8.5mm;height:25mm;display:grid;grid-template-columns:1fr 40mm 1fr;align-items:end;gap:5mm;border-top:0;padding-top:1.5mm;font-size:14px;font-weight:700}
+.signature{text-align:center;font-size:16px;font-weight:700;line-height:1.35;transform:translateY(-3mm)}
+.signature strong{display:block;margin-top:.7mm;font-size:18px;font-weight:700}
+.barcode-zone{text-align:center;align-self:end;font-size:14px;font-weight:700}
+.qr-code{width:23mm;height:23mm;margin:1.2mm auto .45mm;padding:.8mm;background:#fff}
+.qr-code canvas,.qr-code img{width:21.5mm!important;height:21.5mm!important;margin:auto;image-rendering:auto}
+.qr-code canvas{display:block!important}
+.qr-code img{display:none!important}
+.record-id{margin-top:.2mm;direction:ltr;font-family:"Times New Roman",Times,serif;font-size:5px;font-weight:700;letter-spacing:.25px}
+.auditor{margin-top:.7mm;text-align:center;font-size:14px;font-weight:700;line-height:1.25}
+.manager{margin-top:.8mm;text-align:center;font-size:16px;font-weight:700;line-height:1.3;transform:translateY(-3mm)}
+.manager strong{display:block;margin-top:.7mm;font-size:18px;font-weight:700}
+.page-no{position:absolute;z-index:5;bottom:6.8mm;left:8mm;padding:.4mm 1.2mm;background:#fff;font-size:10px;font-weight:700}
+.continuation{position:absolute;top:6mm;left:7mm;padding:1mm 2mm;border-radius:999px;background:#f4f4f4;font-size:6.5px;font-weight:900}
+@media(max-width:1050px){
+ .layout{grid-template-columns:1fr}.panel{position:static}.preview-area{min-height:500px}
+}
+@media(max-width:560px){
+ .layout{padding:10px}.inline{grid-template-columns:1fr}.actions{grid-template-columns:1fr}
+ .topbar{align-items:flex-start}.top-actions{gap:6px;justify-content:flex-end}.admin-back,.logout{padding:9px 10px;font-size:8px}
+ .preview-area{padding:10px 2px}.print-page{transform-origin:top center}
+}
+@media print{
+ @page{size:A4 portrait;margin:0}
+ html,body{width:210mm!important;background:#fff!important}
+ body{margin:0!important}
+ .no-print,.topbar,.panel,.preview-toolbar{display:none!important}
+ .layout{display:block!important;width:auto!important;margin:0!important;padding:0!important}
+ .preview-shell,.preview-area{display:block!important;margin:0!important;padding:0!important;border:0!important;background:#fff!important;overflow:visible!important}
+ #printPages{display:block!important}
+ .print-page{width:210mm!important;height:297mm!important;margin:0!important;border:0!important;box-shadow:none!important;break-after:page;page-break-after:always;animation:none!important}
+ .print-page:last-child{break-after:auto;page-break-after:auto}
+}
+
+.school-side-logo{width:40mm;height:40mm;display:block;margin:.5mm auto 0;object-fit:contain}
+.admin-title{font-size:18px;font-weight:700;line-height:1.15}
+.admin-title .admin-word{display:block;font-size:18px;font-weight:700;margin-bottom:.8mm}
+.admin-title .admin-school{display:block;font-size:18px;font-weight:700;line-height:1.15}
+
+
+.public-view{background:#eef2f6}
+.public-view .topbar,.public-view .panel,.public-view .preview-toolbar{display:none!important}
+.public-view .layout{display:block!important;width:100%!important;max-width:none!important;margin:0!important;padding:0!important}
+.public-view .preview-shell{width:100%!important}
+.public-view .preview-area{min-height:100vh;border:0!important;border-radius:0!important;padding:16px 4px 32px!important;background:#eef2f6!important}
+.public-error{width:min(560px,calc(100% - 28px));margin:70px auto;padding:28px 20px;border:1px solid #dbe3ec;border-radius:22px;background:#fff;text-align:center;box-shadow:0 18px 55px rgba(30,54,88,.10)}
+.public-error h2{font-size:19px;font-weight:700;color:#172033}
+.public-error p{margin-top:10px;font-size:14px;font-weight:700;line-height:1.8;color:#667085}
+.public-record-badge{position:fixed;z-index:45;top:10px;left:50%;transform:translateX(-50%);padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.94);border:1px solid #dfe6ee;box-shadow:0 6px 18px rgba(30,54,88,.08);font-size:11px;font-weight:700;color:#344054;white-space:nowrap}
+@media print{.public-record-badge{display:none!important}.public-view .preview-area{padding:0!important;background:#fff!important}}
+
+
+
+
+.record-table tbody tr:last-child td{border-bottom:1.5px solid #111!important}
+
+
+.admin-qr-block{margin-top:.5mm;text-align:center}
+.admin-qr-block .record-id{margin-top:.35mm;font-size:4.8px;line-height:1;direction:ltr}
+
+
+.footer-auditor{text-align:center;font-size:16px;font-weight:700;line-height:1.3;transform:translateY(-3mm)}
+.footer-auditor span{display:block}
+.footer-auditor strong{display:block;margin-top:.7mm;font-size:18px;font-weight:700}
+
+</style>
+</head>
+<body>
+<div id="loader" class="loader"><div class="loader-card"><div class="spinner"></div><p>جاري تحميل بيانات السجلات...</p></div></div>
+
+<div id="app" class="app hidden">
+<header class="topbar no-print">
+ <div class="brand"><img src="logo.png" alt="الشعار"><div><h1>سجلات الدرجات</h1><p>مدرسة التحدي الأهلية المختلطة</p></div></div>
+ <div class="top-actions">
+  <button class="admin-back" type="button" onclick="location.href='add.html'">الرجوع إلى صفحة الإدارة</button>
+  <button class="logout" type="button" onclick="logout()">تسجيل الخروج</button>
+ </div>
+</header>
+
+<div class="layout">
+ <aside class="panel no-print">
+  <div class="panel-head"><h2>إعداد سجل الأستاذ</h2><p>اختر الجنس أولاً، ثم المرحلة، ثم الصف والقاعة والمادة، وبعدها عاين السجل واطبعه مباشرة بحجم A4.</p></div>
+  <div class="form-grid">
+   <div class="field"><label>الجنس</label><select id="genderSelect"><option value="">اختر الجنس</option><option value="male">بنين</option><option value="female">بنات</option></select></div>
+   <div class="field"><label>المرحلة</label><select id="stageSelect" disabled><option value="">اختر المرحلة</option><option value="secondary">ثانوية</option><option value="primary">ابتدائية</option></select></div>
+   <div class="field"><label>الصف / القاعة / الجنس</label><select id="classSelect" disabled><option value="">اختر الصف والقاعة</option></select><small>تظهر الخيارات حسب الجنس والمرحلة، ويظهر الصف والقاعة والجنس داخل نفس الخيار.</small></div>
+   <div class="field"><label>المادة</label><select id="subjectSelect" disabled><option value="">اختر المادة</option></select><small>المادة تُقرأ من المواد المعرفة للصف في صفحة الإدارة.</small></div>
+
+   <div class="field"><label>نوع السجل</label>
+    <div class="mode-box">
+     <div class="mode-option"><input id="modeGrades" name="recordMode" type="radio" value="grades" checked><label for="modeGrades">بدرجات</label></div>
+     <div class="mode-option"><input id="modeBlank" name="recordMode" type="radio" value="blank"><label for="modeBlank">بدون درجات</label></div>
+    </div>
+   </div>
+
+   <div class="field"><label>اسم الأستاذ / مدرس المادة</label><input id="teacherName" type="text" placeholder="اكتب اسم الأستاذ"></div>
+   <div class="inline">
+    <div class="field"><label>صفة الإدارة</label><select id="managerTitle"><option value="مدير">مدير</option><option value="مديرة">مديرة</option></select></div>
+    <div class="field"><label>اسم المدير / المديرة</label><input id="managerName" type="text" placeholder="اكتب الاسم"></div>
+   </div>
+   <div class="field"><label>العام الدراسي</label><input id="schoolYear" type="text" value="2026-2027"></div>
+   <div class="status ok" style="margin-top:0">تنسيق السجل ثابت: <b>Times New Roman</b>، داخل الجدول 14 غير عريض، أعلى السجل 16 عريض، وأسفل الجدول 14 عريض. الإطار مزخرف وعريض جداً.<br>إذا اخترت «بدرجات» يظهر QR واحد في كل صفحة ويفتح PDF الكامل للسجل بدون تسجيل دخول. إذا اخترت «بدون درجات» لا يظهر QR.</div>
+  </div>
+
+  <div class="actions">
+   <button id="previewBtn" class="btn btn-preview" type="button">معاينة السجل</button>
+   <button id="printBtn" class="btn btn-print" type="button" disabled>طباعة السجل</button>
+  </div>
+  <div id="status" class="status">اختر الصف للبدء.</div>
+ </aside>
+
+ <main class="preview-shell">
+  <div class="preview-toolbar no-print"><div><strong>معاينة A4</strong><span id="previewInfo">لم يتم إنشاء سجل بعد</span></div><span>الطباعة فقط — بدون PDF</span></div>
+  <div class="preview-area" id="previewArea">
+   <div id="emptyPreview" class="empty-preview"><h3>سجل الدرجات</h3><p>بعد اختيار البيانات اضغط «معاينة السجل» وسيظهر هنا بنفس شكل الطباعة.</p></div>
+   <div id="printPages"></div>
+  </div>
+ </main>
+</div>
+</div>
+
+<script>
+const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
+const $=id=>document.getElementById(id);
+let SESSION={},ADMIN_USER={},DATA={classes:{},students:{}},CLASS_CHOICES={},CURRENT={students:[],subject:null,classData:null,room:"",mode:"grades",generatedAt:0,recordId:""};
+
+const READ_CACHE=new Map(),READ_PENDING=new Map(),READ_TTL=2500;
+function cleanPath(p){return String(p||"").replace(/^\/+|\/+$/g,"")}
+async function dbGet(path,{fresh=false,ttl=READ_TTL}={}){
+ path=cleanPath(path);
+ if(!fresh){const c=READ_CACHE.get(path);if(c&&Date.now()-c.at<=ttl)return c.value;if(READ_PENDING.has(path))return READ_PENDING.get(path)}
+ const run=(async()=>{const r=await fetch(`${DB}/${path}.json`,{cache:"no-store"});if(!r.ok)throw new Error("DB_READ");const v=await r.json();READ_CACHE.set(path,{at:Date.now(),value:v});return v})();
+ READ_PENDING.set(path,run);try{return await run}finally{if(READ_PENDING.get(path)===run)READ_PENDING.delete(path)}
+}
+const dbGetFresh=path=>dbGet(path,{fresh:true,ttl:0});
+async function dbPut(path,value){
+ path=cleanPath(path);
+ const r=await fetch(`${DB}/${path}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(value)});
+ if(!r.ok)throw new Error("DB_WRITE");
+ READ_CACHE.set(path,{at:Date.now(),value});
+ return await r.json().catch(()=>value)
+}
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+function norm(v){return String(v??"").trim().toLowerCase().replace(/[\u064b-\u065f\u0670]/g,"").replace(/ـ/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/\s+/g," ")}
+function safeKey(v){return String(v??"").replace(/[.#$\[\]\/]/g,"_")}
+function roleOf(v){return norm(v?.role||v?.type||v?.userType)}
+function isAdminRole(v){return["admin","administrator","add","ادمن","إدارة","ادارة"].includes(roleOf(v))}
+function loadSession(){try{SESSION=JSON.parse(sessionStorage.getItem("tahadi_session")||"{}")}catch{SESSION={}}return!!SESSION.code}
+function logout(){sessionStorage.removeItem("tahadi_session");sessionStorage.removeItem("tahadi_code");sessionStorage.removeItem("tahadi_role");localStorage.removeItem("tahadi_remembered_login");location.replace("index.html")}
+function toast(text,type=""){const box=$("status");box.textContent=text;box.className=`status ${type}`.trim()}
+function normalizeGender(value){const g=norm(typeof value==="object"?value?.gender:value);if(["female","f","girl","girls","اناث","إناث","انثى","أنثى","بنات"].includes(g))return"female";if(["mixed","mix","مختلط","مختلطة"].includes(g))return"mixed";return"male"}
+function genderLabel(v){const g=normalizeGender(v);return g==="female"?"بنات":g==="mixed"?"مختلط":"بنين"}
+function classStageValue(c){const raw=norm(c?.stage||c?.classStage||c?.schoolStage||"");if(["primary","ابتدائية","ابتدائي"].includes(raw))return"primary";if(["secondary","ثانوية","ثانوي"].includes(raw))return"secondary";return/ابتدائ|ابتدائي/.test(norm(c?.name||""))?"primary":"secondary"}
+function stageLabel(c){return classStageValue(c)==="primary"?"ابتدائية":"ثانوية"}
+const ROOM_NEW_STUDENTS=101,ROOM_TRANSFERRED_STUDENTS=102;
+function roomLabel(v){const n=Number(v);if(n===ROOM_NEW_STUDENTS)return"الطلاب الجدد";if(n===ROOM_TRANSFERRED_STUDENTS)return"الطلاب المنقولين";return n?`القاعة ${n}`:"بدون قاعة"}
+
+function normalizeClassSubjects(c){
+ let rows=Array.isArray(c?.subjects)?c.subjects:Object.values(c?.subjects||{});
+ rows=rows.filter(Boolean).map((x,i)=>({id:String(x.id||`SUB_${i+1}`),name:String(x.name||x.subjectName||"").trim(),maxGrade:Number(x.maxGrade||100),passGrade:Number(x.passGrade??50),order:Number(x.order||i+1),autoType:x.autoType||""})).filter(x=>x.name);
+ if(!rows.some(x=>x.autoType==="sport"))rows.push({id:"SPORT",name:"الرياضة",maxGrade:100,passGrade:50,order:rows.length+1,autoType:"sport"});
+ if(!rows.some(x=>x.autoType==="art"))rows.push({id:"ART",name:"الفنية",maxGrade:100,passGrade:50,order:rows.length+1,autoType:"art"});
+ return rows.sort((a,b)=>a.order-b.order)
+}
+function isGrade(v){return v!==undefined&&v!==null&&v!==""&&Number.isFinite(Number(v))}
+function gradeNum(v){return isGrade(v)?Number(v):""}
+function roundedGrade(v){return Math.round(Number(v))}
+function recordSubjectName(rec,key=""){return String(rec?.subjectName||rec?.subject||rec?.name||key||"").trim()}
+function findGradeRecord(raw,subject){
+ const entries=Object.entries(raw||{});
+ return entries.find(([key,r])=>String(r?.subjectId||"")===String(subject.id)||String(key)===String(subject.id)||norm(recordSubjectName(r,key))===norm(subject.name))?.[1]||{}
+}
+function annualFromRecord(rec){const a=gradeNum(rec.term1),b=gradeNum(rec.midyear),c=gradeNum(rec.term2);return isGrade(a)&&isGrade(b)&&isGrade(c)?roundedGrade((a+b+c)/3):(isGrade(rec.annual)?Number(rec.annual):"")}
+function finalFromRecord(rec,annual){if(isGrade(rec.final))return Number(rec.final);const exam=gradeNum(rec.finalExam);return isGrade(annual)&&isGrade(exam)?roundedGrade((Number(annual)+exam)/2):""}
+function activityGrade(rows,field){
+ const values=rows.filter(r=>!r.autoType&&isGrade(r[field])).map(r=>Number(r[field])/Math.max(1,Number(r.maxGrade||100))*100);
+ if(!values.length)return"";const high=Math.max(...values);if(high>=100)return 100;if(high>80)return 90;return 85
+}
+function buildAllSubjectRows(c,raw){
+ const subjects=normalizeClassSubjects(c),rows=subjects.map(s=>{const rec=findGradeRecord(raw,s);if(s.autoType)return{...s,term1:"",midyear:"",term2:"",annual:"",finalExam:"",final:"",secondRound:"",secondFinal:""};const annual=annualFromRecord(rec),final=finalFromRecord(rec,annual),secondFinal=gradeNum(rec.secondRoundFinal??rec.finalSecondRound??rec.secondFinal);return{...s,term1:gradeNum(rec.term1),midyear:gradeNum(rec.midyear),term2:gradeNum(rec.term2),annual,finalExam:gradeNum(rec.finalExam),final,secondRound:gradeNum(rec.secondRound),secondFinal}});
+ const academic=rows.filter(r=>!r.autoType);
+ return rows.map(r=>r.autoType?{...r,term1:activityGrade(academic,"term1"),midyear:activityGrade(academic,"midyear"),term2:activityGrade(academic,"term2"),annual:activityGrade(academic,"annual"),finalExam:activityGrade(academic,"finalExam"),final:activityGrade(academic,"final"),secondRound:activityGrade(academic,"secondRound"),secondFinal:""}:r)
+}
+function subjectRowForStudent(c,raw,subject){return buildAllSubjectRows(c,raw).find(r=>String(r.id)===String(subject.id)||norm(r.name)===norm(subject.name))||{...subject,term1:"",midyear:"",term2:"",annual:"",finalExam:"",final:"",secondRound:"",secondFinal:""}}
+
+function savePrefs(){const x={teacherName:$("teacherName").value,managerName:$("managerName").value,managerTitle:$("managerTitle").value,schoolYear:$("schoolYear").value};localStorage.setItem("tahadi_records_prefs",JSON.stringify(x))}
+function loadPrefs(){try{const x=JSON.parse(localStorage.getItem("tahadi_records_prefs")||"{}");["teacherName","managerName","managerTitle","schoolYear"].forEach(k=>{if(x[k]!==undefined&&$(k))$(k).value=x[k]})}catch{}}
+
+function studentGenderValue(s,c){
+ const raw=s?.gender||s?.studentGender||c?.gender||"";
+ return normalizeGender(raw)
+}
+function classStudents(classId){return Object.entries(DATA.students||{}).map(([code,s])=>({code,...(s||{})})).filter(s=>String(s.classId||"")===String(classId))}
+function resetClassAndSubject(){
+ CLASS_CHOICES={};
+ $("classSelect").innerHTML='<option value="">اختر الصف والقاعة</option>';
+ $("classSelect").disabled=true;
+ $("subjectSelect").innerHTML='<option value="">اختر المادة</option>';
+ $("subjectSelect").disabled=true;
+}
+function onGenderChange(){
+ const gender=$("genderSelect").value;
+ $("stageSelect").disabled=!gender;
+ $("stageSelect").value="";
+ resetClassAndSubject();
+ toast(gender?"اختر المرحلة الدراسية.":"اختر الجنس أولاً.")
+}
+function buildClassChoices(){
+ const gender=$("genderSelect").value,stage=$("stageSelect").value;
+ resetClassAndSubject();
+ if(!gender||!stage)return;
+ let seq=0,options=[];
+ Object.entries(DATA.classes||{}).forEach(([classId,c])=>{
+  if(!c||classStageValue(c)!==stage)return;
+  const students=classStudents(classId).filter(st=>studentGenderValue(st,c)===gender);
+  const rooms=[...new Set(students.map(st=>String(st.roomNumber??c.roomNumber??"")).filter(Boolean))];
+  if(!rooms.length&&normalizeGender(c)===gender)rooms.push(String(c.roomNumber??""));
+  rooms.forEach(room=>{
+   const key=`C${++seq}`;
+   CLASS_CHOICES[key]={classId:String(classId),room:String(room||""),gender,stage};
+   options.push({key,c,room,count:students.filter(st=>String(st.roomNumber??c.roomNumber??"")===String(room)).length})
+  })
+ });
+ options.sort((a,b)=>String(a.c.name||"").localeCompare(String(b.c.name||""),"ar")||Number(a.room||0)-Number(b.room||0));
+ $("classSelect").innerHTML='<option value="">اختر الصف والقاعة</option>'+options.map(x=>`<option value="${esc(x.key)}">${esc(x.c.name||"بدون اسم")} — ${esc(roomLabel(x.room))} — ${gender==="female"?"بنات":"بنين"}</option>`).join("");
+ $("classSelect").disabled=!options.length;
+ toast(options.length?`تم العثور على ${options.length} خيار صف/قاعة.`:"لا توجد صفوف مطابقة للاختيار.",options.length?"ok":"error")
+}
+function onClassChoiceChange(){
+ const choice=CLASS_CHOICES[$("classSelect").value];
+ $("subjectSelect").disabled=!choice;
+ if(!choice){$("subjectSelect").innerHTML='<option value="">اختر المادة</option>';return}
+ const c=DATA.classes[choice.classId]||{};
+ const subjects=normalizeClassSubjects(c);
+ $("subjectSelect").innerHTML='<option value="">اختر المادة</option>'+subjects.map(x=>`<option value="${esc(x.id)}">${esc(x.name)}</option>`).join("");
+ const count=classStudents(choice.classId).filter(st=>String(st.roomNumber??c.roomNumber??"")===String(choice.room)&&studentGenderValue(st,c)===choice.gender).length;
+ toast(count?`تم العثور على ${count} طالب/ة في ${roomLabel(choice.room)}.`:"لا يوجد طلاب ضمن هذا الاختيار.",count?"ok":"error")
+}
+function selectedMode(){return document.querySelector('input[name="recordMode"]:checked')?.value||"grades"}
+function currentSelection(){
+ const choice=CLASS_CHOICES[$("classSelect").value];
+ if(!choice)throw new Error("اختر الصف والقاعة");
+ const classId=choice.classId,c=DATA.classes[classId],room=choice.room,subjectId=$("subjectSelect").value,subject=normalizeClassSubjects(c||{}).find(x=>String(x.id)===String(subjectId));
+ if(!c)throw new Error("اختر الصف");
+ if(!subject)throw new Error("اختر المادة");
+ const teacher=$("teacherName").value.trim();if(!teacher)throw new Error("اكتب اسم الأستاذ");
+ const manager=$("managerName").value.trim();if(!manager)throw new Error("اكتب اسم المدير / المديرة");
+ const managerTitle=$("managerTitle").value||"مدير";
+ let students=classStudents(classId).filter(st=>String(st.roomNumber??c.roomNumber??"")===String(room)&&studentGenderValue(st,c)===choice.gender);
+ students.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar"));
+ if(!students.length)throw new Error("لا يوجد طلاب ضمن الاختيار الحالي");
+ return{c,room,subject,students,teacher,manager,managerTitle,mode:selectedMode(),selectedGender:choice.gender,selectedStage:choice.stage}
+}
+
+function randomRecordToken(){
+ try{const a=new Uint32Array(2);crypto.getRandomValues(a);return[...a].map(n=>n.toString(36)).join("").toUpperCase()}catch{return Math.random().toString(36).slice(2,12).toUpperCase()}
+}
+function randomPublicKey(){
+ try{
+  const a=new Uint8Array(18);crypto.getRandomValues(a);
+  return [...a].map(b=>b.toString(16).padStart(2,"0")).join("");
+ }catch{return`${Date.now().toString(36)}${Math.random().toString(36).slice(2,18)}`.replace(/[^a-z0-9]/gi,"")}
+}
+async function sha256Hex(value){
+ try{if(!crypto?.subtle)return"";const bytes=new TextEncoder().encode(String(value||"")),hash=await crypto.subtle.digest("SHA-256",bytes);return[...new Uint8Array(hash)].map(b=>b.toString(16).padStart(2,"0")).join("")}catch{return""}
+}
+function makeRecordId(c,room,subject){
+ const d=new Date(),stamp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,"0")}${String(d.getDate()).padStart(2,"0")}${String(d.getHours()).padStart(2,"0")}${String(d.getMinutes()).padStart(2,"0")}`;
+ return `THD-${safeKey(c.id).slice(-6)}-${safeKey(room||"ALL")}-${safeKey(subject.id).slice(-6)}-${stamp}-${randomRecordToken().slice(0,8)}`.toUpperCase()
+}
+function gradeHTML(v,pass,mode){
+ if(mode==="blank"||!isGrade(v))return"";
+ const n=Number(v),fail=n<Number(pass??50);
+ return `<span class="${fail?"fail":""}">${esc(Number.isInteger(n)?n:Math.round(n*10)/10)}</span>`
+}
+
+let NAME_MEASURE_CANVAS=null;
+function studentNameForRecord(value){
+ return String(value||"").trim().replace(/\s+/g," ")||"—"
+}
+function studentNameFontSize(value){
+ const text=studentNameForRecord(value);
+ if(!text||text==="—")return 15;
+ try{
+  NAME_MEASURE_CANVAS=NAME_MEASURE_CANVAS||document.createElement("canvas");
+  const ctx=NAME_MEASURE_CANVAS.getContext("2d");
+  if(!ctx)return 15;
+  const targetPx=232;
+  for(const size of [15,14.5,14,13.5,13,12.5,12,11.5]){
+   ctx.font=`700 ${size}px "Times New Roman"`;
+   if(ctx.measureText(text).width<=targetPx)return size
+  }
+  return 11
+ }catch{return 13}
+}
+function cellGrade(v,pass,mode){const n=mode==="blank"?"":v,fail=mode!=="blank"&&isGrade(n)&&Number(n)<Number(pass??50);return `<td class="grade ${fail?"fail":""}">${mode==="blank"?"":esc(isGrade(n)?(Number.isInteger(Number(n))?Number(n):Math.round(Number(n)*10)/10):"")}</td>`}
+
+async function prepareRows(selection){
+ if(selection.mode==="blank")return selection.students.map(s=>({student:s,row:{...selection.subject,term1:"",midyear:"",term2:"",annual:"",finalExam:"",final:""}}));
+ toast("جاري سحب درجات الطلاب...");
+ const grades=await Promise.all(selection.students.map(s=>dbGet(`grades/${encodeURIComponent(s.code)}`,{ttl:5000}).catch(()=>({}))));
+ return selection.students.map((student,i)=>({student,row:subjectRowForStudent(selection.c,grades[i]||{},selection.subject)}))
+}
+
+function recordPageBaseURL(){
+ try{
+  if(/^https?:$/i.test(location.protocol))return `${location.origin}${location.pathname}`;
+ }catch{}
+ return "https://altahdi-school.github.io/student-AhLtahadi/records.html";
+}
+function qrRecordURL(publicKey){
+ const url=new URL(recordPageBaseURL());
+ url.searchParams.set("record",String(publicKey||""));
+ url.searchParams.set("pdf","1");
+ return url.toString();
+}
+function pageHTML(rows,pageIndex,totalPages,selection,startIndex,recordId,totalStudents,fingerprint,publicKey=""){
+ const perPage=25,blankCount=Math.max(0,perPage-rows.length),year=$("schoolYear").value.trim()||"2026-2027";
+ const classText=selection.c.name||"—",roomText=selection.room?roomLabel(selection.room):(rows[0]?.student?.roomNumber?roomLabel(rows[0].student.roomNumber):"كل القاعات"),stage=stageLabel(selection.c),gender=genderLabel(selection.c),isPrimary=classStageValue(selection.c)==="primary";
+ const adminName=isPrimary?"إدارة ابتدائية التحدي المختلطة الأهلية":"إدارة ثانوية التحدي الأهلية المختلطة";
+ const studentNameHead=isPrimary?(selection.selectedGender==="female"?"اسم التلميذة":"اسم التلميذ"):(selection.selectedGender==="female"?"اسم الطالبة":"اسم الطالب");
+ const body=rows.map((x,i)=>{const r=x.row,p=Number(r.passGrade??selection.subject.passGrade??50);return`<tr>
+ <td class="seq">${startIndex+i+1}</td>
+ <td class="name" style="font-size:${studentNameFontSize(x.student.name)}px">${esc(studentNameForRecord(x.student.name))}</td>
+ ${cellGrade(r.term1,p,selection.mode)}
+ ${cellGrade(r.midyear,p,selection.mode)}
+ ${cellGrade(r.term2,p,selection.mode)}
+ ${cellGrade(r.annual,p,selection.mode)}
+ ${cellGrade(r.finalExam,p,selection.mode)}
+ ${cellGrade(r.final,p,selection.mode)}
+ ${cellGrade(r.secondRound,p,selection.mode)}
+ ${cellGrade(r.secondFinal,p,selection.mode)}
+ <td></td></tr>`}).join("");
+ const blanks=Array.from({length:blankCount},()=>`<tr class="blank-row"><td>—</td><td>—</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`).join("");
+ const qr=selection.mode==="grades"&&publicKey?`<div class="admin-qr-block"><div class="qr-code" data-code="${esc(qrRecordURL(publicKey))}"></div><div class="record-id">${esc(recordId)}</div></div>`:"";
+ return `<section class="print-page">
+  <div class="page-frame"></div><div class="page-corner bl">◆</div><div class="page-corner tr">◆</div><img class="watermark-logo" src="logo.png" alt="">
+  ${pageIndex>0?`<div class="continuation">تكملة السجل</div>`:""}
+  <div class="page-inner">
+   <header class="record-head">
+    <div class="head-side"><div class="admin-title"><span class="admin-word">إدارة</span><span class="admin-school">${esc(isPrimary?"ابتدائية التحدي الأهلية المختلطة":"ثانوية التحدي الأهلية المختلطة")}</span></div>${qr}</div>
+    <div class="head-center"><img class="ministry-logo" src="ministry-logo.PNG" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ALtahdi-school/student-AhLtahadi/main/ministry-logo.PNG'" alt="شعار وزارة التربية"><h2>سجل درجات الإدارة</h2><h3>${esc(classText)} — ${esc(roomText)}</h3><div class="gender-line">${esc(gender)}</div><p>للعام الدراسي ${esc(year)}</p><div class="record-meta"><span>المادة: ${esc(selection.subject.name)}</span></div></div>
+    <div class="head-side"><img class="school-side-logo" src="logo.png" alt="شعار المدرسة"></div>
+   </header>
+   <table class="record-table">
+    <thead><tr>
+     <th class="seq">ت</th><th class="name">${esc(studentNameHead)}</th>
+     <th class="vertical"><span class="vlabel">معدل الفصل الأول</span></th><th class="vertical"><span class="vlabel">نصف السنة</span></th><th class="vertical"><span class="vlabel">معدل الفصل الثاني</span></th>
+     <th class="vertical"><span class="vlabel">السعي السنوي</span></th><th class="vertical"><span class="vlabel">الامتحان النهائي</span></th><th class="vertical"><span class="vlabel">الدرجة النهائية</span></th>
+     <th class="vertical"><span class="vlabel">درجة الدور الثاني</span></th><th class="vertical"><span class="vlabel">الدرجة النهائية</span></th>
+     <th class="note">الملاحظات</th>
+    </tr></thead>
+    <tbody>${body}${blanks}</tbody>
+   </table>
+   <footer class="record-footer">
+    <div class="signature">مدرس المادة<strong>${esc(selection.teacher)}</strong></div>
+    <div class="footer-auditor">${selection.mode==="grades"&&publicKey?`<span>المدقق</span><strong>أحمد عبد الرحمن أحمد</strong>`:""}</div>
+    <div class="manager">${esc(selection.managerTitle)} المدرسة<strong>${esc(selection.manager)}</strong></div>
+   </footer>
+   <div class="page-no">صفحة ${pageIndex+1} من ${totalPages}</div>
+  </div>
+ </section>`
+}
+function renderBarcodes(){document.querySelectorAll(".qr-code").forEach(el=>{try{el.innerHTML="";const text=String(el.dataset.code||"").trim();if(!text)return;if(typeof QRCode==="undefined")throw new Error("QR_LIBRARY_NOT_LOADED");new QRCode(el,{text,width:160,height:160,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});requestAnimationFrame(()=>{const canvas=el.querySelector("canvas"),img=el.querySelector("img");if(canvas){canvas.style.display="block";canvas.style.width="21.5mm";canvas.style.height="21.5mm";canvas.style.margin="auto";if(img)img.remove();}else if(img){img.style.display="block";img.style.width="21.5mm";img.style.height="21.5mm";img.style.margin="auto";}})}catch(e){console.error("QR_ERROR",e);el.innerHTML='<div style="font-size:9px;font-weight:700;line-height:1.4;text-align:center">تعذر إنشاء<br>رمز السجل</div>'}})}
+
+function fitPreview(){
+ const area=$("previewArea"),pages=[...document.querySelectorAll(".print-page")];if(!pages.length)return;
+ const max=Math.min(1,(area.clientWidth-26)/(210*3.7795275591));pages.forEach(p=>{p.style.transform=`scale(${max})`;p.style.transformOrigin="top center";p.style.marginBottom=`${-(297*3.7795275591)*(1-max)}px`})
+}
+function resetPrintScale(){document.querySelectorAll(".print-page").forEach(p=>{p.style.transform="";p.style.marginBottom=""})}
+
+
+function publicSnapshotPayload(sel,rows,recordId,fingerprint,publicKey){
+ return{
+  version:2,recordId,publicKey,fingerprint,createdAt:Date.now(),
+  schoolYear:$("schoolYear").value.trim()||"2026-2027",
+  mode:sel.mode,teacher:sel.teacher,manager:sel.manager,managerTitle:sel.managerTitle,
+  room:sel.room||"",
+  classData:{id:String(sel.c.id||""),name:String(sel.c.name||""),stage:sel.c.stage||sel.c.classStage||"",gender:sel.c.gender||""},
+  subject:{id:String(sel.subject.id||""),name:String(sel.subject.name||""),passGrade:Number(sel.subject.passGrade??50),maxGrade:Number(sel.subject.maxGrade??100)},
+  rows:rows.map(x=>({
+   student:{code:String(x.student.code||""),name:String(x.student.name||""),roomNumber:x.student.roomNumber??""},
+   row:{term1:x.row.term1??"",midyear:x.row.midyear??"",term2:x.row.term2??"",annual:x.row.annual??"",finalExam:x.row.finalExam??"",final:x.row.final??"",secondRound:x.row.secondRound??"",secondFinal:x.row.secondFinal??"",passGrade:Number(x.row.passGrade??sel.subject.passGrade??50)}
+  }))
+ }
+}
+async function publishRecordSnapshot(sel,rows,recordId,fingerprint){
+ const publicKey=randomPublicKey();
+ const snap=publicSnapshotPayload(sel,rows,recordId,fingerprint,publicKey);
+ const integrity=await sha256Hex(JSON.stringify({recordId:snap.recordId,publicKey:snap.publicKey,schoolYear:snap.schoolYear,mode:snap.mode,teacher:snap.teacher,manager:snap.manager,managerTitle:snap.managerTitle,room:snap.room,classData:snap.classData,subject:snap.subject,rows:snap.rows}));
+ snap.integrity=integrity;
+ await dbPut(`publicRecords/${encodeURIComponent(publicKey)}`,snap);
+ return{publicKey,snapshot:snap}
+}
+async function verifyPublicSnapshot(snap,requestedKey=""){
+ if(!snap||!snap.recordId||!snap.publicKey||!Array.isArray(snap.rows))return false;
+ if(requestedKey&&String(snap.publicKey)!==String(requestedKey))return false;
+ return true
+}
+function publicError(title,message){
+ document.body.classList.add("public-view");
+ $("loader").classList.add("hidden");$("app").classList.remove("hidden");
+ $("printPages").innerHTML=`<div class="public-error"><h2>${esc(title)}</h2><p>${esc(message)}</p></div>`;
+ $("emptyPreview").classList.add("hidden");
+}
+
+function isMobilePDFDevice(){return /iphone|ipad|ipod|android|mobile/i.test(navigator.userAgent||"")}
+async function waitPublicRecordAssets(){
+ const imgs=[...document.querySelectorAll("#printPages img")];
+ await Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve})));
+ await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+}
+async function createPublicRecordPDF(recordId){
+ if(typeof html2canvas==="undefined"||!window.jspdf?.jsPDF)throw new Error("PDF_LIBRARY_NOT_LOADED");
+ await waitPublicRecordAssets();
+ resetPrintScale();
+ const pages=[...document.querySelectorAll("#printPages .print-page")];
+ if(!pages.length)throw new Error("NO_RECORD_PAGES");
+ const {jsPDF}=window.jspdf;
+ const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+ pdf.setProperties({title:`سجل درجات ${recordId||""}`,subject:"سجل درجات الإدارة",author:"مدرسة التحدي الأهلية المختلطة",creator:"منصة التحدي"});
+ const scale=isMobilePDFDevice()?1.45:1.8;
+ for(let i=0;i<pages.length;i++){
+  const canvas=await html2canvas(pages[i],{
+   scale,
+   backgroundColor:"#ffffff",
+   useCORS:true,
+   allowTaint:false,
+   logging:false,
+   width:pages[i].scrollWidth,
+   height:pages[i].scrollHeight,
+   windowWidth:pages[i].scrollWidth,
+   windowHeight:pages[i].scrollHeight,
+   scrollX:0,scrollY:0
+  });
+  if(i>0)pdf.addPage("a4","portrait");
+  const img=canvas.toDataURL("image/jpeg",.94);
+  pdf.addImage(img,"JPEG",0,0,210,297,undefined,"FAST");
+  canvas.width=1;canvas.height=1;
+ }
+ const blob=pdf.output("blob");
+ const blobURL=URL.createObjectURL(blob);
+ sessionStorage.setItem("tahadi_last_public_pdf",blobURL);
+ return blobURL;
+}
+async function openPublicRecordAsPDF(recordId){
+ let badge=document.querySelector(".public-record-badge");
+ if(badge)badge.textContent="جاري تجهيز ملف PDF...";
+ try{
+  const pdfURL=await createPublicRecordPDF(recordId);
+  if(badge)badge.textContent="تم تجهيز ملف PDF";
+  setTimeout(()=>{const w=window.open(pdfURL,"_blank","noopener");if(!w)location.href=pdfURL},80);
+ }catch(error){
+  console.error("PUBLIC_PDF_ERROR",error);
+  if(badge)badge.textContent="السجل جاهز للعرض";
+  const fallback=document.createElement("div");
+  fallback.className="public-record-badge";
+  fallback.style.top="48px";
+  fallback.textContent="السجل ظاهر بالكامل أدناه";
+  document.body.appendChild(fallback);
+  setTimeout(fitPreview,100);
+ }
+}
+
+async function initPublicRecord(publicKey){
+ try{
+  document.body.classList.add("public-view");
+  const snap=await dbGetFresh(`publicRecords/${encodeURIComponent(publicKey)}`);
+  if(!snap){publicError("السجل غير موجود","هذا الرمز لا يحتوي سجلاً منشوراً، أو أنه من إصدار قديم. أنشئ معاينة جديدة للسجل ثم اطبعه من جديد.");return}
+  const ok=await verifyPublicSnapshot(snap,publicKey);
+  if(!ok){publicError("تعذر التحقق من السجل","تعذر التحقق من مفتاح السجل.");return}
+  $("schoolYear").value=snap.schoolYear||"2026-2027";
+  const sel={c:snap.classData||{},room:snap.room||"",subject:snap.subject||{},teacher:snap.teacher||"",manager:snap.manager||"",managerTitle:snap.managerTitle||"مدير",mode:snap.mode||"grades"};
+  const rows=(snap.rows||[]).map(x=>({student:x.student||{},row:{...(x.row||{}),...snap.subject,passGrade:Number(x?.row?.passGrade??snap?.subject?.passGrade??50)}}));
+  const perPage=25,total=Math.max(1,Math.ceil(rows.length/perPage));
+  CURRENT={...sel,rows,generatedAt:snap.createdAt||0,recordId:snap.recordId,fingerprint:snap.fingerprint||"",publicKey:snap.publicKey,public:true};
+  let html="";for(let i=0;i<total;i++)html+=pageHTML(rows.slice(i*perPage,(i+1)*perPage),i,total,sel,i*perPage,snap.recordId,rows.length,snap.fingerprint||"",snap.publicKey);
+  $("printPages").innerHTML=html;$("emptyPreview").classList.add("hidden");
+  $("loader").classList.add("hidden");$("app").classList.remove("hidden");
+  const badge=document.createElement("div");badge.className="public-record-badge";badge.textContent="سجل درجات موثق — يفتح PDF بدون تسجيل دخول";document.body.appendChild(badge);
+  renderBarcodes();
+  const wantsPDF=String(new URLSearchParams(location.search).get("pdf")||"")==="1";
+  setTimeout(async()=>{
+   fitPreview();
+   if(wantsPDF)await openPublicRecordAsPDF(snap.recordId);
+  },120)
+ }catch(error){
+  console.error("PUBLIC_RECORD_ERROR",error);
+  publicError("تعذر فتح السجل","تعذر تحميل السجل الآن. تأكد من الاتصال بالإنترنت وحاول مرة أخرى.")
+ }
+}
+
+async function buildPreview(){
+ const btn=$("previewBtn");btn.disabled=true;toast("جاري تجهيز السجل...");
+ try{
+  savePrefs();const sel=currentSelection(),rows=await prepareRows(sel),perPage=25,total=Math.ceil(rows.length/perPage),recordId=makeRecordId(sel.c,sel.room,sel.subject),fingerprint=await sha256Hex(JSON.stringify({recordId,classId:sel.c.id,room:sel.room,subjectId:sel.subject.id,students:rows.map(x=>[x.student.code,x.student.name,x.row.term1,x.row.midyear,x.row.term2,x.row.annual,x.row.finalExam,x.row.final,x.row.secondRound,x.row.secondFinal]),teacher:sel.teacher,manager:sel.manager,year:$("schoolYear").value.trim()}));
+  toast("جاري نشر نسخة التحقق الخاصة بالـ QR...");
+  const published=sel.mode==="grades"?await publishRecordSnapshot(sel,rows,recordId,fingerprint):{publicKey:"",snapshot:null};
+  CURRENT={...sel,rows,generatedAt:Date.now(),recordId,fingerprint,publicKey:published.publicKey};
+  let html="";for(let i=0;i<total;i++)html+=pageHTML(rows.slice(i*perPage,(i+1)*perPage),i,total,sel,i*perPage,recordId,rows.length,fingerprint,published.publicKey);
+  $("printPages").innerHTML=html;$("emptyPreview").classList.add("hidden");renderBarcodes();
+  $("previewInfo").textContent=`${rows.length} طالب/ة — ${total} صفحة A4 — ${sel.mode==="grades"?"بدرجات":"بدون درجات"}`;
+  $("printBtn").disabled=false;toast("السجل جاهز للطباعة.","ok");setTimeout(fitPreview,60)
+ }catch(error){console.error(error);toast(error.message||"تعذر إنشاء السجل","error");$("printBtn").disabled=true}
+ finally{btn.disabled=false}
+}
+async function waitPrintAssets(){const imgs=[...document.querySelectorAll("#printPages img")];await Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve})));await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)))}
+async function printRecord(){
+ if(!CURRENT.rows?.length){toast("أنشئ معاينة السجل أولاً","error");return}
+ savePrefs();resetPrintScale();$("printBtn").disabled=true;
+ try{toast("جاري تجهيز الطباعة...");await waitPrintAssets();window.print()}finally{$("printBtn").disabled=false;setTimeout(fitPreview,250)}
+}
+
+$("genderSelect").addEventListener("change",onGenderChange);
+$("stageSelect").addEventListener("change",buildClassChoices);
+$("classSelect").addEventListener("change",onClassChoiceChange);
+$("previewBtn").addEventListener("click",buildPreview);
+$("printBtn").addEventListener("click",printRecord);
+window.addEventListener("resize",()=>setTimeout(fitPreview,80));
+window.addEventListener("afterprint",()=>setTimeout(fitPreview,100));
+
+async function init(){
+ try{
+  const publicKey=String(new URLSearchParams(location.search).get("record")||"").trim();
+  if(publicKey){await initPublicRecord(publicKey);return}
+  if(!loadSession()){location.replace("index.html");return}
+  ADMIN_USER=await dbGetFresh(`users/${encodeURIComponent(SESSION.code)}`);
+  if(!ADMIN_USER||!isAdminRole(ADMIN_USER)){logout();return}
+  const[classes,students]=await Promise.all([dbGetFresh("classes"),dbGetFresh("students")]);
+  DATA.classes=classes||{};Object.entries(DATA.classes).forEach(([id,c])=>{if(c&&!c.id)c.id=id});
+  DATA.students=students||{};Object.entries(DATA.students).forEach(([code,x])=>{if(x&&!x.code)x.code=code});
+  loadPrefs();resetClassAndSubject();$("loader").classList.add("hidden");$("app").classList.remove("hidden");toast("ابدأ باختيار الجنس، ثم المرحلة، ثم الصف والقاعة والمادة.")
+ }catch(error){console.error("INIT_ERROR",error);$("loader").innerHTML='<div class="loader-card"><p style="color:#c62828">تعذر تحميل صفحة السجلات</p></div>'}
+}
+window.addEventListener("load",init);
+</script>
+</body>
+</html>

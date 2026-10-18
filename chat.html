@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#075fcf">
+<title>دردشات الصفوف | مدرسة التحدي الأهلية المختلطة</title>
+<style>
+:root{
+ --p:#075fcf;--pd:#06469c;--ps:#edf5ff;--g:#078b50;--gs:#ecfdf3;
+ --r:#d92d20;--rs:#fff1f0;--o:#dc6803;--os:#fff6ed;--v:#6938ef;--vs:#f4f3ff;
+ --bg:#f4f7fb;--text:#172033;--muted:#667085;--border:#e4e7ec;--white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{min-height:100vh;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+.hidden{display:none!important}
+
+.loading{position:fixed;inset:0;z-index:50000;display:flex;align-items:center;justify-content:center;background:#fff}
+.loader-box{text-align:center}
+.loader{width:46px;height:46px;margin:auto;border:4px solid #e9edf3;border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}
+.loader-box p{margin-top:10px;color:var(--muted);font-size:10px;font-weight:900}
+
+.header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.header-in{width:min(1450px,100%);min-height:68px;margin:auto;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}
+.brand img{width:46px;height:46px;object-fit:contain;flex:none}
+.brand h1{font-size:14px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.brand p{margin-top:3px;color:var(--p);font-size:8px;font-weight:900}
+.header-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.btn{min-height:40px;padding:0 13px;border:0;border-radius:10px;font-size:9px;font-weight:900;transition:.15s}
+.btn:active{transform:scale(.98)}
+.btn:disabled{opacity:.55;cursor:default}
+.btn-p{color:#fff;background:var(--p)}
+.btn-soft{color:var(--p);background:var(--ps)}
+.btn-r{color:var(--r);background:var(--rs)}
+.btn-g{color:#fff;background:var(--g)}
+
+.main{width:min(1450px,100%);margin:auto;padding:15px 13px 38px}
+.hero{position:relative;overflow:hidden;margin-bottom:14px;padding:18px;border-radius:20px;color:#fff;background:linear-gradient(135deg,#0870e8,#064594);box-shadow:0 14px 35px rgba(7,95,207,.14)}
+.hero:after{content:"";position:absolute;width:210px;height:210px;left:-80px;top:-125px;border-radius:50%;background:rgba(255,255,255,.08)}
+.hero h2,.hero p{position:relative;z-index:2}
+.hero h2{font-size:19px}
+.hero p{margin-top:6px;font-size:10px;line-height:1.7;opacity:.92}
+
+.panel{overflow:hidden;border:1px solid var(--border);border-radius:17px;background:#fff;box-shadow:0 10px 30px rgba(16,24,40,.055)}
+.panel-head{min-height:62px;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border)}
+.panel-head h3{font-size:14px;font-weight:900}
+.panel-head p{margin-top:3px;color:var(--muted);font-size:8.5px;line-height:1.6}
+.panel-body{padding:14px}
+
+.toolbar{display:grid;grid-template-columns:minmax(220px,1fr) 170px;gap:7px;margin-bottom:12px}
+.toolbar input,.toolbar select{width:100%;height:43px;padding:0 11px;border:1.5px solid var(--border);border-radius:10px;background:#fff;outline:none;color:var(--text)}
+.toolbar input:focus,.toolbar select:focus{border-color:var(--p);box-shadow:0 0 0 4px rgba(7,95,207,.06)}
+
+.classes{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:9px}
+.class-card{position:relative;min-height:145px;padding:14px;border:1px solid var(--border);border-radius:15px;background:linear-gradient(145deg,#fff,#f8fbff);transition:.18s}
+.class-card:hover{transform:translateY(-2px);border-color:#a9cdf8}
+.class-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.class-title{font-size:14px;font-weight:900;line-height:1.6}
+.badge{display:inline-flex;align-items:center;justify-content:center;min-height:24px;padding:0 8px;border-radius:20px;font-size:8px;font-weight:900}
+.blue{color:var(--p);background:var(--ps)}
+.purple{color:var(--v);background:var(--vs)}
+.green{color:var(--g);background:var(--gs)}
+.orange{color:var(--o);background:var(--os)}
+.class-meta{margin-top:13px;display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.meta-box{padding:8px;border:1px solid var(--border);border-radius:9px;background:#fff}
+.meta-box small{display:block;color:var(--muted);font-size:7px}
+.meta-box strong{display:block;margin-top:3px;font-size:10px}
+.class-open{width:100%;margin-top:10px}
+.empty{padding:30px 14px;text-align:center;color:var(--muted);font-size:10px;line-height:1.8}
+
+.modal{position:fixed;inset:0;z-index:6000;display:none;align-items:center;justify-content:center;padding:13px;background:rgba(16,24,40,.52);backdrop-filter:blur(4px)}
+.modal.show{display:flex}
+.modal-card{width:min(560px,100%);max-height:90vh;overflow:auto;padding:17px;border-radius:17px;background:#fff;box-shadow:0 25px 70px rgba(0,0,0,.2)}
+.modal-head{display:flex;align-items:flex-start;justify-content:space-between;gap:9px;margin-bottom:13px}
+.modal-head h3{font-size:15px}
+.modal-head p{margin-top:3px;color:var(--muted);font-size:8px}
+.close{width:34px;height:34px;border:0;border-radius:9px;color:var(--r);background:var(--rs);font-weight:900}
+.rooms{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.room-btn{min-height:64px;padding:9px;border:1px solid var(--border);border-radius:11px;background:#fff;text-align:right}
+.room-btn strong{display:block;font-size:11px}
+.room-btn small{display:block;margin-top:5px;color:var(--muted);font-size:7px}
+.room-btn:hover{border-color:#a9cdf8;background:#f8fbff}
+
+.chat-shell{display:grid;grid-template-rows:auto minmax(430px,calc(100vh - 270px)) auto;overflow:hidden;border:1px solid var(--border);border-radius:17px;background:#fff;box-shadow:0 10px 30px rgba(16,24,40,.055)}
+.chat-head{padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border);background:#fff}
+.chat-head-main{display:flex;align-items:center;gap:9px;min-width:0}
+.chat-icon{width:42px;height:42px;display:flex;align-items:center;justify-content:center;flex:none;border-radius:12px;color:#fff;background:linear-gradient(135deg,#075fcf,#06469c);font-size:18px;font-weight:900}
+.chat-head h3{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chat-head p{margin-top:3px;color:var(--muted);font-size:8px}
+.chat-state{display:flex;align-items:center;gap:5px;color:var(--g);font-size:8px;font-weight:900;white-space:nowrap}
+.chat-state-dot{width:7px;height:7px;border-radius:50%;background:var(--g)}
+
+.messages{min-height:430px;overflow-y:auto;padding:18px 14px;background:linear-gradient(#f8fafc,#f3f7fb)}
+.day-label{width:max-content;margin:8px auto 14px;padding:5px 10px;border-radius:15px;color:#667085;background:#e8edf3;font-size:7.5px;font-weight:900}
+.msg-row{display:flex;margin-bottom:9px}
+.msg-row.admin{justify-content:flex-start}
+.msg-row.other{justify-content:flex-end}
+.msg{max-width:min(78%,650px);padding:9px 11px;border-radius:13px;box-shadow:0 2px 8px rgba(16,24,40,.04)}
+.msg-row.admin .msg{border-bottom-left-radius:4px;color:#fff;background:var(--p)}
+.msg-row.other .msg{border-bottom-right-radius:4px;border:1px solid var(--border);background:#fff}
+.msg-name{margin-bottom:4px;font-size:7.5px;font-weight:900;opacity:.9}
+.msg-text{font-size:10px;line-height:1.85;white-space:pre-wrap;overflow-wrap:anywhere}
+.msg-meta{margin-top:5px;font-size:6.8px;opacity:.75;direction:ltr;text-align:left}
+.no-messages{height:100%;min-height:380px;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--muted);font-size:10px;line-height:1.9}
+
+.composer{padding:10px;border-top:1px solid var(--border);background:#fff}
+.composer-inner{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:end}
+.composer textarea{width:100%;min-height:46px;max-height:130px;padding:12px;border:1.5px solid var(--border);border-radius:12px;outline:none;resize:none;color:var(--text);line-height:1.6}
+.composer textarea:focus{border-color:var(--p);box-shadow:0 0 0 4px rgba(7,95,207,.06)}
+.send{min-width:78px;height:46px;border:0;border-radius:12px;color:#fff;background:var(--p);font-size:9px;font-weight:900}
+.send:disabled{opacity:.55}
+.composer-note{margin-top:5px;color:var(--muted);font-size:7px}
+
+.toast{position:fixed;z-index:30000;left:50%;bottom:23px;transform:translate(-50%,30px);min-width:210px;max-width:calc(100% - 24px);padding:10px 14px;border-radius:10px;background:#101828;color:#fff;text-align:center;font-size:9px;font-weight:800;opacity:0;visibility:hidden;transition:.2s}
+.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+
+@media(max-width:680px){
+ .header-in{padding:7px 8px}.brand img{width:39px;height:39px}.brand h1{font-size:10px}.brand p{font-size:7px}
+ .header-actions .btn{min-height:36px;padding:0 9px;font-size:8px}
+ .main{padding:10px 8px 30px}.hero{padding:15px}.hero h2{font-size:16px}
+ .toolbar{grid-template-columns:1fr}.classes{grid-template-columns:1fr 1fr}.class-card{min-height:135px;padding:11px}.class-title{font-size:11px}
+ .rooms{grid-template-columns:1fr}
+ .chat-shell{grid-template-rows:auto minmax(400px,calc(100vh - 195px)) auto;border-radius:12px}
+ .chat-head{padding:9px}.chat-icon{width:38px;height:38px}.chat-head h3{font-size:10px}.chat-state{font-size:7px}
+ .messages{min-height:400px;padding:13px 8px}.msg{max-width:88%;padding:8px 9px}.msg-text{font-size:10px}
+ .composer{padding:8px}.composer-inner{grid-template-columns:minmax(0,1fr) 67px}.send{min-width:67px;padding:0 5px}
+}
+@media(max-width:420px){.classes{grid-template-columns:1fr}.class-meta{grid-template-columns:1fr 1fr}}
+@keyframes spin{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+
+<div id="loading" class="loading">
+ <div class="loader-box">
+  <div class="loader"></div>
+  <p id="loadingText">جاري تحميل الدردشات...</p>
+ </div>
+</div>
+
+<header class="header">
+ <div class="header-in">
+  <div class="brand">
+   <img src="logo.png" alt="شعار المدرسة">
+   <div>
+    <h1>مدرسة التحدي الأهلية المختلطة</h1>
+    <p>قسم الحوكمة - دردشات الصفوف</p>
+   </div>
+  </div>
+  <div class="header-actions">
+   <button id="backToClassesBtn" class="btn btn-soft hidden" type="button">الصفوف</button>
+   <button class="btn btn-soft" type="button" onclick="location.href='add.html'">لوحة الإدارة</button>
+   <button class="btn btn-r" type="button" onclick="logout()">خروج</button>
+  </div>
+ </div>
+</header>
+
+<main class="main">
+ <section id="classesView">
+  <section class="hero">
+   <h2 id="welcome">دردشات الصفوف</h2>
+   <p>اختر الصف ثم القاعة لقراءة رسائل الطلاب والرد عليهم باسم إدارة المدرسة.</p>
+  </section>
+
+  <section class="panel">
+   <div class="panel-head">
+    <div>
+     <h3>الصفوف</h3>
+     <p>الدردشة مفصولة حسب الصف والقاعة والجنس.</p>
+    </div>
+    <span id="classesCount" class="badge blue">0 صف</span>
+   </div>
+   <div class="panel-body">
+    <div class="toolbar">
+     <input id="searchInput" type="search" placeholder="بحث باسم الصف...">
+     <select id="genderFilter">
+      <option value="">الكل: ذكور وإناث</option>
+      <option value="male">ذكور</option>
+      <option value="female">إناث</option>
+     </select>
+    </div>
+    <div id="classesGrid" class="classes"></div>
+    <div id="classesEmpty" class="empty hidden">لا توجد صفوف مطابقة.</div>
+   </div>
+  </section>
+ </section>
+
+ <section id="chatView" class="hidden">
+  <div class="chat-shell">
+   <div class="chat-head">
+    <div class="chat-head-main">
+     <div class="chat-icon">ت</div>
+     <div style="min-width:0">
+      <h3 id="chatTitle">—</h3>
+      <p id="chatSubtitle">—</p>
+     </div>
+    </div>
+    <div class="chat-state"><span class="chat-state-dot"></span><span id="chatStateText">متصل</span></div>
+   </div>
+
+   <div id="messages" class="messages">
+    <div class="no-messages">اختر صفاً وقاعة لعرض الرسائل.</div>
+   </div>
+
+   <div class="composer">
+    <div class="composer-inner">
+     <textarea id="messageInput" placeholder="اكتب رسالة إلى الصف..." maxlength="2000"></textarea>
+     <button id="sendBtn" class="send" type="button">إرسال</button>
+    </div>
+    <div class="composer-note">Enter للإرسال — Shift + Enter لسطر جديد.</div>
+   </div>
+  </div>
+ </section>
+</main>
+
+<div id="roomsModal" class="modal">
+ <div class="modal-card">
+  <div class="modal-head">
+   <div>
+    <h3 id="roomsTitle">اختيار القاعة</h3>
+    <p>اختر القاعة التي تريد فتح دردشتها.</p>
+   </div>
+   <button class="close" type="button" onclick="closeRoomsModal()">×</button>
+  </div>
+  <div id="roomsList" class="rooms"></div>
+  <div id="roomsEmpty" class="empty hidden">لا توجد قاعات مسجلة لهذا الصف.</div>
+ </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
+const CHAT_ROOT="chats";
+
+const $=id=>document.getElementById(id);
+const norm=v=>String(v||"").trim().toLowerCase();
+const esc=v=>String(v??"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
+
+let DATA={classes:{},students:{}};
+let adminUser=null;
+let selectedClass=null;
+let currentRoom=null;
+let pollTimer=null;
+let lastRenderedSignature="";
+let toastTimer=null;
+let firstChatLoad=true;
+
+function session(){
+ try{return JSON.parse(sessionStorage.getItem("tahadi_session")||"{}");}
+ catch{return {};}
+}
+
+function adminCode(){return session().code||"";}
+
+async function req(path,method="GET",data=null){
+ const options={method,cache:"no-store"};
+ if(data!==null){
+  options.headers={"Content-Type":"application/json"};
+  options.body=JSON.stringify(data);
+ }
+ const response=await fetch(`${DB}/${path}.json`,options);
+ if(!response.ok)throw new Error(`${method}_${path}_${response.status}`);
+ return method==="DELETE"?true:response.json();
+}
+const dbGet=path=>req(path);
+const dbPut=(path,data)=>req(path,"PUT",data);
+const dbPatch=(path,data)=>req(path,"PATCH",data);
+
+function toast(text){
+ const el=$("toast");
+ el.textContent=text;
+ el.classList.add("show");
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.classList.remove("show"),2300);
+}
+
+function genderText(g){return g==="female"?"إناث":"ذكور";}
+
+function normalizeRoomPart(value){
+ return String(value??"").trim()
+  .replace(/[.#$\[\]\/]/g,"_")
+  .replace(/\s+/g,"_");
+}
+
+function normalizeGenderValue(value){
+ const g=norm(value);
+ if(["female","f","انثى","أنثى","بنت","بنات"].includes(g))return"female";
+ return"male";
+}
+
+function makeRoomId(classId,roomNumber,gender){
+ const classPart=normalizeRoomPart(classId||"no_class");
+ const roomPart=normalizeRoomPart(roomNumber||"no_room");
+ return `${classPart}__room_${roomPart}__${normalizeGenderValue(gender)}`;
+}
+
+function formatTime(value){
+ const n=Number(value||0);
+ if(!n)return"";
+ const d=new Date(n);
+ if(Number.isNaN(d.getTime()))return"";
+ return d.toLocaleTimeString("ar-IQ",{hour:"2-digit",minute:"2-digit"});
+}
+
+function dateKey(value){
+ const d=new Date(Number(value||Date.now()));
+ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+}
+
+function dateLabel(key){
+ const today=new Date();
+ const todayKey=dateKey(today.getTime());
+ const y=new Date(today);y.setDate(y.getDate()-1);
+ const yKey=dateKey(y.getTime());
+ if(key===todayKey)return"اليوم";
+ if(key===yKey)return"أمس";
+ const p=key.split("-");
+ return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:key;
+}
+
+async function verifyAdmin(){
+ const s=session();
+ if(!s.code){location.replace("index.html");return false;}
+ const user=await dbGet(`users/${encodeURIComponent(s.code)}`);
+ if(!user||!["admin","administrator","add"].includes(norm(user.role))||user.active===false){
+  sessionStorage.clear();
+  location.replace("index.html");
+  return false;
+ }
+ adminUser={...user,code:s.code};
+ if(user.name)$("welcome").textContent=`دردشات الصفوف - ${user.name}`;
+ return true;
+}
+
+function logout(){
+ sessionStorage.clear();
+ location.replace("index.html");
+}
+
+async function loadBase(){
+ const [classes,students]=await Promise.all([
+  dbGet("classes"),
+  dbGet("students")
+ ]);
+ DATA.classes=classes||{};
+ DATA.students=students||{};
+ renderClasses();
+}
+
+function classStudents(classId){
+ return Object.values(DATA.students).filter(s=>s&&s.classId===classId&&s.hidden!==true);
+}
+
+function classRooms(c){
+ const map=new Map();
+ classStudents(c.id).forEach(s=>{
+  const n=Number(s.roomNumber||0);
+  if(!n)return;
+  if(!map.has(n))map.set(n,0);
+  map.set(n,map.get(n)+1);
+ });
+ return [...map.entries()]
+  .map(([roomNumber,count])=>({roomNumber,count}))
+  .sort((a,b)=>a.roomNumber-b.roomNumber);
+}
+
+function filteredClasses(){
+ const q=norm($("searchInput").value);
+ const g=$("genderFilter").value;
+ return Object.values(DATA.classes)
+  .filter(c=>c&&c.active!==false)
+  .filter(c=>!g||normalizeGenderValue(c.gender)===g)
+  .filter(c=>!q||norm(c.name).includes(q))
+  .sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar"));
+}
+
+function renderClasses(){
+ const rows=filteredClasses();
+ $("classesCount").textContent=`${rows.length} صف`;
+ $("classesEmpty").classList.toggle("hidden",rows.length>0);
+ $("classesGrid").innerHTML=rows.map(c=>{
+  const rooms=classRooms(c);
+  const studentCount=classStudents(c.id).length;
+  return `
+   <article class="class-card">
+    <div class="class-top">
+     <div class="class-title">${esc(c.name||"بدون اسم")}</div>
+     <span class="badge ${normalizeGenderValue(c.gender)==="female"?"purple":"blue"}">${genderText(normalizeGenderValue(c.gender))}</span>
+    </div>
+    <div class="class-meta">
+     <div class="meta-box"><small>الطلاب</small><strong>${studentCount}</strong></div>
+     <div class="meta-box"><small>القاعات</small><strong>${rooms.length}</strong></div>
+    </div>
+    <button class="btn btn-p class-open" type="button" onclick="chooseClass('${jsSafe(c.id)}')">فتح الدردشة</button>
+   </article>
+  `;
+ }).join("");
+}
+
+function jsSafe(value){
+ return String(value??"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/\r/g,"\\r").replace(/\n/g,"\\n");
+}
+
+function chooseClass(id){
+ const c=DATA.classes[id];
+ if(!c)return;
+ selectedClass=c;
+ const rooms=classRooms(c);
+ $("roomsTitle").textContent=`${c.name} - ${genderText(normalizeGenderValue(c.gender))}`;
+ $("roomsEmpty").classList.toggle("hidden",rooms.length>0);
+ $("roomsList").innerHTML=rooms.map(r=>`
+  <button class="room-btn" type="button" onclick="openRoom(${Number(r.roomNumber)})">
+   <strong>القاعة ${Number(r.roomNumber)}</strong>
+   <small>${Number(r.count)} طالب مسجل</small>
+  </button>
+ `).join("");
+ $("roomsModal").classList.add("show");
+}
+
+function closeRoomsModal(){
+ $("roomsModal").classList.remove("show");
+}
+
+function openRoom(roomNumber){
+ if(!selectedClass)return;
+ closeRoomsModal();
+ const gender=normalizeGenderValue(selectedClass.gender);
+ const roomId=makeRoomId(selectedClass.id,roomNumber,gender);
+ const count=classStudents(selectedClass.id).filter(s=>Number(s.roomNumber)===Number(roomNumber)).length;
+ currentRoom={
+  classId:selectedClass.id,
+  className:selectedClass.name||"",
+  roomNumber:Number(roomNumber),
+  gender,
+  roomId,
+  studentCount:count
+ };
+ $("chatTitle").textContent=`${currentRoom.className} - القاعة ${currentRoom.roomNumber}`;
+ $("chatSubtitle").textContent=`${genderText(gender)} • ${count} طالب`;
+ $("classesView").classList.add("hidden");
+ $("chatView").classList.remove("hidden");
+ $("backToClassesBtn").classList.remove("hidden");
+ $("messageInput").value="";
+ lastRenderedSignature="";
+ firstChatLoad=true;
+ stopPolling();
+ loadMessages(true);
+ pollTimer=setInterval(()=>loadMessages(false),2000);
+ setTimeout(()=>$("messageInput").focus(),120);
+}
+
+function backToClasses(){
+ stopPolling();
+ currentRoom=null;
+ $("chatView").classList.add("hidden");
+ $("classesView").classList.remove("hidden");
+ $("backToClassesBtn").classList.add("hidden");
+}
+
+function stopPolling(){
+ if(pollTimer){clearInterval(pollTimer);pollTimer=null;}
+}
+
+function messageArray(data){
+ if(!data||typeof data!=="object")return[];
+ return Object.entries(data).map(([id,m])=>({id,...(m||{})})).sort((a,b)=>{
+  const ta=Number(a.createdAt??a.timestamp??a.time??0);
+  const tb=Number(b.createdAt??b.timestamp??b.time??0);
+  return ta-tb;
+ });
+}
+
+function isAdminMessage(m){
+ const role=norm(m.senderRole||m.role);
+ const code=String(m.senderCode||m.code||"");
+ return ["admin","administrator","add","management"].includes(role)||code===adminCode();
+}
+
+function messageText(m){return String(m.text??m.message??m.body??"");}
+function senderName(m){
+ return String(m.senderName||m.name||m.studentName||(isAdminMessage(m)?"إدارة المدرسة":"طالب"));
+}
+function messageTime(m){return Number(m.createdAt??m.timestamp??m.time??0)||0;}
+
+async function loadMessages(forceScroll=false){
+ if(!currentRoom)return;
+ try{
+  $("chatStateText").textContent="متصل";
+  const data=await dbGet(`${CHAT_ROOT}/${currentRoom.roomId}/messages`);
+  if(!currentRoom)return;
+  const rows=messageArray(data);
+  const signature=rows.map(m=>`${m.id}:${messageTime(m)}:${messageText(m)}`).join("|");
+  if(signature===lastRenderedSignature&&!forceScroll)return;
+  lastRenderedSignature=signature;
+  renderMessages(rows,forceScroll||firstChatLoad);
+  firstChatLoad=false;
+ }catch(error){
+  console.error(error);
+  $("chatStateText").textContent="تعذر التحديث";
+ }
+}
+
+function renderMessages(rows,forceScroll){
+ const box=$("messages");
+ const nearBottom=box.scrollHeight-box.scrollTop-box.clientHeight<120;
+ if(!rows.length){
+  box.innerHTML=`<div class="no-messages">لا توجد رسائل في هذه الدردشة حتى الآن.<br>اكتب أول رسالة من إدارة المدرسة.</div>`;
+  return;
+ }
+ let html="";
+ let lastDay="";
+ rows.forEach(m=>{
+  const time=messageTime(m)||Date.now();
+  const day=dateKey(time);
+  if(day!==lastDay){
+   html+=`<div class="day-label">${esc(dateLabel(day))}</div>`;
+   lastDay=day;
+  }
+  const admin=isAdminMessage(m);
+  html+=`
+   <div class="msg-row ${admin?"admin":"other"}">
+    <div class="msg">
+     <div class="msg-name">${esc(senderName(m))}</div>
+     <div class="msg-text">${esc(messageText(m))}</div>
+     <div class="msg-meta">${esc(formatTime(time))}</div>
+    </div>
+   </div>
+  `;
+ });
+ box.innerHTML=html;
+ if(forceScroll||nearBottom)box.scrollTop=box.scrollHeight;
+}
+
+function makeMessageId(){
+ return `MSG_${Date.now()}_${Math.random().toString(36).slice(2,9)}`;
+}
+
+async function sendMessage(){
+ if(!currentRoom)return;
+ const input=$("messageInput");
+ const text=input.value.trim();
+ if(!text){toast("اكتب الرسالة أولاً");return;}
+ const button=$("sendBtn");
+ button.disabled=true;
+ button.textContent="...";
+ const createdAt=Date.now();
+ const id=makeMessageId();
+ const row={
+  id,
+  text,
+  message:text,
+  body:text,
+  senderCode:adminCode(),
+  senderName:adminUser?.name||"إدارة المدرسة",
+  senderRole:"admin",
+  role:"admin",
+  classId:currentRoom.classId,
+  className:currentRoom.className,
+  roomNumber:currentRoom.roomNumber,
+  gender:currentRoom.gender,
+  roomId:currentRoom.roomId,
+  createdAt,
+  timestamp:createdAt,
+  read:false
+ };
+ try{
+  await Promise.all([
+   dbPut(`${CHAT_ROOT}/${currentRoom.roomId}/messages/${id}`,row),
+   dbPatch(`${CHAT_ROOT}/${currentRoom.roomId}/meta`,{
+    roomId:currentRoom.roomId,
+    classId:currentRoom.classId,
+    className:currentRoom.className,
+    roomNumber:currentRoom.roomNumber,
+    gender:currentRoom.gender,
+    updatedAt:createdAt,
+    lastMessage:text,
+    lastSenderName:row.senderName,
+    lastSenderRole:"admin"
+   })
+  ]);
+  input.value="";
+  autoResizeInput();
+  await loadMessages(true);
+ }catch(error){
+  console.error(error);
+  toast("تعذر إرسال الرسالة");
+ }finally{
+  button.disabled=false;
+  button.textContent="إرسال";
+  input.focus();
+ }
+}
+
+function autoResizeInput(){
+ const el=$("messageInput");
+ el.style.height="46px";
+ el.style.height=Math.min(el.scrollHeight,130)+"px";
+}
+
+$("searchInput").addEventListener("input",renderClasses);
+$("genderFilter").addEventListener("change",renderClasses);
+$("sendBtn").addEventListener("click",sendMessage);
+$("backToClassesBtn").addEventListener("click",backToClasses);
+$("messageInput").addEventListener("input",autoResizeInput);
+$("messageInput").addEventListener("keydown",event=>{
+ if(event.key==="Enter"&&!event.shiftKey){
+  event.preventDefault();
+  sendMessage();
+ }
+});
+$("roomsModal").addEventListener("click",event=>{
+ if(event.target===$("roomsModal"))closeRoomsModal();
+});
+window.addEventListener("beforeunload",stopPolling);
+
+window.addEventListener("load",async()=>{
+ try{
+  $("loadingText").textContent="جاري التحقق من الحساب...";
+  const allowed=await verifyAdmin();
+  if(!allowed)return;
+  $("loadingText").textContent="جاري تحميل الصفوف...";
+  await loadBase();
+ }catch(error){
+  console.error(error);
+  toast("تعذر تحميل صفحة الدردشات");
+ }finally{
+  $("loading").classList.add("hidden");
+ }
+});
+</script>
+</body>
+</html>

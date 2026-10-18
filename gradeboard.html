@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover">
+<meta name="theme-color" content="#075fcf">
+<title>بورد الدرجات | مدرسة التحدي الأهلية المختلطة</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+:root{
+ --p:#075fcf;--pd:#06469c;--ps:#edf5ff;
+ --pink:#d84f94;--pinks:#fff0f7;--pinkb:#eaa1c7;
+ --g:#078b50;--gs:#ecfdf3;--r:#d92d20;--rs:#fff1f0;
+ --o:#dc6803;--os:#fff6ed;--v:#6938ef;--vs:#f4f3ff;
+ --bg:#f4f7fb;--text:#172033;--muted:#667085;--border:#e4e7ec;
+ --shadow:0 12px 32px rgba(16,24,40,.07);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{min-height:100dvh;background:var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;overflow-x:hidden}
+button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.loading{position:fixed;inset:0;z-index:99999;display:flex;align-items:center;justify-content:center;background:#fff}
+.loader-wrap{text-align:center}.loader{width:48px;height:48px;margin:auto;border:4px solid #e8edf4;border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}.loader-wrap p{margin-top:11px;color:var(--muted);font-size:9px;font-weight:900}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+.header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.97);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.header-in{width:min(1800px,100%);min-height:70px;margin:auto;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.brand{display:flex;align-items:center;gap:10px;min-width:0}.brand img{width:48px;height:48px;object-fit:contain}
+.brand h1{font-size:15px;font-weight:900;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.brand p{margin-top:3px;color:var(--p);font-size:9px;font-weight:900}
+.top-actions{display:flex;gap:7px;flex-wrap:wrap}
+.btn{min-height:39px;padding:0 13px;border:0;border-radius:10px;font-size:9px;font-weight:900;transition:.15s}
+.btn:active{transform:scale(.98)}.btn:disabled{opacity:.45;cursor:default}.btn-p{color:#fff;background:var(--p)}.btn-soft{color:var(--p);background:var(--ps)}.btn-g{color:#fff;background:var(--g)}.btn-r{color:#fff;background:var(--r)}.btn-o{color:#fff;background:var(--o)}.btn-v{color:#fff;background:var(--v)}
+
+.main{width:min(1800px,100%);margin:auto;padding:15px 14px 50px}
+.hero{padding:18px;border-radius:18px;color:#fff;background:linear-gradient(135deg,#0870e8,#064594);box-shadow:0 14px 35px rgba(7,95,207,.14);margin-bottom:14px}
+.hero h2{font-size:20px;font-weight:900}.hero p{margin-top:6px;font-size:10px;line-height:1.8;opacity:.94}
+.security-note{margin-top:10px;display:inline-flex;align-items:center;gap:6px;padding:6px 9px;border-radius:999px;background:rgba(255,255,255,.14);font-size:8px;font-weight:900}
+
+.panel{margin-bottom:14px;border:1px solid var(--border);border-radius:17px;background:#fff;box-shadow:var(--shadow);overflow:hidden}
+.panel-head{padding:13px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px;border-bottom:1px solid var(--border)}
+.panel-head h3{font-size:14px;font-weight:900}.panel-head p{margin-top:3px;color:var(--muted);font-size:8.5px;line-height:1.6}.panel-body{padding:14px}
+
+.class-groups{display:grid;grid-template-columns:1fr 1fr;gap:12px;direction:rtl}
+.gender-column{min-width:0;padding:10px;border:1px solid var(--border);border-radius:15px;background:#fff}
+.gender-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;padding:10px 11px;border-radius:11px;font-size:11px;font-weight:900}
+.gender-head.male{color:var(--p);background:var(--ps);border:1px solid #b6d4f7}.gender-head.female{color:var(--pink);background:var(--pinks);border:1px solid var(--pinkb)}
+.class-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px}
+.class-card{position:relative;min-height:100px;padding:12px;border:1.5px solid var(--border);border-radius:14px;cursor:pointer;transition:.15s;text-align:right}
+.class-card.male{background:var(--ps);border-color:#a9cef8}.class-card.female{background:var(--pinks);border-color:var(--pinkb)}
+.class-card:hover{transform:translateY(-2px)}.class-card.male.active{border-color:var(--p);box-shadow:0 0 0 3px rgba(7,95,207,.13)}.class-card.female.active{border-color:var(--pink);box-shadow:0 0 0 3px rgba(216,79,148,.13)}
+.class-card.active:after{content:"✓";position:absolute;left:9px;top:9px;width:25px;height:25px;display:flex;align-items:center;justify-content:center;border-radius:50%;color:#fff;font-size:11px;font-weight:900}
+.class-card.male.active:after{background:var(--p)}.class-card.female.active:after{background:var(--pink)}
+.class-card h4{padding-left:28px;font-size:12px;font-weight:900}.class-card.male h4{color:var(--p)}.class-card.female h4{color:var(--pink)}
+.class-card .meta{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.badge{display:inline-flex;min-height:23px;align-items:center;justify-content:center;padding:0 8px;border-radius:999px;font-size:7px;font-weight:900}
+.blue{color:var(--p);background:#fff}.pink{color:var(--pink);background:#fff}.purple{color:var(--v);background:var(--vs)}.green{color:var(--g);background:var(--gs)}.orange{color:var(--o);background:var(--os)}.red{color:var(--r);background:var(--rs)}
+.class-count{margin-top:9px;color:#475467;font-size:8px;font-weight:900}
+.class-enter-bar{margin-top:11px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px;border:1px solid #dce7f4;border-radius:13px;background:#f8fbff}
+.class-enter-bar strong{font-size:9px}.class-enter-actions{display:flex;gap:7px;flex-wrap:wrap}
+
+.board-toolbar{display:grid;grid-template-columns:minmax(145px,.55fr) minmax(180px,1fr) auto auto auto auto auto;gap:8px;align-items:end}
+.field{display:flex;flex-direction:column;gap:5px}.field label{font-size:8px;font-weight:900;color:#344054}
+.field input,.field select{width:100%;height:42px;padding:0 10px;border:1.5px solid var(--border);border-radius:9px;background:#fff;outline:none}
+.field input:focus,.field select:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(7,95,207,.06)}
+
+.zoom-tools{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-top:10px;padding:8px 9px;border:1px solid var(--border);border-radius:11px;background:#f9fbfd}
+.zoom-tools .btn{min-height:34px;padding:0 10px}.zoom-value{min-width:62px;text-align:center;font-size:8px;font-weight:900;color:#475467}
+
+.rules-panel{margin-top:11px;padding:12px;border:1px solid #dbe6f2;border-radius:13px;background:#f8fbff}
+.rules-head{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}.rules-head strong{font-size:11px;color:var(--p)}
+.rules-head p{margin-top:3px;color:var(--muted);font-size:7.5px;line-height:1.7}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.rule-card{padding:11px;border:1px solid var(--border);border-radius:12px;background:#fff}.rule-card h4{font-size:10px;font-weight:900}.rule-card p{margin-top:3px;color:var(--muted);font-size:7.5px;line-height:1.6}
+.rule-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:9px}
+.rule-enable{display:flex;align-items:center;gap:7px;margin-top:8px;font-size:8px;font-weight:900}.rule-enable input{width:18px;height:18px;accent-color:var(--p)}
+.rules-actions{display:flex;justify-content:flex-end;gap:7px;margin-top:10px}
+
+.summary{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}.summary .badge{min-height:27px;font-size:8px}
+.board-groups{display:grid;gap:14px}
+.board-group{border:1px solid #cfd7e2;border-radius:14px;background:#fff;overflow:hidden}
+.board-group-head{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border)}
+.board-group-head.male{background:#eef6ff}.board-group-head.female{background:#fff1f7}
+.board-group-head h4{font-size:11px;font-weight:900}.board-group-head p{margin-top:3px;color:#667085;font-size:7.5px}.board-group-head .group-average{font-size:8px;font-weight:900}
+.board-viewport{width:100%;overflow:hidden;background:#fff}
+.board-stage{position:relative;transform-origin:top right}
+.grade-board{width:max-content;min-width:0;border-collapse:collapse;direction:rtl;font-family:"Times New Roman",Times,serif;font-size:10px;font-weight:700;transform-origin:top right}
+.grade-board th,.grade-board td{border:1px solid #4b5563;padding:3px 2px;text-align:center;vertical-align:middle;white-space:nowrap;line-height:1.15}
+.grade-board thead th{background:#eaf3ff;color:#172033;font-weight:700}.board-group.female .grade-board thead th{background:#fff0f7}
+.grade-board .seq{min-width:28px;width:28px}.grade-board .name{min-width:155px;max-width:175px;width:165px;text-align:right;background:#fff}
+.grade-board .subject-head{min-width:136px;font-size:9px}.grade-board .subgrade{min-width:34px;width:34px;font-size:7px;white-space:normal}
+.grade-board .average{min-width:48px;width:48px;font-size:8px}.grade-board .status{min-width:78px;width:78px;font-size:7.5px;white-space:normal}
+.grade-board tbody tr:nth-child(even) td{background:#fcfdff}.grade-board tbody tr.editing-row>td{background:#fff7d6!important}.grade-board tbody tr.editing-row>.name{background:#fff1bd!important}
+.grade-board .name.grade-changed{color:#dc6803!important;background:#fff6ed!important}
+.grade-board .name.grade-changed::after{content:"معدل";display:inline-flex;margin-inline-start:5px;padding:2px 5px;border-radius:999px;background:#dc6803;color:#fff;font-family:Tahoma,Arial,sans-serif;font-size:6px;font-weight:900}
+
+.board-grade-input{width:32px;height:24px;padding:0;border:1px solid transparent;border-radius:5px;background:transparent;text-align:center;font-family:"Times New Roman",Times,serif;font-size:9px;font-weight:700;outline:none}
+.board-grade-input:hover{border-color:#b8c4d4;background:#fff}.board-grade-input:focus{border-color:#075fcf;background:#fff;box-shadow:0 0 0 2px rgba(7,95,207,.10)}
+.board-grade-input.dirty{background:#fff6ed;border-color:#f5b782}.readonly-grade{display:inline-flex;min-width:30px;min-height:23px;align-items:center;justify-content:center;font-size:9px}
+.grade-cell.textual{background:#fff6ed!important;color:#9a4c00!important}
+
+/* الفصل الأول/نصف السنة/الفصل الثاني: الراسب أحمر تحته خط */
+.grade-cell.term.fail,.grade-cell.term.fail .readonly-grade,.grade-cell.term.fail .board-grade-input{color:#d00000!important;text-decoration:underline;text-decoration-thickness:1.7px;text-underline-offset:2px}
+/* الدرجة الحرجة في الثلاث فترات: برتقالي وكتابة بيضاء */
+.grade-cell.term.critical{background:#dc6803!important;color:#fff!important;text-decoration:none!important}.grade-cell.term.critical .readonly-grade,.grade-cell.term.critical .board-grade-input{background:#dc6803!important;color:#fff!important;border-color:#dc6803!important;text-decoration:none!important}
+/* السعي الحرج: أسود وأبيض */
+.grade-cell.annual.critical{background:#000!important;color:#fff!important}.grade-cell.annual.critical .readonly-grade{color:#fff!important}
+/* السعي الراسب: أحمر وأبيض */
+.grade-cell.annual.fail{background:#d00000!important;color:#fff!important}.grade-cell.annual.fail .readonly-grade{color:#fff!important}.grade-cell.annual.pass{background:#f2fbf5!important}
+
+.rule-status.good{color:#067647;background:#ecfdf3!important}.rule-status.bad{color:#b42318;background:#fff1f0!important}.rule-status.wait{color:#b54708;background:#fff6ed!important}.rule-status.off{color:#667085;background:#f2f4f7!important}
+.average-cell{font-weight:900;background:#f8fbff!important}
+
+.empty{padding:25px;text-align:center;color:var(--muted);font-size:9px;line-height:1.8}
+.toast{position:fixed;z-index:30000;left:50%;top:max(82px,calc(env(safe-area-inset-top) + 72px));transform:translate(-50%,-14px);width:min(560px,calc(100% - 22px));padding:11px 13px;border:1px solid #dbe7f4;border-radius:13px;background:#fff;color:#26354a;text-align:center;font-size:9px;font-weight:900;box-shadow:0 18px 45px rgba(16,24,40,.18);opacity:0;visibility:hidden;transition:.2s}
+.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}.toast.error{border-color:#f0bcbc;background:#fff6f6;color:#b42318}.toast.success{border-color:#b7e6ca;background:#f4fff8;color:#067647}.toast.warn{border-color:#f8d6aa;background:#fffaf2;color:#b54708}
+
+.pdf-host{position:fixed;left:-14000px;top:0;width:1123px;pointer-events:none;z-index:-99999}
+.board-a4{position:relative;width:1123px;height:794px;padding:16px 18px 15px;overflow:hidden;background:#fff;color:#111;direction:rtl;font-family:"Times New Roman",Times,serif;font-size:7px;font-weight:700}
+.board-a4-head{display:grid;grid-template-columns:52px 1fr 125px;align-items:center;gap:6px;padding-bottom:5px;border-bottom:3px double #111}.board-a4-head img{width:46px;height:46px;object-fit:contain}
+.board-a4-title{text-align:center}.board-a4-title h2{font-size:14px}.board-a4-title h3{margin-top:2px;font-size:11px}.board-a4-title p{margin-top:2px;font-size:8px}.board-a4-meta{text-align:left;font-size:7px;line-height:1.35}
+.board-a4-rule{margin:4px 0;padding:3px 5px;border:1px solid #555;text-align:center;font-size:7px}
+.board-a4-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:var(--pdfFont,6.5px)}.board-a4-table th,.board-a4-table td{border:1px solid #222;padding:1px;text-align:center;vertical-align:middle;overflow:hidden;white-space:normal;line-height:1.05}
+.board-a4-table thead th{background:#eef3f8;font-size:var(--pdfHeadFont,6px)}.board-a4-table tbody td{height:var(--pdfRowH,14px);font-size:var(--pdfFont,6.5px)}
+.board-a4-table .a4-seq{width:2.5%}.board-a4-table .a4-name{width:11%;text-align:right;padding-right:3px;font-size:var(--pdfNameFont,7px)}.board-a4-table .a4-status{width:6.5%;font-size:var(--pdfHeadFont,6px)}
+.board-a4-table .subject-title{font-size:var(--pdfSubjectFont,6px);line-height:1}.board-a4-table .small-head{font-size:var(--pdfHeadFont,5.5px);line-height:1}
+.board-a4-table .pdf-grade.term.fail{color:#d00000;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:1px}
+.board-a4-table .pdf-grade.term.critical{background:#dc6803;color:#fff;text-decoration:none}.board-a4-table .pdf-grade.annual.critical{background:#000;color:#fff}.board-a4-table .pdf-grade.annual.fail{background:#d00000;color:#fff}
+.board-a4-table .pdf-status.good{background:#ecfdf3}.board-a4-table .pdf-status.bad{background:#fff1f0;color:#b42318}.board-a4-table .pdf-status.wait{background:#fff6ed;color:#b54708}.board-a4-table .pdf-status.off{background:#f2f4f7;color:#667085}
+.board-a4-foot{position:absolute;right:18px;left:18px;bottom:5px;display:flex;align-items:center;justify-content:space-between;padding-top:3px;border-top:1px solid #777;font-size:6px}
+
+@media(max-width:1050px){
+ .board-toolbar{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:850px){
+ .class-groups{grid-template-columns:1fr 1fr;gap:6px}.gender-column{padding:6px}.class-list{grid-template-columns:1fr}
+ .main{padding:10px 7px 35px}.header-in{padding:7px 8px}.brand img{width:39px;height:39px}.brand h1{font-size:11px}.brand p{font-size:7px}.top-actions .btn{padding:0 9px;font-size:7.5px}
+ .board-toolbar{grid-template-columns:1fr 1fr}.rules-grid{grid-template-columns:1fr}.rule-fields{grid-template-columns:1fr 1fr}
+}
+@media(max-width:560px){
+ .header-in{align-items:flex-start}.top-actions{justify-content:flex-end}.hero{padding:14px}.hero h2{font-size:16px}
+ .class-groups{grid-template-columns:1fr;gap:8px}.gender-head{font-size:9px;padding:8px}.class-card{padding:9px;min-height:86px}.class-card h4{font-size:10px}
+ .class-enter-bar{align-items:stretch;flex-direction:column}.class-enter-actions{display:grid;grid-template-columns:1fr 1fr}.class-enter-actions .btn{width:100%}
+ .board-toolbar{grid-template-columns:1fr 1fr}.board-toolbar>.field{grid-column:span 1}.board-toolbar>.btn{width:100%}
+ .rule-fields{grid-template-columns:1fr}.rules-actions{display:grid;grid-template-columns:1fr 1fr}.rules-actions .btn{width:100%}
+ .panel-body{padding:9px}.panel-head{padding:11px}.panel-head h3{font-size:12px}
+ .zoom-tools{justify-content:center}
+}
+@media(max-width:390px){
+ .board-toolbar{grid-template-columns:1fr}.brand h1{max-width:180px}
+}
+</style>
+</head>
+
+<body>
+<div id="loading" class="loading"><div class="loader-wrap"><div class="loader"></div><p>جاري التحقق من صلاحية الإدارة</p></div></div>
+
+<header class="header">
+ <div class="header-in">
+  <div class="brand"><img src="logo.png" alt="شعار المدرسة"><div><h1>مدرسة التحدي الأهلية المختلطة</h1><p>قسم الحوكمة - بورد الدرجات</p></div></div>
+  <div class="top-actions">
+   <button class="btn btn-soft" onclick="backToAdmin()">الرجوع إلى الإدارة</button>
+   <button class="btn btn-r" onclick="logout()">تسجيل الخروج</button>
+  </div>
+ </div>
+</header>
+
+<main class="main">
+ <section class="hero">
+  <h2>بورد الدرجات</h2>
+  <p>اختر صفاً واحداً أو عدة صفوف ثم اضغط «دخول إلى البورد». يظهر كل صف في بورد مستقل، وجميع مواده مع الفصل الأول ونصف السنة والفصل الثاني والسعي السنوي.</p>
+  <div class="security-note">دخول الإدارة فقط — لا يعمل الرابط المباشر بدون المرور من صفحة الإدارة</div>
+ </section>
+
+ <section id="classPanel" class="panel">
+  <div class="panel-head">
+   <div><h3>1) اختيار الصفوف</h3><p>البنين بالأزرق والبنات بالوردي. يمكن تحديد أكثر من صف ثم الدخول إلى البورد.</p></div>
+   <button class="btn btn-soft" onclick="refreshCore()">تحديث الصفوف</button>
+  </div>
+  <div class="panel-body">
+   <div id="classGroups" class="class-groups"></div>
+   <div class="class-enter-bar">
+    <strong id="selectionSummary">لم يتم تحديد أي صف.</strong>
+    <div class="class-enter-actions">
+     <button class="btn btn-soft" onclick="clearClassSelection()">إلغاء التحديد</button>
+     <button id="enterBoardBtn" class="btn btn-p" onclick="enterSelectedBoards()" disabled>دخول إلى البورد</button>
+    </div>
+   </div>
+  </div>
+ </section>
+
+ <section id="boardPanel" class="panel hidden">
+  <div class="panel-head">
+   <div><h3>2) البورد</h3><p id="boardSubtitle">—</p></div>
+   <button class="btn btn-soft" onclick="changeSelectedClasses()">تغيير الصفوف</button>
+  </div>
+  <div class="panel-body">
+   <div class="board-toolbar">
+    <div class="field"><label>العام الدراسي</label><input id="schoolYear" value="2026-2027"></div>
+    <div class="field"><label>بحث باسم الطالب</label><input id="studentSearch" type="search" placeholder="اكتب اسم الطالب"></div>
+    <button id="editGradesBtn" class="btn btn-o" onclick="toggleEditMode()">تعديل الدرجات</button>
+    <button id="saveGradesBtn" class="btn btn-g" onclick="saveBoardGrades()" disabled>حفظ الدرجات</button>
+    <button id="clearChangedBtn" class="btn btn-r" onclick="clearGradeChangedMarkers()">حذف علامة تم تعديلهم</button>
+    <button class="btn btn-v" onclick="toggleRulesPanel()">قواعد الوزاري والإعفاء</button>
+    <button id="excelBtn" class="btn btn-g" onclick="downloadExcel()">تحميل Excel</button>
+    <button id="downloadBtn" class="btn btn-p" onclick="downloadBoardPDF()">تحميل PDF</button>
+   </div>
+
+   <div class="zoom-tools">
+    <span class="zoom-value" id="zoomValue">ملاءمة 100%</span>
+    <button class="btn btn-soft" onclick="changeBoardZoom(-.25)">تصغير −</button>
+    <button class="btn btn-soft" onclick="resetBoardZoom()">ملاءمة الشاشة</button>
+    <button class="btn btn-soft" onclick="changeBoardZoom(.25)">تكبير +</button>
+    <span style="color:#667085;font-size:7px;font-weight:800">الوضع الافتراضي يعرض البورد كاملاً بدون سحب يمين/يسار. عند التكبير يمكن التحريك.</span>
+   </div>
+
+   <div id="rulesPanel" class="rules-panel hidden">
+    <div class="rules-head">
+     <div>
+      <strong>قواعد البورد</strong>
+      <p>هذه القواعد تطبق تلقائياً على جميع الصفوف الموجودة حالياً في البورد فقط. أي تغيير هنا يظهر مباشرة في البورد كمعاينة، بما فيه الرياضة والفنية والمعدل، ثم زر الحفظ يثبت القاعدة والدرجات فعلياً.</p>
+     </div>
+     <span id="rulesTargetSummary" class="badge blue">—</span>
+    </div>
+
+    <div class="rules-grid">
+     <div class="rule-card">
+      <h4>قاعدة الدخول الوزاري</h4>
+      <p>لا يظهر عمود الدخول الوزاري في البورد إلا إذا فعّلت هذه القاعدة ثم حفظتها.</p>
+      <label class="rule-enable"><input id="ministerialEnabled" type="checkbox"> تفعيل قاعدة الدخول الوزاري</label>
+      <div class="rule-fields">
+       <div class="field"><label>أقصى عدد مواد راسب بها</label><input id="ministerialMaxSubjects" type="number" min="0" max="30" value="3"></div>
+       <div class="field"><label>أقصى نقص مسموح لكل مادة حتى النجاح</label><input id="ministerialMaxDeficit" type="number" min="0" max="100" step=".5" value="10"></div>
+      </div>
+     </div>
+
+     <div class="rule-card">
+      <h4>قاعدة الإعفاء العام والفردي</h4>
+      <p>إذا تحقق الإعفاء العام يظهر «إعفاء عام». ويمكنك تحديد عدد مواد الرسوب من 0 إلى 10، ثم تحديد هل الطالب بهذا العدد يحق له الإعفاء العام أو لا يحق له. وإذا لم يتحقق العام، يفحص النظام الإعفاء الفردي.</p>
+      <label class="rule-enable"><input id="exemptionEnabled" type="checkbox"> تفعيل قاعدة الإعفاء</label>
+
+      <div class="rule-fields">
+       <div class="field"><label>المعدل المطلوب للإعفاء العام</label><input id="exemptionMinAverage" type="number" min="0" max="100" step=".5" value="85"></div>
+       <div class="field"><label>أقل سعي مسموح في المواد للإعفاء العام</label><input id="exemptionMinSubject" type="number" min="0" max="100" step=".5" value="75"></div>
+       <div class="field">
+        <label>عدد مواد الرسوب</label>
+        <select id="exemptionFailCount">
+         <option value="0">0 مادة</option>
+         <option value="1">1 مادة</option>
+         <option value="2">2 مادة</option>
+         <option value="3">3 مواد</option>
+         <option value="4">4 مواد</option>
+         <option value="5">5 مواد</option>
+         <option value="6">6 مواد</option>
+         <option value="7">7 مواد</option>
+         <option value="8">8 مواد</option>
+         <option value="9">9 مواد</option>
+         <option value="10">10 مواد</option>
+        </select>
+       </div>
+       <div class="field">
+        <label>الحكم عند عدد مواد الرسوب المحدد</label>
+        <select id="exemptionFailDecision">
+         <option value="allow">يحق له الإعفاء العام</option>
+         <option value="block">لا يحق له الإعفاء العام</option>
+        </select>
+       </div>
+       <div class="field"><label>سعي المادة المطلوب للإعفاء الفردي</label><input id="individualMinSubject" type="number" min="0" max="100" step=".5" value="90"></div>
+      </div>
+      <label class="rule-enable" style="margin-top:10px;padding:9px;border:1px solid #dbe6f2;border-radius:10px;background:#f8fbff">
+       <input id="exemptionMaxActivities" type="checkbox">
+       رفع الرياضة والفنية فعلياً للدرجة العظمى إذا كان ذلك يجعل الطالب مؤهلاً للإعفاء العام
+      </label>
+      <div class="rule-note" style="margin-top:8px">
+       عند تفعيل هذا الخيار وحفظ القواعد، يفحص النظام كل طالب في الصفوف الموجودة بالبورد. إذا كان الطالب لا يحقق الإعفاء العام بدرجاته الحالية، لكنه يحققه عند رفع الرياضة والفنية، تُحفظ الرياضة والفنية فعلياً بالدرجة العظمى المحددة لكل مادة، من دون تجاوز حد المادة. إذا لم يؤدِّ الرفع إلى الإعفاء العام فلا تتغير درجات الطالب.
+      </div>
+      <div class="rule-note" style="margin-top:8px">
+       الإعفاء الفردي يُفحص فقط إذا لم يحصل الطالب على الإعفاء العام. ويظهر عدد المواد التي حقق بها الإعفاء الفردي.
+      </div>
+     </div>
+    </div>
+
+    <div class="rules-actions">
+     <button class="btn btn-g" onclick="saveBoardRules()">حفظ القواعد لكل الصفوف المحددة</button>
+     <button class="btn btn-r" onclick="clearBoardRules()">إلغاء القواعد من الصفوف المحددة</button>
+    </div>
+   </div>
+   <div id="summary" class="summary"></div>
+   <div id="boardGroups" class="board-groups"><div class="empty">حدد الصفوف ثم ادخل إلى البورد.</div></div>
+  </div>
+ </section>
+</main>
+
+<div id="pdfHost" class="pdf-host"></div>
+<div id="toast" class="toast"></div>
+
+<script>
+const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
+const $=id=>document.getElementById(id);
+const norm=v=>String(v??"").trim().toLowerCase();
+const esc=v=>String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+const jsq=v=>JSON.stringify(String(v??""));
+const DATA={students:{},classes:{},grades:{}};
+
+let SELECTED_KEYS=new Set();
+let ACTIVE_GROUPS=[];
+let EDIT_MODE=false;
+let BOARD_ZOOM=1;
+let dirtyGradeStudents=new Set();
+let dirtyGradeCells=new Map();
+let RULE_PREVIEW=null;
+let toastTimer=0;
+
+/* =========================
+   رسائل الصفحة
+========================= */
+function toast(text,type=""){
+ const el=$("toast");
+ el.textContent=String(text||"");
+ el.className=`toast show ${type}`.trim();
+ clearTimeout(toastTimer);
+ toastTimer=setTimeout(()=>el.className="toast",3600)
+}
+
+/* =========================
+   الجلسة والحماية
+========================= */
+function session(){try{return JSON.parse(sessionStorage.getItem("tahadi_session")||"{}")}catch{return{}}}
+function adminCode(){return session().code||""}
+function logout(){
+ sessionStorage.removeItem("tahadi_session");
+ sessionStorage.removeItem("tahadi_code");
+ sessionStorage.removeItem("tahadi_role");
+ sessionStorage.removeItem("tahadi_gradeboard_gate");
+ localStorage.removeItem("tahadi_remembered_login");
+ location.replace("index.html")
+}
+function backToAdmin(){location.href="add.html"}
+
+async function req(path,method="GET",data){
+ const o={method,cache:"no-store"};
+ if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}
+ const clean=String(path||"").replace(/^\/+|\/+$/g,"");
+ const r=await fetch(`${DB}/${clean}.json`,o);
+ if(!r.ok)throw new Error(`${method}_${path}_${r.status}`);
+ return method==="DELETE"?true:await r.json()
+}
+const dbGet=path=>req(path),dbPatch=(path,data)=>req(path,"PATCH",data);
+
+function cameFromAdminPage(){
+ try{
+  if(!document.referrer)return false;
+  const ref=new URL(document.referrer);
+  const sameSite=ref.protocol===location.protocol&&ref.host===location.host;
+  return sameSite&&/\/add\.html$/i.test(ref.pathname)
+ }catch{return false}
+}
+function validGate(code){
+ try{
+  const x=JSON.parse(sessionStorage.getItem("tahadi_gradeboard_gate")||"{}");
+  return x.code===code&&Number(x.at)>0&&(Date.now()-Number(x.at))<8*60*60*1000
+ }catch{return false}
+}
+async function verifyAdmin(){
+ const s=session();
+ if(!s.code){location.replace("index.html");return false}
+ const u=await dbGet(`users/${encodeURIComponent(s.code)}`);
+ if(!u||!["admin","administrator","add"].includes(norm(u.role))||u.active===false){
+  logout();return false
+ }
+ if(!validGate(s.code)){
+  if(!cameFromAdminPage()){
+   toast("لا يمكن فتح بورد الدرجات من الرابط مباشرة. افتحه من صفحة الإدارة.","error");
+   setTimeout(()=>location.replace("add.html"),900);
+   return false
+  }
+  sessionStorage.setItem("tahadi_gradeboard_gate",JSON.stringify({code:s.code,at:Date.now()}))
+ }
+ return true
+}
+
+/* =========================
+   أدوات الصفوف والطلاب
+========================= */
+function normalizeGender(value){
+ const g=norm(typeof value==="object"?value?.gender:value);
+ if(["female","f","girl","girls","اناث","إناث","انثى","أنثى","بنات"].includes(g))return"female";
+ if(["mixed","mix","مختلط","مختلطة"].includes(g))return"mixed";
+ return"male"
+}
+function classStageValue(c){
+ const raw=norm(c?.stage||c?.classStage||c?.schoolStage||"");
+ if(["primary","ابتدائية","ابتدائي"].includes(raw))return"primary";
+ if(["secondary","ثانوية","ثانوي"].includes(raw))return"secondary";
+ return/ابتدائ|ابتدائي/.test(norm(c?.name||""))?"primary":"secondary"
+}
+function classStageLabel(c){return classStageValue(c)==="primary"?"ابتدائية":"ثانوية"}
+function roomLabel(v){const n=Number(v);if(n===101)return"الطلاب الجدد";if(n===102)return"الطلاب المنقولين";return n?`القاعة ${n}`:"بدون قاعة"}
+function personLabel(c,g){const p=classStageValue(c)==="primary";return p?(g==="female"?"التلميذة":"التلميذ"):(g==="female"?"الطالبة":"الطالب")}
+function groupKey(classId,gender){return`${classId}|||${gender}`}
+function parseGroupKey(key){const i=key.lastIndexOf("|||");return{classId:key.slice(0,i),gender:key.slice(i+3)}}
+
+function normalizeClassSubjects(c){
+ let rows=Array.isArray(c?.subjects)?c.subjects:Object.values(c?.subjects||{});
+ rows=rows.filter(Boolean).map((s,i)=>({
+  id:String(s.id||`SUB_${i+1}`),
+  name:String(s.name||s.subjectName||"").trim(),
+  maxGrade:Number(s.maxGrade||100),
+  passGrade:Number(s.passGrade??50),
+  order:Number(s.order||i+1),
+  autoType:s.autoType||""
+ })).filter(s=>s.name);
+ if(!rows.some(s=>s.autoType==="sport"))rows.push({id:"SPORT",name:"الرياضة",maxGrade:100,passGrade:50,order:rows.length+1,autoType:"sport"});
+ if(!rows.some(s=>s.autoType==="art"))rows.push({id:"ART",name:"الفنية",maxGrade:100,passGrade:50,order:rows.length+1,autoType:"art"});
+ return rows.sort((a,b)=>a.order-b.order)
+}
+function classStudents(classId,gender){
+ return Object.values(DATA.students||{}).filter(s=>s&&s.hidden!==true&&s.classId===classId&&normalizeGender(s.gender)===gender)
+ .sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar",{sensitivity:"base"}))
+}
+function classEntries(gender){
+ return Object.values(DATA.classes||{}).filter(Boolean).map(c=>{
+  const cg=normalizeGender(c),count=classStudents(c.id,gender).length;
+  if(cg===gender)return{c,count};
+  if(cg==="mixed"&&count>0)return{c,count};
+  return null
+ }).filter(Boolean).sort((a,b)=>String(a.c.name||"").localeCompare(String(b.c.name||""),"ar",{sensitivity:"base"})||Number(a.c.roomNumber||0)-Number(b.c.roomNumber||0))
+}
+function classCard(item,gender){
+ const c=item.c,key=groupKey(c.id,gender),active=SELECTED_KEYS.has(key),genderText=gender==="female"?"بنات":"بنين";
+ return`<article class="class-card ${gender} ${active?"active":""}" onclick='toggleClassSelection(${jsq(c.id)},${jsq(gender)})'>
+  <h4>${esc(c.name||"بدون اسم")}</h4>
+  <div class="meta">
+   <span class="badge ${gender==="female"?"pink":"blue"}">${genderText}</span>
+   <span class="badge green">${classStageLabel(c)}</span>
+   <span class="badge orange">${esc(roomLabel(c.roomNumber))}</span>
+   ${normalizeGender(c)==="mixed"?`<span class="badge purple">مختلط</span>`:""}
+  </div>
+  <div class="class-count">${item.count} ${esc(personLabel(c,gender))}</div>
+ </article>`
+}
+function renderClasses(){
+ const male=classEntries("male"),female=classEntries("female");
+ const col=(title,g,list)=>`<section class="gender-column">
+  <div class="gender-head ${g}"><span>${title}</span><span>${list.length} صف</span></div>
+  <div class="class-list">${list.length?list.map(x=>classCard(x,g)).join(""):`<div class="empty">لا توجد صفوف</div>`}</div>
+ </section>`;
+ $("classGroups").innerHTML=col("البنين","male",male)+col("البنات","female",female);
+ updateSelectionSummary()
+}
+function toggleClassSelection(id,gender){
+ const key=groupKey(id,gender);
+ if(SELECTED_KEYS.has(key))SELECTED_KEYS.delete(key);else SELECTED_KEYS.add(key);
+ renderClasses()
+}
+function clearClassSelection(){SELECTED_KEYS.clear();renderClasses()}
+function updateSelectionSummary(){
+ const n=SELECTED_KEYS.size;
+ $("selectionSummary").textContent=n?`تم تحديد ${n} صف/مجموعة.`:"لم يتم تحديد أي صف.";
+ $("enterBoardBtn").disabled=!n
+}
+function selectedGroups(){
+ return[...SELECTED_KEYS].map(parseGroupKey).map(x=>({
+  key:groupKey(x.classId,x.gender),
+  classId:x.classId,
+  gender:x.gender,
+  c:DATA.classes[x.classId],
+  students:classStudents(x.classId,x.gender)
+ })).filter(x=>x.c&&x.students.length)
+ .sort((a,b)=>(a.gender==="male"?0:1)-(b.gender==="male"?0:1)||String(a.c.name||"").localeCompare(String(b.c.name||""),"ar"))
+}
+
+/* =========================
+   الدرجات والحسابات
+========================= */
+function rawText(v){return String(v??"").trim()}
+function numericGrade(v){const t=rawText(v),n=Number(t);return t!==""&&Number.isFinite(n)?n:null}
+function calcGrade(v){const t=rawText(v);if(t==="")return null;const n=Number(t);return Number.isFinite(n)?n:0}
+function storedGradeValue(v){const t=rawText(v);if(t==="")return null;const n=Number(t);return Number.isFinite(n)?n:t}
+function gradeDisplay(v){const t=rawText(v);if(!t)return"—";const n=Number(t);return Number.isFinite(n)?String(Number.isInteger(n)?n:Math.round(n*10)/10):t}
+function boardRound(v){const n=Number(v);if(!Number.isFinite(n))return"";return Math.round(n)}
+function computeAnnual(t1,mid,t2){
+ const a=calcGrade(t1),b=calcGrade(mid),c=calcGrade(t2);
+ return a!==null&&b!==null&&c!==null?boardRound((a+b+c)/3):""
+}
+function recordSubjectName(rec,key=""){return String(rec?.subjectName||rec?.subject||rec?.name||key||"").trim()}
+function findGradeEntry(raw,subject){
+ const found=Object.entries(raw||{}).find(([key,r])=>String(r?.subjectId||"")===String(subject.id)||String(key)===String(subject.id)||norm(recordSubjectName(r,key))===norm(subject.name));
+ return found||["",{}]
+}
+function activityGrade(rows,field){
+ const vals=rows.filter(r=>!r.autoType&&rawText(r[field])!=="").map(r=>(Number(calcGrade(r[field])||0)/Math.max(1,Number(r.maxGrade||100)))*100);
+ if(!vals.length)return"";
+ const high=Math.max(...vals);if(high>=100)return 100;if(high>80)return 90;return 85
+}
+function buildStudentModel(st,c,raw){
+ let rows=normalizeClassSubjects(c).map(sub=>{
+  const rec=findGradeEntry(raw,sub)[1]||{};
+  if(!sub.autoType){
+   const term1=rec.term1??"",midyear=rec.midyear??"",term2=rec.term2??"";
+   return{...sub,term1,midyear,term2,annual:computeAnnual(term1,midyear,term2)}
+  }
+  const hasStored=["term1","midyear","term2","annual"].some(k=>rawText(rec[k])!=="");
+  const boardAuto=rec?.autoCalculatedByBoard===true||String(rec?.updatedSource||"")==="gradeboard_auto_activity";
+  const preserveStored=hasStored&&!boardAuto;
+  if(preserveStored){
+   const term1=rec.term1??"",midyear=rec.midyear??"",term2=rec.term2??"",computed=computeAnnual(term1,midyear,term2);
+   return{...sub,term1,midyear,term2,annual:computed!==""?computed:(rec.annual??""),storedActivity:true}
+  }
+  return{...sub,term1:"",midyear:"",term2:"",annual:"",storedActivity:false}
+ });
+ const academic=rows.filter(r=>!r.autoType);
+ rows=rows.map(r=>{
+  if(!r.autoType)return r;
+  if(r.storedActivity){const x={...r};delete x.storedActivity;return x}
+  const term1=activityGrade(academic,"term1"),midyear=activityGrade(academic,"midyear"),term2=activityGrade(academic,"term2");
+  const x={...r,term1,midyear,term2,annual:computeAnnual(term1,midyear,term2)};delete x.storedActivity;return x
+ });
+ return{student:st,rows,academic:rows.filter(r=>!r.autoType)}
+}
+function rowForSubject(model,sub){return model.rows.find(r=>String(r.id)===String(sub.id)||norm(r.name)===norm(sub.name))||{...sub,term1:"",midyear:"",term2:"",annual:""}}
+function annualAverage(model){
+ const rows=model.academic;
+ if(!rows.length||rows.some(r=>rawText(r.annual)===""))return"";
+ const vals=rows.map(r=>(Number(calcGrade(r.annual)||0)/Math.max(1,Number(r.maxGrade||100)))*100);
+ return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)
+}
+function gradeState(value,row,annual=false){
+ const raw=rawText(value);if(!raw)return"";
+ const n=Number(raw);if(!Number.isFinite(n))return"textual";
+ const pass=Number(row.passGrade??50),gap=Math.max(1,pass*.10);
+ if(n>=pass)return"pass";
+ if(n>=pass-gap)return"critical";
+ return"fail"
+}
+
+/* =========================
+   القواعد
+========================= */
+function defaultBoardRules(){
+ return{
+  ministerial:{enabled:false,maxSubjects:3,maxDeficitPerSubject:10},
+  exemption:{
+   enabled:false,
+   minAverage:85,
+   minSubjectGrade:75,
+   failSubjectCount:0,
+   failDecision:"allow",
+   individualMinSubjectGrade:90,
+   maximizeActivitiesForExemption:false
+  }
+ }
+}
+function rulesForClass(c){
+ const out=defaultBoardRules();
+ if(c?.gradeBoardRules?.ministerial)out.ministerial={...out.ministerial,...c.gradeBoardRules.ministerial};
+ if(c?.gradeBoardRules?.exemption){
+  out.exemption={...out.exemption,...c.gradeBoardRules.exemption};
+  if(c.gradeBoardRules.exemption.failSubjectCount===undefined&&c.gradeBoardRules.exemption.failPolicy!==undefined){
+   out.exemption.failSubjectCount=c.gradeBoardRules.exemption.failPolicy==="allow"?10:0;
+   out.exemption.failDecision="allow"
+  }
+ }
+ if(c?.gradeBoardRule?.type==="ministerial"){
+  out.ministerial={
+   enabled:true,
+   maxSubjects:Number(c.gradeBoardRule.maxSubjects??3),
+   maxDeficitPerSubject:Number(c.gradeBoardRule.bonusPerSubject??10)
+  }
+ }
+ if(c?.gradeBoardRule?.type==="exemption"){
+  out.exemption={
+   ...out.exemption,
+   enabled:true,
+   minAverage:Number(c.gradeBoardRule.minAverage??85),
+   minSubjectGrade:Number(c.gradeBoardRule.minSubjectGrade??75),
+   individualMinSubjectGrade:Number(c.gradeBoardRule.individualMinSubjectGrade??90),
+   failSubjectCount:Number(c.gradeBoardRule.failSubjectCount??(c.gradeBoardRule.failPolicy==="allow"?10:0)),
+   failDecision:String(c.gradeBoardRule.failDecision||"allow")==="block"?"block":"allow",
+   maximizeActivitiesForExemption:!!c.gradeBoardRule.maximizeActivitiesForExemption
+  }
+ }
+ return out
+}
+function uniqueActiveClassIds(){return[...new Set(ACTIVE_GROUPS.map(g=>g.classId).filter(Boolean))]}
+function activeClassesLabel(){
+ const ids=uniqueActiveClassIds();
+ return ids.map(id=>DATA.classes[id]?.name||id).join("، ")
+}
+function allSelectedRules(){
+ const ids=uniqueActiveClassIds();
+ return ids.map(id=>rulesForClass(DATA.classes[id]||{}))
+}
+function sharedRuleValue(path,fallback){
+ const rules=allSelectedRules();if(!rules.length)return fallback;
+ const parts=path.split(".");
+ const vals=rules.map(r=>parts.reduce((x,k)=>x?.[k],r));
+ return vals.every(v=>String(v)===String(vals[0]))?vals[0]:fallback
+}
+function ministerialStatus(model,rule){
+ if(!rule?.enabled)return{css:"off",text:"",details:""};
+ const rows=model.academic;
+ if(!rows.length||rows.some(r=>rawText(r.annual)===""))return{css:"wait",text:"غير مكتمل",details:""};
+ const failed=rows.filter(r=>Number(calcGrade(r.annual)||0)<Number(r.passGrade??50));
+ const deficits=failed.map(r=>Number(r.passGrade??50)-Number(calcGrade(r.annual)||0));
+ const ok=failed.length<=Number(rule.maxSubjects??3)&&deficits.every(d=>d<=Number(rule.maxDeficitPerSubject??10));
+ if(!failed.length)return{css:"good",text:"مؤهل",details:"لا توجد مواد راسبة"};
+ return{css:ok?"good":"bad",text:ok?"مؤهل":"غير مؤهل",details:`${failed.length} مواد راسبة — أكبر نقص ${Math.max(...deficits)} درجة`}
+}
+function failedSubjectCount(model){
+ return model.academic.filter(r=>rawText(r.annual)!==""&&Number(calcGrade(r.annual)||0)<Number(r.passGrade??50)).length
+}
+function exemptionRows(model,rule){
+ const academic=model.academic||[];
+ if(!academic.length||academic.some(r=>rawText(r.annual)===""))return null;
+ return (model.rows||[]).map(r=>({...r}))
+}
+function exemptionAverage(model,rule){
+ const rows=exemptionRows(model,rule);
+ if(!rows||!rows.length||rows.some(r=>rawText(r.annual)===""))return"";
+ const vals=rows.map(r=>(Number(calcGrade(r.annual)||0)/Math.max(1,Number(r.maxGrade||100)))*100);
+ return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length)
+}
+function maxAnnualPercent(model,rule){
+ const rows=exemptionRows(model,rule);
+ if(!rows)return"";
+ const vals=rows.filter(r=>rawText(r.annual)!=="").map(r=>(Number(calcGrade(r.annual)||0)/Math.max(1,Number(r.maxGrade||100)))*100);
+ return vals.length?Math.round(Math.max(...vals)):""
+}
+function individualExemptionSubjects(model,rule){
+ const threshold=Number(rule?.individualMinSubjectGrade??90),rows=exemptionRows(model,rule);
+ if(!rows)return[];
+ return rows.filter(r=>{
+  if(rawText(r.annual)==="")return false;
+  const p=(Number(calcGrade(r.annual)||0)/Math.max(1,Number(r.maxGrade||100)))*100;
+  return p>=threshold&&Number(calcGrade(r.annual)||0)>=Number(r.passGrade??50)
+ })
+}
+function exemptionFailCondition(fails,rule){
+ const count=Math.max(0,Math.min(10,Math.floor(Number(rule?.failSubjectCount??0))));
+ const decision=String(rule?.failDecision||"allow")==="block"?"block":"allow";
+ if(decision==="allow"){
+  return{ok:fails<=count,label:`يسمح حتى ${count} مادة رسوب`}
+ }
+ // "لا يحق عند العدد المحدد": بلوغ العدد أو تجاوزه يمنع الإعفاء.
+ // عند اختيار 0 يكون المقصود: لا يسمح بأي مادة رسوب.
+ const ok=count===0?fails===0:fails<count;
+ return{ok,label:count===0?"لا يسمح بأي مادة رسوب":`إذا بلغ الرسوب ${count} مادة أو أكثر لا يحق له الإعفاء العام`}
+}
+function generalExemptionCheck(model,rule){
+ const rows=exemptionRows(model,rule),avg=exemptionAverage(model,rule);
+ if(!rows||avg===""||rows.some(r=>rawText(r.annual)===""))return{complete:false,eligible:false,avg:"",min:"",fails:failedSubjectCount(model),highest:""};
+ const percs=rows.map(r=>(Number(calcGrade(r.annual)||0)/Math.max(1,Number(r.maxGrade||100)))*100);
+ const min=Math.min(...percs),fails=failedSubjectCount(model),highest=maxAnnualPercent(model,rule),failRule=exemptionFailCondition(fails,rule);
+ const eligible=avg>=Number(rule?.minAverage??85)&&min>=Number(rule?.minSubjectGrade??75)&&failRule.ok;
+ return{complete:true,eligible,avg,min,fails,highest,failRule}
+}
+function modelWithMaxActivities(model){
+ const rows=(model.rows||[]).map(r=>{
+  if(["sport","art"].includes(String(r.autoType||""))){
+   const max=Math.max(0,Number(r.maxGrade||100));
+   return{...r,term1:max,midyear:max,term2:max,annual:max}
+  }
+  return{...r}
+ });
+ return{...model,rows,academic:rows.filter(r=>!r.autoType)}
+}
+function exemptionActivitySubjects(c){
+ return normalizeClassSubjects(c).filter(r=>["sport","art"].includes(String(r.autoType||"")))
+}
+function exemptionStatus(model,rule){
+ if(!rule?.enabled)return{css:"off",text:"",details:""};
+ const check=generalExemptionCheck(model,rule);
+ if(!check.complete)return{css:"wait",text:"غير مكتمل",details:""};
+ const {avg,min,fails,highest,eligible,failRule}=check;
+ const activityNote=rule.maximizeActivitiesForExemption?" — خيار رفع الرياضة والفنية للمؤهلين مفعّل":"";
+ const failNote=failRule?.label?` — ${failRule.label}`:"";
+ if(eligible)return{
+  css:"good",
+  text:"إعفاء عام",
+  details:`المعدل ${avg} — أعلى سعي ${highest} — أقل سعي ${Math.round(min)} — مواد الرسوب ${fails}${failNote}${activityNote}`
+ };
+ const individual=individualExemptionSubjects(model,rule);
+ if(individual.length)return{
+  css:"good",
+  text:`إعفاء فردي ${individual.length}`,
+  details:`المواد: ${individual.map(x=>x.name).join("، ")} — أعلى سعي ${highest} — مواد الرسوب ${fails}${failNote}${activityNote}`
+ };
+ return{
+  css:"bad",
+  text:"غير مؤهل",
+  details:`المعدل ${avg} — أعلى سعي ${highest} — أقل سعي ${Math.round(min)} — مواد الرسوب ${fails}${failNote}${activityNote}`
+ }
+}
+function anyActiveMinisterial(){
+ return ACTIVE_GROUPS.some(g=>rulesForClass(g.c).ministerial.enabled)
+}
+function anyActiveExemption(){
+ return ACTIVE_GROUPS.some(g=>rulesForClass(g.c).exemption.enabled)
+}
+function currentRuleDraftFromUI(){
+ return{
+  ministerial:{
+   enabled:!!$("ministerialEnabled")?.checked,
+   maxSubjects:Math.max(0,Math.floor(Number($("ministerialMaxSubjects")?.value||0))),
+   maxDeficitPerSubject:Math.max(0,Number($("ministerialMaxDeficit")?.value||0))
+  },
+  exemption:{
+   enabled:!!$("exemptionEnabled")?.checked,
+   minAverage:Math.max(0,Number($("exemptionMinAverage")?.value||0)),
+   minSubjectGrade:Math.max(0,Number($("exemptionMinSubject")?.value||0)),
+   failSubjectCount:Math.max(0,Math.min(10,Math.floor(Number($("exemptionFailCount")?.value||0)))),
+   failDecision:$("exemptionFailDecision")?.value==="block"?"block":"allow",
+   individualMinSubjectGrade:Math.max(0,Number($("individualMinSubject")?.value||0)),
+   maximizeActivitiesForExemption:!!$("exemptionMaxActivities")?.checked
+  }
+ }
+}
+function effectiveRulesForClass(c){
+ if(RULE_PREVIEW&&!$("rulesPanel")?.classList.contains("hidden"))return RULE_PREVIEW;
+ return rulesForClass(c)
+}
+function displayModelForRules(model,rules){
+ const ex=rules?.exemption;
+ if(!ex?.enabled||!ex?.maximizeActivitiesForExemption)return model;
+ const before=generalExemptionCheck(model,ex);
+ if(!before.complete||before.eligible)return model;
+ const promoted=modelWithMaxActivities(model),after=generalExemptionCheck(promoted,ex);
+ return after.complete&&after.eligible?promoted:model
+}
+function boardAverageForRules(model,rules){
+ if(rules?.exemption?.enabled){
+  const v=exemptionAverage(model,rules.exemption);
+  if(v!=="")return v
+ }
+ return annualAverage(model)
+}
+function previewRuleChanges(){
+ if($("rulesPanel")?.classList.contains("hidden"))return;
+ RULE_PREVIEW=currentRuleDraftFromUI();
+ renderAllBoards()
+}
+function toggleRulesPanel(){
+ const panel=$("rulesPanel");
+ panel.classList.toggle("hidden");
+ if(!panel.classList.contains("hidden")){
+  loadRulesForActiveGroups()
+ }else{
+  RULE_PREVIEW=null;
+  renderAllBoards()
+ }
+}
+function loadRulesForActiveGroups(){
+ const ids=uniqueActiveClassIds();
+ $("rulesTargetSummary").textContent=ids.length?`تطبق على ${ids.length} صف/صفوف`:"لا توجد صفوف";
+ $("ministerialEnabled").checked=!!sharedRuleValue("ministerial.enabled",false);
+ $("ministerialMaxSubjects").value=Number(sharedRuleValue("ministerial.maxSubjects",3));
+ $("ministerialMaxDeficit").value=Number(sharedRuleValue("ministerial.maxDeficitPerSubject",10));
+ $("exemptionEnabled").checked=!!sharedRuleValue("exemption.enabled",false);
+ $("exemptionMinAverage").value=Number(sharedRuleValue("exemption.minAverage",85));
+ $("exemptionMinSubject").value=Number(sharedRuleValue("exemption.minSubjectGrade",75));
+ $("exemptionFailCount").value=String(Math.max(0,Math.min(10,Number(sharedRuleValue("exemption.failSubjectCount",0)))));
+ $("exemptionFailDecision").value=String(sharedRuleValue("exemption.failDecision","allow"))==="block"?"block":"allow";
+ $("individualMinSubject").value=Number(sharedRuleValue("exemption.individualMinSubjectGrade",90));
+ $("exemptionMaxActivities").checked=!!sharedRuleValue("exemption.maximizeActivitiesForExemption",false);
+ RULE_PREVIEW=currentRuleDraftFromUI();
+ renderAllBoards()
+}
+async function saveBoardRules(){
+ const ids=uniqueActiveClassIds();if(!ids.length)return toast("لا توجد صفوف ظاهرة في البورد.","warn");
+ if(dirtyGradeStudents.size)return toast("احفظ الدرجات المعدلة في البورد أولاً قبل تطبيق قواعد الإعفاء.","warn");
+ const draft=currentRuleDraftFromUI(),rules={
+  ministerial:{...draft.ministerial},
+  exemption:{...draft.exemption},
+  updatedAt:Date.now(),updatedBy:adminCode()
+ };
+ try{
+  const updates={},now=Date.now(),by=adminCode(),changedCodes=new Set(),seenCodes=new Set();
+  ids.forEach(id=>updates[`classes/${id}/gradeBoardRules`]=rules);
+
+  if(rules.exemption.enabled&&rules.exemption.maximizeActivitiesForExemption){
+   for(const g of ACTIVE_GROUPS){
+    if(!ids.includes(g.classId))continue;
+    const activitySubs=exemptionActivitySubjects(g.c);
+    if(!activitySubs.length)continue;
+
+    for(const st of g.students){
+     if(!st?.code||seenCodes.has(st.code))continue;
+     seenCodes.add(st.code);
+
+     const raw=DATA.grades[st.code]||{},model=buildStudentModel(st,g.c,raw),before=generalExemptionCheck(model,rules.exemption);
+     if(!before.complete||before.eligible)continue;
+
+     const promoted=modelWithMaxActivities(model),after=generalExemptionCheck(promoted,rules.exemption);
+     if(!after.complete||!after.eligible)continue;
+
+     for(const sub of activitySubs){
+      const max=Math.max(0,Number(sub.maxGrade||100)),[oldKey,oldRec]=findGradeEntry(raw,sub),base=`grades/${st.code}/${sub.id}`;
+      updates[base]={
+       ...(oldRec||{}),
+       subjectId:sub.id,
+       subjectName:sub.name,
+       autoType:sub.autoType,
+       maxGrade:max,
+       passGrade:Number(sub.passGrade??50),
+       classId:g.classId,
+       term1:max,
+       midyear:max,
+       term2:max,
+       annual:max,
+       adminEditedAt:now,
+       adminEditedBy:by,
+       exemptionAdjustedAt:now,
+       exemptionAdjustedBy:by,
+       exemptionAdjustment:"max_activity_for_general_exemption",activityLocked:true,autoCalculatedByBoard:false,updatedAt:now,updatedBy:by,updatedSource:"gradeboard_exemption",canonicalVersion:1
+      };
+      if(oldKey&&oldKey!==sub.id)updates[`grades/${st.code}/${oldKey}`]=null
+     }
+
+     updates[`students/${st.code}/gradeBoardGradeChanged`]=true;
+     updates[`students/${st.code}/gradeBoardGradeChangedAt`]=now;
+     updates[`students/${st.code}/gradeBoardGradeChangedBy`]=by;
+     changedCodes.add(st.code)
+    }
+   }
+  }
+
+  await dbPatch("",updates);
+  ids.forEach(id=>{if(DATA.classes[id])DATA.classes[id].gradeBoardRules=JSON.parse(JSON.stringify(rules))});
+
+  if(changedCodes.size){
+   const codes=[...changedCodes],limit=6;let next=0;
+   async function worker(){
+    while(next<codes.length){
+     const code=codes[next++];
+     DATA.grades[code]=await dbGet(`grades/${encodeURIComponent(code)}`)||{};
+     if(DATA.students[code]){
+      DATA.students[code].gradeBoardGradeChanged=true;
+      DATA.students[code].gradeBoardGradeChangedAt=now;
+      DATA.students[code].gradeBoardGradeChangedBy=by
+     }
+    }
+   }
+   await Promise.all(Array.from({length:Math.min(limit,codes.length)},worker))
+  }
+
+  RULE_PREVIEW={ministerial:{...rules.ministerial},exemption:{...rules.exemption}};
+  renderAllBoards();
+  if(rules.exemption.enabled&&rules.exemption.maximizeActivitiesForExemption){
+   if(changedCodes.size)toast(`تم حفظ القواعد، ورفع الرياضة والفنية فعلياً للحد الأعلى لـ ${changedCodes.size} طالب/ة لأن ذلك حقق لهم الإعفاء العام.`,"success");
+   else toast(`تم حفظ القواعد. لم يوجد طالب يحتاج رفع الرياضة والفنية حتى يحقق الإعفاء العام.`,"success")
+  }else{
+   toast(`تم حفظ القواعد وتطبيقها على ${ids.length} صف/صفوف موجودة في البورد.`,"success")
+  }
+ }catch(e){console.error(e);toast("تعذر حفظ القواعد أو تطبيق درجات الإعفاء.","error")}
+}
+async function clearBoardRules(){
+ const ids=uniqueActiveClassIds();if(!ids.length)return;
+ try{
+  const updates={};
+  ids.forEach(id=>{
+   updates[`classes/${id}/gradeBoardRules`]=null;
+   updates[`classes/${id}/gradeBoardRule`]=null
+  });
+  await dbPatch("",updates);
+  ids.forEach(id=>{if(DATA.classes[id]){delete DATA.classes[id].gradeBoardRules;delete DATA.classes[id].gradeBoardRule}});
+  RULE_PREVIEW=null;loadRulesForActiveGroups();renderAllBoards();
+  toast(`تم إلغاء قواعد البورد من ${ids.length} صف/صفوف.`,"success")
+ }catch(e){console.error(e);toast("تعذر إلغاء القواعد.","error")}
+}
+
+/* =========================
+   تحميل الصفوف والدخول
+========================= */
+async function loadGradesForGroups(groups){
+ const map=new Map();
+ groups.forEach(g=>g.students.forEach(st=>map.set(st.code,st)));
+ const missing=[...map.values()].filter(st=>DATA.grades[st.code]===undefined);
+ let next=0;
+ async function worker(){
+  while(next<missing.length){
+   const st=missing[next++];
+   try{DATA.grades[st.code]=await dbGet(`grades/${encodeURIComponent(st.code)}`)||{}}catch{DATA.grades[st.code]={}}
+  }
+ }
+ await Promise.all(Array.from({length:Math.min(8,Math.max(1,missing.length))},worker))
+}
+async function enterSelectedBoards(){
+ if(!SELECTED_KEYS.size)return toast("حدد صفاً واحداً على الأقل.","warn");
+ if(dirtyGradeStudents.size)return toast("احفظ الدرجات المعدلة أولاً.","warn");
+ ACTIVE_GROUPS=selectedGroups();
+ if(!ACTIVE_GROUPS.length)return toast("الصفوف المحددة لا تحتوي أسماء.","warn");
+ $("enterBoardBtn").disabled=true;$("enterBoardBtn").textContent="جاري التحميل...";
+ try{
+  await loadGradesForGroups(ACTIVE_GROUPS);
+  EDIT_MODE=false;BOARD_ZOOM=1;RULE_PREVIEW=null;
+  $("boardPanel").classList.remove("hidden");
+  $("rulesPanel").classList.add("hidden");
+  $("editGradesBtn").textContent="تعديل الدرجات";
+  $("saveGradesBtn").disabled=true;$("saveGradesBtn").textContent="حفظ الدرجات";
+  $("boardSubtitle").textContent=`${ACTIVE_GROUPS.length} صف/مجموعة — البنين أولاً ثم البنات`;
+  renderAllBoards();
+  $("boardPanel").scrollIntoView({behavior:"smooth",block:"start"})
+ }catch(e){console.error(e);toast("تعذر تحميل الدرجات.","error")}
+ finally{$("enterBoardBtn").disabled=false;$("enterBoardBtn").textContent="دخول إلى البورد"}
+}
+function changeSelectedClasses(){
+ if(dirtyGradeStudents.size)return toast("احفظ الدرجات المعدلة قبل تغيير الصفوف.","warn");
+ $("classPanel").scrollIntoView({behavior:"smooth",block:"start"})
+}
+
+/* =========================
+   عرض البورد والتكبير
+========================= */
+function currentModelsForGroup(g){
+ return g.students.map(st=>({student:st,model:buildStudentModel(st,g.c,DATA.grades[st.code]||{})}))
+}
+function searchModels(items){
+ const q=norm($("studentSearch")?.value);return q?items.filter(x=>norm(x.student.name).includes(q)||norm(x.student.code).includes(q)):items
+}
+function dirtyCellKey(code,subject,field){return`${code}|||${subject}|||${field}`}
+function getDirtyOrStored(code,subject,field,fallback){
+ const key=dirtyCellKey(code,subject,field);
+ return dirtyGradeCells.has(key)?dirtyGradeCells.get(key):fallback
+}
+function liveRow(item,sub){
+ const base=rowForSubject(item.model,sub);
+ if(sub.autoType)return base;
+ const term1=getDirtyOrStored(item.student.code,sub.id,"term1",base.term1);
+ const midyear=getDirtyOrStored(item.student.code,sub.id,"midyear",base.midyear);
+ const term2=getDirtyOrStored(item.student.code,sub.id,"term2",base.term2);
+ return{...base,term1,midyear,term2,annual:computeAnnual(term1,midyear,term2)}
+}
+function liveModel(item,subjects){
+ const rows=subjects.map(s=>liveRow(item,s)),academic=rows.filter(r=>!r.autoType);
+ return{student:item.student,rows,academic}
+}
+function boardInputCell(code,row,field){
+ const value=row[field],state=gradeState(value,row,false),auto=!!row.autoType,cellCls=`grade-cell term ${state}`;
+ if(auto||!EDIT_MODE)return`<td class="${cellCls}"><span class="readonly-grade">${gradeDisplay(value)}</span></td>`;
+ return`<td class="${cellCls}">
+  <input class="board-grade-input ${state}" type="text" inputmode="decimal"
+   value="${esc(rawText(value))}"
+   data-code="${esc(code)}" data-subject="${esc(row.id)}" data-field="${field}"
+   data-pass="${Number(row.passGrade??50)}" data-max="${Number(row.maxGrade||100)}"
+   onfocus="boardGradeFocus(this)" onblur="boardGradeBlur(this)" oninput="boardGradeChanged(this)">
+ </td>`
+}
+function annualCell(code,row){const state=gradeState(row.annual,row,true);return`<td class="grade-cell annual ${state}" data-annual-code="${esc(code)}" data-annual-subject="${esc(row.id)}"><span class="readonly-grade">${gradeDisplay(row.annual)}</span></td>`}
+function renderBoardGroup(g){
+ const subjects=normalizeClassSubjects(g.c),baseItems=searchModels(currentModelsForGroup(g)),rules=effectiveRulesForClass(g.c),person=personLabel(g.c,g.gender),showMinisterial=!!rules.ministerial.enabled,showExemption=!!rules.exemption.enabled;
+ if(!baseItems.length)return`<section class="board-group ${g.gender}"><div class="board-group-head ${g.gender}"><div><h4>${esc(g.c.name)} — ${g.gender==="female"?"بنات":"بنين"}</h4></div></div><div class="empty">لا توجد أسماء مطابقة.</div></section>`;
+ const h1=subjects.map(s=>`<th colspan="4" class="subject-head">${esc(s.name)}</th>`).join("");
+ const h2=subjects.map(()=>`<th class="subgrade">ف1</th><th class="subgrade">نصف</th><th class="subgrade">ف2</th><th class="subgrade">سعي</th>`).join("");
+ const ruleHeads=`${showMinisterial?'<th rowspan="2" class="status">دخول وزاري</th>':""}${showExemption?'<th rowspan="2" class="status">الإعفاء</th>':""}`;
+ const rows=baseItems.map((item,i)=>{
+  const baseModel=liveModel(item,subjects),lm=displayModelForRules(baseModel,rules),avg=boardAverageForRules(lm,rules),fails=failedSubjectCount(lm),minister=ministerialStatus(lm,rules.ministerial),exempt=exemptionStatus(lm,rules.exemption),changed=item.student.gradeBoardGradeChanged===true||dirtyGradeStudents.has(item.student.code);
+  return`<tr data-student-code="${esc(item.student.code)}">
+   <td class="seq">${i+1}</td>
+   <td class="name ${changed?"grade-changed":""}">${esc(item.student.name||"—")}</td>
+   ${subjects.map(s=>{const r=lm.rows.find(x=>String(x.id)===String(s.id));return boardInputCell(item.student.code,r,"term1")+boardInputCell(item.student.code,r,"midyear")+boardInputCell(item.student.code,r,"term2")+annualCell(item.student.code,r)}).join("")}
+   <td class="average average-cell" data-average-code="${esc(item.student.code)}">${avg===""?"—":avg}</td>
+   <td class="average average-cell" data-fail-count-code="${esc(item.student.code)}">${fails}</td>
+   ${showMinisterial?`<td class="rule-status status ${minister.css}" data-ministerial-code="${esc(item.student.code)}" title="${esc(minister.details||"")}">${esc(minister.text)}</td>`:""}
+   ${showExemption?`<td class="rule-status status ${exempt.css}" data-exemption-code="${esc(item.student.code)}" title="${esc(exempt.details||"")}">${esc(exempt.text)}</td>`:""}
+  </tr>`
+ }).join("");
+ return`<section class="board-group ${g.gender}" data-group-key="${esc(g.key)}">
+  <div class="board-group-head ${g.gender}">
+   <div><h4>${esc(g.c.name||"الصف")} — ${g.gender==="female"?"بنات":"بنين"}</h4><p>${esc(classStageLabel(g.c))} | ${esc(roomLabel(g.c.roomNumber))} | ${subjects.length} مادة | ${baseItems.length} اسم</p></div>
+   <div class="group-average">السعي والمعدل بدون كسور</div>
+  </div>
+  <div class="board-viewport"><div class="board-stage">
+   <table class="grade-board">
+    <thead><tr><th rowspan="2" class="seq">ت</th><th rowspan="2" class="name">اسم ${esc(person)}</th>${h1}<th rowspan="2" class="average">المعدل</th><th rowspan="2" class="average">مواد الرسوب</th>${ruleHeads}</tr><tr>${h2}</tr></thead>
+    <tbody>${rows}</tbody>
+   </table>
+  </div></div>
+ </section>`
+}
+function renderAllBoards(){
+ if(!ACTIVE_GROUPS.length)return;
+ const totalStudents=ACTIVE_GROUPS.reduce((n,g)=>n+g.students.length,0),totalSubjects=ACTIVE_GROUPS.reduce((n,g)=>n+normalizeClassSubjects(g.c).length,0);
+ const boostedActivities=ACTIVE_GROUPS.some(g=>effectiveRulesForClass(g.c).exemption?.enabled&&effectiveRulesForClass(g.c).exemption?.maximizeActivitiesForExemption);
+ $("summary").innerHTML=`<span class="badge blue">${ACTIVE_GROUPS.length} صف/مجموعة</span><span class="badge green">${totalStudents} اسم</span><span class="badge orange">${totalSubjects} مجموع المواد المعروضة</span><span class="badge purple">الحرج بالسعي: أسود</span><span class="badge orange">الحرج بالفصول: برتقالي</span><span class="badge red">الراسب بالسعي: أحمر</span>${boostedActivities?'<span class="badge green">الإعفاء: رفع فعلي للرياضة والفنية عند الحاجة</span>':""}`;
+ $("boardGroups").innerHTML=ACTIVE_GROUPS.map(renderBoardGroup).join("");
+ requestAnimationFrame(()=>requestAnimationFrame(fitAllBoards))
+}
+function fitOneBoard(groupEl){
+ const viewport=groupEl.querySelector(".board-viewport"),stage=groupEl.querySelector(".board-stage"),table=groupEl.querySelector(".grade-board");
+ if(!viewport||!stage||!table)return;
+ table.style.transform="none";stage.style.width="auto";stage.style.height="auto";
+ const naturalW=table.scrollWidth,naturalH=table.offsetHeight,available=Math.max(260,viewport.clientWidth-2),fit=Math.min(1,available/Math.max(1,naturalW)),scale=Math.max(.08,fit*BOARD_ZOOM);
+ table.style.transform=`scale(${scale})`;
+ table.style.transformOrigin="top right";
+ stage.style.width=`${Math.ceil(naturalW*scale)}px`;
+ stage.style.height=`${Math.ceil(naturalH*scale)}px`;
+ viewport.style.overflowX=scale>fit+.002?"auto":"hidden";
+ viewport.style.overflowY="hidden"
+}
+function fitAllBoards(){document.querySelectorAll(".board-group").forEach(fitOneBoard);$("zoomValue").textContent=`ملاءمة ${Math.round(BOARD_ZOOM*100)}%`}
+function changeBoardZoom(delta){BOARD_ZOOM=Math.max(.5,Math.min(3,BOARD_ZOOM+delta));fitAllBoards()}
+function resetBoardZoom(){BOARD_ZOOM=1;fitAllBoards()}
+let resizeTimer=0;window.addEventListener("resize",()=>{clearTimeout(resizeTimer);resizeTimer=setTimeout(fitAllBoards,100)});
+
+/* =========================
+   تعديل وحفظ الدرجات
+========================= */
+function toggleEditMode(){
+ if(EDIT_MODE){
+  if(dirtyGradeStudents.size)return toast("احفظ الدرجات المعدلة قبل إنهاء وضع التعديل.","warn");
+  EDIT_MODE=false;$("editGradesBtn").textContent="تعديل الدرجات";renderAllBoards();return
+ }
+ EDIT_MODE=true;$("editGradesBtn").textContent="إنهاء التعديل";renderAllBoards();toast("تم تفعيل تعديل الدرجات. عدّل ثم اضغط حفظ.","success")
+}
+function boardGradeFocus(input){input.closest("tr")?.classList.add("editing-row")}
+function boardGradeBlur(input){input.closest("tr")?.classList.remove("editing-row")}
+function refreshStudentComputedCells(code){
+ const st=DATA.students[code];if(!st)return;
+ const g=ACTIVE_GROUPS.find(x=>x.classId===st.classId&&x.students.some(s=>s.code===code));if(!g)return;
+ const subjects=normalizeClassSubjects(g.c),baseItem={student:st,model:buildStudentModel(st,g.c,DATA.grades[code]||{})},baseModel=liveModel(baseItem,subjects),rules=effectiveRulesForClass(g.c),lm=displayModelForRules(baseModel,rules);
+ for(const r of lm.rows){
+  const cell=document.querySelector(`[data-annual-code="${CSS.escape(code)}"][data-annual-subject="${CSS.escape(String(r.id))}"]`);
+  if(cell){
+   const state=gradeState(r.annual,r,true);
+   cell.className=`grade-cell annual ${state}`;
+   const span=cell.querySelector(".readonly-grade");if(span)span.textContent=gradeDisplay(r.annual)
+  }
+ }
+ const avg=boardAverageForRules(lm,rules),avgCell=document.querySelector(`[data-average-code="${CSS.escape(code)}"]`);if(avgCell)avgCell.textContent=avg===""?"—":avg;
+ const failCell=document.querySelector(`[data-fail-count-code="${CSS.escape(code)}"]`);if(failCell)failCell.textContent=String(failedSubjectCount(lm));
+ const m=ministerialStatus(lm,rules.ministerial),mCell=document.querySelector(`[data-ministerial-code="${CSS.escape(code)}"]`);
+ if(mCell){mCell.className=`rule-status status ${m.css}`;mCell.textContent=m.text;mCell.title=m.details||""}
+ const e=exemptionStatus(lm,rules.exemption),eCell=document.querySelector(`[data-exemption-code="${CSS.escape(code)}"]`);
+ if(eCell){eCell.className=`rule-status status ${e.css}`;eCell.textContent=e.text;eCell.title=e.details||""}
+}
+function boardGradeChanged(input){
+ const code=input.dataset.code,subject=input.dataset.subject,field=input.dataset.field,max=Number(input.dataset.max||100),pass=Number(input.dataset.pass||50),raw=input.value.trim(),n=Number(raw);
+ const invalid=raw!==""&&Number.isFinite(n)&&(n<0||n>max),td=input.closest("td");
+ input.style.borderColor=invalid?"#d92d20":"";
+ if(invalid)return toast(`الدرجة يجب أن تكون بين 0 و ${max}`,"error");
+ const state=gradeState(raw,{passGrade:pass,maxGrade:max},false);
+ if(td)td.className=`grade-cell term ${state}`;
+ input.className=`board-grade-input ${state} dirty`;
+ dirtyGradeStudents.add(code);dirtyGradeCells.set(dirtyCellKey(code,subject,field),raw);
+ const row=input.closest("tr"),name=row?.querySelector(".name");if(name)name.classList.add("grade-changed");
+ $("saveGradesBtn").disabled=false;$("saveGradesBtn").textContent=`حفظ الدرجات (${dirtyGradeStudents.size})`;
+ refreshStudentComputedCells(code)
+}
+async function saveBoardGrades(){
+ if(!dirtyGradeStudents.size)return toast("لا توجد درجات معدلة للحفظ.","warn");
+ const btn=$("saveGradesBtn");btn.disabled=true;btn.textContent="جاري الحفظ...";
+ try{
+  const updates={},now=Date.now();
+  for(const code of dirtyGradeStudents){
+   const st=DATA.students[code];if(!st)continue;
+   const c=DATA.classes[st.classId];if(!c)continue;
+   const raw=DATA.grades[code]||{},allSubjects=normalizeClassSubjects(c),subjects=allSubjects.filter(s=>!s.autoType),workingRaw=JSON.parse(JSON.stringify(raw||{}));
+   for(const sub of subjects){
+    const [oldKey,oldRec]=findGradeEntry(raw,sub),fields={};
+    let touched=false;
+    for(const field of ["term1","midyear","term2"]){
+     const k=dirtyCellKey(code,sub.id,field);
+     if(dirtyGradeCells.has(k)){fields[field]=dirtyGradeCells.get(k);touched=true}else fields[field]=oldRec?.[field]??""
+    }
+    if(!touched)continue;
+    const annual=computeAnnual(fields.term1,fields.midyear,fields.term2),base=`grades/${code}/${sub.id}`,record={
+     ...(oldRec||{}),
+     subjectId:sub.id,subjectName:sub.name,maxGrade:sub.maxGrade,passGrade:sub.passGrade,classId:st.classId,
+     term1:storedGradeValue(fields.term1),midyear:storedGradeValue(fields.midyear),term2:storedGradeValue(fields.term2),
+     annual:annual===""?null:Number(annual),adminEditedAt:now,adminEditedBy:adminCode(),
+     updatedAt:now,updatedBy:adminCode(),updatedSource:"gradeboard",canonicalVersion:1,
+     components:{...(oldRec?.components||{})},gradeOverrides:{...(oldRec?.gradeOverrides||{})}
+    };
+    for(const field of ["term1","midyear","term2"]){
+     if(dirtyGradeCells.has(dirtyCellKey(code,sub.id,field))){
+      delete record.components[field];
+      record.gradeOverrides[field]={source:"gradeboard",updatedAt:now,updatedBy:adminCode()}
+     }
+    }
+    updates[base]=record;
+    workingRaw[sub.id]=record;
+    if(oldKey&&oldKey!==sub.id){updates[`grades/${code}/${oldKey}`]=null;delete workingRaw[oldKey]}
+   }
+
+   // الرياضة والفنية تُحسب بنفس خوارزمية البورد وتُحفظ كسجل أساسي مشترك.
+   const liveModel=buildStudentModel(st,c,workingRaw);
+   for(const sub of allSubjects.filter(s=>s.autoType)){
+    const row=rowForSubject(liveModel,sub),[oldKey,oldRec]=findGradeEntry(raw,sub),base=`grades/${code}/${sub.id}`;
+    const annual=rawText(row.annual)===""?computeAnnual(row.term1,row.midyear,row.term2):row.annual;
+    const record={
+     ...(oldRec||{}),
+     subjectId:sub.id,subjectName:sub.name,autoType:sub.autoType,maxGrade:Number(sub.maxGrade||100),passGrade:Number(sub.passGrade??50),classId:st.classId,
+     term1:storedGradeValue(row.term1),midyear:storedGradeValue(row.midyear),term2:storedGradeValue(row.term2),annual:annual===""?null:Number(annual),
+     autoCalculatedByBoard:true,autoCalculatedAt:now,autoCalculatedBy:adminCode(),
+     updatedAt:now,updatedBy:adminCode(),updatedSource:"gradeboard_auto_activity",canonicalVersion:1
+    };
+    // إذا كان السجل مثبتاً من قاعدة إعفاء أو تعديل صريح فلا نستبدله بالحساب التلقائي.
+    const lockedActivity=oldRec?.exemptionAdjustment||oldRec?.activityLocked===true||String(oldRec?.updatedSource||"")==="gradeboard_exemption";
+    if(!lockedActivity){updates[base]=record;workingRaw[sub.id]=record}
+    if(oldKey&&oldKey!==sub.id&&!lockedActivity)updates[`grades/${code}/${oldKey}`]=null
+   }
+
+   updates[`students/${code}/gradeBoardGradeChanged`]=true;
+   updates[`students/${code}/gradeBoardGradeChangedAt`]=now;
+   updates[`students/${code}/gradeBoardGradeChangedBy`]=adminCode()
+  }
+  await dbPatch("",updates);
+  for(const code of dirtyGradeStudents){
+   if(DATA.students[code]){DATA.students[code].gradeBoardGradeChanged=true;DATA.students[code].gradeBoardGradeChangedAt=now;DATA.students[code].gradeBoardGradeChangedBy=adminCode()}
+   DATA.grades[code]=await dbGet(`grades/${encodeURIComponent(code)}`)||{}
+  }
+  dirtyGradeStudents.clear();dirtyGradeCells.clear();EDIT_MODE=false;
+  $("editGradesBtn").textContent="تعديل الدرجات";$("saveGradesBtn").disabled=true;$("saveGradesBtn").textContent="حفظ الدرجات";
+  renderAllBoards();toast("تم حفظ الدرجات والرياضة والفنية كسجل أساسي موحد للكرت وصفحة الطالب.","success")
+ }catch(e){console.error("GRADEBOARD_SAVE_ERROR",e);toast("تعذر حفظ الدرجات.","error");btn.disabled=false;btn.textContent=`حفظ الدرجات (${dirtyGradeStudents.size})`}
+}
+
+async function clearGradeChangedMarkers(){
+ if(!ACTIVE_GROUPS.length)return toast("ادخل إلى البورد أولاً.","warn");
+ if(dirtyGradeStudents.size)return toast("احفظ الدرجات المعدلة أولاً قبل حذف علامة تم تعديلهم.","warn");
+ const codes=[...new Set(ACTIVE_GROUPS.flatMap(g=>g.students.map(st=>st.code)).filter(Boolean))];
+ const changed=codes.filter(code=>DATA.students[code]?.gradeBoardGradeChanged===true);
+ if(!changed.length)return toast("لا يوجد طلاب عليهم علامة تم تعديل الدرجات.","warn");
+ const btn=$("clearChangedBtn");btn.disabled=true;btn.textContent="جاري الحذف...";
+ try{
+  const updates={};
+  changed.forEach(code=>{
+   updates[`students/${code}/gradeBoardGradeChanged`]=null;
+   updates[`students/${code}/gradeBoardGradeChangedAt`]=null;
+   updates[`students/${code}/gradeBoardGradeChangedBy`]=null
+  });
+  await dbPatch("",updates);
+  changed.forEach(code=>{
+   if(DATA.students[code]){
+    delete DATA.students[code].gradeBoardGradeChanged;
+    delete DATA.students[code].gradeBoardGradeChangedAt;
+    delete DATA.students[code].gradeBoardGradeChangedBy
+   }
+  });
+  renderAllBoards();
+  toast(`تم حذف علامة التعديل من ${changed.length} طالب/ة، وبقوا مثل باقي الطلبة بدون تغيير درجاتهم.`,"success")
+ }catch(e){console.error(e);toast("تعذر حذف علامة تم تعديلهم.","error")}
+ finally{btn.disabled=false;btn.textContent="حذف علامة تم تعديلهم"}
+}
+
+/* =========================
+   Excel
+========================= */
+function excelValue(v){const t=rawText(v);if(!t)return"";const n=Number(t);return Number.isFinite(n)?n:t}
+function safeSheetName(name){return String(name||"صف").replace(/[\\\/\?\*\[\]:]/g,"-").slice(0,31)}
+function downloadExcel(){
+ if(!ACTIVE_GROUPS.length)return toast("ادخل إلى البورد أولاً.","warn");
+ if(dirtyGradeStudents.size)return toast("احفظ الدرجات المعدلة قبل تحميل Excel.","warn");
+ if(typeof XLSX==="undefined")return toast("تعذر تحميل مكتبة Excel. تحقق من الإنترنت.","error");
+ try{
+  const wb=XLSX.utils.book_new(),year=$("schoolYear").value.trim()||"2026-2027";
+  ACTIVE_GROUPS.forEach((g,gi)=>{
+   const subjects=normalizeClassSubjects(g.c),rules=effectiveRulesForClass(g.c),items=currentModelsForGroup(g),showMinisterial=!!rules.ministerial.enabled,showExemption=!!rules.exemption.enabled;
+   const head=["ت","كود الطالب","اسم الطالب"];
+   subjects.forEach(s=>head.push(`${s.name} - فصل أول`,`${s.name} - نصف السنة`,`${s.name} - فصل ثاني`,`${s.name} - السعي`));
+   head.push("المعدل","عدد مواد الرسوب");
+   if(showMinisterial)head.push("الدخول الوزاري");
+   if(showExemption)head.push("الإعفاء");
+   const aoa=[head];
+   items.forEach((item,i)=>{
+    const baseModel=liveModel(item,subjects),lm=displayModelForRules(baseModel,rules),avg=boardAverageForRules(lm,rules),fails=failedSubjectCount(lm),m=ministerialStatus(lm,rules.ministerial),e=exemptionStatus(lm,rules.exemption),row=[i+1,item.student.code||"",item.student.name||""];
+    lm.rows.forEach(r=>row.push(excelValue(r.term1),excelValue(r.midyear),excelValue(r.term2),excelValue(r.annual)));
+    row.push(avg===""?"":avg,fails);
+    if(showMinisterial)row.push(m.text);
+    if(showExemption)row.push(e.text);
+    aoa.push(row)
+   });
+   const ws=XLSX.utils.aoa_to_sheet(aoa);
+   ws["!freeze"]={xSplit:3,ySplit:1};
+   ws["!cols"]=head.map((h,i)=>({wch:i===2?28:i<3?12:14}));
+   const gender=g.gender==="female"?"بنات":"بنين",sheetName=safeSheetName(`${g.c.name}-${gender}-${gi+1}`);
+   XLSX.utils.book_append_sheet(wb,ws,sheetName)
+  });
+  XLSX.writeFile(wb,`بورد_الدرجات_${String(year).replace(/[^\d-]/g,"")}.xlsx`);
+  toast("تم إنشاء ملف Excel للبورد.","success")
+ }catch(e){console.error("EXCEL_ERROR",e);toast("تعذر إنشاء ملف Excel.","error")}
+}
+/* =========================
+   PDF
+========================= */
+function waitImages(root){return Promise.all([...root.querySelectorAll("img")].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve})))}
+function waitPaint(){return new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)))}
+function fileSafe(v){return String(v||"بورد").replace(/[\\/:*?"<>|]+/g,"-").replace(/\s+/g,"_")}
+function pdfGradeCell(value,row,annual=false){
+ const state=gradeState(value,row,annual);
+ return`<td class="pdf-grade ${annual?"annual":"term"} ${state}">${gradeDisplay(value)}</td>`
+}
+function pdfPageHTML(g,subjects,studentItems,pageIndex,totalPages,studentStart){
+ const c=g.c,person=personLabel(c,g.gender),year=$("schoolYear").value.trim()||"2026-2027",count=Math.max(1,studentItems.length),subCount=Math.max(1,subjects.length),rowH=Math.max(5,Math.min(22,Math.floor(600/count))),pdfFont=Math.max(3.6,Math.min(7,rowH*.56)),headFont=subCount>=12?4.2:subCount>=9?4.8:5.6,subjectFont=subCount>=12?4.4:subCount>=9?5:5.8,rules=effectiveRulesForClass(c),showMinisterial=!!rules.ministerial.enabled,showExemption=!!rules.exemption.enabled;
+ const subjectHeaders=subjects.map(s=>`<th colspan="4" class="subject-title">${esc(s.name)}</th>`).join(""),subHeaders=subjects.map(()=>`<th class="small-head">ف1</th><th class="small-head">نصف</th><th class="small-head">ف2</th><th class="small-head">سعي</th>`).join("");
+ const optionalHeads=`${showMinisterial?'<th rowspan="2" class="a4-status">وزاري</th>':""}${showExemption?'<th rowspan="2" class="a4-status">الإعفاء</th>':""}`;
+ const rows=studentItems.map((item,i)=>{
+  const baseModel=liveModel(item,subjects),lm=displayModelForRules(baseModel,rules),avg=boardAverageForRules(lm,rules),fails=failedSubjectCount(lm),m=ministerialStatus(lm,rules.ministerial),e=exemptionStatus(lm,rules.exemption);
+  return`<tr><td>${studentStart+i+1}</td><td class="a4-name">${esc(item.student.name||"—")}</td>${lm.rows.map(r=>pdfGradeCell(r.term1,r)+pdfGradeCell(r.midyear,r)+pdfGradeCell(r.term2,r)+pdfGradeCell(r.annual,r,true)).join("")}<td>${avg===""?"—":avg}</td><td>${fails}</td>${showMinisterial?`<td class="pdf-status ${m.css}">${esc(m.text)}</td>`:""}${showExemption?`<td class="pdf-status ${e.css}">${esc(e.text)}</td>`:""}</tr>`
+ }).join("");
+ return`<section class="board-a4" style="--pdfRowH:${rowH}px;--pdfFont:${pdfFont}px;--pdfNameFont:${Math.max(5.2,pdfFont+.6)}px;--pdfHeadFont:${headFont}px;--pdfSubjectFont:${subjectFont}px">
+  <div class="board-a4-head"><img src="logo.png" alt=""><div class="board-a4-title"><h2>مدرسة التحدي الأهلية المختلطة</h2><h3>بورد الدرجات - ${esc(c.name||"الصف")}</h3><p>${g.gender==="female"?"بنات":"بنين"} | ${esc(roomLabel(c.roomNumber))} | ${esc(year)}</p></div><div class="board-a4-meta"><div>المواد: ${subjects.length}</div><div>الصفحة: ${pageIndex+1} / ${totalPages}</div><div>A4 أفقي</div></div></div>
+  <div class="board-a4-rule">ف1 + نصف السنة + ف2 + السعي — الحرج بالفصول برتقالي، الحرج بالسعي أسود، والرسوب بالسعي أحمر.</div>
+  <table class="board-a4-table"><thead><tr><th rowspan="2" class="a4-seq">ت</th><th rowspan="2" class="a4-name">اسم ${esc(person)}</th>${subjectHeaders}<th rowspan="2">المعدل</th><th rowspan="2">مواد الرسوب</th>${optionalHeads}</tr><tr>${subHeaders}</tr></thead><tbody>${rows}</tbody></table>
+  <div class="board-a4-foot"><span>قسم الحوكمة - بورد الدرجات</span><span>${esc(year)}</span></div>
+ </section>`
+}
+async function downloadBoardPDF(){
+ if(!ACTIVE_GROUPS.length)return toast("ادخل إلى البورد أولاً.","warn");
+ if(dirtyGradeStudents.size)return toast("احفظ الدرجات المعدلة قبل تحميل PDF.","warn");
+ const btn=$("downloadBtn");btn.disabled=true;btn.textContent="جاري تجهيز PDF...";
+ try{
+  const host=$("pdfHost"),pagesHTML=[];
+  for(const g of ACTIVE_GROUPS){
+   const subjects=normalizeClassSubjects(g.c),models=currentModelsForGroup(g),perPage=18,total=Math.max(1,Math.ceil(models.length/perPage));
+   for(let p=0;p<total;p++)pagesHTML.push(pdfPageHTML(g,subjects,models.slice(p*perPage,(p+1)*perPage),p,total,p*perPage))
+  }
+  host.innerHTML=pagesHTML.join("");
+  const els=[...host.querySelectorAll(".board-a4")],{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:"landscape",unit:"mm",format:"a4",compress:true});
+  for(let i=0;i<els.length;i++){
+   if(i)pdf.addPage("a4","landscape");await waitImages(els[i]);await waitPaint();
+   const canvas=await html2canvas(els[i],{scale:1.8,useCORS:true,allowTaint:true,backgroundColor:"#fff",logging:false,width:1123,height:794,windowWidth:1123,windowHeight:794});
+   pdf.addImage(canvas.toDataURL("image/jpeg",.97),"JPEG",0,0,297,210,undefined,"FAST");canvas.width=1;canvas.height=1
+  }
+  pdf.save(`بورد_الدرجات_${fileSafe($("schoolYear").value)}.pdf`);host.innerHTML="";
+  toast("تم تحميل بورد الدرجات PDF.","success")
+ }catch(e){console.error(e);$("pdfHost").innerHTML="";toast("تعذر إنشاء PDF.","error")}
+ finally{btn.disabled=false;btn.textContent="تحميل PDF"}
+}
+
+/* =========================
+   تحديث وتهيئة
+========================= */
+$("studentSearch").addEventListener("input",()=>{
+ if(dirtyGradeStudents.size){$("studentSearch").value="";return toast("احفظ الدرجات المعدلة قبل البحث.","warn")}
+ renderAllBoards()
+});
+[
+ "ministerialEnabled","ministerialMaxSubjects","ministerialMaxDeficit",
+ "exemptionEnabled","exemptionMinAverage","exemptionMinSubject",
+ "exemptionFailCount","exemptionFailDecision","individualMinSubject","exemptionMaxActivities"
+].forEach(id=>{
+ const el=$(id);if(!el)return;
+ el.addEventListener("input",previewRuleChanges);
+ el.addEventListener("change",previewRuleChanges)
+});
+
+
+async function refreshCore(){
+ if(dirtyGradeStudents.size)return toast("احفظ الدرجات المعدلة قبل التحديث.","warn");
+ try{
+  $("loading").classList.remove("hidden");
+  const[students,classes]=await Promise.all([dbGet("students"),dbGet("classes")]);
+  DATA.students=students||{};DATA.classes=classes||{};
+  Object.entries(DATA.students).forEach(([code,x])=>{if(x&&!x.code)x.code=code});
+  Object.entries(DATA.classes).forEach(([id,x])=>{if(x&&!x.id)x.id=id});
+  renderClasses();
+  if(ACTIVE_GROUPS.length){
+   ACTIVE_GROUPS=selectedGroups();await loadGradesForGroups(ACTIVE_GROUPS);renderAllBoards()
+  }
+  toast("تم تحديث البيانات.","success")
+ }catch(e){console.error(e);toast("تعذر تحديث البيانات.","error")}
+ finally{$("loading").classList.add("hidden")}
+}
+
+(async function init(){
+ try{
+  if(!await verifyAdmin())return;
+  const[students,classes]=await Promise.all([dbGet("students"),dbGet("classes")]);
+  DATA.students=students||{};DATA.classes=classes||{};
+  Object.entries(DATA.students).forEach(([code,x])=>{if(x&&!x.code)x.code=code});
+  Object.entries(DATA.classes).forEach(([id,x])=>{if(x&&!x.id)x.id=id});
+  renderClasses()
+ }catch(e){console.error(e);toast("تعذر تحميل بورد الدرجات.","error")}
+ finally{$("loading").classList.add("hidden")}
+})();
+</script>
+</body>
+</html>

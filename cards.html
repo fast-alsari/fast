@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=5,user-scalable=yes,viewport-fit=cover">
+<meta name="theme-color" content="#075fcf">
+<title>الكرتات | مدرسة التحدي الأهلية المختلطة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dom-to-image-more@3.6.0/dist/dom-to-image-more.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--p:#075fcf;--ps:#edf5ff;--pink:#d84f94;--pinks:#fff0f7;--g:#078b50;--r:#d92d20;--bg:#f5f8fc;--text:#172033;--muted:#667085;--border:#e3e9f1}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:"Cairo",Tahoma,Arial,sans-serif;background:var(--bg);color:var(--text)}button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!important}
+.loading{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:#fff}.loading-box{text-align:center}.loader{width:44px;height:44px;margin:auto;border:4px solid #e7edf5;border-top-color:var(--p);border-radius:50%;animation:spin .8s linear infinite}.loading-text{margin-top:10px;color:var(--p);font-size:10px;font-weight:900}@keyframes spin{to{transform:rotate(360deg)}}
+.header{position:sticky;top:0;z-index:50;background:#fff;border-bottom:1px solid var(--border)}.header-in{width:min(1450px,100%);min-height:68px;margin:auto;padding:8px 14px;display:flex;align-items:center;justify-content:space-between;gap:9px}.brand{display:flex;align-items:center;gap:9px}.brand img{width:47px;height:47px;object-fit:contain}.brand h1{font-size:14px;font-weight:900}.brand p{margin-top:3px;color:var(--p);font-size:8px;font-weight:900}.actions{display:flex;gap:6px;flex-wrap:wrap}
+.btn{min-height:39px;padding:0 12px;border:0;border-radius:10px;font-size:9px;font-weight:900}.btn-p{color:#fff;background:var(--p)}.btn-soft{color:var(--p);background:var(--ps)}.btn-g{color:#fff;background:var(--g)}.btn-r{color:#fff;background:var(--r)}
+.main{width:min(1450px,100%);margin:auto;padding:14px}.hero{padding:18px;border-radius:18px;background:linear-gradient(135deg,#0870e8,#064594);color:#fff}.hero h2{font-size:19px}.hero p{margin-top:6px;font-size:9px;line-height:1.8}
+.panel{margin-top:13px;border:1px solid var(--border);border-radius:16px;background:#fff;overflow:hidden}.panel-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px}.panel-head h3{font-size:13px}.panel-body{padding:13px}
+.toolbar{display:grid;grid-template-columns:1fr 1fr auto auto;gap:7px}.toolbar input,.toolbar select{height:42px;padding:0 10px;border:1px solid var(--border);border-radius:9px;outline:none}
+.class-grid{margin-top:12px}.classes-groups{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"male female";gap:14px;direction:ltr}.classes-column{direction:rtl;border:1px solid var(--border);border-radius:16px;padding:11px;background:#fff}.classes-column.female{grid-area:female;background:linear-gradient(180deg,#fff7fb,#fff)}.classes-column.male{grid-area:male;background:linear-gradient(180deg,#f5f9ff,#fff)}.classes-column.mixed{grid-column:1/-1;grid-area:auto;background:#fafafa;margin-top:2px}.classes-column-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:9px;padding:8px 10px;border-radius:11px;font-weight:900}.classes-column.female .classes-column-head{color:#a62d68;background:#ffe6f2;border:1px solid #efb0ce}.classes-column.male .classes-column-head{color:#0a4b9d;background:#e5f0ff;border:1px solid #a8c9f3}.classes-column.mixed .classes-column-head{color:#475467;background:#f2f4f7;border:1px solid #d0d5dd}.classes-column-head strong{font-size:12px}.classes-column-head span{font-size:8px}.classes-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:9px}.class-card{position:relative;padding:13px 13px 11px;border-radius:14px;text-align:right;transition:.18s ease;box-shadow:0 6px 16px rgba(15,23,42,.045)}.class-card:hover{transform:translateY(-1px)}.class-card.female{background:#fff0f7;border:1.5px solid #e89abb}.class-card.male{background:#edf5ff;border:1.5px solid #9fc2ef}.class-card.mixed{background:#f8fafc;border:1.5px solid #cbd5e1}.class-card.female.active{box-shadow:0 0 0 3px rgba(216,79,148,.16),0 8px 20px rgba(216,79,148,.12);border-color:#d84f94}.class-card.male.active{box-shadow:0 0 0 3px rgba(7,95,207,.14),0 8px 20px rgba(7,95,207,.10);border-color:#075fcf}.class-card.mixed.active{box-shadow:0 0 0 3px rgba(71,84,103,.12)}.class-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;padding-left:24px}.class-card h4{font-size:10px;line-height:1.6}.class-card .class-room{margin-top:5px;font-size:8px;font-weight:900;line-height:1.6}.class-card.female .class-room{color:#a62d68}.class-card.male .class-room{color:#0a4b9d}.class-card.mixed .class-room{color:#475467}.class-card .class-count-small{margin-top:4px;color:var(--muted);font-size:7px;font-weight:700}.class-check{position:absolute;top:11px;left:11px;width:19px;height:19px;border-radius:50%;border:1px solid #bfd0e0;background:#fff;display:grid;place-items:center;font-size:11px;color:#fff}.class-card.female.active .class-check{background:#d84f94;border-color:#d84f94}.class-card.male.active .class-check{background:#075fcf;border-color:#075fcf}.class-card.mixed.active .class-check{background:#667085;border-color:#667085}@media(max-width:760px){.classes-groups{grid-template-columns:1fr;grid-template-areas:"female" "male"}.classes-column.mixed{grid-column:1}}
+.preview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:24px;align-items:start}.preview-item{min-width:0;width:100%;max-width:794px;margin-inline:auto}.preview-item-label{margin-bottom:8px;color:#475467;font-size:9px;font-weight:900}.preview-scale-shell{position:relative;width:100%;max-width:794px;aspect-ratio:210/297;overflow:hidden;margin-inline:auto}.preview-scale-shell .a4-page{position:absolute;top:0;right:0;transform-origin:top right}.preview-final-image{display:block;width:100%;height:100%;object-fit:fill;background:#fff;border:0;margin:0;padding:0;image-rendering:auto}
+.a4-page{position:relative;width:794px;height:1123px;aspect-ratio:auto;overflow:hidden;background:linear-gradient(180deg,rgba(255,255,255,.98) 0%,rgba(248,251,255,.98) 100%),radial-gradient(circle at top right,rgba(255,255,255,.75) 0 16%,transparent 17%),radial-gradient(circle at left 20%,rgba(255,255,255,.38) 0 11%,transparent 12%);padding:18px 20px 20px 20px;display:flex;flex-direction:column;font-family:"Cairo",Tahoma,Arial,"Simplified Arabic","Traditional Arabic",sans-serif;color:#111;box-shadow:0 18px 42px rgba(18,38,63,.12)}
+.a4-page:before{content:"";position:absolute;inset:0;border:14px solid var(--frame);pointer-events:none}.a4-page:after{content:"";position:absolute;inset:8px;border:3px solid var(--frame-dark);pointer-events:none}
+.frame-pattern{position:absolute;inset:14px;pointer-events:none;border:1px solid rgba(255,255,255,.55);background:radial-gradient(circle at 22% 14%,rgba(255,255,255,.18) 0 2px,transparent 2.5px) 0 0/24px 24px,repeating-linear-gradient(45deg,transparent 0 12px,rgba(255,255,255,.10) 12px 15px)}
+.page-inner{position:relative;z-index:2;display:flex;flex-direction:column;height:100%}
+.a4-head{display:grid;grid-template-columns:82px minmax(0,1fr) 102px;align-items:center;gap:10px;padding:4px 4px 12px;border-bottom:3px solid var(--frame-dark)}.a4-logo{width:76px;height:76px;object-fit:contain}.a4-school{min-width:0;text-align:center;direction:rtl}.a4-school h1{font-family:"Cairo",Tahoma,Arial,sans-serif;font-size:21px;font-weight:900;color:#0b2f59;letter-spacing:0;line-height:1.45;white-space:nowrap;direction:rtl;unicode-bidi:plaintext}.a4-school p{margin-top:3px;color:var(--frame-dark);font-size:12px;font-weight:900;line-height:1.5}.a4-year{text-align:left;color:#475467;font-size:10px;font-weight:900;line-height:1.85}
+.student-panel{margin-top:8px;padding:11px 13px 9px;border:2px solid var(--frame-light);border-radius:13px;background:linear-gradient(180deg,rgba(255,255,255,.95) 0%,rgba(255,255,255,.99) 100%);box-shadow:inset 0 0 0 1px rgba(255,255,255,.9),0 5px 14px rgba(15,23,42,.04)}.student-panel-top{display:flex;align-items:center;justify-content:space-between;gap:10px}.student-name-wrap{min-width:0}.student-label{display:block;color:#59687a;font-size:8px;font-weight:700;line-height:1.25}.student-name{display:block;margin-top:0;font-size:13px;font-weight:900;color:#111827;line-height:1.28}.student-meta-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:7px}.student-meta{padding:5px 7px;border-radius:8px;background:#f8fbff;border:1px solid #dfe8f2}.student-meta small{display:block;color:#6b7280;font-size:7.2px;font-weight:700;line-height:1.2}.student-meta strong{display:block;margin-top:1px;font-size:10.2px;font-weight:900;color:#111827;line-height:1.35}.student-code{display:flex;align-items:center;justify-content:center;min-width:120px;padding:7px 9px;border-radius:12px;background:linear-gradient(135deg,var(--frame-dark),var(--frame));color:#fff;border:1px solid rgba(255,255,255,.45);box-shadow:0 6px 15px rgba(15,23,42,.12)}.student-code span{display:block;text-align:center}.student-code .code-label{font-size:7px;font-weight:700;opacity:.92;line-height:1.15}.student-code .code-value{margin-top:2px;font-size:10.8px;font-weight:900;direction:ltr;letter-spacing:.45px;line-height:1.2}
+.grades-wrap{margin-top:8px;display:flex;flex-direction:column;gap:5px;flex:1 1 auto}.grades-title{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:0 2px}.grades-title h2{font-size:14px;color:#0b2f59;font-weight:900;line-height:1.3}.grades-title span{font-size:9px;color:#667085;font-weight:700}
+.grades-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:10.2px;background:#fff;border:2px solid var(--table-border)}.grades-table th,.grades-table td{border:1px solid var(--table-border);padding:7px 4px;text-align:center;vertical-align:middle;line-height:1.35}.grades-table th{background:var(--table-head);color:var(--table-head-text);font-weight:900;font-size:9.6px;height:86px}.grades-table th:first-child,.grades-table td:first-child{width:24%;text-align:right;padding-right:9px;font-weight:900;font-size:10.5px}.grades-table tbody td:not(:first-child){font-size:10.8px;font-weight:900}.grades-table tbody tr:nth-child(even):not(.summary-row){background:#fbfcfe}.grades-table .summary-row td{background:#f2f6fb;font-weight:900;color:#172033;border-top:1.5px solid var(--table-border);font-size:10.3px}.grades-table .summary-row.average td{background:#edf5ff;color:#0b4f9f}.grades-table .vertical-head{width:7.5%;min-width:48px;padding:4px 1px!important;vertical-align:middle;text-align:center!important;overflow:hidden}.grades-table .vertical-head>span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;line-height:1.15;font-size:9.5px;font-weight:900}.grades-table .board-head{width:7.5%;min-width:48px;padding:4px 1px!important;vertical-align:middle;text-align:center!important;overflow:hidden}.grades-table .board-head>span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;line-height:1.15;font-size:10px;font-weight:900}.grades-table .board-value{width:7.5%;padding:4px 1px!important;background:var(--table-head-soft)!important;font-weight:900;border-right:2px solid var(--table-border)!important;border-left:2px solid var(--table-border)!important;vertical-align:middle!important;text-align:center!important;overflow:hidden;position:static!important}.grades-table .board-value>span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap;line-height:1.15;font-size:13px;font-weight:900;max-height:100%}.grades-table .board-value.board-result>span{font-size:13px}.grade-fail{color:#c62828;font-weight:900}.grade-high{color:#078b50;font-weight:900}.grade-normal{color:#111;font-weight:900}.no-grades{padding:20px;border:1px dashed #b8c6d6;border-radius:10px;text-align:center;color:#667085;font-size:11px;font-weight:700}
+.a4-footer{margin-top:10px;padding-top:10px;display:grid;grid-template-columns:120px 1fr;align-items:end;gap:20px}.a4-footer.no-qr{grid-template-columns:1fr}.a4-footer.no-qr .manager-box{max-width:360px;width:100%;margin-inline:auto}.qr-only{display:flex;align-items:flex-end;justify-content:flex-start}.sheet-qr{width:74px;height:74px;padding:4px;border:2px solid #7f92a7;border-radius:10px;background:#fff;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 16px rgba(15,23,42,.07)}.sheet-qr canvas{width:64px!important;height:64px!important;display:block!important}.sheet-qr img{display:none!important}.manager-box{display:flex;flex-direction:column;justify-content:flex-end;align-items:center;min-height:74px;padding:8px 12px;border-top:2px solid #879bb2}.manager-title{font-size:14px;font-weight:900;color:#101828}.manager-name{display:block;margin-top:9px;font-size:15px;font-weight:900;color:#101828}
+.toast{position:fixed;z-index:8000;left:50%;top:80px;transform:translate(-50%,-10px);opacity:0;visibility:hidden;width:min(500px,calc(100% - 20px));padding:11px;border-radius:12px;background:#172033;color:#fff;text-align:center;font-size:9px;font-weight:900;transition:.2s}.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0)}
+.pdf-host{position:fixed;left:-12000px;top:0;width:794px}.pdf-host .a4-page{width:794px;height:1123px;aspect-ratio:auto;box-shadow:none}
+.modal{position:fixed;inset:0;z-index:7000;display:none;align-items:center;justify-content:center;background:rgba(15,23,42,.45);padding:18px}.modal.show{display:flex}.modal-card{width:min(430px,100%);background:#fff;border-radius:18px;padding:18px;box-shadow:0 18px 40px rgba(0,0,0,.16)}.modal-card h3{font-size:15px;font-weight:900}.modal-card p{margin-top:6px;color:#667085;font-size:9px;line-height:1.8}.modal-card input{width:100%;height:44px;margin-top:11px;padding:0 12px;border:1px solid var(--border);border-radius:11px;outline:none}.modal-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+.public-card-screen{min-height:100vh;width:100%;padding:18px;display:flex;align-items:flex-start;justify-content:center;background:linear-gradient(180deg,#eef3f8,#f9fbfd)}.public-card-wrap{position:relative;width:min(794px,100%);aspect-ratio:210/297;margin:0 auto;overflow:hidden}.public-card-wrap .a4-page{position:absolute;top:0;right:0;width:794px;height:1123px;aspect-ratio:auto;transform-origin:top right;box-shadow:0 20px 48px rgba(15,23,42,.16)}
+@media(max-width:860px){.toolbar{grid-template-columns:1fr 1fr}.toolbar .btn{width:100%}.preview-grid{grid-template-columns:1fr}.header-in{align-items:flex-start}.brand h1{font-size:11px}}
+
+.attendance-strip{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:10px}.attendance-box{padding:8px 6px;border-radius:12px;border:1.5px solid color-mix(in srgb,var(--frame) 32%, #dbe5f0);background:linear-gradient(180deg,rgba(255,255,255,.95),rgba(248,250,252,.95));text-align:center;box-shadow:0 4px 10px rgba(15,23,42,.04)}.attendance-box small{display:block;font-size:8px;color:#667085;font-weight:800;line-height:1.2}.attendance-box strong{display:block;margin-top:3px;font-size:13px;color:var(--frame-dark);font-weight:900;line-height:1.2}.grades-table td.grade-fail{color:#d92d20!important;text-decoration:underline;text-decoration-thickness:2px;text-underline-offset:2px;background:#fff7f7;font-weight:900}.grades-table td.grade-critical{background:#f28c28!important;color:#fff!important;font-weight:900}.grades-table td.grade-high{background:#16a34a!important;color:#fff!important;font-weight:900}.grades-table td.grade-normal{color:#111}.grades-table th,.grades-table td{font-size:9.3px}.grades-table th{font-size:8.7px}.grades-table .vertical-head>span,.grades-table .board-head>span,.grades-table .board-value>span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg);white-space:nowrap}.sheet-qr{width:90px;height:90px;padding:5px;border:2px solid #7f92a7;border-radius:13px}.sheet-qr canvas{width:78px!important;height:78px!important}.a4-page{background:linear-gradient(180deg,rgba(255,255,255,.98),rgba(247,250,255,.98)),radial-gradient(circle at top right,rgba(255,255,255,.80) 0 14%,transparent 14.5%),radial-gradient(circle at 12% 85%,rgba(255,255,255,.35) 0 12%,transparent 12.5%)!important}.frame-pattern{background:radial-gradient(circle at 18% 16%,rgba(255,255,255,.2) 0 2px,transparent 2.5px) 0 0/24px 24px,repeating-linear-gradient(45deg,transparent 0 11px,rgba(255,255,255,.12) 11px 14px)!important}@media(max-width:860px){.attendance-strip{grid-template-columns:repeat(3,1fr)}.attendance-box strong{font-size:11px}}
+
+/* ===== V18: جدول 14px + السلوك والانضباط ===== */
+.grades-table{font-size:14px!important;line-height:1.25!important}
+.grades-table th,.grades-table td{font-size:14px!important;font-weight:800!important;text-align:center!important;vertical-align:middle!important;padding:4px 3px!important;line-height:1.25!important}
+.grades-table th:first-child,.grades-table td:first-child{width:21%!important;text-align:center!important;padding-right:3px!important;font-weight:900!important}
+.grades-table .vertical-head,.grades-table .board-head{padding:3px 1px!important}
+.grades-table .vertical-head>span,.grades-table .board-head>span,.grades-table .board-value>span{font-size:14px!important;font-weight:900!important;line-height:1.2!important}
+.grades-table .board-value{vertical-align:middle!important;text-align:center!important;padding:3px 1px!important}
+.grades-table td.grade-fail{color:#d92d20!important;text-decoration:underline!important;text-decoration-thickness:2px!important;text-underline-offset:3px!important;background:#fff7f7!important;font-weight:900!important}
+.grades-table td.grade-critical{background:#f28c28!important;color:#fff!important;text-decoration:none!important;font-weight:900!important}
+.grades-table td.grade-high{background:#16a34a!important;color:#fff!important;text-decoration:none!important;font-weight:900!important}
+.grades-table td.grade-normal{color:#111!important;font-weight:800!important}
+.behavior-panel{margin-top:10px;padding:9px 10px 10px;border:2px solid var(--frame-light);border-radius:14px;background:rgba(255,255,255,.93);box-shadow:0 4px 12px rgba(15,23,42,.04)}
+.behavior-title{text-align:center;font-size:14px;font-weight:900;color:var(--frame-dark);line-height:1.35;margin-bottom:7px}
+.attendance-strip{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:7px!important;margin-top:0!important}
+.attendance-box{min-width:0;padding:7px 4px!important;border-radius:11px!important;border:1.5px solid var(--frame-light)!important;background:#fff!important;text-align:center!important;box-shadow:none!important}
+.attendance-box small{display:block!important;font-size:14px!important;font-weight:900!important;line-height:1.2!important;color:#344054!important;white-space:nowrap}
+.attendance-box strong{display:block!important;margin-top:3px!important;font-size:14px!important;font-weight:900!important;line-height:1.2!important}
+.attendance-box.present strong{color:#16a34a!important}.attendance-box.absent strong{color:#d92d20!important}.attendance-box.late strong{color:#f28c28!important}.attendance-box.escape strong{color:#8b3db8!important}.attendance-box.excused strong{color:#075fcf!important}
+.guardian-phone-card{margin-top:8px;display:flex;align-items:center;justify-content:center;gap:8px;padding:7px 10px;border-radius:11px;background:linear-gradient(135deg,var(--frame-light),#fff);border:1.5px solid var(--frame-light);font-size:14px;font-weight:900;line-height:1.3;color:#172033}
+.guardian-phone-card b{font-size:14px;font-weight:900;direction:ltr;unicode-bidi:plaintext;color:var(--frame-dark)}
+.sheet-qr{width:96px!important;height:96px!important;padding:5px!important;border-radius:14px!important}.sheet-qr canvas{width:84px!important;height:84px!important}
+
+
+/* ===== V20: إخراج نهائي مطابق للمعاينة + Simplified Arabic ===== */
+html,body,button,input,select,.a4-page,.a4-page *{font-family:"Simplified Arabic","Traditional Arabic",Tahoma,Arial,sans-serif!important}
+.student-name-wrap{display:flex!important;align-items:center!important;gap:7px!important;min-width:0!important;flex:1 1 auto!important;white-space:nowrap!important;overflow:hidden!important}
+.student-label{display:inline!important;flex:0 0 auto!important;font-size:13px!important;font-weight:700!important;line-height:1.35!important;white-space:nowrap!important}
+.student-name{display:inline!important;min-width:0!important;margin:0!important;font-size:15px!important;font-weight:900!important;line-height:1.35!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:clip!important}
+.grades-title{display:flex!important;align-items:center!important;justify-content:space-between!important;gap:12px!important;white-space:nowrap!important}
+.grades-title h2{font-size:15px!important;font-weight:900!important;line-height:1.3!important;white-space:nowrap!important}
+.grades-title span{font-size:12px!important;font-weight:700!important;line-height:1.3!important;white-space:nowrap!important}
+.guardian-phone-card{white-space:nowrap!important;flex-wrap:nowrap!important;font-size:14px!important;line-height:1.3!important;overflow:hidden!important}
+.guardian-phone-card span,.guardian-phone-card b{white-space:nowrap!important;font-size:14px!important}
+.a4-footer{grid-template-columns:145px minmax(0,1fr)!important;gap:18px!important;align-items:end!important;padding-top:8px!important}
+.a4-footer.no-qr{grid-template-columns:1fr!important}.a4-footer.no-qr .manager-box{max-width:none!important;width:100%!important}
+.qr-only{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:flex-end!important;gap:5px!important}
+.qr-caption{font-size:12px!important;font-weight:900!important;line-height:1.25!important;color:var(--frame-dark)!important;white-space:nowrap!important;text-align:center!important}
+.sheet-qr{width:118px!important;height:118px!important;padding:6px!important;border:2px solid var(--frame-dark)!important;border-radius:15px!important;background:#fff!important;box-shadow:0 7px 16px rgba(15,23,42,.08)!important}
+.sheet-qr canvas{width:104px!important;height:104px!important;display:block!important}.sheet-qr img{display:none!important}
+.manager-box{display:flex!important;flex-direction:column!important;justify-content:flex-end!important;align-items:stretch!important;min-height:88px!important;padding:0 8px 6px!important;border-top:0!important}
+.result-note{padding:0 4px 7px!important;text-align:center!important;font-size:13px!important;font-weight:800!important;line-height:1.35!important;color:#344054!important;white-space:nowrap!important}
+.manager-line{display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;min-height:44px!important;padding:7px 10px 0!important;border-top:2px solid #879bb2!important;white-space:nowrap!important}
+.manager-title{display:inline!important;font-size:15px!important;font-weight:900!important;line-height:1.3!important;white-space:nowrap!important}
+.manager-name{display:inline!important;margin:0!important;font-size:15px!important;font-weight:900!important;line-height:1.3!important;white-space:nowrap!important}
+.a4-school h1,.a4-school p,.a4-year,.student-code,.student-meta,.behavior-title,.attendance-box{font-family:"Simplified Arabic","Traditional Arabic",Tahoma,Arial,sans-serif!important}
+
+
+/* ===== V21: كل محتوى ورقة النتيجة Bold ===== */
+.a4-page,.a4-page *{font-weight:900!important}
+.a4-page canvas{font-weight:normal!important}
+.preview-final-image{font-weight:normal!important}
+
+
+/* ===== V23: طالب واحد + قواعد متعددة + ملاحظات ولي الأمر + زخرفة ===== */
+.student-lookup{position:relative;margin-bottom:12px;padding:12px;border:1.5px solid #d9e4f0;border-radius:14px;background:linear-gradient(135deg,#f8fbff,#fff)}
+.student-lookup-title{font-size:12px;font-weight:900;color:#0b4f9f;margin-bottom:7px}.student-lookup-sub{font-size:8px;font-weight:900;color:#667085;margin-bottom:8px}
+.student-search-wrap{position:relative}.student-search-wrap input{width:100%;height:46px;padding:0 13px;border:1.5px solid #cbd8e6;border-radius:11px;outline:none;background:#fff;font-size:11px;font-weight:900}.student-search-wrap input:focus{border-color:var(--p);box-shadow:0 0 0 3px rgba(7,95,207,.08)}
+.student-search-results{position:absolute;z-index:200;top:50px;right:0;left:0;max-height:310px;overflow:auto;border:1px solid #d8e2ee;border-radius:12px;background:#fff;box-shadow:0 16px 36px rgba(15,23,42,.14)}
+.student-search-results.hidden{display:none!important}.student-search-result{width:100%;border:0;border-bottom:1px solid #edf1f5;background:#fff;padding:10px 12px;text-align:right;display:flex;align-items:center;justify-content:space-between;gap:10px}.student-search-result:last-child{border-bottom:0}.student-search-result:hover{background:#f5f9ff}.student-search-result strong{display:block;font-size:10px;font-weight:900;color:#172033}.student-search-result small{display:block;margin-top:3px;font-size:7.5px;font-weight:900;color:#667085}.student-search-result .student-result-code{font-size:8px;font-weight:900;color:var(--p);direction:ltr;white-space:nowrap}
+.selected-student-card{margin-top:9px;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:9px 11px;border-radius:11px;border:1.5px solid #9fc2ef;background:#edf5ff}.selected-student-card strong{font-size:10px;font-weight:900;color:#0a4b9d}.selected-student-card span{display:block;margin-top:2px;font-size:7.5px;font-weight:900;color:#475467}.selected-student-card button{border:0;border-radius:8px;padding:7px 10px;background:#fff;color:#d92d20;font-size:8px;font-weight:900}
+
+.modal-card{width:min(720px,100%)!important;max-height:92vh;overflow:auto}.rule-picker{margin-top:12px;display:grid;gap:9px}.rule-block{border:1.5px solid #dce5f0;border-radius:13px;background:#f9fbfd;overflow:hidden}.rule-toggle{display:flex;align-items:center;gap:8px;padding:10px 12px;font-size:10px;font-weight:900;color:#172033;background:#fff}.rule-toggle input{width:18px!important;height:18px!important;margin:0!important;accent-color:var(--p)}.rule-settings{padding:10px 12px;border-top:1px solid #e7edf4}.rule-settings.disabled{opacity:.45;pointer-events:none}.rule-settings-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.rule-settings-grid .field{display:flex;flex-direction:column;gap:4px}.rule-settings-grid label{font-size:8px;font-weight:900;color:#475467}.rule-settings-grid input,.rule-settings-grid select{width:100%;height:38px;margin:0!important;padding:0 9px;border:1px solid #d6e0ea;border-radius:8px;background:#fff;font-size:9px;font-weight:900;outline:none}.rule-help-check{display:flex;align-items:center;gap:8px;margin-top:8px;padding:8px;border-radius:9px;background:#fff;border:1px dashed #b7c7d9;font-size:8px;font-weight:900}.rule-help-check input{width:17px!important;height:17px!important;margin:0!important}
+
+.rule-results-strip{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:7px}.rule-result-card{min-width:0;padding:6px 7px;border:1.5px solid var(--frame-light);border-radius:10px;background:rgba(255,255,255,.94);text-align:center}.rule-result-card small{display:block;font-size:9px;font-weight:900;color:#667085;white-space:nowrap}.rule-result-card strong{display:block;margin-top:2px;font-size:10px;font-weight:900;color:var(--frame-dark);line-height:1.25}.rule-result-card.good strong{color:#078b50}.rule-result-card.bad strong{color:#c62828}.rule-result-card.wait strong{color:#b54708}
+
+.guardian-notes-box{margin-top:7px;padding:7px 10px 6px;border:1.7px solid var(--frame-light);border-radius:11px;background:rgba(255,255,255,.95)}.guardian-notes-title{text-align:right;font-size:12px;font-weight:900;color:var(--frame-dark);line-height:1.25}.guardian-notes-space{height:28px;border-bottom:1px dashed #aab7c6;margin-top:3px}.guardian-signature{margin-top:5px;text-align:left;font-size:11px;font-weight:900;color:#344054;white-space:nowrap}
+
+.a4-page{background:
+ radial-gradient(circle at 14% 10%,rgba(255,255,255,.95) 0 5%,transparent 5.4%),
+ radial-gradient(circle at 86% 18%,rgba(255,255,255,.75) 0 7%,transparent 7.4%),
+ linear-gradient(135deg,rgba(255,255,255,.99),rgba(247,250,255,.985))!important}
+.paper-ornament{position:absolute;z-index:1;inset:16px;pointer-events:none;opacity:.16;background-image:radial-gradient(circle,var(--frame-dark) 1.2px,transparent 1.5px);background-size:30px 30px;border-radius:5px}.paper-ornament:before,.paper-ornament:after{content:"";position:absolute;width:70px;height:70px;border-color:var(--frame-dark);opacity:.7}.paper-ornament:before{top:7px;right:7px;border-top:4px double var(--frame-dark);border-right:4px double var(--frame-dark);border-radius:0 18px 0 0}.paper-ornament:after{bottom:7px;left:7px;border-bottom:4px double var(--frame-dark);border-left:4px double var(--frame-dark);border-radius:0 0 0 18px}.frame-pattern{box-shadow:inset 0 0 0 2px rgba(255,255,255,.28),inset 0 0 22px rgba(0,0,0,.03)!important}
+
+@media(max-width:720px){.rule-settings-grid{grid-template-columns:1fr}.rule-results-strip{grid-template-columns:1fr 1fr}.student-search-result{align-items:flex-start}}
+
+
+/* ===== V24: دخول أسرع بدون حجب الصفحة ===== */
+.core-load-status{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:0 0 10px;padding:9px 11px;border:1px solid #dbe6f2;border-radius:11px;background:#f8fbff;color:#475467;font-size:9px;font-weight:900;line-height:1.4}.core-load-status.ready{background:#f2fff7;border-color:#bfe7ce;color:#067647}.core-load-status.error{background:#fff6f6;border-color:#efc1c1;color:#b42318}.core-load-dot{width:8px;height:8px;border-radius:50%;background:#075fcf;box-shadow:0 0 0 4px rgba(7,95,207,.08);flex:0 0 auto}.core-load-status.ready .core-load-dot{background:#16a34a;box-shadow:0 0 0 4px rgba(22,163,74,.08)}.core-load-status.error .core-load-dot{background:#d92d20;box-shadow:0 0 0 4px rgba(217,45,32,.08)}
+</style>
+</head>
+<body>
+<div id="loading" class="loading hidden"><div class="loading-box"><div class="loader"></div><div id="loadingText" class="loading-text">جاري التحميل...</div></div></div>
+<header class="header"><div class="header-in"><div class="brand"><img src="logo.png" alt=""><div><h1>مدرسة التحدي الأهلية المختلطة</h1><p>قسم الحوكمة - الكرتات</p></div></div><div class="actions"><button class="btn btn-soft" onclick="location.href='add.html'">الرجوع للإدارة</button><button class="btn btn-r" onclick="logout()">خروج</button></div></div></header>
+<main class="main">
+<section class="hero"><h2>تصميم نتائج الطلبة</h2><p>اختر الصفوف فقط، ثم اضغط معاينة. سيتم إنشاء ورقة A4 مستقلة لكل طالب بتصميم رسمي، مع جدول الدرجات وباركود صغير يفتح ملف PDF الخاص بنفس الورقة.</p></section>
+<section class="panel"><div class="panel-head"><h3>اختيار الصفوف</h3><button class="btn btn-soft" onclick="loadData()">تحديث</button></div><div class="panel-body">
+<div id="coreLoadStatus" class="core-load-status"><span style="display:flex;align-items:center;gap:8px"><i class="core-load-dot"></i><span id="coreLoadStatusText">جاري التحقق من الدخول...</span></span><span id="coreLoadCount"></span></div>
+<div class="student-lookup"><div class="student-lookup-title">إصدار كرت لطالب واحد</div><div class="student-lookup-sub">اكتب اسم الطالب أو الكود، ثم اختره من النتائج. عند اختيار طالب تصبح المعاينة والتحميل لهذا الطالب فقط.</div><div class="student-search-wrap"><input id="studentSearch" type="search" autocomplete="off" placeholder="ابحث باسم الطالب أو الكود"><div id="studentSearchResults" class="student-search-results hidden"></div></div><div id="selectedStudentCard" class="selected-student-card hidden"></div></div>
+<div class="toolbar"><input id="search" placeholder="بحث باسم الصف"><select id="genderSelect"><option value="">الجنس: الكل</option><option value="male">بنين</option><option value="female">بنات</option><option value="mixed">مختلط</option></select><button class="btn btn-p" onclick="selectVisibleClasses()">تحديد الظاهر</button><button class="btn btn-soft" onclick="clearSelection()">إلغاء التحديد</button></div>
+<div id="classGrid" class="class-grid"><div class="empty">سيتم إظهار الصفوف فور اكتمال التحقق.</div></div>
+<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:12px"><button class="btn btn-g" onclick="renderPreview()">معاينة</button><button id="pdfBtn" class="btn btn-p" onclick="downloadPDF()">تحميل PDF</button></div>
+</div></section>
+<section class="panel"><div class="panel-head"><h3>المعاينة</h3><span id="countText" style="font-size:8px;color:#667085">0 ورقة</span></div><div class="panel-body"><div id="preview" class="preview-grid"><div class="empty">حدد الصفوف ثم اضغط معاينة.</div></div></div></section>
+</main>
+<div id="pdfHost" class="pdf-host"></div><div id="toast" class="toast"></div>
+<div id="managerModal" class="modal"><div class="modal-card"><h3>معاينة النتائج</h3><p>اكتب اسم مدير المدرسة، ثم فعّل قاعدة واحدة أو أكثر. يمكن تشغيل النجاح والوزاري والإعفاء معاً، ولكل قاعدة إعداداتها المستقلة.</p><input id="managerNameInput" placeholder="اسم المدير"><div class="rule-picker">
+<div class="rule-block"><label class="rule-toggle"><input id="rulePassEnabled" type="checkbox" checked> قاعدة النجاح</label><div id="passRuleSettings" class="rule-settings"><div class="rule-settings-grid"><div class="field"><label>الفترة المعتمدة للنجاح</label><select id="passPeriod"><option value="auto">تلقائي حسب آخر فترة متوفرة</option><option value="term1">الفصل الأول</option><option value="midyear">نصف السنة</option><option value="term2">الفصل الثاني</option><option value="annual">السعي السنوي</option><option value="finalExam">الامتحان النهائي</option><option value="final">الدرجة النهائية</option><option value="secondRound">الدور الثاني</option></select></div></div></div></div>
+<div class="rule-block"><label class="rule-toggle"><input id="ruleMinisterialEnabled" type="checkbox"> قاعدة الدخول الوزاري</label><div id="ministerialRuleSettings" class="rule-settings disabled"><div class="rule-settings-grid"><div class="field"><label>أقصى عدد مواد راسب بها</label><input id="ministerialMaxSubjects" type="number" min="0" max="30" value="3"></div><div class="field"><label>أقصى نقص مسموح للمادة</label><input id="ministerialMaxDeficit" type="number" min="0" max="100" step=".5" value="10"></div></div></div></div>
+<div class="rule-block"><label class="rule-toggle"><input id="ruleExemptionEnabled" type="checkbox"> قاعدة الإعفاء</label><div id="exemptionRuleSettings" class="rule-settings disabled"><div class="rule-settings-grid"><div class="field"><label>المعدل المطلوب للإعفاء العام</label><input id="exemptionMinAverage" type="number" min="0" max="100" step=".5" value="85"></div><div class="field"><label>أقل سعي للمادة</label><input id="exemptionMinSubject" type="number" min="0" max="100" step=".5" value="75"></div><div class="field"><label>عدد مواد الرسوب المسموح</label><input id="exemptionFailCount" type="number" min="0" max="10" value="0"></div><div class="field"><label>حكم عدد مواد الرسوب</label><select id="exemptionFailDecision"><option value="allow">يسمح حتى العدد المحدد</option><option value="block">العدد المحدد يمنع الإعفاء</option></select></div><div class="field"><label>سعي الإعفاء الفردي</label><input id="individualMinSubject" type="number" min="0" max="100" step=".5" value="90"></div></div><label class="rule-help-check"><input id="helperAssist" type="checkbox"> مساعدة الرياضة والفنية للوصول إلى معدل الإعفاء المطلوب إذا كانت المساعدة تحقق الإعفاء</label></div></div>
+</div><div class="modal-actions" style="flex-wrap:wrap"><button class="btn btn-soft" onclick="closeManagerModal()">إلغاء</button><button id="previewAccountantBtn" class="btn btn-g" onclick="confirmManagerPreview('accountant')">تحميل المفعل من الحسابات</button><button id="previewAllBtn" class="btn btn-p" onclick="confirmManagerPreview('all')">تحميل الكل</button></div></div></div>
+<script>
+const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",YEAR="2026-2027",PUBLIC_CARD_PATH="publicStudentCards";
+const A4_BASE_W=794,A4_BASE_H=1123,PRINT_SCALE=3.125,PRINT_W=Math.round(A4_BASE_W*PRINT_SCALE),PRINT_H=Math.round(A4_BASE_H*PRINT_SCALE);
+const $=id=>document.getElementById(id),norm=v=>String(v||"").trim().toLowerCase(),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+let STUDENTS={},CLASSES={},SELECTED_CLASSES=new Set(),SELECTED_STUDENT_CODE="",timer=0,GRADE_CACHE={},ATTENDANCE_CACHE={},PREVIEW_MODELS=[],CURRENT_MANAGER="",PREVIEW_SNAPSHOTS=[],PREVIEW_OPTIONS=defaultPreviewOptions();
+const CORE_CACHE_KEY="tahadi_cards_core_cache_v1",CORE_CACHE_MAX_AGE=15*60*1000;
+function setCoreStatus(text,state="",count=""){const box=$("coreLoadStatus"),label=$("coreLoadStatusText"),counter=$("coreLoadCount");if(label)label.textContent=text;if(counter)counter.textContent=count||"";if(box)box.className=`core-load-status ${state}`.trim()}
+function saveCoreCache(){try{sessionStorage.setItem(CORE_CACHE_KEY,JSON.stringify({at:Date.now(),students:STUDENTS,classes:CLASSES}))}catch(e){console.warn("cards_cache_save",e)}}
+function hydrateCoreCache(){try{const x=JSON.parse(sessionStorage.getItem(CORE_CACHE_KEY)||"null");if(!x||!x.students||!x.classes||Date.now()-Number(x.at||0)>CORE_CACHE_MAX_AGE)return false;STUDENTS=x.students||{};CLASSES=x.classes||{};renderClasses();renderSelectedStudentCard();setCoreStatus("البيانات جاهزة — جاري التحقق من آخر تحديث","ready",`${Object.keys(STUDENTS).length} طالب`);return true}catch(e){console.warn("cards_cache_read",e);return false}}
+const FRAME_PALETTE=[
+  {frame:"#244a9b",light:"#d9e6ff",dark:"#163e8f"},
+  {frame:"#7a4cc2",light:"#efe2ff",dark:"#6632b8"},
+  {frame:"#00827f",light:"#dbf8f5",dark:"#006f6b"},
+  {frame:"#bf7b10",light:"#fff0cf",dark:"#9a6208"},
+  {frame:"#b8457b",light:"#ffe0ee",dark:"#9d2d63"},
+  {frame:"#3f7c2a",light:"#e4f5db",dark:"#2f621e"},
+  {frame:"#5a5ec9",light:"#e7e8ff",dark:"#4347b3"},
+  {frame:"#b85c22",light:"#ffe5d5",dark:"#9b4716"}
+ ];
+function defaultPreviewOptions(){return{pass:{enabled:true,period:"auto"},ministerial:{enabled:false,maxSubjects:3,maxDeficitPerSubject:10},exemption:{enabled:false,minAverage:85,minSubjectGrade:75,failSubjectCount:0,failDecision:"allow",individualMinSubjectGrade:90,maximizeActivitiesForExemption:false}}}
+function normalizePreviewOptions(o={}){const d=defaultPreviewOptions();if(o?.ruleMode){d.pass.enabled=o.ruleMode==="pass";d.ministerial.enabled=o.ruleMode==="ministerial";d.exemption.enabled=o.ruleMode==="exemption";d.exemption.maximizeActivitiesForExemption=!!o.helper;return d}return{pass:{...d.pass,...(o.pass||{})},ministerial:{...d.ministerial,...(o.ministerial||{})},exemption:{...d.exemption,...(o.exemption||{})}}}
+function toast(t){$("toast").textContent=t;$("toast").classList.add("show");clearTimeout(timer);timer=setTimeout(()=>$("toast").classList.remove("show"),2600)}
+async function req(path,method="GET",data){const o={method,cache:"no-store"};if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}const r=await fetch(`${DB}/${path}.json`,o);if(!r.ok)throw new Error(`${method}_${r.status}`);return r.json()}
+const dbGet=p=>req(p),dbPut=(p,d)=>req(p,"PUT",d);
+function session(){try{return JSON.parse(sessionStorage.getItem("tahadi_session")||"{}")}catch{return{}}}
+function logout(){sessionStorage.clear();localStorage.removeItem("tahadi_remembered_login");location.replace("index.html")}
+function cameFromAdmin(){try{const r=new URL(document.referrer);return r.host===location.host&&/\/add\.html$/i.test(r.pathname)}catch{return false}}
+function gateOk(code){try{const x=JSON.parse(sessionStorage.getItem("tahadi_cards_gate")||"{}");return x.code===code&&Date.now()-Number(x.at||0)<8*3600000}catch{return false}}
+async function verifyAdmin(){const s=session();if(!s.code)return logout(),false;const u=await dbGet(`users/${encodeURIComponent(s.code)}`);if(!u||!["admin","administrator","add"].includes(norm(u.role))||u.active===false)return logout(),false;if(!gateOk(s.code)){if(!cameFromAdmin()){location.replace("add.html");return false}sessionStorage.setItem("tahadi_cards_gate",JSON.stringify({code:s.code,at:Date.now()}))}return true}
+function gender(v){const g=norm(v);if(["female","f","girl","girls","اناث","إناث","بنات","أنثى","انثى"].includes(g))return"female";if(["mixed","mix","مختلط","مختلطة"].includes(g))return"mixed";return"male"}
+function genderLabel(v){const g=gender(v);return g==="female"?"بنت":g==="mixed"?"مختلط":"ولد"}
+function learnerLabel(v,classData={}){const g=gender(v),stageText=norm(`${classData?.name||""} ${classData?.stage||""} ${classData?.level||""}`),isPrimary=/ابتدائ|ابتدائي|ابتدائية/.test(stageText);if(g==="female")return isPrimary?"تلميذة":"طالبة";if(g==="mixed")return isPrimary?"تلميذ / تلميذة":"طالب / طالبة";return isPrimary?"تلميذ":"طالب"}
+function genderTheme(v){return gender(v)==="female"?{head:"#fff0f7",headText:"#a6376d",soft:"#fff8fc",border:"#df8cb5"}:{head:"#edf5ff",headText:"#0e4f9c",soft:"#f7fbff",border:"#7fa8d7"}}
+function room(v){const n=Number(v);if(n===101)return"الطلاب الجدد";if(n===102)return"الطلاب المنقولين";return n?`القاعة ${n}`:"بدون قاعة"}
+function classColorSeed(text){const s=String(text||"");let sum=0;for(let i=0;i<s.length;i++)sum=(sum*31+s.charCodeAt(i))>>>0;return sum}
+function classThemeFor(id,name){return FRAME_PALETTE[classColorSeed(String(id||name||"class"))%FRAME_PALETTE.length]}
+function visibleClasses(){const g=$("genderSelect").value,q=norm($("search").value);return Object.entries(CLASSES).map(([id,c])=>({id,...c})).filter(c=>(!g||gender(c.gender)===g)&&(!q||norm(c.name||c.id).includes(q))).sort((a,b)=>String(a.name||a.id).localeCompare(String(b.name||b.id),"ar"))}
+function renderClasses(){
+ const rows=visibleClasses();
+ if(!rows.length){$("classGrid").innerHTML='<div class="empty">لا توجد صفوف مطابقة.</div>';return}
+ const card=c=>{const count=Object.values(STUDENTS).filter(s=>s?.classId===c.id&&s.hidden!==true).length,g=gender(c.gender),selected=SELECTED_CLASSES.has(c.id);return`<button type="button" class="class-card ${g} ${selected?"active":""}" onclick="toggleClassSelection('${esc(c.id)}')"><span class="class-check">${selected?"✓":""}</span><div class="class-card-head"><div><h4>الصف: ${esc(c.name||c.id)}</h4><div class="class-room">القاعة: ${esc(room(c.roomNumber))}</div><div class="class-count-small">${count} طالب</div></div></div></button>`};
+ const female=rows.filter(c=>gender(c.gender)==="female"),male=rows.filter(c=>gender(c.gender)==="male"),mixed=rows.filter(c=>gender(c.gender)==="mixed");
+ const column=(type,title,list)=>list.length?`<section class="classes-column ${type}"><div class="classes-column-head"><strong>${title}</strong><span>${list.length} صف</span></div><div class="classes-list">${list.map(card).join("")}</div></section>`:"";
+ $("classGrid").innerHTML=`<div class="classes-groups">${column("female","البنات",female)}${column("male","البنين",male)}${column("mixed","الصفوف المختلطة",mixed)}</div>`
+}
+function allStudentRows(){return Object.entries(STUDENTS).map(([code,s])=>({code,...s})).filter(s=>s?.name&&s.hidden!==true)}
+function renderStudentSearchResults(){const box=$("studentSearchResults"),q=norm($("studentSearch")?.value||"");if(!box)return;if(!q){box.classList.add("hidden");box.innerHTML="";return}const rows=allStudentRows().filter(s=>norm(`${s.name} ${s.code}`).includes(q)).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar")).slice(0,15);box.innerHTML=rows.length?rows.map(s=>{const c=CLASSES[s.classId]||{};return`<button type="button" class="student-search-result" onclick="selectStudentForCard('${esc(s.code)}')"><span><strong>${esc(s.name)}</strong><small>${esc(c.name||s.className||"بدون صف")} — ${esc(learnerLabel(s.gender,c))}</small></span><span class="student-result-code">${esc(s.code)}</span></button>`}).join(""):'<div class="empty" style="padding:12px">لا يوجد طالب مطابق.</div>';box.classList.remove("hidden")}
+function renderSelectedStudentCard(){const box=$("selectedStudentCard");if(!box)return;if(!SELECTED_STUDENT_CODE||!STUDENTS[SELECTED_STUDENT_CODE]){box.classList.add("hidden");box.innerHTML="";return}const s={code:SELECTED_STUDENT_CODE,...STUDENTS[SELECTED_STUDENT_CODE]},c=CLASSES[s.classId]||{};box.innerHTML=`<div><strong>تم اختيار: ${esc(s.name)}</strong><span>${esc(c.name||s.className||"بدون صف")} — ${esc(s.code)}</span></div><button type="button" onclick="clearStudentCardSelection()">إلغاء اختيار الطالب</button>`;box.classList.remove("hidden")}
+function selectStudentForCard(code){if(!STUDENTS[code])return;SELECTED_STUDENT_CODE=code;SELECTED_CLASSES.clear();renderClasses();renderSelectedStudentCard();if($("studentSearch"))$("studentSearch").value=STUDENTS[code].name||code;if($("studentSearchResults"))$("studentSearchResults").classList.add("hidden");toast("تم اختيار طالب واحد. المعاينة والتحميل سيكونان له فقط")}
+function clearStudentCardSelection(){SELECTED_STUDENT_CODE="";if($("studentSearch"))$("studentSearch").value="";if($("studentSearchResults")){$("studentSearchResults").innerHTML="";$("studentSearchResults").classList.add("hidden")}renderSelectedStudentCard()}
+function toggleClassSelection(id){SELECTED_STUDENT_CODE="";renderSelectedStudentCard();SELECTED_CLASSES.has(id)?SELECTED_CLASSES.delete(id):SELECTED_CLASSES.add(id);renderClasses()}
+function selectVisibleClasses(){SELECTED_STUDENT_CODE="";renderSelectedStudentCard();visibleClasses().forEach(c=>SELECTED_CLASSES.add(c.id));renderClasses();toast(`تم تحديد ${SELECTED_CLASSES.size} صف`)}
+function clearSelection(){SELECTED_CLASSES.clear();SELECTED_STUDENT_CODE="";renderSelectedStudentCard();PREVIEW_MODELS=[];PREVIEW_SNAPSHOTS=[];$("preview").innerHTML='<div class="empty">حدد الصفوف أو اختر طالباً ثم اضغط معاينة.</div>';$("countText").textContent='0 ورقة';renderClasses()}
+function selectedRows(){if(SELECTED_STUDENT_CODE&&STUDENTS[SELECTED_STUDENT_CODE])return[{code:SELECTED_STUDENT_CODE,...STUDENTS[SELECTED_STUDENT_CODE]}];if(!SELECTED_CLASSES.size)return[];return allStudentRows().filter(s=>SELECTED_CLASSES.has(s.classId)).sort((a,b)=>{const ac=String(CLASSES[a.classId]?.name||a.classId||""),bc=String(CLASSES[b.classId]?.name||b.classId||"");const cmp=ac.localeCompare(bc,"ar");return cmp||String(a.name||"").localeCompare(String(b.name||""),"ar")})}
+function classSubjects(c){
+ let rows=Array.isArray(c?.subjects)?c.subjects:Object.values(c?.subjects||{});
+ rows=rows.filter(Boolean).map((s,i)=>({id:String(s.id||`SUB_${i+1}`),name:String(s.name||s.subjectName||"").trim(),maxGrade:Number(s.maxGrade||100),passGrade:Number(s.passGrade??50),order:Number(s.order||i+1),autoType:s.autoType||""})).filter(s=>s.name);
+ const hasSport=rows.some(s=>s.autoType==="sport"||/رياض/.test(norm(s.name)));
+ const hasArt=rows.some(s=>s.autoType==="art"||/فني/.test(norm(s.name)));
+ if(!hasSport)rows.push({id:"SPORT",name:"الرياضة",maxGrade:100,passGrade:50,order:rows.length+1,autoType:"sport"});
+ if(!hasArt)rows.push({id:"ART",name:"الفنية",maxGrade:100,passGrade:50,order:rows.length+1,autoType:"art"});
+ return rows.sort((a,b)=>a.order-b.order)
+}
+function gradeSubjectName(rec,key=""){return String(rec?.subjectName||rec?.subject||rec?.name||key||"").trim()}
+function findGradeRecord(grades,subject){const entries=Object.entries(grades||{});const hit=entries.find(([key,r])=>String(r?.subjectId||"")===String(subject.id)||String(key)===String(subject.id)||norm(gradeSubjectName(r,key))===norm(subject.name));return hit?.[1]||{}}
+function gradeNumber(v){return v!==""&&v!==null&&v!==undefined&&Number.isFinite(Number(v))?Number(v):null}
+function calcAnnual(rec){const direct=gradeNumber(rec.annual);if(direct!==null)return direct;const a=gradeNumber(rec.term1),b=gradeNumber(rec.midyear),c=gradeNumber(rec.term2);return a!==null&&b!==null&&c!==null?Math.round((a+b+c)/3):null}
+function calcFinal(rec,annual){const direct=gradeNumber(rec.final);if(direct!==null)return direct;const exam=gradeNumber(rec.finalExam);return annual!==null&&exam!==null?Math.round((annual+exam)/2):null}
+function boardActivityGrade(rows,field){const vals=rows.filter(r=>!r.autoType&&gradeNumber(r[field])!==null).map(r=>(Number(gradeNumber(r[field])||0)/Math.max(1,Number(r.maxGrade||100)))*100);if(!vals.length)return null;const high=Math.max(...vals);if(high>=100)return 100;if(high>80)return 90;return 85}
+function gradeText(v){return v===null||v===undefined||v===""?"—":String(v)}
+function safeNumber(v){return Number.isFinite(Number(v))?Number(v):0}
+function attendanceSummary(student={}){const a=student.attendance||student.att||{};return{present:safeNumber(student.presentDays??student.attendancePresent??student.present??a.present??a.attendance),absent:safeNumber(student.absentDays??student.attendanceAbsent??student.absent??a.absent??a.absence),late:safeNumber(student.lateDays??student.attendanceLate??student.late??a.late),escape:safeNumber(student.escapeDays??student.attendanceEscape??student.escape??a.escape??a.runaway),leave:safeNumber(student.leaveDays??student.attendanceLeave??student.leave??a.leave??a.excused)}}
+function attendanceSummaryFromNode(node){
+ const sets={present:new Set(),absent:new Set(),leave:new Set(),late:new Set(),escape:new Set()};
+ const normalizeStatus=v=>norm(v).replace(/[أإآ]/g,"ا").replace(/ة/g,"ه");
+ function kindOf(record){
+  const raw=normalizeStatus(record?.status||record?.attendanceStatus||record?.state||record?.type||"");
+  if(record?.escape===true||record?.isEscape===true||raw.includes("هروب")||raw.includes("هرب")||raw==="escape")return"escape";
+  if(record?.late===true||record?.isLate===true||raw.includes("متاخر")||raw==="late")return"late";
+  if(record?.excused===true||record?.leave===true||record?.isExcused===true||raw.includes("مجاز")||raw.includes("اجازه")||raw==="excused"||raw==="leave")return"leave";
+  if(record?.absent===true||record?.isAbsent===true||raw.includes("غائب")||raw.includes("غياب")||raw==="absent")return"absent";
+  if(record?.present===true||record?.isPresent===true||raw.includes("حاضر")||raw.includes("حضور")||raw==="present")return"present";
+  return"";
+ }
+ function walk(value,path=[]){
+  if(!value||typeof value!=="object")return;
+  const kind=kindOf(value);
+  if(kind){const key=String(value.date||value.attendanceDate||value.day||path[0]||path.join("_")||sets[kind].size);sets[kind].add(key);return}
+  Object.entries(value).forEach(([k,v])=>{if(v&&typeof v==="object")walk(v,[...path,k])});
+ }
+ walk(node||{},[]);
+ return{present:sets.present.size,absent:sets.absent.size,late:sets.late.size,escape:sets.escape.size,leave:sets.leave.size}
+}
+function guardianPhoneOf(student={}){return String(student.guardianPhone||student.parentPhone||student.guardianMobile||student.parentMobile||student.waliPhone||student.guardian?.phone||"—").trim()||"—"}
+function isNearPass(n,pass,max){const step=max<=10?1:max<=20?2:5;return n<pass&&n>=pass-step}
+function ruleFieldForMode(rows=[],mode="pass"){const any=f=>rows.some(r=>gradeNumber(r[f])!==null);if(mode==="ministerial"||mode==="exemption"){if(any("annual"))return{field:"annual",label:"السعي السنوي"};if(any("term2"))return{field:"term2",label:"الفصل الثاني"};if(any("midyear"))return{field:"midyear",label:"نصف السنة"};if(any("term1"))return{field:"term1",label:"الفصل الأول"};return{field:null,label:"غير معتمد"}}if(any("secondRound"))return{field:"secondRound",label:"آخر السنة"};if(any("final"))return{field:"final",label:"الدرجة النهائية"};if(any("finalExam"))return{field:"finalExam",label:"الامتحان النهائي"};if(any("annual"))return{field:"annual",label:"السعي السنوي"};if(any("term2"))return{field:"term2",label:"الفصل الثاني"};if(any("midyear"))return{field:"midyear",label:"نصف السنة"};if(any("term1"))return{field:"term1",label:"الفصل الأول"};return{field:null,label:"غير معتمد"}}
+function genderedWord(student,male,female){return gender(student?.gender)==="female"?female:male}
+function assistOnArtSports(rows=[],field="annual",target=85){
+ const cloned=rows.map(r=>({...r}));
+ const stats=periodSummary(cloned,field);
+ if(stats.average===null||stats.average>=target)return cloned;
+ const assists=cloned.filter(r=>/رياض|فني|فنيه|فنية/.test(norm(r.name))&&gradeNumber(r[field])!==null);
+ if(!assists.length)return cloned;
+ const maxTotal=cloned.reduce((s,r)=>s+Math.max(1,Number(r.maxGrade||100)),0);
+ let currentTotal=cloned.reduce((s,r)=>s+(gradeNumber(r[field])||0),0);
+ let needed=Math.ceil((target/100*maxTotal)-currentTotal);
+ if(needed<=0)return cloned;
+ for(const r of assists){
+  if(needed<=0)break;
+  const cur=gradeNumber(r[field]),room=Math.max(0,Number(r.maxGrade||100)-cur),add=Math.min(room,needed);
+  if(add>0){r[field]=cur+add;r._assistedField=field;r._assistedFrom=cur;r._assistedTo=r[field]}
+  needed-=add
+ }
+ return cloned
+}
+function countFailed(rows=[],field){return rows.filter(r=>{const x=gradeNumber(r[field]);return x!==null&&x<Number(r.passGrade??50)}).length}
+function countExemptSubjects(rows=[],field){return rows.filter(r=>{const x=gradeNumber(r[field]);return x!==null&&x>=85}).length}
+function selectedPassField(rows,period="auto"){if(period&&period!=="auto")return{field:period,label:{term1:"الفصل الأول",midyear:"نصف السنة",term2:"الفصل الثاني",annual:"السعي السنوي",finalExam:"الامتحان النهائي",final:"الدرجة النهائية",secondRound:"الدور الثاني"}[period]||period};return ruleFieldForMode(rows,"pass")}
+function exemptionFailAllowed(fails,rule){const n=Math.max(0,Number(rule?.failSubjectCount??0)),decision=rule?.failDecision==="block"?"block":"allow";return decision==="allow"?fails<=n:(n===0?fails===0:fails<n)}
+function resultInfo(rows=[],student={},classData={},options={}){
+ const opts=normalizePreviewOptions(options),baseRows=rows.map(r=>({...r})),academicBase=baseRows.filter(r=>!r.autoType);
+ let workingRows=baseRows;
+ if(opts.exemption.enabled&&opts.exemption.maximizeActivitiesForExemption){const target=Math.max(0,Number(opts.exemption.minAverage??85));workingRows=assistOnArtSports(workingRows,"annual",target)}
+ const academic=workingRows.filter(r=>!r.autoType),ruleResults=[];
+ if(opts.pass.enabled){const board=selectedPassField(academic,opts.pass.period);if(!board.field||academic.some(r=>gradeNumber(r[board.field])===null)){ruleResults.push({key:"pass",label:"النجاح",short:"غير مكتمل",text:"النتيجة غير مكتملة",css:"wait"})}else{const failed=countFailed(academic,board.field);const text=failed?`${genderedWord(student,"مكمل","مكملة")} بعدد دروس ${failed}`:genderedWord(student,"ناجح","ناجحة");ruleResults.push({key:"pass",label:"النجاح",short:failed?`مكمل ${failed}`:text,text,css:failed?"bad":"good"})}}
+ if(opts.ministerial.enabled){const field="annual";if(!academic.length||academic.some(r=>gradeNumber(r[field])===null)){ruleResults.push({key:"ministerial",label:"الوزاري",short:"غير مكتمل",text:"النتيجة غير مكتملة",css:"wait"})}else{const failedRows=academic.filter(r=>gradeNumber(r[field])<Number(r.passGrade??50)),deficits=failedRows.map(r=>Number(r.passGrade??50)-Number(gradeNumber(r[field])||0)),ok=failedRows.length<=Number(opts.ministerial.maxSubjects??3)&&deficits.every(d=>d<=Number(opts.ministerial.maxDeficitPerSubject??10));ruleResults.push({key:"ministerial",label:"الوزاري",short:ok?"مؤهل وزاري":"غير مؤهل وزاري",text:ok?"مبارك مؤهل للوزاري بالتوفيق":"حض اوفر غير مؤهل للوزاري",css:ok?"good":"bad"})}}
+ if(opts.exemption.enabled){const field="annual";if(!workingRows.length||workingRows.some(r=>gradeNumber(r[field])===null)){ruleResults.push({key:"exemption",label:"الإعفاء",short:"غير مكتمل",text:"النتيجة غير مكتملة",css:"wait"})}else{const avg=periodSummary(workingRows,field).average,percs=workingRows.map(r=>(Number(gradeNumber(r[field])||0)/Math.max(1,Number(r.maxGrade||100)))*100),min=Math.min(...percs),fails=countFailed(academic,field),general=avg!==null&&avg>=Number(opts.exemption.minAverage??85)&&min>=Number(opts.exemption.minSubjectGrade??75)&&exemptionFailAllowed(fails,opts.exemption);if(general){ruleResults.push({key:"exemption",label:"الإعفاء",short:"إعفاء عام",text:"اعفاء عام الف الف مبارك",css:"good"})}else{const threshold=Number(opts.exemption.individualMinSubjectGrade??90),individual=workingRows.filter(r=>{const n=gradeNumber(r[field]);if(n===null)return false;return (n/Math.max(1,Number(r.maxGrade||100))*100)>=threshold&&n>=Number(r.passGrade??50)}).length;if(individual)ruleResults.push({key:"exemption",label:"الإعفاء",short:`إعفاء ${individual} مواد`,text:`اعفاء بعدد مواد ${individual} الف الف مبارك`,css:"good"});else ruleResults.push({key:"exemption",label:"الإعفاء",short:"غير مشمول",text:"غير مشمول بالإعفاء",css:"bad"})}}}
+ if(!ruleResults.length)ruleResults.push({key:"none",label:"النتيجة",short:"غير مكتمل",text:"النتيجة غير مكتملة",css:"wait"});
+ const text=ruleResults.map(r=>r.short).join(" • ");return{rows:workingRows,average:periodSummary(workingRows,"annual").average,text,ruleResults}
+}
+function ruleResultsHTML(items=[]){if(!items.length)return"";return`<div class="rule-results-strip">${items.map(x=>`<div class="rule-result-card ${esc(x.css||"")}"><small>${esc(x.label)}</small><strong>${esc(x.text)}</strong></div>`).join("")}</div>`}
+function attendanceHTML(att={},student={}){return`<section class="behavior-panel"><div class="behavior-title">السلوك والانضباط</div><div class="attendance-strip"><div class="attendance-box present"><small>الحضور</small><strong>${esc(att.present??0)}</strong></div><div class="attendance-box absent"><small>الغياب</small><strong>${esc(att.absent??0)}</strong></div><div class="attendance-box late"><small>المتأخر</small><strong>${esc(att.late??0)}</strong></div><div class="attendance-box escape"><small>الهروب</small><strong>${esc(att.escape??0)}</strong></div><div class="attendance-box excused"><small>المجاز</small><strong>${esc(att.leave??0)}</strong></div></div><div class="guardian-phone-card"><span>هاتف ولي أمر الطالب</span><b>${esc(guardianPhoneOf(student))}</b></div><div class="guardian-notes-box"><div class="guardian-notes-title">ملاحظات ولي الأمر</div><div class="guardian-notes-space"></div><div class="guardian-signature">توقيع ولي الأمر: ____________________</div></div></section>`}
+function gradeClass(v,subject){const n=gradeNumber(v);if(n===null)return"";const pass=Number(subject.passGrade??50),max=Math.max(1,Number(subject.maxGrade||100));if(n<pass)return isNearPass(n,pass,max)?"grade-critical":"grade-fail";if(n/max*100>=90)return"grade-high";return"grade-normal"}
+async function studentGradeModel(s){
+ let grades=GRADE_CACHE[s.code],attendanceNode=ATTENDANCE_CACHE[s.code];
+ if(grades===undefined||attendanceNode===undefined){
+  const [g,a]=await Promise.all([
+   grades===undefined?dbGet(`grades/${encodeURIComponent(s.code)}`):Promise.resolve(grades),
+   attendanceNode===undefined?dbGet(`attendance/${encodeURIComponent(s.code)}`):Promise.resolve(attendanceNode)
+  ]);
+  grades=g||{};attendanceNode=a||{};GRADE_CACHE[s.code]=grades;ATTENDANCE_CACHE[s.code]=attendanceNode
+ }
+ const c=CLASSES[s.classId]||{},subjects=classSubjects(c),known=new Set(subjects.map(x=>norm(x.name)));
+ Object.entries(grades).forEach(([key,r])=>{const name=gradeSubjectName(r,key);if(name&&!known.has(norm(name))){subjects.push({id:String(r?.subjectId||key),name,maxGrade:Number(r?.maxGrade||100),passGrade:Number(r?.passGrade??50),order:subjects.length+1,autoType:r?.autoType||""});known.add(norm(name))}});
+ let rows=subjects.map(subject=>{
+  const rec=findGradeRecord(grades,subject);
+  if(subject.autoType){
+   const hasStored=["term1","midyear","term2","annual","finalExam","final","secondRound"].some(k=>gradeNumber(rec[k])!==null);
+   if(hasStored){
+    const annual=calcAnnual(rec),final=calcFinal(rec,annual);
+    return{...subject,term1:gradeNumber(rec.term1),midyear:gradeNumber(rec.midyear),term2:gradeNumber(rec.term2),annual,finalExam:gradeNumber(rec.finalExam),final,secondRound:gradeNumber(rec.secondRound),storedActivity:true}
+   }
+   return{...subject,term1:null,midyear:null,term2:null,annual:null,finalExam:null,final:null,secondRound:null,storedActivity:false}
+  }
+  const annual=calcAnnual(rec),final=calcFinal(rec,annual);
+  return{...subject,term1:gradeNumber(rec.term1),midyear:gradeNumber(rec.midyear),term2:gradeNumber(rec.term2),annual,finalExam:gradeNumber(rec.finalExam),final,secondRound:gradeNumber(rec.secondRound)}
+ });
+ const academic=rows.filter(r=>!r.autoType);
+ rows=rows.map(r=>{
+  if(!r.autoType)return r;
+  if(r.storedActivity){const x={...r};delete x.storedActivity;return x}
+  const term1=boardActivityGrade(academic,"term1"),midyear=boardActivityGrade(academic,"midyear"),term2=boardActivityGrade(academic,"term2");
+  const annual=term1!==null&&midyear!==null&&term2!==null?Math.round((term1+midyear+term2)/3):null;
+  const x={...r,term1,midyear,term2,annual,finalExam:null,final:null,secondRound:null};delete x.storedActivity;return x
+ });
+ const parsed=attendanceSummaryFromNode(attendanceNode),legacy=attendanceSummary(s),sum=Object.values(parsed).reduce((a,b)=>a+b,0);
+ return{student:s,classData:c,grades:rows,attendance:sum?parsed:legacy}
+}
+function makeToken(){if(crypto?.getRandomValues){const a=new Uint32Array(5);crypto.getRandomValues(a);return[...a].map(n=>n.toString(36).padStart(7,"0")).join("")}return`${Date.now().toString(36)}${Math.random().toString(36).slice(2)}${Math.random().toString(36).slice(2)}`.replace(/[^a-z0-9]/gi,"")}
+async function ensureCardToken(s){let token=String(s.cardPdfToken||"").trim();if(token)return token;token=makeToken();await dbPut(`students/${encodeURIComponent(s.code)}/cardPdfToken`,token);STUDENTS[s.code].cardPdfToken=token;return token}
+function publicCardURL(token){const u=new URL(location.href);u.search="";u.hash="";u.searchParams.set("card",token);return u.toString()}
+function snapshotFromModel(model,managerName,token){
+ return {
+  version:6,
+  active:true,
+  year:YEAR,
+  token,
+  student:{
+   code:model.student.code,
+   name:model.student.name||"",
+   gender:gender(model.student.gender),
+   classId:model.student.classId||"",
+   className:model.classData?.name||model.student.className||"",
+   roomNumber:model.student.roomNumber??model.classData?.roomNumber??"",
+   guardianPhone:guardianPhoneOf(model.student)
+  },
+  grades:model.grades.map(x=>({id:x.id,name:x.name,maxGrade:x.maxGrade,passGrade:x.passGrade,term1:x.term1,midyear:x.midyear,term2:x.term2,annual:x.annual,finalExam:x.finalExam,final:x.final,secondRound:x.secondRound})),
+  attendance:model.attendance||attendanceSummary(model.student),
+  managerName,
+  options:model.options||PREVIEW_OPTIONS,
+  generatedAt:Date.now(),
+  generatedBy:session().code||""
+ }
+}
+async function mapLimit(items,limit,fn){const out=new Array(items.length);let index=0;async function worker(){while(index<items.length){const i=index++;out[i]=await fn(items[i],i)}}await Promise.all(Array.from({length:Math.min(limit,items.length)},worker));return out}
+async function prepareModels(rows,managerName,options=PREVIEW_OPTIONS){
+ return mapLimit(rows,6,async s=>{
+  const base=await studentGradeModel(s);
+  const result=resultInfo(base.grades,base.student,base.classData,options);
+  const model={...base,grades:result.rows,attendance:base.attendance,resultText:result.text,ruleResults:result.ruleResults||[],resultMeta:result,options:normalizePreviewOptions(options)};
+  const token=await ensureCardToken(s);
+  const snapshot=snapshotFromModel(model,managerName,token);
+  await dbPut(`${PUBLIC_CARD_PATH}/${encodeURIComponent(token)}`,snapshot);
+  return {...model,managerName,token,qrURL:publicCardURL(token)};
+ })
+}
+function gradeCell(v,subject){return`<td class="${gradeClass(v,subject)}">${esc(gradeText(v))}</td>`}
+const TABLE_PERIODS=["term1","midyear","term2","annual","finalExam","final","secondRound"];
+function periodSummary(rows,field){const values=rows.map(r=>({grade:gradeNumber(r[field]),max:Math.max(1,Number(r.maxGrade||100))})).filter(x=>x.grade!==null);if(!values.length)return{total:null,average:null};const total=values.reduce((sum,x)=>sum+x.grade,0),maxTotal=values.reduce((sum,x)=>sum+x.max,0),average=maxTotal?total/maxTotal*100:null;return{total:Math.round(total*100)/100,average:average===null?null:Math.round(average*10)/10}}
+function activeBoardPeriod(rows=[]){
+ const any=f=>rows.some(r=>gradeNumber(r[f])!==null);
+ if(any("secondRound"))return{field:"secondRound",label:"آخر السنة",mode:"secondRound"};
+ if(any("final")||any("finalExam"))return{field:any("final")?"final":"finalExam",label:"آخر السنة",mode:"final"};
+ if(any("annual")||any("term2"))return{field:any("annual")?"annual":"term2",label:"الفصل الثاني",mode:"term2"};
+ if(any("midyear"))return{field:"midyear",label:"نصف السنة",mode:"midyear"};
+ if(any("term1"))return{field:"term1",label:"الفصل الأول",mode:"term1"};
+ return{field:null,label:"غير معتمد",mode:"none"}
+}
+function boardAverage(rows=[],field){if(!field)return null;const x=periodSummary(rows,field);return x.average}
+function boardResult(rows=[],period){
+ if(!period?.field)return"غير مكتمل";
+ const graded=rows.map(r=>({row:r,value:gradeNumber(r[period.field])})).filter(x=>x.value!==null);
+ if(!graded.length)return"غير مكتمل";
+ const failed=graded.filter(x=>x.value<Number(x.row.passGrade??50));
+ if(period.mode==="secondRound")return failed.length?"راسب":"ناجح";
+ if(period.mode==="final")return failed.length?"دور ثاني":"ناجح";
+ return failed.length?"غير ناجح":"ناجح"
+}
+function gradesTableHTML(rows=[],g,resultText="النتيجة غير مكتملة"){
+ if(!rows.length)return'<div class="no-grades">لا توجد مواد أو درجات معرفة لهذا الطالب حالياً.</div>';
+ const sums=Object.fromEntries(TABLE_PERIODS.map(f=>[f,periodSummary(rows,f)])),span=rows.length+2;
+ const resultClass=/اعفاء|مبارك|ناجح/.test(resultText)?"grade-high":/مكمل|حض اوفر/.test(resultText)?"grade-fail":"grade-normal";
+ const boardCell=`<td class="board-value board-result ${resultClass}" rowspan="${span}"><span>${esc(resultText)}</span></td>`;
+ return`<table class="grades-table"><thead><tr><th>المادة</th><th class="vertical-head"><span>الفصل الأول</span></th><th class="vertical-head"><span>نصف السنة</span></th><th class="vertical-head"><span>الفصل الثاني</span></th><th class="vertical-head"><span>السعي السنوي</span></th><th class="vertical-head"><span>الامتحان النهائي</span></th><th class="vertical-head"><span>الدرجة النهائية</span></th><th class="vertical-head"><span>الدور الثاني</span></th><th class="board-head"><span>النتيجة</span></th></tr></thead><tbody>${rows.map((r,i)=>`<tr><td>${esc(r.name)}</td>${gradeCell(r.term1,r)}${gradeCell(r.midyear,r)}${gradeCell(r.term2,r)}${gradeCell(r.annual,r)}${gradeCell(r.finalExam,r)}${gradeCell(r.final,r)}${gradeCell(r.secondRound,r)}${i===0?boardCell:""}</tr>`).join("")}<tr class="summary-row"><td>المجموع</td>${TABLE_PERIODS.map(f=>`<td>${sums[f].total===null?"—":esc(sums[f].total)}</td>`).join("")}</tr><tr class="summary-row average"><td>المعدل</td>${TABLE_PERIODS.map(f=>`<td>${sums[f].average===null?"—":esc(sums[f].average+"%")}</td>`).join("")}</tr></tbody></table>`
+}
+function pageVars(model){const c=model.classData||{},g=genderTheme(model.student?.gender),t=classThemeFor(model.student?.classId,c.name);return`--frame:${t.frame};--frame-light:${t.light};--frame-dark:${t.dark};--table-head:${g.head};--table-head-text:${g.headText};--table-head-soft:${g.soft};--table-border:${g.border};`}
+function a4HTML(model,idSuffix="",options={}){
+ const showQR=options.showQR!==false,s=model.student||{},c=model.classData||{};
+ const qrid=`qr_${String(s.code||model.token||"").replace(/[^a-zA-Z0-9_-]/g,"_")}_${idSuffix}`;
+ const className=c.name||s.className||"—",roomText=room(s.roomNumber??c.roomNumber),qrURL=model.qrURL||publicCardURL(model.token||"");
+ const qrBlock=showQR?`<div class="qr-only"><div class="qr-caption">صحة صدور النتيجة</div><div id="${qrid}" class="sheet-qr" data-url="${esc(qrURL)}"></div></div>`:"";
+ const labelName=/تلميذ|تلميذة/.test(learnerLabel(s.gender,c))?"اسم التلميذ":"اسم الطالب";
+ return `<section class="a4-page" style="${pageVars(model)}"><div class="frame-pattern"></div><div class="paper-ornament"></div><div class="page-inner"><div class="a4-head"><img class="a4-logo" src="logo.png" alt=""><div class="a4-school"><h1>مدرسة التحدي الأهلية المختلطة</h1><p>نتيجة ${esc(learnerLabel(s.gender,c))}</p></div><div class="a4-year">العام الدراسي<br>${YEAR}</div></div><div class="student-panel"><div class="student-panel-top"><div class="student-name-wrap"><span class="student-label">${esc(labelName)}</span><strong class="student-name">${esc(s.name||"—")}</strong></div><div class="student-code"><span><span class="code-label">كود الطالب</span><span class="code-value">${esc(s.code||"—")}</span></span></div></div><div class="student-meta-grid"><div class="student-meta"><small>الجنس</small><strong>${esc(learnerLabel(s.gender,c))}</strong></div><div class="student-meta"><small>الصف</small><strong>${esc(className)}</strong></div><div class="student-meta"><small>القاعة</small><strong>${esc(roomText)}</strong></div></div></div><div class="grades-wrap"><div class="grades-title"><h2>جدول الدرجات</h2><span>سجل أكاديمي رسمي</span></div>${gradesTableHTML(model.grades||[],gender(s.gender),model.resultText||"النتيجة غير مكتملة")}${ruleResultsHTML(model.ruleResults||[])}${attendanceHTML(model.attendance||attendanceSummary(s),s)}</div><div class="a4-footer${showQR?"":" no-qr"}">${qrBlock}<div class="manager-box"><div class="result-note">ملاحظة: النتيجة خالية من الحك والشطب نهائياً.</div><div class="manager-line"><span class="manager-title">مدير المدرسة:</span><strong class="manager-name">${esc(model.managerName||"—")}</strong></div></div></div></div></section>`
+}
+function fillQR(root){root.querySelectorAll(".sheet-qr").forEach(el=>{el.innerHTML="";new QRCode(el,{text:el.dataset.url||"",width:312,height:312,correctLevel:QRCode.CorrectLevel.M});el.querySelectorAll("img").forEach(img=>img.remove());const canvases=[...el.querySelectorAll("canvas")];canvases.slice(1).forEach(x=>x.remove())})}
+function isAccountantActive(student){
+ if(!student||student.accountantApproved!==true)return false;
+ if(student.accountantPermanent===true)return true;
+ const until=Number(student.accountantApprovedUntil||0);
+ if(!until)return true;
+ return Date.now()<until
+}
+function fitPreviewPages(){document.querySelectorAll(".preview-scale-shell").forEach(shell=>{const page=shell.querySelector(".a4-page");if(!page)return;const scale=Math.min(1,shell.clientWidth/794);page.style.transform=`scale(${scale})`})}
+function fitPublicPage(){const shell=document.querySelector(".public-card-wrap"),page=shell?.querySelector(".a4-page");if(!shell||!page)return;const scale=Math.min(1,shell.clientWidth/794);page.style.transform=`scale(${scale})`}
+function syncRuleSettingsUI(){const pairs=[["rulePassEnabled","passRuleSettings"],["ruleMinisterialEnabled","ministerialRuleSettings"],["ruleExemptionEnabled","exemptionRuleSettings"]];pairs.forEach(([c,s])=>{const cb=$(c),box=$(s);if(box)box.classList.toggle("disabled",!cb?.checked)})}
+function writePreviewOptionsToUI(options){const o=normalizePreviewOptions(options);$("rulePassEnabled").checked=!!o.pass.enabled;$("passPeriod").value=o.pass.period||"auto";$("ruleMinisterialEnabled").checked=!!o.ministerial.enabled;$("ministerialMaxSubjects").value=Number(o.ministerial.maxSubjects??3);$("ministerialMaxDeficit").value=Number(o.ministerial.maxDeficitPerSubject??10);$("ruleExemptionEnabled").checked=!!o.exemption.enabled;$("exemptionMinAverage").value=Number(o.exemption.minAverage??85);$("exemptionMinSubject").value=Number(o.exemption.minSubjectGrade??75);$("exemptionFailCount").value=Number(o.exemption.failSubjectCount??0);$("exemptionFailDecision").value=o.exemption.failDecision==="block"?"block":"allow";$("individualMinSubject").value=Number(o.exemption.individualMinSubjectGrade??90);$("helperAssist").checked=!!o.exemption.maximizeActivitiesForExemption;syncRuleSettingsUI()}
+function readPreviewOptionsFromUI(){return normalizePreviewOptions({pass:{enabled:!!$("rulePassEnabled").checked,period:$("passPeriod").value||"auto"},ministerial:{enabled:!!$("ruleMinisterialEnabled").checked,maxSubjects:Math.max(0,Number($("ministerialMaxSubjects").value||0)),maxDeficitPerSubject:Math.max(0,Number($("ministerialMaxDeficit").value||0))},exemption:{enabled:!!$("ruleExemptionEnabled").checked,minAverage:Math.max(0,Number($("exemptionMinAverage").value||0)),minSubjectGrade:Math.max(0,Number($("exemptionMinSubject").value||0)),failSubjectCount:Math.max(0,Number($("exemptionFailCount").value||0)),failDecision:$("exemptionFailDecision").value==="block"?"block":"allow",individualMinSubjectGrade:Math.max(0,Number($("individualMinSubject").value||0)),maximizeActivitiesForExemption:!!$("helperAssist").checked}})}
+function openManagerModal(){const rows=selectedRows();if(!rows.length)return toast("حدد صفاً واحداً على الأقل أو اختر طالباً من البحث");const saved=localStorage.getItem("tahadi_cards_manager_name")||CURRENT_MANAGER||"";$("managerNameInput").value=saved;writePreviewOptionsToUI(PREVIEW_OPTIONS);$("managerModal").classList.add("show");setTimeout(()=>$("managerNameInput").focus(),50)}
+function closeManagerModal(){$("managerModal").classList.remove("show")}
+function renderPreview(){openManagerModal()}
+
+async function nodeToExactPng(page){
+ await ensureArabicFonts();
+ await waitImages(page);
+ await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+ const originalTransform=page.style.transform;
+ const originalOrigin=page.style.transformOrigin;
+ page.style.transform="none";
+ page.style.transformOrigin="top right";
+ try{
+  if(window.domtoimage?.toPng){
+   try{
+    return await window.domtoimage.toPng(page,{
+     width:PRINT_W,
+     height:PRINT_H,
+     bgcolor:"#ffffff",
+     cacheBust:true,
+     quality:1,
+     style:{
+      transform:`scale(${PRINT_SCALE})`,
+      transformOrigin:"top left",
+      width:`${A4_BASE_W}px`,
+      height:`${A4_BASE_H}px`,
+      margin:"0"
+     }
+    })
+   }catch(e){console.warn("highres_dom_to_image_fallback",e)}
+  }
+  const canvas=await html2canvas(page,{
+   scale:PRINT_SCALE,
+   useCORS:true,
+   allowTaint:true,
+   backgroundColor:"#fff",
+   width:A4_BASE_W,
+   height:A4_BASE_H,
+   windowWidth:A4_BASE_W,
+   windowHeight:A4_BASE_H,
+   logging:false,
+   scrollX:0,
+   scrollY:0,
+   imageTimeout:15000
+  });
+  const data=canvas.toDataURL("image/png",1);
+  canvas.width=1;canvas.height=1;
+  return data
+ }finally{
+  page.style.transform=originalTransform;
+  page.style.transformOrigin=originalOrigin
+ }
+}
+async function freezePreviewAsExactImages(){
+ PREVIEW_SNAPSHOTS=[];
+ const shells=[...$("preview").querySelectorAll(".preview-item .preview-scale-shell")];
+ for(let i=0;i<shells.length;i++){
+  const shell=shells[i],page=shell.querySelector(".a4-page");
+  if(!page)continue;
+  const data=await nodeToExactPng(page);
+  PREVIEW_SNAPSHOTS.push(data);
+  shell.innerHTML=`<img class="preview-final-image" src="${data}" alt="معاينة ورقة الطالب">`;
+ }
+ if(PREVIEW_SNAPSHOTS.length!==shells.length)throw new Error("PREVIEW_SNAPSHOT_MISMATCH")
+}
+async function confirmManagerPreview(mode="all"){
+ const name=$("managerNameInput").value.trim();if(!name)return toast("اكتب اسم مدير المدرسة");
+ PREVIEW_OPTIONS=readPreviewOptionsFromUI();
+ if(!PREVIEW_OPTIONS.pass.enabled&&!PREVIEW_OPTIONS.ministerial.enabled&&!PREVIEW_OPTIONS.exemption.enabled)return toast("فعّل قاعدة واحدة على الأقل");
+ let rows=selectedRows();if(!rows.length)return closeManagerModal(),toast("حدد صفاً أو اختر طالباً من البحث");
+ if(mode==="accountant")rows=rows.filter(isAccountantActive);if(!rows.length)return toast(mode==="accountant"?"لا يوجد طلاب مفعلون من الحسابات ضمن الاختيار":"لا توجد أسماء ضمن الاختيار");
+ CURRENT_MANAGER=name;localStorage.setItem("tahadi_cards_manager_name",name);closeManagerModal();
+ const b1=$("previewAccountantBtn"),b2=$("previewAllBtn");if(b1)b1.disabled=true;if(b2)b2.disabled=true;
+ $("loadingText").textContent=rows.length===1?"جاري تجهيز كرت الطالب":"جاري تجهيز كرتات الطلبة";$("loading").classList.remove("hidden");
+ try{PREVIEW_SNAPSHOTS=[];PREVIEW_MODELS=await prepareModels(rows,name,PREVIEW_OPTIONS);$("countText").textContent=`${PREVIEW_MODELS.length} ورقة`;$("preview").innerHTML=PREVIEW_MODELS.map((m,i)=>`<div class="preview-item"><div class="preview-item-label">${esc(CLASSES[m.student.classId]?.name||m.student.className||"")} — ${esc(m.student.name||"")}</div><div class="preview-scale-shell">${a4HTML(m,`preview_${i}`)}</div></div>`).join("");fillQR($("preview"));fitPreviewPages();$("loadingText").textContent="جاري تجهيز المعاينة عالية الدقة للطباعة";await freezePreviewAsExactImages();toast(PREVIEW_MODELS.length===1?"تم إنشاء كرت الطالب":"تم إنشاء المعاينة") }catch(e){console.error(e);PREVIEW_MODELS=[];PREVIEW_SNAPSHOTS=[];toast("تعذر تجهيز المعاينة النهائية") }finally{if(b1)b1.disabled=false;if(b2)b2.disabled=false;$("loading").classList.add("hidden")}
+}
+async function waitImages(root){await Promise.all([...root.querySelectorAll("img")].map(img=>img.complete?Promise.resolve():new Promise(r=>{img.onload=r;img.onerror=r})))}
+async function pdfFromPages(pages,fileName,openInBrowser=false){const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});for(let i=0;i<pages.length;i++){await waitImages(pages[i]);if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:2,useCORS:true,allowTaint:true,backgroundColor:"#fff",width:794,height:1123,windowWidth:794,windowHeight:1123,logging:false});pdf.addImage(canvas.toDataURL("image/jpeg",.96),"JPEG",0,0,210,297,undefined,"FAST");canvas.width=1;canvas.height=1}if(openInBrowser){const blob=pdf.output("blob"),url=URL.createObjectURL(blob);location.replace(url);return}pdf.save(fileName)}
+async function ensureArabicFonts(){
+ try{
+  if(document.fonts?.ready)await document.fonts.ready;
+  if(document.fonts?.load)await Promise.all([
+   document.fonts.load('900 21px "Simplified Arabic"'),
+   document.fonts.load('900 15px "Simplified Arabic"'),
+   document.fonts.load('700 14px "Simplified Arabic"')
+  ]);
+ }catch(e){console.warn("font_wait",e)}
+}
+async function pdfFromFrozenPreview(images,fileName){
+ if(!images.length)throw new Error("NO_FROZEN_PREVIEW");
+ const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
+ for(let i=0;i<images.length;i++){
+  if(i)pdf.addPage("a4","portrait");
+  pdf.addImage(images[i],"PNG",0,0,210,297,undefined,"FAST")
+ }
+ pdf.save(fileName)
+}
+async function downloadPDF(){
+ if(!PREVIEW_MODELS.length||!PREVIEW_SNAPSHOTS.length)return toast("اضغط معاينة أولاً حتى يتم تثبيت نفس الشكل للـ PDF");
+ const btn=$("pdfBtn");btn.disabled=true;btn.textContent="جاري تجهيز PDF...";
+ try{
+  const fileName=PREVIEW_MODELS.length===1?`كرت_${String(PREVIEW_MODELS[0].student?.name||PREVIEW_MODELS[0].student?.code||"الطالب").replace(/[\/:*?"<>|]/g,"_")}_${YEAR}.pdf`:`نتائج_الطلبة_A4_${YEAR}.pdf`;await pdfFromFrozenPreview(PREVIEW_SNAPSHOTS,fileName);
+  toast(`تم إنشاء PDF عالي الدقة من نفس المعاينة بعدد ${PREVIEW_SNAPSHOTS.length} ورقة`)
+ }catch(e){console.error(e);toast("تعذر إنشاء ملف PDF")}
+ finally{btn.disabled=false;btn.textContent="تحميل PDF"}
+}
+async function loadData(options={}){
+ const hadData=Object.keys(STUDENTS).length>0||Object.keys(CLASSES).length>0;
+ setCoreStatus(hadData?"جاري تحديث البيانات بالخلفية...":"جاري تحميل الصفوف والطلبة...","",hadData?`${Object.keys(STUDENTS).length} طالب`:"");
+ try{
+  const[s,c]=await Promise.all([dbGet("students"),dbGet("classes")]);
+  STUDENTS=s||{};CLASSES=c||{};GRADE_CACHE={};ATTENDANCE_CACHE={};
+  renderClasses();renderSelectedStudentCard();saveCoreCache();
+  setCoreStatus("جاهز","ready",`${Object.keys(STUDENTS).length} طالب`);
+  if(!options.silent&&hadData)toast("تم تحديث البيانات")
+ }catch(e){
+  console.error(e);
+  setCoreStatus(hadData?"تعذر التحديث — البيانات السابقة ما زالت متاحة":"تعذر تحميل البيانات","error",hadData?`${Object.keys(STUDENTS).length} طالب`:"");
+  if(!hadData)toast("تعذر تحميل البيانات")
+ }
+}
+function modelFromSnapshot(x){
+ const grades=Array.isArray(x.grades)?x.grades:Object.values(x.grades||{});
+ const options=normalizePreviewOptions(x.options||{});
+ const result=resultInfo(grades,x.student||{}, {name:x.student?.className||""}, options);
+ return {
+  student:{code:x.student?.code||"",name:x.student?.name||"",gender:x.student?.gender||"male",classId:x.student?.classId||"",className:x.student?.className||"",roomNumber:x.student?.roomNumber??"",guardianPhone:x.student?.guardianPhone||""},
+  classData:{name:x.student?.className||"",roomNumber:x.student?.roomNumber??"",guardianPhone:x.student?.guardianPhone||""},
+  grades:result.rows,
+  attendance:x.attendance||attendanceSummary(x.student||{}),
+  managerName:x.managerName||"",
+  token:x.token||"",
+  qrURL:publicCardURL(x.token||""),
+  options,
+  resultText:result.text,
+  ruleResults:result.ruleResults||[]
+ }
+}
+async function openPublicCardPDF(token){document.body.classList.add("public-mode");$("loadingText").textContent="جاري فتح صفحة الطالب";$("loading").classList.remove("hidden");try{const snapshot=await dbGet(`${PUBLIC_CARD_PATH}/${encodeURIComponent(token)}`);if(!snapshot||snapshot.active===false)throw new Error("CARD_NOT_FOUND");const model=modelFromSnapshot(snapshot);await ensureArabicFonts();document.body.innerHTML=`<main class="public-card-screen"><div class="public-card-wrap">${a4HTML(model,"public",{showQR:false})}</div></main>`;document.title=`نتيجة ${model.student.name||"الطالب"} | مدرسة التحدي`;fitPublicPage();window.scrollTo(0,0)}catch(e){console.error(e);document.body.innerHTML=`<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px;background:#f5f8fc;font-family:'Simplified Arabic','Traditional Arabic',Tahoma,Arial,sans-serif"><div style="max-width:440px;padding:25px;border-radius:18px;background:#fff;text-align:center;box-shadow:0 12px 35px rgba(0,0,0,.08)"><h2 style="font-size:18px">تعذر فتح صفحة الطالب</h2><p style="margin-top:8px;color:#667085;font-size:11px;line-height:1.8">قد يكون الباركود غير صالح أو تم حذف بيانات هذه البطاقة.</p></div></div>`}}
+$("genderSelect").onchange=renderClasses;$("search").oninput=renderClasses;$("studentSearch").oninput=renderStudentSearchResults;["rulePassEnabled","ruleMinisterialEnabled","ruleExemptionEnabled"].forEach(id=>$(id)?.addEventListener("change",syncRuleSettingsUI));$("managerNameInput").addEventListener("keydown",e=>{if(e.key==="Enter")confirmManagerPreview("all")});$("managerModal").addEventListener("click",e=>{if(e.target===$("managerModal"))closeManagerModal()});document.addEventListener("click",e=>{if(!e.target.closest(".student-search-wrap"))$("studentSearchResults")?.classList.add("hidden")});
+window.addEventListener("resize",()=>{fitPreviewPages();fitPublicPage()});
+window.addEventListener("load",async()=>{
+ const publicToken=new URLSearchParams(location.search).get("card");
+ if(publicToken){await openPublicCardPDF(publicToken);return}
+ $("loading")?.classList.add("hidden");
+ setCoreStatus("جاري التحقق من صلاحية الدخول...");
+ const ok=await verifyAdmin();
+ if(!ok)return;
+ const cached=hydrateCoreCache();
+ if(!cached)setCoreStatus("تم التحقق — جاري تحميل البيانات...");
+ loadData({silent:true});
+});
+</script>
+</body>
+</html>

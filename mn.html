@@ -1,0 +1,4616 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
+>
+
+<meta name="theme-color" content="#075fcf">
+<meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<title>قسم الحسابات | مدرسة التحدي الأهلية المختلطة</title>
+
+<style>
+
+:root{
+    --blue:#075fcf;
+    --blue-dark:#064ca8;
+    --blue-soft:#eef6ff;
+
+    --bg:#f5f8fc;
+    --white:#fff;
+
+    --text:#172033;
+    --muted:#667085;
+    --border:#e3e9f1;
+
+    --green:#078746;
+    --green-bg:#ecfdf3;
+
+    --red:#c62828;
+    --red-bg:#fff0f0;
+
+    --orange:#dd7400;
+    --orange-bg:#fff5e8;
+
+    --shadow:0 14px 40px rgba(30,55,88,.09);
+}
+
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    -webkit-tap-highlight-color:transparent;
+}
+
+html,body{
+    width:100%;
+    min-height:100%;
+}
+
+body{
+    font-family:Tahoma,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    overflow-x:hidden;
+}
+
+button,
+input{
+    font:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.hidden{
+    display:none!important;
+}
+
+/* =========================================================
+   LOADER
+========================================================= */
+
+.loader-screen{
+    position:fixed;
+    inset:0;
+    z-index:99999;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    background:#fff;
+}
+
+.loader-box{
+    text-align:center;
+}
+
+.loader-logo{
+    width:88px;
+    height:88px;
+    object-fit:contain;
+    margin-bottom:16px;
+}
+
+.spinner{
+    width:38px;
+    height:38px;
+    margin:auto;
+
+    border-radius:50%;
+
+    border:4px solid #e5edf7;
+    border-top-color:var(--blue);
+
+    animation:spin .75s linear infinite;
+}
+
+.loader-box p{
+    margin-top:12px;
+    color:var(--muted);
+    font-size:10px;
+    font-weight:800;
+}
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.topbar{
+    position:sticky;
+    top:0;
+    z-index:80;
+
+    min-height:72px;
+
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+
+    padding:
+        max(10px,env(safe-area-inset-top))
+        15px
+        10px;
+
+    background:rgba(255,255,255,.96);
+
+    backdrop-filter:blur(17px);
+    -webkit-backdrop-filter:blur(17px);
+
+    border-bottom:1px solid var(--border);
+}
+
+.brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    min-width:0;
+}
+
+.logo{
+    width:49px;
+    height:49px;
+    object-fit:contain;
+    flex:none;
+}
+
+.brand-text{
+    min-width:0;
+}
+
+.brand-text h1{
+    font-size:13px;
+    font-weight:900;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+}
+
+.brand-text p{
+    margin-top:3px;
+    color:var(--blue);
+    font-size:9px;
+    font-weight:900;
+}
+
+.logout{
+    flex:none;
+    border:0;
+    border-radius:12px;
+    padding:9px 11px;
+
+    background:#f1f4f7;
+    color:#475467;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+/* =========================================================
+   MAIN
+========================================================= */
+
+.main{
+    width:100%;
+    max-width:1100px;
+    margin:auto;
+    padding:16px;
+}
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.hero{
+    position:relative;
+    overflow:hidden;
+
+    padding:21px;
+
+    border-radius:24px;
+
+    color:#fff;
+
+    background:
+        radial-gradient(
+            circle at 0 0,
+            rgba(255,255,255,.18),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #0870e5,
+            #0757c7 55%,
+            #064493
+        );
+
+    box-shadow:
+        0 19px 45px
+        rgba(7,95,207,.18);
+}
+
+.hero:before{
+    content:"";
+    position:absolute;
+
+    width:190px;
+    height:190px;
+
+    top:-115px;
+    left:-65px;
+
+    border-radius:50%;
+    background:rgba(255,255,255,.08);
+}
+
+.hero-content{
+    position:relative;
+    z-index:2;
+}
+
+.hero h2{
+    font-size:19px;
+    font-weight:900;
+}
+
+.hero p{
+    margin-top:5px;
+    max-width:600px;
+    opacity:.92;
+
+    font-size:10px;
+    line-height:1.85;
+}
+
+/* =========================================================
+   STATS
+========================================================= */
+
+.stats{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:9px;
+    margin-top:13px;
+}
+
+.stat{
+    padding:14px;
+
+    border-radius:17px;
+
+    background:#fff;
+    border:1px solid var(--border);
+
+    box-shadow:
+        0 6px 20px
+        rgba(20,40,70,.04);
+}
+
+.stat span{
+    display:block;
+    color:var(--muted);
+    font-size:8px;
+    font-weight:800;
+}
+
+.stat strong{
+    display:block;
+    margin-top:5px;
+    font-size:18px;
+    font-weight:900;
+}
+
+/* =========================================================
+   SECTION
+========================================================= */
+
+.section-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+
+    margin:22px 2px 10px;
+}
+
+.section-head h3{
+    font-size:14px;
+    font-weight:900;
+}
+
+.section-head span{
+    color:var(--muted);
+    font-size:8px;
+}
+
+/* =========================================================
+   CLASSES
+========================================================= */
+
+.classes{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:10px;
+}
+
+.class-card{
+    position:relative;
+
+    min-height:110px;
+
+    padding:15px;
+
+    border:1px solid var(--border);
+    border-radius:20px;
+
+    background:#fff;
+    text-align:right;
+
+    box-shadow:var(--shadow);
+
+    transition:.2s;
+}
+
+.class-card:active{
+    transform:scale(.98);
+}
+
+.class-card.active{
+    border-color:var(--blue);
+    box-shadow:
+        0 0 0 3px rgba(7,95,207,.06),
+        var(--shadow);
+}
+
+.class-icon{
+    width:38px;
+    height:38px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:12px;
+
+    background:var(--blue-soft);
+    color:var(--blue);
+
+    font-size:15px;
+    font-weight:900;
+}
+
+.class-card h4{
+    margin-top:11px;
+    font-size:11px;
+    font-weight:900;
+}
+
+.class-card p{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:8px;
+}
+
+.class-count{
+    position:absolute;
+    top:12px;
+    left:12px;
+
+    min-width:27px;
+    height:27px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    padding:0 7px;
+
+    border-radius:99px;
+
+    background:#f4f7fa;
+    color:#475467;
+
+    font-size:8px;
+    font-weight:900;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+.table-tools{
+    display:flex;
+    gap:8px;
+    margin-bottom:10px;
+}
+
+.search{
+    width:100%;
+    height:47px;
+
+    padding:0 13px;
+
+    outline:none;
+
+    border:1px solid var(--border);
+    border-radius:14px;
+
+    background:#fff;
+    color:var(--text);
+
+    font-size:11px;
+}
+
+.search:focus{
+    border-color:var(--blue);
+    box-shadow:0 0 0 3px rgba(7,95,207,.06);
+}
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+.table-wrap{
+    width:100%;
+    overflow:auto;
+
+    border-radius:18px;
+
+    border:1px solid var(--border);
+
+    background:#fff;
+
+    box-shadow:var(--shadow);
+}
+
+.students-table{
+    width:100%;
+    min-width:980px;
+
+    border-collapse:collapse;
+}
+
+.students-table th,
+.students-table td{
+    padding:11px 9px;
+
+    text-align:center;
+
+    border-bottom:1px solid #edf0f4;
+
+    font-size:9px;
+}
+
+.students-table th{
+    position:sticky;
+    top:0;
+    z-index:3;
+
+    background:#f7f9fc;
+    color:#475467;
+
+    font-weight:900;
+}
+
+.students-table tbody tr:last-child td{
+    border-bottom:0;
+}
+
+.students-table tbody tr:hover{
+    background:#fbfdff;
+}
+
+.student-name-btn{
+    border:0;
+    background:transparent;
+
+    color:var(--blue);
+
+    font-size:9px;
+    font-weight:900;
+
+    text-decoration:underline;
+    text-underline-offset:3px;
+}
+
+.status-cell{
+    font-weight:900;
+}
+
+.status-cell.active{
+    background:var(--green-bg);
+    color:var(--green);
+}
+
+.status-cell.inactive{
+    background:var(--red-bg);
+    color:var(--red);
+}
+
+.amount{
+    font-weight:900;
+    direction:ltr;
+}
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.empty{
+    padding:30px 15px;
+
+    text-align:center;
+
+    border:1px solid var(--border);
+    border-radius:19px;
+
+    background:#fff;
+    color:var(--muted);
+
+    font-size:10px;
+    line-height:1.8;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+
+.modal{
+    display:none;
+
+    position:fixed;
+    inset:0;
+    z-index:10000;
+
+    align-items:flex-end;
+    justify-content:center;
+
+    background:rgba(17,32,51,.46);
+
+    backdrop-filter:blur(5px);
+    -webkit-backdrop-filter:blur(5px);
+}
+
+.modal.show{
+    display:flex;
+}
+
+.modal-card{
+    width:100%;
+    max-width:560px;
+    max-height:91vh;
+    overflow:auto;
+
+    padding:
+        19px 16px
+        max(20px,env(safe-area-inset-bottom));
+
+    border-radius:25px 25px 0 0;
+
+    background:#fff;
+
+    box-shadow:
+        0 -20px 60px
+        rgba(0,0,0,.16);
+
+    animation:
+        modalUp .3s
+        cubic-bezier(.16,1,.3,1);
+}
+
+.modal-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+
+    margin-bottom:15px;
+}
+
+.modal-head h3{
+    font-size:15px;
+    font-weight:900;
+}
+
+.close{
+    width:35px;
+    height:35px;
+
+    border:0;
+    border-radius:11px;
+
+    background:#f1f4f7;
+    color:#475467;
+
+    font-size:16px;
+}
+
+.student-profile{
+    display:flex;
+    align-items:center;
+    gap:11px;
+
+    padding:14px;
+
+    border-radius:17px;
+
+    background:var(--blue-soft);
+}
+
+.avatar{
+    width:50px;
+    height:50px;
+
+    flex:none;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:15px;
+
+    background:#fff;
+    color:var(--blue);
+
+    font-size:18px;
+    font-weight:900;
+}
+
+.profile-text h4{
+    font-size:12px;
+    font-weight:900;
+}
+
+.profile-text p{
+    margin-top:4px;
+    color:var(--muted);
+    font-size:8px;
+}
+
+/* =========================================================
+   MODAL INFO
+========================================================= */
+
+.modal-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+
+    margin-top:13px;
+}
+
+.info{
+    padding:11px;
+
+    border-radius:13px;
+
+    background:#f8fafc;
+}
+
+.info span{
+    display:block;
+    color:var(--muted);
+    font-size:7px;
+}
+
+.info strong{
+    display:block;
+    margin-top:4px;
+    font-size:10px;
+    font-weight:900;
+}
+
+.payment-box{
+    margin-top:14px;
+
+    padding:14px;
+
+    border:1px solid var(--border);
+    border-radius:17px;
+
+    background:#fff;
+}
+
+.payment-box h4{
+    font-size:11px;
+    font-weight:900;
+}
+
+.payment-summary{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:7px;
+
+    margin-top:10px;
+}
+
+.money-box{
+    padding:10px 5px;
+
+    text-align:center;
+
+    border-radius:12px;
+
+    background:#f8fafc;
+}
+
+.money-box span{
+    display:block;
+    color:var(--muted);
+    font-size:7px;
+}
+
+.money-box strong{
+    display:block;
+    margin-top:4px;
+    font-size:10px;
+    font-weight:900;
+}
+
+/* =========================================================
+   ACTIVATION AMOUNT
+========================================================= */
+
+.activation-area{
+    margin-top:14px;
+
+    padding:14px;
+
+    border-radius:17px;
+
+    background:#f8fafc;
+}
+
+.activation-area label{
+    display:block;
+
+    margin-bottom:7px;
+
+    color:#475467;
+
+    font-size:8px;
+    font-weight:900;
+}
+
+.activation-input{
+    width:100%;
+    height:49px;
+
+    padding:0 13px;
+
+    border:1px solid var(--border);
+    border-radius:14px;
+
+    outline:none;
+
+    background:#fff;
+
+    direction:ltr;
+    text-align:center;
+
+    font-size:15px;
+    font-weight:900;
+}
+
+.activation-input:focus{
+    border-color:var(--blue);
+
+    box-shadow:
+        0 0 0 3px
+        rgba(7,95,207,.06);
+}
+
+.activation-help{
+    margin-top:7px;
+
+    color:var(--muted);
+
+    font-size:7.5px;
+    line-height:1.7;
+}
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+
+    margin-top:14px;
+}
+
+.action{
+    min-height:49px;
+
+    border:0;
+    border-radius:14px;
+
+    font-size:10px;
+    font-weight:900;
+}
+
+.action.activate{
+    background:var(--green);
+    color:#fff;
+}
+
+.action.disable{
+    background:var(--red);
+    color:#fff;
+}
+
+.action:disabled{
+    opacity:.55;
+    cursor:default;
+}
+
+/* =========================================================
+   CONFIRM MODAL
+========================================================= */
+
+.confirm-modal{
+    z-index:11000;
+    align-items:center;
+    padding:16px;
+}
+
+.confirm-card{
+    width:100%;
+    max-width:360px;
+
+    padding:20px;
+
+    text-align:center;
+
+    border-radius:22px;
+
+    background:#fff;
+
+    box-shadow:
+        0 25px 70px
+        rgba(0,0,0,.20);
+}
+
+.confirm-icon{
+    width:62px;
+    height:62px;
+
+    margin:0 auto 12px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    border-radius:19px;
+
+    background:var(--red-bg);
+    color:var(--red);
+
+    font-size:25px;
+    font-weight:900;
+}
+
+.confirm-card h3{
+    font-size:15px;
+    font-weight:900;
+}
+
+.confirm-card p{
+    margin-top:7px;
+
+    color:var(--muted);
+
+    font-size:9px;
+    line-height:1.8;
+}
+
+.confirm-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:7px;
+
+    margin-top:15px;
+}
+
+.confirm-actions button{
+    height:45px;
+
+    border:0;
+    border-radius:13px;
+
+    font-size:9px;
+    font-weight:900;
+}
+
+.confirm-cancel{
+    background:#f1f4f7;
+    color:#475467;
+}
+
+.confirm-ok{
+    background:var(--red);
+    color:#fff;
+}
+
+/* =========================================================
+   TOAST
+========================================================= */
+
+.toast{
+    position:fixed;
+
+    left:15px;
+    right:15px;
+    bottom:max(20px,env(safe-area-inset-bottom));
+
+    z-index:30000;
+
+    max-width:430px;
+    margin:auto;
+
+    padding:12px 14px;
+
+    text-align:center;
+
+    border-radius:14px;
+
+    background:#172033;
+    color:#fff;
+
+    font-size:9px;
+    font-weight:800;
+
+    opacity:0;
+    pointer-events:none;
+
+    transform:translateY(10px);
+
+    transition:.25s;
+}
+
+.toast.show{
+    opacity:1;
+    transform:none;
+}
+
+/* =========================================================
+   ANIMATIONS
+========================================================= */
+
+@keyframes spin{
+    to{
+        transform:rotate(360deg);
+    }
+}
+
+@keyframes modalUp{
+    from{
+        opacity:0;
+        transform:translateY(25px);
+    }
+
+    to{
+        opacity:1;
+        transform:none;
+    }
+}
+
+/* =========================================================
+   DESKTOP
+========================================================= */
+
+@media(min-width:700px){
+
+    .stats{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .classes{
+        grid-template-columns:repeat(4,1fr);
+    }
+
+    .modal{
+        align-items:center;
+        padding:20px;
+    }
+
+    .modal-card{
+        border-radius:25px;
+    }
+
+}
+
+
+/* =========================================================
+   MONTHLY ACCOUNT ACTIVATION / WHATSAPP
+========================================================= */
+
+.table-tools{
+    align-items:center;
+}
+
+.show-all-btn{
+    flex:none;
+    height:47px;
+    padding:0 13px;
+    border:0;
+    border-radius:14px;
+    background:var(--blue-soft);
+    color:var(--blue);
+    font-size:9px;
+    font-weight:900;
+}
+
+.whatsapp-btn{
+    min-height:34px;
+    padding:0 10px;
+    border:0;
+    border-radius:10px;
+    background:#eafaf1;
+    color:#067647;
+    font-size:8px;
+    font-weight:900;
+    white-space:nowrap;
+}
+
+.whatsapp-btn:disabled{
+    opacity:.45;
+    cursor:default;
+}
+
+.activation-type{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    min-height:24px;
+    padding:0 8px;
+    border-radius:99px;
+    font-size:7.5px;
+    font-weight:900;
+}
+
+.activation-type.monthly{
+    background:#eef6ff;
+    color:#075fcf;
+}
+
+.activation-type.permanent{
+    background:#f4f0ff;
+    color:#6938ef;
+}
+
+.activation-type.off{
+    background:#f2f4f7;
+    color:#667085;
+}
+
+.permanent-switch{
+    display:flex!important;
+    align-items:flex-start;
+    gap:9px;
+    margin-top:12px!important;
+    padding:11px;
+    border:1px solid #d8cfff;
+    border-radius:13px;
+    background:#f7f5ff;
+    color:#5030c9!important;
+    line-height:1.7;
+}
+
+.permanent-switch input{
+    width:20px;
+    height:20px;
+    flex:none;
+    margin-top:1px;
+    accent-color:#6938ef;
+}
+
+.activation-note{
+    margin-top:10px;
+    padding:10px 11px;
+    border-radius:13px;
+    background:#fff8e8;
+    color:#8a5200;
+    font-size:8px;
+    font-weight:800;
+    line-height:1.8;
+}
+
+.account-active-summary{
+    margin-top:14px;
+    padding:12px;
+    border:1px solid #bde7cd;
+    border-radius:15px;
+    background:var(--green-bg);
+    color:var(--green);
+    font-size:9px;
+    font-weight:900;
+    line-height:1.9;
+}
+
+.actions.single{
+    grid-template-columns:1fr;
+}
+
+.action.activate.hidden{
+    display:none!important;
+}
+
+@media(max-width:650px){
+    .table-tools{
+        flex-direction:column;
+    }
+
+    .show-all-btn{
+        width:100%;
+    }
+}
+
+
+/* =========================================================
+   GENDER SPLIT TABLES
+========================================================= */
+
+.gender-tables{
+    display:flex;
+    flex-direction:row;
+    direction:rtl;
+    gap:14px;
+    align-items:flex-start;
+}
+
+.gender-panel{
+    flex:1 1 0;
+}
+
+.gender-panel{
+    min-width:0;
+    overflow:hidden;
+    border:1px solid var(--border);
+    border-radius:20px;
+    background:#fff;
+    box-shadow:var(--shadow);
+}
+
+.gender-panel-head{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    min-height:52px;
+    padding:12px 14px;
+    font-size:11px;
+    font-weight:900;
+}
+
+.gender-panel-head span{
+    min-width:29px;
+    height:29px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0 8px;
+    border-radius:99px;
+    background:#fff;
+    font-size:8px;
+    font-weight:900;
+}
+
+.gender-panel.boys{
+    border-color:#b9d9ff;
+}
+
+.gender-panel.boys .gender-panel-head{
+    background:#eaf4ff;
+    color:#075fcf;
+}
+
+.gender-panel.girls{
+    border-color:#f4bfd6;
+}
+
+.gender-panel.girls .gender-panel-head{
+    background:#fff0f6;
+    color:#c72c72;
+}
+
+.gender-panel .table-wrap{
+    border:0;
+    border-radius:0;
+    box-shadow:none;
+}
+
+.gender-panel .students-table{
+    min-width:860px;
+}
+
+.students-table tbody tr.gender-boy{
+    background:#fff;
+}
+
+.students-table tbody tr.gender-boy:hover{
+    background:#fbfdff;
+}
+
+.students-table tbody tr.gender-girl{
+    background:#fff;
+}
+
+.students-table tbody tr.gender-girl:hover{
+    background:#fbfdff;
+}
+
+.gender-boy td:first-child{
+    border-right:0;
+}
+
+.gender-girl td:first-child{
+    border-right:0;
+}
+
+.gender-empty{
+    padding:24px 14px;
+    text-align:center;
+    color:var(--muted);
+    font-size:9px;
+    font-weight:800;
+}
+
+@media(max-width:900px){
+    .gender-tables{
+        flex-direction:column;
+    }
+
+    .gender-panel{
+        width:100%;
+        flex:none;
+    }
+}
+
+
+/* =========================================================
+   STUDENT NAME COLOR BY ACCOUNT STATUS
+========================================================= */
+
+.student-name-btn.account-active-name{
+    color:#078746;
+    text-decoration-color:#078746;
+}
+
+.student-name-btn.account-inactive-name{
+    color:#d94f8a;
+    text-decoration-color:#d94f8a;
+}
+
+.student-name-btn.account-active-name:hover,
+.student-name-btn.account-active-name:focus{
+    color:#056a37;
+}
+
+.student-name-btn.account-inactive-name:hover,
+.student-name-btn.account-inactive-name:focus{
+    color:#b83b72;
+}
+
+
+/* =========================================================
+   WHITE STUDENT TABLE
+========================================================= */
+
+.students-table tbody td{
+    background:#fff;
+    color:#172033;
+}
+
+.students-table tbody tr:hover td{
+    background:#fbfdff;
+}
+
+.students-table .student-name-btn{
+    color:#172033 !important;
+    text-decoration-color:#172033 !important;
+}
+
+.students-table .status-cell.active{
+    background:#fff !important;
+    color:#172033 !important;
+}
+
+.students-table .status-cell.inactive{
+    background:#ffe5e5 !important;
+    color:#b42318 !important;
+}
+
+
+/* =========================================================
+   CLASS BUTTONS BY GENDER
+========================================================= */
+
+.classes-by-gender{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    align-items:start;
+}
+
+.class-gender-group{
+    min-width:0;
+    padding:12px;
+    border-radius:22px;
+    background:#fff;
+    border:1px solid var(--border);
+    box-shadow:var(--shadow);
+}
+
+.class-gender-title{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:10px;
+    font-size:11px;
+    font-weight:900;
+}
+
+.class-gender-title span{
+    min-width:28px;
+    height:28px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    padding:0 8px;
+    border-radius:99px;
+    background:#fff;
+    font-size:8px;
+    font-weight:900;
+}
+
+.class-gender-group.boys-group{
+    border-color:#b9d9ff;
+}
+
+.class-gender-group.boys-group .class-gender-title{
+    color:#075fcf;
+}
+
+.class-gender-group.girls-group{
+    border-color:#f3bfd4;
+}
+
+.class-gender-group.girls-group .class-gender-title{
+    color:#c72c72;
+}
+
+.class-list-grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:10px;
+}
+
+.class-card.boy-class{
+    border-color:#9fc9ff;
+    background:#eaf4ff;
+}
+
+.class-card.boy-class .class-icon{
+    background:#d9ebff;
+    color:#075fcf;
+}
+
+.class-card.boy-class.active{
+    border-color:#075fcf;
+    box-shadow:
+        0 0 0 3px rgba(7,95,207,.08),
+        var(--shadow);
+}
+
+.class-card.girl-class{
+    border-color:#efb3ce;
+    background:#fff0f6;
+}
+
+.class-card.girl-class .class-icon{
+    background:#ffe0ee;
+    color:#c72c72;
+}
+
+.class-card.girl-class.active{
+    border-color:#d64a89;
+    box-shadow:
+        0 0 0 3px rgba(214,74,137,.08),
+        var(--shadow);
+}
+
+.class-card.boy-class h4,
+.class-card.boy-class p,
+.class-card.girl-class h4,
+.class-card.girl-class p{
+    color:#172033;
+}
+
+.class-card.boy-class .class-count,
+.class-card.girl-class .class-count{
+    background:#fff;
+    color:#475467;
+}
+
+@media(max-width:800px){
+    .classes-by-gender{
+        grid-template-columns:1fr;
+    }
+}
+
+@media(max-width:430px){
+    .class-list-grid{
+        grid-template-columns:1fr 1fr;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+<!-- =========================================================
+     LOADER
+========================================================= -->
+
+<div
+    id="loaderScreen"
+    class="loader-screen"
+>
+
+    <div class="loader-box">
+
+        <img
+            src="logo.png"
+            class="loader-logo"
+            alt="شعار المدرسة"
+        >
+
+        <div class="spinner"></div>
+
+        <p>
+            جاري تحميل قسم الحسابات
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="topbar">
+
+    <div class="brand">
+
+        <img
+            src="logo.png"
+            class="logo"
+            alt="شعار المدرسة"
+        >
+
+        <div class="brand-text">
+
+            <h1>
+                مدرسة التحدي الأهلية المختلطة
+            </h1>
+
+            <p>
+                قسم الحسابات
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <button
+        id="logoutBtn"
+        class="logout"
+        type="button"
+    >
+        خروج
+    </button>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="main">
+
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h2>
+            حسابات الطلبة
+        </h2>
+
+        <p>
+            اختر الصف أو ابحث عن الطالب مباشرة. التفعيل الشهري ينتهي
+            تلقائياً يوم 28، والتفعيل الدائم يبقى إلى أن تلغيه الإدارة.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     STATS
+========================================================= -->
+
+<section class="stats">
+
+    <div class="stat">
+
+        <span>
+            جميع الطلبة
+        </span>
+
+        <strong id="statStudents">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span>
+            مفعّل من الحسابات
+        </span>
+
+        <strong id="statActive">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span>
+            غير مفعّل
+        </span>
+
+        <strong id="statInactive">
+            0
+        </strong>
+
+    </div>
+
+
+    <div class="stat">
+
+        <span>
+            مجموع المتبقي
+        </span>
+
+        <strong id="statRemaining">
+            0
+        </strong>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     CLASSES
+========================================================= -->
+
+<div class="section-head">
+
+    <h3>
+        الصفوف
+    </h3>
+
+    <span>
+        اختر الصف
+    </span>
+
+</div>
+
+
+<section
+    id="classesGrid"
+    class="classes-by-gender"
+></section>
+
+
+<!-- =========================================================
+     STUDENTS
+========================================================= -->
+
+<section
+    id="studentsSection"
+>
+
+    <div class="section-head">
+
+        <h3 id="selectedClassTitle">
+            جميع الطلاب
+        </h3>
+
+        <span id="studentsCount">
+            0 طالب
+        </span>
+
+    </div>
+
+
+    <div class="table-tools">
+
+        <input
+            id="searchInput"
+            class="search"
+            type="text"
+            placeholder="بحث باسم الطالب أو الكود أو رقم ولي الأمر"
+            autocomplete="off"
+        >
+
+        <button
+            id="showAllBtn"
+            class="show-all-btn"
+            type="button"
+        >
+            عرض كل الطلاب
+        </button>
+
+    </div>
+
+
+    <div
+        id="tableArea"
+    ></div>
+
+</section>
+
+
+</main>
+
+
+<!-- =========================================================
+     STUDENT MODAL
+========================================================= -->
+
+<div
+    id="studentModal"
+    class="modal"
+>
+
+    <div class="modal-card">
+
+
+        <div class="modal-head">
+
+            <h3>
+                حساب الطالب
+            </h3>
+
+            <button
+                id="closeStudentModal"
+                class="close"
+                type="button"
+            >
+                ×
+            </button>
+
+        </div>
+
+
+        <div class="student-profile">
+
+            <div
+                id="modalAvatar"
+                class="avatar"
+            >
+                ط
+            </div>
+
+
+            <div class="profile-text">
+
+                <h4 id="modalName">
+                    —
+                </h4>
+
+                <p id="modalCode">
+                    —
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="modalInfo"
+            class="modal-grid"
+        ></div>
+
+
+        <div class="payment-box">
+
+            <h4>
+                حالة الأقساط
+            </h4>
+
+
+            <div class="payment-summary">
+
+                <div class="money-box">
+
+                    <span>
+                        القسط الكلي
+                    </span>
+
+                    <strong id="modalTotal">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="money-box">
+
+                    <span>
+                        المدفوع
+                    </span>
+
+                    <strong id="modalPaid">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="money-box">
+
+                    <span>
+                        المتبقي
+                    </span>
+
+                    <strong id="modalRemaining">
+                        0
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="activationArea"
+            class="activation-area"
+        >
+
+            <label>
+                مبلغ الدفعة (اختياري)
+            </label>
+
+            <input
+                id="paymentAmount"
+                class="activation-input"
+                type="number"
+                min="0"
+                step="250"
+                inputmode="numeric"
+                placeholder="أدخل المبلغ إن وجدت دفعة"
+            >
+
+            <div
+                id="activationHelp"
+                class="activation-help"
+            >
+                يمكن تفعيل الحساب بدون تسجيل دفعة. إذا أدخلت مبلغاً سيتم حفظه ضمن دفعات الطالب.
+            </div>
+
+            <label class="permanent-switch">
+                <input
+                    id="permanentActivation"
+                    type="checkbox"
+                >
+                <span>
+                    تفعيل دائم — يبقى حساب الطالب مفعّلاً ولا يدخل ضمن الإيقاف الشهري.
+                    إلغاء التفعيل الدائم يكون من الإدارة فقط.
+                </span>
+            </label>
+
+            <div class="activation-note">
+                التفعيل العادي ينتهي تلقائياً في يوم 28. المحاسب يستطيع التفعيل فقط،
+                ولا يستطيع إلغاء التفعيل بعد اعتماده.
+            </div>
+
+        </div>
+
+        <div
+            id="activeAccountSummary"
+            class="account-active-summary hidden"
+        ></div>
+
+
+        <div class="actions single">
+
+            <button
+                id="activateBtn"
+                class="action activate"
+                type="button"
+            >
+                تفعيل
+            </button>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     CONFIRM DISABLE
+========================================================= -->
+
+<div
+    id="confirmModal"
+    class="modal confirm-modal"
+>
+
+    <div class="confirm-card">
+
+        <div class="confirm-icon">
+            !
+        </div>
+
+        <h3>
+            إلغاء تفعيل الحسابات
+        </h3>
+
+        <p>
+            هل أنت متأكد من إلغاء صلاحية الحسابات لهذا الطالب؟
+        </p>
+
+        <div class="confirm-actions">
+
+            <button
+                id="cancelDisable"
+                class="confirm-cancel"
+                type="button"
+            >
+                رجوع
+            </button>
+
+            <button
+                id="confirmDisable"
+                class="confirm-ok"
+                type="button"
+            >
+                إلغاء التفعيل
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOAST
+========================================================= -->
+
+<div
+    id="toast"
+    class="toast"
+></div>
+
+
+<script>
+
+/* =========================================================
+   DATABASE
+========================================================= */
+
+const DB =
+    "https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
+
+
+/* =========================================================
+   GLOBAL STATE
+========================================================= */
+
+let session = {};
+
+let accountantUser = {};
+
+let students = {};
+
+let classes = {};
+
+let payments = {};
+
+let paymentSummary = {};
+
+let selectedClassId = "";
+
+let selectedStudentCode = "";
+
+let isLoggingOut = false;
+
+
+/* =========================================================
+   SHORTCUT
+========================================================= */
+
+const $ =
+    id =>
+        document.getElementById(id);
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function esc(value){
+
+    return String(value ?? "")
+
+        .replace(
+            /[&<>"']/g,
+            char => ({
+                "&":"&amp;",
+                "<":"&lt;",
+                ">":"&gt;",
+                '"':"&quot;",
+                "'":"&#039;"
+            })[char]
+        );
+
+}
+
+
+function norm(value){
+
+    return String(value ?? "")
+        .trim()
+        .toLowerCase();
+
+}
+
+
+function num(value){
+
+    const n =
+        Number(value);
+
+    return Number.isFinite(n)
+        ? n
+        : 0;
+
+}
+
+
+function money(value){
+
+    return (
+        new Intl.NumberFormat(
+            "ar-IQ"
+        ).format(
+            Math.round(
+                num(value)
+            )
+        )
+        +
+        " د.ع"
+    );
+
+}
+
+
+
+/* =========================================================
+   ACCOUNTING MONTHLY ACCESS
+   التفعيل العادي ينتهي يوم 28.
+   التفعيل الدائم لا ينتهي إلا إذا ألغته الإدارة.
+========================================================= */
+
+function cutoffTimestampForDate(dateValue){
+
+    const date =
+        dateValue instanceof Date
+            ? new Date(dateValue.getTime())
+            : new Date(dateValue);
+
+    const nowTime =
+        date.getTime();
+
+    let cutoff =
+        new Date(
+            date.getFullYear(),
+            date.getMonth(),
+            28,
+            0,
+            0,
+            0,
+            0
+        );
+
+    /*
+       إذا تم التفعيل يوم 28 أو بعده،
+       يكون تاريخ الإيقاف في 28 من الشهر القادم.
+    */
+    if(
+        nowTime >=
+        cutoff.getTime()
+    ){
+
+        cutoff =
+            new Date(
+                date.getFullYear(),
+                date.getMonth() + 1,
+                28,
+                0,
+                0,
+                0,
+                0
+            );
+
+    }
+
+    return cutoff.getTime();
+
+}
+
+
+function legacyCurrentCutoffTimestamp(){
+
+    const now =
+        new Date();
+
+    return new Date(
+        now.getFullYear(),
+        now.getMonth(),
+        28,
+        0,
+        0,
+        0,
+        0
+    ).getTime();
+
+}
+
+
+function formatDateTime(timestamp){
+
+    if(
+        !timestamp
+    ){
+        return "—";
+    }
+
+    try{
+
+        return new Intl.DateTimeFormat(
+            "ar-IQ",
+            {
+                year:"numeric",
+                month:"2-digit",
+                day:"2-digit"
+            }
+        ).format(
+            new Date(timestamp)
+        );
+
+    }
+    catch{
+
+        return "—";
+
+    }
+
+}
+
+
+function isPermanentAccounting(student){
+
+    return (
+        student?.accountantPermanent === true &&
+        student?.accountantApproved === true
+    );
+
+}
+
+
+function isAccountantActive(student){
+
+    if(
+        !student ||
+        student.accountantApproved !== true
+    ){
+        return false;
+    }
+
+    if(
+        student.accountantPermanent === true
+    ){
+        return true;
+    }
+
+    const until =
+        num(
+            student.accountantApprovedUntil
+        );
+
+    /*
+       للسجلات القديمة قبل هذا التعديل:
+       إذا ماكو تاريخ انتهاء، نبقي قيمة accountantApproved
+       مؤقتاً إلى أن تعمل مزامنة الإيقاف.
+    */
+    if(
+        !until
+    ){
+        return true;
+    }
+
+    return Date.now() < until;
+
+}
+
+
+function accountingTypeText(student){
+
+    if(
+        !isAccountantActive(student)
+    ){
+        return "غير مفعّل";
+    }
+
+    if(
+        student.accountantPermanent === true
+    ){
+        return "دائم";
+    }
+
+    return "شهري";
+
+}
+
+
+function guardianPhone(student){
+
+    return String(
+        student?.guardianPhone ||
+        student?.guardianNumber ||
+        student?.parentPhone ||
+        student?.guardianMobile ||
+        student?.phoneGuardian ||
+        student?.fatherPhone ||
+        ""
+    ).trim();
+
+}
+
+
+function whatsappNumber(value){
+
+    let digits =
+        String(value || "")
+        .replace(/\D/g,"");
+
+    if(
+        digits.startsWith("00")
+    ){
+        digits =
+            digits.slice(2);
+    }
+
+    if(
+        digits.startsWith("0")
+    ){
+        digits =
+            "964" +
+            digits.slice(1);
+    }
+
+    if(
+        digits.length === 10 &&
+        digits.startsWith("7")
+    ){
+        digits =
+            "964" +
+            digits;
+    }
+
+    return digits;
+
+}
+
+
+function openGuardianWhatsApp(code){
+
+    const student =
+        students[code];
+
+    if(
+        !student
+    ){
+        return;
+    }
+
+    const phone =
+        whatsappNumber(
+            guardianPhone(student)
+        );
+
+    if(
+        !phone
+    ){
+
+        toast(
+            "لا يوجد رقم ولي أمر مسجل لهذا الطالب"
+        );
+
+        return;
+    }
+
+    const message =
+        encodeURIComponent(
+            `السلام عليكم، ولي أمر الطالب ${student.name || ""}`
+        );
+
+    window.open(
+        `https://wa.me/${phone}?text=${message}`,
+        "_blank",
+        "noopener"
+    );
+
+}
+
+
+async function syncAccountingExpiry(){
+
+    const now =
+        Date.now();
+
+    const update = {};
+
+    let changed =
+        0;
+
+    Object.entries(
+        students
+    ).forEach(
+        ([code,student]) => {
+
+            if(
+                !student ||
+                student.deleted === true ||
+                student.accountantApproved !== true
+            ){
+                return;
+            }
+
+            /*
+               التفعيل الدائم مستثنى كلياً.
+               الإدارة فقط تلغي هذا النوع.
+            */
+            if(
+                student.accountantPermanent === true
+            ){
+                return;
+            }
+
+            let until =
+                num(
+                    student.accountantApprovedUntil
+                );
+
+            /*
+               ترحيل السجلات القديمة:
+               إذا كان مفعلاً بدون تاريخ انتهاء،
+               نربطه بيوم 28 من الشهر الحالي.
+            */
+            if(
+                !until
+            ){
+
+                until =
+                    legacyCurrentCutoffTimestamp();
+
+                update[
+                    `${code}/accountantApprovedUntil`
+                ] =
+                    until;
+
+                student.accountantApprovedUntil =
+                    until;
+
+            }
+
+            if(
+                now >= until
+            ){
+
+                update[
+                    `${code}/accountantApproved`
+                ] =
+                    false;
+
+                update[
+                    `${code}/accountantDisabledAt`
+                ] =
+                    now;
+
+                update[
+                    `${code}/accountantDisabledReason`
+                ] =
+                    "monthly_cutoff_day_28";
+
+                update[
+                    `${code}/accountantApprovalMode`
+                ] =
+                    "monthly_expired";
+
+                student.accountantApproved =
+                    false;
+
+                changed++;
+
+            }
+
+        }
+    );
+
+    if(
+        Object.keys(update).length
+    ){
+
+        await dbPatch(
+            "students",
+            update
+        );
+
+    }
+
+    return changed;
+
+}
+
+
+function allStudents(){
+
+    return Object.entries(
+        students
+    )
+    .map(
+        ([code,value]) => ({
+            code,
+            ...value
+        })
+    )
+    .filter(
+        student =>
+            student &&
+            student.deleted !== true
+    )
+    .sort(
+        (a,b) =>
+            String(a.name || "")
+            .localeCompare(
+                String(b.name || ""),
+                "ar",
+                {
+                    sensitivity:"base"
+                }
+            )
+    );
+
+}
+
+
+function showAllStudents(
+    scroll = true
+){
+
+    selectedClassId =
+        "";
+
+    $("searchInput").value =
+        "";
+
+    $("studentsSection")
+        .classList.remove(
+            "hidden"
+        );
+
+    renderClasses();
+
+    renderStudentsTable();
+
+    if(
+        scroll
+    ){
+
+        setTimeout(
+            () =>
+                $("studentsSection")
+                .scrollIntoView({
+                    behavior:"smooth",
+                    block:"start"
+                }),
+            60
+        );
+
+    }
+
+}
+
+function genderText(value){
+
+    return value === "female"
+        ? "أنثى"
+        : "ذكر";
+
+}
+
+
+function toast(text){
+
+    $("toast").textContent =
+        text;
+
+
+    $("toast")
+        .classList.add(
+            "show"
+        );
+
+
+    clearTimeout(
+        window.toastTimer
+    );
+
+
+    window.toastTimer =
+        setTimeout(
+            () => {
+
+                $("toast")
+                    .classList.remove(
+                        "show"
+                    );
+
+            },
+            2400
+        );
+
+}
+
+
+/* =========================================================
+   FIREBASE REST
+========================================================= */
+
+async function dbGet(path){
+
+    const response =
+        await fetch(
+            `${DB}/${path}.json`,
+            {
+                cache:"no-store"
+            }
+        );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "GET_FAILED"
+        );
+
+    }
+
+
+    return response.json();
+
+}
+
+
+async function dbPatch(
+    path,
+    data
+){
+
+    const response =
+        await fetch(
+            `${DB}/${path}.json`,
+            {
+                method:"PATCH",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(
+                        data
+                    )
+            }
+        );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "PATCH_FAILED"
+        );
+
+    }
+
+
+    return response.json();
+
+}
+
+
+async function dbPost(
+    path,
+    data
+){
+
+    const response =
+        await fetch(
+            `${DB}/${path}.json`,
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":
+                        "application/json"
+                },
+
+                body:
+                    JSON.stringify(
+                        data
+                    )
+            }
+        );
+
+
+    if(!response.ok){
+
+        throw new Error(
+            "POST_FAILED"
+        );
+
+    }
+
+
+    return response.json();
+
+}
+
+
+/* =========================================================
+   SESSION
+========================================================= */
+
+function loadSession(){
+
+    /*
+       إذا الصفحة وصلت بحالة logout لأي سبب،
+       لا نحاول استعادة أي جلسة قديمة.
+    */
+    try{
+        const params =
+            new URLSearchParams(
+                location.search
+            );
+
+        if(
+            params.get("logout") === "1"
+        ){
+            clearAuthStorage();
+            session = {};
+
+            location.replace(
+                `index.html?logout=1&t=${Date.now()}`
+            );
+
+            return false;
+        }
+    }
+    catch{}
+
+    try{
+
+        session =
+            JSON.parse(
+                sessionStorage.getItem(
+                    "tahadi_session"
+                ) || "{}"
+            );
+
+    }
+    catch{
+
+        session = {};
+
+    }
+
+    if(
+        !session.code
+    ){
+
+        clearAuthStorage();
+
+        location.replace(
+            `index.html?logout=1&t=${Date.now()}`
+        );
+
+        return false;
+
+    }
+
+    return true;
+
+}
+
+
+
+function hasAccountantSession(){
+
+    try{
+
+        const stored =
+            JSON.parse(
+                sessionStorage.getItem(
+                    "tahadi_session"
+                ) || "{}"
+            );
+
+        return Boolean(
+            stored &&
+            stored.code
+        );
+
+    }
+    catch{
+
+        return false;
+
+    }
+
+}
+
+/* =========================================================
+   VERIFY ACCOUNTANT
+========================================================= */
+
+async function verifyAccountant(){
+
+    if(
+        !loadSession()
+    ){
+        return false;
+    }
+
+
+    accountantUser =
+        await dbGet(
+            `users/${encodeURIComponent(session.code)}`
+        );
+
+
+    if(
+        !accountantUser
+    ){
+
+        logout();
+
+        return false;
+
+    }
+
+
+    const role =
+        norm(
+            accountantUser.role
+        );
+
+
+    if(
+        ![
+            "accountant",
+            "accounting",
+            "mn"
+        ].includes(role)
+    ){
+
+        logout();
+
+        return false;
+
+    }
+
+
+    if(
+        accountantUser.active === false ||
+        accountantUser.hidden === true
+    ){
+
+        logout();
+
+        return false;
+
+    }
+
+
+    return true;
+
+}
+
+
+
+function clearAuthStorage(){
+
+    /*
+       امسح كل آثار تسجيل الدخول من هذا الموقع.
+       السبب: بعض نسخ صفحة الدخول قد تحفظ الجلسة في
+       localStorage وليس sessionStorage فقط.
+    */
+
+    try{
+        sessionStorage.removeItem("tahadi_session");
+        sessionStorage.removeItem("tahadi_user");
+        sessionStorage.removeItem("tahadi_role");
+        sessionStorage.removeItem("studentCode");
+        sessionStorage.removeItem("userCode");
+        sessionStorage.clear();
+    }
+    catch(error){
+        console.warn("SESSION_STORAGE_CLEAR_ERROR",error);
+    }
+
+    try{
+        localStorage.removeItem("tahadi_session");
+        localStorage.removeItem("tahadi_user");
+        localStorage.removeItem("tahadi_role");
+        localStorage.removeItem("studentCode");
+        localStorage.removeItem("userCode");
+        localStorage.removeItem("loginCode");
+        localStorage.removeItem("rememberedCode");
+
+        /*
+           لضمان عدم وجود جلسة قديمة باسم مختلف
+           من نسخة سابقة للموقع، نمسح تخزين الموقع المحلي كله.
+        */
+        localStorage.clear();
+    }
+    catch(error){
+        console.warn("LOCAL_STORAGE_CLEAR_ERROR",error);
+    }
+
+    /*
+       امسح الكوكيز القابلة للمسح من JavaScript لنفس الموقع.
+       لا نعتمد عليها أساساً، لكن هذا يمنع أي نسخة قديمة
+       من إعادة تسجيل الدخول تلقائياً.
+    */
+    try{
+        document.cookie
+            .split(";")
+            .forEach(cookie => {
+
+                const name =
+                    cookie
+                    .split("=")[0]
+                    .trim();
+
+                if(!name){
+                    return;
+                }
+
+                document.cookie =
+                    `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;SameSite=Lax`;
+
+            });
+    }
+    catch(error){
+        console.warn("COOKIE_CLEAR_ERROR",error);
+    }
+
+    try{
+        window.name = "";
+    }
+    catch{}
+
+}
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+function logout(){
+
+    if(isLoggingOut){
+        return;
+    }
+
+    isLoggingOut = true;
+
+    /*
+       أولاً نمسح كل الجلسات قبل أي انتقال.
+    */
+    clearAuthStorage();
+
+    /*
+       امسح نسخة الحساب الموجودة في ذاكرة الصفحة نفسها.
+    */
+    session = {};
+    accountantUser = {};
+    selectedStudentCode = "";
+    selectedClassId = "";
+
+    try{
+        $("studentModal")?.classList.remove("show");
+        $("confirmModal")?.classList.remove("show");
+    }
+    catch{}
+
+    /*
+       نستخدم رابطاً جديداً مع logout=1 ووقت متغير
+       حتى لا يعيد المتصفح نسخة index من الكاش.
+       replace يمنع الرجوع مباشرة إلى صفحة المحاسب.
+    */
+    const target =
+        `index.html?logout=1&t=${Date.now()}`;
+
+    try{
+        history.replaceState(
+            null,
+            "",
+            target
+        );
+    }
+    catch{}
+
+    window.location.replace(
+        target
+    );
+
+}
+
+
+/* =========================================================
+   LOAD DATA
+========================================================= */
+
+async function loadAll(){
+
+    const data =
+        await Promise.all([
+
+            dbGet(
+                "students"
+            ),
+
+            dbGet(
+                "classes"
+            ),
+
+            dbGet(
+                "payments"
+            )
+
+        ]);
+
+
+    students =
+        data[0] || {};
+
+
+    classes =
+        data[1] || {};
+
+
+    payments =
+        data[2] || {};
+
+
+    calculatePaymentSummary();
+
+}
+
+
+/* =========================================================
+   PAYMENT SUMMARY
+========================================================= */
+
+function calculatePaymentSummary(){
+
+    paymentSummary = {};
+
+
+    Object.entries(
+        students
+    )
+    .forEach(
+        ([code,student]) => {
+
+            const list =
+                payments[code] || {};
+
+
+            const paid =
+                Object.values(
+                    list
+                )
+                .reduce(
+                    (sum,item) =>
+                        sum +
+                        num(
+                            item.amount
+                        ),
+                    0
+                );
+
+
+            const total =
+                Math.max(
+                    0,
+                    num(
+                        student.tuitionTotal
+                    )
+                );
+
+
+            const remaining =
+                Math.max(
+                    0,
+                    total -
+                    paid
+                );
+
+
+            paymentSummary[
+                code
+            ] = {
+
+                total,
+                paid,
+                remaining
+
+            };
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   MONTHLY RESET - DAY 29
+
+   مرة واحدة لكل شهر.
+
+   الاستثناء:
+   tuitionTotal == 0
+   remaining == 0
+========================================================= */
+
+async function runMonthlyAccountingReset(){
+
+    /*
+       الاسم محفوظ حتى لا نغيّر هيكل الصفحة،
+       لكن التنفيذ الجديد يفحص تاريخ الانتهاء يومياً
+       وليس يوم 29 فقط.
+    */
+    return syncAccountingExpiry();
+
+}
+
+
+/* =========================================================
+   CLASS NAME
+========================================================= */
+
+function className(classId){
+
+    return (
+        classes[classId]?.name ||
+        "—"
+    );
+
+}
+
+
+/* =========================================================
+   STUDENTS IN CLASS
+========================================================= */
+
+function classStudents(
+    classId
+){
+
+    return Object.entries(
+        students
+    )
+
+    .map(
+        ([code,value]) => ({
+            code,
+            ...value
+        })
+    )
+
+    .filter(
+        student =>
+            student.classId ===
+                classId &&
+            student.deleted !==
+                true
+    )
+
+    .sort(
+        (a,b) =>
+            String(
+                a.name || ""
+            )
+            .localeCompare(
+                String(
+                    b.name || ""
+                ),
+                "ar",
+                {
+                    sensitivity:"base"
+                }
+            )
+    );
+
+}
+
+
+/* =========================================================
+   RENDER CLASSES
+========================================================= */
+
+
+function classGender(
+    id,
+    item
+){
+
+    const raw =
+        norm(
+            [
+                item?.gender,
+                item?.studentGender,
+                item?.type,
+                item?.section,
+                item?.group,
+                item?.name,
+                id
+            ].join(" ")
+        );
+
+
+    if(
+        raw.includes("female") ||
+        raw.includes("girl") ||
+        raw.includes("بنات") ||
+        raw.includes("اناث") ||
+        raw.includes("إناث") ||
+        raw.includes("بنت")
+    ){
+        return "female";
+    }
+
+
+    if(
+        raw.includes("male") ||
+        raw.includes("boy") ||
+        raw.includes("بنين") ||
+        raw.includes("ذكور") ||
+        raw.includes("ولد")
+    ){
+        return "male";
+    }
+
+
+    /*
+       إذا الصف نفسه ما بيه حقل جنس،
+       نحدد الجنس من الطلاب الموجودين داخله.
+    */
+    const list =
+        classStudents(
+            id
+        );
+
+
+    const females =
+        list.filter(
+            student =>
+                student.gender === "female"
+        ).length;
+
+
+    const males =
+        list.length -
+        females;
+
+
+    return females > males
+        ? "female"
+        : "male";
+
+}
+
+
+function renderClassButton(
+    id,
+    item,
+    gender
+){
+
+    const count =
+        classStudents(
+            id
+        ).length;
+
+
+    return `
+
+        <button
+            type="button"
+            class="
+                class-card
+                ${
+                    gender === "female"
+                        ? "girl-class"
+                        : "boy-class"
+                }
+                ${
+                    selectedClassId === id
+                        ? "active"
+                        : ""
+                }
+            "
+            onclick="
+                selectClass(
+                    '${safeJS(id)}'
+                )
+            "
+        >
+
+            <div class="class-count">
+                ${count}
+            </div>
+
+            <div class="class-icon">
+                ص
+            </div>
+
+            <h4>
+                ${esc(item.name || "صف")}
+            </h4>
+
+            <p>
+                ${count} طالب
+            </p>
+
+        </button>
+
+    `;
+
+}
+
+
+function renderClasses(){
+
+    const classList =
+        Object.entries(
+            classes
+        )
+
+        .filter(
+            ([id,item]) =>
+                item &&
+                item.active !== false
+        )
+
+        .sort(
+            (a,b) =>
+                String(
+                    a[1].name || ""
+                )
+                .localeCompare(
+                    String(
+                        b[1].name || ""
+                    ),
+                    "ar"
+                )
+        );
+
+
+    if(
+        !classList.length
+    ){
+
+        $("classesGrid").innerHTML = `
+
+            <div class="empty">
+                لا توجد صفوف في النظام.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    const boys =
+        classList.filter(
+            ([id,item]) =>
+                classGender(
+                    id,
+                    item
+                ) !== "female"
+        );
+
+
+    const girls =
+        classList.filter(
+            ([id,item]) =>
+                classGender(
+                    id,
+                    item
+                ) === "female"
+        );
+
+
+    $("classesGrid").className =
+        "classes-by-gender";
+
+
+    $("classesGrid").innerHTML = `
+
+        <section class="class-gender-group boys-group">
+
+            <div class="class-gender-title">
+                <strong>صفوف البنين</strong>
+                <span>${boys.length}</span>
+            </div>
+
+            <div class="class-list-grid">
+                ${
+                    boys.length
+                        ? boys.map(
+                            ([id,item]) =>
+                                renderClassButton(
+                                    id,
+                                    item,
+                                    "male"
+                                )
+                        ).join("")
+                        : `
+                            <div class="empty">
+                                لا توجد صفوف بنين.
+                            </div>
+                          `
+                }
+            </div>
+
+        </section>
+
+
+        <section class="class-gender-group girls-group">
+
+            <div class="class-gender-title">
+                <strong>صفوف البنات</strong>
+                <span>${girls.length}</span>
+            </div>
+
+            <div class="class-list-grid">
+                ${
+                    girls.length
+                        ? girls.map(
+                            ([id,item]) =>
+                                renderClassButton(
+                                    id,
+                                    item,
+                                    "female"
+                                )
+                        ).join("")
+                        : `
+                            <div class="empty">
+                                لا توجد صفوف بنات.
+                            </div>
+                          `
+                }
+            </div>
+
+        </section>
+
+    `;
+
+}
+
+
+/* =========================================================
+   SELECT CLASS
+========================================================= */
+
+function selectClass(
+    classId
+){
+
+    selectedClassId =
+        classId;
+
+
+    $("studentsSection")
+        .classList.remove(
+            "hidden"
+        );
+
+
+    $("searchInput").value =
+        "";
+
+
+    renderClasses();
+
+    renderStudentsTable();
+
+
+    setTimeout(
+        () => {
+
+            $("studentsSection")
+                .scrollIntoView({
+                    behavior:"smooth",
+                    block:"start"
+                });
+
+        },
+        80
+    );
+
+}
+
+
+/* =========================================================
+   FILTER CURRENT CLASS
+========================================================= */
+
+function filteredCurrentStudents(){
+
+    const search =
+        norm(
+            $("searchInput").value
+        );
+
+    const source =
+        selectedClassId
+            ? classStudents(
+                selectedClassId
+            )
+            : allStudents();
+
+    return source
+    .filter(
+        student => {
+
+            if(
+                !search
+            ){
+                return true;
+            }
+
+            const data =
+                norm(
+                    [
+                        student.name,
+                        student.code,
+                        guardianPhone(student),
+                        student.studentPhone,
+                        student.phone
+                    ].join(" ")
+                );
+
+            return data.includes(
+                search
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   TABLE
+========================================================= */
+
+function renderStudentsTable(){
+
+    const list =
+        filteredCurrentStudents();
+
+
+    $("selectedClassTitle").textContent =
+        selectedClassId
+            ? className(
+                selectedClassId
+            )
+            : "جميع الطلاب";
+
+
+    $("studentsCount").textContent =
+        `${list.length} طالب`;
+
+
+    if(
+        !list.length
+    ){
+
+        $("tableArea").innerHTML = `
+
+            <div class="empty">
+                لا توجد نتائج مطابقة.
+            </div>
+
+        `;
+
+        return;
+
+    }
+
+
+    $("tableArea").innerHTML = `
+
+        <div class="table-wrap">
+
+            <table class="students-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>اسم الطالب</th>
+
+                        <th>الصف</th>
+
+                        <th>القاعة</th>
+
+                        <th>حالة الحساب</th>
+
+                        <th>نوع التفعيل</th>
+
+                        <th>ينتهي</th>
+
+                        <th>المتبقي</th>
+
+                        <th>ولي الأمر</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    ${
+                        list.map(
+                            (student,index) => {
+
+                                const summary =
+                                    paymentSummary[
+                                        student.code
+                                    ] || {
+                                        total:0,
+                                        paid:0,
+                                        remaining:0
+                                    };
+
+
+                                const active =
+                                    isAccountantActive(
+                                        student
+                                    );
+
+
+                                const permanent =
+                                    active &&
+                                    student.accountantPermanent === true;
+
+
+                                const phone =
+                                    guardianPhone(
+                                        student
+                                    );
+
+
+                                return `
+
+                                    <tr>
+
+                                        <td>
+                                            ${index + 1}
+                                        </td>
+
+
+                                        <td>
+
+                                            <button
+                                                type="button"
+                                                class="student-name-btn"
+                                                onclick="
+                                                    openStudent(
+                                                        '${safeJS(student.code)}'
+                                                    )
+                                                "
+                                            >
+                                                ${esc(student.name || "—")}
+                                            </button>
+
+                                        </td>
+
+
+                                        <td>
+                                            ${esc(className(student.classId))}
+                                        </td>
+
+
+                                        <td>
+                                            ${esc(student.roomNumber || "—")}
+                                        </td>
+
+
+                                        <td
+                                            class="
+                                                status-cell
+                                                ${
+                                                    active
+                                                        ? "active"
+                                                        : "inactive"
+                                                }
+                                            "
+                                        >
+                                            ${
+                                                active
+                                                    ? "مفعّل"
+                                                    : "غير مفعّل"
+                                            }
+                                        </td>
+
+
+                                        <td>
+
+                                            <span
+                                                class="
+                                                    activation-type
+                                                    ${
+                                                        !active
+                                                            ? "off"
+                                                            : permanent
+                                                                ? "permanent"
+                                                                : "monthly"
+                                                    }
+                                                "
+                                            >
+                                                ${
+                                                    !active
+                                                        ? "متوقف"
+                                                        : permanent
+                                                            ? "دائم"
+                                                            : "شهري"
+                                                }
+                                            </span>
+
+                                        </td>
+
+
+                                        <td>
+                                            ${
+                                                !active
+                                                    ? "—"
+                                                    : permanent
+                                                        ? "بدون انتهاء"
+                                                        : esc(
+                                                            formatDateTime(
+                                                                student.accountantApprovedUntil
+                                                            )
+                                                        )
+                                            }
+                                        </td>
+
+
+                                        <td class="amount">
+                                            ${esc(money(summary.remaining))}
+                                        </td>
+
+
+                                        <td>
+
+                                            <button
+                                                type="button"
+                                                class="whatsapp-btn"
+                                                ${
+                                                    phone
+                                                        ? ""
+                                                        : "disabled"
+                                                }
+                                                onclick="
+                                                    openGuardianWhatsApp(
+                                                        '${safeJS(student.code)}'
+                                                    )
+                                                "
+                                            >
+                                                واتساب ولي الأمر
+                                            </button>
+
+                                        </td>
+
+                                    </tr>
+
+                                `;
+
+                            }
+                        ).join("")
+                    }
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   OPEN STUDENT
+========================================================= */
+
+function openStudent(
+    code
+){
+
+    const student =
+        students[
+            code
+        ];
+
+
+    if(
+        !student
+    ){
+        return;
+    }
+
+
+    selectedStudentCode =
+        code;
+
+
+    const summary =
+        paymentSummary[
+            code
+        ] || {
+            total:0,
+            paid:0,
+            remaining:0
+        };
+
+
+    const active =
+        isAccountantActive(
+            student
+        );
+
+
+    const permanent =
+        active &&
+        student.accountantPermanent === true;
+
+
+    $("modalAvatar").textContent =
+        (
+            student.name ||
+            "ط"
+        )
+        .trim()
+        .charAt(0) ||
+        "ط";
+
+
+    $("modalName").textContent =
+        student.name ||
+        "—";
+
+
+    $("modalCode").textContent =
+        code;
+
+
+    $("modalInfo").innerHTML = `
+
+        <div class="info">
+
+            <span>
+                الصف
+            </span>
+
+            <strong>
+                ${esc(className(student.classId))}
+            </strong>
+
+        </div>
+
+
+        <div class="info">
+
+            <span>
+                الجنس
+            </span>
+
+            <strong>
+                ${esc(genderText(student.gender))}
+            </strong>
+
+        </div>
+
+
+        <div class="info">
+
+            <span>
+                القاعة
+            </span>
+
+            <strong>
+                ${esc(student.roomNumber || "—")}
+            </strong>
+
+        </div>
+
+
+        <div class="info">
+
+            <span>
+                حالة الحسابات
+            </span>
+
+            <strong>
+                ${
+                    active
+                        ? "مفعّل"
+                        : "غير مفعّل"
+                }
+            </strong>
+
+        </div>
+
+
+        <div class="info">
+
+            <span>
+                نوع التفعيل
+            </span>
+
+            <strong>
+                ${
+                    !active
+                        ? "—"
+                        : permanent
+                            ? "دائم"
+                            : "شهري"
+                }
+            </strong>
+
+        </div>
+
+
+        <div class="info">
+
+            <span>
+                تاريخ الانتهاء
+            </span>
+
+            <strong>
+                ${
+                    !active
+                        ? "—"
+                        : permanent
+                            ? "إلى أن تلغيه الإدارة"
+                            : esc(
+                                formatDateTime(
+                                    student.accountantApprovedUntil
+                                )
+                            )
+                }
+            </strong>
+
+        </div>
+
+
+        <div class="info">
+
+            <span>
+                رقم ولي الأمر
+            </span>
+
+            <strong>
+                ${esc(guardianPhone(student) || "غير مسجل")}
+            </strong>
+
+        </div>
+
+
+        <div class="info">
+
+            <span>
+                الإجراء
+            </span>
+
+            <strong>
+                ${
+                    active
+                        ? "لا يمكن للمحاسب إلغاء التفعيل"
+                        : "بانتظار التفعيل"
+                }
+            </strong>
+
+        </div>
+
+    `;
+
+
+    $("modalTotal").textContent =
+        money(
+            summary.total
+        );
+
+
+    $("modalPaid").textContent =
+        money(
+            summary.paid
+        );
+
+
+    $("modalRemaining").textContent =
+        money(
+            summary.remaining
+        );
+
+
+    $("paymentAmount").value =
+        "";
+
+
+    $("permanentActivation").checked =
+        false;
+
+
+    /*
+       بعد التفعيل يختفي قسم التفعيل من المحاسب.
+       لا يوجد زر إلغاء تفعيل للمحاسب.
+    */
+
+    $("activationArea")
+        .classList.toggle(
+            "hidden",
+            active
+        );
+
+
+    $("activateBtn")
+        .classList.toggle(
+            "hidden",
+            active
+        );
+
+
+    $("activeAccountSummary")
+        .classList.toggle(
+            "hidden",
+            !active
+        );
+
+
+    if(
+        active
+    ){
+
+        $("activeAccountSummary").innerHTML =
+            permanent
+                ? `
+                    الحساب مفعّل تفعيل دائم.<br>
+                    يبقى فعالاً إلى أن تلغيه الإدارة.
+                  `
+                : `
+                    الحساب مفعّل لهذا الشهر.<br>
+                    الإيقاف التلقائي: يوم
+                    ${esc(formatDateTime(student.accountantApprovedUntil))}
+                  `;
+
+    }
+    else{
+
+        $("activeAccountSummary").innerHTML =
+            "";
+
+    }
+
+
+    $("studentModal")
+        .classList.add(
+            "show"
+        );
+
+}
+
+
+/* =========================================================
+   ACTIVATE STUDENT
+========================================================= */
+
+$("activateBtn").onclick =
+async () => {
+
+    const code =
+        selectedStudentCode;
+
+
+    const student =
+        students[
+            code
+        ];
+
+
+    if(
+        !student
+    ){
+        return;
+    }
+
+
+    if(
+        isAccountantActive(
+            student
+        )
+    ){
+
+        toast(
+            "حساب الطالب مفعّل بالفعل"
+        );
+
+        return;
+    }
+
+
+    /*
+       الدفعة أصبحت اختيارية.
+       إذا كتب المحاسب مبلغاً نحفظه،
+       وإذا تركه صفراً يتم التفعيل فقط.
+    */
+
+    const currentPayments =
+        await dbGet(
+            `payments/${encodeURIComponent(code)}`
+        ) || {};
+
+
+    payments[
+        code
+    ] =
+        currentPayments;
+
+
+    calculatePaymentSummary();
+
+
+    const summary =
+        paymentSummary[
+            code
+        ] || {
+            total:0,
+            paid:0,
+            remaining:0
+        };
+
+
+    const amount =
+        num(
+            $("paymentAmount").value
+        );
+
+
+    if(
+        amount < 0
+    ){
+
+        toast(
+            "مبلغ الدفعة غير صحيح"
+        );
+
+        return;
+    }
+
+
+    if(
+        amount > 0 &&
+        summary.remaining > 0 &&
+        amount >
+        summary.remaining
+    ){
+
+        toast(
+            "مبلغ الدفعة أكبر من المبلغ المتبقي"
+        );
+
+        return;
+    }
+
+
+    const permanent =
+        $("permanentActivation")
+        .checked === true;
+
+
+    $("activateBtn").disabled =
+        true;
+
+
+    $("activateBtn").textContent =
+        "جاري التفعيل";
+
+
+    try{
+
+
+        const now =
+            Date.now();
+
+
+        const approvedUntil =
+            permanent
+                ? null
+                : cutoffTimestampForDate(
+                    new Date(now)
+                );
+
+
+        if(
+            amount > 0
+        ){
+
+            await dbPost(
+                `payments/${encodeURIComponent(code)}`,
+                {
+
+                    amount:
+                        amount,
+
+                    date:
+                        now,
+
+                    timestamp:
+                        now,
+
+                    note:
+                        permanent
+                            ? "دفعة مع تفعيل دائم للحسابات"
+                            : "دفعة مع تفعيل شهري للحسابات",
+
+                    type:
+                        "account_activation",
+
+                    receivedBy:
+                        session.code,
+
+                    studentCode:
+                        code
+
+                }
+            );
+
+        }
+
+
+        await dbPatch(
+            `students/${encodeURIComponent(code)}`,
+            {
+
+                accountantApproved:
+                    true,
+
+                accountantApprovedAt:
+                    now,
+
+                accountantApprovedBy:
+                    session.code,
+
+                accountantLastPaymentAmount:
+                    amount,
+
+                accountantPermanent:
+                    permanent,
+
+                accountantApprovalMode:
+                    permanent
+                        ? "permanent"
+                        : "monthly",
+
+                accountantApprovedUntil:
+                    approvedUntil
+
+            }
+        );
+
+
+        students[
+            code
+        ].accountantApproved =
+            true;
+
+
+        students[
+            code
+        ].accountantApprovedAt =
+            now;
+
+
+        students[
+            code
+        ].accountantApprovedBy =
+            session.code;
+
+
+        students[
+            code
+        ].accountantPermanent =
+            permanent;
+
+
+        students[
+            code
+        ].accountantApprovalMode =
+            permanent
+                ? "permanent"
+                : "monthly";
+
+
+        students[
+            code
+        ].accountantApprovedUntil =
+            approvedUntil;
+
+
+        payments[
+            code
+        ] =
+            await dbGet(
+                `payments/${encodeURIComponent(code)}`
+            ) || {};
+
+
+        calculatePaymentSummary();
+
+
+        renderStats();
+
+        renderStudentsTable();
+
+        openStudent(
+            code
+        );
+
+
+        toast(
+            permanent
+                ? "تم تفعيل الطالب تفعيل دائم — الإلغاء من الإدارة فقط"
+                : `تم تفعيل الطالب حتى يوم ${formatDateTime(approvedUntil)}`
+        );
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        toast(
+            "تعذر تفعيل الطالب"
+        );
+
+    }
+
+    finally{
+
+        $("activateBtn").disabled =
+            false;
+
+        $("activateBtn").textContent =
+            "تفعيل";
+
+    }
+
+};
+
+
+/* =========================================================
+   ACCOUNTANT CANNOT DISABLE
+   إلغاء التفعيل متاح للإدارة فقط.
+========================================================= */
+
+
+/* =========================================================
+   STATS
+========================================================= */
+
+function renderStats(){
+
+    const list =
+        Object.entries(
+            students
+        )
+        .filter(
+            ([code,student]) =>
+                student &&
+                student.deleted !== true
+        );
+
+
+    const active =
+        list.filter(
+            ([code,student]) =>
+                isAccountantActive(
+                    student
+                )
+        ).length;
+
+
+    const remaining =
+        list.reduce(
+            (sum,[code]) => {
+
+                return (
+                    sum +
+                    (
+                        paymentSummary[
+                            code
+                        ]?.remaining ||
+                        0
+                    )
+                );
+
+            },
+            0
+        );
+
+
+    $("statStudents").textContent =
+        list.length;
+
+
+    $("statActive").textContent =
+        active;
+
+
+    $("statInactive").textContent =
+        list.length -
+        active;
+
+
+    $("statRemaining").textContent =
+        new Intl.NumberFormat(
+            "ar-IQ"
+        ).format(
+            Math.round(
+                remaining
+            )
+        );
+
+}
+
+
+/* =========================================================
+   SAFE JS STRING
+========================================================= */
+
+function safeJS(value){
+
+    return String(value || "")
+
+        .replace(
+            /\\/g,
+            "\\\\"
+        )
+
+        .replace(
+            /'/g,
+            "\\'"
+        );
+
+}
+
+
+/* =========================================================
+   CLOSE STUDENT MODAL
+========================================================= */
+
+$("closeStudentModal").onclick =
+    () => {
+
+        $("studentModal")
+            .classList.remove(
+                "show"
+            );
+
+    };
+
+
+$("studentModal").addEventListener(
+    "click",
+    event => {
+
+        if(
+            event.target ===
+            $("studentModal")
+        ){
+
+            $("studentModal")
+                .classList.remove(
+                    "show"
+                );
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+$("searchInput").addEventListener(
+    "input",
+    renderStudentsTable
+);
+
+
+$("showAllBtn").onclick =
+    () =>
+        showAllStudents(
+            true
+        );
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+$("logoutBtn").onclick =
+    logout;
+
+
+
+/* =========================================================
+   SESSION GUARD
+   إذا رجع المستخدم بزر الرجوع بعد تسجيل الخروج،
+   لا نسمح بعرض الصفحة من ذاكرة المتصفح.
+========================================================= */
+
+window.addEventListener(
+    "pageshow",
+    event => {
+
+        if(
+            event.persisted ||
+            !hasAccountantSession()
+        ){
+
+            if(
+                !hasAccountantSession()
+            ){
+
+                clearAuthStorage();
+
+                window.location.replace(
+                    `index.html?logout=1&t=${Date.now()}`
+                );
+
+            }
+
+        }
+
+    }
+);
+
+window.addEventListener(
+    "storage",
+    event => {
+
+        if(
+            event.key === "tahadi_session" &&
+            !event.newValue
+        ){
+
+            clearAuthStorage();
+
+            window.location.replace(
+                `index.html?logout=1&t=${Date.now()}`
+            );
+
+        }
+
+    }
+);
+
+/* =========================================================
+   INIT
+========================================================= */
+
+async function init(){
+
+    try{
+
+
+        const verified =
+            await verifyAccountant();
+
+
+        if(
+            !verified
+        ){
+            return;
+        }
+
+
+        /*
+           أولاً نسحب البيانات.
+        */
+
+        await loadAll();
+
+
+        /*
+           فحص انتهاء التفعيل الشهري.
+           أي تفعيل عادي وصل إلى يوم 28
+           يتوقف، أما الدائم فلا يتأثر.
+        */
+
+        await runMonthlyAccountingReset();
+
+
+        calculatePaymentSummary();
+
+
+        renderClasses();
+
+        renderStats();
+
+        showAllStudents(
+            false
+        );
+
+
+        /*
+           طالما صفحة المحاسب مفتوحة،
+           نعيد الفحص كل 5 دقائق حتى إذا دخل
+           يوم 28 أثناء بقاء الصفحة مفتوحة
+           يتم تحديث الحالات.
+        */
+
+        window.accountingExpiryTimer =
+            setInterval(
+                async () => {
+
+                    try{
+
+                        const changed =
+                            await syncAccountingExpiry();
+
+                        if(
+                            changed > 0
+                        ){
+
+                            renderStats();
+
+                            renderStudentsTable();
+
+                        }
+
+                    }
+                    catch(error){
+
+                        console.error(
+                            "ACCOUNTING_EXPIRY_SYNC",
+                            error
+                        );
+
+                    }
+
+                },
+                5 * 60 * 1000
+            );
+
+
+        $("loaderScreen")
+            .classList.add(
+                "hidden"
+            );
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            error
+        );
+
+
+        $("loaderScreen")
+            .classList.add(
+                "hidden"
+            );
+
+
+        toast(
+            "تعذر تحميل قسم الحسابات"
+        );
+
+    }
+
+}
+
+
+window.addEventListener(
+    "load",
+    init
+);
+
+</script>
+
+</body>
+
+</html>
