@@ -253,6 +253,7 @@
 .record-cover-page .old-record-warning{top:9mm}
 .public-record-mode .topbar,.public-record-mode .main,.public-record-mode .modal,.public-record-mode #toast{display:none!important}
 .public-record-mode #loaderScreen{display:flex!important;background:#fff}
+.public-record-mode #loaderScreen.record-ready{display:none!important}
 .public-record-mode #loaderScreen p{font-size:12px}
 .record-cover-lines.multi{width:88%}
 .record-cover-lines.multi .record-cover-line{line-height:1.55}
@@ -375,6 +376,37 @@ body.alert-open{overflow:hidden}
 .teacher-objection-change b{color:#172033}
 .save-btn.pending{background:#b77900}
 
+
+/* ===== معاينة السجلات والطباعة: ملائمة للمتصفح وتطبيق WebView ===== */
+.record-preview-overlay{position:fixed;inset:0;z-index:41000;display:none;flex-direction:column;background:#e7edf6;color:#172033;direction:rtl;font-family:Tahoma,Arial,sans-serif}
+.record-preview-overlay.show{display:flex}
+.record-preview-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex:none;background:#fff;padding:calc(12px + env(safe-area-inset-top)) 14px 12px;border-bottom:1px solid #d5e1ef;box-shadow:0 3px 14px #1231  ;}
+.record-preview-toolbar h3{font-size:14px;font-weight:900;line-height:1.5}
+.record-preview-toolbar p{margin-top:4px;font-size:10px;color:#667085;font-weight:800}
+.record-preview-close{height:42px;min-width:75px;padding:0 12px;border:1px solid #d4dce7;border-radius:12px;background:#f4f6f9;color:#344054;font-weight:900;font-size:11px}
+.record-preview-scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:15px 12px 25px}
+.record-preview-sheet{margin:0 auto 16px;max-width:660px;width:100%;background:#fff;box-shadow:0 5px 23px #14283b29;position:relative;line-height:0;overflow:hidden}
+.record-preview-sheet.landscape{max-width:960px}
+.record-preview-sheet img{display:block;width:100%;height:auto;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.record-preview-pagenum{position:absolute;bottom:10px;left:10px;min-width:64px;border-radius:99px;background:#152638db;color:#fff;font-size:10px;font-weight:bold;padding:13px 10px;line-height:1;text-align:center}
+.record-preview-bottom{flex:none;display:flex;gap:10px;padding:12px 14px calc(12px + env(safe-area-inset-bottom));background:#fff;border-top:1px solid #dce4ef}
+.record-preview-print{flex:1;min-height:52px;border:0;border-radius:14px;background:linear-gradient(135deg,#0872e7,#06499e);color:#fff;font-weight:900;font-size:13px}
+.record-preview-bottom .record-preview-close{min-height:52px}
+.record-preview-print:disabled{background:#a7bbd5;cursor:wait}
+body.record-preview-open{overflow:hidden!important}
+@media(max-width:560px){.record-preview-toolbar h3{font-size:12px}.record-preview-scroll{padding:10px 8px 20px}.record-preview-sheet{margin-bottom:12px}.record-preview-bottom{padding-inline:10px}.record-preview-pagenum{font-size:8px;padding:8px}}
+@media print{
+ html,body{width:100%!important;height:auto!important;overflow:visible!important;background:#fff!important;margin:0!important;padding:0!important}
+ body> :not(#recordPreviewOverlay){display:none!important}
+ #recordPreviewOverlay{position:static!important;display:block!important;inset:auto!important;background:#fff!important;overflow:visible!important;width:100%!important;height:auto!important}
+ #recordPreviewOverlay .record-preview-toolbar,#recordPreviewOverlay .record-preview-bottom,#recordPreviewOverlay .record-preview-pagenum{display:none!important}
+ #recordPreviewOverlay .record-preview-scroll{display:block!important;overflow:visible!important;padding:0!important;margin:0!important}
+ #recordPreviewOverlay .record-preview-sheet,#recordPreviewOverlay .record-preview-sheet.landscape{max-width:none!important;width:100%!important;margin:0!important;padding:0!important;box-shadow:none!important;border:0!important;overflow:hidden!important;break-inside:avoid!important;page-break-inside:avoid!important;break-after:page!important;page-break-after:always!important}
+ #recordPreviewOverlay .record-preview-sheet:last-child{break-after:auto!important;page-break-after:auto!important}
+ #recordPreviewOverlay .record-preview-sheet{height:297mm!important;min-height:297mm!important;max-height:297mm!important}
+ #recordPreviewOverlay .record-preview-sheet.landscape{height:210mm!important;min-height:210mm!important;max-height:210mm!important}
+ #recordPreviewOverlay .record-preview-sheet img{display:block!important;width:100%!important;height:100%!important;max-height:none!important;object-fit:fill!important}
+}
 </style></head>
 <body>
 <div id="loaderScreen" class="loader-screen"><div class="loader-box"><img src="logo.png" class="loader-logo" alt=""><div class="spinner"></div><p>جاري تحميل منصة الأستاذ</p></div></div>
@@ -442,7 +474,7 @@ body.alert-open{overflow:hidden}
     </div></div>
    </div>
 
-   <button id="hubDownloadBtn" class="records-download" type="button">تحميل السجل PDF</button>
+   <button id="hubDownloadBtn" class="records-download" type="button">معاينة السجل وطباعته</button>
    <button id="recordsHomeBtn2" class="records-home-btn" type="button">رجوع إلى الصفحة الرئيسية</button>
   </div>
  </div>
@@ -458,6 +490,15 @@ body.alert-open{overflow:hidden}
 <div id="recordPdfHost" class="record-pdf-host"></div>
 <div id="draftPdfHost" class="draft-pdf-host"></div>
 <div id="oralPdfHost" class="oral-pdf-host"></div>
+
+
+<!-- معاينة السجل داخل الصفحة: لا يتم تنزيل أي ملف تلقائياً -->
+<section id="recordPreviewOverlay" class="record-preview-overlay" aria-label="معاينة السجل وطباعته" role="dialog" aria-modal="true">
+ <header class="record-preview-toolbar"><div><h3 id="recordPreviewTitle">معاينة السجل</h3><p id="recordPreviewCount">معاينة قبل الطباعة</p></div><button type="button" id="recordPreviewCloseTop" class="record-preview-close">إغلاق ×</button></header>
+ <div id="recordPreviewScroll" class="record-preview-scroll"><div id="recordPreviewPages"></div></div>
+ <footer class="record-preview-bottom"><button id="recordPreviewPrintBtn" class="record-preview-print" type="button">طباعة السجل</button><button type="button" id="recordPreviewCloseBottom" class="record-preview-close">إغلاق</button></footer>
+</section>
+<style id="recordDynamicPageStyle">@page{size:A4 portrait;margin:0}</style>
 
 <div id="formulaModal" class="modal"><div class="modal-card"><div class="modal-head"><h3 id="formulaModalTitle">تقسيم الدرجة</h3><button id="closeFormulaModal" class="close" type="button">×</button></div><p id="formulaModalDesc" class="modal-desc"></p><div id="componentList" class="component-list"></div><div id="formulaTotal" class="formula-total"><span>مجموع الدرجات</span><strong>0</strong></div><button id="saveFormulaBtn" class="modal-save" type="button">اعتماد التقسيم</button></div></div>
 <div id="toast" class="toast"></div>
@@ -1900,7 +1941,64 @@ function officialPageHTML(rows,pageIndex,totalPages,ctx,startIndex,recordId,publ
 function renderRecordQR(root){root.querySelectorAll(".record-qr-code").forEach(el=>{try{el.innerHTML="";const text=String(el.dataset.code||"").trim();if(!text)return;new QRCode(el,{text,width:320,height:320,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.M});requestAnimationFrame(()=>requestAnimationFrame(()=>{const canvas=el.querySelector("canvas"),img=el.querySelector("img");if(canvas){canvas.style.display="block";canvas.style.width="22mm";canvas.style.height="22mm";if(img)img.remove()}}))}catch(e){console.error(e)}})}
 async function waitRecordAssets(root){const imgs=[...root.querySelectorAll("img")];await Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(res=>{img.onload=res;img.onerror=res})));for(let i=0;i<30;i++){const need=root.querySelectorAll(".record-qr-code").length,got=root.querySelectorAll(".record-qr-code canvas,.record-qr-code img").length;if(!need||got>=need)break;await new Promise(res=>setTimeout(res,40))}await new Promise(res=>requestAnimationFrame(()=>requestAnimationFrame(res)))}
 function addSharpQRToPDF(pdf,page){const qr=page.querySelector(".record-qr-code canvas");if(!qr)return;try{const pr=page.getBoundingClientRect(),rr=qr.getBoundingClientRect();if(!pr.width||!rr.width)return;pdf.addImage(qr.toDataURL("image/png"),"PNG",(rr.left-pr.left)*210/pr.width,(rr.top-pr.top)*297/pr.height,rr.width*210/pr.width,rr.height*297/pr.height,undefined,"FAST")}catch(e){console.error(e)}}
-async function savePDFBlob(pdf,filename){const blob=pdf.output("blob"),url=URL.createObjectURL(blob);try{const a=document.createElement("a");a.href=url;a.download=filename;a.rel="noopener";a.style.display="none";document.body.appendChild(a);a.click();setTimeout(()=>a.remove(),1000);if(isAppleMobile())setTimeout(()=>{try{location.href=url}catch{}},350)}finally{setTimeout(()=>URL.revokeObjectURL(url),60000)}}
+/* حافظ على PDF في الذاكرة للطبـاعة فقط، ولا تنزّله عند إنشاء السجل. */
+let ACTIVE_RECORD_PRINT=null;
+function showRecordPreview(pdf,filename,orientation,pageImages){
+ closeRecordPreview();
+ const view=$("recordPreviewOverlay"),list=$("recordPreviewPages");
+ const fragment=document.createDocumentFragment();
+ pageImages.forEach((src,i)=>{
+  const page=document.createElement("div");page.className="record-preview-sheet "+(orientation==="landscape"?"landscape":"portrait");
+  const img=document.createElement("img");img.src=src;img.alt=`صفحة ${i+1} من ${pageImages.length}`;img.decoding="async";
+  const label=document.createElement("div");label.className="record-preview-pagenum";label.textContent=`${i+1} / ${pageImages.length}`;
+  page.append(img,label);fragment.append(page)
+ });
+ list.replaceChildren(fragment);
+ ACTIVE_RECORD_PRINT={pdf,filename,orientation,pageCount:pageImages.length};
+ $("recordPreviewTitle").textContent=filename.replace(/\.pdf$/i,"").replace(/_/g," ");
+ $("recordPreviewCount").textContent=`${pageImages.length} ${pageImages.length===1?"صفحة":"صفحات"} — معاينة جاهزة للطباعة على ورق A4`;
+ $("recordDynamicPageStyle").textContent=`@page{size:A4 ${orientation==="landscape"?"landscape":"portrait"};margin:0}`;
+ view.classList.add("show");document.body.classList.add("record-preview-open");
+ $("recordPreviewScroll").scrollTop=0;
+}
+function closeRecordPreview(){
+ $("recordPreviewOverlay")?.classList.remove("show");
+ document.body.classList.remove("record-preview-open");
+ $("recordPreviewPages")?.replaceChildren();
+ ACTIVE_RECORD_PRINT=null;
+}
+function isAndroidWebView(){return /Android/i.test(navigator.userAgent||"")&&(/; wv[);]/i.test(navigator.userAgent||"")||/Version\/\d+.*Chrome\/\d+/i.test(navigator.userAgent||""))}
+/* تطبيق Android يوفّر TahadiPrint لتمرير PDF بشكل آمن إلى PrintManager */
+function nativeRecordPrint(base64,name,orientation){
+ const bridge=window.TahadiPrint;
+ if(!bridge||typeof bridge.start!=="function"||typeof bridge.append!=="function"||typeof bridge.finish!=="function")return false;
+ // إرسال مجزّأ يمنع تمرير نص كبير دفعة واحدة إلى JavaScriptInterface.
+ bridge.start(name,orientation);
+ const step=48000;
+ for(let i=0;i<base64.length;i+=step)bridge.append(base64.substring(i,i+step));
+ bridge.finish();return true
+}
+async function printRecordPreview(){
+ const active=ACTIVE_RECORD_PRINT;
+ if(!active)return toast("لا توجد معاينة جاهزة للطباعة.","error");
+ const btn=$("recordPreviewPrintBtn");btn.disabled=true;btn.textContent="جاري إرسال السجل للطباعة...";
+ try{
+  if(window.TahadiPrint&&typeof window.TahadiPrint.start==="function"){
+   const dataUri=active.pdf.output("datauristring"),base64=dataUri.slice(dataUri.indexOf(",")+1);
+   if(!nativeRecordPrint(base64,active.filename,active.orientation))throw new Error("واجهة الطباعة داخل التطبيق غير مكتملة.");
+  }else if(isAndroidWebView()){
+   throw new Error("لتفعيل الطباعة من داخل تطبيق WebView أضف كود TahadiPrintBridge.java إلى Android Studio واربطه بالـ WebView. المعاينة تعمل الآن دون تحميل PDF.");
+  }else{
+   window.print();
+  }
+ }catch(e){console.error("RECORD_PRINT_ERROR",e);toast(e.message||"تعذر فتح نافذة الطباعة.","error")}
+ finally{btn.disabled=false;btn.textContent="طباعة السجل"}
+}
+$("recordPreviewCloseTop").onclick=closeRecordPreview;
+$("recordPreviewCloseBottom").onclick=closeRecordPreview;
+$("recordPreviewPrintBtn").onclick=printRecordPreview;
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("recordPreviewOverlay").classList.contains("show")){e.preventDefault();closeRecordPreview()}});
+
 async function stableRecordGroupKey(groups){
  const raw=`${TEACHER_CODE}|admin|${groups.map(g=>`${g.a.classId}:${g.a.subjectId}`).sort().join("|")}`,hash=await recordSha256(raw);
  return hash||recordSafeKey(raw).slice(0,180)
@@ -1927,9 +2025,9 @@ async function generateAdminRecord(){
  let html=unifiedCoverHTML(ctx,title,"portrait");
  for(const item of groupRows){const gp=item.group,gctx={...ctx,c:gp.c,a:gp.a,room:gp.room,gender:gp.gender,mode,outdated:false};const pages=Math.max(1,Math.ceil(item.rows.length/25));for(let p=0;p<pages;p++){html+=officialPageHTML(item.rows.slice(p*25,(p+1)*25),pageCount++,totalPages,gctx,p*25,recordId,publicKey)}}
  host.innerHTML=html;renderRecordQR(host);await waitRecordAssets(host);
- const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.record-print-page")];
- for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.45:1.8,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});pdf.addImage(canvas.toDataURL("image/jpeg",.96),"JPEG",0,0,210,297,undefined,"FAST");if(pages[i].classList.contains("record-print-page"))addSharpQRToPDF(pdf,pages[i]);canvas.width=1;canvas.height=1}
- await savePDFBlob(pdf,`${recordFileName(title)}_${mode==="grades"?"بدرجات":"بدون_درجات"}_${recordFileName(ctx.classesText)}.pdf`);host.innerHTML=""
+ const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.record-print-page")],previewImages=[];
+ for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.45:1.8,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});const previewSrc=canvas.toDataURL("image/jpeg",.96);previewImages.push(previewSrc);pdf.addImage(previewSrc,"JPEG",0,0,210,297,undefined,"FAST");if(pages[i].classList.contains("record-print-page"))addSharpQRToPDF(pdf,pages[i]);canvas.width=1;canvas.height=1}
+ showRecordPreview(pdf,`${recordFileName(title)}_${mode==="grades"?"بدرجات":"بدون_درجات"}_${recordFileName(ctx.classesText)}.pdf`,"portrait",previewImages);host.innerHTML=""
 }
 async function generateDraftRecord(){
  const ctx=recordCommonInput(),headers=customHubHeaders("[data-hub-draft-head]",8),title=recordAutoTitle("draft"),host=$("draftPdfHost"),perPage=20;
@@ -1942,9 +2040,9 @@ async function generateDraftRecord(){
   }
  }
  host.innerHTML=html;await waitRecordAssets(host);
- const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"landscape",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.draft-print-page")];
- for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","landscape");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.4:1.75,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});pdf.addImage(canvas.toDataURL("image/jpeg",.96),"JPEG",0,0,297,210,undefined,"FAST");canvas.width=1;canvas.height=1}
- await savePDFBlob(pdf,`مسودة_${recordFileName(ctx.teacherName)}_${recordFileName(ctx.classesText)}.pdf`);host.innerHTML=""
+ const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"landscape",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.draft-print-page")],previewImages=[];
+ for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","landscape");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.4:1.75,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});const previewSrc=canvas.toDataURL("image/jpeg",.96);previewImages.push(previewSrc);pdf.addImage(previewSrc,"JPEG",0,0,297,210,undefined,"FAST");canvas.width=1;canvas.height=1}
+ showRecordPreview(pdf,`مسودة_${recordFileName(ctx.teacherName)}_${recordFileName(ctx.classesText)}.pdf`,"landscape",previewImages);host.innerHTML=""
 }
 async function generateOralRecord(){
  const ctx=recordCommonInput(),period=$("hubOralPeriod").value||"midyear",headers=customHubHeaders("[data-hub-oral-head]",6),title=recordAutoTitle("oral"),host=$("oralPdfHost"),perPage=25;
@@ -1957,17 +2055,17 @@ async function generateOralRecord(){
   }
  }
  host.innerHTML=html;await waitRecordAssets(host);
- const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.oral-print-page")];
- for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.4:1.75,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});pdf.addImage(canvas.toDataURL("image/jpeg",.96),"JPEG",0,0,210,297,undefined,"FAST");canvas.width=1;canvas.height=1}
- await savePDFBlob(pdf,`سجل_الشفهي_${recordFileName(ctx.classesText)}.pdf`);host.innerHTML=""
+ const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.oral-print-page")],previewImages=[];
+ for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.4:1.75,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});const previewSrc=canvas.toDataURL("image/jpeg",.96);previewImages.push(previewSrc);pdf.addImage(previewSrc,"JPEG",0,0,210,297,undefined,"FAST");canvas.width=1;canvas.height=1}
+ showRecordPreview(pdf,`سجل_الشفهي_${recordFileName(ctx.classesText)}.pdf`,"portrait",previewImages);host.innerHTML=""
 }
-async function downloadHubRecord(){
+async function previewHubRecord(){
  if(!RECORD_ASSIGNMENT_INDEXES.size)return toast("حدد صفاً واحداً على الأقل.");
- if(!await ensureRecordLibraries())return toast("تعذر تحميل مكتبات PDF. تأكد من اتصال الإنترنت.");
- const btn=$("hubDownloadBtn");btn.disabled=true;btn.textContent="جاري تجهيز PDF...";
- try{if(RECORD_KIND==="admin")await generateAdminRecord();else if(RECORD_KIND==="oral")await generateOralRecord();else if(RECORD_KIND==="draft")await generateDraftRecord();else throw new Error("اختر نوع السجل");toast("تم تجهيز ملف PDF وتحميله بنجاح.")}
+ if(!await ensureRecordLibraries())return toast("تعذر تحميل مكتبات إعداد السجل. تأكد من اتصال الإنترنت.");
+ const btn=$("hubDownloadBtn");btn.disabled=true;btn.textContent="جاري تجهيز المعاينة...";
+ try{if(RECORD_KIND==="admin")await generateAdminRecord();else if(RECORD_KIND==="oral")await generateOralRecord();else if(RECORD_KIND==="draft")await generateDraftRecord();else throw new Error("اختر نوع السجل");/* يظهر السجل داخل نافذة المعاينة دون تحميل أي ملف */}
  catch(e){console.error("RECORD_HUB_ERROR",e);toast(e.message||"تعذر إنشاء السجل.")}
- finally{btn.disabled=false;btn.textContent="تحميل السجل PDF"}
+ finally{btn.disabled=false;btn.textContent="معاينة السجل وطباعته"}
 }
 function snapshotGroups(snap){
  if(Array.isArray(snap?.groups)&&snap.groups.length)return snap.groups;
@@ -1975,7 +2073,7 @@ function snapshotGroups(snap){
  return[]
 }
 async function initPublicTeacherRecord(publicKey){
- document.body.classList.add("public-record-mode");$("loaderScreen").classList.remove("hidden");$("loaderScreen").querySelector("p").textContent="جاري تجهيز ملف السجل PDF...";
+ document.body.classList.add("public-record-mode");$("loaderScreen").classList.remove("hidden");$("loaderScreen").querySelector("p").textContent="جاري تجهيز معاينة السجل...";
  try{
   if(!await ensureRecordLibraries())throw new Error("تعذر تحميل مكتبات PDF");
   const snap=await dbGet(`publicRecords/${encodeURIComponent(publicKey)}`);if(!snap)throw new Error("السجل غير موجود");
@@ -1986,13 +2084,13 @@ async function initPublicTeacherRecord(publicKey){
   let totalPages=groups.reduce((n,g)=>n+Math.max(1,Math.ceil((g.rows||[]).length/25)),0),pageNo=0,html=unifiedCoverHTML(ctx,recordAutoTitle("admin"),"portrait");
   for(const g of groups){const rows=(g.rows||[]).map(x=>({student:x.student||{},row:{...(x.row||{}),subjectId:g.subject?.id,subjectName:g.subject?.name,passGrade:Number(x?.row?.passGrade??g.subject?.passGrade??50),maxGrade:Number(g.subject?.maxGrade??100)}})),gc={...ctx,c:g.classData||{},a:{subjectId:g.subject?.id||"",subjectName:g.subject?.name||"",passGrade:Number(g.subject?.passGrade??50),maxGrade:Number(g.subject?.maxGrade??100)},room:g.room||"",gender:recordNormalizeGender(g.gender||g.classData?.gender),mode:snap.mode||"grades",outdated};const pages=Math.max(1,Math.ceil(rows.length/25));for(let p=0;p<pages;p++)html+=officialPageHTML(rows.slice(p*25,(p+1)*25),pageNo++,totalPages,gc,p*25,snap.recordId||"—",publicKey)}
   const host=$("recordPdfHost");host.innerHTML=html;renderRecordQR(host);await waitRecordAssets(host);
-  const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.record-print-page")];
-  for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.45:1.8,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});pdf.addImage(canvas.toDataURL("image/jpeg",.96),"JPEG",0,0,210,297,undefined,"FAST");if(pages[i].classList.contains("record-print-page"))addSharpQRToPDF(pdf,pages[i]);canvas.width=1;canvas.height=1}
-  const blob=pdf.output("blob"),url=URL.createObjectURL(blob);$("loaderScreen").querySelector("p").textContent=outdated?"هذا الباركود قديم — جاري فتح السجل القديم PDF...":"جاري فتح ملف السجل PDF...";setTimeout(()=>location.replace(url),120)
+  const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.record-print-page")],previewImages=[];
+  for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.45:1.8,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});const previewSrc=canvas.toDataURL("image/jpeg",.96);previewImages.push(previewSrc);pdf.addImage(previewSrc,"JPEG",0,0,210,297,undefined,"FAST");if(pages[i].classList.contains("record-print-page"))addSharpQRToPDF(pdf,pages[i]);canvas.width=1;canvas.height=1}
+  showRecordPreview(pdf,`سجل_الإدارة_${recordFileName(ctx.classesText)}.pdf`,"portrait",previewImages);$("loaderScreen").classList.add("record-ready");host.innerHTML=""
  }catch(e){console.error("PUBLIC_RECORD_ERROR",e);$("loaderScreen").querySelector("p").textContent=e.message||"تعذر فتح السجل"}
 }
 $("openRecordsHubBtn").onclick=openRecordsHub;
-$("openExamsPageBtn").onclick=()=>{location.href="examples.html"};$("closeRecordsHubBtn").onclick=closeRecordsHub;$("closeRecordsHubBtn2").onclick=closeRecordsHub;$("recordsHomeBtn").onclick=closeRecordsHub;$("recordsHomeBtn2").onclick=closeRecordsHub;$("recordsBackTypesBtn").onclick=backRecordTypes;$("recordsHubModal").addEventListener("click",e=>{if(e.target===$("recordsHubModal"))closeRecordsHub()});document.querySelectorAll("[data-record-kind]").forEach(b=>b.addEventListener("click",()=>showRecordType(b.dataset.recordKind)));$("hubDownloadBtn").onclick=downloadHubRecord;
+$("openExamsPageBtn").onclick=()=>{location.href="examples.html"};$("closeRecordsHubBtn").onclick=closeRecordsHub;$("closeRecordsHubBtn2").onclick=closeRecordsHub;$("recordsHomeBtn").onclick=closeRecordsHub;$("recordsHomeBtn2").onclick=closeRecordsHub;$("recordsBackTypesBtn").onclick=backRecordTypes;$("recordsHubModal").addEventListener("click",e=>{if(e.target===$("recordsHubModal"))closeRecordsHub()});document.querySelectorAll("[data-record-kind]").forEach(b=>b.addEventListener("click",()=>showRecordType(b.dataset.recordKind)));$("hubDownloadBtn").onclick=previewHubRecord;
 
 
 const OBJECTION_PERIOD_LABELS={term1:"الفصل الأول",midyear:"نصف السنة",term2:"الفصل الثاني",annual:"السعي السنوي",finalExam:"نهاية السنة / الامتحان النهائي",secondRound:"الدور الثاني"};
