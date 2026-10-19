@@ -474,7 +474,7 @@ body.record-preview-open{overflow:hidden!important}
     </div></div>
    </div>
 
-   <button id="hubDownloadBtn" class="records-download" type="button">معاينة السجل وطباعته</button>
+   <button id="hubPreviewBtn" class="records-download" type="button">معاينة السجل قبل الطباعة</button>
    <button id="recordsHomeBtn2" class="records-home-btn" type="button">رجوع إلى الصفحة الرئيسية</button>
   </div>
  </div>
@@ -1956,7 +1956,10 @@ function showRecordPreview(pdf,filename,orientation,pageImages){
  list.replaceChildren(fragment);
  ACTIVE_RECORD_PRINT={pdf,filename,orientation,pageCount:pageImages.length};
  $("recordPreviewTitle").textContent=filename.replace(/\.pdf$/i,"").replace(/_/g," ");
- $("recordPreviewCount").textContent=`${pageImages.length} ${pageImages.length===1?"صفحة":"صفحات"} — معاينة جاهزة للطباعة على ورق A4`;
+ $("recordPreviewCount").textContent=`${pageImages.length} ${pageImages.length===1?"صفحة":"صفحات"} — جاهز للطباعة على A4`;
+ const printButton=$("recordPreviewPrintBtn");
+ printButton.textContent="طباعة السجل";
+ printButton.title=isAndroidWebView()&&!window.TahadiPrint?"تحتاج الطباعة داخل التطبيق إلى تفعيل TahadiPrintBridge في Android Studio":"افتح نافذة الطباعة";
  $("recordDynamicPageStyle").textContent=`@page{size:A4 ${orientation==="landscape"?"landscape":"portrait"};margin:0}`;
  view.classList.add("show");document.body.classList.add("record-preview-open");
  $("recordPreviewScroll").scrollTop=0;
@@ -1987,7 +1990,7 @@ async function printRecordPreview(){
    const dataUri=active.pdf.output("datauristring"),base64=dataUri.slice(dataUri.indexOf(",")+1);
    if(!nativeRecordPrint(base64,active.filename,active.orientation))throw new Error("واجهة الطباعة داخل التطبيق غير مكتملة.");
   }else if(isAndroidWebView()){
-   throw new Error("لتفعيل الطباعة من داخل تطبيق WebView أضف كود TahadiPrintBridge.java إلى Android Studio واربطه بالـ WebView. المعاينة تعمل الآن دون تحميل PDF.");
+   throw new Error("المعاينة تعمل داخل التطبيق، لكن زر الطباعة يحتاج ربط TahadiPrintBridge.java بملف MainActivity.java في Android Studio. لا يتم تنزيل أي ملف.");
   }else{
    window.print();
   }
@@ -2062,10 +2065,10 @@ async function generateOralRecord(){
 async function previewHubRecord(){
  if(!RECORD_ASSIGNMENT_INDEXES.size)return toast("حدد صفاً واحداً على الأقل.");
  if(!await ensureRecordLibraries())return toast("تعذر تحميل مكتبات إعداد السجل. تأكد من اتصال الإنترنت.");
- const btn=$("hubDownloadBtn");btn.disabled=true;btn.textContent="جاري تجهيز المعاينة...";
+ const btn=$("hubPreviewBtn");btn.disabled=true;btn.textContent="جاري تجهيز المعاينة...";
  try{if(RECORD_KIND==="admin")await generateAdminRecord();else if(RECORD_KIND==="oral")await generateOralRecord();else if(RECORD_KIND==="draft")await generateDraftRecord();else throw new Error("اختر نوع السجل");/* يظهر السجل داخل نافذة المعاينة دون تحميل أي ملف */}
  catch(e){console.error("RECORD_HUB_ERROR",e);toast(e.message||"تعذر إنشاء السجل.")}
- finally{btn.disabled=false;btn.textContent="معاينة السجل وطباعته"}
+ finally{btn.disabled=false;btn.textContent="معاينة السجل قبل الطباعة"}
 }
 function snapshotGroups(snap){
  if(Array.isArray(snap?.groups)&&snap.groups.length)return snap.groups;
@@ -2090,7 +2093,7 @@ async function initPublicTeacherRecord(publicKey){
  }catch(e){console.error("PUBLIC_RECORD_ERROR",e);$("loaderScreen").querySelector("p").textContent=e.message||"تعذر فتح السجل"}
 }
 $("openRecordsHubBtn").onclick=openRecordsHub;
-$("openExamsPageBtn").onclick=()=>{location.href="examples.html"};$("closeRecordsHubBtn").onclick=closeRecordsHub;$("closeRecordsHubBtn2").onclick=closeRecordsHub;$("recordsHomeBtn").onclick=closeRecordsHub;$("recordsHomeBtn2").onclick=closeRecordsHub;$("recordsBackTypesBtn").onclick=backRecordTypes;$("recordsHubModal").addEventListener("click",e=>{if(e.target===$("recordsHubModal"))closeRecordsHub()});document.querySelectorAll("[data-record-kind]").forEach(b=>b.addEventListener("click",()=>showRecordType(b.dataset.recordKind)));$("hubDownloadBtn").onclick=previewHubRecord;
+$("openExamsPageBtn").onclick=()=>{location.href="examples.html"};$("closeRecordsHubBtn").onclick=closeRecordsHub;$("closeRecordsHubBtn2").onclick=closeRecordsHub;$("recordsHomeBtn").onclick=closeRecordsHub;$("recordsHomeBtn2").onclick=closeRecordsHub;$("recordsBackTypesBtn").onclick=backRecordTypes;$("recordsHubModal").addEventListener("click",e=>{if(e.target===$("recordsHubModal"))closeRecordsHub()});document.querySelectorAll("[data-record-kind]").forEach(b=>b.addEventListener("click",()=>showRecordType(b.dataset.recordKind)));$("hubPreviewBtn").onclick=previewHubRecord;
 
 
 const OBJECTION_PERIOD_LABELS={term1:"الفصل الأول",midyear:"نصف السنة",term2:"الفصل الثاني",annual:"السعي السنوي",finalExam:"نهاية السنة / الامتحان النهائي",secondRound:"الدور الثاني"};
