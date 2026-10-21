@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
- 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#075fcf">
@@ -111,6 +110,36 @@
 
 /* ===== توحيد الإدارة مع منصات النظام ===== */
 .grade-change-admin-head{margin:18px 0 10px;padding:11px 12px;display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid #cfe0f5;border-radius:13px;background:#f5f9ff}.grade-change-admin-head strong{display:block;color:#075fcf;font-size:11px;font-weight:900}.grade-change-admin-head span{display:block;margin-top:4px;color:#667085;font-size:7.5px;line-height:1.7}.grade-change-card{padding:11px;border:1px solid #edc578;border-radius:13px;background:#fffaf0}.grade-change-card+.grade-change-card{margin-top:8px}.grade-change-values{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}.grade-change-value{padding:9px;border:1px solid #e2e8f0;border-radius:10px;background:#fff;text-align:center}.grade-change-value small{display:block;color:#667085;font-size:7px}.grade-change-value strong{display:block;margin-top:4px;font-size:15px;font-weight:900}.grade-change-actions{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}.grade-change-actions button{min-height:38px;padding:0 10px;border:0;border-radius:9px;font-size:8px;font-weight:900}.grade-change-new{color:#fff;background:#078b50}.grade-change-old{color:#fff;background:#667085}.objection-grade-input{height:38px!important;min-width:130px!important;direction:ltr;text-align:center}@media(max-width:680px){.grade-change-admin-head{align-items:stretch;flex-direction:column}.grade-change-admin-head .btn{width:100%}.grade-change-actions{display:grid;grid-template-columns:1fr 1fr}.grade-change-actions button{width:100%}}
+
+/* ===== إضافة مستقلة: إنشاء مواد جماعياً للصفوف المحددة ===== */
+.bulk-subjects-toolbar{display:flex;gap:7px;align-items:center;flex-wrap:wrap}
+.bulk-subjects-modal-card{width:min(900px,100%)!important;max-height:94vh;max-height:94dvh}
+.bulk-subjects-intro{padding:11px 12px;border:1px solid #cfe0f5;border-radius:11px;background:#f5f9ff;color:#344054;font-size:10px;font-weight:800;line-height:1.85}
+.bulk-subjects-head{margin:14px 0 9px;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap}
+.bulk-subjects-head strong{font-size:12px;color:#172033}
+.bulk-subjects-picker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:260px;overflow:auto;padding:4px;border:1px solid #e4e7ec;border-radius:13px}
+.bulk-subjects-class{min-width:0;display:flex;align-items:flex-start;gap:9px;padding:10px;border:1px solid #dce5ef;border-radius:11px;background:#fff;cursor:pointer;line-height:1.55}
+.bulk-subjects-class.selected{border-color:#075fcf;background:#edf5ff}
+.bulk-subjects-class input{flex:none;width:18px;height:18px;margin-top:2px;accent-color:#075fcf}
+.bulk-subjects-class span{min-width:0;display:block;font-size:10px;font-weight:900;overflow-wrap:anywhere}
+.bulk-subjects-class small{display:block;margin-top:3px;color:#667085;font-size:8px;font-weight:800}
+.bulk-subjects-template{display:flex;gap:8px;align-items:center;flex-wrap:wrap;padding:10px;border:1px solid #e0e8f2;border-radius:11px;background:#f8fafc}
+.bulk-subjects-template select{height:42px;min-width:160px;flex:1;padding:0 10px;border:1px solid #d0d9e5;border-radius:9px;background:#fff;font-size:10px}
+.bulk-subjects-list{display:grid;gap:8px;margin:10px 0}
+.bulk-subject-row{display:grid;grid-template-columns:minmax(170px,1fr) 90px 90px 106px;gap:8px;align-items:end;padding:10px;border:1px solid #dce5ef;border-radius:12px;background:#fff}
+.bulk-subject-row.is-auto{background:#f7f5ff;border-color:#ddd6fe}
+.bulk-subject-row .field label{font-size:8px}
+.bulk-subject-row .field input{height:40px;font-size:11px}
+.bulk-subject-row-buttons{display:flex;gap:4px;align-items:center;justify-content:stretch}
+.bulk-subject-row-buttons button{flex:1;min-height:39px;padding:0 5px;border:0;border-radius:8px;color:#075fcf;background:#edf5ff;font-weight:900;font-size:13px}
+.bulk-subject-row-buttons button.remove{color:#b42318;background:#fff1f0}
+.bulk-subject-row-buttons button:disabled{opacity:.35;cursor:default}
+.bulk-subjects-summary{margin-top:9px;padding:9px 11px;border-radius:10px;background:#ecfdf3;color:#067647;font-size:9px;font-weight:900;line-height:1.8}
+.bulk-subjects-warning{padding:10px;border:1px solid #fed7aa;border-radius:11px;background:#fff7ed;color:#9a3412;font-size:9px;font-weight:800;line-height:1.85}
+.bulk-subjects-actions{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap}
+.bulk-subjects-actions button{flex:1;min-width:150px;min-height:47px;font-size:10px}
+@media(max-width:680px){.bulk-subjects-picker{grid-template-columns:1fr}.bulk-subject-row{grid-template-columns:repeat(2,minmax(0,1fr))}.bulk-subject-row>.field:first-child{grid-column:1/-1}.bulk-subjects-modal-card{max-height:94dvh}.bulk-subjects-actions{flex-direction:column}.bulk-subjects-actions button{width:100%}}
+
 </style>
 </head>
 <body>
@@ -124,7 +153,7 @@
 <div class="quick-pages"><a class="quick-page" href="chat.html">الدردشات</a><a class="quick-page" href="notify.html">التبليغات</a><a class="quick-page" href="cards.html">الكرتات</a><a class="quick-page" href="gradeboard.html">بورد الدرجات</a><a class="quick-page" href="logs.html">السجلات</a></div>
 <div class="stats"><div class="stat"><span>عدد الصفوف</span><strong id="totalClasses">0</strong></div><div class="stat"><span>إجمالي الطلاب</span><strong id="totalStudents">0</strong></div><div class="stat"><span>الطلاب الذكور</span><strong id="totalMaleStudents">0</strong></div><div class="stat"><span>الطلاب الإناث</span><strong id="totalFemaleStudents">0</strong></div><div class="stat"><span>طلاب الابتدائية</span><strong id="totalPrimaryStudents">0</strong></div><div class="stat"><span>ابتدائية - ذكور</span><strong id="totalPrimaryMaleStudents">0</strong></div><div class="stat"><span>ابتدائية - إناث</span><strong id="totalPrimaryFemaleStudents">0</strong></div><div class="stat"><span>تم القبول</span><strong id="totalAccepted">0</strong></div><div class="stat"><span>عدد الأساتذة</span><strong id="totalTeachers">0</strong></div><div class="stat"><span>المخالفات السلوكية</span><strong id="totalViolations">0</strong></div></div>
 
-<section class="panel"><div class="panel-head"><div><h3>الصفوف</h3><p>صفوف البنين تظهر يميناً والبنات يساراً، والصفوف المختلطة تظهر بقسم مستقل. لكل صف تحدد ابتدائية أو ثانوية وجنس الصف.</p></div><button class="btn btn-p" onclick="openClassModal()">إنشاء صف</button></div><div class="panel-body"><div id="classesGrid" class="classes"></div></div></section>
+<section class="panel"><div class="panel-head"><div><h3>الصفوف</h3><p>صفوف البنين تظهر يميناً والبنات يساراً، والصفوف المختلطة تظهر بقسم مستقل. لكل صف تحدد ابتدائية أو ثانوية وجنس الصف.</p></div><div class="bulk-subjects-toolbar"><button type="button" class="btn btn-v" onclick="openBulkSubjectsModal()">إنشاء مواد</button><button class="btn btn-p" onclick="openClassModal()">إنشاء صف</button></div></div><div class="panel-body"><div id="classesGrid" class="classes"></div></div></section>
 
 <nav class="tabs"><button class="tab active" data-target="studentsSection">الطلاب</button><button class="tab" data-target="addStudentSection">إضافة طالب</button><button class="tab" data-target="teachersSection">الأساتذة</button><button class="tab" data-target="addTeacherSection">إضافة أستاذ</button><button class="tab" data-target="staffSection">الحسابات والمشرفون</button><button class="tab" data-target="addStaffSection">إنشاء حساب إداري</button><button class="tab" data-target="violationsSection">المخالفات السلوكية</button><button class="tab" data-target="objectionsSection">اعتراضات الدرجات</button></nav>
 
@@ -223,6 +252,28 @@
 
 
 <div id="classModal" class="modal"><div class="modal-card" style="width:min(1040px,100%)"><div class="modal-head"><div><h3 id="classModalTitle">إنشاء صف جديد</h3><p id="classModalText">حدد الصف والقاعة أو مجموعة الطلاب الجدد/المنقولين والمواد وقواعد النتيجة وقالب A4.</p></div><button class="close" onclick="closeModal('classModal')">×</button></div><form id="classForm" class="form-grid"><div class="field"><label>اسم الصف</label><input id="className" required></div><div class="field"><label>المرحلة</label><select id="classStage" required><option value="">اختر المرحلة</option><option value="primary">ابتدائية</option><option value="secondary">ثانوية</option></select></div><div class="field"><label>جنس الصف</label><select id="classGender" required><option value="">اختر</option><option value="male">ذكور</option><option value="female">إناث</option><option value="mixed">مختلط</option></select><span id="classGenderHelp" class="help">يمكن جعل الصف مختلطاً. عند تعديل صف يحتوي طلاباً لن يسمح النظام باختيار جنس يتعارض مع الطلاب الموجودين.</span></div><div id="classTerminologyPreview" class="class-terminology-preview">اختر المرحلة وجنس الصف لعرض التسمية المناسبة.</div><div class="field"><label>القاعة / نوع التجميع</label><select id="classRoom" required></select><span class="help">يمكن اختيار رقم قاعة، أو «الطلاب الجدد»، أو «الطلاب المنقولين». عند تعديلها يتم تحديث طلاب هذا الصف بنفس المكان.</span></div><div class="field"><label>رابط مجموعة واتساب لطلاب الصف</label><input id="classWhatsappStudentsGroupLink" type="text" dir="ltr" placeholder="https://chat.whatsapp.com/..."><span class="help">يظهر في الصفحة الرئيسية للطالب. إذا كان فارغاً تظهر رسالة «المجموعة غير متاحة».</span></div><div class="field"><label>رابط مجموعة واتساب العامة لجميع الطلاب</label><input id="classWhatsappGeneralGroupLink" type="text" dir="ltr" placeholder="https://chat.whatsapp.com/..."><span class="help">يُحفظ ضمن إعدادات الصف. إذا كان فارغاً تظهر رسالة «المجموعة غير متاحة».</span></div><input id="classAssessmentType" type="hidden" value="normal"><div class="class-students-import"><div class="class-students-import-head"><div><strong>إضافة مجموعة طلاب من Excel إلى هذا الصف</strong><p>حدد عمود أسماء الطلاب في Excel وانسخه ثم الصقه أدناه. كل خلية تمثل اسم طالب. ويمكن أيضاً إفلات ملف Excel أو CSV. عند حفظ الصف يتم إنشاء الطالب وتوليد الكود والعدد تلقائياً.</p></div><button id="clearClassBulkStudentsBtn" type="button" class="btn btn-r">مسح الأسماء</button></div><div id="classBulkGenderField" class="field hidden" style="margin-bottom:9px"><label>جنس الطلاب الجدد في الصف المختلط</label><select id="classBulkGender"><option value="">اختر جنس الأسماء الجديدة</option><option value="male">ذكور</option><option value="female">إناث</option></select><span class="help">هذا الاختيار يخص الأسماء الجديدة فقط. الطالب الموجود مسبقاً يحتفظ بجنسه عند نقله.</span></div><label id="classExcelDrop" class="class-excel-drop"><strong>إفلات ملف Excel هنا أو اضغط لاختياره</strong><span>XLSX / XLS / CSV / TXT — أو الصق عمود الأسماء مباشرة</span><input id="classExcelFile" type="file" accept=".xlsx,.xls,.csv,.txt,text/csv,text/plain,application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"></label><textarea id="classBulkStudentNames" class="class-bulk-names" placeholder="الصق هنا عمود الأسماء من Excel، مثال:&#10;أحمد محمد علي حسن&#10;محمد كريم جاسم محمود&#10;علي حسين عباس سالم"></textarea><div class="class-bulk-toolbar"><div id="classBulkStudentStatus" class="class-bulk-status">لا توجد أسماء مضافة حالياً.</div><button id="normalizeClassBulkStudentsBtn" type="button" class="btn btn-soft">تنظيف وترتيب الأسماء</button></div><div id="classBulkStudentPreview" class="class-bulk-preview"></div></div><div class="field full"><div class="subject-title"><div><strong>مواد الصف وترتيب ظهورها</strong><div class="help">هذه المواد نفسها تظهر كقائمة منسدلة عند إضافة الأستاذ. لكل مادة درجة عظمى ودرجة نجاح وترتيب.</div></div><button type="button" class="btn btn-soft" onclick="addAcademicSubject()">+ إضافة مادة</button></div><div id="classSubjectsEditor" class="subjects-editor"></div></div><div class="rule-box"><div class="subject-title"><div><strong>قواعد النتيجة لهذا الصف</strong><div class="help">أضف أي قاعدة وحدد المراحل التي تعمل عليها والأولوية والنص الذي يظهر عند تحققها. الأقل رقماً في الأولوية يُفحص أولاً.</div></div><button type="button" class="btn btn-v" onclick="addResultRule()">+ إضافة قاعدة</button></div><div id="resultRulesEditor" class="rules-editor"></div><div class="rule-help" style="margin-top:8px">يمكن استخدام <b>{count}</b> لعدد المواد، <b>{average}</b> للمعدل، <b>{total}</b> للمجموع، <b>{needed}</b> لعدد المواد المحتاجة للمساعدة، و<b>{bonus}</b> لدرجة المساعدة لكل مادة.</div></div><div class="result-template-box"><div class="result-template-head"><div><strong>صورة إطار نتيجة A4 لهذا الصف</strong><div class="help">الصورة نفسها تُستخدم لكل طلاب هذا الصف. تستطيع رفعها أو استبدالها أو حذفها، والمنصة تضع بيانات الطالب والدرجات والباركود فوقها.</div></div><button id="removeResultTemplateBtn" type="button" class="btn btn-r">حذف صورة الإطار</button></div><label class="result-template-upload">رفع / تغيير صورة الإطار<input id="resultTemplateFile" type="file" accept="image/*"></label><div id="resultTemplatePreview" class="result-template-preview"><img id="resultTemplatePreviewImage" alt="معاينة قالب النتيجة"></div><div class="result-template-grid" style="margin-top:10px"><label class="color-field"><input id="resultHeaderColor" type="color" value="#5798cc"><span>لون رؤوس الجدول</span></label><label class="color-field"><input id="resultSubjectColor" type="color" value="#5798cc"><span>لون المواد</span></label><label class="color-field"><input id="resultCellColor" type="color" value="#dceafa"><span>لون الخلايا</span></label><label class="color-field"><input id="resultBorderColor" type="color" value="#66717d"><span>لون الإطار</span></label><label class="color-field"><input id="resultFailColor" type="color" value="#d62828"><span>لون درجة الرسوب</span></label><label class="color-field"><input id="resultTextColor" type="color" value="#111111"><span>لون النص</span></label></div></div><div class="form-actions"><button id="classSubmitBtn" type="submit" class="btn btn-p">إنشاء الصف</button></div></form></div></div>
+
+
+<!-- إضافة مستقلة: إنشاء مواد للصفوف الموجودة بدون تغيير نافذة إنشاء الصف -->
+<div id="bulkSubjectsModal" class="modal">
+ <div class="modal-card bulk-subjects-modal-card">
+  <div class="modal-head">
+   <div><h3>إنشاء مواد للصفوف</h3><p>رتّب المواد مرة واحدة ثم طبّق القائمة على الصفوف التي تختارها.</p></div>
+   <button type="button" class="close" onclick="closeModal('bulkSubjectsModal')">×</button>
+  </div>
+  <div class="bulk-subjects-intro">اختر الصفوف الموجودة، ثم أضف المواد أو احذفها أو غيّر ترتيبها. ستصبح المواد التي تحفظها قائمة المواد لهذه الصفوف فقط، مع بقاء معلومات الصفوف والطلاب والقواعد والدرجات الأخرى كما هي.</div>
+  <div class="bulk-subjects-head"><strong>الصفوف المطلوب تطبيق المواد عليها</strong><div class="bulk-subjects-toolbar"><button type="button" class="btn btn-soft" onclick="bulkSubjectsSelectAll(true)">تحديد الجميع</button><button type="button" class="btn btn-soft" onclick="bulkSubjectsSelectAll(false)">إلغاء التحديد</button></div></div>
+  <div id="bulkSubjectsClasses" class="bulk-subjects-picker"></div>
+  <div id="bulkSubjectsSelected" class="bulk-subjects-summary">لم تُحدد أي صفوف بعد.</div>
+  <div class="bulk-subjects-head"><strong>ترتيب المواد الدراسية</strong></div>
+  <div class="bulk-subjects-template"><label for="bulkSubjectsSource" style="font-size:9px;font-weight:900">نسخ مواد من صف موجود:</label><select id="bulkSubjectsSource"></select><button class="btn btn-soft" type="button" onclick="bulkSubjectsLoadTemplate()">تحميل مواد هذا الصف</button></div>
+  <div id="bulkSubjectsEditor" class="bulk-subjects-list"></div>
+  <button type="button" class="btn btn-soft" style="width:100%;margin:2px 0 10px" onclick="bulkSubjectsAddRow()">+ إضافة مادة جديدة</button>
+  <div class="bulk-subjects-warning">ملاحظة: حفظ هذه القائمة يستبدل قائمة المواد للصفوف المحددة، ولا يحذف درجات الطلاب المخزنة. عند إزالة مادة مرتبطة بأستاذ، يُحدّث ربط الأستاذ بهذه المادة مثلما يحدث عند تعديل مواد الصف من إعداداته. الرياضة والفنية التلقائيتان تبقيان ضمن القائمة.</div>
+  <div id="bulkSubjectsMessage" class="message" role="alert"></div>
+  <div class="bulk-subjects-actions"><button type="button" id="bulkSubjectsSave" class="btn btn-g" onclick="bulkSubjectsSaveChanges()">حفظ المواد على الصفوف المحددة</button><button type="button" class="btn btn-soft" onclick="closeModal('bulkSubjectsModal')">إلغاء</button></div>
+ </div>
+</div>
 
 <div id="studentProfileModal" class="modal"><div class="modal-card profile-modal">
 <div class="modal-head"><div><h3>ملف الطالب الكامل</h3><p id="profileHeaderCode">—</p></div><button class="close" onclick="closeStudentProfile()">×</button></div>
@@ -902,6 +953,150 @@ function renderAll(){renderStats();renderClasses();fillControls();fillStudentCol
 window.addEventListener("offline",()=>toast("لا يوجد اتصال بالإنترنت"));
 window.addEventListener("online",async()=>{toast("تم استعادة الاتصال");try{await loadAll();}catch(error){console.error(error);}});
 window.addEventListener("load",async()=>{$("startDate").value=today();$("studentRoom").innerHTML=roomOptions();$("studentGenderDisplay").disabled=true;$("studentGenderDisplay").value="";$("studentNameLabel").textContent="اسم الطالب";try{if(!await loadAll({progressive:true,verify:true}))return;await loadAdminObjections();}catch(error){console.error(error);toast("تعذر تحميل بيانات الإدارة");}finally{$("loading").classList.add("hidden");}});
+
+/* ===== إنشاء مواد للصفوف الموجودة - إضافة فقط ===== */
+let BULK_SUBJECT_ROWS=[];
+function bulkSubjectsSnapshot(){
+ const rows=[...document.querySelectorAll('#bulkSubjectsEditor .bulk-subject-row')];
+ if(!rows.length)return BULK_SUBJECT_ROWS;
+ return rows.map((el,i)=>({
+  id:el.dataset.subjectId||'',autoType:el.dataset.autoType||'',
+  name:el.querySelector('.bulk-subject-name').value.trim(),
+  maxGrade:Number(el.querySelector('.bulk-subject-max').value),
+  passGrade:Number(el.querySelector('.bulk-subject-pass').value),order:i+1
+ }));
+}
+function bulkSubjectsRenderRows(){
+ const holder=$('bulkSubjectsEditor');
+ holder.innerHTML=BULK_SUBJECT_ROWS.map((s,i)=>{
+  const auto=!!s.autoType;
+  return `<div class="bulk-subject-row ${auto?'is-auto':''}" data-subject-id="${esc(s.id||'')}" data-auto-type="${esc(s.autoType||'')}">
+   <div class="field"><label>المادة ${i+1}${auto?' (تلقائية)':''}</label><input class="bulk-subject-name" value="${esc(s.name)}" ${auto?'readonly':''} placeholder="اسم المادة"></div>
+   <div class="field"><label>الدرجة العظمى</label><input class="bulk-subject-max" type="number" min="1" step="0.5" value="${Number(s.maxGrade||100)}" ${auto?'readonly':''}></div>
+   <div class="field"><label>درجة النجاح</label><input class="bulk-subject-pass" type="number" min="0" step="0.5" value="${Number(s.passGrade??50)}" ${auto?'readonly':''}></div>
+   <div class="bulk-subject-row-buttons"><button type="button" title="تحريك للأعلى" aria-label="تحريك المادة للأعلى" onclick="bulkSubjectsMove(${i},-1)" ${i===0?'disabled':''}>↑</button><button type="button" title="تحريك للأسفل" aria-label="تحريك المادة للأسفل" onclick="bulkSubjectsMove(${i},1)" ${i===BULK_SUBJECT_ROWS.length-1?'disabled':''}>↓</button><button type="button" class="remove" title="حذف المادة" aria-label="حذف المادة" onclick="bulkSubjectsRemove(${i})" ${auto?'disabled':''}>×</button></div>
+  </div>`;
+ }).join('');
+}
+function bulkSubjectsDefaultRows(){return[{id:'SPORT',name:'الرياضة',maxGrade:100,passGrade:50,autoType:'sport',order:1},{id:'ART',name:'الفنية',maxGrade:100,passGrade:50,autoType:'art',order:2}];}
+function bulkSubjectsLoadTemplate(){
+ const id=$('bulkSubjectsSource').value,c=DATA.classes[id];
+ if(!c){message('bulkSubjectsMessage','اختر صفاً موجوداً لنسخ مواده');return;}
+ BULK_SUBJECT_ROWS=normalizeClassSubjects(c).map(s=>({...s}));
+ bulkSubjectsRenderRows();hideMessage('bulkSubjectsMessage');
+}
+function bulkSubjectsAddRow(){
+ BULK_SUBJECT_ROWS=bulkSubjectsSnapshot();
+ const firstAuto=BULK_SUBJECT_ROWS.findIndex(x=>!!x.autoType);
+ const row={id:newSubjectId(),name:'',maxGrade:100,passGrade:50,autoType:'',order:0};
+ if(firstAuto<0)BULK_SUBJECT_ROWS.push(row);else BULK_SUBJECT_ROWS.splice(firstAuto,0,row);
+ bulkSubjectsRenderRows();
+ const inputs=[...document.querySelectorAll('#bulkSubjectsEditor .bulk-subject-name')];
+ inputs.find(x=>!x.value)?.focus();
+}
+function bulkSubjectsMove(index,direction){
+ BULK_SUBJECT_ROWS=bulkSubjectsSnapshot();const next=index+direction;
+ if(next<0||next>=BULK_SUBJECT_ROWS.length)return;
+ [BULK_SUBJECT_ROWS[index],BULK_SUBJECT_ROWS[next]]=[BULK_SUBJECT_ROWS[next],BULK_SUBJECT_ROWS[index]];
+ bulkSubjectsRenderRows();
+}
+function bulkSubjectsRemove(index){
+ BULK_SUBJECT_ROWS=bulkSubjectsSnapshot();if(BULK_SUBJECT_ROWS[index]?.autoType)return;
+ BULK_SUBJECT_ROWS.splice(index,1);bulkSubjectsRenderRows();
+}
+function bulkSubjectsSelection(){return[...document.querySelectorAll('#bulkSubjectsClasses input[type="checkbox"]:checked')].map(x=>x.value).filter(id=>DATA.classes[id]);}
+function bulkSubjectsUpdateSelection(){
+ document.querySelectorAll('#bulkSubjectsClasses .bulk-subjects-class').forEach(el=>el.classList.toggle('selected',!!el.querySelector('input')?.checked));
+ const ids=bulkSubjectsSelection();
+ $('bulkSubjectsSelected').textContent=ids.length?`الصفوف المحددة: ${ids.length} — سيتم تطبيق نفس المواد على هذه الصفوف فقط.`:'لم تُحدد أي صفوف بعد.';
+}
+function bulkSubjectsSelectAll(checked){document.querySelectorAll('#bulkSubjectsClasses input[type="checkbox"]').forEach(el=>el.checked=checked);bulkSubjectsUpdateSelection();}
+function openBulkSubjectsModal(){
+ const classes=Object.entries(DATA.classes||{}).filter(([,c])=>!!c).sort((a,b)=>String(a[1].name||'').localeCompare(String(b[1].name||''),'ar')||Number(a[1].roomNumber||0)-Number(b[1].roomNumber||0));
+ if(!classes.length){toast('أنشئ صفاً أولاً حتى تتمكن من إضافة المواد');return;}
+ $('bulkSubjectsClasses').innerHTML=classes.map(([id,c])=>`<label class="bulk-subjects-class"><input type="checkbox" value="${esc(id)}" onchange="bulkSubjectsUpdateSelection()"><span>${esc(c.name||'صف')}
+ <small>${esc(classStageLabel(c))} — ${esc(genderClass(c.gender))} — ${esc(classPlaceLabel(c))} — ${normalizeClassSubjects(c).filter(s=>!s.autoType).length} مادة</small></span></label>`).join('');
+ $('bulkSubjectsSource').innerHTML=classes.map(([id,c])=>`<option value="${esc(id)}">${esc(c.name||'صف')} — ${esc(classPlaceLabel(c))} — ${esc(genderClass(c.gender))}</option>`).join('');
+ BULK_SUBJECT_ROWS=classes.length?normalizeClassSubjects(classes[0][1]).map(s=>({...s})):bulkSubjectsDefaultRows();
+ bulkSubjectsRenderRows();bulkSubjectsUpdateSelection();hideMessage('bulkSubjectsMessage');openModal('bulkSubjectsModal');
+}
+function bulkSubjectsValidatedRows(){
+ const rows=bulkSubjectsSnapshot(),names=new Set();
+ if(!rows.some(s=>!s.autoType))throw new Error('أضف مادة دراسية واحدة على الأقل');
+ for(const s of rows){
+  if(!s.name)throw new Error('أكمل أسماء جميع المواد');
+  const key=norm(s.name);if(names.has(key))throw new Error(`المادة ${s.name} مكررة`);names.add(key);
+  if(!Number.isFinite(s.maxGrade)||s.maxGrade<=0||!Number.isFinite(s.passGrade)||s.passGrade<0||s.passGrade>s.maxGrade)throw new Error(`تحقق من درجات مادة ${s.name}`);
+ }
+ if(!rows.some(s=>s.autoType==='sport')||!rows.some(s=>s.autoType==='art'))throw new Error('يجب بقاء مواد الرياضة والفنية التلقائية');
+ return rows.map((s,i)=>({...s,order:i+1}));
+}
+function bulkSubjectsCreateForClass(template,current,sharedIds){
+ const old=normalizeClassSubjects(current),used=new Set();
+ return template.map((s,i)=>{
+  const matching=old.find(prev=>!used.has(prev.id)&& (s.autoType?prev.autoType===s.autoType:(!prev.autoType&&(norm(prev.name)===norm(s.name)||(s.id&&prev.id===s.id)))));
+  if(matching)used.add(matching.id);
+  const key=s.autoType||norm(s.name);
+  if(!matching&&!sharedIds.has(key))sharedIds.set(key,s.autoType==='sport'?'SPORT':s.autoType==='art'?'ART':newSubjectId());
+  return{id:matching?.id||sharedIds.get(key),name:s.name,maxGrade:s.autoType?100:s.maxGrade,passGrade:s.autoType?50:s.passGrade,order:i+1,autoType:s.autoType||''};
+ });
+}
+async function bulkSubjectsCommit(classIds,template){
+ const saveButton=$('bulkSubjectsSave');saveButton.disabled=true;saveButton.textContent='جاري حفظ المواد...';
+ try{
+  const [freshClasses,freshTeachers]=await Promise.all([dbGetFresh('classes'),dbGetFresh('teachers')]);
+  const changes={},updatedClasses={},updatedTeachers={},sharedIds=new Map(),now=Date.now();
+  for(const id of classIds){
+   const c=freshClasses?.[id];if(!c)throw new Error('أحد الصفوف المحددة لم يعد موجوداً، حدّث الصفحة وأعد المحاولة');
+   const subjects=bulkSubjectsCreateForClass(template,c,sharedIds);
+   updatedClasses[id]={...c,id:c.id||id,subjects,updatedAt:now,updatedBy:adminCode()};
+   changes[`classes/${id}/subjects`]=subjects;
+   changes[`classes/${id}/updatedAt`]=now;
+   changes[`classes/${id}/updatedBy`]=adminCode();
+  }
+  // مزامنة تعيينات الأساتذة التي تتبع مواد الصف، دون حذف أي أستاذ أو سجلات درجات.
+  Object.entries(freshTeachers||{}).forEach(([code,teacher])=>{
+   if(!teacher)return;
+   const oldAssign=Array.isArray(teacher.assignments)?teacher.assignments:null;
+   if(oldAssign){
+    const next=[];
+    for(const a of oldAssign){
+     const list=updatedClasses[a.classId]?.subjects;
+     if(!list){next.push(a);continue;}
+     const found=list.find(s=>!s.autoType&&(s.id===a.subjectId||norm(s.name)===norm(a.subjectName)));
+     if(found)next.push({...a,subjectId:found.id,subjectName:found.name,maxGrade:found.maxGrade,passGrade:found.passGrade});
+    }
+    if(JSON.stringify(next)!==JSON.stringify(oldAssign)){
+     const classIdsNext=[...new Set(next.map(a=>a.classId))];
+     const subjectNext=next[0]?.subjectName||teacher.subject||'';
+     changes[`teachers/${code}/assignments`]=next;
+     changes[`teachers/${code}/classIds`]=classIdsNext;
+     changes[`teachers/${code}/subject`]=subjectNext;
+     updatedTeachers[code]={...teacher,assignments:next,classIds:classIdsNext,subject:subjectNext};
+    }
+   }else if(Array.isArray(teacher.classIds)&&teacher.subject){
+    const nextIds=teacher.classIds.filter(id=>!updatedClasses[id]||updatedClasses[id].subjects.some(s=>!s.autoType&&norm(s.name)===norm(teacher.subject)));
+    if(nextIds.length!==teacher.classIds.length){changes[`teachers/${code}/classIds`]=nextIds;updatedTeachers[code]={...teacher,classIds:nextIds};}
+   }
+  });
+  await dbPatch('',changes);
+  Object.assign(DATA.classes,updatedClasses);Object.assign(DATA.teachers,updatedTeachers);
+  closeModal('bulkSubjectsModal');renderAll();
+  toast(`تم اعتماد ${template.filter(s=>!s.autoType).length} مادة على ${classIds.length} صف بنجاح`);
+ }catch(error){console.error('BULK_CLASS_SUBJECTS_ERROR',error);message('bulkSubjectsMessage',error.message||'تعذر حفظ المواد، لم تتغير بيانات الصفحة');}
+ finally{saveButton.disabled=false;saveButton.textContent='حفظ المواد على الصفوف المحددة';}
+}
+function bulkSubjectsSaveChanges(){
+ hideMessage('bulkSubjectsMessage');
+ let rows,ids;
+ try{rows=bulkSubjectsValidatedRows();ids=bulkSubjectsSelection();if(!ids.length)throw new Error('حدد صفاً واحداً على الأقل لتطبيق المواد عليه');}
+ catch(error){message('bulkSubjectsMessage',error.message);return;}
+ const removed=ids.flatMap(id=>normalizeClassSubjects(DATA.classes[id]).filter(s=>!s.autoType&&!rows.some(newRow=>!newRow.autoType&&(norm(newRow.name)===norm(s.name)||(newRow.id&&newRow.id===s.id)))).map(s=>`${DATA.classes[id].name}: ${s.name}`));
+ let text=`سيتم حفظ ${rows.filter(s=>!s.autoType).length} مادة دراسية، بالإضافة إلى المواد التلقائية، على ${ids.length} صف. ستأخذ الصفوف المحددة نفس قائمة المواد وترتيبها.`;
+ if(removed.length)text+=` توجد ${removed.length} مادة قديمة غير موجودة في القائمة الجديدة. قد تتأثر تعيينات الأساتذة المرتبطة بها، لكن لن تُحذف درجات الطلاب المحفوظة.`;
+ confirmBox('تأكيد تطبيق المواد على الصفوف',text,async()=>await bulkSubjectsCommit(ids,rows));
+}
+
 setupClassBulkStudentImport();
 </script>
 <div id="studentInfoExportHost" class="student-info-export-host"></div>
