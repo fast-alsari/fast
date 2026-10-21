@@ -278,7 +278,7 @@
   <div class="field full"><label>المادة الدراسية</label><select id="editTeacherSubject" required></select></div>
   <div class="field full"><label>الصفوف التي يدرّسها الأستاذ</label><div class="assign-class-tools"><button class="btn btn-soft" type="button" onclick="selectAssignedClasses('editTeacherClasses',true)">تحديد الظاهر</button><button class="btn btn-soft" type="button" onclick="selectAssignedClasses('editTeacherClasses',false)">إلغاء التحديد</button></div><div id="editTeacherClasses" class="assign-class-list"></div><span class="assign-class-note">تظهر الصفوف التي تحتوي المادة المختارة فقط، مميزة بحسب الجنس والقاعة.</span></div>
   <div class="field full"><label><input id="editTeacherActive" type="checkbox" style="width:auto;height:auto;margin-inline-end:7px;accent-color:#075fcf">الحساب فعال</label></div>
-  <div class="field full"><div id="editTeacherMessage" class="message"></div><div class="account-edit-actions"><button id="editTeacherSave" type="submit" class="btn btn-g">حفظ تعديلات الأستاذ</button><button type="button" class="btn btn-soft" onclick="closeModal('editTeacherModal')">إلغاء</button></div></div>
+  <div class="field full"><div id="editTeacherMessage" class="message"></div><div class="account-edit-actions"><button id="editTeacherSave" type="submit" class="btn btn-g">حفظ تعديلات الأستاذ</button><button type="button" class="btn btn-r" onclick="deleteTeacher(editingTeacherCode)">حذف الأستاذ</button><button type="button" class="btn btn-soft" onclick="closeModal('editTeacherModal')">إلغاء</button></div></div>
  </form>
 </div></div>
 <!-- تعديل المحاسب أو مشرف الحضور والغياب -->
@@ -855,8 +855,51 @@ async function previewTeacherCode(){try{generatedTeacherCode=await uniqueTeacher
 $("teacherForm").onsubmit=async event=>{event.preventDefault();hideMessage("teacherMessage");const name=$("teacherName").value.trim(),subjectKey=$("teacherSubject").value,classIds=[...document.querySelectorAll("#teacherClasses input:checked")].map(input=>input.value);if(!name||!subjectKey||!classIds.length){message("teacherMessage","أدخل اسم الأستاذ واختر المادة وصفاً واحداً على الأقل");return;}const subjectName=allAcademicSubjectNames().find(([k])=>k===subjectKey)?.[1]||"",assignments=classIds.map(classId=>{const c=DATA.classes[classId],s=normalizeClassSubjects(c).find(x=>!x.autoType&&norm(x.name)===subjectKey);return s?{classId,subjectId:s.id,subjectName:s.name,maxGrade:s.maxGrade,passGrade:s.passGrade}:null;}).filter(Boolean);if(assignments.length!==classIds.length){message("teacherMessage","أحد الصفوف المحددة لا يحتوي المادة المختارة");return;}const button=$("saveTeacherBtn");button.disabled=true;button.textContent="جاري الحفظ...";try{let code=generatedTeacherCode||await uniqueTeacherCode();if(await dbGetFresh(`users/${code}`))code=await uniqueTeacherCode();const now=Date.now(),teacher={code,name,subject:subjectName,subjectKey,classIds,assignments,accountActive:true,createdAt:now,createdBy:adminCode()},user={code,name,role:"teacher",teacherId:code,active:true,createdAt:now},updates={};updates[`teachers/${code}`]=teacher;updates[`users/${code}`]=user;await dbPatch("",updates);DATA.teachers[code]=teacher;DATA.users[code]=user;message("teacherMessage",`تم إنشاء الأستاذ - المادة ${subjectName} - الكود ${code}`,"success");$("teacherForm").reset();generatedTeacherCode="";$("teacherCodePreview").textContent="لم يتم التوليد";renderAll();toast("تم حفظ الأستاذ وربطه بمواد الصف");}catch(error){console.error(error);message("teacherMessage",error.message||"تعذر حفظ الأستاذ");}finally{button.disabled=false;button.textContent="حفظ الأستاذ";}};
 ["teacherSearch","teacherClassFilter","teacherStatusFilter"].forEach(id=>$(id).addEventListener(id==="teacherSearch"?"input":"change",renderTeachers));
 $("teacherLockSearch")?.addEventListener("input",renderTeacherLockList);document.querySelectorAll("#teacherLockPeriods input").forEach(x=>x.addEventListener("change",updateTeacherLockSummary));
-function renderTeachers(){const q=norm($("teacherSearch").value),classId=$("teacherClassFilter").value,status=$("teacherStatusFilter").value,rows=Object.values(DATA.teachers).filter(t=>{if(classId&&!(t.classIds||[]).includes(classId))return false;if(status==="active"&&!t.accountActive)return false;if(status==="inactive"&&t.accountActive)return false;if(q&&!norm(`${t.name} ${t.code} ${t.subject}`).includes(q))return false;return true;}).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar"));$("teachersBody").innerHTML=rows.map(t=>{const classNames=assignedClassesChips(t.classIds||[]);return`<tr><td><span class="code">${esc(t.code)}</span></td><td>${esc(t.name)}</td><td>${esc(t.subject||"—")}</td><td>${classNames}</td><td><span class="badge ${t.accountActive?"green":"red"}">${t.accountActive?"فعال":"غير فعال"}</span></td><td><div class="row-actions"><button class="mini btn-soft" onclick="copyCode('${safeJS(t.code)}')">نسخ</button><button class="mini btn-p" onclick="openEditTeacherModal('${safeJS(t.code)}')">تعديل</button><button class="mini btn-v" onclick="openTeacherGradeLockModal('${safeJS(t.code)}')">قفل الدرجات</button><button class="mini ${t.accountActive?"btn-r":"btn-g"}" onclick="toggleTeacher('${safeJS(t.code)}')">${t.accountActive?"إلغاء التفعيل":"تفعيل"}</button></div></td></tr>`;}).join("");}
+function renderTeachers(){const q=norm($("teacherSearch").value),classId=$("teacherClassFilter").value,status=$("teacherStatusFilter").value,rows=Object.values(DATA.teachers).filter(t=>{if(classId&&!(t.classIds||[]).includes(classId))return false;if(status==="active"&&!t.accountActive)return false;if(status==="inactive"&&t.accountActive)return false;if(q&&!norm(`${t.name} ${t.code} ${t.subject}`).includes(q))return false;return true;}).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar"));$("teachersBody").innerHTML=rows.map(t=>{const classNames=assignedClassesChips(t.classIds||[]);return`<tr><td><span class="code">${esc(t.code)}</span></td><td>${esc(t.name)}</td><td>${esc(t.subject||"—")}</td><td>${classNames}</td><td><span class="badge ${t.accountActive?"green":"red"}">${t.accountActive?"فعال":"غير فعال"}</span></td><td><div class="row-actions"><button class="mini btn-soft" onclick="copyCode('${safeJS(t.code)}')">نسخ</button><button class="mini btn-p" onclick="openEditTeacherModal('${safeJS(t.code)}')">تعديل</button><button class="mini btn-r" onclick="deleteTeacher('${safeJS(t.code)}')">حذف الأستاذ</button><button class="mini btn-v" onclick="openTeacherGradeLockModal('${safeJS(t.code)}')">قفل الدرجات</button><button class="mini ${t.accountActive?"btn-r":"btn-g"}" onclick="toggleTeacher('${safeJS(t.code)}')">${t.accountActive?"إلغاء التفعيل":"تفعيل"}</button></div></td></tr>`;}).join("");}
 function toggleTeacher(code){const teacher=DATA.teachers[code];if(!teacher)return;const active=!teacher.accountActive;confirmBox(active?"تفعيل الأستاذ":"إلغاء تفعيل الأستاذ",`هل تريد ${active?"تفعيل":"إلغاء تفعيل"} حساب الأستاذ ${teacher.name}؟`,async()=>{const updates={};updates[`teachers/${code}/accountActive`]=active;updates[`users/${code}/active`]=active;await dbPatch("",updates);teacher.accountActive=active;if(DATA.users[code])DATA.users[code].active=active;renderTeachers();toast(active?"تم تفعيل الأستاذ":"تم إلغاء تفعيل الأستاذ");});}
+
+// حذف الأستاذ نهائياً من سجل الأساتذة ومن حساب الدخول، دون المساس بدرجات الطلاب أو سجل تعديلاتها.
+function deleteTeacher(code){
+ const teacher=DATA.teachers?.[code];
+ if(!teacher){toast('الأستاذ غير موجود');return;}
+ if(code===adminCode()){toast('لا يمكن حذف حساب الإدارة من قائمة الأساتذة');return;}
+ confirmBox(
+  'تأكيد حذف الأستاذ',
+  `هل تريد حذف الأستاذ «${teacher.name||code}» (الكود: ${code}) نهائياً؟ سيتم حذف حسابه وإلغاء إمكانية دخوله إلى المنصة وإزالة تعيين صفوفه، مع إبقاء درجات الطلاب وسجلاتها محفوظة. لا يمكن التراجع عن الحذف.`,
+  async()=>{
+   // التأكد من البيانات الفعلية قبل أي حذف؛ يمنع حذف حساب آخر إذا أعيد استخدام الكود.
+   const [freshTeacher,freshUser]=await Promise.all([
+    dbGetFresh(`teachers/${encodeURIComponent(code)}`),
+    dbGetFresh(`users/${encodeURIComponent(code)}`)
+   ]);
+   if(!freshTeacher){
+    delete DATA.teachers[code];
+    if(editingTeacherCode===code){editingTeacherCode='';closeModal('editTeacherModal');}
+    renderTeachers();renderStats();renderTeacherLockList();
+    toast('الأستاذ محذوف مسبقاً');
+    return;
+   }
+   if(freshUser&&norm(freshUser.role)!=='teacher'){
+    toast('لم يتم الحذف: حساب الدخول المرتبط بالكود ليس حساب أستاذ');
+    return;
+   }
+   const changes={
+    [`teachers/${code}`]:null,
+    [`settings/gradeLocks/teachers/${code}`]:null
+   };
+   if(freshUser)changes[`users/${code}`]=null;
+   await dbPatch('',changes);
+   delete DATA.teachers[code];
+   if(freshUser)delete DATA.users[code];
+   if(typeof TEACHER_GRADE_LOCKS!=='undefined'&&TEACHER_GRADE_LOCKS)delete TEACHER_GRADE_LOCKS[code];
+   if(typeof selectedTeacherGradeLocks!=='undefined')selectedTeacherGradeLocks.delete(code);
+   if(editingTeacherCode===code){editingTeacherCode='';closeModal('editTeacherModal');}
+   renderAll();renderTeacherLockList();
+   toast('تم حذف الأستاذ وحساب دخوله بنجاح');
+  }
+ );
+}
+
 
 
 const TEACHER_LOCK_PERIODS={
