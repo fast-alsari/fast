@@ -175,10 +175,10 @@
 <nav class="tabs"><button class="tab active" data-target="studentsSection">الطلاب</button><button class="tab" data-target="addStudentSection">إضافة طالب</button><button class="tab" data-target="teachersSection">الأساتذة</button><button class="tab" data-target="addTeacherSection">إضافة أستاذ</button><button class="tab" data-target="staffSection">الحسابات والمشرفون</button><button class="tab" data-target="addStaffSection">إنشاء حساب إداري</button><button class="tab" data-target="violationsSection">المخالفات السلوكية</button><button class="tab" data-target="objectionsSection">اعتراضات الدرجات</button></nav>
 
 <section id="studentsSection" class="section active"><div class="panel">
-<div class="panel-head"><div><h3 id="studentsTitle">جميع الطلاب</h3><p>اضغط على اسم الطالب أو زر بيانات لفتح ملفه وتعديل بياناته وصورته وكوده.</p></div><button class="btn btn-soft" onclick="showAllStudents()">عرض الجميع</button></div>
+<div class="panel-head"><div><h3 id="studentsTitle">جميع الطلاب</h3><p>اضغط على اسم الطالب أو زر بيانات لفتح ملفه وتعديل بياناته وصورته وكوده.</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="classCodesChangeBtn" class="btn btn-v hidden" onclick="changeCodesForClass()">تغيير أكواد الصف بالكامل</button><button class="btn btn-soft" onclick="showAllStudents()">عرض الجميع</button></div></div>
 <div class="panel-body">
 <div class="toolbar four"><input id="studentSearch" type="search" placeholder="بحث بالاسم أو الكود أو الهاتف"><select id="studentGenderFilter"><option value="">الجنس: الجميع</option><option value="male">ذكور</option><option value="female">إناث</option></select><select id="studentStatusFilter"><option value="">جميع حالات الملف</option><option value="infoIncomplete">المعلومات ناقصة</option><option value="pending">لم يجلب الملف</option><option value="accepted">تم القبول</option></select><select id="studentAccessFilter"><option value="">كل حالات الحساب</option><option value="accountActive">الحساب فعال</option><option value="accountInactive">الحساب غير فعال</option><option value="accountantActive">الحسابات مفعلة</option><option value="accountantInactive">الحسابات غير مفعلة</option><option value="adminActive">الإدارة مفعلة</option><option value="adminInactive">الإدارة غير مفعلة</option><option value="behaviorBlocked">محظور سلوكياً</option></select></div>
-<div id="bulkBar" class="bulk"><strong id="selectedCount">تم تحديد 0 طالب</strong><div class="bulk-actions"><select id="moveClassSelect"><option value="">نقل إلى صف...</option></select><select id="moveRoomSelect"><option value="">نقل إلى قاعة...</option></select><button class="btn btn-p" onclick="moveSelectedStudents()">نقل المحددين</button><button id="bulkAccountantToggleBtn" class="btn btn-g" onclick="toggleSelectedAccountantApproval()">تفعيل الحسابات</button><button id="bulkAdminToggleBtn" class="btn btn-p" onclick="toggleSelectedAdminApproval()">تفعيل الإدارة</button><button id="bulkBooksToggleBtn" class="btn btn-g" onclick="toggleSelectedBooksStatus()">استلام الكتب</button><button id="bulkFileToggleBtn" class="btn btn-g" onclick="toggleSelectedFileStatus()">استلام الفايل</button><button id="bulkMediaRequirementToggleBtn" class="btn btn-o" onclick="toggleSelectedMediaRequirement()">إلزام الصور والهويات</button><button class="btn btn-wa" onclick="openBulkMessageModal()">رسالة واتساب</button><button class="btn btn-v" onclick="downloadSelectedStudentCodes()">تحميل الأكواد</button><button class="btn btn-o" onclick="downloadSelectedStudentInfo()">تحميل المعلومات PDF</button><button class="btn btn-g" onclick="downloadSelectedStudentData()">سحب بيانات الطلاب</button><button class="btn btn-p" onclick="printSelectedStudentPhotos()">طباعة صورة</button><button class="btn btn-r" onclick="deleteSelectedStudents()">حذف المحددين</button><button class="btn btn-soft" onclick="clearSelectedStudents()">إلغاء التحديد</button></div></div>
+<div id="bulkBar" class="bulk"><strong id="selectedCount">تم تحديد 0 طالب</strong><div class="bulk-actions"><select id="moveClassSelect"><option value="">نقل إلى صف...</option></select><select id="moveRoomSelect"><option value="">نقل إلى قاعة...</option></select><button class="btn btn-p" onclick="moveSelectedStudents()">نقل المحددين</button><button id="bulkAccountantToggleBtn" class="btn btn-g" onclick="toggleSelectedAccountantApproval()">تفعيل الحسابات</button><button id="bulkAdminToggleBtn" class="btn btn-p" onclick="toggleSelectedAdminApproval()">تفعيل الإدارة</button><button id="bulkBooksToggleBtn" class="btn btn-g" onclick="toggleSelectedBooksStatus()">استلام الكتب</button><button id="bulkFileToggleBtn" class="btn btn-g" onclick="toggleSelectedFileStatus()">استلام الفايل</button><button id="bulkMediaRequirementToggleBtn" class="btn btn-o" onclick="toggleSelectedMediaRequirement()">إلزام الصور والهويات</button><button class="btn btn-wa" onclick="openBulkMessageModal()">رسالة واتساب</button><button class="btn btn-r" onclick="changeCodesForSelected()">تغيير أكواد المحددين</button><button class="btn btn-v" onclick="downloadSelectedStudentCodes()">تحميل الأكواد</button><button class="btn btn-o" onclick="downloadSelectedStudentInfo()">تحميل المعلومات PDF</button><button class="btn btn-g" onclick="downloadSelectedStudentData()">سحب بيانات الطلاب</button><button class="btn btn-p" onclick="printSelectedStudentPhotos()">طباعة صورة</button><button class="btn btn-r" onclick="deleteSelectedStudents()">حذف المحددين</button><button class="btn btn-soft" onclick="clearSelectedStudents()">إلغاء التحديد</button></div></div>
 <div class="table-wrap"><table style="min-width:1850px"><thead><tr><th><input id="selectAll" type="checkbox"></th><th>العدد</th><th>الصورة</th><th>الكود</th><th>الطالب</th><th>الجنس</th><th>الصف</th><th>القاعة</th><th>الملف</th><th>الكتب</th><th>القسط</th><th>حالة الحساب</th><th>الحسابات</th><th>الإدارة</th><th>السلوك</th><th>الإجراءات</th></tr><tr class="excel-filter-row"><th></th><th><input id="colSerialFilter" placeholder="العدد"></th><th><select id="colPhotoFilter"><option value="">الكل</option><option value="yes">بصورة</option><option value="no">بدون صورة</option></select></th><th><input id="colCodeFilter" placeholder="الكود"></th><th><input id="colNameFilter" placeholder="الاسم"></th><th><select id="colGenderFilter"><option value="">الكل</option><option value="male">ذكر</option><option value="female">أنثى</option></select></th><th><select id="colClassFilter"><option value="">كل الصفوف</option></select></th><th><select id="colRoomFilter"><option value="">كل القاعات</option></select></th><th><select id="colFileFilter"><option value="">الكل</option><option value="accepted">سلم الفايل</option><option value="pending">لم يسلم الفايل</option></select></th><th><select id="colBooksFilter"><option value="">الكل</option><option value="yes">استلم</option><option value="no">لم يستلم</option></select></th><th><input id="colTuitionFilter" placeholder="القسط"></th><th><select id="colAccountFilter"><option value="">الكل</option><option value="yes">فعال</option><option value="no">غير فعال</option></select></th><th><select id="colAccountantFilter"><option value="">الكل</option><option value="yes">مفعّل</option><option value="no">غير مفعّل</option></select></th><th><select id="colAdminFilter"><option value="">الكل</option><option value="yes">مفعّل</option><option value="no">غير مفعّل</option></select></th><th><select id="colBehaviorFilter"><option value="">الكل</option><option value="clean">سليم</option><option value="blocked">محظور</option></select></th><th><button type="button" class="mini btn-soft" onclick="clearStudentColumnFilters()">مسح الفلاتر</button></th></tr></thead><tbody id="studentsBody"></tbody></table></div><div id="studentsEmpty" class="empty hidden">لا توجد بيانات مطابقة.</div>
 </div></div></section>
 
@@ -620,7 +620,7 @@ $("selectAll").onchange=function(){filteredStudents().forEach(s=>this.checked?se
 function selectedExistingStudents(){return[...selectedStudents].map(code=>DATA.students[code]).filter(Boolean);}
 function setBulkSmartButton(id,allOn,onText,offText,onClass,offClass,count){const b=$(id);if(!b)return;b.disabled=!count;b.textContent=allOn?offText:onText;b.className=`btn ${allOn?offClass:onClass}`;}
 function updateBulkActionButtons(){const rows=selectedExistingStudents(),count=rows.length,allAccountant=count>0&&rows.every(s=>accountantApprovalActive(s)),allAdmin=count>0&&rows.every(s=>s.adminApproved===true),allBooks=count>0&&rows.every(s=>s.booksReceived===true),allFiles=count>0&&rows.every(s=>s.fileStatus==="accepted"),allMediaRequired=count>0&&rows.every(s=>studentMediaRequirementOn(s));setBulkSmartButton("bulkAccountantToggleBtn",allAccountant,"تفعيل الحسابات","إلغاء تفعيل الحسابات","btn-g","btn-r",count);setBulkSmartButton("bulkAdminToggleBtn",allAdmin,"تفعيل الإدارة","إلغاء تفعيل الإدارة","btn-p","btn-r",count);setBulkSmartButton("bulkBooksToggleBtn",allBooks,"استلام الكتب","إلغاء استلام الكتب","btn-g","btn-o",count);setBulkSmartButton("bulkFileToggleBtn",allFiles,"استلام الفايل","إلغاء استلام الفايل","btn-g","btn-o",count);setBulkSmartButton("bulkMediaRequirementToggleBtn",allMediaRequired,"إلزام الصور والهويات","إلغاء إلزام الصور والهويات","btn-o","btn-r",count);}
-function updateBulk(){const count=selectedStudents.size;$("selectedCount").textContent=`تم تحديد ${count} طالب`;$("bulkBar").classList.toggle("show",count>0);buildMoveOptions();buildMoveRoomOptions();updateBulkActionButtons();}
+function updateBulk(){const classBtn=$("classCodesChangeBtn");if(classBtn)classBtn.classList.toggle("hidden",!selectedClassId);const count=selectedStudents.size;$("selectedCount").textContent=`تم تحديد ${count} طالب`;$("bulkBar").classList.toggle("show",count>0);buildMoveOptions();buildMoveRoomOptions();updateBulkActionButtons();}
 function selectedStudentRows(){return[...selectedStudents].map(code=>DATA.students[code]).filter(Boolean).sort((a,b)=>{const ca=DATA.classes[a.classId],cb=DATA.classes[b.classId],an=String(ca?.name||a.className||""),bn=String(cb?.name||b.className||"");return an.localeCompare(bn,"ar",{sensitivity:"base"})||Number(a.roomNumber||0)-Number(b.roomNumber||0)||String(a.name||"").localeCompare(String(b.name||""),"ar",{sensitivity:"base"});});}
 
 function studentInfoExportValue(value){return value===null||value===undefined||String(value).trim()===""?"—":String(value).trim()}
@@ -779,6 +779,53 @@ $("profileEditCode").addEventListener("input",()=>{clearTimeout(profileCodeCheck
 
 
 function adminStudentChatRoomId(st){const clean=value=>String(value??"").trim().replace(/[.#$\[\]\/]/g,"_").replace(/\s+/g,"_"),gender=normalizeGender(st?.gender),classPart=clean(st?.classId||st?.className||"no_class"),roomPart=clean(st?.roomNumber||"no_room");return`${classPart}__room_${roomPart}__${gender}`;}
+// تغيير الأكواد جماعياً مع الحفاظ على سجلات الطالب المرتبطة بالكود.
+let bulkCodeChangeRunning=false;
+function changeCodesForSelected(){startBulkStudentCodeChange([...selectedStudents]);}
+function changeCodesForClass(){
+ if(!selectedClassId||!DATA.classes[selectedClassId]){toast("حدد الصف أولاً");return;}
+ startBulkStudentCodeChange(Object.keys(DATA.students).filter(code=>DATA.students[code]?.classId===selectedClassId));
+}
+function startBulkStudentCodeChange(codes){
+ if(bulkCodeChangeRunning){toast("هناك عملية تغيير أكواد قيد التنفيذ");return;}
+ codes=[...new Set(codes)].filter(code=>DATA.students[code]);
+ if(!codes.length){toast("لا يوجد طلاب للتغيير");return;}
+ const className=selectedClassId&&DATA.classes[selectedClassId]?.name||"";
+ confirmBox("تأكيد تغيير أكواد الطلاب",`سيتم تغيير أكواد ${codes.length} طالب/طالبة ${className?"من "+className:""}. سيُلغى تسجيل الدخول بالأكواد القديمة، وستنتقل بيانات الطلاب والدرجات والحضور والأقساط والرسائل إلى الأكواد الجديدة. يُفضّل سحب نسخة احتياطية أولاً. هل تريد المتابعة؟`,async()=>{
+  bulkCodeChangeRunning=true;
+  const used=new Set([...Object.keys(DATA.students),...Object.keys(DATA.users)]);
+  let completed=0;const failed=[];const changed=[];
+  try{
+   for(const oldCode of codes){
+    const student=DATA.students[oldCode];if(!student)continue;
+    try{
+     const gender=normalizeGender(student.gender);
+     let newCode="";
+     for(let attempt=0;attempt<300;attempt++){
+      const candidate=makeStudentCode(gender);
+      if(candidate===oldCode||used.has(candidate))continue;
+      if(!await adminStudentCodeAvailable(candidate,oldCode))continue;
+      newCode=candidate;break;
+     }
+     if(!newCode)throw new Error("لم يتوفر كود فريد");
+     used.add(newCode);
+     await renameStudentCode(oldCode,newCode,{});
+     changed.push({name:student.name||"",oldCode,newCode});completed++;
+     toast(`تم تغيير ${completed} من ${codes.length}`);
+    }catch(error){console.error("BULK_STUDENT_CODE_ERROR",oldCode,error);failed.push(`${student.name||oldCode}: ${error.message||"فشل الحفظ"}`);}
+   }
+  }finally{
+   bulkCodeChangeRunning=false;
+   renderAll();
+   if(changed.length){
+    const csv="\uFEFFالاسم,الكود القديم,الكود الجديد\n"+changed.map(x=>[x.name,x.oldCode,x.newCode].map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\n");
+    const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download="student-codes-changed-"+Date.now()+".csv";document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+   }
+   alert(`اكتملت العملية. نجح تغيير ${completed} من ${codes.length} كود.${failed.length?"\nتعذر تغيير "+failed.length+" كود:\n"+failed.slice(0,12).join("\n"):""}\nتم إنشاء كشف CSV بالأكواد المتغيرة إن وُجدت. احتفظ به لتوزيع الأكواد الجديدة.`);
+  }
+ });
+}
+
 async function renameStudentCode(oldCode,newCode,studentUpdate){
 if(oldCode===newCode)return oldCode;if(!validStudentCode(newCode))throw new Error("الكود الجديد يجب أن يبدأ بـ ST ويحتوي أحرف إنجليزية وأرقام فقط");if(!await adminStudentCodeAvailable(newCode,oldCode))throw new Error("هذا الكود موجود مسبقاً");
 const oldStudent=DATA.students[oldCode];if(!oldStudent)throw new Error("بيانات الطالب غير موجودة");const room=adminStudentChatRoomId(oldStudent);
