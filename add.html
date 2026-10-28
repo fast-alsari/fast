@@ -157,6 +157,21 @@
 .account-edit-card{width:min(760px,100%);max-height:93dvh}.account-edit-code{padding:10px 12px;border-radius:11px;background:#edf5ff;color:#075fcf;font-size:11px;font-weight:900;direction:ltr;text-align:center}
 .account-edit-actions{display:flex;gap:8px;margin-top:12px}.account-edit-actions button{flex:1}
 @media(max-width:620px){.assign-class-list{grid-template-columns:1fr}.account-edit-actions{flex-direction:column}.account-edit-actions button{width:100%}}
+
+/* بطاقات دخول الطلاب: عشرون بطاقة في كل ورقة A4 */
+.codes-a4.codes-cards-page{width:794px!important;height:1123px!important;padding:22px 26px 16px!important;display:flex;flex-direction:column;overflow:hidden;background:#fff}
+.codes-cards-header{height:67px;flex:none;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #075fcf;margin-bottom:10px;padding-bottom:8px}
+.codes-cards-header h2{font-size:18px;color:#075fcf;margin:0}.codes-cards-header p{font-size:9px;color:#475467;margin-top:5px;font-weight:900}
+.codes-cards-header-meta{font-size:9px;font-weight:900;color:#344054;line-height:1.65;text-align:left}
+.codes-cards-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(10,1fr);gap:5px 7px;flex:1;min-height:0}
+.codes-student-card{min-height:0;display:flex;direction:rtl;align-items:stretch;gap:5px;padding:6px 7px;border:1.2px solid #9cb7d7;border-right:3px solid #075fcf;border-radius:7px;background:#fff;overflow:hidden}
+.codes-card-main{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px}
+.codes-card-name{font-size:9px;line-height:1.3}.codes-card-name span{color:#667085;font-weight:900}.codes-card-name strong{display:block;color:#172033;font-size:10px;font-weight:900;overflow-wrap:anywhere}
+.codes-card-class{font-size:8px;color:#475467}.codes-card-class b{color:#172033}
+.codes-card-code{font-size:8px;color:#475467}.codes-card-code b{display:inline-block;font-size:12px;color:#075fcf;font-weight:900;letter-spacing:.4px}
+.codes-card-note{font-size:7px;color:#9a3412;line-height:1.45;font-weight:800}
+.codes-card-qr{display:flex;flex:none;gap:4px;align-items:center;direction:rtl}.codes-card-qr>div{width:49px;text-align:center}.codes-card-qr img{width:45px;height:45px;display:block;margin:0 auto 3px;image-rendering:auto}.codes-card-qr span{display:block;white-space:nowrap;font-size:6.2px;font-weight:900;color:#344054}
+.codes-cards-footer{flex:none;height:19px;display:flex;align-items:end;justify-content:center;color:#667085;font-size:8px;font-weight:900}
 </style>
 </head>
 <body>
@@ -629,9 +644,47 @@ function studentInfoExportPageHTML(rows,pageIndex,totalPages,startIndex){return`
 async function downloadSelectedStudentInfo(){const students=selectedStudentRows();if(!students.length){toast("حدد طالباً واحداً على الأقل");return}if(typeof html2canvas==="undefined"||!window.jspdf?.jsPDF){toast("مكتبة إنشاء PDF غير متوفرة");return}const host=$("studentInfoExportHost");host.innerHTML="";try{toast("جاري تجهيز ملف معلومات الطلاب PDF...");const pages=studentInfoExportPages(students);host.innerHTML=pages.map((rows,i)=>studentInfoExportPageHTML(rows,i,pages.length,i*22)).join("");const els=[...host.querySelectorAll(".student-info-export-a4")],{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});for(let i=0;i<els.length;i++){await waitImages(els[i]);await waitPaint();if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(els[i],{scale:2,useCORS:true,allowTaint:true,backgroundColor:"#ffffff",logging:false,width:794,height:1123,windowWidth:794,windowHeight:1123});pdf.addImage(canvas.toDataURL("image/jpeg",.95),"JPEG",0,0,210,297,undefined,"FAST");canvas.width=1;canvas.height=1}pdf.save(`معلومات_الطلاب_${today()}.pdf`);toast(`تم تحميل معلومات ${students.length} طالب بصيغة PDF`)}catch(error){console.error("STUDENT_INFO_PDF_EXPORT_ERROR",error);toast("تعذر إنشاء ملف معلومات الطلاب PDF")}finally{host.innerHTML=""}}
 window.downloadSelectedStudentInfo=downloadSelectedStudentInfo;
 
-function buildCodePages(students){const groups=new Map;students.forEach(st=>{const c=DATA.classes[st.classId],className=c?.name||st.className||"بدون صف",room=st.roomNumber||c?.roomNumber||"—",key=`${st.classId||className}__${room}`;if(!groups.has(key))groups.set(key,{className,room,students:[]});groups.get(key).students.push(st);});const pages=[],PER_PAGE=22;groups.forEach(group=>{group.students.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar",{sensitivity:"base"}));for(let i=0;i<group.students.length;i+=PER_PAGE)pages.push({...group,rows:group.students.slice(i,i+PER_PAGE),part:Math.floor(i/PER_PAGE)+1,parts:Math.ceil(group.students.length/PER_PAGE)});});return pages;}
-function codePageHTML(page,index,total){return`<section class="codes-a4"><div class="codes-a4-head"><h2>مدرسة التحدي الأهلية المختلطة</h2><p>أكواد الطلاب</p><div class="codes-a4-meta"><span>الصف: ${esc(page.className)}</span><span>القاعة: ${esc(page.room)}</span></div></div><table><thead><tr><th style="width:64%">اسم الطالب</th><th>الكود الخاص بالطالب</th></tr></thead><tbody>${page.rows.map(st=>`<tr><td>${esc(st.name||"—")}</td><td class="code-cell">${esc(st.code||"—")}</td></tr>`).join("")}</tbody></table><div class="page-no">الصفحة ${index+1} من ${total}${page.parts>1?` — جزء ${page.part} من ${page.parts}`:""}</div></section>`;}
-async function downloadSelectedStudentCodes(){const students=selectedStudentRows();if(!students.length){toast("حدد طالباً واحداً على الأقل");return;}if(typeof html2canvas==="undefined"||!window.jspdf?.jsPDF){toast("مكتبة إنشاء PDF غير متوفرة");return;}const pages=buildCodePages(students),host=$("codesPdfHost");host.innerHTML=pages.map((p,i)=>codePageHTML(p,i,pages.length)).join("");try{toast("جاري تجهيز ملف الأكواد...");const{jsPDF}=window.jspdf,pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true}),els=[...host.querySelectorAll(".codes-a4")];for(let i=0;i<els.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(els[i],{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,width:794,height:1123});pdf.addImage(canvas.toDataURL("image/jpeg",.94),"JPEG",0,0,210,297,undefined,"FAST");}pdf.save(`اكواد_الطلاب_${today()}.pdf`);toast("تم تحميل ملف الأكواد");}catch(error){console.error(error);toast("تعذر إنشاء ملف الأكواد");}finally{host.innerHTML="";}}
+function buildCodePages(students){
+ const groups=new Map();
+ students.forEach(st=>{const c=DATA.classes[st.classId],className=c?.name||st.className||"بدون صف",room=st.roomNumber||c?.roomNumber||"—",key=`${st.classId||className}__${room}`;if(!groups.has(key))groups.set(key,{className,room,students:[]});groups.get(key).students.push(st);});
+ const pages=[],PER_PAGE=20;
+ groups.forEach(group=>{group.students.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar",{sensitivity:"base"}));for(let i=0;i<group.students.length;i+=PER_PAGE)pages.push({...group,rows:group.students.slice(i,i+PER_PAGE),part:Math.floor(i/PER_PAGE)+1,parts:Math.ceil(group.students.length/PER_PAGE)});});
+ return pages;
+}
+function studentCodeCardGender(st){const g=String(st.gender||"").trim().toLowerCase();return g==="female"||g==="أنثى"||g==="انثى"||g==="f"?"الطالبة":"الطالب";}
+function codePageHTML(page,index,total,portalQR,playQR){
+ return `<section class="codes-a4 codes-cards-page">
+ <div class="codes-cards-header"><div><h2>مدرسة التحدي الأهلية المختلطة</h2><p>قسم الحوكمة | بطاقة الدخول إلى منصة التحدي</p></div><div class="codes-cards-header-meta">الصف: ${esc(page.className)}<br>القاعة: ${esc(page.room)}<br>الصفحة ${index+1} من ${total}</div></div>
+ <div class="codes-cards-grid">${page.rows.map(st=>`<article class="codes-student-card"><div class="codes-card-main"><div class="codes-card-name"><span>${studentCodeCardGender(st)}:</span><strong>${esc(st.name||"—")}</strong></div><div class="codes-card-class">الصف: <b>${esc(DATA.classes[st.classId]?.name||st.className||page.className)}</b></div><div class="codes-card-code">كود الدخول: <b dir="ltr">${esc(st.code||"—")}</b></div><div class="codes-card-note">إذا كان الاسم أو المعلومات غير صحيحة، يُرجى التواصل مع الأستاذ أحمد من الشباك لتصحيحها.</div></div><div class="codes-card-qr"><div><img src="${portalQR}" alt="QR المنصة"><span>دخول المنصة</span></div><div><img src="${playQR}" alt="QR التطبيق"><span>تحميل التطبيق</span></div></div></article>`).join("")}</div>
+ <div class="codes-cards-footer">منصة التحدي الإلكترونية • احتفظ بكود الدخول الخاص بك ولا تشاركه مع الآخرين</div></section>`;
+}
+function makeCodesQrDataURL(value){
+ if(typeof QRCode==="function"){
+  const el=document.createElement("div");el.style.cssText="position:fixed;left:-9999px;top:0;background:#fff";document.body.appendChild(el);
+  try{new QRCode(el,{text:value,width:160,height:160,colorDark:"#111827",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});const canvas=el.querySelector("canvas");if(canvas)return canvas.toDataURL("image/png");const img=el.querySelector("img");if(img&&img.src.startsWith("data:"))return img.src;throw new Error("QR_NOT_READY");}finally{el.remove();}
+ }
+ throw new Error("مكتبة QRCode غير متوفرة");
+}
+async function downloadSelectedStudentCodes(){
+ const students=selectedStudentRows();if(!students.length){toast("حدد طالباً واحداً على الأقل");return;}
+ if(typeof html2canvas==="undefined"||!window.jspdf?.jsPDF||typeof QRCode!=="function"){toast("مكتبات PDF أو QR غير متوفرة");return;}
+ const host=$("codesPdfHost");
+ try{
+  toast("جاري تجهيز بطاقات الطلاب مع رموز QR...");
+  const portalQR=makeCodesQrDataURL("https://fast-alsari.github.io/fast/");
+  const playQR=makeCodesQrDataURL("https://play.google.com/store/apps/details?id=iq.alsaree.orders");
+  const pages=buildCodePages(students);
+  host.innerHTML=pages.map((p,i)=>codePageHTML(p,i,pages.length,portalQR,playQR)).join("");
+  const {jsPDF}=window.jspdf,pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true}),els=[...host.querySelectorAll(".codes-a4")];
+  for(let i=0;i<els.length;i++){
+   await waitImages(els[i]);await waitPaint();
+   if(i)pdf.addPage("a4","portrait");
+   const canvas=await html2canvas(els[i],{scale:2,useCORS:true,backgroundColor:"#ffffff",logging:false,width:794,height:1123,windowWidth:794,windowHeight:1123});
+   pdf.addImage(canvas.toDataURL("image/png"),"PNG",0,0,210,297,undefined,"FAST");canvas.width=1;canvas.height=1;
+  }
+  pdf.save(`بطاقات_اكواد_الطلاب_${today()}.pdf`);toast(`تم تجهيز بطاقات ${students.length} طالب`);
+ }catch(error){console.error("STUDENT_CODES_PDF_ERROR",error);toast("تعذر إنشاء بطاقات الأكواد: "+(error?.message||"خطأ غير معروف"));}finally{host.innerHTML="";}
+}
 function dataURLFromBlob(blob){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(String(r.result||""));r.onerror=()=>reject(r.error||new Error("FILE_READER_FAILED"));r.readAsDataURL(blob);});}
 async function safeImageDataURL(url){url=String(url||"").trim();if(!url)return"";if(url.startsWith("data:")||url.startsWith("blob:"))return url;try{const response=await fetch(url,{mode:"cors",cache:"no-store"});if(!response.ok)throw new Error("IMAGE_FETCH_FAILED");return await dataURLFromBlob(await response.blob());}catch(error){console.warn("IMAGE_DATA_URL_FALLBACK",url,error);return url;}}
 function studentDocumentURL(docs,key){const value=docs?.[key];return typeof value==="string"?value:String(value?.url||"").trim();}
