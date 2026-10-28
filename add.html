@@ -158,20 +158,16 @@
 .account-edit-actions{display:flex;gap:8px;margin-top:12px}.account-edit-actions button{flex:1}
 @media(max-width:620px){.assign-class-list{grid-template-columns:1fr}.account-edit-actions{flex-direction:column}.account-edit-actions button{width:100%}}
 
-/* بطاقات دخول الطلاب: عشرون بطاقة في كل ورقة A4 */
-.codes-a4.codes-cards-page{width:794px!important;height:1123px!important;padding:22px 26px 16px!important;display:flex;flex-direction:column;overflow:hidden;background:#fff}
-.codes-cards-header{height:67px;flex:none;display:flex;align-items:center;justify-content:space-between;border-bottom:3px solid #075fcf;margin-bottom:10px;padding-bottom:8px}
-.codes-cards-header h2{font-size:18px;color:#075fcf;margin:0}.codes-cards-header p{font-size:9px;color:#475467;margin-top:5px;font-weight:900}
-.codes-cards-header-meta{font-size:9px;font-weight:900;color:#344054;line-height:1.65;text-align:left}
-.codes-cards-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:repeat(10,1fr);gap:5px 7px;flex:1;min-height:0}
-.codes-student-card{min-height:0;display:flex;direction:rtl;align-items:stretch;gap:5px;padding:6px 7px;border:1.2px solid #9cb7d7;border-right:3px solid #075fcf;border-radius:7px;background:#fff;overflow:hidden}
-.codes-card-main{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:4px}
-.codes-card-name{font-size:9px;line-height:1.3}.codes-card-name span{color:#667085;font-weight:900}.codes-card-name strong{display:block;color:#172033;font-size:10px;font-weight:900;overflow-wrap:anywhere}
-.codes-card-class{font-size:8px;color:#475467}.codes-card-class b{color:#172033}
-.codes-card-code{font-size:8px;color:#475467}.codes-card-code b{display:inline-block;font-size:12px;color:#075fcf;font-weight:900;letter-spacing:.4px}
-.codes-card-note{font-size:7px;color:#9a3412;line-height:1.45;font-weight:800}
-.codes-card-qr{display:flex;flex:none;gap:4px;align-items:center;direction:rtl}.codes-card-qr>div{width:49px;text-align:center}.codes-card-qr img{width:45px;height:45px;display:block;margin:0 auto 3px;image-rendering:auto}.codes-card-qr span{display:block;white-space:nowrap;font-size:6.2px;font-weight:900;color:#344054}
-.codes-cards-footer{flex:none;height:19px;display:flex;align-items:end;justify-content:center;color:#667085;font-size:8px;font-weight:900}
+/* بطاقات الطلاب: أشرطة منفصلة بعرض الورقة، عشرة أشرطة في كل A4 */
+.codes-a4.codes-cards-page{width:794px!important;height:1123px!important;padding:20px 28px!important;display:block!important;overflow:hidden;background:#fff}
+.codes-cards-grid{height:1083px;display:grid;grid-template-columns:1fr;grid-template-rows:repeat(10,minmax(0,1fr));gap:5px}
+.codes-student-card{min-height:0;display:flex;direction:rtl;align-items:center;gap:14px;padding:6px 12px;border:1.5px dashed #8daac8;border-right:4px solid #075fcf;border-radius:6px;background:#fff;overflow:hidden;break-inside:avoid}
+.codes-card-main{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;gap:5px}
+.codes-card-name{font-size:12px;line-height:1.3}.codes-card-name span{color:#526477;font-weight:900;margin-left:5px}.codes-card-name strong{display:inline;color:#172033;font-size:14px;font-weight:900;overflow-wrap:anywhere}
+.codes-card-class{font-size:11px;color:#475467;font-weight:800}.codes-card-class b{color:#172033}
+.codes-card-code{font-size:11px;color:#475467;font-weight:800}.codes-card-code b{display:inline-block;font-size:16px;color:#075fcf;font-weight:900;letter-spacing:1px}
+.codes-card-note{font-size:9px;color:#8c3c17;line-height:1.45;font-weight:800}
+.codes-card-qr{display:flex;flex:none;gap:18px;align-items:center;direction:rtl}.codes-card-qr>div{width:82px;text-align:center}.codes-card-qr img{width:75px;height:75px;display:block;margin:0 auto 3px;image-rendering:pixelated}.codes-card-qr span{display:block;white-space:nowrap;font-size:9px;font-weight:900;color:#344054}
 </style>
 </head>
 <body>
@@ -647,21 +643,18 @@ window.downloadSelectedStudentInfo=downloadSelectedStudentInfo;
 function buildCodePages(students){
  const groups=new Map();
  students.forEach(st=>{const c=DATA.classes[st.classId],className=c?.name||st.className||"بدون صف",room=st.roomNumber||c?.roomNumber||"—",key=`${st.classId||className}__${room}`;if(!groups.has(key))groups.set(key,{className,room,students:[]});groups.get(key).students.push(st);});
- const pages=[],PER_PAGE=20;
+ const pages=[],PER_PAGE=10;
  groups.forEach(group=>{group.students.sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar",{sensitivity:"base"}));for(let i=0;i<group.students.length;i+=PER_PAGE)pages.push({...group,rows:group.students.slice(i,i+PER_PAGE),part:Math.floor(i/PER_PAGE)+1,parts:Math.ceil(group.students.length/PER_PAGE)});});
  return pages;
 }
 function studentCodeCardGender(st){const g=String(st.gender||"").trim().toLowerCase();return g==="female"||g==="أنثى"||g==="انثى"||g==="f"?"الطالبة":"الطالب";}
 function codePageHTML(page,index,total,portalQR,playQR){
- return `<section class="codes-a4 codes-cards-page">
- <div class="codes-cards-header"><div><h2>مدرسة التحدي الأهلية المختلطة</h2><p>قسم الحوكمة | بطاقة الدخول إلى منصة التحدي</p></div><div class="codes-cards-header-meta">الصف: ${esc(page.className)}<br>القاعة: ${esc(page.room)}<br>الصفحة ${index+1} من ${total}</div></div>
- <div class="codes-cards-grid">${page.rows.map(st=>`<article class="codes-student-card"><div class="codes-card-main"><div class="codes-card-name"><span>${studentCodeCardGender(st)}:</span><strong>${esc(st.name||"—")}</strong></div><div class="codes-card-class">الصف: <b>${esc(DATA.classes[st.classId]?.name||st.className||page.className)}</b></div><div class="codes-card-code">كود الدخول: <b dir="ltr">${esc(st.code||"—")}</b></div><div class="codes-card-note">إذا كان الاسم أو المعلومات غير صحيحة، يُرجى التواصل مع الأستاذ أحمد من الشباك لتصحيحها.</div></div><div class="codes-card-qr"><div><img src="${portalQR}" alt="QR المنصة"><span>دخول المنصة</span></div><div><img src="${playQR}" alt="QR التطبيق"><span>تحميل التطبيق</span></div></div></article>`).join("")}</div>
- <div class="codes-cards-footer">منصة التحدي الإلكترونية • احتفظ بكود الدخول الخاص بك ولا تشاركه مع الآخرين</div></section>`;
+ return `<section class="codes-a4 codes-cards-page"><div class="codes-cards-grid">${page.rows.map(st=>`<article class="codes-student-card"><div class="codes-card-main"><div class="codes-card-name"><span>${studentCodeCardGender(st)}:</span><strong>${esc(st.name||"—")}</strong></div><div class="codes-card-class">الصف: <b>${esc(DATA.classes[st.classId]?.name||st.className||page.className)}</b></div><div class="codes-card-code">كود الدخول: <b dir="ltr">${esc(st.code||"—")}</b></div><div class="codes-card-note">إذا كان الاسم أو المعلومات غير صحيحة، يُرجى التواصل مع الأستاذ أحمد من الشباك لتصحيحها.</div></div><div class="codes-card-qr"><div><img src="${portalQR}" alt="رمز دخول المنصة"><span>دخول المنصة</span></div><div><img src="${playQR}" alt="رمز تحميل التطبيق"><span>تحميل التطبيق</span></div></div></article>`).join("")}</div></section>`;
 }
 function makeCodesQrDataURL(value){
  if(typeof QRCode==="function"){
   const el=document.createElement("div");el.style.cssText="position:fixed;left:-9999px;top:0;background:#fff";document.body.appendChild(el);
-  try{new QRCode(el,{text:value,width:160,height:160,colorDark:"#111827",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});const canvas=el.querySelector("canvas");if(canvas)return canvas.toDataURL("image/png");const img=el.querySelector("img");if(img&&img.src.startsWith("data:"))return img.src;throw new Error("QR_NOT_READY");}finally{el.remove();}
+  try{new QRCode(el,{text:value,width:320,height:320,colorDark:"#111827",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});const canvas=el.querySelector("canvas");if(canvas)return canvas.toDataURL("image/png");const img=el.querySelector("img");if(img&&img.src.startsWith("data:"))return img.src;throw new Error("QR_NOT_READY");}finally{el.remove();}
  }
  throw new Error("مكتبة QRCode غير متوفرة");
 }
