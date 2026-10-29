@@ -168,6 +168,34 @@
 .codes-card-code{font-size:11px;color:#475467;font-weight:800}.codes-card-code b{display:inline-block;font-size:16px;color:#075fcf;font-weight:900;letter-spacing:1px}
 .codes-card-note{font-size:9px;color:#8c3c17;line-height:1.45;font-weight:800}
 .codes-card-qr{display:flex;flex:none;gap:18px;align-items:center;direction:rtl}.codes-card-qr>div{width:82px;text-align:center}.codes-card-qr img{width:75px;height:75px;display:block;margin:0 auto 3px;image-rendering:pixelated}.codes-card-qr span{display:block;white-space:nowrap;font-size:9px;font-weight:900;color:#344054}
+
+/* ===== نسخة احتياطية واستعادة قاعدة البيانات ===== */
+.db-backup-panel{border-color:#b7d1f1;box-shadow:0 9px 28px rgba(7,95,207,.06)}
+.db-backup-panel .panel-head{background:linear-gradient(120deg,#eff6ff,#fff)}
+.db-backup-panel .panel-head h3{display:flex;align-items:center;gap:8px;color:#084b9f}
+.db-backup-actions{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.db-backup-action{min-height:72px;display:flex;align-items:center;justify-content:center;gap:9px;padding:12px 16px;border:1px solid #c6d9ee;border-radius:13px;background:#fff;color:#075fcf;font-size:12px;font-weight:900;line-height:1.6;text-align:center;cursor:pointer}
+.db-backup-action.save{color:#fff;background:linear-gradient(125deg,#0b70e2,#064da7);border-color:#075fcf}
+.db-backup-action.restore{color:#16704c;background:#ecfdf3;border-color:#b5e2c6}
+.db-backup-action:disabled{opacity:.55;cursor:wait}
+.db-backup-help{margin-top:11px;padding:10px 12px;border-radius:11px;background:#fff9ec;border:1px solid #ffdfa3;color:#875304;font-size:10px;font-weight:800;line-height:1.9}
+.db-backup-msg{display:none;margin-top:10px;padding:11px 12px;border-radius:10px;font-size:10px;font-weight:900;line-height:1.9;white-space:pre-wrap;overflow-wrap:anywhere}
+.db-backup-msg.show{display:block}
+.db-backup-msg.info{color:#075fcf;background:#edf5ff}
+.db-backup-msg.good{color:#078746;background:#ecfdf3}
+.db-backup-msg.bad{color:#b42318;background:#fff1f0}
+.db-backup-preview{display:none;margin-top:12px;padding:13px;border:1px solid #cee0f2;border-radius:13px;background:#f8fbff}
+.db-backup-preview.show{display:block}
+.db-backup-preview h4{margin-bottom:7px;color:#075fcf;font-size:12px}
+.db-backup-preview p{margin:6px 0;font-size:10px;line-height:1.9;color:#475467;overflow-wrap:anywhere}
+.db-backup-confirm{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:10px;font-weight:900;line-height:1.8}
+.db-backup-confirm input{width:17px;height:17px;flex:none;accent-color:#075fcf}
+.db-backup-word{width:100%;height:43px;margin-top:9px;padding:0 12px;border:1px solid #bdd3eb;border-radius:9px;background:#fff;font-size:12px}
+.db-backup-restore-go{width:100%;min-height:43px;margin-top:9px;border:0;border-radius:9px;color:#fff;background:#078746;font-size:11px;font-weight:900}
+.db-backup-restore-go:disabled{opacity:.5;cursor:wait}
+.db-backup-file{display:none}
+@media(max-width:680px){.db-backup-actions{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -178,6 +206,30 @@
 
 <main class="main">
 <section class="hero"><h2 id="welcome">لوحة إدارة المدرسة</h2><p>إدارة الصفوف والطلاب والأساتذة والحسابات والحضور والمخالفات السلوكية.</p></section>
+
+<section class="panel db-backup-panel" id="databaseBackupPanel">
+  <div class="panel-head">
+    <div><h3>🛡️ النسخ الاحتياطي واستعادة قاعدة البيانات</h3><p>حفظ نسخة كاملة من Firebase Realtime Database إلى ملفات جهاز الإدارة، واستعادة الأقسام والسجلات المحذوفة دون مسح الموجود</p></div>
+  </div>
+  <div class="panel-body">
+    <div class="db-backup-actions">
+      <button type="button" class="db-backup-action save" id="dbBackupDownloadButton" onclick="downloadFullDatabaseBackup()">⬇ تحميل قاعدة البيانات كاملة (JSON)</button>
+      <button type="button" class="db-backup-action restore" id="dbBackupSelectButton" onclick="document.getElementById('dbBackupFile').click()">↥ استعادة قاعدة البيانات من نسخة سابقة</button>
+      <input class="db-backup-file" type="file" id="dbBackupFile" accept=".json,application/json">
+    </div>
+    <div class="db-backup-help">⚠ النسخة تحتوي على بيانات الطلاب وأكواد الدخول؛ احتفظ بها بمكان آمن ولا ترسلها لأحد. الاستعادة لا تمسح أي بيانات موجودة، وتُعيد البيانات المفقودة فقط. إذا انحذفت قاعدة البيانات بالكامل وحساب الإدارة معها، استورد ملف JSON من Firebase Console باستخدام حساب مالك المشروع؛ لأن الموقع لا يقدر يثبت أنك مدير بعد حذف حسابك.</div>
+    <div id="dbBackupMessage" class="db-backup-msg" role="status" aria-live="polite"></div>
+    <div id="dbBackupPreview" class="db-backup-preview">
+      <h4>معاينة ملف النسخة الاحتياطية</h4>
+      <p id="dbBackupPreviewDetails"></p>
+      <p><strong>تنبيه:</strong> العملية تعيد الأقسام والسجلات والحقول المحذوفة فقط، ولا تستبدل قيمة موجودة أو تصلح بيانات عُدّلت بدل حذفها. عند حذف حساب الإدارة، استخدم وحدة تحكم Firebase للاستعادة.</p>
+      <label class="db-backup-confirm"><input type="checkbox" id="dbBackupAgree"> أؤكد أنني راجعت النسخة وأريد استعادة البيانات المفقودة فقط، دون تغيير البيانات الموجودة.</label>
+      <input class="db-backup-word" id="dbBackupConfirmation" placeholder="اكتب كلمة استعادة للتأكيد" autocomplete="off" spellcheck="false">
+      <button type="button" class="db-backup-restore-go" id="dbBackupRestoreButton" onclick="restoreDatabaseMissingSections()">تأكيد الاستعادة الآمنة</button>
+    </div>
+  </div>
+</section>
+
 <div class="quick-pages"><a class="quick-page" href="chat.html">الدردشات</a><a class="quick-page" href="notify.html">التبليغات</a><a class="quick-page" href="cards.html">الكرتات</a><a class="quick-page" href="gradeboard.html">بورد الدرجات</a><a class="quick-page" href="logs.html">السجلات</a></div>
 <div class="stats"><div class="stat"><span>عدد الصفوف</span><strong id="totalClasses">0</strong></div><div class="stat"><span>إجمالي الطلاب</span><strong id="totalStudents">0</strong></div><div class="stat"><span>الطلاب الذكور</span><strong id="totalMaleStudents">0</strong></div><div class="stat"><span>الطلاب الإناث</span><strong id="totalFemaleStudents">0</strong></div><div class="stat"><span>طلاب الابتدائية</span><strong id="totalPrimaryStudents">0</strong></div><div class="stat"><span>ابتدائية - ذكور</span><strong id="totalPrimaryMaleStudents">0</strong></div><div class="stat"><span>ابتدائية - إناث</span><strong id="totalPrimaryFemaleStudents">0</strong></div><div class="stat"><span>تم القبول</span><strong id="totalAccepted">0</strong></div><div class="stat"><span>عدد الأساتذة</span><strong id="totalTeachers">0</strong></div><div class="stat"><span>المخالفات السلوكية</span><strong id="totalViolations">0</strong></div></div>
 
@@ -1389,6 +1441,184 @@ $('editStaffForm').addEventListener('submit',async e=>{
  }catch(error){console.error('EDIT_STAFF',error);message('editStaffMessage',error.message||'تعذر حفظ تعديلات الحساب');}
  finally{button.disabled=false;button.textContent='حفظ تعديلات الحساب';}
 });
+
+
+/* ===== النسخة الاحتياطية والاستعادة: لا تتجاوز قواعد Firebase ===== */
+let tahadiBackupCandidate=null;
+const tahadiDbRootUrl=()=>`${DB}/.json`;
+const tahadiHasKey=(obj,key)=>Object.prototype.hasOwnProperty.call(obj,key);
+function tahadiBackupMessage(text,kind="info"){
+  const el=$("dbBackupMessage");
+  el.textContent=String(text||"");
+  el.className="db-backup-msg show "+kind;
+}
+function tahadiBackupBusy(busy){
+  $("dbBackupDownloadButton").disabled=busy;
+  $("dbBackupSelectButton").disabled=busy;
+  $("dbBackupRestoreButton").disabled=busy;
+}
+function tahadiValidDatabaseSnapshot(data){
+  if(!data||typeof data!=="object"||Array.isArray(data))return false;
+  const keys=Object.keys(data);
+  if(keys.length<2||!keys.includes("users")||!keys.includes("students"))return false;
+  for(const key of keys){
+    if(!key||/[.#$\[\]\/\u0000-\u001f\u007f]/.test(key))return false;
+    if(key==="__proto__"||key==="constructor"||key==="prototype")return false;
+  }
+  return typeof data.users==="object"&&data.users!==null&&!Array.isArray(data.users)
+    &&typeof data.students==="object"&&data.students!==null&&!Array.isArray(data.students);
+}
+function tahadiValidateNestedKeys(root){
+  const stack=[root];let count=0;
+  while(stack.length){
+    const obj=stack.pop();
+    if(!obj||typeof obj!=="object")continue;
+    if(++count>1000000)throw new Error("حجم بنية النسخة كبير جدًا للتحقق داخل المتصفح.");
+    if(Array.isArray(obj)){for(const item of obj)if(item&&typeof item==="object")stack.push(item);continue;}
+    for(const key of Object.keys(obj)){
+      if(!key||/[.#$\[\]\/\u0000-\u001f\u007f]/.test(key)||["__proto__","constructor","prototype"].includes(key))
+        throw new Error("وجدت مفتاحًا غير مسموح داخل النسخة الاحتياطية: "+key);
+      const child=obj[key];if(child&&typeof child==="object")stack.push(child);
+    }
+  }
+  return true;
+}
+function tahadiFindMissingEntries(backup,current){
+  const missing=[];
+  const walk=(saved,now,path,depth)=>{
+    if(depth>25)throw new Error("البيانات متداخلة جدًا لمراجعة الاستعادة آليًا.");
+    if(!saved||typeof saved!=="object"||Array.isArray(saved))return;
+    if(!now||typeof now!=="object"||Array.isArray(now))return;
+    for(const key of Object.keys(saved)){
+      const pathNext=path?path+"/"+key:key;
+      if(!tahadiHasKey(now,key)){
+        missing.push({path:pathNext,value:saved[key]});
+        if(missing.length>2500)throw new Error("يوجد أكثر من 2500 عنصر مفقود. يُفضّل الاستعادة من Firebase Console أو على دفعات بإشراف تقني.");
+      }else if(saved[key]&&typeof saved[key]==="object"&&!Array.isArray(saved[key])){
+        walk(saved[key],now[key],pathNext,depth+1);
+      }
+    }
+  };
+  walk(backup,current,"",0);
+  return missing;
+}
+function tahadiCountCollection(x){return x&&typeof x==="object"&&!Array.isArray(x)?Object.keys(x).length:0;}
+function tahadiBackupInfo(data){
+  return `المستخدمون: ${tahadiCountCollection(data.users)} | الطلاب: ${tahadiCountCollection(data.students)} | الصفوف: ${tahadiCountCollection(data.classes)} | الأساتذة: ${tahadiCountCollection(data.teachers)} | الأقسام: ${Object.keys(data).length}`;
+}
+function tahadiDbError(operation,response){
+  const status=response?.status||"غير معروف";
+  if(status===401||status===403)return new Error(`رفضت Firebase ${operation} (HTTP ${status}). راجع قواعد القراءة والكتابة، ولا تجعل قاعدة الطلاب عامة بغرض تفعيل النسخ.`);
+  if(status===412)return new Error("تغيرت بيانات القاعدة أثناء الاستعادة. تم إيقاف العملية حتى لا تُكتب فوق بيانات جديدة.");
+  return new Error(`تعذّرت ${operation} (HTTP ${status}).`);
+}
+async function downloadFullDatabaseBackup(){
+  if($("dbBackupDownloadButton").disabled)return;
+  tahadiBackupBusy(true);
+  tahadiBackupMessage("جاري التحقق من حساب الإدارة وقراءة قاعدة البيانات كاملة...","info");
+  try{
+    if(!await verifyAdmin())return;
+    const response=await fetch(tahadiDbRootUrl(),{method:"GET",cache:"no-store"});
+    if(!response.ok)throw tahadiDbError("قراءة قاعدة البيانات",response);
+    const raw=await response.text();
+    if(raw==="null"||raw.trim()==="")throw new Error("قاعدة البيانات فارغة الآن؛ لا يمكن إنشاء نسخة احتياطية فارغة.");
+    let data;
+    try{data=JSON.parse(raw);}catch{throw new Error("استجابة قاعدة البيانات ليست JSON صالحًا.");}
+    if(!tahadiValidDatabaseSnapshot(data))throw new Error("النسخة غير مكتملة: يجب أن تحتوي القاعدة على قسمي users و students. لن ننزّل نسخة مضللة.");
+    const stamp=new Date().toISOString().replace(/[:.]/g,"-");
+    const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json;charset=utf-8"});
+    const url=URL.createObjectURL(blob),link=document.createElement("a");
+    link.href=url;link.download=`tahadi-REALTIME-FULL-BACKUP-${stamp}.json`;
+    document.body.appendChild(link);link.click();link.remove();
+    setTimeout(()=>URL.revokeObjectURL(url),60000);
+    tahadiBackupMessage(`تم إعداد النسخة الاحتياطية كاملة. ${tahadiBackupInfo(data)}. تأكد أن الملف حُفظ في جهازك، ثم احتفظ به بمكان آمن.`,"good");
+  }catch(e){console.error("TAHADI_BACKUP",e);tahadiBackupMessage(e.message||"تعذّر تنزيل نسخة قاعدة البيانات.","bad");}
+  finally{tahadiBackupBusy(false);}
+}
+async function tahadiBackupFileSelected(event){
+  tahadiBackupCandidate=null;
+  $("dbBackupPreview").classList.remove("show");
+  $("dbBackupAgree").checked=false;
+  $("dbBackupConfirmation").value="";
+  const file=event.target.files?.[0];
+  if(!file)return;
+  try{
+    if(file.size>150*1024*1024)throw new Error("حجم الملف أكبر من 150 ميغابايت. تحتاج النسخ الضخمة إلى استيراد من وحدة تحكم Firebase أو خادم مخصص.");
+    if(!/\.json$/i.test(file.name))throw new Error("يرجى اختيار ملف JSON فقط.");
+    const data=JSON.parse(await file.text());
+    tahadiValidateNestedKeys(data);
+    if(!tahadiValidDatabaseSnapshot(data))throw new Error("الملف ليس نسخة كاملة صحيحة من قاعدة التحدي (يلزم وجود users و students). لم يتم تعديل شيء.");
+    tahadiBackupCandidate={data,fileName:file.name};
+    $("dbBackupPreviewDetails").textContent=`الملف: ${file.name} — الحجم: ${(file.size/1024/1024).toFixed(2)} MB — ${tahadiBackupInfo(data)}`;
+    $("dbBackupPreview").classList.add("show");
+    tahadiBackupMessage("تم فحص بنية النسخة محليًا ولم تُرفع أي بيانات بعد. للمواصلة راجع التفاصيل وأكّد الاستعادة.","info");
+  }catch(e){console.error("TAHADI_BACKUP_FILE",e);tahadiBackupMessage(e.message||"تعذّر فتح الملف.","bad");}
+  finally{event.target.value="";}
+}
+async function tahadiGetWithEtag(path){
+  const url=path?`${DB}/${path.split("/").map(encodeURIComponent).join("/")}.json`:tahadiDbRootUrl();
+  const response=await fetch(url,{method:"GET",cache:"no-store",headers:{"X-Firebase-ETag":"true"}});
+  if(!response.ok)throw tahadiDbError("فحص حالة القاعدة",response);
+  const etag=response.headers.get("ETag");
+  if(!etag)throw new Error("الخادم لم يُرجع ETag. تم إيقاف الاستعادة لمنع استبدال بيانات موجودة.");
+  return {value:await response.json(),etag};
+}
+async function tahadiConditionalPut(path,data,etag){
+  const url=path?`${DB}/${path.split("/").map(encodeURIComponent).join("/")}.json`:tahadiDbRootUrl();
+  const response=await fetch(url,{
+    method:"PUT",cache:"no-store",
+    headers:{"Content-Type":"application/json","if-match":etag},
+    body:JSON.stringify(data)
+  });
+  if(!response.ok)throw tahadiDbError("استعادة البيانات",response);
+}
+async function restoreDatabaseMissingSections(){
+  if($("dbBackupRestoreButton").disabled)return;
+  if(!tahadiBackupCandidate){tahadiBackupMessage("اختر ملف النسخة الاحتياطية أولًا.","bad");return;}
+  if(!$("dbBackupAgree").checked||$("dbBackupConfirmation").value.trim()!=="استعادة"){
+    tahadiBackupMessage("فعّل مربع الموافقة واكتب كلمة استعادة للتأكيد.","bad");return;
+  }
+  tahadiBackupBusy(true);
+  let restored=[];
+  try{
+    // هذا فحص واجهة موجود بالنظام الأصلي، ولا يمثل مصادقة أمنية موثوقة.
+    if(!await verifyAdmin())return;
+    const backup=tahadiBackupCandidate.data;
+    const live=await tahadiGetWithEtag("");
+    if(live.value===null){
+      // كتابة مشروطة بقيمة ETag: لا كتابة فوق قاعدة بدأت تتغير أثناء التنفيذ.
+      if(!confirm("قاعدة البيانات فارغة بالكامل. هل تريد استعادة محتويات ملف النسخة المختار؟"))return;
+      tahadiBackupMessage("تتم استعادة قاعدة البيانات الفارغة... لا تغلق الصفحة.","info");
+      await tahadiConditionalPut("",backup,live.etag);
+      restored=[...Object.keys(backup)];
+    }else if(live.value&&typeof live.value==="object"&&!Array.isArray(live.value)){
+      const missing=tahadiFindMissingEntries(backup,live.value);
+      if(!missing.length){
+        tahadiBackupMessage("لم أجد أقسامًا أو سجلات محذوفة مقارنةً بالنسخة. لم يتم تعديل شيء. لا يتم استبدال القيم الموجودة حتى لو كانت مختلفة.","info");return;
+      }
+      const summary=missing.slice(0,8).map(x=>x.path).join("، ");
+      if(!confirm(`تم العثور على ${missing.length} عنصرًا مفقودًا. ستُستعاد العناصر المحذوفة فقط دون الكتابة فوق الموجود. أمثلة: ${summary}${missing.length>8?" ...":""}. هل أنت متأكد؟`))return;
+      for(const entry of missing){
+        tahadiBackupMessage(`جاري استعادة عنصر ${restored.length+1} من ${missing.length}: ${entry.path}`,"info");
+        const latest=await tahadiGetWithEtag(entry.path);
+        if(latest.value!==null)continue;
+        await tahadiConditionalPut(entry.path,entry.value,latest.etag);
+        restored.push(entry.path);
+      }
+
+    }else throw new Error("البيانات الحالية غير متوقعة. أوقفت الاستعادة حفاظًا عليها.");
+    clearReadCache();
+    tahadiBackupMessage(`اكتملت الاستعادة الآمنة. العناصر التي أُعيدت: ${restored.length}. ${restored.length?"أمثلة: "+restored.slice(0,10).join("، "):"لم توجد بيانات مفقودة"}. يرجى إعادة تحميل الصفحة للتحقق من السجلات.`,"good");
+    tahadiBackupCandidate=null;
+    $("dbBackupPreview").classList.remove("show");
+    $("dbBackupAgree").checked=false;
+    $("dbBackupConfirmation").value="";
+  }catch(e){
+    console.error("TAHADI_RESTORE",e);
+    tahadiBackupMessage(`${e.message||"تعذّرت الاستعادة"}. ${restored.length?`تمت استعادة هذه الأقسام قبل التوقف: ${restored.join("، ")}.`:"لم يثبت إتمام أي قسم."} لم نُصدر أمر حذف أو استبدال للأقسام الموجودة.`,"bad");
+  }finally{tahadiBackupBusy(false);}
+}
+$("dbBackupFile").addEventListener("change",tahadiBackupFileSelected);
 
 setupClassBulkStudentImport();
 </script>
