@@ -11,7 +11,9 @@
 
 <meta name="theme-color" content="#075fcf">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<link rel="apple-touch-icon" href="logo.png">
+<meta name="apple-mobile-web-app-title" content="منصة التحدي">
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" sizes="180x180" href="logo.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <title>منصة التحدي | مدرسة التحدي الأهلية المختلطة</title>
@@ -1695,12 +1697,68 @@ input{
 .install-link svg{width:24px;height:24px;flex-shrink:0}
 .install-link.play{background:#f0f7ff;border-color:#cde3ff;color:#0757b6}
 .install-link.apple{background:#f7f8fa;border-color:#d8dce4;color:#172033}
-.install-help{display:none;position:fixed;inset:0;z-index:30000;background:rgba(13,29,53,.62);padding:20px;align-items:center;justify-content:center}
-.install-help.show{display:flex}
-.install-help-card{width:min(380px,100%);background:#fff;border-radius:23px;padding:24px 20px;box-shadow:0 24px 65px rgba(0,0,0,.2);text-align:right}
-.install-help-card h3{font-size:19px;color:#12385f;margin-bottom:12px}
-.install-help-card p{font-size:13px;line-height:2;color:#344054;margin-bottom:12px}
-.install-help-card .install-close{width:100%;border:0;border-radius:13px;background:#075fcf;color:white;padding:13px;font-size:14px;font-weight:900;cursor:pointer}
+/* ===== دليل تثبيت الآيفون: واجهة تعليم مرئية عالية الوضوح ===== */
+.install-help{
+    display:none; position:fixed; inset:0; z-index:30000;
+    align-items:center; justify-content:center;
+    padding:max(14px,env(safe-area-inset-top)) 14px max(14px,env(safe-area-inset-bottom));
+    background:rgba(6,18,39,.73); backdrop-filter:blur(13px); -webkit-backdrop-filter:blur(13px);
+    overscroll-behavior:contain;
+}
+.install-help.show{display:flex;animation:iosShadeIn .25s ease both}
+.ios-guide-card{
+    position:relative; width:min(440px,100%); max-height:min(94dvh,820px);
+    overflow-y:auto; overscroll-behavior:contain;
+    background:#fff; border:1px solid rgba(255,255,255,.8);
+    border-radius:27px; box-shadow:0 35px 110px rgba(0,0,0,.35);
+    scrollbar-width:none; text-align:right;
+    animation:iosRise .45s cubic-bezier(.19,1,.22,1) both;
+}
+.ios-guide-card::-webkit-scrollbar{display:none}
+.ios-guide-head{
+    position:relative; overflow:hidden; padding:29px 21px 23px;
+    background:linear-gradient(135deg,#08449e 0%,#075fcf 60%,#348ff7 100%); color:#fff;
+}
+.ios-guide-head:before,.ios-guide-head:after{content:"";position:absolute;pointer-events:none;border:1px solid rgba(255,255,255,.13);border-radius:50%}
+.ios-guide-head:before{width:190px;height:190px;top:-105px;left:-70px}
+.ios-guide-head:after{width:130px;height:130px;bottom:-88px;right:-50px}
+.ios-guide-exit{position:absolute;left:15px;top:15px;z-index:3;display:grid;place-items:center;width:34px;height:34px;border:1px solid rgba(255,255,255,.28);border-radius:11px;color:#fff;background:rgba(255,255,255,.15);font-size:22px;cursor:pointer}
+.ios-guide-brand{display:flex;align-items:center;gap:12px;max-width:calc(100% - 35px)}
+.ios-guide-icon{width:65px;height:65px;flex:none;display:grid;place-items:center;overflow:hidden;border:3px solid rgba(255,255,255,.8);border-radius:16px;background:#fff;box-shadow:0 10px 26px rgba(1,31,80,.22)}
+.ios-guide-icon img{width:100%;height:100%;object-fit:contain;padding:5px}
+.ios-guide-overline{display:block;margin-bottom:3px;color:#d5eaff;font-size:10px;font-weight:800}
+.ios-guide-brand h3{margin:0;font-size:19px;line-height:1.55;font-weight:900}
+.ios-guide-brand p{margin-top:4px;color:#e7f1ff;font-size:11px;line-height:1.7}
+.ios-guide-body{padding:18px 19px 19px}
+.ios-guide-intro{display:flex;align-items:center;gap:8px;margin-bottom:13px;color:#124477;font-size:12px;font-weight:900}
+.ios-guide-steps{display:grid;gap:9px}
+.ios-step{display:grid;grid-template-columns:35px minmax(0,1fr) 68px;align-items:center;gap:10px;min-height:91px;padding:12px;border:1px solid #dfe8f3;border-radius:16px;background:linear-gradient(135deg,#fff,#f8fbff)}
+.ios-step.active{border-color:#a7ccff;background:#eff7ff;box-shadow:inset 0 0 0 1px rgba(7,95,207,.06)}
+.ios-step-number{align-self:start;display:grid;place-items:center;width:31px;height:31px;border-radius:10px;background:#075fcf;color:#fff;font-size:15px;font-weight:900}
+.ios-step-label strong{display:block;margin-bottom:4px;color:#143657;font-size:13px;font-weight:900}
+.ios-step-label small{display:block;color:#64748b;font-size:10px;line-height:1.8;font-weight:700}
+.ios-symbol{position:relative;justify-self:center;display:flex;align-items:center;justify-content:center;width:62px;height:62px;border-radius:17px;background:#fff;box-shadow:0 4px 17px rgba(9,67,134,.09);border:1px solid #dfe9f4;color:#0872e6}
+.ios-symbol svg{width:37px;height:37px}
+.ios-step.active .ios-symbol{box-shadow:0 0 0 5px rgba(7,95,207,.09),0 5px 17px rgba(0,72,155,.14)}
+.ios-share-pulse{position:absolute;inset:-5px;border:2px solid #0872e6;border-radius:21px;animation:iosPulse 1.8s infinite;pointer-events:none}
+.ios-add-graphic{display:flex;align-items:center;gap:3px;color:#075fcf;font-weight:900;font-size:14px}
+.ios-add-graphic svg{width:24px;height:24px}
+.ios-add-btn{display:grid;place-items:center;width:55px;height:33px;border-radius:9px;color:#fff;background:#075fcf;font-size:13px;font-weight:900}
+.ios-guide-note{display:flex;align-items:flex-start;gap:9px;margin-top:12px;padding:11px;border-radius:13px;background:#f2f6fc;color:#43546a;font-size:10px;line-height:1.85;font-weight:700}
+.ios-guide-note svg{width:17px;height:17px;flex:none;margin-top:2px;color:#075fcf}
+.ios-safari-hint{margin-top:12px;padding:12px;border-radius:13px;border:1px solid #f5dca0;background:#fffaec;color:#755312;font-size:11px;line-height:1.8;font-weight:800}
+.ios-guide-actions{display:grid;gap:8px;margin-top:14px}
+.ios-guide-okay{min-height:49px;width:100%;border:0;border-radius:14px;background:linear-gradient(135deg,#075fcf,#087af2);box-shadow:0 9px 20px rgba(7,95,207,.23);color:#fff;font-size:13px;font-weight:900;cursor:pointer}
+.ios-guide-safari-link{display:none;min-height:45px;align-items:center;justify-content:center;border:1px solid #dbe5f1;border-radius:12px;background:#fff;color:#075fcf;font-size:12px;font-weight:900;text-decoration:none}
+.ios-guide-card.not-safari .ios-guide-safari-link{display:flex}
+.ios-guide-installed{display:none;padding:20px 0;text-align:center;color:#067647;font-size:13px;font-weight:900;line-height:1.9}
+.ios-guide-card.already-installed .ios-guide-installed{display:block}
+.ios-guide-card.already-installed .ios-guide-steps,.ios-guide-card.already-installed .ios-guide-intro,.ios-guide-card.already-installed .ios-guide-note,.ios-guide-card.already-installed .ios-safari-hint{display:none}
+@keyframes iosShadeIn{from{opacity:0}to{opacity:1}}
+@keyframes iosRise{from{opacity:0;transform:translateY(25px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes iosPulse{0%{opacity:.85;transform:scale(.95)}75%{opacity:0;transform:scale(1.14)}100%{opacity:0}}
+@media(max-width:380px){.ios-guide-body{padding:13px}.ios-guide-head{padding:23px 16px 19px}.ios-step{grid-template-columns:30px minmax(0,1fr) 52px;gap:7px;padding:9px;min-height:78px}.ios-step-number{width:27px;height:27px;font-size:13px}.ios-symbol{width:49px;height:49px;border-radius:13px}.ios-symbol svg{width:29px;height:29px}.ios-step-label strong{font-size:12px}.ios-step-label small{font-size:9px}.ios-guide-brand h3{font-size:17px}.ios-guide-icon{width:57px;height:57px}}
+@media(prefers-reduced-motion:reduce){.ios-guide-card,.install-help.show,.ios-share-pulse{animation:none}}
 
 </style>
 
@@ -1995,12 +2053,58 @@ input{
 
 
 
-<div id="iosInstallHelp" class="install-help" role="dialog" aria-modal="true" aria-labelledby="iosInstallTitle">
-    <div class="install-help-card">
-        <h3 id="iosInstallTitle">تثبيت منصة التحدي على الآيفون</h3>
-        <p id="iosInstallInstructions">افتح هذه الصفحة في متصفح Safari، ثم اضغط زر المشاركة <strong>□↑</strong> واختر <strong>إضافة إلى الشاشة الرئيسية</strong>، ثم اضغط <strong>إضافة</strong>. ستظهر المنصة على الشاشة الرئيسية بأيقونتها.</p>
-        <button type="button" id="iosInstallClose" class="install-close">فهمت</button>
+<div id="iosInstallHelp" class="install-help" role="dialog" aria-modal="true" aria-labelledby="iosInstallTitle" aria-describedby="iosInstallSubtitle" aria-hidden="true">
+  <div class="ios-guide-card" id="iosGuideCard" dir="rtl">
+    <div class="ios-guide-head">
+      <button class="ios-guide-exit" id="iosInstallClose" type="button" aria-label="إغلاق التوجيه">×</button>
+      <div class="ios-guide-brand">
+        <div class="ios-guide-icon"><img src="logo.png" alt="أيقونة منصة التحدي"></div>
+        <div>
+          <span class="ios-guide-overline">تطبيقك في متناول يدك</span>
+          <h3 id="iosInstallTitle">منصة التحدي على الآيفون</h3>
+          <p id="iosInstallSubtitle">ثبّتها بأيقونة المدرسة خلال 3 خطوات بسيطة</p>
+        </div>
+      </div>
     </div>
+    <div class="ios-guide-body">
+      <div class="ios-guide-intro">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>
+        اتبع الصور داخل متصفح Safari
+      </div>
+      <div class="ios-guide-steps">
+        <div class="ios-step active">
+          <span class="ios-step-number">1</span>
+          <div class="ios-step-label"><strong>اضغط أيقونة المشاركة</strong><small>ستجد المربع والسهم ↑ في شريط Safari، وقد يكون أسفل الشاشة أو أعلاها.</small></div>
+          <div class="ios-symbol" aria-label="رمز المشاركة في Safari">
+            <span class="ios-share-pulse"></span>
+            <svg viewBox="0 0 32 32" fill="none" stroke="#0872e6" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V2m0 0-6 6m6-6 6 6"/><path d="M10 12H7a3 3 0 0 0-3 3v11a3 3 0 0 0 3 3h18a3 3 0 0 0 3-3V15a3 3 0 0 0-3-3h-3"/></svg>
+          </div>
+        </div>
+        <div class="ios-step">
+          <span class="ios-step-number">2</span>
+          <div class="ios-step-label"><strong>إضافة إلى الشاشة الرئيسية</strong><small>اختر هذا الخيار من قائمة المشاركة.</small></div>
+          <div class="ios-symbol" aria-label="رمز إضافة إلى الشاشة الرئيسية">
+            <svg viewBox="0 0 32 32" fill="none" stroke="#075fcf" stroke-width="2.1" stroke-linecap="round" aria-hidden="true"><rect x="4" y="4" width="24" height="24" rx="6"/><path d="M16 10v12m-6-6h12"/></svg>
+          </div>
+        </div>
+        <div class="ios-step">
+          <span class="ios-step-number">3</span>
+          <div class="ios-step-label"><strong>اضغط «إضافة»</strong><small>ستجد أيقونة منصة التحدي على الشاشة الرئيسية.</small></div>
+          <div class="ios-symbol" aria-label="زر إضافة"><span class="ios-add-btn">إضافة</span></div>
+        </div>
+      </div>
+      <div class="ios-guide-installed" id="iosGuideInstalled">✓ المنصة مفتوحة الآن من أيقونة الشاشة الرئيسية، ولا تحتاج لتثبيتها مرة ثانية.</div>
+      <div class="ios-guide-note">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 11v6m0-10h.01"/></svg>
+        عند الإضافة ستظهر المنصة باسم «منصة التحدي» وبشعار المدرسة، وتفتح كأنها تطبيق مستقل.
+      </div>
+      <div class="ios-safari-hint" id="iosSafariHint" hidden>أنت لا تستخدم Safari حاليًا. افتح الرابط في Safari ثم اضغط زر التثبيت واتبع الصور.</div>
+      <div class="ios-guide-actions">
+        <a class="ios-guide-safari-link" href="https://fast-alsari.github.io/fast/" target="_blank" rel="noopener noreferrer">فتح رابط المنصة</a>
+        <button class="ios-guide-okay" id="iosGuideOkay" type="button">فهمت، سأضغط مشاركة</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- =========================================================
@@ -2022,25 +2126,57 @@ input{
 
 <script>
 
-/* إرشادات إضافة المنصة إلى الشاشة الرئيسية على iPhone */
-(function(){
-    const button=document.getElementById('iosInstallButton');
-    const dialog=document.getElementById('iosInstallHelp');
-    const close=document.getElementById('iosInstallClose');
-    const instructions=document.getElementById('iosInstallInstructions');
-    if(!button||!dialog||!close)return;
-    button.addEventListener('click',function(){
-        const isIos=/iPhone|iPad|iPod/.test(navigator.userAgent)|| (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-        const installed=window.navigator.standalone===true;
-        if(installed){instructions.textContent='المنصة مضافة بالفعل إلى الشاشة الرئيسية على هذا الجهاز.';}
-        else if(!isIos){instructions.textContent='هذه الميزة مخصصة للآيفون. افتح رابط المنصة من Safari على الآيفون، ثم اضغط مشاركة واختر إضافة إلى الشاشة الرئيسية.';}
-        else{instructions.innerHTML='لإضافة المنصة بأيقونتها: افتح الصفحة في <strong>Safari</strong>، واضغط زر <strong>المشاركة (مربع وسهم للأعلى)</strong>، ثم اختر <strong>إضافة إلى الشاشة الرئيسية</strong> واضغط <strong>إضافة</strong>. إذا كنت داخل متصفح تطبيق آخر، افتح الرابط أولاً في Safari.';}
-        dialog.classList.add('show');
+/* دليل تثبيت منصة التحدي على آيفون: نافذة صور توضيحية دون ادعاء فتح مشاركة Safari تلقائياً */
+(function () {
+    const trigger = document.getElementById('iosInstallButton');
+    const overlay = document.getElementById('iosInstallHelp');
+    const card = document.getElementById('iosGuideCard');
+    const close = document.getElementById('iosInstallClose');
+    const confirm = document.getElementById('iosGuideOkay');
+    const safariHint = document.getElementById('iosSafariHint');
+    if (!trigger || !overlay || !card || !close || !confirm || !safariHint) return;
+
+    let restoreFocus = null;
+    function dismissGuide() {
+        overlay.classList.remove('show');
+        overlay.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if (restoreFocus) restoreFocus.focus();
+    }
+    trigger.addEventListener('click', function () {
+        // Chrome/Firefox on iOS do not expose Safari's share sheet to web pages.
+        const ua = navigator.userAgent || '';
+        const iOS = /iPad|iPhone|iPod/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        const safari = /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS|OPiOS|DuckDuckGo|GSA/i.test(ua);
+        const installed = navigator.standalone === true || matchMedia('(display-mode: standalone)').matches;
+        card.classList.toggle('already-installed', installed);
+        card.classList.toggle('not-safari', !iOS || !safari);
+        safariHint.hidden = installed || (iOS && safari);
+        safariHint.textContent = iOS
+            ? 'افتح رابط المنصة في متصفح Safari أولاً، وبعدها اضغط زر المشاركة كما هو موضح بالصور.'
+            : 'هذه الإرشادات مخصصة للآيفون. افتح رابط المنصة في Safari على جهاز iPhone.';
+        confirm.textContent = installed ? 'إغلاق' : 'فهمت، سأضغط مشاركة';
+        restoreFocus = document.activeElement;
+        overlay.classList.add('show');
+        overlay.setAttribute('aria-hidden', 'false');
+        document.body.style.overflow = 'hidden';
         close.focus();
     });
-    close.addEventListener('click',()=>dialog.classList.remove('show'));
-    dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.classList.remove('show')});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')dialog.classList.remove('show')});
+    close.addEventListener('click', dismissGuide);
+    confirm.addEventListener('click', dismissGuide);
+    overlay.addEventListener('click', function (event) { if (event.target === overlay) dismissGuide(); });
+    document.addEventListener('keydown', function (event) {
+        if (!overlay.classList.contains('show')) return;
+        if (event.key === 'Escape') dismissGuide();
+        // Keep keyboard focus inside the dialog.
+        if (event.key === 'Tab') {
+            const interactive = [...card.querySelectorAll('button, a[href]')].filter(el => el.offsetParent !== null);
+            if (!interactive.length) return;
+            const first = interactive[0], last = interactive[interactive.length - 1];
+            if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+            else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+        }
+    });
 })();
 
 
