@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
+
 <meta charset="UTF-8">
 
 <meta
@@ -10,6 +11,7 @@
 
 <meta name="theme-color" content="#075fcf">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="apple-touch-icon" href="logo.png">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 
 <title>منصة التحدي | مدرسة التحدي الأهلية المختلطة</title>
@@ -1685,6 +1687,21 @@ input{
 
 }
 
+
+/* أزرار تثبيت منصة التحدي */
+.install-actions{display:grid;grid-template-columns:1fr;gap:10px;margin-top:17px}
+.install-link{display:flex;align-items:center;justify-content:center;gap:11px;min-height:51px;padding:10px 14px;border-radius:15px;border:1px solid #dbe5f1;background:#fff;color:#18324f;text-decoration:none;font-size:13px;font-weight:900;cursor:pointer;transition:transform .15s,box-shadow .15s}
+.install-link:active{transform:scale(.985)}
+.install-link svg{width:24px;height:24px;flex-shrink:0}
+.install-link.play{background:#f0f7ff;border-color:#cde3ff;color:#0757b6}
+.install-link.apple{background:#f7f8fa;border-color:#d8dce4;color:#172033}
+.install-help{display:none;position:fixed;inset:0;z-index:30000;background:rgba(13,29,53,.62);padding:20px;align-items:center;justify-content:center}
+.install-help.show{display:flex}
+.install-help-card{width:min(380px,100%);background:#fff;border-radius:23px;padding:24px 20px;box-shadow:0 24px 65px rgba(0,0,0,.2);text-align:right}
+.install-help-card h3{font-size:19px;color:#12385f;margin-bottom:12px}
+.install-help-card p{font-size:13px;line-height:2;color:#344054;margin-bottom:12px}
+.install-help-card .install-close{width:100%;border:0;border-radius:13px;background:#075fcf;color:white;padding:13px;font-size:14px;font-weight:900;cursor:pointer}
+
 </style>
 
 </head>
@@ -1939,6 +1956,18 @@ input{
             </button>
 
 
+
+            <div class="install-actions" aria-label="خيارات تحميل وتثبيت المنصة">
+                <a class="install-link play" href="https://play.google.com/store/apps/details?id=iq.alsaree.orders" target="_blank" rel="noopener noreferrer" aria-label="تحميل التطبيق من Google Play">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#22a65a" d="M3.5 2.3v19.4L13.6 12z"/><path fill="#35a8ef" d="M3.5 2.3 15.3 9.9 19 7.8 5.7 1.4c-1-.5-1.7-.2-2.2.9z"/><path fill="#f9c53c" d="m13.6 12 5.4-4.2 2.1 1.1c1.7.9 1.7 2.2 0 3.1l-2.1 1.1z"/><path fill="#ec4551" d="M3.5 21.7 15.3 14l3.7 2.2-13.3 6.4c-1 .5-1.7.2-2.2-.9z"/></svg>
+                    <span>تحميل التطبيق من سوق بلي</span>
+                </a>
+                <button class="install-link apple" id="iosInstallButton" type="button" aria-label="تثبيت المنصة على الآيفون">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M17.3 12.8c0-2.2 1.8-3.3 1.9-3.4-1-1.5-2.5-1.7-3-1.7-1.3-.1-2.5.8-3.2.8-.8 0-1.9-.8-3-.8-1.5 0-2.9.9-3.7 2.2-1.6 2.8-.4 6.9 1.1 9.1.8 1.1 1.6 2.2 2.8 2.2s1.6-.7 3-.7 1.7.7 3 .7 2-1.2 2.7-2.3c.8-1.2 1.1-2.3 1.1-2.4-.1 0-2.7-1-2.7-3.7ZM15.5 6.2c.6-.8 1.1-1.9 1-3-.9.1-2 .7-2.7 1.5-.6.7-1.2 1.8-1 2.9 1 .1 2-.5 2.7-1.4Z"/></svg>
+                    <span>تثبيت المنصة على الآيفون</span>
+                </button>
+            </div>
+
             <div class="security-note">
                 استخدم الكود المخصص لك فقط ولا تشاركه مع الآخرين
             </div>
@@ -1965,6 +1994,15 @@ input{
 </main>
 
 
+
+<div id="iosInstallHelp" class="install-help" role="dialog" aria-modal="true" aria-labelledby="iosInstallTitle">
+    <div class="install-help-card">
+        <h3 id="iosInstallTitle">تثبيت منصة التحدي على الآيفون</h3>
+        <p id="iosInstallInstructions">افتح هذه الصفحة في متصفح Safari، ثم اضغط زر المشاركة <strong>□↑</strong> واختر <strong>إضافة إلى الشاشة الرئيسية</strong>، ثم اضغط <strong>إضافة</strong>. ستظهر المنصة على الشاشة الرئيسية بأيقونتها.</p>
+        <button type="button" id="iosInstallClose" class="install-close">فهمت</button>
+    </div>
+</div>
+
 <!-- =========================================================
      AUDIO
 ========================================================= -->
@@ -1983,6 +2021,28 @@ input{
 
 
 <script>
+
+/* إرشادات إضافة المنصة إلى الشاشة الرئيسية على iPhone */
+(function(){
+    const button=document.getElementById('iosInstallButton');
+    const dialog=document.getElementById('iosInstallHelp');
+    const close=document.getElementById('iosInstallClose');
+    const instructions=document.getElementById('iosInstallInstructions');
+    if(!button||!dialog||!close)return;
+    button.addEventListener('click',function(){
+        const isIos=/iPhone|iPad|iPod/.test(navigator.userAgent)|| (navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+        const installed=window.navigator.standalone===true;
+        if(installed){instructions.textContent='المنصة مضافة بالفعل إلى الشاشة الرئيسية على هذا الجهاز.';}
+        else if(!isIos){instructions.textContent='هذه الميزة مخصصة للآيفون. افتح رابط المنصة من Safari على الآيفون، ثم اضغط مشاركة واختر إضافة إلى الشاشة الرئيسية.';}
+        else{instructions.innerHTML='لإضافة المنصة بأيقونتها: افتح الصفحة في <strong>Safari</strong>، واضغط زر <strong>المشاركة (مربع وسهم للأعلى)</strong>، ثم اختر <strong>إضافة إلى الشاشة الرئيسية</strong> واضغط <strong>إضافة</strong>. إذا كنت داخل متصفح تطبيق آخر، افتح الرابط أولاً في Safari.';}
+        dialog.classList.add('show');
+        close.focus();
+    });
+    close.addEventListener('click',()=>dialog.classList.remove('show'));
+    dialog.addEventListener('click',e=>{if(e.target===dialog)dialog.classList.remove('show')});
+    document.addEventListener('keydown',e=>{if(e.key==='Escape')dialog.classList.remove('show')});
+})();
+
 
 /* =========================================================
    DATABASE
