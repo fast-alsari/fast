@@ -91,7 +91,7 @@
 .report-total{padding:6px 2px}
 .report-attendance-table th{padding:8px 5px;font-size:10px}
 .report-attendance-table td{padding:6px 5px;height:27px;font-size:10px}
-.report-login-code{direction:ltr;unicode-bidi:isolate;font-size:10px!important;font-weight:900;letter-spacing:.3px;white-space:nowrap}
+
 .report-attendance-table td:nth-child(2){font-size:10px}
 .report-signature{margin-top:7px;gap:7px}
 .report-supervisor{padding:8px 11px}
@@ -117,6 +117,31 @@
  #reportModal .report-scale:last-child{break-after:auto;page-break-after:auto}
  #reportModal .report-sheet{position:absolute!important;right:0!important;top:0!important;width:210mm!important;height:297mm!important;transform:none!important;transform-origin:top right!important;box-shadow:none!important;print-color-adjust:exact!important;-webkit-print-color-adjust:exact!important}
 }
+
+/* === A4 report edition: code column removed, notes emphasized, preview/print 100% === */
+.report-modal-scroll{overflow:auto!important;direction:rtl;-webkit-overflow-scrolling:touch}
+.report-pages{width:max-content!important;min-width:794px;max-width:none!important;margin:0 auto;align-items:stretch}
+.report-scale{width:794px!important;height:1123px!important;flex:0 0 1123px}
+.report-sheet{width:794px!important;height:1123px!important;transform:none!important;zoom:1!important}
+.report-attendance-table th:nth-child(2),.report-attendance-table td:nth-child(2){font-size:12px!important;text-align:right;font-weight:900}
+.report-attendance-table th{font-size:11px!important}
+.report-attendance-table td{height:29px!important}
+.report-supervisor-note{padding:12px 14px!important;background:#f3f8ff!important;border:2px solid #96bce8!important}
+.report-supervisor-note small{font-size:13px!important;font-weight:900!important;color:#0a448a!important}
+.report-supervisor-note p{font-size:14px!important;line-height:1.7!important;color:#142e51!important;font-weight:900!important}
+.report-sheet.is-medium .report-supervisor-note p{font-size:12.5px!important;line-height:1.6!important}
+.report-sheet.is-long .report-supervisor-note p{font-size:11px!important;line-height:1.5!important}
+.report-sheet.is-very-long .report-supervisor-note p{font-size:10px!important;line-height:1.45!important}
+.report-pagefoot{font-size:9px}
+@media(max-width:820px){.report-modal-scroll{padding:10px 10px 38px!important}.report-toolbar-buttons .btn{flex:1 1 120px}}
+@media print{
+ @page{size:A4 portrait;margin:0}
+ html,body{zoom:1!important;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
+ #reportModal .report-pages{display:block!important;width:210mm!important;min-width:210mm!important;margin:0!important}
+ #reportModal .report-scale{width:210mm!important;height:297mm!important;min-height:297mm!important;transform:none!important;zoom:1!important;break-inside:avoid!important;page-break-inside:avoid!important}
+ #reportModal .report-sheet{width:210mm!important;height:297mm!important;transform:none!important;zoom:1!important}
+}
+
 </style>
 </head>
 <body>
@@ -130,7 +155,7 @@
   <section class="card hidden" id="studentsCard"><div class="card-title"><div><h2>أسماء الطلاب وحالاتهم</h2><p>الحالة الافتراضية «حاضر»، غيّر فقط الطالب الغائب أو المتأخر أو المجاز أو الهارب.</p></div><span id="studentsNumber" class="pill">0 طالب</span></div><div class="summary" id="summary"></div><div class="state-filters" id="stateFilters" aria-label="تصفية حسب حالة الطالب"></div><div class="student-list" id="studentList" style="margin-top:13px"></div><div class="field" style="margin-top:16px"><label for="dayNotes">ملاحظات اليوم الخاصة بالصف</label><textarea id="dayNotes" maxlength="1500" placeholder="ملاحظات المشرف عن حضور هذا الصف في اليوم المحدد (اختياري)"></textarea></div><p id="saveInfo" class="save-note">التغييرات تُحفظ كمسودة على هذا الجهاز؛ لا تُرفع إلى Firebase إلا عند الضغط على حفظ مع توفر الإنترنت.</p><div class="actions"><button class="btn btn-success" id="saveBtn" type="button">حفظ الحضور والغياب في Firebase</button><button class="btn btn-neutral" id="printBtn" type="button">معاينة تقرير اليوم</button></div></section>
 </main>
 <div id="reportModal" class="report-modal hidden" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
- <div class="report-toolbar"><div class="report-toolbar-title"><strong id="reportModalTitle">معاينة التقرير اليومي للصف</strong><small id="reportModalHint">صف واحد • تاريخ واحد • طباعة A4</small></div><div class="report-toolbar-buttons"><button class="btn btn-primary" type="button" id="reportPrintConfirm">طباعة التقرير</button><button class="btn btn-neutral" type="button" id="reportCloseBtn">إغلاق المعاينة</button></div></div>
+ <div class="report-toolbar"><div class="report-toolbar-title"><strong id="reportModalTitle">معاينة التقرير اليومي للصف</strong><small id="reportModalHint">صف واحد • تاريخ واحد • طباعة A4</small></div><div class="report-toolbar-buttons"><button class="btn btn-primary" type="button" id="reportPrintConfirm">طباعة A4</button><button class="btn btn-success" type="button" id="reportSharePdf">مشاركة / حفظ PDF</button><button class="btn btn-neutral" type="button" id="reportCloseBtn">إغلاق المعاينة</button></div></div>
  <div class="report-modal-scroll" id="reportScroll"><div class="report-pages" id="reportPages"></div></div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -248,7 +273,7 @@ const ORIGINAL_PAGE_TITLE=document.title;
 let printingReport=false;
 function reportPrintTitle(){
  const klass=String(className(currentClass)||'الصف').replace(/[\\/:*?"<>|\u0000-\u001f]/g,' ').trim();
- return `تقرير الحضور والغياب | الصف ${klass}`;
+ return `تقرير حضور و غياب | ${/^الصف\s/.test(klass)?klass:'الصف '+klass}`;
 }
 function formatReportDate(k){try{return new Intl.DateTimeFormat('ar-IQ',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Baghdad'}).format(new Date(k+'T12:00:00Z'))}catch{return k}}
 function reportChunks(items,size){const out=[];for(let i=0;i<items.length;i+=size)out.push(items.slice(i,i+size));return out.length?out:[[]]}
@@ -256,30 +281,30 @@ function reportTallies(roster){const tally=Object.fromEntries(VALID_STATES.map(s
 function reportNoteSettings(text){
  // Reserve progressively more space for long notes without making any A4 page overflow.
  const n=text.length;
- if(n>1100)return {rows:6,klass:'is-very-long'};
- if(n>700)return {rows:8,klass:'is-long'};
- if(n>350)return {rows:10,klass:'is-medium'};
- return {rows:14,klass:'is-short'};
+ if(n>1100)return {rows:5,klass:'is-very-long'};
+ if(n>700)return {rows:7,klass:'is-long'};
+ if(n>350)return {rows:9,klass:'is-medium'};
+ return {rows:13,klass:'is-short'};
 }
 function buildReportPage(roster,chunk,page,totalPages,tally,rowStart,noteText,noteLengthClass){
  const gender=classGender(classes[currentClass]);
  const rows=chunk.map((student,index)=>{
    const st=recordStatuses[student.code]||'present';
-   return `<tr><td>${rowStart+index+1}</td><td>${esc(student.name||'بدون اسم')}</td><td class="report-login-code">${esc(student.code||'—')}</td><td><span class="report-state is-${st}">${esc(LABELS[st])}</span></td></tr>`;
+   return `<tr><td>${rowStart+index+1}</td><td>${esc(student.name||'بدون اسم')}</td><td><span class="report-state is-${st}">${esc(LABELS[st])}</span></td></tr>`;
  }).join('');
  const sums=[['الطلاب',roster.length,''],...VALID_STATES.map(st=>[LABELS[st],tally[st],st])];
  return `<div class="report-scale"><article class="report-sheet ${noteLengthClass}" aria-label="تقرير ${esc(className(currentClass))} الصفحة ${page}"><div class="report-sheet-inner">
  <div class="report-letterhead"><div class="report-school"><img src="logo.png" alt=""><div><strong>مدرسة التحدي الأهلية المختلطة</strong><small>سجلات الحضور والغياب • تقرير يومي</small></div></div><div class="report-doc-id">العام الدراسي 2026–2027<br>صفحة ${page} من ${totalPages}</div></div>
- <div class="report-heading"><h2>تقرير الحضور والغياب | ${esc(className(currentClass))}</h2><p>تقرير الصف للتاريخ المحدد</p>${dirty?'<div class="report-unsaved">نسخة معاينة — توجد تعديلات غير محفوظة في Firebase</div>':!currentlySaved?'<div class="report-unsaved">كشف مُعدّ محليًا — لم يُعتمد الحفظ في Firebase</div>':''}</div>
+ <div class="report-heading"><h2>${esc(reportPrintTitle())}</h2><p>تقرير الصف للتاريخ المحدد</p>${dirty?'<div class="report-unsaved">نسخة معاينة — توجد تعديلات غير محفوظة في Firebase</div>':!currentlySaved?'<div class="report-unsaved">كشف مُعدّ محليًا — لم يُعتمد الحفظ في Firebase</div>':''}</div>
  <div class="report-details"><div class="report-detail"><small>الصف</small><strong>${esc(className(currentClass))}</strong></div><div class="report-detail"><small>التاريخ</small><strong>${esc(formatReportDate(currentDate))}</strong></div><div class="report-detail"><small>القسم</small><strong>${gender==='female'?'بنات':gender==='mixed'?'مختلط':'بنين'}</strong></div></div>
  <div class="report-totals">${sums.map(([label,val,st])=>`<div class="report-total ${st?'is-'+st:''}"><b>${val}</b><small>${label}</small></div>`).join('')}</div>
- <table class="report-attendance-table"><colgroup><col style="width:7%"><col style="width:49%"><col style="width:25%"><col style="width:19%"></colgroup><thead><tr><th>ت</th><th>اسم الطالب</th><th>كود الدخول إلى المنصة</th><th>الحالة</th></tr></thead><tbody>${rows||'<tr><td colspan="4">لا يوجد طلاب في هذا الصف</td></tr>'}</tbody></table>
+ <table class="report-attendance-table"><colgroup><col style="width:8%"><col style="width:70%"><col style="width:22%"></colgroup><thead><tr><th>ت</th><th>اسم الطالب</th><th>الحالة</th></tr></thead><tbody>${rows||'<tr><td colspan="3">لا يوجد طلاب في هذا الصف</td></tr>'}</tbody></table>
  <div class="report-grow"></div>
  <div class="report-signature"><div class="report-supervisor"><small>اسم الأستاذ المشرف على الحضور والغياب</small><strong>${esc(supervisor.name||'مشرف الحضور والغياب')}</strong></div><div class="report-supervisor-note"><small>ملاحظة المشرف لهذا اليوم</small><p>${esc(noteText)}</p></div></div>
  <div class="report-pagefoot"><span>مدرسة التحدي الأهلية المختلطة</span><span>${esc(currentDate)} • ${esc(className(currentClass))} • صفحة ${page}/${totalPages}</span></div>
  </div></article></div>`;
 }
-function scaleReportPreview(){const box=$('reportScroll');if(!box||$('reportModal').classList.contains('hidden'))return;const scale=Math.min(1,Math.max(.26,(box.clientWidth-30)/794));$('reportPages').querySelectorAll('.report-scale').forEach(wrapper=>{wrapper.style.width=(794*scale)+'px';wrapper.style.height=(1123*scale)+'px';wrapper.querySelector('.report-sheet').style.transform=`scale(${scale})`})}
+function scaleReportPreview(){const box=$('reportScroll');if(!box||$('reportModal').classList.contains('hidden'))return;$('reportPages').querySelectorAll('.report-scale').forEach(wrapper=>{wrapper.style.width='794px';wrapper.style.height='1123px';wrapper.querySelector('.report-sheet').style.transform='none'});}
 function showReportPreview(){
  if(!currentClass||!assignedIds.includes(currentClass)){notify('اختر الصف أولًا');return}
  if(!validSchoolDay(currentDate)){notify('لا يمكن طباعة كشف ليوم الجمعة أو السبت أو تاريخ مستقبلي');return}
@@ -287,7 +312,7 @@ function showReportPreview(){
  const setting=reportNoteSettings(note),chunks=reportChunks(roster,setting.rows),total=chunks.length,tally=reportTallies(roster);
  $('reportPages').innerHTML=chunks.map((ch,i)=>buildReportPage(roster,ch,i+1,total,tally,i*setting.rows,note,setting.klass)).join('');
  $('reportModalTitle').textContent=reportPrintTitle();
- $('reportModalHint').textContent=`${formatReportDate(currentDate)} • ${roster.length} طالب • ${total} ورقة A4 • نفس الملاحظة على كل ورقة`;
+ $('reportModalHint').textContent=`${formatReportDate(currentDate)} • ${roster.length} طالب • ${total} ورقة A4 • نفس الملاحظة على كل ورقة • عرض 100%`;
  $('reportModal').classList.remove('hidden');document.body.style.overflow='hidden';$('reportScroll').scrollTop=0;scaleReportPreview();
 }
 function closeReportPreview(){if($('reportModal').classList.contains('hidden'))return;$('reportModal').classList.add('hidden');document.body.style.overflow='';if(!printingReport)document.title=ORIGINAL_PAGE_TITLE}
@@ -305,6 +330,126 @@ window.addEventListener('keydown',event=>{if(event.key==='Escape')closeReportPre
 window.addEventListener('resize',scaleReportPreview);
 window.addEventListener('beforeprint',()=>{if(!$('reportModal').classList.contains('hidden')){printingReport=true;document.title=reportPrintTitle()}});
 window.addEventListener('afterprint',()=>{printingReport=false;setTimeout(()=>{document.title=ORIGINAL_PAGE_TITLE;scaleReportPreview()},850)});
+
+
+/* Export an actual A4 PDF from a local canvas: no browser URL, no third-party libraries, works offline.
+   The PDF is rendered as a high-resolution image per page to support Arabic text and fixed geometry.
+   This does not expose student login codes. */
+function pdfRounded(ctx,x,y,w,h,r,fill,stroke){
+ ctx.beginPath();ctx.roundRect(x,y,w,h,r);if(fill){ctx.fillStyle=fill;ctx.fill()}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1;ctx.stroke()}
+}
+function pdfText(ctx,text,x,y,size=13,color='#172033',weight='900',align='right'){
+ ctx.save();ctx.font=`${weight} ${size}px Tahoma, Arial, sans-serif`;ctx.fillStyle=color;ctx.direction='rtl';ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(String(text??''),x,y);ctx.restore();
+}
+function pdfWrap(ctx,text,maxWidth,fontSize){
+ ctx.font=`900 ${fontSize}px Tahoma, Arial, sans-serif`;
+ const lines=[];
+ for(const paragraph of String(text||'').split(/\r?\n/)){
+   if(!paragraph.trim()){lines.push('');continue}
+   let line='';
+   for(const token of paragraph.split(/\s+/)){
+     const next=line?line+' '+token:token;
+     if(ctx.measureText(next).width<=maxWidth){line=next;continue}
+     if(line)lines.push(line);
+     if(ctx.measureText(token).width<=maxWidth){line=token;continue}
+     let partial='';
+     for(const char of Array.from(token)){
+       if(partial&&ctx.measureText(partial+char).width>maxWidth){lines.push(partial);partial=char}else partial+=char;
+     }
+     line=partial;
+   }
+   if(line)lines.push(line);
+ }
+ return lines;
+}
+function drawPdfPage(roster,chunk,page,totalPages,tally,rowStart,noteText){
+ const c=document.createElement('canvas');c.width=1191;c.height=1685;
+ const ctx=c.getContext('2d',{alpha:false});ctx.scale(1.5,1.5);
+ ctx.fillStyle='#fff';ctx.fillRect(0,0,794,1123);
+ const bar=ctx.createLinearGradient(0,0,794,0);bar.addColorStop(0,'#075fcf');bar.addColorStop(1,'#064594');ctx.fillStyle=bar;ctx.fillRect(0,0,794,9);
+ const logo=document.querySelector('.identity img');
+ if(logo&&logo.complete&&logo.naturalWidth){try{ctx.drawImage(logo,40,39,58,58)}catch(_){}}
+ pdfText(ctx,'مدرسة التحدي الأهلية المختلطة',754,66,19,'#06469c');
+ pdfText(ctx,'سجلات الحضور والغياب · تقرير يومي',754,88,10,'#63758b');
+ pdfText(ctx,'العام الدراسي 2026–2027',40,119,10,'#526277','900','left');
+ pdfText(ctx,`صفحة ${page} من ${totalPages}`,754,119,10,'#526277');
+ ctx.strokeStyle='#2c6297';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(36,130);ctx.lineTo(758,130);ctx.stroke();
+ pdfText(ctx,reportPrintTitle(),397,163,19,'#123e73','900','center');
+ pdfText(ctx,'تقرير الصف للتاريخ المحدد',397,184,10,'#63758b','800','center');
+ if(dirty||!currentlySaved){pdfRounded(ctx,222,191,350,23,5,'#fff3e5','#ead3a2');pdfText(ctx,dirty?'نسخة معاينة — توجد تعديلات غير محفوظة':'كشف مُعدّ محليًا — لم يُعتمد الحفظ في Firebase',397,207,10,'#96520b','900','center')}
+ const gender=classGender(classes[currentClass]);const meta=[['الصف',className(currentClass)],['التاريخ',formatReportDate(currentDate)],['القسم',gender==='female'?'بنات':gender==='mixed'?'مختلط':'بنين']];
+ meta.forEach(([label,value],i)=>{const x=40+(2-i)*240;pdfRounded(ctx,x,223,233,51,6,'#f4f8fd','#dbe5f0');pdfText(ctx,label,x+218,241,9,'#66768d');pdfText(ctx,value,x+218,260,11,'#21374c')});
+ const stats=[['الطلاب',roster.length],...VALID_STATES.map(st=>[LABELS[st],tally[st]])];
+ stats.forEach(([name,count],i)=>{const x=40+i*120;pdfRounded(ctx,x,287,114,47,5,'#f9fbff','#dbe4ee');pdfText(ctx,String(count),x+57,308,17,'#075fcf','900','center');pdfText(ctx,name,x+57,326,9,'#66768d','900','center')});
+ const tx=40,tw=714,ty=350,rowH=29,headH=32,colA=52,colB=503,colC=159;
+ ctx.fillStyle='#075fcf';ctx.fillRect(tx,ty,tw,headH);
+ pdfText(ctx,'ت',tx+tw-colA/2,ty+22,11,'#fff','900','center');
+ pdfText(ctx,'اسم الطالب',tx+tw-colA-colB+colB-12,ty+22,11,'#fff');
+ pdfText(ctx,'الحالة',tx+colC/2,ty+22,11,'#fff','900','center');
+ const stateColors={present:'#087e4b',absent:'#c62828',excused:'#7441ba',late:'#b9660b',escape:'#9c2237'};
+ chunk.forEach((student,i)=>{
+   const y=ty+headH+i*rowH;const st=recordStatuses[student.code]||'present';
+   ctx.fillStyle=i%2?'#f7faff':'#fff';ctx.fillRect(tx,y,tw,rowH);
+   ctx.strokeStyle='#d0dbe8';ctx.lineWidth=.8;ctx.strokeRect(tx,y,tw,rowH);
+   ctx.beginPath();ctx.moveTo(tx+colC,y);ctx.lineTo(tx+colC,y+rowH);ctx.moveTo(tx+colC+colB,y);ctx.lineTo(tx+colC+colB,y+rowH);ctx.stroke();
+   pdfText(ctx,String(rowStart+i+1),tx+tw-colA/2,y+19,11,'#344054','900','center');
+   pdfText(ctx,String(student.name||'بدون اسم'),tx+tw-colA-12,y+19,12,'#172033');
+   pdfText(ctx,LABELS[st]||'حاضر',tx+colC/2,y+19,11,stateColors[st]||'#344054','900','center');
+ });
+ const endTable=ty+headH+chunk.length*rowH;
+ const supervisorY=Math.max(endTable+18,612);
+ pdfRounded(ctx,40,supervisorY,714,59,7,'#f3f8ff','#91b5df');
+ pdfText(ctx,'اسم الأستاذ المشرف على الحضور والغياب',397,supervisorY+21,11,'#446380','900','center');
+ pdfText(ctx,supervisor.name||'مشرف الحضور والغياب',397,supervisorY+45,16,'#103e73','900','center');
+ const noteY=supervisorY+71, noteBottom=1064,noteH=Math.max(45,noteBottom-noteY);
+ pdfRounded(ctx,40,noteY,714,noteH,8,'#f3f8ff','#87add9');
+ pdfText(ctx,'ملاحظة المشرف لهذا اليوم',735,noteY+24,14,'#0b488b');
+ const maxLinesArea=noteH-47;
+ let size=15,lines=[];
+ while(size>=9){lines=pdfWrap(ctx,noteText,660,size);if(lines.length*size*1.55 <=maxLinesArea)break;size-=.5}
+ const lineHeight=size*1.5;
+ ctx.save();ctx.beginPath();ctx.rect(58,noteY+33,678,Math.max(0,noteH-40));ctx.clip();
+ lines.forEach((line,i)=>pdfText(ctx,line,735,noteY+43+i*lineHeight,size,'#183a60'));
+ ctx.restore();
+ ctx.beginPath();ctx.moveTo(40,1080);ctx.lineTo(754,1080);ctx.strokeStyle='#d9e2ec';ctx.stroke();
+ pdfText(ctx,'مدرسة التحدي الأهلية المختلطة',754,1097,9,'#63758b');
+ pdfText(ctx,`${currentDate}  ·  ${className(currentClass)}  ·  ${page}/${totalPages}`,40,1097,9,'#63758b','800','left');
+ return c;
+}
+function assembleA4Pdf(canvases){
+ const encoder=new TextEncoder(),parts=[],offsets=[0];let cursor=0;
+ function push(part){parts.push(part);cursor+=part.length}
+ function str(t){push(encoder.encode(t))}
+ str('%PDF-1.4\n%\xC3\xA4\xC3\xBC\n');
+ const n=2+canvases.length*3;const firstPageObject=3;
+ const objects={1:()=>str('<< /Type /Catalog /Pages 2 0 R >>'),2:()=>str(`<< /Type /Pages /Count ${canvases.length} /Kids [${canvases.map((_,i)=>(firstPageObject+3*i)+' 0 R').join(' ')}] >>`)};
+ canvases.forEach((canvas,i)=>{
+   const pageNum=firstPageObject+i*3,contentNum=pageNum+1,imageNum=pageNum+2;
+   objects[pageNum]=()=>str(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595.28 841.89] /Resources << /XObject << /Im0 ${imageNum} 0 R >> >> /Contents ${contentNum} 0 R >>`);
+   objects[contentNum]=()=>{const stream=`q\n595.28 0 0 841.89 0 0 cm\n/Im0 Do\nQ\n`;const data=encoder.encode(stream);str(`<< /Length ${data.length} >>\nstream\n`);push(data);str('\nendstream')};
+   objects[imageNum]=()=>{const data=atob(canvas.toDataURL('image/jpeg',.94).split(',')[1]);const bytes=Uint8Array.from(data,c=>c.charCodeAt(0));str(`<< /Type /XObject /Subtype /Image /Width ${canvas.width} /Height ${canvas.height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${bytes.length} >>\nstream\n`);push(bytes);str('\nendstream')};
+ });
+ for(let i=1;i<=n;i++){offsets[i]=cursor;str(`${i} 0 obj\n`);objects[i]();str('\nendobj\n')}
+ const xref=cursor;str(`xref\n0 ${n+1}\n0000000000 65535 f \n`);for(let i=1;i<=n;i++)str(`${String(offsets[i]).padStart(10,'0')} 00000 n \n`);
+ str(`trailer\n<< /Size ${n+1} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+ return new Blob(parts,{type:'application/pdf'});
+}
+function reportPdfFile(){
+ if(!currentClass||!assignedIds.includes(currentClass)||!validSchoolDay(currentDate))throw new Error('INVALID_REPORT');
+ const roster=availableStudents(currentClass),note=dayNotes.trim()||REPORT_DEFAULT_NOTE,settings=reportNoteSettings(note),chunks=reportChunks(roster,settings.rows),tally=reportTallies(roster);
+ const canvases=chunks.map((ch,i)=>drawPdfPage(roster,ch,i+1,chunks.length,tally,i*settings.rows,note));
+ return new File([assembleA4Pdf(canvases)],reportPrintTitle()+'.pdf',{type:'application/pdf'});
+}
+$('reportSharePdf').addEventListener('click',()=>{
+ try{
+  if($('reportModal').classList.contains('hidden'))return;
+  const file=reportPdfFile();
+  if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
+    navigator.share({files:[file],title:reportPrintTitle()}).catch(err=>{if(err&&err.name!=='AbortError')savePdfFile(file)});
+  }else savePdfFile(file);
+ }catch(err){console.error('PDF_EXPORT_FAILED',err);notify('تعذر إنشاء PDF على هذا الجهاز. استخدم زر طباعة A4.')}
+});
+function savePdfFile(file){const url=URL.createObjectURL(file);const link=document.createElement('a');link.href=url;link.download=file.name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);notify('تم تجهيز ملف PDF باسم التقرير والصف')}
 
 $('refreshBtn').onclick=async()=>{if(!navigator.onLine){notify('لا يوجد اتصال بالإنترنت الآن.');return}if(!session.code){location.replace('index.html');return}if(dirty&&!confirm('لديك تعديلات محفوظة محليًا لم تُرسل. هل تريد تحديث بيانات الطلاب والصفوف؟ (مسودتك لن تُمسح)'))return;try{setLoading('جاري تحديث الطلاب والصفوف...');await loadOnline();buildClasses();if(currentClass&&!assignedIds.includes(currentClass)){currentClass='';$('dateCard').classList.add('hidden');$('studentsCard').classList.add('hidden')}else if(currentClass)await loadDay();stopLoading();notify('تم تحديث البيانات بنجاح')}catch(e){stopLoading();console.error('REFRESH_FAILED',e);notify('تعذر تحديث البيانات؛ بقيت النسخة المحلية محفوظة')}};
 $('logoutBtn').onclick=()=>{
