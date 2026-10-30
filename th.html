@@ -440,6 +440,43 @@ body.record-preview-open{overflow:hidden!important}
 
 /* التقسيم البصري: خيارات فقط من دون إدخال معادلات */
 .builder-area{display:grid;gap:11px;margin:12px 0}.builder-section{border:1px solid #d9e6f5;border-radius:17px;background:#f9fbfe;padding:13px}.builder-section h4{font-size:12px;font-weight:900;color:#075fcf;margin-bottom:6px}.builder-section p{font-size:10px;color:#667085;line-height:1.8;margin-bottom:9px}.builder-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.builder-field{min-width:0}.builder-field label{display:block;margin-bottom:5px;font-size:10px;font-weight:900;color:#344054}.builder-field select{width:100%;height:43px;border-radius:11px;border:1px solid #cddbeb;background:#fff;padding:0 9px;font-size:11px;color:#172033;outline:none}.builder-field select:focus{border-color:#075fcf}.builder-check{display:flex;align-items:center;gap:9px;margin-bottom:12px;font-size:11px;font-weight:900;color:#344054}.builder-check input{width:20px;height:20px;accent-color:#075fcf}.builder-item{display:grid;grid-template-columns:minmax(95px,1fr) minmax(110px,1fr) minmax(110px,1fr);gap:8px;align-items:center;padding:10px 0;border-bottom:1px solid #e5eaf2}.builder-item:last-child{border-bottom:0}.builder-item strong{font-size:10px}.builder-item select{height:39px;font-size:10px}.builder-summary{padding:11px 12px;border:1px solid #b8d9ff;border-radius:13px;background:#edf5ff;font-size:11px;line-height:1.9;font-weight:800;color:#17518e}.builder-summary strong{color:#075fcf}.builder-warning{padding:10px 12px;background:#fff9ed;color:#915700;border:1px solid #f5d59a;border-radius:11px;font-size:10px;font-weight:800;line-height:1.75}.builder-empty{padding:9px;color:#667085;font-size:10px;line-height:1.8}.formula-max-row{grid-template-columns:minmax(100px,1fr) 90px 110px}@media(max-width:560px){.builder-item{grid-template-columns:1fr 1fr}.builder-item strong{grid-column:1/-1}.builder-grid{grid-template-columns:1fr 1fr}.builder-section{padding:11px}}
+
+/* Flexible visual grading: the sheet flows sideways at its natural size. */
+.formula-wizard-card{max-width:1050px!important;width:min(1050px,100%)!important}
+.formula-wizard-card .component-list.teacher-component-grid{grid-template-columns:repeat(2,minmax(0,1fr));display:grid;gap:7px}
+.field-label{display:block;color:#344054;font-size:11px;font-weight:900;margin:0 0 8px}
+.period-target-select{width:100%;height:47px;border:1px solid #b7d3f0;border-radius:11px;background:#fff;padding:0 12px;font-size:12px;font-weight:900;color:#075fcf}
+.quick-months{display:flex;gap:5px;flex-wrap:wrap;align-items:center;padding:10px;border:1px solid #e1ebf5;border-radius:13px;margin:10px 0;background:#f8fbff}
+.quick-months span{font-size:10px;font-weight:900;color:#667085;margin-inline-end:5px}
+.quick-months button{width:34px;height:34px;border-radius:10px;border:1px solid #bfd6f4;background:#fff;color:#075fcf;font-weight:900;font-size:11px}
+.quick-months button:active{background:#dceaff}
+.chain-visual-wrap{overflow-x:auto;overflow-y:hidden;width:100%;max-width:100%;-webkit-overflow-scrolling:touch;padding:12px 2px 18px;border-radius:12px}
+.chain-visual{display:flex;flex-flow:row nowrap;gap:9px;width:max-content;align-items:center;min-width:100%;direction:rtl}
+.chain-card{width:186px;flex:none;min-height:236px;border:1.5px solid #bcd6f1;border-radius:18px;background:white;padding:13px 11px;box-shadow:0 7px 19px #075fcf0b;display:flex;flex-direction:column;gap:10px}
+.chain-card h5{font-size:12px;font-weight:900;color:#172033;line-height:1.5}
+.chain-card .chain-index{font-size:9px;font-weight:900;color:#8d99ac}
+.chain-max{font-size:12px;font-weight:900;color:#075fcf;border-radius:8px;background:#edf5ff;padding:8px;text-align:center}
+.chain-field{display:grid;gap:5px}
+.chain-field label{font-size:9px;font-weight:900;color:#475467}
+.chain-field select,.chain-field input{width:100%;height:37px;padding:0 7px;border:1px solid #cddceb;border-radius:9px;background:#fff;font-size:11px;color:#172033;font-weight:900}
+.chain-field input{direction:ltr;text-align:center}
+.chain-after{padding:8px 6px;border-top:1px dashed #cbd9ea;margin-top:1px}
+.chain-move{display:flex;gap:5px;margin-top:auto}
+.chain-move button{flex:1;min-height:30px;background:#f4f8fd;color:#075fcf;border:1px solid #d3e1f0;border-radius:8px;font-size:9px;font-weight:900}
+.chain-move button:disabled{opacity:.3}
+.chain-connector{display:flex;flex-direction:column;align-items:center;gap:6px;min-width:78px;flex:none;padding:6px 0}
+.chain-connector label{font-size:9px;font-weight:900;color:#667085}
+.chain-connector select{width:78px;height:45px;border:2px solid #075fcf;border-radius:12px;background:#edf5ff;color:#075fcf;text-align:center;font-size:15px;font-weight:900;outline:0}
+.chain-result{min-width:156px;flex:none;padding:14px 10px;border:2px solid #0b8c51;border-radius:17px;background:#f0fcf5;text-align:center;line-height:2}
+.chain-result strong{display:block;font-size:13px;color:#087c45}
+.chain-result b{display:block;font-size:20px;color:#087c45}
+.chain-status{font-size:10px;color:#667085;font-weight:800;line-height:1.7}
+.chain-details{display:flex;justify-content:space-between;gap:9px;align-items:center;flex-wrap:wrap;padding:10px 11px;border-radius:11px;background:#f3f8ff;font-size:10px;font-weight:900}
+.chain-details em{font-style:normal;color:#075fcf}
+.chain-hint{padding:10px;border-right:3px solid #075fcf;background:#eff6ff;font-size:10px;line-height:1.9;font-weight:700;border-radius:8px;color:#344054}
+.builder-summary{font-size:11px!important;line-height:2!important}
+@media(max-width:560px){.formula-wizard-card{max-width:100%!important;padding:14px 12px}.formula-wizard-card .component-list.teacher-component-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.formula-max-row{grid-template-columns:minmax(85px,1fr) 65px 85px}.chain-card{width:166px}.chain-visual-wrap{margin-inline:-5px;width:calc(100% + 10px)}}
+
 </style></head>
 <body>
 <div id="loaderScreen" class="loader-screen"><div class="loader-box"><img src="logo.png" class="loader-logo" alt=""><div class="spinner"></div><p>جاري تحميل منصة الأستاذ</p></div></div>
@@ -537,15 +574,15 @@ body.record-preview-open{overflow:hidden!important}
  <div class="modal-card formula-wizard-card">
   <div class="modal-head"><h3 id="formulaModalTitle">تقسيم الدرجة</h3><button id="closeFormulaModal" class="close" type="button">×</button></div>
   <p id="formulaModalDesc" class="modal-desc"></p>
-  <div class="formula-steps"><span id="formulaStep1" class="active">١ - اختر المفردات</span><span id="formulaStep2">٢ - الدرجات وطريقة الحساب</span></div>
-  <div id="formulaChooseStage"><p class="formula-help">اختر المفردات التي تريد تقييم الطلاب عليها، دون وضع أي درجة الآن. مثل الشهر الأول والثاني واليومي والشفهي والتحضير والامتحان الإلكتروني.</p><div id="componentList" class="component-list"></div><button id="formulaNextBtn" class="modal-save" type="button">التالي: تحديد درجات المفردات</button></div>
-  <div id="formulaMathStage" class="hidden"><p class="formula-help">حدد الدرجة العظمى لكل مفردة، ثم اختر طريقة الجمع والطرح أو اعتماد الأعلى أو المتوسط من القوائم، من دون كتابة أي معادلة.</p>
+  <div class="formula-steps"><span id="formulaStep1" class="active">١ - اختر الفترة والمفردات</span><span id="formulaStep2">٢ - الدرجات والحساب الحي</span></div>
+  <div id="formulaChooseStage"><div class="builder-section"><label class="field-label" for="formulaTargetPeriod">أولًا: التقسيم تابع لأي فترة؟</label><select id="formulaTargetPeriod" class="period-target-select" aria-label="الفترة المستهدفة"></select></div><p class="formula-help">اختر من شهر واحد إلى 12 شهرًا، وأضف النشاط والحضور والشفهي وغيرها. ما تحتاج تحط درجات بهذه الخطوة.</p><div class="quick-months" id="quickMonthChoices"><span>عدد الأشهر بسرعة:</span><button type="button" data-month-count="1">1</button><button type="button" data-month-count="2">2</button><button type="button" data-month-count="3">3</button><button type="button" data-month-count="4">4</button><button type="button" data-month-count="6">6</button><button type="button" data-month-count="8">8</button><button type="button" data-month-count="12">12</button></div><div id="componentList" class="component-list teacher-component-grid"></div><button id="formulaNextBtn" class="modal-save" type="button">التالي: تحديد درجات المفردات</button></div>
+  <div id="formulaMathStage" class="hidden"><p class="formula-help">اكتب سقف درجة كل مفردة، وبعدها شوفها بالمخطط الأفقي: إبقاء أو إعطاء أو طرح، واختَر + أو − أو ÷ أو الأعلى أو المتوسط بين الخانات. النتيجة تطلع مباشرة قبل الاعتماد.</p>
    <div id="formulaMaxList" class="component-list"></div>
    <div id="formulaVisualBuilder" class="builder-area" aria-label="طريقة احتساب الدرجة"></div>
    <textarea id="formulaExpression" class="hidden" aria-hidden="true" tabindex="-1"></textarea><div id="formulaTokens" class="hidden"></div>
    <div class="formula-expr-field"><label for="formulaScaleMode">طريقة إظهار النتيجة النهائية</label><select id="formulaScaleMode"><option value="normalize">تحويل تلقائي إلى الدرجة الكاملة للمادة</option><option value="direct">استخدام الناتج كما هو (بشرط ألّا يتجاوز درجة المادة)</option></select></div>
    <div class="formula-expr-field"><label for="formulaRounding">تقريب الناتج</label><select id="formulaRounding"><option value="0.5">أقرب نصف درجة</option><option value="1">أقرب درجة صحيحة</option><option value="0.1">أقرب عُشر</option><option value="0">دون تقريب (رقمان عشريان)</option></select></div>
-   <div id="formulaTotal" class="formula-total"><span>المحصلة عند الدرجة الكاملة</span><strong>—</strong></div>
+   <div id="formulaTotal" class="formula-total"><span>المحصلة النهائية حسب التقسيم</span><strong>—</strong></div>
    <p id="formulaFormulaPreview" class="formula-help" style="margin-top:8px"></p>
    <div class="formula-actions"><button id="formulaBackBtn" type="button" class="formula-secondary">رجوع للمفردات</button><button id="saveFormulaBtn" class="modal-save" type="button">اعتماد التقسيم</button></div>
   </div>
@@ -561,7 +598,7 @@ body.record-preview-open{overflow:hidden!important}
  </div>
 </div>
 <script>
-const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",PERIODS={term1:{label:"الفصل الأول"},midyear:{label:"نصف السنة"},term2:{label:"الفصل الثاني"},finalExam:{label:"الامتحان النهائي"},secondRound:{label:"الدور الثاني"}},COMPONENTS=[["month1","شهر 1"],["month2","شهر 2"],["month3","شهر 3"],["month4","شهر 4"],["grammar","قواعد"],["literature","أدب"],["composition","إنشاء"],["oral","شفهي"],["practical","عملي"],["behavior","سلوك"],["attendance","حضور"],["drawing","رسم"],["preparation","تحضير"],["homework","واجب"],["daily","يومي"],["monthly","شهري"],["weekly","أسبوعي"],["electronic","إلكتروني"],["quiz","اختبار قصير"],["participation","مشاركة"],["project","مشروع"],["activity","نشاط"]].map(([key,label])=>({key,label}));
+const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",PERIODS={term1:{label:"الفصل الأول"},midyear:{label:"نصف السنة"},term2:{label:"الفصل الثاني"},finalExam:{label:"الامتحان النهائي"},secondRound:{label:"الدور الثاني"}},COMPONENTS=[["month1","الشهر الأول"],["month2","الشهر الثاني"],["month3","الشهر الثالث"],["month4","الشهر الرابع"],["month5","الشهر الخامس"],["month6","الشهر السادس"],["month7","الشهر السابع"],["month8","الشهر الثامن"],["month9","الشهر التاسع"],["month10","الشهر العاشر"],["month11","الشهر الحادي عشر"],["month12","الشهر الثاني عشر"],["grammar","قواعد"],["literature","أدب"],["composition","إنشاء"],["oral","شفهي"],["practical","عملي"],["behavior","سلوك"],["attendance","حضور"],["drawing","رسم"],["preparation","تحضير"],["homework","واجب"],["daily","يومي"],["monthly","شهري"],["weekly","أسبوعي"],["electronic","إلكتروني"],["quiz","اختبار قصير"],["participation","مشاركة"],["project","مشروع"],["activity","نشاط"]].map(([key,label])=>({key,label}));
 let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null;
 const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])),norm=v=>String(v??"").trim().toLowerCase(),num=v=>v===""||v===null||v===undefined?null:(Number.isFinite(Number(v))?Number(v):null),safeJS=v=>String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"),safeId=v=>String(v||"").replace(/[^a-zA-Z0-9_-]/g,"_"),safeKey=v=>String(v||"").trim().toLowerCase().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[^a-z0-9\u0600-\u06ff]+/gi,"_").replace(/^_+|_+$/g,"");
 let SCREEN_ALERT_LAST_FOCUS=null;
@@ -790,7 +827,7 @@ function gradeExprTokens(expr){
 }
 /* Small arithmetic evaluator, deliberately no eval(), Function() or arbitrary code. */
 function gradeExpressionValue(expr,values){
- const tokens=gradeExprTokens(expr),allowed=new Set(Object.keys(values)),funcs={MAX:Math.max,MIN:Math.min,AVG:(...v)=>v.reduce((a,b)=>a+b,0)/v.length};let p=0;
+ const tokens=gradeExprTokens(expr),allowed=new Set(Object.keys(values)),funcs={MAX:Math.max,MIN:Math.min,AVG:(...v)=>v.reduce((a,b)=>a+b,0)/v.length,DIV:(a,b)=>b===0?0:a/b};let p=0;
  function primary(){
   const token=tokens[p++];if(token===undefined)throw new Error("المعادلة غير مكتملة");
   if(token==="+")return primary();if(token==="-")return -primary();
@@ -834,7 +871,7 @@ function calculateConfiguredPeriod(period,code){
  try{
   const upper=f.builder?builderUpperBound(comps,f.builder,f.expression):validateGradeExpression(f.expression,comps),raw=gradeExpressionValue(f.expression,values);
   const pre=f.scaleMode==="direct"?raw:raw/upper*subjectMax();
-  const scaled=f.builder?pre-(Number(f.builder.deduction)||0)+(Number(f.builder.bonus)||0):pre;
+  const scaled=f.builder&&f.builder.kind!=="visual_chain_v3"?pre-(Number(f.builder.deduction)||0)+(Number(f.builder.bonus)||0):pre;
   return roundGradeResult(Math.min(subjectMax(),Math.max(0,scaled)),f.rounding??"0.5")
  }catch{return null}
 }
@@ -1331,106 +1368,159 @@ function defaultGradeExpression(selected){
 }
 // محرر احتساب الدرجات بالخانات المنسدلة. تحفظ المعادلة داخليًا لتوافق النظام السابق.
 let BUILDER_DRAFT=null;
-const BUILDER_VALUES=[0,1,2,3,4,5,6,7,8,9,10,15,20,25,30];
+const CHAIN_TYPE="visual_chain_v3";
+const CHAIN_OPERATORS={add:"+",subtract:"−",divide:"÷",higher:"الأعلى",average:"المتوسط"};
+const CHAIN_ADJUSTMENTS={keep:"إبقاء كما هي",give:"إعطاء درجات",remove:"طرح درجات"};
 function builderOptionList(options,value){return options.map(([v,label])=>`<option value="${esc(v)}" ${String(v)===String(value)?"selected":""}>${esc(label)}</option>`).join("")}
-function builderPickDefaultPair(list){
- const keys=list.map(x=>x.key);
- if(keys.includes("month1")&&keys.includes("month2"))return ["month1","month2"];
- if(keys.includes("month3")&&keys.includes("month4"))return ["month3","month4"];
- return keys.slice(0,2)
+function chainInitial(list){
+ const prior=formulas?.[editingPeriod]?.builder;
+ const keys=list.map(c=>c.key);
+ if(prior?.kind===CHAIN_TYPE){
+  const order=[...(prior.order||[]).filter(k=>keys.includes(k)),...keys.filter(k=>!(prior.order||[]).includes(k))];
+  return {kind:CHAIN_TYPE,order,items:{...(prior.items||{})},links:{...(prior.links||{})}};
+ }
+ // Legacy schemes remain supported for periods previously configured.
+ return {kind:CHAIN_TYPE,order:keys,items:{},links:{}};
 }
-function builderInitial(list){
- const saved=formulas?.[editingPeriod]?.builder;
- const keys=list.map(x=>x.key),pair=builderPickDefaultPair(list);
- const safeSaved= saved&&typeof saved==="object"?saved:{};
- const pairEnabled=typeof safeSaved.pairEnabled==="boolean"?safeSaved.pairEnabled:list.length>=2&&((keys.includes("month1")&&keys.includes("month2"))||(keys.includes("month3")&&keys.includes("month4")));
- return {pairEnabled,first:keys.includes(safeSaved.first)?safeSaved.first:pair[0]||"",second:keys.includes(safeSaved.second)?safeSaved.second:pair[1]||"",pairMode:safeSaved.pairMode||"average",items:safeSaved.items||{},deduction:Number(safeSaved.deduction)||0,bonus:Number(safeSaved.bonus)||0};
-}
+function chainOrder(draft,list){const keys=list.map(x=>x.key);return [...new Set([...(draft.order||[]).filter(k=>keys.includes(k)),...keys])];}
 function builderRead(){
- const $one=$("builderPairFirst"),$two=$("builderPairSecond");
- if(!$one||!$two)return BUILDER_DRAFT;
- const items={};document.querySelectorAll("[data-builder-item]").forEach(el=>{
-  const key=el.dataset.builderItem;
-  items[key]={operation:el.querySelector("[data-builder-op]")?.value||"add",weight:el.querySelector("[data-builder-weight]")?.value||"full"};
+ if(!$('formulaVisualBuilder')?.querySelector('[data-chain-card]'))return BUILDER_DRAFT;
+ const initial=BUILDER_DRAFT||chainInitial(wizardComponents());
+ const items={...initial.items},links={...initial.links};
+ document.querySelectorAll('[data-chain-card]').forEach(card=>{
+  const key=card.dataset.chainCard,mode=card.querySelector('[data-chain-adjust]')?.value||'keep';
+  const value=Number(card.querySelector('[data-chain-value]')?.value||0);
+  items[key]={adjust:mode,value:Number.isFinite(value)?value:0,after:card.querySelector('[data-chain-after]')?.value||'keep',afterValue:Number(card.querySelector('[data-chain-after-value]')?.value||2)};
  });
- return {pairEnabled:!!$("builderPairEnabled")?.checked,first:$one.value,second:$two.value,pairMode:$("builderPairMode")?.value||"average",items:{...(BUILDER_DRAFT?.items||{}),...items},deduction:Number($("builderDeduction")?.value)||0,bonus:Number($("builderBonus")?.value)||0}
+ document.querySelectorAll('[data-chain-link]').forEach(select=>{links[select.dataset.chainLink]=select.value||'add'});
+ return {kind:CHAIN_TYPE,order:chainOrder(initial,wizardComponents()),items,links};
 }
-function builderPairChanged(){
- BUILDER_DRAFT=builderRead()||BUILDER_DRAFT;
- builderRender(true)
+function chainAdjustChanged(key){
+ const card=[...document.querySelectorAll('[data-chain-card]')].find(x=>x.dataset.chainCard===key);
+ if(!card)return;
+ card.querySelector('[data-chain-value-row]').classList.toggle('hidden',card.querySelector('[data-chain-adjust]').value==='keep');
+ updateFormulaTotal();
+}
+function chainAfterChanged(key){
+ const card=[...document.querySelectorAll('[data-chain-card]')].find(x=>x.dataset.chainCard===key);
+ if(!card)return;
+ card.querySelector('[data-chain-after-row]').classList.toggle('hidden',card.querySelector('[data-chain-after]').value==='keep');
+ updateFormulaTotal();
+}
+function builderMove(key,delta){
+ BUILDER_DRAFT=builderRead();if(!BUILDER_DRAFT)return;
+ const arr=BUILDER_DRAFT.order,i=arr.indexOf(key),j=i+delta;
+ if(j<0||j>=arr.length)return;
+ [arr[i],arr[j]]=[arr[j],arr[i]];
+ builderRender(true);
 }
 function builderRender(keep=false){
  const list=wizardComponents(),keys=list.map(x=>x.key);
- if(!keep||!BUILDER_DRAFT)BUILDER_DRAFT=builderInitial(list);
- const draft=BUILDER_DRAFT;
- if(!keys.includes(draft.first)||!keys.includes(draft.second)){
-  const p=builderPickDefaultPair(list);draft.first=keys.includes(draft.first)?draft.first:p[0]||"";draft.second=keys.includes(draft.second)?draft.second:p[1]||"";
+ if(!keep||!BUILDER_DRAFT)BUILDER_DRAFT=chainInitial(list);
+ BUILDER_DRAFT.order=chainOrder(BUILDER_DRAFT,list);
+ const b=BUILDER_DRAFT,ordered=b.order.map(k=>list.find(x=>x.key===k)).filter(Boolean);
+ const optionOps=Object.entries(CHAIN_OPERATORS).map(([v,label])=>[v,label]);
+ const optionAdjust=Object.entries(CHAIN_ADJUSTMENTS).map(([v,label])=>[v,label]);
+ $('formulaVisualBuilder').innerHTML=`
+ <div class="builder-section"><h4>المخطط الحي لتقسيم الدرجات</h4><p>شوف كل مفردة بدرجتها الكاملة وحرّك يمين ويسار على الهاتف. كل مفردة «إبقاء» افتراضيًا. وإذا تختار «إعطاء» أو «طرح»، تظهر خانة الرقم تحتها. اختَر العملية بين الخانات. ولحساب متوسط شهرين مثلًا اختر «جمع» بينهما، ثم «قسمة المجموع على عدد 2» تحت الشهر الثاني. يظهر الناتج مباشرة.</p>
+ <div class="chain-hint">العمليات تُنفّذ بالتسلسل من أول مفردة إلى آخر مفردة، ويمكن تغيير ترتيبها من أزرار كل خانة. «الأعلى» يأخذ الأكبر من الطرفين، و«المتوسط» يأخذ متوسطهما. عند القسمة على صفر تُحتسب القيمة صفر لمنع الخطأ.</div>
+ <div class="chain-visual-wrap" tabindex="0" aria-label="مخطط حي أفقي للدرجات"><div class="chain-visual">
+ ${ordered.map((c,i)=>{
+  const setting=b.items[c.key]||{},mode=['keep','give','remove'].includes(setting.adjust)?setting.adjust:'keep',v=Number(setting.value)||0,after=setting.after==='divide'?'divide':'keep',afterValue=Number(setting.afterValue)||2;
+  return `${i?`<div class="chain-connector"><label>العملية</label><select data-chain-link="${esc(c.key)}" aria-label="العملية قبل ${esc(c.label)}" onchange="updateFormulaTotal()">${builderOptionList(optionOps,b.links[c.key]||'add')}</select></div>`:''}
+ <div class="chain-card" data-chain-card="${esc(c.key)}">
+  <span class="chain-index">المفردة ${i+1}</span><h5>${esc(c.label)}</h5>
+  <div class="chain-max" data-chain-max="${esc(c.key)}">الدرجة العظمى: —</div>
+  <div class="chain-field"><label>التعديل على المفردة</label><select data-chain-adjust aria-label="تعديل ${esc(c.label)}" onchange="chainAdjustChanged('${esc(c.key)}')">${builderOptionList(optionAdjust,mode)}</select></div>
+  <div class="chain-field ${mode==='keep'?'hidden':''}" data-chain-value-row><label>كم درجة؟</label><input data-chain-value type="number" inputmode="decimal" min="0" step="0.5" value="${esc(v)}" oninput="updateFormulaTotal()" aria-label="قيمة الإعطاء أو الطرح في ${esc(c.label)}"></div>
+  <div class="chain-after"><div class="chain-field"><label>بعد هذه الخانة</label><select data-chain-after onchange="chainAfterChanged('${esc(c.key)}')">${builderOptionList([['keep','إبقاء المجموع'],['divide','قسمة المجموع على عدد']],after)}</select></div><div class="chain-field ${after==='keep'?'hidden':''}" data-chain-after-row style="margin-top:6px"><label>على كم تقسم المجموع؟</label><input data-chain-after-value type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(afterValue)}" oninput="updateFormulaTotal()"></div></div>
+  <div class="chain-move"><button type="button" ${i===0?'disabled':''} onclick="builderMove('${esc(c.key)}',-1)">السابق ◀</button><button type="button" ${i===ordered.length-1?'disabled':''} onclick="builderMove('${esc(c.key)}',1)">التالي ▶</button></div>
+ </div>`}).join('')}
+ <div class="chain-connector"><span style="font-size:24px;font-weight:900;color:#078746">=</span></div>
+ <div class="chain-result" aria-live="polite"><strong id="chainPeriodLabel">الناتج</strong><b id="chainLiveScore">—</b><span class="chain-status">قبل اعتماد الدرجات</span></div>
+ </div></div><div class="chain-details"><span>المفردات المختارة: <em>${ordered.length}</em></span><span>النتيجة المستهدفة: <em id="chainPeriodInline">—</em></span></div></div>
+ <div class="builder-summary" id="builderSummary" role="status">جاري حساب المثال...</div>
+ ${formulas?.[editingPeriod]?.expression&&formulas?.[editingPeriod]?.builder?.kind!==CHAIN_TYPE?'<div class="builder-warning">يوجد تقسيم سابق لهذه الفترة. اعتماد المخطط الجديد سيستبدل طريقة الحساب فقط، مع الإبقاء على درجات الطلاب الموجودة، لذا راجعها قبل إرسال الفترة.</div>':''}`;
+ updateFormulaTotal();
+}
+function chainTermRange(c,setting){
+ const op=setting?.adjust||'keep',v=Number(setting?.value||0);
+ if(!['keep','give','remove'].includes(op)||!Number.isFinite(v)||v<0||v>10000)throw new Error('راجع الإعطاء أو الطرح في '+c.label);
+ return {min:op==='give'?v:op==='remove'?-v:0,max:c.max+(op==='give'?v:op==='remove'?-v:0)};
+}
+function chainAfterRange(range,setting,label){
+ if((setting?.after||'keep')!=='divide')return range;
+ const v=Number(setting?.afterValue||0);
+ if(!Number.isFinite(v)||v<=0||v>10000)throw new Error('حدد رقمًا موجبًا لقسمة المجموع بعد '+label);
+ return {min:range.min/v,max:range.max/v};
+}
+function chainCombineRange(a,t,op){
+ if(op==='add')return {min:a.min+t.min,max:a.max+t.max};
+ if(op==='subtract')return {min:a.min-t.max,max:a.max-t.min};
+ if(op==='average')return {min:(a.min+t.min)/2,max:(a.max+t.max)/2};
+ if(op==='higher')return {min:Math.max(a.min,t.min),max:Math.max(a.max,t.max)};
+ if(op==='divide'){
+  // Students may receive zero; DIV returns 0 in that case.
+  const candidates=[];const denominators=[t.min,t.max];
+  if(t.min<=0&&t.max>=0)denominators.push(0,0.5,-0.5);
+  for(const n of [a.min,a.max])for(const d of denominators)if(Math.abs(d)>0.000001)candidates.push(n/d);
+  candidates.push(0);return {min:Math.min(...candidates),max:Math.max(...candidates)};
  }
- if(draft.first===draft.second&&keys.length>=2)draft.second=keys.find(k=>k!==draft.first);
- if(keys.length<2)draft.pairEnabled=false;
- const paired=draft.pairEnabled&&keys.length>=2;
- const remain=list.filter(x=>!paired||![draft.first,draft.second].includes(x.key));
- const pairChoice=list.map(c=>[c.key,c.label]);
- const modeChoice=[["average","متوسط الدرجتين (جمع ثم تقسيم على 2)"],["higher","اعتماد الأعلى بينهما"],["sum","جمع الدرجتين"],["lower","اعتماد الأقل بينهما"]];
- const opChoice=[["add","أضف إلى الناتج +"],["subtract","اطرح من الناتج −"]];
- const weightChoice=[["full","الدرجة كاملة"],["half","نصف الدرجة ÷2"],["quarter","ربع الدرجة ÷4"],["double","ضعف الدرجة ×2"]];
- $("formulaVisualBuilder").innerHTML=`
- <div class="builder-section"><h4>١. شلون تريد تحتسب الشهرين؟</h4>
- <p>مثلاً الشهر الأول والشهر الثاني: متوسطهن أو تختار الأعلى. وتكدر تطبق هذا الخيار على أي مفردتين.</p>
- <label class="builder-check"><input id="builderPairEnabled" type="checkbox" ${paired?"checked":""} ${keys.length<2?"disabled":""} onchange="builderPairChanged()"> اجمع مفردتين بطريقة خاصة</label>
- <div class="builder-grid" ${paired?"":"style='opacity:.5'"}>
- <div class="builder-field"><label>المفردة الأولى</label><select id="builderPairFirst" ${paired?"":"disabled"} onchange="builderPairChanged()">${builderOptionList(pairChoice,draft.first)}</select></div>
- <div class="builder-field"><label>المفردة الثانية</label><select id="builderPairSecond" ${paired?"":"disabled"} onchange="builderPairChanged()">${builderOptionList(pairChoice,draft.second)}</select></div>
- <div class="builder-field" style="grid-column:1/-1"><label>طريقة احتساب الاثنين</label><select id="builderPairMode" ${paired?"":"disabled"} onchange="updateFormulaTotal()">${builderOptionList(modeChoice,draft.pairMode)}</select></div>
- </div></div>
- <div class="builder-section"><h4>٢. النشاط والحضور والمشاركة وبقية المفردات</h4><p>اختَر لكل مفردة إذا تريد تضيفها أو تطرحها، واحتسابها كاملة أو نصف أو ربع. ما يحتاج تكتب أي حساب.</p>
- ${remain.length?remain.map(comp=>{const entry=draft.items[comp.key]||{};return `<div class="builder-item" data-builder-item="${esc(comp.key)}"><strong>${esc(comp.label)}</strong><div class="builder-field"><select aria-label="طريقة ${esc(comp.label)}" data-builder-op onchange="updateFormulaTotal()">${builderOptionList(opChoice,entry.operation||"add")}</select></div><div class="builder-field"><select aria-label="نسبة ${esc(comp.label)}" data-builder-weight onchange="updateFormulaTotal()">${builderOptionList(weightChoice,entry.weight||"full")}</select></div></div>`}).join(""):'<div class="builder-empty">كل المفردات المختارة دخلت في الحساب الأول، ولا توجد مفردات إضافية.</div>'}
- </div>
- <div class="builder-section"><h4>٣. خصم ثابت أو درجات إضافية (اختياري)</h4><p>مثلاً تنقص 5 درجات من المجموع، أو تضيف درجة إضافية. إذا ما تحتاجهن اختَر «لا يوجد».</p>
- <div class="builder-grid"><div class="builder-field"><label>خصم من الدرجة النهائية</label><select id="builderDeduction" onchange="updateFormulaTotal()">${builderOptionList(BUILDER_VALUES.map(n=>[n,n?`ناقص ${n} درجات`:'لا يوجد خصم']),draft.deduction)}</select></div>
- <div class="builder-field"><label>إضافة إلى الدرجة النهائية</label><select id="builderBonus" onchange="updateFormulaTotal()">${builderOptionList(BUILDER_VALUES.map(n=>[n,n?`زائد ${n} درجات`:'لا توجد إضافة']),draft.bonus)}</select></div></div></div>
- <div class="builder-summary" id="builderSummary" role="status">اختر طريقة الحساب وستظهر هنا خلاصة بسيطة.</div>
- ${formulas?.[editingPeriod]?.expression&&!formulas?.[editingPeriod]?.builder?'<div class="builder-warning">لهذه الفترة تقسيم قديم بمعادلة متقدمة. إذا اعتمدت الخيارات الجديدة سيتم استبدال طريقة الحساب القديمة. درجات الطلاب المدخلة تبقى محفوظة، ويجب مراجعة نتائجها قبل إعادة الاعتماد.</div>':""}`;
- updateFormulaTotal()
+ throw new Error('عملية غير مدعومة');
 }
 function builderUpperBound(list,b,expression){
- // عند طرح إحدى المفردات، حدّ الناتج الأعلى يكون عندما درجتها صفر.
- // لا يصح استخدام الدرجة الكاملة لكل المفردات في مقام التحويل النسبي.
- const values={};for(const comp of list){
-  const sub=!b.pairEnabled||![b.first,b.second].includes(comp.key);
-  values[comp.key]=sub&&b.items?.[comp.key]?.operation==="subtract"?0:comp.max;
+ if(b?.kind===CHAIN_TYPE){
+  const byKey=Object.fromEntries(list.map(c=>[c.key,c]));const keys=chainOrder(b,list);if(!keys.length)throw new Error('اختر مفردة على الأقل');
+  let range=chainAfterRange(chainTermRange(byKey[keys[0]],b.items?.[keys[0]]),b.items?.[keys[0]],byKey[keys[0]].label);
+  for(const key of keys.slice(1)){range=chainAfterRange(chainCombineRange(range,chainTermRange(byKey[key],b.items?.[key]),b.links?.[key]||'add'),b.items?.[key],byKey[key].label)}
+  if(!Number.isFinite(range.max)||range.max<=0||range.max>1e12)throw new Error('الناتج الأعلى ليس صالحًا. راجع العمليات خصوصًا الطرح والقسمة.');
+  return Number(range.max.toFixed(6))
  }
- const upper=gradeExpressionValue(expression,values);
- if(!Number.isFinite(upper)||upper<=0)throw new Error("طريقة التقسيم لا تعطي حدًا أعلى موجبًا. راجع المفردات التي تُطرح والخصم الثابت.");
- return upper
+ // Preserve old builder computation for previous records.
+ const values={};for(const comp of list){const sub=!b?.pairEnabled||![b.first,b.second].includes(comp.key);values[comp.key]=sub&&b?.items?.[comp.key]?.operation==='subtract'?0:comp.max}
+ const upper=gradeExpressionValue(expression,values);if(!Number.isFinite(upper)||upper<=0)throw new Error('طريقة التقسيم لا تعطي حدًا أعلى موجبًا.');return upper
 }
 function builderGenerate(list,b){
- if(!list.length)throw new Error("اختر مفردة على الأقل");
+ if(b?.kind===CHAIN_TYPE){
+  if(!list.length)throw new Error('اختر مفردة على الأقل');
+  const map=Object.fromEntries(list.map(c=>[c.key,c])),keys=chainOrder(b,list),descr=[];
+  const term=k=>{
+   const c=map[k],setting=b.items?.[k]||{},mode=setting.adjust||'keep',v=Number(setting.value||0);
+   chainTermRange(c,setting);
+   if(mode==='give'){descr.push(`إعطاء ${v} لـ${c.label}`);return `(${k}+${v})`}
+   if(mode==='remove'){descr.push(`طرح ${v} من ${c.label}`);return `(${k}-${v})`}
+   return k;
+  };
+  const after=(expression,k)=>{const setting=b.items?.[k]||{};if((setting.after||'keep')==='divide'){
+   const value=Number(setting.afterValue||0);if(!Number.isFinite(value)||value<=0||value>10000)throw new Error('حدد رقم القسمة بعد '+map[k].label);
+   descr.push(`قسمة المجموع على ${value} بعد ${map[k].label}`);return `(${expression}/${value})`;
+  }return expression};
+  let expression=after(term(keys[0]),keys[0]);
+  const opDesc={add:'جمع',subtract:'طرح',divide:'قسمة',higher:'اعتماد الأعلى',average:'احتساب المتوسط'};
+  for(const k of keys.slice(1)){
+   const op=b.links?.[k]||'add',t=term(k);
+   if(!opDesc[op])throw new Error('راجع العملية المختارة قبل '+map[k].label);
+   if(op==='add')expression=`(${expression}+${t})`;
+   if(op==='subtract')expression=`(${expression}-${t})`;
+   if(op==='divide')expression=`DIV(${expression},${t})`;
+   if(op==='higher')expression=`MAX(${expression},${t})`;
+   if(op==='average')expression=`AVG(${expression},${t})`;
+   expression=after(expression,k);
+   descr.push(`${opDesc[op]} ${map[k].label}`);
+  }
+  return {expression,description:`${keys.map(k=>map[k].label).join(' ← ')}. ${descr.join('، ')||'إبقاء الدرجات كما هي'}`};
+ }
+ // Backwards compatibility when opening previously configured periods.
  const found=new Set(list.map(x=>x.key)),parts=[],descriptions=[];
- if(b.pairEnabled){
-  if(!found.has(b.first)||!found.has(b.second)||b.first===b.second)throw new Error("اختَر مفردتين مختلفتين للحساب الأول");
-  const a=b.first,c=b.second,la=list.find(x=>x.key===a).label,lc=list.find(x=>x.key===c).label;
-  const pairMode={average:`((${a}+${c})/2)`,higher:`MAX(${a},${c})`,lower:`MIN(${a},${c})`,sum:`(${a}+${c})`};
-  if(!pairMode[b.pairMode])throw new Error("طريقة احتساب المفردتين غير صحيحة");
-  parts.push(pairMode[b.pairMode]);
-  descriptions.push(({average:`متوسط ${la} و${lc}`,higher:`الأعلى من ${la} و${lc}`,lower:`الأقل من ${la} و${lc}`,sum:`مجموع ${la} و${lc}`})[b.pairMode]);
- }
- for(const comp of list){
-  if(b.pairEnabled&&(comp.key===b.first||comp.key===b.second))continue;
-  const setting=b.items[comp.key]||{},weight=setting.weight||"full",op=setting.operation||"add";
-  const ops={full:comp.key,half:`(${comp.key}/2)`,quarter:`(${comp.key}/4)`,double:`(${comp.key}*2)`};
-  if(!ops[weight]||!["add","subtract"].includes(op))throw new Error("راجع خيارات احتساب "+comp.label);
-  parts.push(`${parts.length?(op==="subtract"?"-":"+"):(op==="subtract"?"-":"")}${ops[weight]}`);
-  descriptions.push(`${op==="subtract"?"طرح":"إضافة"} ${comp.label}${weight==="half"?" بالنصف":weight==="quarter"?" بالربع":weight==="double"?" مضاعفة":""}`)
- }
- const deduction=Number(b.deduction)||0,bonus=Number(b.bonus)||0;
- let expression=parts.join(" ");if(deduction)descriptions.push(`خصم ${deduction} من الدرجة النهائية`);if(bonus)descriptions.push(`إضافة ${bonus} إلى الدرجة النهائية`);
- return {expression,description:descriptions.join("، ")}
+ if(b.pairEnabled){if(!found.has(b.first)||!found.has(b.second)||b.first===b.second)throw new Error('اختَر مفردتين مختلفتين');const a=b.first,c=b.second;const pairMode={average:`((${a}+${c})/2)`,higher:`MAX(${a},${c})`,lower:`MIN(${a},${c})`,sum:`(${a}+${c})`};if(!pairMode[b.pairMode])throw new Error('طريقة الاحتساب غير صحيحة');parts.push(pairMode[b.pairMode])}
+ for(const comp of list){if(b.pairEnabled&&(comp.key===b.first||comp.key===b.second))continue;const setting=b.items[comp.key]||{},weight=setting.weight||'full',op=setting.operation||'add',ops={full:comp.key,half:`(${comp.key}/2)`,quarter:`(${comp.key}/4)`,double:`(${comp.key}*2)`};if(!ops[weight])throw new Error('راجع المفردات');parts.push(`${parts.length?(op==='subtract'?'-':'+'):(op==='subtract'?'-':'')}${ops[weight]}`)}
+ return {expression:parts.join(' '),description:descriptions.join('، ')}
 }
 function openFormulaModal(period){
  if(editLocked(period)){toast(editLockText(period),"warn");return}
  editingPeriod=period;BUILDER_DRAFT=null;const f=formulas?.[period]||{},values=f.components||{};
  $("formulaModalTitle").textContent=`تقسيم ${PERIODS[period].label}`;
+  $("formulaTargetPeriod").innerHTML=Object.entries(PERIODS).map(([key,val])=>`<option value="${esc(key)}" ${key===period?"selected":""}>${esc(val.label)}</option>`).join("");
  $("formulaModalDesc").textContent=`الدرجة النهائية لمادة ${activeAssignment()?.subjectName||"—"} من ${subjectMax()}. اختر المفردات أولًا، ثم حدد درجاتها وطريقة الحساب من الاختيارات الجاهزة.`;
  $("componentList").innerHTML=COMPONENTS.map(comp=>`<label class="component-choice"><input type="checkbox" class="component-check" data-key="${esc(comp.key)}" ${Number(values[comp.key])>0?"checked":""}><span>${esc(comp.label)}</span><small>اختر</small></label>`).join("");
  $("formulaExpression").value=f.expression||"";$("formulaScaleMode").value=f.scaleMode||"normalize";$("formulaRounding").value=String(f.rounding??"0.5");
@@ -1447,6 +1537,17 @@ function fillFormulaMaxList(){
  $("formulaMaxList").innerHTML=list.map(comp=>`<div class="formula-max-row"><label>${esc(comp.label)}</label><span>الدرجة العظمى</span><input type="number" inputmode="decimal" min="0.1" max="10000" step="0.5" class="max-input" data-max-key="${esc(comp.key)}" value="${esc(previous[comp.key]||f.components?.[comp.key]||10)}" oninput="updateFormulaTotal()"></div>`).join("");
  builderRender(!!BUILDER_DRAFT)
 }
+$("formulaTargetPeriod").addEventListener("change",function(){
+ const target=this.value;if(!PERIODS[target]||target===editingPeriod)return;
+ if(editLocked(target)){toast("لا يمكن تعديل هذه الفترة، لأنها مقفلة.","warn");this.value=editingPeriod;return}
+ if(wizardComponents().length&&!window.confirm("تغيير الفترة سيعرض إعداداتها الخاصة. هل تريد المتابعة؟")){this.value=editingPeriod;return}
+ openFormulaModal(target)
+});
+$("quickMonthChoices").addEventListener("click",e=>{
+ const btn=e.target.closest("[data-month-count]");if(!btn)return;
+ const n=Number(btn.dataset.monthCount);
+ document.querySelectorAll(".component-check").forEach(c=>{if(/^month\d+$/.test(c.dataset.key))c.checked=Number(c.dataset.key.slice(5))<=n});
+});
 $("formulaNextBtn").onclick=()=>{if(!wizardComponents().length)return toast("اختر مفردة تقييم واحدة على الأقل.","warn");formulaShowStage(2);fillFormulaMaxList()};
 $("formulaBackBtn").onclick=()=>{BUILDER_DRAFT=builderRead();formulaShowStage(1)};
 $("formulaScaleMode").addEventListener("change",updateFormulaTotal);
@@ -1461,25 +1562,31 @@ function formulaFormData(){
 function updateFormulaTotal(){
  const el=$("formulaTotal"),msg=$("formulaFormulaPreview");if(FORMULA_STEP!==2)return false;
  try{
-  const components=formulaFormData(),list=COMPONENTS.filter(c=>components[c.key]>0).map(c=>({...c,max:components[c.key]}));
-  const builder=builderRead();if(!builder)throw new Error("لم تكتمل خيارات التقسيم");
-  BUILDER_DRAFT=builder;
-  const generated=builderGenerate(list,builder);
-  $("formulaExpression").value=generated.expression;
-  const upper=builderUpperBound(list,builder,generated.expression),raw=upper;
-  const prescaled=$("formulaScaleMode").value==="direct"?raw:raw/upper*subjectMax();
-  const scaled=prescaled-builder.deduction+builder.bonus;
-  if($("formulaScaleMode").value==="direct"&&scaled>subjectMax()+.001)throw new Error(`الدرجة الناتجة ${scaled} تتجاوز سقف المادة ${subjectMax()}. اختر التحويل التلقائي أو غيّر الاختيارات.`);
-  const sampleRaw=gradeExpressionValue(generated.expression,Object.fromEntries(list.map(c=>[c.key,Number((c.max*.6).toFixed(2))])));
-  const sampleBase=$("formulaScaleMode").value==="direct"?sampleRaw:sampleRaw/upper*subjectMax();
-  const sampleScaled=sampleBase-builder.deduction+builder.bonus;
-  const sampleFinal=roundGradeResult(Math.min(subjectMax(),Math.max(0,sampleScaled)),$("formulaRounding").value);
-  $("builderSummary").innerHTML=`<strong>ملخص التقسيم:</strong> ${esc(generated.description)}.<br><strong>مثال توضيحي:</strong> لو الطالب أخذ 60٪ من كل مفردة، تكون درجته المحسوبة ${sampleFinal} من ${subjectMax()}.`;
-  el.className="formula-total valid";el.querySelector("strong").textContent=`${roundGradeResult(Math.min(subjectMax(),Math.max(0,scaled)),$("formulaRounding").value)} / ${subjectMax()}`;
-  msg.textContent=`الناتج النهائي من ${subjectMax()}، وسيُحسب تلقائيًا عند إدخال درجات الطلاب. هذا مثال فقط ولم تُحفظ أي درجات بعد.`;
-  return true
- }catch(error){el.className="formula-total invalid";el.querySelector("strong").textContent="راجع الاختيارات";msg.textContent=error.message;
-  const summary=$("builderSummary");if(summary)summary.textContent="راجع اختيارات التقسيم: "+error.message;return false}
+  const components=formulaFormData(),selected=wizardComponents(),list=selected.map(c=>({...c,max:components[c.key]}));
+  document.querySelectorAll('[data-chain-max]').forEach(span=>{span.textContent=`الدرجة العظمى: ${components[span.dataset.chainMax]||'—'}`});
+  const builder=builderRead();if(!builder)throw new Error('لم تكتمل خيارات التقسيم');BUILDER_DRAFT=builder;
+  const generated=builderGenerate(list,builder);$("formulaExpression").value=generated.expression;
+  const upper=builderUpperBound(list,builder,generated.expression);
+  const scale=$("formulaScaleMode").value,target=subjectMax();
+  const exampleVals=Object.fromEntries(list.map(c=>[c.key,Number((c.max*0.6).toFixed(2))]));
+  const example=gradeExpressionValue(generated.expression,exampleVals);
+  const actualRaw=gradeExpressionValue(generated.expression,Object.fromEntries(list.map(c=>[c.key,c.max])));
+  const mapped=scale==='direct'?example:example/upper*target;
+  if(scale==='direct'&&upper>target+0.001)throw new Error(`سقف النتيجة ${Number(upper.toFixed(2))} أكبر من درجة المادة ${target}. اختر التحويل التلقائي أو عدّل التقسيم.`);
+  const sampleFinal=roundGradeResult(Math.min(target,Math.max(0,mapped)),$("formulaRounding").value);
+  const maxPossible=roundGradeResult(Math.min(target,Math.max(0,scale==='direct'?upper:target)),$("formulaRounding").value);
+  const resultLabel=PERIODS[editingPeriod]?.label||'الفترة المختارة';
+  const place=$("chainPeriodLabel"),score=$("chainLiveScore"),inline=$("chainPeriodInline");
+  if(place)place.textContent=resultLabel;if(inline)inline.textContent=resultLabel;
+  if(score)score.textContent=`${sampleFinal} / ${target}`;
+  const desc=$("builderSummary");
+  if(desc)desc.innerHTML=`<strong>النتيجة المستهدفة: ${esc(resultLabel)}</strong><br>تم اختيار ${selected.length} مفردات بالترتيب الموجود أعلاه. <strong>مثال مباشر:</strong> إذا الطالب حصل على 60٪ من درجة كل مفردة، تكون نتيجته ${sampleFinal} من ${target}.<br><span style="color:#667085">الحساب يتم بالتسلسل من أول مفردة، والنتيجة النهائية تُحفظ فقط بعد اعتماد التقسيم وإدخال الدرجات.</span>`;
+  el.className='formula-total valid';el.querySelector('strong').textContent=`${maxPossible} / ${target}`;
+  msg.textContent=`الدرجة النهائية لـ ${resultLabel} من ${target}. المثال المعروض للتوضيح فقط ولم يُحفظ شيء بعد.`;
+  return true;
+ }catch(error){el.className='formula-total invalid';el.querySelector('strong').textContent='راجع الاختيارات';msg.textContent=error.message;
+  const d=$("builderSummary");if(d)d.textContent='مراجعة التقسيم: '+error.message;
+  const score=$("chainLiveScore");if(score)score.textContent='—';return false}
 }
 $("saveFormulaBtn").onclick=async()=>{
  if(await refreshEditLock(editingPeriod)){toast(editLockText(editingPeriod),"warn");$("formulaModal").classList.remove("show");renderPeriodButtons();renderFormulaInfo();renderGradeTable();return}
@@ -1500,7 +1607,7 @@ $("saveFormulaBtn").onclick=async()=>{
    const total=periodTotal(st.code,editingPeriod);
    if(total===null)delete rec[editingPeriod];else rec[editingPeriod]=total;
   }
-  $("formulaModal").classList.remove("show");renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم اعتماد تقسيم الدرجات. يمكن تعديله ما دامت الفترة غير مقفلة.","success")
+  $("formulaModal").classList.remove("show");selectedPeriod=editingPeriod;renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم اعتماد تقسيم الدرجات. يمكن تعديله ما دامت الفترة غير مقفلة.","success")
  }catch(error){toast("تعذر حفظ التقسيم: "+error.message,"error")}
  finally{button.disabled=false}
 };
