@@ -142,6 +142,29 @@
  #reportModal .report-sheet{width:210mm!important;height:297mm!important;transform:none!important;zoom:1!important}
 }
 
+
+/* حجم الملاحظة متغيّر وفق عدد السطور فعليًا، وليس مربعًا ثابتًا */
+.report-supervisor-note{
+  width:100%;
+  height:auto!important;
+  min-height:var(--note-box-height,74px);
+  box-sizing:border-box;
+  padding:10px 13px!important;
+}
+.report-supervisor-note small{margin-bottom:6px!important}
+.report-supervisor-note p,
+.report-sheet.is-medium .report-supervisor-note p,
+.report-sheet.is-long .report-supervisor-note p,
+.report-sheet.is-very-long .report-supervisor-note p{
+  font-size:var(--note-font-size,14px)!important;
+  line-height:var(--note-line-height,22.4px)!important;
+  font-weight:900!important;
+  margin:0!important;
+  white-space:pre-wrap!important;
+  overflow-wrap:anywhere!important;
+}
+.report-signature{flex:none!important;min-height:0!important}
+
 </style>
 </head>
 <body>
@@ -279,21 +302,34 @@ function formatReportDate(k){try{return new Intl.DateTimeFormat('ar-IQ',{weekday
 function reportChunks(items,size){const out=[];for(let i=0;i<items.length;i+=size)out.push(items.slice(i,i+size));return out.length?out:[[]]}
 function reportTallies(roster){const tally=Object.fromEntries(VALID_STATES.map(st=>[st,0]));for(const student of roster)tally[recordStatuses[student.code]||'present']++;return tally}
 function reportNoteSettings(text){
- // Reserve progressively more space for long notes without making any A4 page overflow.
- const n=text.length;
- if(n>1100)return {rows:5,klass:'is-very-long'};
- if(n>700)return {rows:7,klass:'is-long'};
- if(n>350)return {rows:9,klass:'is-medium'};
- return {rows:13,klass:'is-short'};
+ // احسب الأسطر بعد لفّ النص بحسب العرض الحقيقي، وليس عدد الحروف وحده.
+ // الصندوق يكون قصيرًا للملاحظات القصيرة ويطول مع سطور الملاحظات فقط.
+ const canvas=document.createElement('canvas'),ctx=canvas.getContext('2d');
+ const note=String(text||REPORT_DEFAULT_NOTE);
+ let font=14,lines=[],lineHeight=22.4,boxHeight=74,rows=13;
+ while(font>=9.5){
+  lines=pdfWrap(ctx,note,660,font);
+  lineHeight=Math.round(font*1.6*10)/10;
+  boxHeight=Math.max(74,Math.ceil(51+lines.length*lineHeight));
+  // PDF: table starts at 350; header 32; each student 29; between blocks 18+59+12.
+  // The note ends at y=1064, above the page footer.
+  rows=Math.min(16,Math.floor((1064-350-32-18-59-12-boxHeight)/29));
+  if(rows>=1)break;
+  font-=0.5;
+ }
+ // If there are many manually inserted new lines, never render over the page edge.
+ if(rows<1){throw new Error('REPORT_NOTES_TOO_LONG')}
+ return {rows,klass:font<12?'is-very-long':font<14?'is-long':'is-short',
+  font,lineHeight,boxHeight,lines};
 }
-function buildReportPage(roster,chunk,page,totalPages,tally,rowStart,noteText,noteLengthClass){
+function buildReportPage(roster,chunk,page,totalPages,tally,rowStart,noteText,noteSettings){
  const gender=classGender(classes[currentClass]);
  const rows=chunk.map((student,index)=>{
    const st=recordStatuses[student.code]||'present';
    return `<tr><td>${rowStart+index+1}</td><td>${esc(student.name||'بدون اسم')}</td><td><span class="report-state is-${st}">${esc(LABELS[st])}</span></td></tr>`;
  }).join('');
  const sums=[['الطلاب',roster.length,''],...VALID_STATES.map(st=>[LABELS[st],tally[st],st])];
- return `<div class="report-scale"><article class="report-sheet ${noteLengthClass}" aria-label="تقرير ${esc(className(currentClass))} الصفحة ${page}"><div class="report-sheet-inner">
+ return `<div class="report-scale"><article class="report-sheet ${noteSettings.klass}" style="--note-font-size:${noteSettings.font}px;--note-line-height:${noteSettings.lineHeight}px;--note-box-height:${noteSettings.boxHeight}px" aria-label="تقرير ${esc(className(currentClass))} الصفحة ${page}"><div class="report-sheet-inner">
  <div class="report-letterhead"><div class="report-school"><img src="logo.png" alt=""><div><strong>مدرسة التحدي الأهلية المختلطة</strong><small>سجلات الحضور والغياب • تقرير يومي</small></div></div><div class="report-doc-id">العام الدراسي 2026–2027<br>صفحة ${page} من ${totalPages}</div></div>
  <div class="report-heading"><h2>${esc(reportPrintTitle())}</h2><p>تقرير الصف للتاريخ المحدد</p>${dirty?'<div class="report-unsaved">نسخة معاينة — توجد تعديلات غير محفوظة في Firebase</div>':!currentlySaved?'<div class="report-unsaved">كشف مُعدّ محليًا — لم يُعتمد الحفظ في Firebase</div>':''}</div>
  <div class="report-details"><div class="report-detail"><small>الصف</small><strong>${esc(className(currentClass))}</strong></div><div class="report-detail"><small>التاريخ</small><strong>${esc(formatReportDate(currentDate))}</strong></div><div class="report-detail"><small>القسم</small><strong>${gender==='female'?'بنات':gender==='mixed'?'مختلط':'بنين'}</strong></div></div>
@@ -309,8 +345,10 @@ function showReportPreview(){
  if(!currentClass||!assignedIds.includes(currentClass)){notify('اختر الصف أولًا');return}
  if(!validSchoolDay(currentDate)){notify('لا يمكن طباعة كشف ليوم الجمعة أو السبت أو تاريخ مستقبلي');return}
  const roster=availableStudents(currentClass),note=dayNotes.trim()||REPORT_DEFAULT_NOTE;
- const setting=reportNoteSettings(note),chunks=reportChunks(roster,setting.rows),total=chunks.length,tally=reportTallies(roster);
- $('reportPages').innerHTML=chunks.map((ch,i)=>buildReportPage(roster,ch,i+1,total,tally,i*setting.rows,note,setting.klass)).join('');
+ let setting;
+ try{setting=reportNoteSettings(note)}catch(e){notify('الملاحظات طويلة جدًا لتظهر كاملة في ورقة A4؛ يرجى تقليل الأسطر الفارغة');return}
+ const chunks=reportChunks(roster,setting.rows),total=chunks.length,tally=reportTallies(roster);
+ $('reportPages').innerHTML=chunks.map((ch,i)=>buildReportPage(roster,ch,i+1,total,tally,i*setting.rows,note,setting)).join('');
  $('reportModalTitle').textContent=reportPrintTitle();
  $('reportModalHint').textContent=`${formatReportDate(currentDate)} • ${roster.length} طالب • ${total} ورقة A4 • نفس الملاحظة على كل ورقة • عرض 100%`;
  $('reportModal').classList.remove('hidden');document.body.style.overflow='hidden';$('reportScroll').scrollTop=0;scaleReportPreview();
@@ -362,7 +400,7 @@ function pdfWrap(ctx,text,maxWidth,fontSize){
  }
  return lines;
 }
-function drawPdfPage(roster,chunk,page,totalPages,tally,rowStart,noteText){
+function drawPdfPage(roster,chunk,page,totalPages,tally,rowStart,noteText,noteSettings){
  const c=document.createElement('canvas');c.width=1191;c.height=1685;
  const ctx=c.getContext('2d',{alpha:false});ctx.scale(1.5,1.5);
  ctx.fillStyle='#fff';ctx.fillRect(0,0,794,1123);
@@ -397,19 +435,19 @@ function drawPdfPage(roster,chunk,page,totalPages,tally,rowStart,noteText){
    pdfText(ctx,LABELS[st]||'حاضر',tx+colC/2,y+19,11,stateColors[st]||'#344054','900','center');
  });
  const endTable=ty+headH+chunk.length*rowH;
- const supervisorY=Math.max(endTable+18,612);
+ // The box grows only when the supervisor writes more lines. Both PDF and preview
+ // use the same measurements; short notes never reserve a huge empty frame.
+ const layout=noteSettings||reportNoteSettings(noteText);
+ const noteH=layout.boxHeight,noteBottom=1064,noteY=noteBottom-noteH;
+ const supervisorY=noteY-71;
+ if(supervisorY<endTable+17){throw new Error('REPORT_PAGE_OVERFLOW')}
  pdfRounded(ctx,40,supervisorY,714,59,7,'#f3f8ff','#91b5df');
  pdfText(ctx,'اسم الأستاذ المشرف على الحضور والغياب',397,supervisorY+21,11,'#446380','900','center');
  pdfText(ctx,supervisor.name||'مشرف الحضور والغياب',397,supervisorY+45,16,'#103e73','900','center');
- const noteY=supervisorY+71, noteBottom=1064,noteH=Math.max(45,noteBottom-noteY);
  pdfRounded(ctx,40,noteY,714,noteH,8,'#f3f8ff','#87add9');
- pdfText(ctx,'ملاحظة المشرف لهذا اليوم',735,noteY+24,14,'#0b488b');
- const maxLinesArea=noteH-47;
- let size=15,lines=[];
- while(size>=9){lines=pdfWrap(ctx,noteText,660,size);if(lines.length*size*1.55 <=maxLinesArea)break;size-=.5}
- const lineHeight=size*1.5;
- ctx.save();ctx.beginPath();ctx.rect(58,noteY+33,678,Math.max(0,noteH-40));ctx.clip();
- lines.forEach((line,i)=>pdfText(ctx,line,735,noteY+43+i*lineHeight,size,'#183a60'));
+ pdfText(ctx,'ملاحظة المشرف لهذا اليوم',735,noteY+23,13,'#0b488b');
+ ctx.save();ctx.beginPath();ctx.rect(58,noteY+34,678,Math.max(0,noteH-38));ctx.clip();
+ layout.lines.forEach((line,i)=>pdfText(ctx,line,735,noteY+45+i*layout.lineHeight,layout.font,'#183a60'));
  ctx.restore();
  ctx.beginPath();ctx.moveTo(40,1080);ctx.lineTo(754,1080);ctx.strokeStyle='#d9e2ec';ctx.stroke();
  pdfText(ctx,'مدرسة التحدي الأهلية المختلطة',754,1097,9,'#63758b');
@@ -437,7 +475,7 @@ function assembleA4Pdf(canvases){
 function reportPdfFile(){
  if(!currentClass||!assignedIds.includes(currentClass)||!validSchoolDay(currentDate))throw new Error('INVALID_REPORT');
  const roster=availableStudents(currentClass),note=dayNotes.trim()||REPORT_DEFAULT_NOTE,settings=reportNoteSettings(note),chunks=reportChunks(roster,settings.rows),tally=reportTallies(roster);
- const canvases=chunks.map((ch,i)=>drawPdfPage(roster,ch,i+1,chunks.length,tally,i*settings.rows,note));
+ const canvases=chunks.map((ch,i)=>drawPdfPage(roster,ch,i+1,chunks.length,tally,i*settings.rows,note,settings));
  return new File([assembleA4Pdf(canvases)],reportPrintTitle()+'.pdf',{type:'application/pdf'});
 }
 $('reportSharePdf').addEventListener('click',()=>{
