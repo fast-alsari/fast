@@ -407,6 +407,36 @@ body.record-preview-open{overflow:hidden!important}
  #recordPreviewOverlay .record-preview-sheet.landscape{height:210mm!important;min-height:210mm!important;max-height:210mm!important}
  #recordPreviewOverlay .record-preview-sheet img{display:block!important;width:100%!important;height:100%!important;max-height:none!important;object-fit:fill!important}
 }
+
+/* ===== 100% A4 print preview, horizontal scroll rather than scaling the paper ===== */
+.record-preview-scroll{overflow:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important;text-align:center!important}
+.record-preview-sheet{max-width:none!important;width:794px!important;min-width:794px!important;margin:0 auto 18px!important;line-height:0}
+.record-preview-sheet.landscape{width:1123px!important;min-width:1123px!important}
+.record-preview-sheet img{width:100%!important;height:100%!important;object-fit:fill!important}
+.record-preview-bottom{flex-wrap:wrap}
+.record-preview-share{min-height:52px;flex:1;border:0;border-radius:14px;background:#078746;color:#fff;font-size:12px;font-weight:900}
+/* teacher grade setup wizard */
+.formula-wizard-card{max-width:760px!important}
+.formula-steps{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:9px 0 14px}
+.formula-steps span{padding:11px 8px;border:1px solid #dbe4ef;border-radius:12px;background:#f7f9fc;color:#667085;text-align:center;font-size:10px;font-weight:900}
+.formula-steps .active{background:#edf5ff;color:#075fcf;border-color:#83baf4}
+.formula-help{padding:9px 11px;border-radius:10px;background:#f7faff;color:#475467;font-size:10px;font-weight:700;line-height:1.8;margin-bottom:11px}
+.component-choice{min-height:46px;padding:9px 11px;border:1px solid #dce6f3;border-radius:12px;display:flex;align-items:center;gap:9px;font-size:11px;font-weight:900;cursor:pointer}
+.component-choice input{width:20px;height:20px;accent-color:#075fcf}.component-choice span{flex:1}.component-choice small{color:#98a2b3;font-size:8px}
+.formula-max-row{display:grid;grid-template-columns:minmax(100px,1fr) 90px 110px;align-items:center;gap:8px;padding:9px 10px;border:1px solid #dce6f3;border-radius:12px;font-size:10px;font-weight:900}.formula-max-row span{color:#667085;font-size:9px}
+.formula-expr-field{margin-top:13px}.formula-expr-field label{display:block;margin-bottom:7px;color:#344054;font-size:10px;font-weight:900}
+.formula-expr-field textarea,.formula-expr-field select{width:100%;border:1px solid #cbd8e9;border-radius:12px;background:#fff;padding:11px;font-size:12px;line-height:1.7}
+.formula-expr-field textarea{font-family:ui-monospace,Consolas,monospace;resize:vertical;min-height:90px}
+.formula-token-list{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}.formula-token-list button{min-height:34px;padding:0 10px;border:1px solid #b9d4f4;border-radius:8px;background:#edf5ff;color:#075fcf;font-size:10px;font-weight:900}
+.formula-actions{display:grid;grid-template-columns:1fr 2fr;gap:9px;margin-top:9px}.formula-actions .modal-save{margin:0}.formula-secondary{min-height:50px;border:1px solid #cfd9e6;border-radius:14px;background:#f6f8fc;color:#344054;font-weight:900}
+.period-total-col{background:#eaf4ff!important;color:#075fcf!important;font-size:11px!important;font-weight:900!important}
+.draft-meta{grid-template-columns:repeat(4,minmax(0,1fr))!important}.oral-print-page .draft-meta{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+@media(max-width:560px){.formula-max-row{grid-template-columns:minmax(70px,1fr) 65px 90px}.formula-actions{grid-template-columns:1fr 1fr}.formula-help{font-size:9px}.record-preview-sheet,.record-preview-sheet.landscape{margin-left:0!important;margin-right:0!important}}
+@media print{
+ @page{margin:0}
+ #recordPreviewOverlay .record-preview-sheet{width:210mm!important;min-width:210mm!important}
+ #recordPreviewOverlay .record-preview-sheet.landscape{width:297mm!important;min-width:297mm!important}
+}
 </style></head>
 <body>
 <div id="loaderScreen" class="loader-screen"><div class="loader-box"><img src="logo.png" class="loader-logo" alt=""><div class="spinner"></div><p>جاري تحميل منصة الأستاذ</p></div></div>
@@ -496,11 +526,27 @@ body.record-preview-open{overflow:hidden!important}
 <section id="recordPreviewOverlay" class="record-preview-overlay" aria-label="معاينة السجل وطباعته" role="dialog" aria-modal="true">
  <header class="record-preview-toolbar"><div><h3 id="recordPreviewTitle">معاينة السجل</h3><p id="recordPreviewCount">معاينة قبل الطباعة</p></div><button type="button" id="recordPreviewCloseTop" class="record-preview-close">إغلاق ×</button></header>
  <div id="recordPreviewScroll" class="record-preview-scroll"><div id="recordPreviewPages"></div></div>
- <footer class="record-preview-bottom"><button id="recordPreviewPrintBtn" class="record-preview-print" type="button">طباعة A4</button><button type="button" id="recordPreviewCloseBottom" class="record-preview-close">إغلاق</button></footer>
+ <footer class="record-preview-bottom"><button id="recordPreviewPrintBtn" class="record-preview-print" type="button">طباعة A4</button><button id="recordPreviewShareBtn" class="record-preview-share" type="button">مشاركة / حفظ PDF</button><button type="button" id="recordPreviewCloseBottom" class="record-preview-close">إغلاق</button></footer>
 </section>
 <style id="recordDynamicPageStyle">@page{size:A4 portrait;margin:0}</style>
 
-<div id="formulaModal" class="modal"><div class="modal-card"><div class="modal-head"><h3 id="formulaModalTitle">تقسيم الدرجة</h3><button id="closeFormulaModal" class="close" type="button">×</button></div><p id="formulaModalDesc" class="modal-desc"></p><div id="componentList" class="component-list"></div><div id="formulaTotal" class="formula-total"><span>مجموع الدرجات</span><strong>0</strong></div><button id="saveFormulaBtn" class="modal-save" type="button">اعتماد التقسيم</button></div></div>
+<div id="formulaModal" class="modal" aria-modal="true" role="dialog" aria-label="تقسيم درجات المادة">
+ <div class="modal-card formula-wizard-card">
+  <div class="modal-head"><h3 id="formulaModalTitle">تقسيم الدرجة</h3><button id="closeFormulaModal" class="close" type="button">×</button></div>
+  <p id="formulaModalDesc" class="modal-desc"></p>
+  <div class="formula-steps"><span id="formulaStep1" class="active">١ - اختر المفردات</span><span id="formulaStep2">٢ - حدد الدرجات والمعادلة</span></div>
+  <div id="formulaChooseStage"><p class="formula-help">اختر المفردات التي تريد تقييم الطلاب عليها، دون وضع أي درجة الآن. مثل الشهر الأول والثاني واليومي والشفهي والتحضير والامتحان الإلكتروني.</p><div id="componentList" class="component-list"></div><button id="formulaNextBtn" class="modal-save" type="button">التالي: تحديد درجات المفردات</button></div>
+  <div id="formulaMathStage" class="hidden"><p class="formula-help">حدد الدرجة العظمى لكل مفردة؛ ثم اكتب معادلة النتيجة. كل مفردة لها رمز يمكنك إضافته بالضغط على زرها. يمكنك استخدام + و − و × و ÷ والأقواس، و MAX() لاختيار الأعلى بين درجتين، و MIN() للأقل.</p>
+   <div id="formulaMaxList" class="component-list"></div>
+   <div class="formula-expr-field"><label for="formulaExpression">معادلة احتساب الدرجة</label><textarea id="formulaExpression" dir="ltr" spellcheck="false" rows="3" placeholder="(month1 + month2) / 2"></textarea><div id="formulaTokens" class="formula-token-list"></div></div>
+   <div class="formula-expr-field"><label for="formulaScaleMode">طريقة تحويل الناتج إلى الدرجة العظمى للمادة</label><select id="formulaScaleMode"><option value="normalize">تحويل نسبي تلقائي إلى درجة المادة (100 أو 10 أو غيرها)</option><option value="direct">الناتج المباشر؛ يشترط ألّا يتجاوز الدرجة العظمى</option></select></div>
+   <div class="formula-expr-field"><label for="formulaRounding">تقريب الناتج</label><select id="formulaRounding"><option value="0.5">أقرب نصف درجة</option><option value="1">أقرب درجة صحيحة</option><option value="0.1">أقرب عُشر</option><option value="0">دون تقريب (رقمان عشريان)</option></select></div>
+   <div id="formulaTotal" class="formula-total"><span>معاينة الناتج بأعلى الدرجات</span><strong>—</strong></div>
+   <p id="formulaFormulaPreview" class="formula-help" style="margin-top:8px"></p>
+   <div class="formula-actions"><button id="formulaBackBtn" type="button" class="formula-secondary">رجوع للمفردات</button><button id="saveFormulaBtn" class="modal-save" type="button">اعتماد التقسيم والمعادلة</button></div>
+  </div>
+ </div>
+</div>
 <div id="toast" class="toast"></div>
 <div id="screenAlert" class="screen-alert info" role="alertdialog" aria-modal="true" aria-labelledby="screenAlertTitle" aria-describedby="screenAlertText">
  <div class="screen-alert-card">
@@ -511,7 +557,7 @@ body.record-preview-open{overflow:hidden!important}
  </div>
 </div>
 <script>
-const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",PERIODS={term1:{label:"الفصل الأول"},midyear:{label:"نصف السنة"},term2:{label:"الفصل الثاني"},finalExam:{label:"الامتحان النهائي"},secondRound:{label:"الدور الثاني"}},COMPONENTS=[["month1","شهر 1"],["month2","شهر 2"],["month3","شهر 3"],["month4","شهر 4"],["grammar","قواعد"],["literature","أدب"],["composition","إنشاء"],["oral","شفهي"],["practical","عملي"],["behavior","سلوك"],["attendance","حضور"],["drawing","رسم"],["preparation","تحضير"],["homework","واجب"],["daily","يومي"],["monthly","شهري"]].map(([key,label])=>({key,label}));
+const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",PERIODS={term1:{label:"الفصل الأول"},midyear:{label:"نصف السنة"},term2:{label:"الفصل الثاني"},finalExam:{label:"الامتحان النهائي"},secondRound:{label:"الدور الثاني"}},COMPONENTS=[["month1","شهر 1"],["month2","شهر 2"],["month3","شهر 3"],["month4","شهر 4"],["grammar","قواعد"],["literature","أدب"],["composition","إنشاء"],["oral","شفهي"],["practical","عملي"],["behavior","سلوك"],["attendance","حضور"],["drawing","رسم"],["preparation","تحضير"],["homework","واجب"],["daily","يومي"],["monthly","شهري"],["weekly","أسبوعي"],["electronic","إلكتروني"],["quiz","اختبار قصير"],["participation","مشاركة"],["project","مشروع"],["activity","نشاط"]].map(([key,label])=>({key,label}));
 let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null;
 const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])),norm=v=>String(v??"").trim().toLowerCase(),num=v=>v===""||v===null||v===undefined?null:(Number.isFinite(Number(v))?Number(v):null),safeJS=v=>String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"),safeId=v=>String(v||"").replace(/[^a-zA-Z0-9_-]/g,"_"),safeKey=v=>String(v||"").trim().toLowerCase().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[^a-z0-9\u0600-\u06ff]+/gi,"_").replace(/^_+|_+$/g,"");
 let SCREEN_ALERT_LAST_FOCUS=null;
@@ -660,7 +706,7 @@ function renderClasses(){
  if(!assignments.length){$("classesGrid").innerHTML=`<div class="empty">لا توجد مادة وصف مسندان إلى حسابك حالياً. يجب ربط الأستاذ من صفحة الإدارة بمادة موجودة داخل الصف.</div>`;return}
  $("classesGrid").innerHTML=assignments.map(a=>{
   const c=classes[a.classId]||{},list=studentsOfClass(a.classId),count=list.length,gender=recordGenderFromList(c,list),genderText=gender==="female"?"بنات":gender==="male"?"بنين":"بنين و بنات",genderClass=gender==="female"?"gender-female":gender==="male"?"gender-male":"gender-mixed";
-  return`<button type="button" class="class-card ${genderClass} ${selectedClassId===a.classId?"active":""}" onclick="selectClass('${safeJS(a.classId)}')"><div class="class-count">${count}</div><div class="class-icon gender-label">${genderText}</div><h4>${esc(c.name||a.classId)}</h4><p>${esc(a.subjectName)}<br>${esc(recordRoomLabel(c.roomNumber))} | من ${a.maxGrade} | النجاح ${a.passGrade}</p></button>`
+  return`<button type="button" class="class-card ${genderClass} ${selectedClassId===a.classId?"active":""}" onclick="selectClass('${safeJS(a.classId)}')"><div class="class-count">${count}</div><div class="class-icon gender-label">${genderText}</div><h4>${esc(c.name||a.classId)}</h4><p>${esc(a.subjectName)}<br>من ${a.maxGrade} | النجاح ${a.passGrade}</p></button>`
  }).join("")
 }
 async function selectClass(classId){
@@ -718,7 +764,75 @@ function gradePath(code){const a=activeAssignment();return`grades/${encodeURICom
 }
 function formulaBasePath(){const a=activeAssignment();return`gradeSchemas/${encodeURIComponent(TEACHER_CODE)}/${encodeURIComponent(selectedClassId)}/${encodeURIComponent(a.subjectId)}`}async function loadFormulas(){formulas=await dbGet(formulaBasePath())||{};if(!Object.keys(formulas).length){const a=activeAssignment(),legacy=safeKey(a?.subjectName||"");if(legacy&&legacy!==a?.subjectId)formulas=await dbGet(`gradeSchemas/${encodeURIComponent(TEACHER_CODE)}/${encodeURIComponent(selectedClassId)}/${encodeURIComponent(legacy)}`)||{}}}
 function activeComponents(period){const c=formulas?.[period]?.components||{};return COMPONENTS.filter(x=>num(c[x.key])!==null&&Number(c[x.key])>0).map(x=>({...x,max:Number(c[x.key])}))}
-function formulaConfigured(period){const list=activeComponents(period);return list.length>0&&Math.abs(list.reduce((s,x)=>s+x.max,0)-subjectMax())<.001}
+/* The previous additive schemas remain valid. New schemas carry an explicit expression. */
+function formulaConfigured(period){
+ const f=formulas?.[period],list=activeComponents(period);
+ if(!list.length)return false;
+ if(f?.expression){try{validateGradeExpression(f.expression,list);return true}catch{return false}}
+ return Math.abs(list.reduce((s,x)=>s+x.max,0)-subjectMax())<.001
+}
+function gradeExprTokens(expr){
+ const s=String(expr||""),tokens=[];let i=0;
+ while(i<s.length){
+  if(/\s/.test(s[i])){i++;continue}
+  const rest=s.slice(i);
+  const match=rest.match(/^(?:\d+(?:\.\d+)?|\.\d+)|^[A-Za-z_][A-Za-z0-9_]*/);
+  if(match){tokens.push(match[0]);i+=match[0].length;continue}
+  if("+-*/(),%".includes(s[i])){tokens.push(s[i]);i++;continue}
+  throw new Error("رمز غير مسموح بالمعادلة: "+s[i]);
+ }
+ if(tokens.length>140)throw new Error("المعادلة طويلة جدًا");
+ return tokens
+}
+/* Small arithmetic evaluator, deliberately no eval(), Function() or arbitrary code. */
+function gradeExpressionValue(expr,values){
+ const tokens=gradeExprTokens(expr),allowed=new Set(Object.keys(values)),funcs={MAX:Math.max,MIN:Math.min,AVG:(...v)=>v.reduce((a,b)=>a+b,0)/v.length};let p=0;
+ function primary(){
+  const token=tokens[p++];if(token===undefined)throw new Error("المعادلة غير مكتملة");
+  if(token==="+")return primary();if(token==="-")return -primary();
+  if(token==="("){const value=addition();if(tokens[p++]!==")")throw new Error("أغلق القوس في المعادلة");return value}
+  if(/^\d/.test(token)||/^\.\d/.test(token))return Number(token);
+  const fn=funcs[token.toUpperCase()];
+  if(fn&&tokens[p]==="("){
+   p++;const args=[];
+   if(tokens[p]!==")"){args.push(addition());while(tokens[p]===","){p++;args.push(addition())}}
+   if(tokens[p++]!==")"||!args.length)throw new Error("راجع أقواس الدالة "+token);
+   return fn(...args)
+  }
+  if(!allowed.has(token))throw new Error("المفردة غير محددة: "+token);
+  return Number(values[token]);
+ }
+ function percent(){let v=primary();while(tokens[p]==="%"){p++;v/=100}return v}
+ function multiply(){let v=percent();while(tokens[p]==="*"||tokens[p]==="/"){const op=tokens[p++],r=percent();if(op==="/"&&r===0)throw new Error("قسمة على صفر");v=op==="*"?v*r:v/r}return v}
+ function addition(){let v=multiply();while(tokens[p]==="+"||tokens[p]==="-"){const op=tokens[p++],r=multiply();v=op==="+"?v+r:v-r}return v}
+ const result=addition();if(p!==tokens.length)throw new Error("راجع ترتيب الرموز والأقواس");
+ if(!Number.isFinite(result))throw new Error("المعادلة أنتجت نتيجة غير صالحة");
+ return result
+}
+function validateGradeExpression(expr,list){
+ if(!String(expr||"").trim())throw new Error("اكتب معادلة احتساب الدرجة");
+ const maxima=Object.fromEntries(list.map(c=>[c.key,c.max]));
+ const maximum=gradeExpressionValue(expr,maxima);
+ if(maximum<=0)throw new Error("الناتج الأعلى للمعادلة يجب أن يكون أكبر من صفر");
+ return maximum
+}
+function roundGradeResult(n,step){
+ const v=Number(step);return Number((v>0?Math.round((n+Number.EPSILON)/v)*v:Math.round(n*100)/100).toFixed(2))
+}
+function calculateConfiguredPeriod(period,code){
+ const f=formulas?.[period],comps=activeComponents(period),values={};
+ for(const comp of comps){
+  const raw=componentValue(code,period,comp.key);if(rawText(raw)==="")return null;
+  const v=calcGradeValue(raw);if(v===null||!Number.isFinite(Number(v))||Number(v)<0||Number(v)>comp.max)return null;
+  values[comp.key]=Number(v)
+ }
+ if(!f?.expression)return Number(comps.reduce((t,c)=>t+values[c.key],0).toFixed(2));
+ try{
+  const upper=validateGradeExpression(f.expression,comps),raw=gradeExpressionValue(f.expression,values);
+  const scaled=f.scaleMode==="direct"?raw:raw/upper*subjectMax();
+  return roundGradeResult(Math.min(subjectMax(),Math.max(0,scaled)),f.rounding??"0.5")
+ }catch{return null}
+}
 function renderPeriodButtons(){
  $("periodTools").innerHTML=
   Object.entries(PERIODS)
@@ -764,7 +878,7 @@ function renderFormulaInfo(){
         formulaConfigured(
          selectedPeriod
         )
-         ?`${list.map(x=>`${x.label} (${x.max})`).join(" + ")} = ${subjectMax()}`
+         ?`${list.map(x=>`${x.label} (${x.max})`).join("، ")} — ${formulas?.[selectedPeriod]?.expression?"المعادلة: "+formulas[selectedPeriod].expression:"جمع المفردات"} — النهائي من ${subjectMax()}`
          :`يمكن إدخال درجة ${PERIODS[selectedPeriod].label} مباشرة من ${subjectMax()}، أو إعداد تقسيم الدرجة إلى مفردات.`;
 
  $("formulaInfo").className=
@@ -824,36 +938,7 @@ function periodTotal(code,period){
   )
  }
 
- const comps=
-  activeComponents(
-   period
-  );
-
- let total=0;
-
- for(const comp of comps){
-  const raw=
-   componentValue(
-    code,
-    period,
-    comp.key
-   );
-
-  if(rawText(raw)===""){
-   return null
-  }
-
-  const value=
-   calcGradeValue(raw);
-
-  total+=Number(
-   value||0
-  )
- }
-
- return Math.round(
-  total*100
- )/100
+ return calculateConfiguredPeriod(period,code)
 }
 function annualPreview(code){
  const a=periodTotal(code,"term1"),b=periodTotal(code,"midyear"),c=periodTotal(code,"term2");
@@ -873,7 +958,7 @@ function renderGradeTable(){
  const list=filteredStudents(),components=activeComponents(selectedPeriod),configured=formulaConfigured(selectedPeriod),max=subjectMax(),pass=subjectPass(),locked=editLocked(selectedPeriod),annualLocked=periodLocked("annual"),c=classes[selectedClassId]||{},gender=classGenderForUI(c,list);
  if(!list.length){$("tableArea").innerHTML=`<div class="empty">لا توجد أسماء مطابقة.</div>`;return}
  const cols=configured?components.map(comp=>`<th class="score-col"><span class="column-title">${esc(comp.label)}</span><span class="column-max">من ${comp.max}</span></th>`).join(""):`<th class="score-col"><span class="column-title">${esc(PERIODS[selectedPeriod].label)}</span><span class="column-max">من ${max}</span></th>`;
- $("tableArea").innerHTML=`<div class="table-wrap"><table class="grade-table"><thead><tr><th class="seq-col">ت</th><th class="name-col">${esc(personHead(c,gender))}</th>${cols}<th class="total-col ${annualLocked?"admin-locked-annual":""}"><span class="column-title">السعي السنوي</span><span class="column-max">${annualLocked?"مقفل من الإدارة":"محسوب تلقائياً"}</span></th></tr></thead><tbody>${list.map((st,i)=>{
+ $("tableArea").innerHTML=`<div class="table-wrap"><table class="grade-table"><thead><tr><th class="seq-col">ت</th><th class="name-col">${esc(personHead(c,gender))}</th>${cols}<th class="total-col period-total-col"><span class="column-title">الناتج الصافي ${esc(PERIODS[selectedPeriod].label)}</span><span class="column-max">من ${max}</span></th><th class="total-col ${annualLocked?"admin-locked-annual":""}"><span class="column-title">السعي السنوي</span><span class="column-max">${annualLocked?"مقفل من الإدارة":"محسوب تلقائياً"}</span></th></tr></thead><tbody>${list.map((st,i)=>{
   const annual=annualPreview(st.code),annualFail=!annualLocked&&annual!==null&&annual<pass;
   const inputs=locked
    ?(configured?components.map(()=>`<td class="score-col"><div class="admin-locked-score">مقفل</div></td>`).join(""):`<td class="score-col"><div class="admin-locked-score">مقفل</div></td>`)
@@ -884,7 +969,7 @@ function renderGradeTable(){
      const raw=directValue(st.code,selectedPeriod),critical=isCriticalGrade(raw,max,pass);
      return`<td class="score-col"><input class="score-input ${critical?"critical":""} ${rawText(raw)!==""&&!Number.isFinite(Number(raw))?"textual":""}" type="text" inputmode="decimal" data-student="${esc(st.code)}" data-direct="1" data-max="${max}" data-pass="${pass}" data-original="${esc(raw)}" value="${esc(raw)}" onfocus="scoreFocus(this)" oninput="scoreChanged(this)"></td>`
     })());
-  return`<tr><td class="seq-col">${esc(st.serial||i+1)}</td><td class="name-col"><div class="student-name">${esc(st.name||"—")}</div><div class="student-code">${esc(st.code)}</div></td>${inputs}<td id="annual_${safeId(st.code)}" class="total-col ${annualLocked?"admin-locked-annual":annualFail?"fail":""}">${annualLocked?"مقفل":(annual===null?"—":annual)}</td></tr>`
+  return`<tr><td class="seq-col">${esc(st.serial||i+1)}</td><td class="name-col"><div class="student-name">${esc(st.name||"—")}</div><div class="student-code">${esc(st.code)}</div></td>${inputs}<td id="periodTotal_${safeId(st.code)}" class="total-col period-total-col">${periodTotal(st.code,selectedPeriod)??"—"}</td><td id="annual_${safeId(st.code)}" class="total-col ${annualLocked?"admin-locked-annual":annualFail?"fail":""}">${annualLocked?"مقفل":(annual===null?"—":annual)}</td></tr>`
  }).join("")}</tbody></table></div>`;
  $("saveGradesBtn").disabled=locked;
  $("saveGradesBtn").classList.toggle("pending",submissionPendingAdmin(selectedPeriod));
@@ -904,6 +989,7 @@ function scoreChanged(input){
  const rec=ensureRecord(code),stored=storedGradeValue(raw);
  if(input.dataset.direct){if(raw==="")delete rec[selectedPeriod];else rec[selectedPeriod]=stored}
  else{hydrateComponentsFromDirect(code,selectedPeriod);rec.components??={};rec.components[selectedPeriod]??={};if(raw==="")delete rec.components[selectedPeriod][input.dataset.component];else rec.components[selectedPeriod][input.dataset.component]=stored;const total=periodTotal(code,selectedPeriod);if(total===null)delete rec[selectedPeriod];else rec[selectedPeriod]=total}
+ const periodCell=$(`periodTotal_${safeId(code)}`);if(periodCell)periodCell.textContent=periodTotal(code,selectedPeriod)??"—";
  const annual=annualPreview(code),annualCell=$(`annual_${safeId(code)}`),annualLocked=periodLocked("annual");if(annualCell){annualCell.textContent=annualLocked?"مقفل":(annual===null?"—":annual);annualCell.classList.toggle("admin-locked-annual",annualLocked);annualCell.classList.toggle("fail",!annualLocked&&annual!==null&&annual<subjectPass())}
 }
 
@@ -1230,20 +1316,89 @@ function scoreKeyNav(event,input){
  }
 }
 
-function openFormulaModal(period){if(editLocked(period)){toast(editLockText(period),"warn");return}editingPeriod=period;const values=formulas?.[period]?.components||{};$("formulaModalTitle").textContent=`تقسيم ${PERIODS[period].label}`;$("formulaModalDesc").textContent=`اختر مفردات التقييم. يجب أن يكون مجموعها ${subjectMax()} وهي الدرجة العظمى للمادة في هذا الصف.`;$("componentList").innerHTML=COMPONENTS.map(comp=>{const v=num(values[comp.key]),checked=v!==null&&v>0;return`<div class="component-item"><input type="checkbox" class="component-check" data-key="${esc(comp.key)}" ${checked?"checked":""} onchange="componentToggle(this)"><div class="component-name">${esc(comp.label)}</div><input type="number" class="max-input" data-max-key="${esc(comp.key)}" min="0.5" max="${subjectMax()}" step="0.5" value="${checked?v:""}" ${checked?"":"disabled"} oninput="updateFormulaTotal()" placeholder="الدرجة"></div>`}).join("");updateFormulaTotal();$("formulaModal").classList.add("show")}
-function componentToggle(ch){const i=document.querySelector(`[data-max-key="${CSS.escape(ch.dataset.key)}"]`);i.disabled=!ch.checked;if(!ch.checked)i.value="";else if(!i.value)i.value="1";updateFormulaTotal()}
-function formulaFormData(){const out={};document.querySelectorAll(".component-check:checked").forEach(ch=>{const i=document.querySelector(`[data-max-key="${CSS.escape(ch.dataset.key)}"]`),v=num(i.value);if(v!==null&&v>0)out[ch.dataset.key]=v});return out}
-function updateFormulaTotal(){const total=Object.values(formulaFormData()).reduce((s,v)=>s+Number(v),0),target=subjectMax(),el=$("formulaTotal");el.querySelector("strong").textContent=`${total} / ${target}`;el.className=`formula-total ${Math.abs(total-target)<.001?"valid":"invalid"}`}
+let FORMULA_STEP=1;
+function wizardComponents(){
+ return [...document.querySelectorAll(".component-check:checked")].map(c=>COMPONENTS.find(x=>x.key===c.dataset.key)).filter(Boolean)
+}
+function defaultGradeExpression(selected){
+ if(!selected.length)return"";
+ return selected.map(x=>x.key).join(" + ")
+}
+function openFormulaModal(period){
+ if(editLocked(period)){toast(editLockText(period),"warn");return}
+ editingPeriod=period;const f=formulas?.[period]||{},values=f.components||{};
+ $("formulaModalTitle").textContent=`تقسيم ${PERIODS[period].label}`;
+ $("formulaModalDesc").textContent=`الدرجة النهائية لمادة ${activeAssignment()?.subjectName||"—"} من ${subjectMax()}. اختر المفردات أولًا، ثم الدرجات والمعادلة.`;
+ $("componentList").innerHTML=COMPONENTS.map(comp=>`<label class="component-choice"><input type="checkbox" class="component-check" data-key="${esc(comp.key)}" ${Number(values[comp.key])>0?"checked":""}><span>${esc(comp.label)}</span><small>اختر</small></label>`).join("");
+ $("formulaExpression").value=f.expression||"";$("formulaScaleMode").value=f.scaleMode||"normalize";$("formulaRounding").value=String(f.rounding??"0.5");
+ formulaShowStage(1);$("formulaModal").classList.add("show")
+}
+function formulaShowStage(step){
+ FORMULA_STEP=step;
+ $("formulaChooseStage").classList.toggle("hidden",step!==1);
+ $("formulaMathStage").classList.toggle("hidden",step!==2);
+ $("formulaStep1").classList.toggle("active",step===1);$("formulaStep2").classList.toggle("active",step===2)
+}
+function fillFormulaMaxList(){
+ const previous=Object.fromEntries([...document.querySelectorAll("[data-max-key]")].map(el=>[el.dataset.maxKey,el.value]));
+ const f=formulas?.[editingPeriod]||{},list=wizardComponents();
+ $("formulaMaxList").innerHTML=list.map(comp=>`<div class="formula-max-row"><label>${esc(comp.label)}</label><span>الدرجة العظمى</span><input type="number" inputmode="decimal" min="0.1" max="10000" step="0.5" class="max-input" data-max-key="${esc(comp.key)}" value="${esc(previous[comp.key]||f.components?.[comp.key]||10)}" oninput="updateFormulaTotal()"></div>`).join("");
+ $("formulaTokens").innerHTML=list.map(comp=>`<button type="button" data-token="${esc(comp.key)}" onclick="insertFormulaToken('${comp.key}')">${esc(comp.label)}</button>`).join("")+`<button type="button" onclick="insertFormulaToken('MAX(')">الأعلى MAX(</button><button type="button" onclick="insertFormulaToken('MIN(')">الأقل MIN(</button><button type="button" onclick="insertFormulaToken('AVG(')">المتوسط AVG(</button>`;
+ if(!$("formulaExpression").value.trim())$("formulaExpression").value=defaultGradeExpression(list);
+ updateFormulaTotal()
+}
+function insertFormulaToken(token){
+ const el=$("formulaExpression"),start=el.selectionStart,end=el.selectionEnd,separator=token.endsWith("(")?"":" ";
+ el.value=el.value.slice(0,start)+token+separator+el.value.slice(end);el.focus();el.setSelectionRange(start+token.length+separator.length,start+token.length+separator.length);updateFormulaTotal()
+}
+$("formulaNextBtn").onclick=()=>{if(!wizardComponents().length)return toast("اختر مفردة تقييم واحدة على الأقل.","warn");formulaShowStage(2);fillFormulaMaxList()};
+$("formulaBackBtn").onclick=()=>formulaShowStage(1);
+$("formulaExpression").addEventListener("input",updateFormulaTotal);
+$("formulaScaleMode").addEventListener("change",updateFormulaTotal);
+$("formulaRounding").addEventListener("change",updateFormulaTotal);
+function formulaFormData(){
+ const values={};for(const comp of wizardComponents()){
+  const input=[...document.querySelectorAll("[data-max-key]")].find(x=>x.dataset.maxKey===comp.key);
+  const v=Number(input?.value);if(!input||!Number.isFinite(v)||v<=0||v>10000)throw new Error(`حدد درجة صحيحة لمفردة ${comp.label}`);values[comp.key]=v
+ }
+ return values
+}
+function updateFormulaTotal(){
+ const el=$("formulaTotal"),msg=$("formulaFormulaPreview");if(FORMULA_STEP!==2)return;
+ try{
+  const components=formulaFormData(),list=COMPONENTS.filter(c=>components[c.key]>0).map(c=>({...c,max:components[c.key]}));
+  const expression=$("formulaExpression").value.trim(),upper=validateGradeExpression(expression,list),raw=gradeExpressionValue(expression,Object.fromEntries(list.map(c=>[c.key,c.max])));
+  const scaled=$("formulaScaleMode").value==="direct"?raw:raw/upper*subjectMax();
+  if($("formulaScaleMode").value==="direct"&&scaled>subjectMax()+.001)throw new Error(`الحد الأعلى للناتج ${scaled} يتجاوز درجة المادة ${subjectMax()}. اختر التحويل النسبي أو غيّر المعادلة.`);
+  el.className="formula-total valid";el.querySelector("strong").textContent=`${roundGradeResult(scaled,$("formulaRounding").value)} / ${subjectMax()}`;
+  msg.textContent=`الناتج الأعلى للمعادلة قبل التحويل: ${Number(upper.toFixed(2))}. سيتم حساب درجات الطلاب من مفرداتهم الفعلية، وليس من هذه القيم القصوى.`;
+  return true
+ }catch(error){el.className="formula-total invalid";el.querySelector("strong").textContent="تحقق من المعادلة";msg.textContent=error.message;return false}
+}
 $("saveFormulaBtn").onclick=async()=>{
  if(await refreshEditLock(editingPeriod)){toast(editLockText(editingPeriod),"warn");$("formulaModal").classList.remove("show");renderPeriodButtons();renderFormulaInfo();renderGradeTable();return}
- if(!await verifyTeacherWritePermission()){toast("تعذر التحقق من صلاحية حساب الأستاذ.");return}
- const components=formulaFormData(),total=Object.values(components).reduce((sum,v)=>sum+Number(v),0),target=subjectMax();
- if(!Object.keys(components).length){await dbPut(`${formulaBasePath()}/${editingPeriod}`,null);delete formulas[editingPeriod];$("formulaModal").classList.remove("show");renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم إلغاء تقسيم الدرجة وسيكون الإدخال مباشراً.");return}
- if(Math.abs(total-target)>.001)return toast(`مجموع المفردات يجب أن يساوي ${target}`);
- const data={components,maxGrade:target,subjectId:activeAssignment().subjectId,subjectName:activeAssignment().subjectName,updatedAt:Date.now(),updatedBy:TEACHER_CODE};
- await dbPut(`${formulaBasePath()}/${editingPeriod}`,data);formulas[editingPeriod]=data;$("formulaModal").classList.remove("show");renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم اعتماد تقسيم الدرجة.")
-}
-$("closeFormulaModal").onclick=()=> $("formulaModal").classList.remove("show");$("formulaModal").addEventListener("click",e=>{if(e.target===$("formulaModal"))$("formulaModal").classList.remove("show")});
+ if(!await verifyTeacherWritePermission()){toast("تعذر التحقق من صلاحية حساب الأستاذ.","error");return}
+ if(!updateFormulaTotal()){toast("راجع درجات المفردات والمعادلة.","warn");return}
+ const components=formulaFormData(),expression=$("formulaExpression").value.trim(),list=COMPONENTS.filter(c=>components[c.key]>0).map(c=>({...c,max:components[c.key]}));
+ try{validateGradeExpression(expression,list)}catch(error){return toast(error.message,"error")}
+ const old=formulas?.[editingPeriod],hasSaved=studentsOfClass(selectedClassId).some(st=>Object.keys(grades?.[st.code]?.components?.[editingPeriod]||{}).length>0);
+ if(hasSaved&&JSON.stringify(old?.components)!==JSON.stringify(components)&&!window.confirm("انتبه: تغيّر الحد الأعلى لمفردات موجودة عليها درجات. درجات الطلاب القديمة ستبقى، لكن يجب مراجعتها وإعادة اعتماد الفترة بعد التعديل. هل تستمر؟"))return;
+ const data={components,expression,scaleMode:$("formulaScaleMode").value,rounding:Number($("formulaRounding").value),maxGrade:subjectMax(),subjectId:activeAssignment().subjectId,subjectName:activeAssignment().subjectName,updatedAt:Date.now(),updatedBy:TEACHER_CODE};
+ const button=$("saveFormulaBtn");button.disabled=true;
+ try{
+  await dbPut(`${formulaBasePath()}/${editingPeriod}`,data);formulas[editingPeriod]=data;
+  // Keep already-entered component scores; recalculate the displayed totals in memory.
+  for(const st of studentsOfClass(selectedClassId)){
+   const rec=grades[st.code];if(!rec)continue;
+   const data=rec.components?.[editingPeriod];if(!data||!Object.keys(data).length)continue;
+   const total=periodTotal(st.code,editingPeriod);
+   if(total===null)delete rec[editingPeriod];else rec[editingPeriod]=total;
+  }
+  $("formulaModal").classList.remove("show");renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم حفظ المفردات والمعادلة. يمكنك تعديلها ما دامت الفترة غير مقفلة.","success")
+ }catch(error){toast("تعذر حفظ التقسيم: "+error.message,"error")}
+ finally{button.disabled=false}
+};
+$("closeFormulaModal").onclick=()=>$("formulaModal").classList.remove("show");$("formulaModal").addEventListener("click",e=>{if(e.target===$("formulaModal"))$("formulaModal").classList.remove("show")});
 function validateScores(){
  for(const i of document.querySelectorAll(".score-input")){const raw=i.value.trim(),n=Number(raw),m=Number(i.dataset.max);if(raw!==""&&Number.isFinite(n)&&(n<0||n>m)){i.classList.add("invalid");i.scrollIntoView({behavior:"smooth",block:"center"});toast(`الدرجة يجب أن تكون بين 0 و ${m}`);return false}}
  return true
@@ -1872,7 +2027,7 @@ function selectedRecordIndexes(){return[...RECORD_ASSIGNMENT_INDEXES].sort((a,b)
 function renderRecordClassChoices(){
  $("recordClassChoices").innerHTML=assignments.map((a,i)=>{
   const c=classes[a.classId]||{},list=recordClassStudents(a.classId),gender=recordGenderFromList(c,list),sel=RECORD_ASSIGNMENT_INDEXES.has(i),genderText=gender==="female"?"بنات":gender==="male"?"بنين":"بنين و بنات",genderClass=gender==="female"?"gender-female":gender==="male"?"gender-male":"gender-mixed";
-  return`<button type="button" class="record-class-option ${genderClass} ${sel?"selected":""}" onclick="chooseRecordAssignment(${i})"><h4>${esc(c.name||a.classId)}</h4><p>${esc(a.subjectName)} — ${esc(recordRoomLabel(c.roomNumber))}<br>${list.length} اسم</p><span class="record-gender-badge">${genderText}</span></button>`
+  return`<button type="button" class="record-class-option ${genderClass} ${sel?"selected":""}" onclick="chooseRecordAssignment(${i})"><h4>${esc(c.name||a.classId)}</h4><p>${esc(a.subjectName)}<br>${list.length} اسم</p><span class="record-gender-badge">${genderText}</span></button>`
  }).join("");
  const n=RECORD_ASSIGNMENT_INDEXES.size;$("recordSelectionNote").textContent=n?`تم تحديد ${n} صف/مادة. سيتم ترتيب البنين أولاً ثم البنات.`:"لم يتم تحديد أي صف بعد."
 }
@@ -1932,11 +2087,11 @@ function recordStudentNameSize(value){const text=String(value||"").trim().replac
 function recordAutoTitle(kind){return kind==="oral"?"سجل الشفهي":kind==="draft"?"مسودة الأستاذ":"سجل خاص بالإدارة"}
 function unifiedCoverHTML(ctx,title,orientation="portrait"){
  const landscape=orientation==="landscape",warn=ctx.outdated?`<div class="old-record-warning">تنبيه: هذا الباركود قديم — يوجد سجل أحدث صادر بعد هذا السجل.</div>`:"";
- return`<section class="record-cover-page ${recordThemeClass(ctx.gender)} ${landscape?"landscape":""}">${warn}<div class="record-cover-frame"></div><div class="record-cover-inner"><div class="record-cover-top"><div class="record-cover-ministry"><img src="ministry-logo.PNG" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ALtahdi-school/student-AhLtahadi/main/ministry-logo.PNG'" alt="شعار وزارة التربية"></div><div class="record-cover-school">${esc(ctx.schoolAdminsText||"إدارة مدرسة التحدي الأهلية المختلطة")}</div></div><div class="record-cover-center"><img class="record-cover-logo" src="logo.png" alt="شعار المدرسة"><div class="record-cover-title">${esc(title)}</div><div class="record-cover-lines multi"><div class="record-cover-line">${ctx.subjectsText.includes("،")?"المواد":"المادة"}: ${esc(ctx.subjectsText||"—")}</div><div class="record-cover-line">أستاذ/ة المادة: ${esc(ctx.teacherName)}</div><div class="record-cover-line">${ctx.classesText.includes("،")?"الصفوف":"الصف"}: ${esc(ctx.classesText||"—")}</div><div class="record-cover-line">${esc(ctx.roomsText||"القاعة: —")}</div><div class="record-cover-line">الجنس: ${esc(recordGenderLabel(ctx.gender))}</div></div></div><div class="record-cover-bottom"><span>${esc(ctx.managerTitle)} المدرسة: ${esc(ctx.managerName)}</span><span>العام الدراسي ${esc(ctx.year)}</span></div></div></section>`
+ return`<section class="record-cover-page ${recordThemeClass(ctx.gender)} ${landscape?"landscape":""}">${warn}<div class="record-cover-frame"></div><div class="record-cover-inner"><div class="record-cover-top"><div class="record-cover-ministry"><img src="ministry-logo.PNG" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ALtahdi-school/student-AhLtahadi/main/ministry-logo.PNG'" alt="شعار وزارة التربية"></div><div class="record-cover-school">${esc(ctx.schoolAdminsText||"إدارة مدرسة التحدي الأهلية المختلطة")}</div></div><div class="record-cover-center"><img class="record-cover-logo" src="logo.png" alt="شعار المدرسة"><div class="record-cover-title">${esc(title)}</div><div class="record-cover-lines multi"><div class="record-cover-line">${ctx.subjectsText.includes("،")?"المواد":"المادة"}: ${esc(ctx.subjectsText||"—")}</div><div class="record-cover-line">أستاذ/ة المادة: ${esc(ctx.teacherName)}</div><div class="record-cover-line">${ctx.classesText.includes("،")?"الصفوف":"الصف"}: ${esc(ctx.classesText||"—")}</div><div class="record-cover-line">الجنس: ${esc(recordGenderLabel(ctx.gender))}</div></div></div><div class="record-cover-bottom"><span>${esc(ctx.managerTitle)} المدرسة: ${esc(ctx.managerName)}</span><span>العام الدراسي ${esc(ctx.year)}</span></div></div></section>`
 }
 function officialPageHTML(rows,pageIndex,totalPages,ctx,startIndex,recordId,publicKey=""){
  const blankCount=Math.max(0,25-rows.length),studentHead=personHead(ctx.c,ctx.gender),warn=ctx.outdated?`<div class="old-record-warning">هذا الباركود قديم — يوجد سجل أحدث</div>`:"",body=rows.map((x,i)=>{const row=x.row,p=Number(row.passGrade??ctx.a.passGrade??50);return`<tr><td class="seq">${startIndex+i+1}</td><td class="name" style="font-size:${recordStudentNameSize(x.student.name)}px">${esc(String(x.student.name||"—").trim())}</td>${recordCellGrade(row.term1,p,ctx.mode)}${recordCellGrade(row.midyear,p,ctx.mode)}${recordCellGrade(row.term2,p,ctx.mode)}${recordCellGrade(row.annual,p,ctx.mode)}${recordCellGrade(row.finalExam,p,ctx.mode)}${recordCellGrade(row.final,p,ctx.mode)}${recordCellGrade(row.secondRound,p,ctx.mode)}${recordCellGrade(row.secondFinal,p,ctx.mode)}<td></td></tr>`}).join(""),blanks=Array.from({length:blankCount},()=>`<tr class="blank-row"><td>—</td><td>—</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`).join(""),qr=ctx.mode==="grades"&&publicKey?`<div class="record-admin-qr-block"><div class="record-qr-code" data-code="${esc(recordQRURL(publicKey))}"></div><div class="record-record-id">${esc(recordId)}</div></div>`:"";
- return`<section class="record-print-page ${recordThemeClass(ctx.gender)}">${warn}<div class="record-page-frame"></div><div class="record-page-corner bl">◆</div><div class="record-page-corner tr">◆</div><img class="record-watermark-logo" src="logo.png" alt="">${pageIndex>0?`<div class="record-continuation">تكملة ${esc(ctx.c.name||"الصف")}</div>`:""}<div class="record-page-inner"><header class="record-head"><div class="record-head-side"><div class="record-admin-title"><span class="admin-word">إدارة</span><span class="admin-school">${esc(recordClassStageValue(ctx.c)==="primary"?"ابتدائية التحدي الأهلية المختلطة":"ثانوية التحدي الأهلية المختلطة")}</span></div>${qr}</div><div class="record-head-center"><img class="record-ministry-logo" src="ministry-logo.PNG" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ALtahdi-school/student-AhLtahadi/main/ministry-logo.PNG'" alt=""><h2>سجل خاص بالإدارة</h2><h3>${esc(ctx.c.name||"—")} — ${esc(recordRoomLabel(ctx.room))}</h3><div class="record-gender-line">${esc(recordGenderLabel(ctx.gender))}</div><p>للعام الدراسي ${esc(ctx.year)}</p><div class="record-meta"><span>المادة: ${esc(ctx.a.subjectName)}</span></div></div><div class="record-head-side"><img class="record-school-side-logo" src="logo.png" alt=""></div></header><table class="record-table-pdf"><thead><tr><th class="seq">ت</th><th class="name">${esc(studentHead)}</th><th class="vertical"><span class="vlabel">معدل الفصل الأول</span></th><th class="vertical"><span class="vlabel">نصف السنة</span></th><th class="vertical"><span class="vlabel">معدل الفصل الثاني</span></th><th class="vertical"><span class="vlabel">السعي السنوي</span></th><th class="vertical"><span class="vlabel">الامتحان النهائي</span></th><th class="vertical"><span class="vlabel">الدرجة النهائية</span></th><th class="vertical"><span class="vlabel">درجة الدور الثاني</span></th><th class="vertical"><span class="vlabel">الدرجة النهائية</span></th><th class="note">الملاحظات</th></tr></thead><tbody>${body}${blanks}</tbody></table><footer class="record-footer-pdf"><div class="record-signature">مدرس المادة<strong>${esc(ctx.teacherName)}</strong></div><div class="record-footer-auditor">${ctx.mode==="grades"&&publicKey?`<span>المدقق</span><strong>أحمد عبد الرحمن أحمد</strong>`:""}</div><div class="record-manager">${esc(ctx.managerTitle)} المدرسة<strong>${esc(ctx.managerName)}</strong></div></footer><div class="record-page-no">صفحة ${pageIndex+1} من ${totalPages}</div></div></section>`
+ return`<section class="record-print-page ${recordThemeClass(ctx.gender)}">${warn}<div class="record-page-frame"></div><div class="record-page-corner bl">◆</div><div class="record-page-corner tr">◆</div><img class="record-watermark-logo" src="logo.png" alt="">${pageIndex>0?`<div class="record-continuation">تكملة ${esc(ctx.c.name||"الصف")}</div>`:""}<div class="record-page-inner"><header class="record-head"><div class="record-head-side"><div class="record-admin-title"><span class="admin-word">إدارة</span><span class="admin-school">${esc(recordClassStageValue(ctx.c)==="primary"?"ابتدائية التحدي الأهلية المختلطة":"ثانوية التحدي الأهلية المختلطة")}</span></div>${qr}</div><div class="record-head-center"><img class="record-ministry-logo" src="ministry-logo.PNG" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ALtahdi-school/student-AhLtahadi/main/ministry-logo.PNG'" alt=""><h2>سجل خاص بالإدارة</h2><h3>${esc(ctx.c.name||"—")}</h3><div class="record-gender-line">${esc(recordGenderLabel(ctx.gender))}</div><p>للعام الدراسي ${esc(ctx.year)}</p><div class="record-meta"><span>المادة: ${esc(ctx.a.subjectName)}</span></div></div><div class="record-head-side"><img class="record-school-side-logo" src="logo.png" alt=""></div></header><table class="record-table-pdf"><thead><tr><th class="seq">ت</th><th class="name">${esc(studentHead)}</th><th class="vertical"><span class="vlabel">معدل الفصل الأول</span></th><th class="vertical"><span class="vlabel">نصف السنة</span></th><th class="vertical"><span class="vlabel">معدل الفصل الثاني</span></th><th class="vertical"><span class="vlabel">السعي السنوي</span></th><th class="vertical"><span class="vlabel">الامتحان النهائي</span></th><th class="vertical"><span class="vlabel">الدرجة النهائية</span></th><th class="vertical"><span class="vlabel">درجة الدور الثاني</span></th><th class="vertical"><span class="vlabel">الدرجة النهائية</span></th><th class="note">الملاحظات</th></tr></thead><tbody>${body}${blanks}</tbody></table><footer class="record-footer-pdf"><div class="record-signature">مدرس المادة<strong>${esc(ctx.teacherName)}</strong></div><div class="record-footer-auditor">${ctx.mode==="grades"&&publicKey?`<span>المدقق</span><strong>أحمد عبد الرحمن أحمد</strong>`:""}</div><div class="record-manager">${esc(ctx.managerTitle)} المدرسة<strong>${esc(ctx.managerName)}</strong></div></footer><div class="record-page-no">صفحة ${pageIndex+1} من ${totalPages}</div></div></section>`
 }
 function renderRecordQR(root){root.querySelectorAll(".record-qr-code").forEach(el=>{try{el.innerHTML="";const text=String(el.dataset.code||"").trim();if(!text)return;new QRCode(el,{text,width:320,height:320,colorDark:"#000",colorLight:"#fff",correctLevel:QRCode.CorrectLevel.M});requestAnimationFrame(()=>requestAnimationFrame(()=>{const canvas=el.querySelector("canvas"),img=el.querySelector("img");if(canvas){canvas.style.display="block";canvas.style.width="22mm";canvas.style.height="22mm";if(img)img.remove()}}))}catch(e){console.error(e)}})}
 async function waitRecordAssets(root){const imgs=[...root.querySelectorAll("img")];await Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(res=>{img.onload=res;img.onerror=res})));for(let i=0;i<30;i++){const need=root.querySelectorAll(".record-qr-code").length,got=root.querySelectorAll(".record-qr-code canvas,.record-qr-code img").length;if(!need||got>=need)break;await new Promise(res=>setTimeout(res,40))}await new Promise(res=>requestAnimationFrame(()=>requestAnimationFrame(res)))}
@@ -2000,7 +2155,12 @@ async function printRecordPreview(){
   }else if(isAndroidWebView()){
    throw new Error("الطباعة من WebView تتطلب ربط TahadiPrintBridge.java داخل MainActivity.java. لا يوجد تنزيل PDF تلقائي.");
   }else{
+   const originalTitle=document.title;
+   document.title=active.filename.replace(/\.pdf$/i,"");
+   const restoreTitle=()=>{document.title=originalTitle;window.removeEventListener("afterprint",restoreTitle)};
+   window.addEventListener("afterprint",restoreTitle,{once:true});
    window.print();
+   setTimeout(restoreTitle,12000);
   }
  }catch(e){console.error("RECORD_PRINT_ERROR",e);toast(e.message||"تعذر فتح نافذة الطباعة.","error")}
  finally{btn.disabled=false;btn.textContent="طباعة A4"}
@@ -2008,6 +2168,22 @@ async function printRecordPreview(){
 $("recordPreviewCloseTop").onclick=closeRecordPreview;
 $("recordPreviewCloseBottom").onclick=closeRecordPreview;
 $("recordPreviewPrintBtn").onclick=printRecordPreview;
+async function shareTeacherRecordPDF(){
+ const active=ACTIVE_RECORD_PRINT;if(!active)return toast("لا يوجد تقرير للمشاركة.","error");
+ const btn=$("recordPreviewShareBtn");btn.disabled=true;btn.textContent="جاري إعداد PDF...";
+ try{
+  const blob=active.pdf.output("blob"),filename=active.filename.endsWith(".pdf")?active.filename:active.filename+".pdf";
+  const file=new File([blob],filename,{type:"application/pdf"});
+  if(navigator.canShare&&navigator.canShare({files:[file]})&&navigator.share){
+   try{await navigator.share({files:[file],title:filename.replace(/\.pdf$/i,"")});return}
+   catch(e){if(e.name==="AbortError")return;console.warn("SHARE_FALLBACK",e)}
+  }
+  const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);
+ }catch(e){console.error(e);toast("تعذرت مشاركة ملف PDF: "+e.message,"error")}
+ finally{btn.disabled=false;btn.textContent="مشاركة / حفظ PDF"}
+}
+$("recordPreviewShareBtn").onclick=shareTeacherRecordPDF;
+
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("recordPreviewOverlay").classList.contains("show")){e.preventDefault();closeRecordPreview()}});
 
 async function stableRecordGroupKey(groups){
@@ -2016,7 +2192,7 @@ async function stableRecordGroupKey(groups){
 }
 async function publishOfficialSnapshot(ctx,groupRows,recordId,fingerprint){
  const publicKey=recordRandomPublicKey(),groupKey=await stableRecordGroupKey(ctx.groups),latest=await dbGet(`publicRecordLatest/${encodeURIComponent(groupKey)}`).catch(()=>null),now=Date.now();
- const snap={version:5,recordId,publicKey,groupKey,isLatest:true,fingerprint,createdAt:now,schoolYear:ctx.year,mode:ctx.mode,recordKind:"admin",recordTitleType:"admin",teacher:ctx.teacherName,teacherCode:TEACHER_CODE,manager:ctx.managerName,managerTitle:ctx.managerTitle,cover:{subjectsText:ctx.subjectsText,classesText:ctx.classesText,roomsText:ctx.roomsText,gender:ctx.gender,schoolAdminsText:ctx.schoolAdminsText},groups:groupRows.map(x=>({classData:{id:String(x.group.c.id||x.group.a.classId||""),name:String(x.group.c.name||""),stage:x.group.c.stage||x.group.c.classStage||"",gender:x.group.gender},room:x.group.room??"",gender:x.group.gender,subject:{id:String(x.group.a.subjectId||""),name:String(x.group.a.subjectName||""),passGrade:Number(x.group.a.passGrade??50),maxGrade:Number(x.group.a.maxGrade??100)},rows:x.rows.map(y=>({student:{code:String(y.student.code||""),name:String(y.student.name||""),roomNumber:y.student.roomNumber??x.group.room??""},row:{term1:y.row.term1??"",midyear:y.row.midyear??"",term2:y.row.term2??"",annual:y.row.annual??"",finalExam:y.row.finalExam??"",final:y.row.final??"",secondRound:y.row.secondRound??"",secondFinal:y.row.secondFinal??"",passGrade:Number(y.row.passGrade??x.group.a.passGrade??50)}}))}))};
+ const snap={version:5,recordId,publicKey,groupKey,isLatest:true,fingerprint,createdAt:now,schoolYear:ctx.year,mode:ctx.mode,recordKind:"admin",recordTitleType:"admin",teacher:ctx.teacherName,teacherCode:TEACHER_CODE,manager:ctx.managerName,managerTitle:ctx.managerTitle,cover:{subjectsText:ctx.subjectsText,classesText:ctx.classesText,gender:ctx.gender,schoolAdminsText:ctx.schoolAdminsText},groups:groupRows.map(x=>({classData:{id:String(x.group.c.id||x.group.a.classId||""),name:String(x.group.c.name||""),stage:x.group.c.stage||x.group.c.classStage||"",gender:x.group.gender},room:x.group.room??"",gender:x.group.gender,subject:{id:String(x.group.a.subjectId||""),name:String(x.group.a.subjectName||""),passGrade:Number(x.group.a.passGrade??50),maxGrade:Number(x.group.a.maxGrade??100)},rows:x.rows.map(y=>({student:{code:String(y.student.code||""),name:String(y.student.name||""),roomNumber:y.student.roomNumber??x.group.room??""},row:{term1:y.row.term1??"",midyear:y.row.midyear??"",term2:y.row.term2??"",annual:y.row.annual??"",finalExam:y.row.finalExam??"",final:y.row.final??"",secondRound:y.row.secondRound??"",secondFinal:y.row.secondFinal??"",passGrade:Number(y.row.passGrade??x.group.a.passGrade??50)}}))}))};
  snap.integrity=await recordSha256(JSON.stringify({recordId:snap.recordId,publicKey:snap.publicKey,groupKey:snap.groupKey,schoolYear:snap.schoolYear,teacher:snap.teacher,manager:snap.manager,groups:snap.groups}));
  const updates={};updates[`publicRecords/${publicKey}`]=snap;updates[`publicRecordLatest/${groupKey}`]={publicKey,recordId,createdAt:now};
  const oldKey=String(latest?.publicKey||"");if(oldKey&&oldKey!==publicKey){updates[`publicRecords/${oldKey}/isLatest`]=false;updates[`publicRecords/${oldKey}/supersededBy`]=publicKey;updates[`publicRecords/${oldKey}/supersededAt`]=now}
@@ -2027,7 +2203,7 @@ function draftPageHTML(rows,pageIndex,totalPages,ctx,startIndex,headers,title,po
  const blankCount=Math.max(0,(portrait?25:20)-rows.length),
  body=rows.map((st,i)=>`<tr><td>${startIndex+i+1}</td><td class="d-name">${esc(st.name||"—")}</td>${headers.map(()=>"<td></td>").join("")}</tr>`).join(""),
  blanks=Array.from({length:blankCount},()=>`<tr><td></td><td class="d-name"></td>${headers.map(()=>"<td></td>").join("")}</tr>`).join("");
- return`<section class="${portrait?"oral-print-page":"draft-print-page"} ${recordThemeClass(ctx.gender)}"><div class="draft-frame"></div>${pageIndex>0?`<div class="draft-cont">تكملة ${esc(ctx.c.name||"الصف")}</div>`:""}<div class="draft-inner"><div class="draft-title">${esc(title)}</div><div class="draft-meta"><span>الصف: ${esc(ctx.c.name||"—")}</span><span>القاعة: ${esc(recordRoomLabel(ctx.room))}</span><span>المادة: ${esc(ctx.a.subjectName)}</span><span>الجنس: ${esc(recordGenderLabel(ctx.gender))}</span>${portrait?`<span>الفترة: ${esc(ctx.periodLabel||"—")}</span>`:""}</div><table class="draft-table"><thead><tr><th class="d-seq">ت</th><th class="d-name">${esc(personHead(ctx.c,ctx.gender))}</th>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${body}${blanks}</tbody></table><div class="draft-note">${pageIndex+1===totalPages?"نهاية هذا الصف":"يتبع هذا الصف"}</div><div class="draft-page-no">صفحة ${pageIndex+1} من ${totalPages}</div></div></section>`
+ return`<section class="${portrait?"oral-print-page":"draft-print-page"} ${recordThemeClass(ctx.gender)}"><div class="draft-frame"></div>${pageIndex>0?`<div class="draft-cont">تكملة ${esc(ctx.c.name||"الصف")}</div>`:""}<div class="draft-inner"><div class="draft-title">${esc(title)}</div><div class="draft-meta"><span>الصف: ${esc(ctx.c.name||"—")}</span><span>المادة: ${esc(ctx.a.subjectName)}</span><span>الجنس: ${esc(recordGenderLabel(ctx.gender))}</span>${portrait?`<span>الفترة: ${esc(ctx.periodLabel||"—")}</span>`:""}</div><table class="draft-table"><thead><tr><th class="d-seq">ت</th><th class="d-name">${esc(personHead(ctx.c,ctx.gender))}</th>${headers.map(h=>`<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${body}${blanks}</tbody></table><div class="draft-note">${pageIndex+1===totalPages?"نهاية هذا الصف":"يتبع هذا الصف"}</div><div class="draft-page-no">صفحة ${pageIndex+1} من ${totalPages}</div></div></section>`
 }
 async function generateAdminRecord(){
  const ctx=recordCommonInput(),mode=document.querySelector('input[name="hubRecordMode"]:checked')?.value||"grades";ctx.mode=mode;
@@ -2038,7 +2214,7 @@ async function generateAdminRecord(){
  host.innerHTML=html;renderRecordQR(host);await waitRecordAssets(host);
  const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.record-print-page")],previewImages=[];
  for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.45:1.8,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});const previewSrc=canvas.toDataURL("image/jpeg",.96);previewImages.push(previewSrc);pdf.addImage(previewSrc,"JPEG",0,0,210,297,undefined,"FAST");if(pages[i].classList.contains("record-print-page"))addSharpQRToPDF(pdf,pages[i]);canvas.width=1;canvas.height=1}
- showRecordPreview(pdf,`${recordFileName(title)}_${mode==="grades"?"بدرجات":"بدون_درجات"}_${recordFileName(ctx.classesText)}.pdf`,"portrait",previewImages);host.innerHTML=""
+ showRecordPreview(pdf,`${recordFileName(title)} | ${recordFileName(ctx.classesText)} | ${recordFileName(ctx.teacherName)}.pdf`,"portrait",previewImages);host.innerHTML=""
 }
 async function generateDraftRecord(){
  const ctx=recordCommonInput(),headers=customHubHeaders("[data-hub-draft-head]",8),title=recordAutoTitle("draft"),host=$("draftPdfHost"),perPage=20;
@@ -2053,7 +2229,7 @@ async function generateDraftRecord(){
  host.innerHTML=html;await waitRecordAssets(host);
  const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"landscape",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.draft-print-page")],previewImages=[];
  for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","landscape");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.4:1.75,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});const previewSrc=canvas.toDataURL("image/jpeg",.96);previewImages.push(previewSrc);pdf.addImage(previewSrc,"JPEG",0,0,297,210,undefined,"FAST");canvas.width=1;canvas.height=1}
- showRecordPreview(pdf,`مسودة_${recordFileName(ctx.teacherName)}_${recordFileName(ctx.classesText)}.pdf`,"landscape",previewImages);host.innerHTML=""
+ showRecordPreview(pdf,`مسودة الأستاذ | ${recordFileName(ctx.classesText)} | ${recordFileName(ctx.teacherName)}.pdf`,"landscape",previewImages);host.innerHTML=""
 }
 async function generateOralRecord(){
  const ctx=recordCommonInput(),period=$("hubOralPeriod").value||"midyear",headers=customHubHeaders("[data-hub-oral-head]",6),title=recordAutoTitle("oral"),host=$("oralPdfHost"),perPage=25;
@@ -2068,7 +2244,7 @@ async function generateOralRecord(){
  host.innerHTML=html;await waitRecordAssets(host);
  const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.oral-print-page")],previewImages=[];
  for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.4:1.75,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});const previewSrc=canvas.toDataURL("image/jpeg",.96);previewImages.push(previewSrc);pdf.addImage(previewSrc,"JPEG",0,0,210,297,undefined,"FAST");canvas.width=1;canvas.height=1}
- showRecordPreview(pdf,`سجل_الشفهي_${recordFileName(ctx.classesText)}.pdf`,"portrait",previewImages);host.innerHTML=""
+ showRecordPreview(pdf,`سجل الشفهي | ${recordFileName(ctx.classesText)} | ${recordFileName(ctx.teacherName)}.pdf`,"portrait",previewImages);host.innerHTML=""
 }
 async function previewHubRecord(){
  if(!RECORD_ASSIGNMENT_INDEXES.size)return toast("حدد صفاً واحداً على الأقل.");
@@ -2097,7 +2273,7 @@ async function initPublicTeacherRecord(publicKey){
   const host=$("recordPdfHost");host.innerHTML=html;renderRecordQR(host);await waitRecordAssets(host);
   const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true}),pages=[...host.querySelectorAll(".record-cover-page,.record-print-page")],previewImages=[];
   for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale:isMobileRecordPDF()?1.45:1.8,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight});const previewSrc=canvas.toDataURL("image/jpeg",.96);previewImages.push(previewSrc);pdf.addImage(previewSrc,"JPEG",0,0,210,297,undefined,"FAST");if(pages[i].classList.contains("record-print-page"))addSharpQRToPDF(pdf,pages[i]);canvas.width=1;canvas.height=1}
-  showRecordPreview(pdf,`سجل_الإدارة_${recordFileName(ctx.classesText)}.pdf`,"portrait",previewImages);$("loaderScreen").classList.add("record-ready");host.innerHTML=""
+  showRecordPreview(pdf,`سجل الإدارة | ${recordFileName(ctx.classesText)} | ${recordFileName(ctx.teacherName)}.pdf`,"portrait",previewImages);$("loaderScreen").classList.add("record-ready");host.innerHTML=""
  }catch(e){console.error("PUBLIC_RECORD_ERROR",e);$("loaderScreen").querySelector("p").textContent=e.message||"تعذر فتح السجل"}
 }
 $("openRecordsHubBtn").onclick=openRecordsHub;
