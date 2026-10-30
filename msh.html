@@ -305,7 +305,7 @@ $('saveBtn').addEventListener('click',async()=>{if(saving||!currentClass)return;
 /* تقرير يوم واحد للصف المحدد، متطابق الصفحات على A4، مع تكرار الملاحظة لكل ورقة. */
 const REPORT_DEFAULT_NOTE='لا توجد ملاحظات من قبل المشرف. تم تنزيل الغياب من السجل كما هي. السادة أولياء الأمور، التفضل بالاطلاع. مع التقدير.';
 const REPORT_NO_INCIDENT_TITLE='لا توجد غيابات لهذا اليوم';
-const REPORT_NO_INCIDENT_MESSAGE='تتقدم إدارة مدرسة التحدي الأهلية المختلطة بخالص الشكر والتقدير إلى السادة أولياء الأمور على حرصهم ومتابعتهم وحث أبنائهم على الالتزام بالدوام المدرسي والانضباط، متمنين لطلبتنا دوام التوفيق والنجاح.';
+const REPORT_NO_INCIDENT_MESSAGE='تتقدم إدارة مدرسة التحدي الأهلية المختلطة بخالص الشكر والتقدير إلى السادة أولياء الأمور على حرصهم ومتابعتهم وحث أبنائهم على الالتزام بالدوام المدرسي والانضباط متمنين لطلبتنا دوام التوفيق والنجاح.';
 const REPORT_INCIDENT_STATES=['absent','late','excused','escape'];
 function reportIncidents(){return availableStudents(currentClass).filter(student=>(recordStatuses[student.code]||'present')!=='present')}
 const ORIGINAL_PAGE_TITLE=document.title;
