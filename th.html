@@ -693,6 +693,43 @@ body.record-preview-open{overflow:hidden!important}
  </div>
 </div>
 <script>
+
+/* Unified Firebase Realtime Database GET transport: retry transient failures only.
+   No changes to database paths, values, authorization, writes, or page markup. */
+async function tahadiFirebaseReadFetch(url, options={}) {
+  const verb=String(options?.method||"GET").toUpperCase();
+  if(verb!=="GET") return fetch(url,options);
+  const retryStatuses=new Set([408,429,500,502,503,504]);
+  const upstreamSignal=options?.signal;
+  for(let attempt=0;attempt<3;attempt++) {
+    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
+    const controller=new AbortController();
+    const abort=()=>controller.abort();
+    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
+    const timeout=setTimeout(()=>controller.abort(),22000);
+    try {
+      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
+      if(!retryStatuses.has(response.status)||attempt===2)return response;
+    }catch(error){
+      if(upstreamSignal?.aborted)throw error;
+      if(attempt===2)throw error;
+    }finally{
+      clearTimeout(timeout);
+      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
+    }
+    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
+  }
+  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
+}
+/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
+async function tahadiLimitedReads(items,limit,readOne){
+  const array=Array.from(items||[]),out=new Array(array.length);
+  let next=0;
+  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
+  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
+  return out;
+}
+
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",PERIODS={term1:{label:"الفصل الأول"},midyear:{label:"نصف السنة"},term2:{label:"الفصل الثاني"},finalExam:{label:"الامتحان النهائي"},secondRound:{label:"الدور الثاني"}},COMPONENTS=[["month1","الشهر الأول"],["month2","الشهر الثاني"],["month3","الشهر الثالث"],["month4","الشهر الرابع"],["month5","الشهر الخامس"],["month6","الشهر السادس"],["month7","الشهر السابع"],["month8","الشهر الثامن"],["month9","الشهر التاسع"],["month10","الشهر العاشر"],["month11","الشهر الحادي عشر"],["month12","الشهر الثاني عشر"],["grammar","قواعد"],["literature","أدب"],["composition","إنشاء"],["oral","شفهي"],["practical","عملي"],["behavior","سلوك"],["attendance","حضور"],["drawing","رسم"],["preparation","تحضير"],["homework","واجب"],["daily","يومي"],["monthly","شهري"],["weekly","أسبوعي"],["electronic","إلكتروني"],["quiz","اختبار قصير"],["participation","مشاركة"],["project","مشروع"],["activity","نشاط"]].map(([key,label])=>({key,label}));
 let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null;
 const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])),norm=v=>String(v??"").trim().toLowerCase(),num=v=>v===""||v===null||v===undefined?null:(Number.isFinite(Number(v))?Number(v):null),safeJS=v=>String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"),safeId=v=>String(v||"").replace(/[^a-zA-Z0-9_-]/g,"_"),safeKey=v=>String(v||"").trim().toLowerCase().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[^a-z0-9\u0600-\u06ff]+/gi,"_").replace(/^_+|_+$/g,"");
@@ -721,7 +758,7 @@ function toast(text,type="warn"){
 }
 $("screenAlertOk").onclick=closeScreenAlert;
 $("screenAlert").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key==="Escape"){e.preventDefault();closeScreenAlert()}});
-async function req(path,method="GET",data=undefined){const o={method,cache:"no-store"};if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}const r=await fetch(`${DB}/${path}.json`,o);if(!r.ok)throw new Error(`${method}_${r.status}`);return method==="DELETE"?true:r.json()}const dbGet=p=>req(p),dbPatch=(p,d)=>req(p,"PATCH",d),dbPut=(p,d)=>req(p,"PUT",d),dbPost=(p,d)=>req(p,"POST",d);
+async function req(path,method="GET",data=undefined){const o={method,cache:"no-store"};if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}const r=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,o);if(!r.ok)throw new Error(`${method}_${r.status}`);return method==="DELETE"?true:r.json()}const dbGet=p=>req(p),dbPatch=(p,d)=>req(p,"PATCH",d),dbPut=(p,d)=>req(p,"PUT",d),dbPost=(p,d)=>req(p,"POST",d);
 
 function rawText(v){return String(v??"").trim()}
 function storedGradeValue(v){const t=rawText(v);if(!t)return"";const n=Number(t);return Number.isFinite(n)?n:t}
@@ -836,7 +873,7 @@ function resolveAssignments(){let rows=Array.isArray(teacher.assignments)?teache
 async function verifyTeacher(){if(!loadSession())return false;teacherUser=await dbGet(`users/${encodeURIComponent(session.code)}`);if(!teacherUser||!["teacher","th"].includes(norm(teacherUser.role))||teacherUser.active===false||teacherUser.hidden===true){logout();return false}TEACHER_CODE=teacherUser.teacherId||session.code;teacher=await dbGet(`teachers/${encodeURIComponent(TEACHER_CODE)}`);if(!teacher)throw new Error("TEACHER_NOT_FOUND");return true}
 async function loadBaseData(){const[a,b]=await Promise.all([dbGet("classes"),dbGet("students")]);classes=a||{};students=b||{};assignments=resolveAssignments()}
 function assignmentFor(classId){return assignments.find(a=>a.classId===classId)||null}function activeAssignment(){return assignmentFor(selectedClassId)}function subjectMax(){return Number(activeAssignment()?.maxGrade||100)}function subjectPass(){return Number(activeAssignment()?.passGrade??50)}
-function studentsOfClass(classId){return Object.entries(students).map(([code,s])=>({code,...s})).filter(s=>s.classId===classId&&s.deleted!==true).sort((a,b)=>(Number(a.serial||999999)-Number(b.serial||999999))||String(a.name||"").localeCompare(String(b.name||""),"ar"))}
+function studentsOfClass(classId){return Object.entries(students).map(([code,s])=>({code,...s})).filter(s=>s.classId===classId&&s.deleted!==true&&s.hidden!==true).sort((a,b)=>(Number(a.serial||999999)-Number(b.serial||999999))||String(a.name||"").localeCompare(String(b.name||""),"ar"))}
 function renderTeacher(){const names=[...new Set(assignments.map(a=>a.subjectName))];$("teacherName").textContent=teacher.name||teacherUser.name||"—";$("teacherSubject").textContent=`المواد: ${names.join("، ")||teacher.subject||"—"}`}
 function renderClasses(){
  if(!assignments.length){$("classesGrid").innerHTML=`<div class="empty">لا توجد مادة وصف مسندان إلى حسابك حالياً. يجب ربط الأستاذ من صفحة الإدارة بمادة موجودة داخل الصف.</div>`;return}
@@ -861,13 +898,8 @@ function gradePath(code){const a=activeAssignment();return`grades/${encodeURICom
 
  const a=activeAssignment(),
        list=studentsOfClass(selectedClassId),
-       res=await Promise.all(
-        list.map(
-         st=>
-          dbGet(
-           `grades/${encodeURIComponent(st.code)}`
-          )
-        )
+       res=await tahadiLimitedReads(list,8,
+        st=>dbGet(`grades/${encodeURIComponent(st.code)}`)
        );
 
  list.forEach(
