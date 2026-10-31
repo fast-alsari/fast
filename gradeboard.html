@@ -298,6 +298,43 @@ button,input,select{font:inherit}button{cursor:pointer}.hidden{display:none!impo
 <div id="toast" class="toast"></div>
 
 <script>
+
+/* Unified Firebase Realtime Database GET transport: retry transient failures only.
+   No changes to database paths, values, authorization, writes, or page markup. */
+async function tahadiFirebaseReadFetch(url, options={}) {
+  const verb=String(options?.method||"GET").toUpperCase();
+  if(verb!=="GET") return fetch(url,options);
+  const retryStatuses=new Set([408,429,500,502,503,504]);
+  const upstreamSignal=options?.signal;
+  for(let attempt=0;attempt<3;attempt++) {
+    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
+    const controller=new AbortController();
+    const abort=()=>controller.abort();
+    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
+    const timeout=setTimeout(()=>controller.abort(),22000);
+    try {
+      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
+      if(!retryStatuses.has(response.status)||attempt===2)return response;
+    }catch(error){
+      if(upstreamSignal?.aborted)throw error;
+      if(attempt===2)throw error;
+    }finally{
+      clearTimeout(timeout);
+      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
+    }
+    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
+  }
+  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
+}
+/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
+async function tahadiLimitedReads(items,limit,readOne){
+  const array=Array.from(items||[]),out=new Array(array.length);
+  let next=0;
+  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
+  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
+  return out;
+}
+
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
 const $=id=>document.getElementById(id);
 const norm=v=>String(v??"").trim().toLowerCase();
@@ -344,7 +381,7 @@ async function req(path,method="GET",data){
  const o={method,cache:"no-store"};
  if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}
  const clean=String(path||"").replace(/^\/+|\/+$/g,"");
- const r=await fetch(`${DB}/${clean}.json`,o);
+ const r=await tahadiFirebaseReadFetch(`${DB}/${clean}.json`,o);
  if(!r.ok)throw new Error(`${method}_${path}_${r.status}`);
  return method==="DELETE"?true:await r.json()
 }
@@ -876,17 +913,17 @@ async function clearBoardRules(){
    تحميل الصفوف والدخول
 ========================= */
 async function loadGradesForGroups(groups){
- const map=new Map();
- groups.forEach(g=>g.students.forEach(st=>map.set(st.code,st)));
- const missing=[...map.values()].filter(st=>DATA.grades[st.code]===undefined);
- let next=0;
- async function worker(){
-  while(next<missing.length){
-   const st=missing[next++];
-   try{DATA.grades[st.code]=await dbGet(`grades/${encodeURIComponent(st.code)}`)||{}}catch{DATA.grades[st.code]={}}
-  }
- }
- await Promise.all(Array.from({length:Math.min(8,Math.max(1,missing.length))},worker))
+ const unique=new Map();
+ groups.forEach(g=>g.students.forEach(st=>unique.set(st.code,st)));
+ // Refresh selected records every time; never mistake a failed GET for an empty report.
+ const loaded=await tahadiLimitedReads([...unique.values()],8,async st=>{
+   const value=await dbGet(`grades/${encodeURIComponent(st.code)}`);
+   if(value!==null&&(typeof value!=="object"||Array.isArray(value)))
+     throw new Error(`INVALID_GRADE_DATA_${st.code}`);
+   return [st.code,value||{}];
+ });
+ // Commit the snapshot only after ALL required reads succeed.
+ for(const [code,value] of loaded)DATA.grades[code]=value;
 }
 async function enterSelectedBoards(){
  if(!SELECTED_KEYS.size)return toast("حدد صفاً واحداً على الأقل.","warn");
