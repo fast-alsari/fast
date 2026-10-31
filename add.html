@@ -2,7 +2,6 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-  
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="theme-color" content="#075fcf">
 <title>إدارة المدرسة | مدرسة التحدي الأهلية المختلطة</title>
@@ -429,6 +428,43 @@
 <div id="pdfHost" class="pdf-host"></div><div id="codesPdfHost" class="codes-pdf-host"></div><div id="studentDataPdfHost" class="codes-pdf-host"></div><div id="toast" class="toast"></div>
 
 <script>
+
+/* Unified Firebase Realtime Database GET transport: retry transient failures only.
+   No changes to database paths, values, authorization, writes, or page markup. */
+async function tahadiFirebaseReadFetch(url, options={}) {
+  const verb=String(options?.method||"GET").toUpperCase();
+  if(verb!=="GET") return fetch(url,options);
+  const retryStatuses=new Set([408,429,500,502,503,504]);
+  const upstreamSignal=options?.signal;
+  for(let attempt=0;attempt<3;attempt++) {
+    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
+    const controller=new AbortController();
+    const abort=()=>controller.abort();
+    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
+    const timeout=setTimeout(()=>controller.abort(),22000);
+    try {
+      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
+      if(!retryStatuses.has(response.status)||attempt===2)return response;
+    }catch(error){
+      if(upstreamSignal?.aborted)throw error;
+      if(attempt===2)throw error;
+    }finally{
+      clearTimeout(timeout);
+      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
+    }
+    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
+  }
+  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
+}
+/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
+async function tahadiLimitedReads(items,limit,readOne){
+  const array=Array.from(items||[]),out=new Array(array.length);
+  let next=0;
+  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
+  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
+  return out;
+}
+
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",IMAGE_UPLOAD_WORKER_URL="https://floral-pine-2aa7.ahmed-a-ahmed00457.workers.dev/";
 const BG_REMOVAL_MODULE_URL="https://esm.sh/@imgly/background-removal@1.7.0?bundle",FACE_VISION_MODULE_URL="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/+esm",FACE_WASM_URL="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm",FACE_MODEL_URL="https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite",PHOTO_PROCESS_VERSION="transaction-photo-v3",PHOTO_W=900,PHOTO_H=1200,PHOTO_FACE_HEIGHT_RATIO=.36,PHOTO_HEAD_TOP_RATIO=.075,PHOTO_MAX_INPUT_SIDE=2200;
 const PATH={users:"users",students:"students",studentPhotos:"studentPhotos",studentDocuments:"studentDocuments",teachers:"teachers",classes:"classes",grades:"grades",attendance:"attendance",payments:"payments",meta:"meta",violations:"behaviorViolationInbox",studentMessages:"studentMessages",gradeObjections:"gradeObjections",gradeChangeRequests:"gradeChangeRequests",adminGradeAlerts:"adminGradeAlerts",teacherGradeSubmissions:"teacherGradeSubmissions"};
@@ -470,7 +506,7 @@ function cleanDbPath(path){return String(path??"").replace(/^\/+|\/+$/g,"");}
 function clearReadCache(path=""){path=cleanDbPath(path);if(!path){READ_CACHE.clear();return;}for(const key of [...READ_CACHE.keys()])if(key===path||key.startsWith(path+"/")||path.startsWith(key+"/"))READ_CACHE.delete(key);}
 function setReadCache(path,value){READ_CACHE.set(cleanDbPath(path),{time:Date.now(),value});return value;}
 function primeCollectionCache(path,data){path=cleanDbPath(path);data=data||{};setReadCache(path,data);Object.entries(data).forEach(([key,value])=>setReadCache(`${path}/${encodeURIComponent(key)}`,value));}
-async function req(path,method="GET",data=undefined,requestOptions={}){path=cleanDbPath(path);method=String(method||"GET").toUpperCase();const fresh=requestOptions?.fresh===true,ttl=Math.max(0,Number(requestOptions?.ttl??READ_CACHE_TTL)),cacheKey=path;if(method==="GET"&&!fresh){const cached=READ_CACHE.get(cacheKey);if(cached&&Date.now()-cached.time<=ttl)return cached.value;if(READ_PENDING.has(cacheKey))return READ_PENDING.get(cacheKey);}const run=(async()=>{const options={method,cache:"no-store"};if(data!==undefined){options.headers={"Content-Type":"application/json"};options.body=JSON.stringify(data);}const response=await fetch(`${DB}/${path}.json`,options);if(!response.ok)throw new Error(`${method}_${path}_${response.status}`);const value=method==="DELETE"?true:await response.json();if(method==="GET")setReadCache(cacheKey,value);else clearReadCache(path);return value;})();if(method!=="GET")return run;READ_PENDING.set(cacheKey,run);try{return await run;}finally{if(READ_PENDING.get(cacheKey)===run)READ_PENDING.delete(cacheKey);}}
+async function req(path,method="GET",data=undefined,requestOptions={}){path=cleanDbPath(path);method=String(method||"GET").toUpperCase();const fresh=requestOptions?.fresh===true,ttl=Math.max(0,Number(requestOptions?.ttl??READ_CACHE_TTL)),cacheKey=path;if(method==="GET"&&!fresh){const cached=READ_CACHE.get(cacheKey);if(cached&&Date.now()-cached.time<=ttl)return cached.value;if(READ_PENDING.has(cacheKey))return READ_PENDING.get(cacheKey);}const run=(async()=>{const options={method,cache:"no-store"};if(data!==undefined){options.headers={"Content-Type":"application/json"};options.body=JSON.stringify(data);}const response=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,options);if(!response.ok)throw new Error(`${method}_${path}_${response.status}`);const value=method==="DELETE"?true:await response.json();if(method==="GET")setReadCache(cacheKey,value);else clearReadCache(path);return value;})();if(method!=="GET")return run;READ_PENDING.set(cacheKey,run);try{return await run;}finally{if(READ_PENDING.get(cacheKey)===run)READ_PENDING.delete(cacheKey);}}
 const dbGet=(path,options)=>req(path,"GET",undefined,options),dbGetFresh=path=>req(path,"GET",undefined,{fresh:true,ttl:0}),dbPut=(path,data)=>req(path,"PUT",data),dbPatch=(path,data)=>req(path,"PATCH",data),dbPost=(path,data)=>req(path,"POST",data),dbDelete=path=>req(path,"DELETE");
 async function mapLimit(items,limit,worker){items=Array.from(items||[]);if(!items.length)return[];const out=new Array(items.length);let next=0;async function runner(){while(true){const i=next++;if(i>=items.length)return;out[i]=await worker(items[i],i);}}await Promise.all(Array.from({length:Math.min(Math.max(1,Number(limit)||1),items.length)},runner));return out;}
 
@@ -595,7 +631,7 @@ function updateClassBulkGenderUI(){const mixed=normalizeGender($("classGender")?
 function updateClassTerminologyPreview(){const stage=$("classStage")?.value,gender=$("classGender")?.value,box=$("classTerminologyPreview");if(!box)return;if(!stage||!gender){box.textContent="اختر المرحلة وجنس الصف لعرض التسمية المناسبة.";return;}const c={stage,gender};box.textContent=`التسمية المعتمدة لهذا الصف: ${classPersonTerm(c)} — المرحلة: ${classStageLabel(c)} — الجنس: ${genderClass(gender)}`;}
 function setupClassBulkStudentImport(){const text=$("classBulkStudentNames"),drop=$("classExcelDrop"),file=$("classExcelFile");if(!text||!drop||!file)return;text.addEventListener("input",renderClassBulkStudentPreview);text.addEventListener("paste",()=>setTimeout(renderClassBulkStudentPreview,0));$("classGender")?.addEventListener("change",()=>{updateClassBulkGenderUI();updateClassTerminologyPreview();renderClassBulkStudentPreview();});$("classStage")?.addEventListener("change",updateClassTerminologyPreview);$("classBulkGender")?.addEventListener("change",renderClassBulkStudentPreview);$("normalizeClassBulkStudentsBtn").onclick=normalizeClassBulkStudents;$("clearClassBulkStudentsBtn").onclick=()=>{resetClassBulkStudents();toast("تم مسح قائمة الطلاب");};file.addEventListener("change",()=>handleClassExcelFile(file.files?.[0]));["dragenter","dragover"].forEach(type=>drop.addEventListener(type,e=>{e.preventDefault();e.stopPropagation();drop.classList.add("dragover");}));["dragleave","drop"].forEach(type=>drop.addEventListener(type,e=>{e.preventDefault();e.stopPropagation();drop.classList.remove("dragover");}));drop.addEventListener("drop",async e=>{const f=e.dataTransfer?.files?.[0];if(f){await handleClassExcelFile(f);return;}const dropped=e.dataTransfer?.getData("text/plain")||"";if(dropped){addBulkStudentNames(parseBulkStudentText(dropped).names);toast("تمت إضافة الأسماء المسحوبة");}});}
 function reserveBulkStudentCodes(gender,count,usedCodes){const out=[];for(let i=0;i<count;i++){let code="";for(let attempt=0;attempt<500;attempt++){const candidate=makeStudentCode(gender);if(!usedCodes.has(candidate)){code=candidate;usedCodes.add(candidate);break;}}if(!code)throw new Error("تعذر توليد أكواد الطلاب");out.push(code);}return out;}
-async function reserveStudentSequences(count){count=Math.max(0,Number(count)||0);if(!count)return[];const url=`${DB}/meta/studentSequence.json`;for(let attempt=0;attempt<12;attempt++){const read=await fetch(url,{method:"GET",cache:"no-store",headers:{"X-Firebase-ETag":"true"}});if(!read.ok)throw new Error("تعذر قراءة تسلسل الطلاب");const etag=read.headers.get("ETag"),current=Number(await read.json()||0),next=current+count,write=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json","if-match":etag},body:JSON.stringify(next)});if(write.status===200)return Array.from({length:count},(_,i)=>current+i+1);if(write.status!==412)throw new Error("تعذر حجز أعداد الطلاب");}throw new Error("تعذر حجز أعداد الطلاب بسبب عملية متزامنة");}
+async function reserveStudentSequences(count){count=Math.max(0,Number(count)||0);if(!count)return[];const url=`${DB}/meta/studentSequence.json`;for(let attempt=0;attempt<12;attempt++){const read=await tahadiFirebaseReadFetch(url,{method:"GET",cache:"no-store",headers:{"X-Firebase-ETag":"true"}});if(!read.ok)throw new Error("تعذر قراءة تسلسل الطلاب");const etag=read.headers.get("ETag"),current=Number(await read.json()||0),next=current+count,write=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json","if-match":etag},body:JSON.stringify(next)});if(write.status===200)return Array.from({length:count},(_,i)=>current+i+1);if(write.status!==412)throw new Error("تعذر حجز أعداد الطلاب");}throw new Error("تعذر حجز أعداد الطلاب بسبب عملية متزامنة");}
 async function appendBulkStudentsToClassUpdates(classRow,updates){const parsed=parseBulkStudentText($("classBulkStudentNames").value);if(!parsed.names.length)return{created:[],existing:[],moved:[],kept:[],duplicates:parsed.duplicates};const students=DATA.students||{},users=DATA.users||{},existing=[],names=[],moved=[],kept=[],unresolved=[];parsed.names.forEach(name=>{const hit=findDuplicateStudentName(name);if(!hit){names.push(name);return;}existing.push({name,...hit});const decision=bulkExistingDecisions.get(bulkStudentNameKey(name));if(!decision||decision.code!==hit.code){unresolved.push({name,...hit});return;}if(decision.action==="keep"){kept.push({name,...hit});return;}const st=hit.student;if(!classAllowsStudentGender(classRow,st.gender))throw new Error(`لا يمكن نقل ${st.name||name} إلى صف من جنس مختلف`);const roomNumber=Number(classRow.roomNumber),time=Date.now();updates[`students/${hit.code}/classId`]=classRow.id;updates[`students/${hit.code}/className`]=classRow.name;updates[`students/${hit.code}/roomNumber`]=roomNumber;updates[`students/${hit.code}/updatedAt`]=time;updates[`students/${hit.code}/updatedBy`]=adminCode();updates[`users/${hit.code}/classId`]=classRow.id;updates[`users/${hit.code}/roomNumber`]=roomNumber;moved.push({name,code:hit.code,student:st,targetClassId:classRow.id,targetClassName:classRow.name,targetRoomNumber:roomNumber});});if(unresolved.length){const namesText=unresolved.slice(0,3).map(v=>v.name).join("، ");throw new Error(`حدد إبقاء أو نقل للطلاب الموجودين مسبقاً${namesText?`: ${namesText}`:""}`);}if(!names.length)return{created:[],existing,moved,kept,duplicates:parsed.duplicates};const newStudentGender=normalizeGender(classRow)==="mixed"?$("classBulkGender").value:normalizeGender(classRow);if(!newStudentGender)throw new Error("الصف مختلط: اختر جنس الأسماء الجديدة قبل الحفظ");const usedCodes=new Set([...Object.keys(users),...Object.keys(students)]),codes=reserveBulkStudentCodes(newStudentGender,names.length,usedCodes),serials=await reserveStudentSequences(names.length),now=Date.now(),created=[];names.forEach((name,i)=>{const code=codes[i],student={code,name,motherName:"",classId:classRow.id,className:classRow.name,gender:newStudentGender,roomNumber:Number(classRow.roomNumber),guardianPhone:"",studentPhone:"",lineNumber:"",previousSchool:"",startDate:"",tuitionTotal:0,address:"",fileStatus:"pending",booksReceived:false,accountantApproved:false,adminApproved:false,behaviorBlocked:false,mediaCompletionRequired:false,accountActive:false,hidden:false,serial:serials[i],createdAt:now+i,createdBy:adminCode(),bulkImported:true,bulkImportedAt:now},user={code,name,role:"student",studentId:code,classId:classRow.id,roomNumber:Number(classRow.roomNumber),gender:newStudentGender,active:false,hidden:false,behaviorBlocked:false,createdAt:now+i};updates[`students/${code}`]=student;updates[`users/${code}`]=user;created.push({student,user});});return{created,existing,moved,kept,duplicates:parsed.duplicates};}
 function applyBulkStudentsToLocalData(result){(result?.created||[]).forEach(({student,user})=>{DATA.students[student.code]=student;DATA.users[user.code]=user;});(result?.moved||[]).forEach(item=>{const st=DATA.students[item.code];if(st){st.classId=item.targetClassId;st.className=item.targetClassName;st.roomNumber=item.targetRoomNumber;st.updatedAt=Date.now();st.updatedBy=adminCode();}if(DATA.users[item.code]){DATA.users[item.code].classId=item.targetClassId;DATA.users[item.code].roomNumber=item.targetRoomNumber;}});}
 function showBulkCreatedStudents(classId,result){const codes=[...(result?.created||[]).map(x=>x.student.code),...(result?.moved||[]).map(x=>x.code)];if(!codes.length)return;selectedClassId=classId;selectedStudents.clear();codes.forEach(code=>selectedStudents.add(code));const c=DATA.classes[classId];$("studentsTitle").textContent=c?`${classPersonTerm(c)}: ${c.name} - ${classStageLabel(c)} - ${classPlaceLabel(c)} - ${genderClass(c.gender)}`:"جميع الطلاب";renderClasses();renderStudents();updateBulk();openTab("studentsSection");}
@@ -633,7 +669,7 @@ async function uniqueStudentCode(gender){for(let i=0;i<120;i++){const code=makeS
 async function confirmedStudentCode(gender,preferred=""){let code=String(preferred||"").trim();for(let i=0;i<12;i++){if(!code||DATA.users[code]||DATA.students[code])code=await uniqueStudentCode(gender);const[u,s]=await Promise.all([dbGetFresh(`users/${code}`),dbGetFresh(`students/${code}`)]);if(!u&&!s)return code;code="";}throw new Error("تعذر حجز كود طالب غير مستخدم");}
 async function previewStudentCode(){try{const c=DATA.classes[$("studentClass").value];if(!c){toast("اختر الصف أولاً");return;}const gender=normalizeGender(c)==="mixed"?$("studentGenderDisplay").value:normalizeGender(c);if(!gender){toast("اختر جنس الطالب أولاً");return;}generatedStudentCode=await uniqueStudentCode(gender);$("studentCodePreview").textContent=generatedStudentCode;}catch(error){console.error(error);toast("تعذر توليد الكود");}}
 
-async function nextStudentSequence(){const url=`${DB}/meta/studentSequence.json`;for(let attempt=0;attempt<10;attempt++){const read=await fetch(url,{method:"GET",cache:"no-store",headers:{"X-Firebase-ETag":"true"}});if(!read.ok)throw new Error("تعذر قراءة تسلسل الطلاب");const etag=read.headers.get("ETag"),current=Number(await read.json()||0),next=current+1;const write=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json","if-match":etag},body:JSON.stringify(next)});if(write.status===200)return next;if(write.status!==412)throw new Error("تعذر إنشاء العدد");}throw new Error("تعذر إنشاء العدد");}
+async function nextStudentSequence(){const url=`${DB}/meta/studentSequence.json`;for(let attempt=0;attempt<10;attempt++){const read=await tahadiFirebaseReadFetch(url,{method:"GET",cache:"no-store",headers:{"X-Firebase-ETag":"true"}});if(!read.ok)throw new Error("تعذر قراءة تسلسل الطلاب");const etag=read.headers.get("ETag"),current=Number(await read.json()||0),next=current+1;const write=await fetch(url,{method:"PUT",headers:{"Content-Type":"application/json","if-match":etag},body:JSON.stringify(next)});if(write.status===200)return next;if(write.status!==412)throw new Error("تعذر إنشاء العدد");}throw new Error("تعذر إنشاء العدد");}
 
 function normalizedStudentName(value){return String(value||"").trim().toLowerCase().replace(/[\u064b-\u065f\u0670]/g,"").replace(/ـ/g,"").replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/\s+/g," ");}
 async function ensureUniqueStudentName(name,exceptCode=""){const key=normalizedStudentName(name);if(!key)throw new Error("أدخل اسم الطالب");const duplicate=findDuplicateStudentName(name,exceptCode);if(duplicate){const st=duplicate.student;throw new Error(`هذا ${studentPersonTerm(st)} موجود مسبقاً: ${st?.name||name} — ${studentClassRoomText(st)}. اختر إبقاءه أو نقله من التنبيه الظاهر تحت الاسم.`);}return true;}
@@ -1510,7 +1546,7 @@ function tahadiDbError(action,response){
   return new Error(`تعذّر ${action} (HTTP ${code}).`);
 }
 async function tahadiGetWholeTreeWithEtag(){
-  const response=await fetch(tahadiDbRootUrl(),{method:"GET",cache:"no-store",headers:{"X-Firebase-ETag":"true"}});
+  const response=await tahadiFirebaseReadFetch(tahadiDbRootUrl(),{method:"GET",cache:"no-store",headers:{"X-Firebase-ETag":"true"}});
   if(!response.ok)throw tahadiDbError("قراءة الشجرة كاملة",response);
   const etag=response.headers.get("ETag");
   if(!etag)throw new Error("لم تعِد Firebase قيمة ETag؛ أوقفنا العملية حفاظًا على البيانات.");
@@ -1570,7 +1606,7 @@ async function tahadiConditionalRootWrite(method, data, etag){
     init.headers["Content-Type"]="application/json";
     init.body=JSON.stringify(data);
   }
-  const response=await fetch(tahadiDbRootUrl(),init);
+  const response=await tahadiFirebaseReadFetch(tahadiDbRootUrl(),init);
   if(!response.ok)throw tahadiDbError(method==="DELETE"?"حذف الشجرة":"استبدال الشجرة",response);
   return response;
 }
