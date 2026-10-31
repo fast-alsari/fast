@@ -7,7 +7,7 @@
 <title>سجلات الدرجات | مدرسة التحدي الأهلية المختلطة</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.2/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 :root{
  --blue:#075fcf;--blue2:#064aa7;--bg:#f4f7fb;--card:#fff;--text:#182230;--muted:#667085;
@@ -172,6 +172,34 @@ button{cursor:pointer}
 .footer-auditor span{display:block}
 .footer-auditor strong{display:block;margin-top:.7mm;font-size:18px;font-weight:700}
 
+
+/* ===== واجهة السجل وفتح QR مباشرة كـ PDF ===== */
+.print-page.gender-male,.public-cover.gender-male{--accent:#075fcf;--soft:#eef5ff}
+.print-page.gender-female,.public-cover.gender-female{--accent:#d85b9d;--soft:#fff1f7}
+.print-page.gender-mixed,.public-cover.gender-mixed{--accent:#5b6472;--soft:#f3f4f6}
+.print-page .page-frame,.public-cover .cover-frame{border-color:var(--accent)!important;outline-color:var(--accent)!important}
+.print-page .record-table th,.print-page .record-table td{border-color:var(--accent)!important}
+.print-page .record-table thead th{background:var(--soft)!important}
+.print-page .head-center h2{color:var(--accent)!important}
+.public-cover{position:relative;width:210mm;height:297mm;overflow:hidden;background:#fff;color:#111;font-family:"Times New Roman",Times,serif}
+.cover-frame{position:absolute;inset:6mm;border:8px double var(--accent);outline:1.6px solid var(--accent);outline-offset:-4mm}
+.cover-frame:before,.cover-frame:after{content:"◆";position:absolute;width:10mm;height:10mm;display:flex;align-items:center;justify-content:center;background:#fff;color:var(--accent);font-size:16px;font-weight:700}
+.cover-frame:before{top:-5mm;right:-5mm}.cover-frame:after{bottom:-5mm;left:-5mm}
+.cover-inner{position:relative;z-index:2;height:100%;padding:13mm 16mm 12mm;display:flex;flex-direction:column}
+.cover-top{direction:ltr;display:grid;grid-template-columns:1fr 1fr;gap:12mm}
+.cover-ministry{text-align:left;direction:rtl}.cover-ministry img{width:34mm;height:34mm;object-fit:contain}.cover-ministry div{font-size:14px;font-weight:700}
+.cover-school{text-align:right;direction:rtl;font-size:21px;font-weight:700;line-height:1.45;color:var(--accent)}
+.cover-center{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.cover-title{font-size:27px;font-weight:700;color:var(--accent);margin-bottom:6mm}
+.cover-logo{width:49mm;height:49mm;object-fit:contain;margin-bottom:7mm}
+.cover-lines{width:82%;display:grid;gap:3.2mm;font-size:18px;font-weight:700;text-align:right}
+.cover-line{padding:2.4mm 4mm;border-bottom:1.5px solid var(--accent)}
+.cover-bottom{display:flex;justify-content:space-between;gap:8mm;font-size:14px;font-weight:700;color:#444}
+.public-direct-pdf .topbar,.public-direct-pdf .panel,.public-direct-pdf .preview-toolbar{display:none!important}
+.public-direct-pdf .layout{position:fixed!important;left:-12000px!important;top:0!important;width:210mm!important;display:block!important}
+.public-direct-pdf .preview-area{overflow:visible!important;background:#fff!important;border:0!important}
+.public-direct-pdf .loader{display:flex!important}
+
 </style>
 </head>
 <body>
@@ -229,6 +257,43 @@ button{cursor:pointer}
 </div>
 
 <script>
+
+/* Unified Firebase Realtime Database GET transport: retry transient failures only.
+   No changes to database paths, values, authorization, writes, or page markup. */
+async function tahadiFirebaseReadFetch(url, options={}) {
+  const verb=String(options?.method||"GET").toUpperCase();
+  if(verb!=="GET") return fetch(url,options);
+  const retryStatuses=new Set([408,429,500,502,503,504]);
+  const upstreamSignal=options?.signal;
+  for(let attempt=0;attempt<3;attempt++) {
+    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
+    const controller=new AbortController();
+    const abort=()=>controller.abort();
+    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
+    const timeout=setTimeout(()=>controller.abort(),22000);
+    try {
+      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
+      if(!retryStatuses.has(response.status)||attempt===2)return response;
+    }catch(error){
+      if(upstreamSignal?.aborted)throw error;
+      if(attempt===2)throw error;
+    }finally{
+      clearTimeout(timeout);
+      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
+    }
+    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
+  }
+  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
+}
+/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
+async function tahadiLimitedReads(items,limit,readOne){
+  const array=Array.from(items||[]),out=new Array(array.length);
+  let next=0;
+  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
+  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
+  return out;
+}
+
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
 const $=id=>document.getElementById(id);
 let SESSION={},ADMIN_USER={},DATA={classes:{},students:{}},CLASS_CHOICES={},CURRENT={students:[],subject:null,classData:null,room:"",mode:"grades",generatedAt:0,recordId:""};
@@ -238,13 +303,13 @@ function cleanPath(p){return String(p||"").replace(/^\/+|\/+$/g,"")}
 async function dbGet(path,{fresh=false,ttl=READ_TTL}={}){
  path=cleanPath(path);
  if(!fresh){const c=READ_CACHE.get(path);if(c&&Date.now()-c.at<=ttl)return c.value;if(READ_PENDING.has(path))return READ_PENDING.get(path)}
- const run=(async()=>{const r=await fetch(`${DB}/${path}.json`,{cache:"no-store"});if(!r.ok)throw new Error("DB_READ");const v=await r.json();READ_CACHE.set(path,{at:Date.now(),value:v});return v})();
+ const run=(async()=>{const r=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,{cache:"no-store"});if(!r.ok)throw new Error("DB_READ");const v=await r.json();READ_CACHE.set(path,{at:Date.now(),value:v});return v})();
  READ_PENDING.set(path,run);try{return await run}finally{if(READ_PENDING.get(path)===run)READ_PENDING.delete(path)}
 }
 const dbGetFresh=path=>dbGet(path,{fresh:true,ttl:0});
 async function dbPut(path,value){
  path=cleanPath(path);
- const r=await fetch(`${DB}/${path}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(value)});
+ const r=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(value)});
  if(!r.ok)throw new Error("DB_WRITE");
  READ_CACHE.set(path,{at:Date.now(),value});
  return await r.json().catch(()=>value)
@@ -299,7 +364,7 @@ function studentGenderValue(s,c){
  const raw=s?.gender||s?.studentGender||c?.gender||"";
  return normalizeGender(raw)
 }
-function classStudents(classId){return Object.entries(DATA.students||{}).map(([code,s])=>({code,...(s||{})})).filter(s=>String(s.classId||"")===String(classId))}
+function classStudents(classId){return Object.entries(DATA.students||{}).map(([code,s])=>({code,...(s||{})})).filter(s=>String(s.classId||"")===String(classId)&&s.hidden!==true&&s.deleted!==true)}
 function resetClassAndSubject(){
  CLASS_CHOICES={};
  $("classSelect").innerHTML='<option value="">اختر الصف والقاعة</option>';
@@ -402,12 +467,12 @@ function studentNameFontSize(value){
   return 11
  }catch{return 13}
 }
-function cellGrade(v,pass,mode){const n=mode==="blank"?"":v,fail=mode!=="blank"&&isGrade(n)&&Number(n)<Number(pass??50);return `<td class="grade ${fail?"fail":""}">${mode==="blank"?"":esc(isGrade(n)?(Number.isInteger(Number(n))?Number(n):Math.round(Number(n)*10)/10):"")}</td>`}
+function cellGrade(v,pass,mode){if(mode==="blank")return`<td class="grade"></td>`;const raw=String(v??"").trim();if(!raw)return`<td class="grade"></td>`;const n=Number(raw),ok=Number.isFinite(n),fail=ok&&n<Number(pass??50);return`<td class="grade ${fail?"fail":""}">${esc(ok?(Number.isInteger(n)?n:Math.round(n*10)/10):raw)}</td>`}
 
 async function prepareRows(selection){
  if(selection.mode==="blank")return selection.students.map(s=>({student:s,row:{...selection.subject,term1:"",midyear:"",term2:"",annual:"",finalExam:"",final:""}}));
  toast("جاري سحب درجات الطلاب...");
- const grades=await Promise.all(selection.students.map(s=>dbGet(`grades/${encodeURIComponent(s.code)}`,{ttl:5000}).catch(()=>({}))));
+ const grades=await tahadiLimitedReads(selection.students,8,s=>dbGet(`grades/${encodeURIComponent(s.code)}`,{fresh:true,ttl:0}));
  return selection.students.map((student,i)=>({student,row:subjectRowForStudent(selection.c,grades[i]||{},selection.subject)}))
 }
 
@@ -423,6 +488,16 @@ function qrRecordURL(publicKey){
  url.searchParams.set("pdf","1");
  return url.toString();
 }
+
+function publicThemeClass(g){const x=normalizeGender(g);return x==="female"?"gender-female":x==="mixed"?"gender-mixed":"gender-male"}
+function publicRecordTitle(v){if(v==="midyear")return"سجل درجات نصف السنة";if(v==="final")return"سجل الامتحانات النهائية";return"سجل الدرجات الخاص بالإدارة"}
+function publicSchoolAdmin(c){return classStageValue(c)==="primary"?"إدارة ابتدائية التحدي الأهلية المختلطة":"إدارة ثانوية التحدي الأهلية المختلطة"}
+function publicSection(c,sel){return String(sel?.section||c?.sectionName||c?.section||c?.division||c?.branch||"—")}
+function publicCoverHTML(sel){
+ const title=publicRecordTitle(sel.recordTitleType),gender=genderLabel(sel.selectedGender||sel.c?.gender||"male");
+ return`<section class="public-cover ${publicThemeClass(sel.selectedGender||sel.c?.gender)}"><div class="cover-frame"></div><div class="cover-inner"><div class="cover-top"><div class="cover-ministry"><img src="ministry-logo.PNG" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ALtahdi-school/student-AhLtahadi/main/ministry-logo.PNG'" alt=""><div>وزارة التربية</div></div><div class="cover-school">${esc(publicSchoolAdmin(sel.c||{}))}</div></div><div class="cover-center"><div class="cover-title">${esc(title)}</div><img class="cover-logo" src="logo.png" alt=""><div class="cover-lines"><div class="cover-line">اسم المادة: ${esc(sel.subject?.name||"—")}</div><div class="cover-line">أستاذ/ة المادة: ${esc(sel.teacher||"—")}</div><div class="cover-line">الصف: ${esc(sel.c?.name||"—")}</div><div class="cover-line">الشعبة: ${esc(publicSection(sel.c,sel))}</div><div class="cover-line">القاعة: ${esc(roomLabel(sel.room))}</div><div class="cover-line">الجنس: ${esc(gender)}</div></div></div><div class="cover-bottom"><span>${esc(sel.managerTitle||"مدير")} المدرسة: ${esc(sel.manager||"—")}</span><span>العام الدراسي ${esc($("schoolYear").value.trim()||"2026-2027")}</span></div></div></section>`
+}
+
 function pageHTML(rows,pageIndex,totalPages,selection,startIndex,recordId,totalStudents,fingerprint,publicKey=""){
  const perPage=25,blankCount=Math.max(0,perPage-rows.length),year=$("schoolYear").value.trim()||"2026-2027";
  const classText=selection.c.name||"—",roomText=selection.room?roomLabel(selection.room):(rows[0]?.student?.roomNumber?roomLabel(rows[0].student.roomNumber):"كل القاعات"),stage=stageLabel(selection.c),gender=genderLabel(selection.c),isPrimary=classStageValue(selection.c)==="primary";
@@ -442,13 +517,13 @@ function pageHTML(rows,pageIndex,totalPages,selection,startIndex,recordId,totalS
  <td></td></tr>`}).join("");
  const blanks=Array.from({length:blankCount},()=>`<tr class="blank-row"><td>—</td><td>—</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`).join("");
  const qr=selection.mode==="grades"&&publicKey?`<div class="admin-qr-block"><div class="qr-code" data-code="${esc(qrRecordURL(publicKey))}"></div><div class="record-id">${esc(recordId)}</div></div>`:"";
- return `<section class="print-page">
+ return `<section class="print-page ${publicThemeClass(selection.selectedGender||selection.c?.gender)}">
   <div class="page-frame"></div><div class="page-corner bl">◆</div><div class="page-corner tr">◆</div><img class="watermark-logo" src="logo.png" alt="">
   ${pageIndex>0?`<div class="continuation">تكملة السجل</div>`:""}
   <div class="page-inner">
    <header class="record-head">
     <div class="head-side"><div class="admin-title"><span class="admin-word">إدارة</span><span class="admin-school">${esc(isPrimary?"ابتدائية التحدي الأهلية المختلطة":"ثانوية التحدي الأهلية المختلطة")}</span></div>${qr}</div>
-    <div class="head-center"><img class="ministry-logo" src="ministry-logo.PNG" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ALtahdi-school/student-AhLtahadi/main/ministry-logo.PNG'" alt="شعار وزارة التربية"><h2>سجل درجات الإدارة</h2><h3>${esc(classText)} — ${esc(roomText)}</h3><div class="gender-line">${esc(gender)}</div><p>للعام الدراسي ${esc(year)}</p><div class="record-meta"><span>المادة: ${esc(selection.subject.name)}</span></div></div>
+    <div class="head-center"><img class="ministry-logo" src="ministry-logo.PNG" onerror="this.onerror=null;this.src='https://raw.githubusercontent.com/ALtahdi-school/student-AhLtahadi/main/ministry-logo.PNG'" alt="شعار وزارة التربية"><h2>${esc(publicRecordTitle(selection.recordTitleType))}</h2><h3>${esc(classText)} — ${esc(roomText)}</h3><div class="gender-line">${esc(gender)}</div><p>للعام الدراسي ${esc(year)}</p><div class="record-meta"><span>المادة: ${esc(selection.subject.name)}</span></div></div>
     <div class="head-side"><img class="school-side-logo" src="logo.png" alt="شعار المدرسة"></div>
    </header>
    <table class="record-table">
@@ -470,13 +545,13 @@ function pageHTML(rows,pageIndex,totalPages,selection,startIndex,recordId,totalS
   </div>
  </section>`
 }
-function renderBarcodes(){document.querySelectorAll(".qr-code").forEach(el=>{try{el.innerHTML="";const text=String(el.dataset.code||"").trim();if(!text)return;if(typeof QRCode==="undefined")throw new Error("QR_LIBRARY_NOT_LOADED");new QRCode(el,{text,width:160,height:160,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});requestAnimationFrame(()=>{const canvas=el.querySelector("canvas"),img=el.querySelector("img");if(canvas){canvas.style.display="block";canvas.style.width="21.5mm";canvas.style.height="21.5mm";canvas.style.margin="auto";if(img)img.remove();}else if(img){img.style.display="block";img.style.width="21.5mm";img.style.height="21.5mm";img.style.margin="auto";}})}catch(e){console.error("QR_ERROR",e);el.innerHTML='<div style="font-size:9px;font-weight:700;line-height:1.4;text-align:center">تعذر إنشاء<br>رمز السجل</div>'}})}
+function renderBarcodes(){document.querySelectorAll(".qr-code").forEach(el=>{try{el.innerHTML="";const text=String(el.dataset.code||"").trim();if(!text)return;if(typeof QRCode==="undefined")throw new Error("QR_LIBRARY_NOT_LOADED");new QRCode(el,{text,width:320,height:320,colorDark:"#000000",colorLight:"#ffffff",correctLevel:QRCode.CorrectLevel.M});requestAnimationFrame(()=>{const canvas=el.querySelector("canvas"),img=el.querySelector("img");if(canvas){canvas.style.display="block";canvas.style.width="21.5mm";canvas.style.height="21.5mm";canvas.style.margin="auto";if(img)img.remove();}else if(img){img.style.display="block";img.style.width="21.5mm";img.style.height="21.5mm";img.style.margin="auto";}})}catch(e){console.error("QR_ERROR",e);el.innerHTML='<div style="font-size:9px;font-weight:700;line-height:1.4;text-align:center">تعذر إنشاء<br>رمز السجل</div>'}})}
 
 function fitPreview(){
- const area=$("previewArea"),pages=[...document.querySelectorAll(".print-page")];if(!pages.length)return;
+ const area=$("previewArea"),pages=[...document.querySelectorAll(".public-cover,.print-page")];if(!pages.length)return;
  const max=Math.min(1,(area.clientWidth-26)/(210*3.7795275591));pages.forEach(p=>{p.style.transform=`scale(${max})`;p.style.transformOrigin="top center";p.style.marginBottom=`${-(297*3.7795275591)*(1-max)}px`})
 }
-function resetPrintScale(){document.querySelectorAll(".print-page").forEach(p=>{p.style.transform="";p.style.marginBottom=""})}
+function resetPrintScale(){document.querySelectorAll(".public-cover,.print-page").forEach(p=>{p.style.transform="";p.style.marginBottom=""})}
 
 
 function publicSnapshotPayload(sel,rows,recordId,fingerprint,publicKey){
@@ -519,85 +594,46 @@ async function waitPublicRecordAssets(){
  await Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve})));
  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
 }
+function publicLoadScript(url){return new Promise((resolve,reject)=>{const ex=[...document.scripts].find(x=>x.src===url);if(ex){ex.addEventListener("load",resolve,{once:true});ex.addEventListener("error",reject,{once:true});setTimeout(resolve,1400);return}const sc=document.createElement("script");sc.src=url;sc.async=true;sc.onload=resolve;sc.onerror=reject;document.head.appendChild(sc)})}
+async function ensurePublicPDFLibraries(){
+ if(typeof QRCode==="undefined"){for(const u of ["https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js","https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"]){try{await publicLoadScript(u);if(typeof QRCode!=="undefined")break}catch{}}}
+ if(typeof html2canvas==="undefined"){for(const u of ["https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js","https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js","https://unpkg.com/html2canvas@1.4.1/dist/html2canvas.min.js"]){try{await publicLoadScript(u);if(typeof html2canvas!=="undefined")break}catch{}}}
+ if(!window.jspdf?.jsPDF&&!window.jsPDF){for(const u of ["https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js","https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js","https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"]){try{await publicLoadScript(u);if(window.jspdf?.jsPDF||window.jsPDF)break}catch{}}}
+ return typeof html2canvas!=="undefined"&&!!(window.jspdf?.jsPDF||window.jsPDF)
+}
+async function waitPublicQR(){const root=$("printPages");for(let i=0;i<30;i++){const need=root.querySelectorAll(".qr-code").length,got=root.querySelectorAll(".qr-code canvas,.qr-code img").length;if(!need||got>=need)return;await new Promise(res=>setTimeout(res,40))}}
+function addPublicSharpQR(pdf,page){const qr=page.querySelector(".qr-code canvas");if(!qr)return;try{const pr=page.getBoundingClientRect(),rr=qr.getBoundingClientRect();if(!pr.width||!rr.width)return;pdf.addImage(qr.toDataURL("image/png"),"PNG",(rr.left-pr.left)*210/pr.width,(rr.top-pr.top)*297/pr.height,rr.width*210/pr.width,rr.height*297/pr.height,undefined,"FAST")}catch(e){console.error(e)}}
 async function createPublicRecordPDF(recordId){
- if(typeof html2canvas==="undefined"||!window.jspdf?.jsPDF)throw new Error("PDF_LIBRARY_NOT_LOADED");
- await waitPublicRecordAssets();
- resetPrintScale();
- const pages=[...document.querySelectorAll("#printPages .print-page")];
- if(!pages.length)throw new Error("NO_RECORD_PAGES");
- const {jsPDF}=window.jspdf;
- const pdf=new jsPDF({orientation:"portrait",unit:"mm",format:"a4",compress:true});
- pdf.setProperties({title:`سجل درجات ${recordId||""}`,subject:"سجل درجات الإدارة",author:"مدرسة التحدي الأهلية المختلطة",creator:"منصة التحدي"});
+ if(!await ensurePublicPDFLibraries())throw new Error("PDF_LIBRARY_NOT_LOADED");
+ await waitPublicRecordAssets();await waitPublicQR();resetPrintScale();
+ const pages=[...document.querySelectorAll("#printPages .public-cover,#printPages .print-page")];if(!pages.length)throw new Error("NO_RECORD_PAGES");
+ const JsPDFCtor=window.jspdf?.jsPDF||window.jsPDF,pdf=new JsPDFCtor({orientation:"portrait",unit:"mm",format:"a4",compress:true});pdf.setProperties({title:`سجل درجات ${recordId||""}`,subject:"سجل درجات الإدارة",author:"مدرسة التحدي الأهلية المختلطة",creator:"منصة التحدي"});
  const scale=isMobilePDFDevice()?1.45:1.8;
- for(let i=0;i<pages.length;i++){
-  const canvas=await html2canvas(pages[i],{
-   scale,
-   backgroundColor:"#ffffff",
-   useCORS:true,
-   allowTaint:false,
-   logging:false,
-   width:pages[i].scrollWidth,
-   height:pages[i].scrollHeight,
-   windowWidth:pages[i].scrollWidth,
-   windowHeight:pages[i].scrollHeight,
-   scrollX:0,scrollY:0
-  });
-  if(i>0)pdf.addPage("a4","portrait");
-  const img=canvas.toDataURL("image/jpeg",.94);
-  pdf.addImage(img,"JPEG",0,0,210,297,undefined,"FAST");
-  canvas.width=1;canvas.height=1;
- }
- const blob=pdf.output("blob");
- const blobURL=URL.createObjectURL(blob);
- sessionStorage.setItem("tahadi_last_public_pdf",blobURL);
- return blobURL;
+ for(let i=0;i<pages.length;i++){if(i)pdf.addPage("a4","portrait");const canvas=await html2canvas(pages[i],{scale,backgroundColor:"#fff",useCORS:true,allowTaint:false,logging:false,width:pages[i].scrollWidth,height:pages[i].scrollHeight,windowWidth:pages[i].scrollWidth,windowHeight:pages[i].scrollHeight,scrollX:0,scrollY:0});pdf.addImage(canvas.toDataURL("image/jpeg",.96),"JPEG",0,0,210,297,undefined,"FAST");if(pages[i].classList.contains("print-page"))addPublicSharpQR(pdf,pages[i]);canvas.width=1;canvas.height=1}
+ const blob=pdf.output("blob"),url=URL.createObjectURL(blob);sessionStorage.setItem("tahadi_last_public_pdf",url);return url
 }
 async function openPublicRecordAsPDF(recordId){
- let badge=document.querySelector(".public-record-badge");
- if(badge)badge.textContent="جاري تجهيز ملف PDF...";
- try{
-  const pdfURL=await createPublicRecordPDF(recordId);
-  if(badge)badge.textContent="تم تجهيز ملف PDF";
-  setTimeout(()=>{const w=window.open(pdfURL,"_blank","noopener");if(!w)location.href=pdfURL},80);
- }catch(error){
-  console.error("PUBLIC_PDF_ERROR",error);
-  if(badge)badge.textContent="السجل جاهز للعرض";
-  const fallback=document.createElement("div");
-  fallback.className="public-record-badge";
-  fallback.style.top="48px";
-  fallback.textContent="السجل ظاهر بالكامل أدناه";
-  document.body.appendChild(fallback);
-  setTimeout(fitPreview,100);
- }
+ try{const pdfURL=await createPublicRecordPDF(recordId);location.replace(pdfURL)}
+ catch(error){console.error("PUBLIC_PDF_ERROR",error);document.body.classList.remove("public-direct-pdf");$("loader").classList.add("hidden");$("app").classList.remove("hidden");const badge=document.createElement("div");badge.className="public-record-badge";badge.textContent="تعذر فتح PDF مباشرة — السجل ظاهر أدناه";document.body.appendChild(badge);setTimeout(fitPreview,100)}
 }
 
 async function initPublicRecord(publicKey){
  try{
-  document.body.classList.add("public-view");
-  const snap=await dbGetFresh(`publicRecords/${encodeURIComponent(publicKey)}`);
-  if(!snap){publicError("السجل غير موجود","هذا الرمز لا يحتوي سجلاً منشوراً، أو أنه من إصدار قديم. أنشئ معاينة جديدة للسجل ثم اطبعه من جديد.");return}
-  const ok=await verifyPublicSnapshot(snap,publicKey);
-  if(!ok){publicError("تعذر التحقق من السجل","تعذر التحقق من مفتاح السجل.");return}
-  $("schoolYear").value=snap.schoolYear||"2026-2027";
-  const sel={c:snap.classData||{},room:snap.room||"",subject:snap.subject||{},teacher:snap.teacher||"",manager:snap.manager||"",managerTitle:snap.managerTitle||"مدير",mode:snap.mode||"grades"};
-  const rows=(snap.rows||[]).map(x=>({student:x.student||{},row:{...(x.row||{}),...snap.subject,passGrade:Number(x?.row?.passGrade??snap?.subject?.passGrade??50)}}));
-  const perPage=25,total=Math.max(1,Math.ceil(rows.length/perPage));
-  CURRENT={...sel,rows,generatedAt:snap.createdAt||0,recordId:snap.recordId,fingerprint:snap.fingerprint||"",publicKey:snap.publicKey,public:true};
-  let html="";for(let i=0;i<total;i++)html+=pageHTML(rows.slice(i*perPage,(i+1)*perPage),i,total,sel,i*perPage,snap.recordId,rows.length,snap.fingerprint||"",snap.publicKey);
-  $("printPages").innerHTML=html;$("emptyPreview").classList.add("hidden");
-  $("loader").classList.add("hidden");$("app").classList.remove("hidden");
-  const badge=document.createElement("div");badge.className="public-record-badge";badge.textContent="سجل درجات موثق — يفتح PDF بدون تسجيل دخول";document.body.appendChild(badge);
-  renderBarcodes();
   const wantsPDF=String(new URLSearchParams(location.search).get("pdf")||"")==="1";
-  setTimeout(async()=>{
-   fitPreview();
-   if(wantsPDF)await openPublicRecordAsPDF(snap.recordId);
-  },120)
- }catch(error){
-  console.error("PUBLIC_RECORD_ERROR",error);
-  publicError("تعذر فتح السجل","تعذر تحميل السجل الآن. تأكد من الاتصال بالإنترنت وحاول مرة أخرى.")
- }
+  document.body.classList.add("public-view");if(wantsPDF)document.body.classList.add("public-direct-pdf");
+  const snap=await dbGetFresh(`publicRecords/${encodeURIComponent(publicKey)}`);if(!snap){publicError("السجل غير موجود","هذا الرمز لا يحتوي سجلاً منشوراً.");return}
+  const ok=await verifyPublicSnapshot(snap,publicKey);if(!ok){publicError("تعذر التحقق من السجل","تعذر التحقق من مفتاح السجل.");return}
+  $("schoolYear").value=snap.schoolYear||"2026-2027";
+  const sel={c:snap.classData||{},room:snap.room||"",section:snap.section||snap?.classData?.sectionName||"",recordTitleType:snap.recordTitleType||"admin",subject:snap.subject||{},teacher:snap.teacher||"",manager:snap.manager||"",managerTitle:snap.managerTitle||"مدير",mode:snap.mode||"grades",selectedGender:normalizeGender(snap?.classData?.gender||"male"),selectedStage:classStageValue(snap.classData||{})};
+  const rows=(snap.rows||[]).map(x=>({student:x.student||{},row:{...(x.row||{}),...snap.subject,passGrade:Number(x?.row?.passGrade??snap?.subject?.passGrade??50)}})),perPage=25,total=Math.max(1,Math.ceil(rows.length/perPage));
+  CURRENT={...sel,rows,generatedAt:snap.createdAt||0,recordId:snap.recordId,fingerprint:snap.fingerprint||"",publicKey:snap.publicKey,public:true};
+  let html=publicCoverHTML(sel);for(let i=0;i<total;i++)html+=pageHTML(rows.slice(i*perPage,(i+1)*perPage),i,total,sel,i*perPage,snap.recordId,rows.length,snap.fingerprint||"",snap.publicKey);
+  $("printPages").innerHTML=html;$("emptyPreview").classList.add("hidden");$("app").classList.remove("hidden");renderBarcodes();
+  if(wantsPDF){$("loader").classList.remove("hidden");$("loader").querySelector("p").textContent="جاري فتح ملف السجل PDF...";setTimeout(()=>openPublicRecordAsPDF(snap.recordId),120)}
+  else{$("loader").classList.add("hidden");const badge=document.createElement("div");badge.className="public-record-badge";badge.textContent="سجل درجات موثق";document.body.appendChild(badge);setTimeout(fitPreview,100)}
+ }catch(error){console.error("PUBLIC_RECORD_ERROR",error);publicError("تعذر فتح السجل","تعذر تحميل السجل الآن.")}
 }
+
 
 async function buildPreview(){
  const btn=$("previewBtn");btn.disabled=true;toast("جاري تجهيز السجل...");
