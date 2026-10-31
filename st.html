@@ -1,4 +1,3 @@
-
 <!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta
     name="viewport"
     content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"
@@ -932,6 +931,43 @@
     id="toast"
     class="toast"
 ></div><script>
+
+/* Unified Firebase Realtime Database GET transport: retry transient failures only.
+   No changes to database paths, values, authorization, writes, or page markup. */
+async function tahadiFirebaseReadFetch(url, options={}) {
+  const verb=String(options?.method||"GET").toUpperCase();
+  if(verb!=="GET") return fetch(url,options);
+  const retryStatuses=new Set([408,429,500,502,503,504]);
+  const upstreamSignal=options?.signal;
+  for(let attempt=0;attempt<3;attempt++) {
+    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
+    const controller=new AbortController();
+    const abort=()=>controller.abort();
+    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
+    const timeout=setTimeout(()=>controller.abort(),22000);
+    try {
+      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
+      if(!retryStatuses.has(response.status)||attempt===2)return response;
+    }catch(error){
+      if(upstreamSignal?.aborted)throw error;
+      if(attempt===2)throw error;
+    }finally{
+      clearTimeout(timeout);
+      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
+    }
+    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
+  }
+  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
+}
+/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
+async function tahadiLimitedReads(items,limit,readOne){
+  const array=Array.from(items||[]),out=new Array(array.length);
+  let next=0;
+  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
+  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
+  return out;
+}
+
 const DB = "https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
 const IMAGE_UPLOAD_WORKER_URL = "https://floral-pine-2aa7.ahmed-a-ahmed00457.workers.dev/";
 const BG_REMOVAL_MODULE_URL="https://esm.sh/@imgly/background-removal@1.7.0?bundle",FACE_VISION_MODULE_URL="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/+esm",FACE_WASM_URL="https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision/wasm",FACE_MODEL_URL="https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite",PHOTO_PROCESS_VERSION="transaction-photo-v3",PHOTO_W=900,PHOTO_H=1200,PHOTO_FACE_HEIGHT_RATIO=.36,PHOTO_HEAD_TOP_RATIO=.075,PHOTO_MAX_INPUT_SIDE=2200;
@@ -988,10 +1024,10 @@ function displayGrade(value){ if( value === null || value === undefined || value
 function dateText(value){ if(!value){ return "—"; } let year; let month; let day; const text = String(value); const match = text.match( /^(\d{4})-(\d{2})-(\d{2})/ ); if(match){ year = Number(match[1]); month = Number(match[2]); day = Number(match[3]); } else{ const date = new Date(value); if( Number.isNaN( date.getTime() ) ){ return text; } year = date.getFullYear(); month = date.getMonth() + 1; day = date.getDate(); } const months = [ "", "كانون الثاني", "شباط", "آذار", "نيسان", "أيار", "حزيران", "تموز", "آب", "أيلول", "تشرين الأول", "تشرين الثاني", "كانون الأول" ]; return `${day} ${months[month]} ${year}`; }
 function timeText(value){ const date = new Date( Number(value) || value ); if( Number.isNaN( date.getTime() ) ){ return ""; } return date.toLocaleTimeString( "ar-IQ", { hour:"2-digit", minute:"2-digit" } ); }
 function toast(text){ $("toast").textContent = text; $("toast") .classList.add( "show" ); clearTimeout( window.toastTimer ); window.toastTimer = setTimeout( () => { $("toast") .classList.remove( "show" ); }, 2400 ); }
-async function dbGet(path){ const response = await fetch( `${DB}/${path}.json`, { cache:"no-store" } ); if(!response.ok){ throw new Error( "DATABASE_GET_FAILED" ); } return response.json(); }
-async function dbPatch( path, data ){ const response = await fetch( `${DB}/${path}.json`, { method:"PATCH", headers:{ "Content-Type": "application/json" }, body: JSON.stringify(data) } ); if(!response.ok){ throw new Error( "DATABASE_PATCH_FAILED" ); } return response.json(); }
-async function dbPost( path, data ){ const response = await fetch( `${DB}/${path}.json`, { method:"POST", headers:{ "Content-Type": "application/json" }, body: JSON.stringify(data) } ); if(!response.ok){ throw new Error( "DATABASE_POST_FAILED" ); } return response.json(); }
-async function dbPut( path, data ){ const response = await fetch( `${DB}/${path}.json`, { method:"PUT", headers:{ "Content-Type": "application/json" }, body: JSON.stringify(data) } ); if(!response.ok){ throw new Error( "DATABASE_PUT_FAILED" ); } return response.json(); }
+async function dbGet(path){ const response = await tahadiFirebaseReadFetch( `${DB}/${path}.json`, { cache:"no-store" } ); if(!response.ok){ throw new Error( "DATABASE_GET_FAILED" ); } return response.json(); }
+async function dbPatch( path, data ){ const response = await tahadiFirebaseReadFetch( `${DB}/${path}.json`, { method:"PATCH", headers:{ "Content-Type": "application/json" }, body: JSON.stringify(data) } ); if(!response.ok){ throw new Error( "DATABASE_PATCH_FAILED" ); } return response.json(); }
+async function dbPost( path, data ){ const response = await tahadiFirebaseReadFetch( `${DB}/${path}.json`, { method:"POST", headers:{ "Content-Type": "application/json" }, body: JSON.stringify(data) } ); if(!response.ok){ throw new Error( "DATABASE_POST_FAILED" ); } return response.json(); }
+async function dbPut( path, data ){ const response = await tahadiFirebaseReadFetch( `${DB}/${path}.json`, { method:"PUT", headers:{ "Content-Type": "application/json" }, body: JSON.stringify(data) } ); if(!response.ok){ throw new Error( "DATABASE_PUT_FAILED" ); } return response.json(); }
 async function uploadImage(file){if(!file)return"";if(!file.type||!file.type.startsWith("image/")){toast("يرجى اختيار صورة فقط");return"";}if(file.size>5*1024*1024){toast("حجم الصورة يجب أن يكون أقل من 5MB");return"";}try{const formData=new FormData();formData.append("file",file);const response=await fetch(IMAGE_UPLOAD_WORKER_URL,{method:"POST",body:formData});if(!response.ok)throw new Error("UPLOAD_FAILED");const data=await response.json();return data.url||data.fullResponse?.url||"";}catch(error){console.error(error);toast("تعذر رفع الصورة");return"";}}
 function photoStatus(text){const e=$("profilePhotoStatus");if(e)e.textContent=text;}
 function setPhotoProcessing(active,text=""){photoProcessing=!!active;const input=$("studentProfileImage"),save=$("saveProfileBtn");if(input)input.disabled=!!active;if(save&&!save.dataset.saving)save.disabled=!!active;if(text)photoStatus(text);}
@@ -2932,6 +2968,30 @@ function safeGradeSchemaKey(value){
   .replace(/^_+|_+$/g,"")
 }
 
+let tahadiStudentSchemaTeachersPromise=null;
+async function tahadiStudentSchemaTeacherCandidates(classId,subjectId,subjectName){
+ if(!tahadiStudentSchemaTeachersPromise){
+  tahadiStudentSchemaTeachersPromise=dbGet("teachers").catch(error=>{
+   console.warn("TEACHER_SCHEMA_FALLBACK_UNAVAILABLE",error);
+   return{};
+  });
+ }
+ const all=await tahadiStudentSchemaTeachersPromise;
+ const result=[];
+ for(const [code,teacher] of Object.entries(all||{})){
+  if(!teacher||teacher.hidden===true||teacher.active===false)continue;
+  const assignments=Array.isArray(teacher.assignments)?teacher.assignments:Object.values(teacher.assignments||{});
+  const match=assignments.some(a=>a&&String(a.classId||"")===String(classId)&&(
+    (subjectId&&String(a.subjectId||"")===String(subjectId))||
+    (subjectName&&norm(a.subjectName||a.subject||"")===norm(subjectName))
+  ));
+  const ids=Array.isArray(teacher.classIds)?teacher.classIds:Object.entries(teacher.classIds||{}).filter(([,v])=>v).map(([k])=>k);
+  const legacy=!assignments.length&&ids.map(String).includes(String(classId))&&subjectName&&norm(teacher.subject||"")===norm(subjectName);
+  if(match||legacy)result.push(code);
+ }
+ // Avoid choosing an arbitrary teacher where several teach the same subject.
+ return result.length===1?result:[];
+}
 function gradeRecordTeacherCode(record){
  const candidates=[
   record?.teacherCode,
@@ -2986,17 +3046,12 @@ async function loadGradeSchemasForStudent(rawGrades){
              ""
             );
 
-     if(
-      !teacherCode||
-      !classId
-     ){
-      return
-     }
+     if(!classId)return;
 
-     let schemas=
+     let schemas=teacherCode?
       await dbGet(
        `gradeSchemas/${encodeURIComponent(teacherCode)}/${encodeURIComponent(classId)}/${encodeURIComponent(subjectId)}`
-      );
+      ):null;
 
      if(
       !schemas||
@@ -3017,6 +3072,17 @@ async function loadGradeSchemasForStudent(rawGrades){
       }
      }
 
+     // Read-only fallback for grades that administrators updated later.
+     if((!schemas||!Object.keys(schemas).length)&&(!teacherCode||!/^th/i.test(teacherCode))){
+       const candidates=await tahadiStudentSchemaTeacherCandidates(classId,subjectId,subjectName);
+       for(const candidate of candidates){
+         if(candidate===teacherCode)continue;
+         let value=await dbGet(`gradeSchemas/${encodeURIComponent(candidate)}/${encodeURIComponent(classId)}/${encodeURIComponent(subjectId)}`);
+         if((!value||!Object.keys(value).length)&&subjectName)
+           value=await dbGet(`gradeSchemas/${encodeURIComponent(candidate)}/${encodeURIComponent(classId)}/${encodeURIComponent(safeGradeSchemaKey(subjectName))}`);
+         if(value&&Object.keys(value).length){schemas=value;break;}
+       }
+     }
      if(
       schemas&&
       typeof schemas==="object"
