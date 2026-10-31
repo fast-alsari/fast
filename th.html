@@ -498,6 +498,53 @@ body.record-preview-open{overflow:hidden!important}
 #formulaMathStage #saveFormulaBtn:disabled{opacity:.48;cursor:not-allowed;background:#94a3b8}
 @media(max-width:600px){#formulaMathStage .builder-section{padding:9px}#formulaMathStage .chain-card{width:174px;padding:10px 9px}#formulaMathStage .chain-grade-input input{width:84px}}
 
+
+/* ===== الإصدار الجديد: واجهة تقسيم عمودية واضحة + حفظ مستقل للعمود ===== */
+.schema-action-bar{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+.schema-button{min-height:43px;border:0;border-radius:12px;padding:0 15px;font-weight:900;font-size:10px;white-space:nowrap}
+.schema-create{background:#075fcf;color:#fff;box-shadow:0 4px 12px #075fcf26}
+.schema-delete{background:#fff0f0;color:#b42318;border:1px solid #edb0b0}
+.column-save-btn{display:block;margin:8px auto 0;min-width:88px;height:31px;padding:0 7px;border:1px solid #8cc4f2;background:#edf7ff;color:#0756a8;border-radius:9px;font-size:9px;font-weight:900;white-space:nowrap}
+.column-save-btn.saved{color:#067647;border-color:#a7dac4;background:#e8fff2}
+.column-save-btn:disabled{opacity:.6;cursor:wait}
+.grade-table thead th.score-col{height:82px;vertical-align:middle}
+.formula-steps{display:flex;flex-wrap:wrap;gap:7px}.formula-steps span{flex:1;min-width:110px;text-align:center}
+.group-editor-intro{padding:12px 13px;border-radius:14px;background:#edf5ff;border:1px solid #c9e0ff}
+.group-editor-intro h4{font-size:13px;color:#064a9c;margin-bottom:5px;font-weight:900}
+.group-editor-intro p{font-size:10px;color:#475467;line-height:1.9;font-weight:700}
+.group-add-bar{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}
+.group-add-bar button{min-height:43px;flex:1 1 140px;padding:6px 10px;background:#075fcf;color:#fff;border:0;border-radius:12px;font-size:10px;font-weight:900}
+.group-add-bar button:nth-child(2){background:#a93632}.group-add-bar button:nth-child(3){background:#6d42bf}
+.group-stack{display:grid;gap:12px}
+.grade-group{background:#fff;border:1px solid #cddced;border-radius:18px;padding:12px;box-shadow:0 5px 18px #1d42710d}
+.grade-group-top{display:flex;align-items:center;gap:9px;margin-bottom:11px}
+.group-n{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;background:#075fcf;color:#fff;border-radius:10px;font-size:12px;font-weight:900}
+.grade-group-top strong{font-size:12px;flex:1}
+.grade-group-top small{color:#667085;font-weight:700}
+.group-remove{border:1px solid #e4afaf;border-radius:8px;padding:7px;color:#b42318;background:#fff4f4;font-size:9px;font-weight:800}
+.group-settings{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.group-settings label{font-size:10px;font-weight:900;color:#344054;display:grid;gap:5px;min-width:0}
+.group-settings select,.group-settings input{width:100%;height:43px;border:1px solid #d0dbea;border-radius:11px;background:#f9fbfe;padding:0 10px;font-size:11px;font-weight:700;color:#172033;min-width:0}
+.group-settings input:disabled{color:#475467;background:#f1f5f9}
+.group-settings label small{font-size:8px;color:#667085}
+.group-members{display:flex;gap:8px;flex-wrap:wrap;margin:11px 0 8px;padding:10px;background:#f8fafc;border-radius:12px;min-height:45px}
+.group-member{background:white;border:1px solid #bed6ed;border-radius:10px;padding:7px 10px;font-size:10px;font-weight:800}
+.group-member b{color:#075fcf;margin-inline-start:4px}
+.group-empty{color:#667085;font-size:10px;font-weight:700}
+.group-human{font-size:10px;color:#075fcf;font-weight:800}
+.group-assign{margin-top:13px;background:#f7faff;border:1px solid #cbdcf0;border-radius:16px;padding:13px}
+.group-assign h4{font-size:12px;font-weight:900;color:#075fcf;margin-bottom:4px}
+.group-assign p{font-size:10px;color:#667085;margin-bottom:10px;line-height:1.75}
+.group-assignment{display:grid;grid-template-columns:1fr minmax(135px,200px);gap:8px;align-items:center;padding:9px;background:#fff;border-radius:10px;margin:6px 0;border:1px solid #e5edf7}
+.group-assignment strong,.group-assignment small{display:block}.group-assignment strong{font-size:10px}.group-assignment small{font-size:9px;color:#667085;margin-top:3px}
+.group-assignment select{width:100%;height:37px;border-radius:9px;border:1px solid #d4dfeb;padding:0 7px;background:#fff;font-size:10px}
+.group-live-result{margin-top:11px;padding:12px;background:#eaf7f0;color:#075c38;border:1px solid #a8d9bf;border-radius:13px;font-size:11px;line-height:2;font-weight:800;word-break:break-word}
+#formulaMathStage .component-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+#formulaMathStage .formula-max-row{display:grid;grid-template-columns:1fr auto 110px;align-items:center;gap:9px}
+#formulaMathStage .formula-max-row label{font-size:10px;font-weight:900}
+#formulaMathStage .formula-max-row span{font-size:9px;color:#667085}
+@media(max-width:650px){.group-settings{grid-template-columns:1fr}.group-add-bar button{flex-basis:calc(50% - 8px)}#formulaMathStage .component-list{grid-template-columns:1fr}#formulaMathStage .formula-max-row{grid-template-columns:1fr auto 105px}.group-assignment{grid-template-columns:1fr 145px}}
+@media(max-width:430px){.schema-action-bar{width:100%;justify-content:stretch}.schema-button{flex:1}.group-add-bar button{flex-basis:100%}.group-assignment{grid-template-columns:1fr 130px}}
 </style></head>
 <body>
 <div id="loaderScreen" class="loader-screen"><div class="loader-box"><img src="logo.png" class="loader-logo" alt=""><div class="spinner"></div><p>جاري تحميل منصة الأستاذ</p></div></div>
@@ -615,19 +662,25 @@ body.record-preview-open{overflow:hidden!important}
  <div class="modal-card formula-wizard-card">
   <div class="modal-head"><h3 id="formulaModalTitle">تقسيم الدرجة</h3><button id="closeFormulaModal" class="close" type="button">×</button></div>
   <p id="formulaModalDesc" class="modal-desc"></p>
-  <div class="formula-steps"><span id="formulaStep1" class="active">١ - اختر الفترة والمفردات</span><span id="formulaStep2">٢ - الدرجات والحساب الحي</span></div>
+  <div class="formula-steps"><span class="active" id="formulaStep1">١ - اختيار الأقسام</span><span id="formulaStep2">٢ - تحديد الدرجات</span><span id="formulaStep3">٣ - ترتيب المعادلة</span></div>
   <div id="formulaChooseStage"><div class="builder-section"><label class="field-label" for="formulaTargetPeriod">أولًا: التقسيم تابع لأي فترة؟</label><select id="formulaTargetPeriod" class="period-target-select" aria-label="الفترة المستهدفة"></select></div><p class="formula-help">اختر من شهر واحد إلى 12 شهرًا، وأضف النشاط والحضور والشفهي وغيرها. ما تحتاج تحط درجات بهذه الخطوة.</p><div class="quick-months" id="quickMonthChoices"><span>عدد الأشهر بسرعة:</span><button type="button" data-month-count="1">1</button><button type="button" data-month-count="2">2</button><button type="button" data-month-count="3">3</button><button type="button" data-month-count="4">4</button><button type="button" data-month-count="6">6</button><button type="button" data-month-count="8">8</button><button type="button" data-month-count="12">12</button></div><div id="componentList" class="component-list teacher-component-grid"></div><button id="formulaNextBtn" class="modal-save" type="button">التالي: تحديد درجات المفردات</button></div>
-  <div id="formulaMathStage" class="hidden"><p class="formula-help">الأقسام تظهر بشكل أفقي: اكتب درجة كل قسم، اختر العملية بينه وبين القسم التالي، ويمكنك قسمة درجة قسم محدد على رقم تختاره. لن يظهر زر الاعتماد مفعّلًا إلا عند مطابقة الدرجة المطلوبة.</p>
-   <div id="formulaMaxList" class="component-list hidden" aria-hidden="true"></div>
-   <div id="formulaVisualBuilder" class="builder-area" aria-label="طريقة احتساب الدرجة"></div>
-   <textarea id="formulaExpression" class="hidden" aria-hidden="true" tabindex="-1"></textarea><div id="formulaTokens" class="hidden"></div>
-   <div class="formula-expr-field hidden"><label for="formulaScaleMode">طريقة إظهار النتيجة النهائية</label><select id="formulaScaleMode"><option value="normalize">تحويل تلقائي إلى الدرجة الكاملة للمادة</option><option value="direct">استخدام الناتج كما هو (بشرط ألّا يتجاوز درجة المادة)</option></select></div>
-   <div class="formula-expr-field"><label for="formulaRounding">تقريب الناتج</label><select id="formulaRounding"><option value="0.5">أقرب نصف درجة</option><option value="1">أقرب درجة صحيحة</option><option value="0.1">أقرب عُشر</option><option value="0">دون تقريب (رقمان عشريان)</option></select></div>
-   <div id="formulaTotal" class="formula-total"><span>مطابقة الدرجة الكاملة للمادة</span><strong>—</strong></div>
-   <div id="formulaMatchState" class="formula-match-status" aria-live="polite">أدخل الدرجة العظمى تحت كل قسم لتظهر المطابقة هنا.</div>
-   <p id="formulaFormulaPreview" class="formula-help" style="margin-top:8px"></p>
-   <div class="formula-actions"><button id="formulaBackBtn" type="button" class="formula-secondary">رجوع للمفردات</button><button id="saveFormulaBtn" class="modal-save" type="button">اعتماد التقسيم</button></div>
-  </div>
+  <div class="hidden" id="formulaMathStage">
+ <p class="formula-help">حدد الدرجة العظمى تحت اسم كل قسم. في المرحلة التالية سترتب الجمع والطرح والأعلى والقسمة بطريقة واضحة.</p>
+ <div class="component-list" id="formulaMaxList"></div>
+ <div class="formula-actions"><button class="formula-secondary" id="formulaGradeBackBtn" type="button">رجوع لاختيار الأقسام</button><button class="modal-save" id="formulaGradeNextBtn" type="button">التالي: ترتيب المعادلة</button></div>
+</div>
+<div class="hidden" id="formulaBuilderStage">
+ <p class="formula-help">رتّب الأقسام في مجموعات: اختر من تجمعه ومن تطرحه ومن تأخذ أعلى درجة منه، ثم ضع رقم القسمة لكل مجموعة عند الحاجة. كل قسم يظهر مرة واحدة.</p>
+ <div aria-label="طريقة احتساب الدرجة" class="builder-area" id="formulaVisualBuilder"></div>
+ <textarea aria-hidden="true" class="hidden" id="formulaExpression" tabindex="-1"></textarea>
+ <div id="formulaTokens" class="hidden"></div>
+ <div class="formula-expr-field hidden"><label for="formulaScaleMode">طريقة النتيجة</label><select id="formulaScaleMode"><option value="direct">الناتج المباشر</option></select></div>
+ <div class="formula-expr-field"><label for="formulaRounding">تقريب الناتج</label><select id="formulaRounding"><option value="0.5">أقرب نصف درجة</option><option value="1">أقرب درجة صحيحة</option><option value="0.1">أقرب عُشر</option><option value="0">دون تقريب (رقمان عشريان)</option></select></div>
+ <div class="formula-total" id="formulaTotal"><span>مطابقة الدرجة الكاملة للمادة</span><strong>—</strong></div>
+ <div aria-live="polite" class="formula-match-status" id="formulaMatchState">وزّع الأقسام على المجموعات.</div>
+ <p class="formula-help" id="formulaFormulaPreview"></p>
+ <div class="formula-actions"><button class="formula-secondary" id="formulaBackBtn" type="button">رجوع لتحديد الدرجات</button><button class="modal-save" id="saveFormulaBtn" type="button">اعتماد التقسيم</button></div>
+</div>
  </div>
 </div>
 <div id="toast" class="toast"></div>
@@ -794,7 +847,7 @@ function renderClasses(){
 }
 async function selectClass(classId){
  selectedClassId=classId;selectedPeriod="term1";$("searchInput").value="";$("gradesSection").classList.remove("hidden");renderClasses();
- await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);renderPeriodButtons();renderFormulaInfo();renderGradeTable();
+ await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);await loadSavedColumnDrafts();renderPeriodButtons();renderFormulaInfo();renderGradeTable();
  const a=activeAssignment(),c=classes[classId]||{},list=studentsOfClass(classId),gender=recordGenderFromList(c,list),genderText=gender==="female"?"بنات":gender==="male"?"بنين":"بنين و بنات";
  $("selectedClassTitle").textContent=`${c.name||"الصف"} - ${a?.subjectName||"المادة"} - ${genderText}`;
  $("studentCount").textContent=`${list.length} اسم — ${genderText}`;
@@ -913,7 +966,7 @@ function calculateConfiguredPeriod(period,code){
  try{
   const upper=f.builder?builderUpperBound(comps,f.builder,f.expression):validateGradeExpression(f.expression,comps),raw=gradeExpressionValue(f.expression,values);
   const pre=f.scaleMode==="direct"?raw:raw/upper*subjectMax();
-  const scaled=f.builder&&!["visual_chain_v3","visual_chain_v4"].includes(f.builder.kind)?pre-(Number(f.builder.deduction)||0)+(Number(f.builder.bonus)||0):pre;
+  const scaled=f.builder&&!["visual_chain_v3","visual_chain_v4","visual_groups_v5"].includes(f.builder.kind)?pre-(Number(f.builder.deduction)||0)+(Number(f.builder.bonus)||0):pre;
   return roundGradeResult(Math.min(subjectMax(),Math.max(0,scaled)),f.rounding??"0.5")
  }catch{return null}
 }
@@ -983,7 +1036,10 @@ function renderFormulaInfo(){
     <strong>${esc(a?.subjectName||"المادة")}:</strong> ${txt}
     ${reopened?`<div class="lock-state-line reopened">${esc(submissionUnlockText(selectedPeriod))}</div>`:""}
    </div>
-   <button class="setup" type="button" onclick="openFormulaModal('${selectedPeriod}')">${formulaConfigured(selectedPeriod)?"تعديل تقسيم الدرجة":"تقسيم الدرجة"}</button>`
+   <div class="schema-action-bar">
+    <button class="schema-button schema-create" type="button" onclick="openFormulaModal('${selectedPeriod}')">${formulaConfigured(selectedPeriod)?'تعديل التقسيم':'تقسيم الدرجات'}</button>
+    ${formulas?.[selectedPeriod]?`<button class="schema-button schema-delete" type="button" onclick="deleteGradeDivision('${selectedPeriod}')">حذف التقسيم</button>`:''}
+   </div>`
 }
 function filteredStudents(){const q=norm($("searchInput").value);return studentsOfClass(selectedClassId).filter(st=>!q||norm(`${st.name} ${st.code}`).includes(q))}
 function componentValue(code,period,key){
@@ -1038,10 +1094,110 @@ function classGenderForUI(c,list){
  const cg=recordNormalizeGender(c?.gender||"");return vals.length>1?"mixed":cg
 }
 function personHead(c,gender){const primary=recordClassStageValue(c)==="primary";return primary?(gender==="female"?"اسم التلميذة":gender==="male"?"اسم التلميذ":"اسم التلاميذ"):(gender==="female"?"اسم الطالبة":gender==="male"?"اسم الطالب":"اسم الطلبة")}
+
+/* ================= حفظ مستقل لكل عمود دون قفل الفترة ================= */
+function teacherDraftPeriodPath(period=selectedPeriod){
+ const a=activeAssignment();
+ if(!a||!selectedClassId)return '';
+ return `teacherGradeDrafts/${encodeURIComponent(TEACHER_CODE)}/${encodeURIComponent(selectedClassId)}/${encodeURIComponent(a.subjectId)}/${encodeURIComponent(period)}`;
+}
+async function loadSavedColumnDrafts(){
+ const a=activeAssignment();if(!a||!selectedClassId)return;
+ let drafts={};try{drafts=await dbGet(`teacherGradeDrafts/${encodeURIComponent(TEACHER_CODE)}/${encodeURIComponent(selectedClassId)}/${encodeURIComponent(a.subjectId)}`)||{}}
+ catch(error){console.warn('DRAFT_LOAD_FAILED',error);toast('لم يمكن تحميل مسودات الدرجات، تحقق من الاتصال قبل إدخال درجات جديدة.','warn');return}
+ for(const [period,record] of Object.entries(drafts)){
+  if(!PERIODS[period]||!record||typeof record!=='object')continue;
+  for(const [key,row] of Object.entries(record.components||{})){
+   if(!COMPONENTS.some(c=>c.key===key))continue;
+   for(const code of Object.keys(grades)){
+    const rec=ensureRecord(code);rec.components??={};rec.components[period]??={};
+    // Blank student entries are intentional deletions in this already-saved column.
+    if(!Object.prototype.hasOwnProperty.call(row?.scores||{},code))delete rec.components[period][key];
+   }
+   for(const [code,value] of Object.entries(row?.scores||{})){
+    if(!Object.prototype.hasOwnProperty.call(grades,code))continue;
+    const rec=ensureRecord(code);rec.components??={};rec.components[period]??={};
+    if(value===null||value===undefined||value==='')delete rec.components[period][key];
+    else rec.components[period][key]=value;
+   }
+  }
+  if(record.direct?.scores){for(const code of Object.keys(grades)){
+   if(!Object.prototype.hasOwnProperty.call(record.direct.scores,code))delete grades[code][period];
+  }}
+  for(const [code,value] of Object.entries(record.direct?.scores||{})){
+   if(!Object.prototype.hasOwnProperty.call(grades,code))continue;
+   if(value===null||value===undefined||value==='')delete grades[code][period];
+   else grades[code][period]=value;
+  }
+  if(formulaConfigured(period))for(const st of studentsOfClass(selectedClassId)){
+   const total=periodTotal(st.code,period);if(total===null)delete grades[st.code][period];else grades[st.code][period]=total;
+  }
+ }
+}
+let COLUMN_SAVE_IN_PROGRESS=false;
+async function saveGradeColumn(key){
+ if(COLUMN_SAVE_IN_PROGRESS||!selectedClassId||!activeAssignment())return;
+ const period=selectedPeriod,configured=formulaConfigured(period),comp=activeComponents(period).find(x=>x.key===key);
+ if(key!=='direct'&&!comp)return toast('هذا العمود غير موجود في التقسيم الحالي.','warn');
+ if(key==='direct'&&configured)return toast('اختر عمودًا من مفردات التقسيم.','warn');
+ // A red invalid cell must not be silently replaced with an older in-memory score.
+ const cells=[...document.querySelectorAll('.score-input')].filter(el=>
+  key==='direct'?el.dataset.direct==='1':el.dataset.component===key);
+ if(cells.some(el=>el.classList.contains('invalid'))){
+  toast('يوجد رقم غير صالح داخل هذا العمود، صححه أولًا ثم احفظ.','warn');return;
+ }
+ if(await refreshEditLock(period)){toast(editLockText(period),'warn');renderPeriodButtons();renderFormulaInfo();renderGradeTable();return}
+ const button=[...document.querySelectorAll('[data-column-save]')].find(x=>x.dataset.columnSave===key);
+ const selected=studentsOfClass(selectedClassId);
+ // Only save column data; other columns may be blank or unfinished.
+ const scores={};let filled=0;
+ for(const st of selected){
+  const raw=key==='direct'?directValue(st.code,period):componentValue(st.code,period,key);
+  if(rawText(raw)==='')continue;
+  const n=Number(raw),max=key==='direct'?subjectMax():comp.max;
+  if(Number.isFinite(n)&&(n<0||n>max)){toast(`درجة ${st.name||st.code} في هذا العمود يجب أن تكون بين 0 و ${max}.`,'warn');return}
+  // A few existing school workflows use textual grade indicators; keep their original value.
+  scores[st.code]=Number.isFinite(n)?n:String(raw);filled++;
+ }
+ if(!await verifyTeacherWritePermission()){toast('تعذر التحقق من صلاحية الأستاذ؛ لم يتم حفظ العمود.','error');return}
+ COLUMN_SAVE_IN_PROGRESS=true;
+ if(button){button.disabled=true;button.textContent='جارٍ الحفظ...'}
+ try{
+  // One PUT of one distinct column: never replaces a neighboring column.
+  const columnPath=`${teacherDraftPeriodPath(period)}/${key==='direct'?'direct':'components/'+encodeURIComponent(key)}`;
+  await dbPut(columnPath,{scores,updatedAt:Date.now(),updatedBy:TEACHER_CODE,classId:selectedClassId,subjectId:activeAssignment().subjectId,period});
+  if(button){button.classList.add('saved');button.textContent='✓ محفوظ'}
+  toast(`تم حفظ عمود ${key==='direct'?PERIODS[period].label:comp.label} (${filled} درجة). بقية الأعمدة لم تتأثر والفترة غير مقفلة.`,'success');
+ }catch(error){console.error('COLUMN_DRAFT_SAVE_FAILED',error);toast('فشل حفظ العمود. لا تغلق الصفحة قبل التأكد من الإنترنت والصلاحيات. '+error.message,'error')}
+ finally{COLUMN_SAVE_IN_PROGRESS=false;if(button){button.disabled=false;if(!button.classList.contains('saved'))button.textContent='حفظ العمود'}}
+}
+function markGradeColumnUnsaved(key){
+ const b=[...document.querySelectorAll('[data-column-save]')].find(x=>x.dataset.columnSave===key);
+ if(b){b.classList.remove('saved');b.textContent='حفظ العمود'}
+}
+async function deleteGradeDivision(period=selectedPeriod){
+ if(await refreshEditLock(period))return toast(editLockText(period),'warn');
+ if(submissionPreviouslySubmitted(period))return toast('لا يجوز حذف تقسيم سبق تقديم درجاته رسميًا. يجب مراجعة الإدارة.','warn');
+ const current=formulas?.[period];if(!current)return toast('ماكو تقسيم محفوظ لهذه الفترة.','info');
+ if(!window.confirm(`حذف تقسيم ${PERIODS[period]?.label||period}؟ سيتم حذف مسودات أعمدته غير المعتمدة، ولن تُحذف درجات الطلاب الرسمية.`))return;
+ if(!window.confirm('تأكيد أخير: هل تريد حذف التقسيم والمسودات المرتبطة به؟'))return;
+ if(!await verifyTeacherWritePermission())return toast('تعذر التحقق من صلاحية الأستاذ.','error');
+ try{
+  const updates={};
+  updates[`${formulaBasePath()}/${period}`]=null;
+  updates[teacherDraftPeriodPath(period)]=null;
+  await dbPatch('',updates);
+  delete formulas[period];
+  await loadClassGrades();await loadSavedColumnDrafts();
+  renderPeriodButtons();renderFormulaInfo();renderGradeTable();
+  toast('تم حذف التقسيم ومسوداته. لم يُمس أي سجل رسمي للدرجات.','success');
+ }catch(error){console.error('SCHEMA_DELETE_FAILED',error);toast('تعذر حذف التقسيم: '+error.message,'error')}
+}
+
 function renderGradeTable(){
  const list=filteredStudents(),components=activeComponents(selectedPeriod),configured=formulaConfigured(selectedPeriod),max=subjectMax(),pass=subjectPass(),locked=editLocked(selectedPeriod),annualLocked=periodLocked("annual"),c=classes[selectedClassId]||{},gender=classGenderForUI(c,list);
  if(!list.length){$("tableArea").innerHTML=`<div class="empty">لا توجد أسماء مطابقة.</div>`;return}
- const cols=configured?components.map(comp=>`<th class="score-col"><span class="column-title">${esc(comp.label)}</span><span class="column-max">من ${comp.max}</span></th>`).join(""):`<th class="score-col"><span class="column-title">${esc(PERIODS[selectedPeriod].label)}</span><span class="column-max">من ${max}</span></th>`;
+ const cols=configured?components.map(comp=>`<th class="score-col"><span class="column-title">${esc(comp.label)}</span><span class="column-max">من ${comp.max}</span>${!locked?`<button type="button" class="column-save-btn" data-column-save="${esc(comp.key)}" onclick="saveGradeColumn('${comp.key}')">حفظ العمود</button>`:''}</th>`).join(""):`<th class="score-col"><span class="column-title">${esc(PERIODS[selectedPeriod].label)}</span><span class="column-max">من ${max}</span>${!locked?`<button type="button" class="column-save-btn" data-column-save="direct" onclick="saveGradeColumn('direct')">حفظ العمود</button>`:''}</th>`;
  $("tableArea").innerHTML=`<div class="table-wrap"><table class="grade-table"><thead><tr><th class="seq-col">ت</th><th class="name-col">${esc(personHead(c,gender))}</th>${cols}<th class="total-col period-total-col"><span class="column-title">الناتج الصافي ${esc(PERIODS[selectedPeriod].label)}</span><span class="column-max">من ${max}</span></th><th class="total-col ${annualLocked?"admin-locked-annual":""}"><span class="column-title">السعي السنوي</span><span class="column-max">${annualLocked?"مقفل من الإدارة":"محسوب تلقائياً"}</span></th></tr></thead><tbody>${list.map((st,i)=>{
   const annual=annualPreview(st.code),annualFail=!annualLocked&&annual!==null&&annual<pass;
   const inputs=locked
@@ -1066,6 +1222,7 @@ function scoreFocus(input){if(editLocked(selectedPeriod)){input.blur();toast(edi
 function scoreChanged(input){
  if(editLocked(selectedPeriod)){input.value=input.dataset.original||"";toast(editLockText(selectedPeriod),"warn");return}
  gradesDirty=true;
+ markGradeColumnUnsaved(input.dataset.component||'direct');
  const code=input.dataset.student,max=Number(input.dataset.max),pass=Number(input.dataset.pass??subjectPass()),raw=input.value.trim(),numeric=raw===""?null:Number(raw),isNum=raw!==""&&Number.isFinite(numeric),invalid=isNum&&(numeric<0||numeric>max);
  input.classList.toggle("invalid",invalid);input.classList.toggle("textual",raw!==""&&!isNum);if(invalid)return;
  const critical=isCriticalGrade(raw,max,pass);input.classList.toggle("critical",critical);
@@ -1413,174 +1570,161 @@ let BUILDER_DRAFT=null;
 const CHAIN_TYPE="visual_chain_v4";
 const CHAIN_OPERATORS={add:"+",subtract:"−",divide:"÷",higher:"الأعلى"};
 function builderOptionList(options,value){return options.map(([v,label])=>`<option value="${esc(v)}" ${String(v)===String(value)?"selected":""}>${esc(label)}</option>`).join("")}
-function chainInitial(list){
- const prior=formulas?.[editingPeriod]?.builder;
- const keys=list.map(c=>c.key);
- if(prior?.kind===CHAIN_TYPE){
-  const order=[...(prior.order||[]).filter(k=>keys.includes(k)),...keys.filter(k=>!(prior.order||[]).includes(k))];
-  return {kind:CHAIN_TYPE,order,items:{...(prior.items||{})},links:{...(prior.links||{})}};
- }
- // عند تحرير تقسيم أقدم: نحافظ على ترتيب المفردات والعمليات المتوافقة.
- // لا نعيد تطبيق الإعطاء/الطرح القديمين بعد إزالتهما من الواجهة.
- if(prior?.kind==="visual_chain_v3"){
-  const order=[...(prior.order||[]).filter(k=>keys.includes(k)),...keys.filter(k=>!(prior.order||[]).includes(k))];
-  const links={};for(const k of keys)links[k]=["add","subtract","divide","higher"].includes(prior.links?.[k])?prior.links[k]:"add";
-  return {kind:CHAIN_TYPE,order,links,items:{},migratedFrom:prior.kind};
- }
- return {kind:CHAIN_TYPE,order:keys,items:{},links:{}};
+
+/* ===== محرر التقسيم بالمجموعات: جمع/طرح/الأعلى/قَسْمَة على عدد ===== */
+const GROUP_SCHEMA_KIND='visual_groups_v5';
+let GROUP_COUNTER=0;
+function newGradeGroup(mode='sum',action='add',keys=[]){
+ GROUP_COUNTER++;
+ return {id:'g'+GROUP_COUNTER.toString(36)+'_'+Math.random().toString(36).slice(2,6),mode:mode==='highest'?'highest':'sum',action:action==='subtract'?'subtract':'add',divisor:1,keys:[...keys]};
 }
+// Preserve valid calculations created with the previous visual-chain editor.
 function chainOrder(draft,list){
- const keys=list.map(x=>x.key);
- return [...new Set([...(draft.order||[]).filter(k=>keys.includes(k)),...keys])];
+ const keys=list.map(c=>c.key);
+ return [...new Set([...(Array.isArray(draft?.order)?draft.order:[]).filter(k=>keys.includes(k)),...keys])];
+}
+function chainInitial(list){
+ const prior=formulas?.[editingPeriod]?.builder,keys=list.map(c=>c.key);
+ if(prior?.kind===GROUP_SCHEMA_KIND&&Array.isArray(prior.groups)&&prior.groups.length){
+  const groups=prior.groups.slice(0,30).map((g,i)=>({
+   id:String(g.id||'group_'+i),mode:g.mode==='highest'?'highest':'sum',
+   action:i===0?'add':g.action==='subtract'?'subtract':'add',
+   divisor:Number(g.divisor)||1,keys:Array.isArray(g.keys)?g.keys.filter(k=>keys.includes(k)):[]
+  }));
+  const assigned=new Set();for(const g of groups){g.keys=g.keys.filter(k=>!assigned.has(k)&&assigned.add(k))}
+  for(const k of keys)if(!assigned.has(k))groups[0].keys.push(k);
+  return {kind:GROUP_SCHEMA_KIND,groups};
+ }
+ return {kind:GROUP_SCHEMA_KIND,groups:[newGradeGroup('sum','add',keys)],migratedFrom:prior?.kind||null};
 }
 function builderRead(){
- if(!$('formulaVisualBuilder')?.querySelector('[data-chain-card]'))return BUILDER_DRAFT;
- const initial=BUILDER_DRAFT||chainInitial(wizardComponents());
- const items={...initial.items},links={...initial.links};
- document.querySelectorAll('[data-chain-card]').forEach(card=>{
-  const key=card.dataset.chainCard;
-  const enabled=card.querySelector('[data-chain-divide-toggle]')?.getAttribute('aria-pressed')==='true';
-  const input=card.querySelector('[data-chain-divisor]');
-  const divisor=enabled?Number(input?.value):1;
-  items[key]={divide:enabled,divisor};
+ if(!$('formulaVisualBuilder')?.querySelector('[data-grade-group]'))return BUILDER_DRAFT;
+ const prior=BUILDER_DRAFT||chainInitial(wizardComponents());
+ const groups=[];
+ document.querySelectorAll('[data-grade-group]').forEach((card,i)=>{
+  const id=card.dataset.gradeGroup;
+  const old=prior.groups.find(g=>g.id===id)||{};
+  groups.push({id,mode:card.querySelector('[data-group-mode]')?.value==='highest'?'highest':'sum',
+   action:i===0?'add':card.querySelector('[data-group-action]')?.value==='subtract'?'subtract':'add',
+   divisor:Number(card.querySelector('[data-group-divisor]')?.value ?? 1),keys:[...(old.keys||[])]});
  });
- document.querySelectorAll('[data-chain-op].active').forEach(btn=>{
-  links[btn.dataset.chainLink]=btn.dataset.chainOp;
- });
- return {...initial,kind:CHAIN_TYPE,order:chainOrder(initial,wizardComponents()),items,links};
+ return {kind:GROUP_SCHEMA_KIND,groups};
 }
-function chainPickOperator(key,operation){
- if(!Object.prototype.hasOwnProperty.call(CHAIN_OPERATORS,operation))return;
- BUILDER_DRAFT=builderRead();
- if(!BUILDER_DRAFT)return;
- BUILDER_DRAFT.links[key]=operation;
- builderRender(true);
+function groupMoveComponent(key,groupId){
+ const b=builderRead();if(!b||!b.groups.some(g=>g.id===groupId))return;
+ for(const g of b.groups)g.keys=g.keys.filter(k=>k!==key);
+ b.groups.find(g=>g.id===groupId).keys.push(key);
+ BUILDER_DRAFT=b;builderRender(true);
 }
-function chainToggleDivider(key){
- BUILDER_DRAFT=builderRead();
- if(!BUILDER_DRAFT)return;
- const old=BUILDER_DRAFT.items[key]||{};
- BUILDER_DRAFT.items[key]={divide:!old.divide,divisor:old.divide?1:(Number(old.divisor)>0&&Number(old.divisor)!==1?Number(old.divisor):2)};
- builderRender(true);
+function groupAdd(mode='sum',action='add'){
+ const b=builderRead();if(!b)return;
+ if(b.groups.length>=20)return toast('أقصى عدد للمجموعات هو 20.','warn');
+ b.groups.push(newGradeGroup(mode,action));BUILDER_DRAFT=b;builderRender(true);
 }
-function builderMove(key,delta){
- BUILDER_DRAFT=builderRead();if(!BUILDER_DRAFT)return;
- const arr=BUILDER_DRAFT.order,i=arr.indexOf(key),j=i+delta;
- if(j<0||j>=arr.length)return;
- [arr[i],arr[j]]=[arr[j],arr[i]];
- builderRender(true);
+function groupRemove(id){
+ const b=builderRead();if(!b||b.groups.length<=1)return;
+ const idx=b.groups.findIndex(g=>g.id===id);if(idx<=0)return;
+ const removed=b.groups.splice(idx,1)[0];
+ b.groups[0].keys.push(...removed.keys);
+ BUILDER_DRAFT=b;builderRender(true);
 }
+function groupSettingsChanged(){BUILDER_DRAFT=builderRead();updateFormulaTotal()}
 function builderRender(keep=false){
  const list=wizardComponents();
  if(!keep||!BUILDER_DRAFT)BUILDER_DRAFT=chainInitial(list);
- BUILDER_DRAFT.order=chainOrder(BUILDER_DRAFT,list);
- const b=BUILDER_DRAFT,ordered=b.order.map(k=>list.find(x=>x.key===k)).filter(Boolean);
- const operatorNames={add:"جمع",subtract:"طرح",divide:"قسمة",higher:"اعتماد الأعلى"};
+ let b=BUILDER_DRAFT;
+ const available=new Set(list.map(c=>c.key));
+ const seen=new Set();
+ b.groups=b.groups.filter(Boolean).slice(0,20);
+ for(const g of b.groups){g.keys=(g.keys||[]).filter(k=>available.has(k)&&!seen.has(k)&&seen.add(k))}
+ if(!b.groups.length)b.groups=[newGradeGroup('sum','add')];
+ for(const c of list)if(!seen.has(c.key))b.groups[0].keys.push(c.key);
+ b.groups[0].action='add';
+ const maxes=Object.fromEntries([...document.querySelectorAll('[data-max-key]')].map(x=>[x.dataset.maxKey,Number(x.value)]));
  $('formulaVisualBuilder').innerHTML=`
- <div class="builder-section"><h4>مخطط تقسيم الدرجات</h4>
- <p>اكتب درجة كل قسم، ثم اختر العملية الموجودة <b>بين القسمين</b>. ويمكن قسمة درجة أي قسم وحده على عدد من داخل بطاقته.</p>
- <div class="chain-hint">العمليات تُحسب بالترتيب من اليمين إلى اليسار. عند اختيار <b>الأعلى</b> تُعتمد الدرجة الأكبر من الجانبين. يلزم تطابق الناتج مع سقف المادة قبل الاعتماد.</div>
- <div class="chain-visual-wrap" tabindex="0" aria-label="مخطط أفقي لمفردات التقسيم"><div class="chain-visual">
- ${ordered.map((c,i)=>{
-  const setting=b.items[c.key]||{},divide=setting.divide===true,divisor=divide?setting.divisor:2;
-  const maxScore=document.querySelector(`[data-max-key="${c.key}"]`)?.value||formulas?.[editingPeriod]?.components?.[c.key]||10;
-  const op=b.links[c.key]||'add';
-  const opButtons=Object.entries(CHAIN_OPERATORS).map(([value,symbol])=>`<button type="button" class="chain-op-btn ${op===value?'active':''}" data-chain-link="${esc(c.key)}" data-chain-op="${value}" aria-pressed="${op===value}" aria-label="${operatorNames[value]} قبل ${esc(c.label)}" onclick="chainPickOperator('${esc(c.key)}','${value}')">${symbol}</button>`).join('');
-  return `${i?`<div class="chain-connector chain-ops"><span>اختر العملية</span><div class="chain-op-grid">${opButtons}</div></div>`:''}
-  <div class="chain-card" data-chain-card="${esc(c.key)}">
-   <span class="chain-index">القسم ${i+1}</span><h5>${esc(c.label)}</h5>
-   <div class="chain-grade-entry"><label for="grade-${esc(c.key)}">درجة ${esc(c.label)}</label><div class="chain-grade-input"><span>من</span><input id="grade-${esc(c.key)}" type="number" inputmode="decimal" min="0.1" max="10000" step="0.5" data-inline-max="${esc(c.key)}" value="${esc(maxScore)}" oninput="formulaMaxEdited(this)" aria-label="الدرجة العظمى لمفردة ${esc(c.label)}"></div></div>
-   <div class="chain-own-divide"><button type="button" class="chain-divide-toggle ${divide?'active':''}" data-chain-divide-toggle aria-pressed="${divide}" onclick="chainToggleDivider('${esc(c.key)}')">÷ قسمة درجة هذا القسم</button>
-   <div class="chain-divide-number ${divide?'':'hidden'}"><label>على العدد</label><input data-chain-divisor type="number" inputmode="decimal" min="0.01" step="any" value="${esc(divisor)}" oninput="updateFormulaTotal()" aria-label="قسمة درجة ${esc(c.label)} على عدد"></div></div>
-   <div class="chain-move"><button type="button" ${i===0?'disabled':''} onclick="builderMove('${esc(c.key)}',-1)">السابق ◀</button><button type="button" ${i===ordered.length-1?'disabled':''} onclick="builderMove('${esc(c.key)}',1)">التالي ▶</button></div>
-  </div>`
- }).join('')}
- <div class="chain-connector"><span style="font-size:24px;font-weight:900;color:#078746">=</span></div>
- <div class="chain-result" aria-live="polite"><strong id="chainPeriodLabel">الناتج</strong><b id="chainLiveScore">—</b><span class="chain-status" id="chainStatus">مطابقة الدرجة قبل الاعتماد</span></div>
- </div></div><div class="chain-details"><span>الأقسام: <em>${ordered.length}</em></span><span>الهدف: <em id="chainPeriodInline">—</em></span></div></div>
- <div class="builder-summary" id="builderSummary" role="status">جاري حساب النتيجة...</div>
- ${b.migratedFrom?'<div class="builder-warning">هذا التقسيم محفوظ بالإصدار القديم. تم تبسيط واجهته؛ راجع العمليات قبل حفظ التقسيم الجديد لأن خيارات الإعطاء والطرح القديمة لم تعد موجودة.</div>':''}
- ${formulas?.[editingPeriod]?.expression&&formulas?.[editingPeriod]?.builder?.kind!==CHAIN_TYPE?'<div class="builder-warning">عند اعتماد المخطط الجديد، ستتغير طريقة الاحتساب فقط وتبقى درجات الطلاب المخزنة. راجع النتائج قبل إرسال الفترة.</div>':''}`;
+ <section class="group-editor-intro"><h4>طريقة احتساب ${esc(PERIODS[editingPeriod]?.label||'الدرجة')}</h4>
+ <p>اجمع الأقسام التي تريدها داخل مجموعة، واختر هل تجمع درجاتها أو تعتمد الأعلى بينها، ثم إذا احتجت اقسم الناتج على عدد. أضف مجموعة ثانية للجمع أو الطرح. كل قسم يدخل بالحساب مرة واحدة فقط.</p></section>
+ <div class="group-add-bar"><button type="button" onclick="groupAdd('sum','add')">+ إضافة مجموعة جمع</button><button type="button" onclick="groupAdd('sum','subtract')">− إضافة مجموعة طرح</button><button type="button" onclick="groupAdd('highest','add')">★ مجموعة أعلى درجة</button></div>
+ <div class="group-stack">
+ ${b.groups.map((g,i)=>{
+  const members=g.keys.map(k=>list.find(c=>c.key===k)).filter(Boolean);
+  const d=Number(g.divisor);
+  return `<section class="grade-group" data-grade-group="${esc(g.id)}">
+    <div class="grade-group-top"><span class="group-n">${i+1}</span><strong>${i===0?'المجموعة الأساسية':'المجموعة '+(i+1)}</strong>
+      ${i>0?`<button type="button" class="group-remove" onclick="groupRemove('${esc(g.id)}')">حذف المجموعة</button>`:'<small>بداية الحساب</small>'}</div>
+    <div class="group-settings"><label>طريقة حساب المجموعة<select data-group-mode onchange="groupSettingsChanged()">${builderOptionList([['sum','جمع درجات الأقسام'],['highest','اعتماد أعلى درجة فقط']],g.mode)}</select></label>
+    ${i===0?'<label>إضافتها للمحصلة<input value="بداية الحساب (+)" disabled></label>':`<label>تأثير المجموعة<select data-group-action onchange="groupSettingsChanged()">${builderOptionList([['add','+ إضافتها إلى الناتج'],['subtract','− طرحها من الناتج']],g.action)}</select></label>`}
+    <label>قسمة الناتج على عدد<input type="number" min="1" step="any" inputmode="decimal" data-group-divisor value="${esc(d)}" oninput="groupSettingsChanged()" aria-label="تقسيم ناتج المجموعة ${i+1} على عدد"><small>1 = بدون قسمة</small></label></div>
+    <div class="group-members">${members.length?members.map(c=>`<span class="group-member">${esc(c.label)} <b>من ${esc(maxes[c.key]||'—')}</b></span>`).join(''):'<span class="group-empty">لا توجد أقسام هنا، اخترها من القائمة أدناه.</span>'}</div>
+    <div class="group-human" id="groupHelp_${esc(g.id)}">${g.mode==='highest'?'اختيار الدرجة الأعلى':'جمع درجات المجموعة'}${d!==1?' ثم القسمة على '+d:''}</div>
+  </section>`
+ }).join('')}</div>
+ <div class="group-assign"><h4>توزيع الأقسام على المجموعات</h4><p>كل قسم يظهر مرة واحدة ويمكن نقله إلى أي مجموعة من القائمة.</p>
+ ${list.map(c=>{const parent=b.groups.find(g=>g.keys.includes(c.key));return `<div class="group-assignment"><div><strong>${esc(c.label)}</strong><small>الدرجة العظمى ${esc(maxes[c.key]||'—')}</small></div><select aria-label="المجموعة التي ينتمي إليها ${esc(c.label)}" onchange="groupMoveComponent('${esc(c.key)}',this.value)">${b.groups.map((g,i)=>`<option value="${esc(g.id)}" ${g.id===parent?.id?'selected':''}>المجموعة ${i+1}</option>`).join('')}</select></div>`}).join('')}
+ </div>
+ <div class="group-live-result" id="builderSummary" role="status">النتيجة تحسب تلقائيًا...</div>
+ ${b.migratedFrom?'<p class="builder-warning">هذا تقسيم من نسخة سابقة. اختياراتك القديمة محفوظة ما لم تضغط اعتماد التقسيم الجديد. راجع توزيع الأقسام والنتيجة قبل الاعتماد.</p>':''}`;
  updateFormulaTotal();
-}
-function formulaMaxEdited(input){
- const linked=[...document.querySelectorAll('[data-max-key]')].find(el=>el.dataset.maxKey===input.dataset.inlineMax);
- if(linked)linked.value=input.value;
- updateFormulaTotal();
-}
-function chainTermRange(c,setting){
- const divided=setting?.divide===true;
- const divisor=divided?Number(setting.divisor):1;
- if(!Number.isFinite(divisor)||divisor<=0||divisor>10000)throw new Error('حدد رقمًا موجبًا صحيحًا لقسمة '+c.label);
- return {min:0,max:c.max/divisor};
 }
 function builderUpperBound(list,b,expression){
- if(b?.kind===CHAIN_TYPE){
-  // تعرض المطابقة عند إدخال الدرجة الكاملة في كل قسم؛ القسمة بين قيمتين
-  // يمكن أن تتغيّر نتيجتها عند إدخال درجات الطلاب الفعلية.
-  const maxima=Object.fromEntries(list.map(c=>[c.key,c.max]));
-  const upper=gradeExpressionValue(expression,maxima);
-  if(!Number.isFinite(upper)||upper<=0||upper>1e12)throw new Error('الناتج غير صالح. راجع العمليات ودرجات الأقسام.');
-  return Number(upper.toFixed(6));
+ if(b?.kind===GROUP_SCHEMA_KIND){
+  const values=Object.fromEntries(list.map(c=>[c.key,c.max]));
+  const total=gradeExpressionValue(expression,values);
+  if(!Number.isFinite(total)||total<=0||total>1e12)throw new Error('الناتج غير صحيح. راجع المجموعات وأرقام القسمة.');
+  return Number(total.toFixed(6));
  }
- // Preserve old builder computation for previous records.
+ if(b?.kind===CHAIN_TYPE){const maxima=Object.fromEntries(list.map(c=>[c.key,c.max]));const upper=gradeExpressionValue(expression,maxima);if(!Number.isFinite(upper)||upper<=0||upper>1e12)throw new Error('الناتج غير صحيح');return Number(upper.toFixed(6))}
  const values={};for(const comp of list){const sub=!b?.pairEnabled||![b.first,b.second].includes(comp.key);values[comp.key]=sub&&b?.items?.[comp.key]?.operation==='subtract'?0:comp.max}
- const upper=gradeExpressionValue(expression,values);if(!Number.isFinite(upper)||upper<=0)throw new Error('طريقة التقسيم لا تعطي حدًا أعلى موجبًا.');return upper
+ const upper=gradeExpressionValue(expression,values);if(!Number.isFinite(upper)||upper<=0)throw new Error('الناتج غير صحيح');return upper
 }
 function builderGenerate(list,b){
- if(b?.kind===CHAIN_TYPE){
-  if(!list.length)throw new Error('اختر قسمًا واحدًا على الأقل');
-  const map=Object.fromEntries(list.map(c=>[c.key,c]));
-  const keys=chainOrder(b,list),descr=[];
-  const term=k=>{
-   const c=map[k],setting=b.items?.[k]||{};
-   chainTermRange(c,setting);
-   if(setting.divide===true){
-    const n=Number(setting.divisor);
-    descr.push(`قسمة درجة ${c.label} على ${n}`);
-    return `(${k}/${n})`;
-   }
-   return k;
-  };
-  let expression=term(keys[0]);
-  const names={add:'جمع',subtract:'طرح',divide:'قسمة',higher:'اعتماد الأعلى'};
-  for(const k of keys.slice(1)){
-   const op=b.links?.[k]||'add',v=term(k);
-   if(!names[op])throw new Error('راجع العملية المختارة قبل '+map[k].label);
-   if(op==='add')expression=`(${expression}+${v})`;
-   if(op==='subtract')expression=`(${expression}-${v})`;
-   if(op==='divide')expression=`DIV(${expression},${v})`;
-   if(op==='higher')expression=`MAX(${expression},${v})`;
-   descr.push(`${names[op]} ${map[k].label}`);
+ if(b?.kind===GROUP_SCHEMA_KIND){
+  if(!list.length)throw new Error('اختر قسمًا واحدًا على الأقل.');
+  const allowed=new Set(list.map(c=>c.key)),used=new Set(),labels=Object.fromEntries(list.map(c=>[c.key,c.label]));
+  if(!b.groups?.length)throw new Error('أضف مجموعة حساب واحدة على الأقل.');
+  const parts=[],description=[];
+  for(let i=0;i<b.groups.length;i++){
+   const g=b.groups[i],keys=g.keys||[];
+   if(!keys.length)throw new Error('المجموعة '+(i+1)+' فارغة. انقل إليها قسمًا أو احذفها.');
+   for(const k of keys){if(!allowed.has(k))throw new Error('قسم غير معروف في المجموعة.');if(used.has(k))throw new Error('القسم '+labels[k]+' مكرر في أكثر من مجموعة.');used.add(k)}
+   const divisor=Number(g.divisor);
+   if(!Number.isFinite(divisor)||divisor<1||divisor>10000)throw new Error('القسمة في المجموعة '+(i+1)+' يجب أن تكون على عدد أكبر من أو يساوي 1.');
+   const mode=g.mode==='highest'?'highest':g.mode==='sum'?'sum':null;if(!mode)throw new Error('اختر طريقة المجموعة '+(i+1));
+   const subtotal=mode==='highest'?(keys.length===1?keys[0]:`MAX(${keys.join(',')})`):`(${keys.join('+')})`;
+   const expr=divisor===1?subtotal:`(${subtotal}/${divisor})`;
+   const sign=i===0?'add':g.action;
+   if(sign!=='add'&&sign!=='subtract')throw new Error('اختر إضافة أو طرح المجموعة '+(i+1));
+   parts.push(i===0?expr:`${sign==='subtract'?'-':'+'}${expr}`);
+   description.push(`${i===0?'':sign==='subtract'?'طرح ':'إضافة '}${mode==='highest'?'أعلى درجة من ':'مجموع '}${keys.map(k=>labels[k]).join(' و ')}${divisor===1?'':' ÷ '+divisor}`);
   }
-  return {expression,description:`${keys.map(k=>map[k].label).join(' ← ')}. ${descr.join('، ')||'احتساب مباشر'}`};
+  if(used.size!==allowed.size)throw new Error('وزّع جميع الأقسام على المجموعات قبل الاعتماد.');
+  return {expression:'('+parts.join('')+')',description:description.join('، ثم ')};
  }
- // Backwards compatibility when opening previously configured periods.
- const found=new Set(list.map(x=>x.key)),parts=[],descriptions=[];
- if(b.pairEnabled){if(!found.has(b.first)||!found.has(b.second)||b.first===b.second)throw new Error('اختَر مفردتين مختلفتين');const a=b.first,c=b.second;const pairMode={average:`((${a}+${c})/2)`,higher:`MAX(${a},${c})`,lower:`MIN(${a},${c})`,sum:`(${a}+${c})`};if(!pairMode[b.pairMode])throw new Error('طريقة الاحتساب غير صحيحة');parts.push(pairMode[b.pairMode])}
- for(const comp of list){if(b.pairEnabled&&(comp.key===b.first||comp.key===b.second))continue;const setting=b.items[comp.key]||{},weight=setting.weight||'full',op=setting.operation||'add',ops={full:comp.key,half:`(${comp.key}/2)`,quarter:`(${comp.key}/4)`,double:`(${comp.key}*2)`};if(!ops[weight])throw new Error('راجع المفردات');parts.push(`${parts.length?(op==='subtract'?'-':'+'):(op==='subtract'?'-':'')}${ops[weight]}`)}
- return {expression:parts.join(' '),description:descriptions.join('، ')}
+ if(b?.kind===CHAIN_TYPE){const map=Object.fromEntries(list.map(c=>[c.key,c]));const keys=chainOrder(b,list);let ex='';for(const k of keys){const v=b.items?.[k]?.divide?`(${k}/${Number(b.items[k].divisor)||1})`:k;const op=b.links?.[k]||'add';if(!ex)ex=v;else ex=op==='higher'?`MAX(${ex},${v})`:op==='divide'?`DIV(${ex},${v})`:op==='subtract'?`(${ex}-${v})`:`(${ex}+${v})`;}return{expression:ex,description:'المخطط القديم'}}
+ const parts=[],found=new Set(list.map(x=>x.key));if(b?.pairEnabled){if(!found.has(b.first)||!found.has(b.second))throw new Error('المفردات ناقصة');const a=b.first,c=b.second;parts.push({average:`((${a}+${c})/2)`,higher:`MAX(${a},${c})`,lower:`MIN(${a},${c})`,sum:`(${a}+${c})`}[b.pairMode]||'')}
+ for(const c of list){if(b?.pairEnabled&&(c.key===b.first||c.key===b.second))continue;const setting=b?.items?.[c.key]||{},base={full:c.key,half:`(${c.key}/2)`,quarter:`(${c.key}/4)`,double:`(${c.key}*2)`}[setting.weight||'full']||c.key;parts.push(`${parts.length?(setting.operation==='subtract'?'-':'+'):(setting.operation==='subtract'?'-':'')}${base}`)}
+ return{expression:parts.join(''),description:'التقسيم السابق'}
 }
 function openFormulaModal(period){
  if(editLocked(period)){toast(editLockText(period),"warn");return}
  editingPeriod=period;BUILDER_DRAFT=null;const f=formulas?.[period]||{},values=f.components||{};
  $("formulaModalTitle").textContent=`تقسيم ${PERIODS[period].label}`;
   $("formulaTargetPeriod").innerHTML=Object.entries(PERIODS).map(([key,val])=>`<option value="${esc(key)}" ${key===period?"selected":""}>${esc(val.label)}</option>`).join("");
- $("formulaModalDesc").textContent=`الدرجة النهائية لمادة ${activeAssignment()?.subjectName||"—"} من ${subjectMax()}. اختر المفردات أولًا، ثم حدد درجاتها وطريقة الحساب من الاختيارات الجاهزة.`;
+ $("formulaModalDesc").textContent=`الدرجة النهائية لمادة ${activeAssignment()?.subjectName||"—"} من ${subjectMax()}. اختر الأقسام أولًا، ثم حدد درجاتها، وبعدها وزع الأقسام على مجموعات الجمع والطرح والأعلى والقسمة.`;
  $("componentList").innerHTML=COMPONENTS.map(comp=>`<label class="component-choice"><input type="checkbox" class="component-check" data-key="${esc(comp.key)}" ${Number(values[comp.key])>0?"checked":""}><span>${esc(comp.label)}</span><small>اختر</small></label>`).join("");
  $("formulaExpression").value=f.expression||"";$("formulaScaleMode").value="direct";$("formulaRounding").value=String(f.rounding??"0.5");
  formulaShowStage(1);$("formulaModal").classList.add("show")
 }
 function formulaShowStage(step){
  FORMULA_STEP=step;
- $("formulaChooseStage").classList.toggle("hidden",step!==1);$("formulaMathStage").classList.toggle("hidden",step!==2);
- $("formulaStep1").classList.toggle("active",step===1);$("formulaStep2").classList.toggle("active",step===2)
+ $("formulaChooseStage").classList.toggle("hidden",step!==1);$("formulaMathStage").classList.toggle("hidden",step!==2);$("formulaBuilderStage").classList.toggle("hidden",step!==3);
+ $("formulaStep1").classList.toggle("active",step===1);$("formulaStep2").classList.toggle("active",step===2);$("formulaStep3").classList.toggle("active",step===3)
 }
 function fillFormulaMaxList(){
  const previous=Object.fromEntries([...document.querySelectorAll("[data-max-key]")].map(el=>[el.dataset.maxKey,el.value]));
  const f=formulas?.[editingPeriod]||{},list=wizardComponents();
  $("formulaMaxList").innerHTML=list.map(comp=>`<div class="formula-max-row"><label>${esc(comp.label)}</label><span>الدرجة العظمى</span><input type="number" inputmode="decimal" min="0.1" max="10000" step="0.5" class="max-input" data-max-key="${esc(comp.key)}" value="${esc(previous[comp.key]||f.components?.[comp.key]||10)}" oninput="updateFormulaTotal()"></div>`).join("");
- builderRender(!!BUILDER_DRAFT)
+ // المجموعات تظهر فقط بعد خطوة تحديد الدرجات.
 }
 $("formulaTargetPeriod").addEventListener("change",function(){
  const target=this.value;if(!PERIODS[target]||target===editingPeriod)return;
@@ -1594,7 +1738,9 @@ $("quickMonthChoices").addEventListener("click",e=>{
  document.querySelectorAll(".component-check").forEach(c=>{if(/^month\d+$/.test(c.dataset.key))c.checked=Number(c.dataset.key.slice(5))<=n});
 });
 $("formulaNextBtn").onclick=()=>{if(!wizardComponents().length)return toast("اختر مفردة تقييم واحدة على الأقل.","warn");formulaShowStage(2);fillFormulaMaxList()};
-$("formulaBackBtn").onclick=()=>{BUILDER_DRAFT=builderRead();formulaShowStage(1)};
+$("formulaGradeBackBtn").onclick=()=>formulaShowStage(1);
+$("formulaGradeNextBtn").onclick=()=>{try{formulaFormData();formulaShowStage(3);builderRender(!!BUILDER_DRAFT)}catch(e){toast(e.message,'warn')}};
+$("formulaBackBtn").onclick=()=>{BUILDER_DRAFT=builderRead();formulaShowStage(2)};
 $("formulaScaleMode").addEventListener("change",updateFormulaTotal);
 $("formulaRounding").addEventListener("change",updateFormulaTotal);
 function formulaFormData(){
@@ -1606,7 +1752,7 @@ function formulaFormData(){
 }
 function updateFormulaTotal(){
  const el=$("formulaTotal"),msg=$("formulaFormulaPreview"),state=$("formulaMatchState"),saveBtn=$("saveFormulaBtn");
- if(FORMULA_STEP!==2)return false;
+ if(FORMULA_STEP!==3)return false;
  try{
   const components=formulaFormData(),selected=wizardComponents(),list=selected.map(c=>({...c,max:components[c.key]}));
   const builder=builderRead();if(!builder)throw new Error('لم تكتمل خيارات التقسيم');BUILDER_DRAFT=builder;
@@ -2186,6 +2332,8 @@ $("saveGradesBtn").onclick=async()=>{
   ]=0
  }
 
+ // الإرسال النهائي يمسح مسودات الأعمدة في نفس التحديث الذري؛ تبقى الدرجات الرسمية فقط.
+ updates[teacherDraftPeriodPath(selectedPeriod)]=null;
  await dbPatch(
   "",
   updates
@@ -2707,6 +2855,6 @@ $("openTeacherObjectionsBtn").onclick=openTeacherObjections;
 $("closeTeacherObjectionsBtn").onclick=closeTeacherObjections;
 $("teacherObjectionsModal").addEventListener("click",e=>{if(e.target===$("teacherObjectionsModal"))closeTeacherObjections()});
 
-$("searchInput").addEventListener("input",renderGradeTable);$("reloadBtn").onclick=async()=>{if(!selectedClassId)return;try{$("reloadBtn").disabled=true;await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم تحديث البيانات.")}catch(e){console.error(e);toast("تعذر تحديث البيانات")}finally{$("reloadBtn").disabled=false}};$("logoutBtn").onclick=logout;
+$("searchInput").addEventListener("input",renderGradeTable);$("reloadBtn").onclick=async()=>{if(!selectedClassId)return;try{$("reloadBtn").disabled=true;await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);await loadSavedColumnDrafts();renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم تحديث البيانات.")}catch(e){console.error(e);toast("تعذر تحديث البيانات")}finally{$("reloadBtn").disabled=false}};$("logoutBtn").onclick=logout;
 async function init(){const publicKey=String(new URLSearchParams(location.search).get("record")||"").trim();if(publicKey){await initPublicTeacherRecord(publicKey);return}try{if(!await verifyTeacher())return;await loadBaseData();renderTeacher();renderClasses();await loadTeacherObjections();startTeacherObjectionPolling()}catch(e){console.error(e);toast("تعذر تحميل حساب الأستاذ")}finally{$("loaderScreen").classList.add("hidden")}}window.addEventListener("load",init);
 </script></body></html>
