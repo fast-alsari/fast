@@ -196,6 +196,43 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay hidden" id="unlockOverlay"><div class="dialog"><h3>فتح نسخة الحضور المحفوظة</h3><p>لا يوجد اتصال أو جلسة دخول فعالة. أدخل كود مشرف الحضور نفسه لعرض صفوفه التي نزلت على هذا الجهاز سابقًا. عند توفر الإنترنت يجب تسجيل الدخول بالطريقة المعتادة.</p><input id="offlineCode" type="text" placeholder="كود المشرف" autocomplete="off" spellcheck="false"><div class="actions"><button id="offlineUnlockBtn" type="button" class="btn btn-primary">عرض النسخة المحفوظة</button><button id="offlineCancelBtn" type="button" class="btn btn-neutral">رجوع للدخول</button></div><p class="help">هذا وضع عمل محلي، وليس تحققًا أمنيًا من هوية المستخدم. استخدمه فقط على جهاز المشرف الموثوق.</p></div></div>
 <script>
+
+/* Unified Firebase Realtime Database GET transport: retry transient failures only.
+   No changes to database paths, values, authorization, writes, or page markup. */
+async function tahadiFirebaseReadFetch(url, options={}) {
+  const verb=String(options?.method||"GET").toUpperCase();
+  if(verb!=="GET") return fetch(url,options);
+  const retryStatuses=new Set([408,429,500,502,503,504]);
+  const upstreamSignal=options?.signal;
+  for(let attempt=0;attempt<3;attempt++) {
+    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
+    const controller=new AbortController();
+    const abort=()=>controller.abort();
+    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
+    const timeout=setTimeout(()=>controller.abort(),22000);
+    try {
+      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
+      if(!retryStatuses.has(response.status)||attempt===2)return response;
+    }catch(error){
+      if(upstreamSignal?.aborted)throw error;
+      if(attempt===2)throw error;
+    }finally{
+      clearTimeout(timeout);
+      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
+    }
+    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
+  }
+  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
+}
+/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
+async function tahadiLimitedReads(items,limit,readOne){
+  const array=Array.from(items||[]),out=new Array(array.length);
+  let next=0;
+  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
+  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
+  return out;
+}
+
 'use strict';
 const DB='https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app';
 const ROLES=new Set(['msh','attendance','supervisor','attendance_supervisor']);
@@ -220,8 +257,8 @@ function className(id){return classes[id]?.name||classes[id]?.title||id}
 function classLabel(id){const c=classes[id]||{};return String(c.roomNumber||c.room||'').trim()?`القاعة ${c.roomNumber||c.room}`:''}
 function availableStudents(id){return students.filter(x=>String(x.classId||'')===String(id)&&x.hidden!==true).sort((a,b)=>String(a.name||'').localeCompare(String(b.name||''),'ar'))}
 function sessionFromStorage(){try{const s=JSON.parse(sessionStorage.getItem('tahadi_session')||'{}');return typeof s==='object'&&s?s:{}}catch{return {}}}
-async function apiGet(path,{timeout=20000}={}){const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeout);try{const res=await fetch(`${DB}/${path}.json`,{cache:'no-store',signal:ctrl.signal});if(!res.ok)throw new Error(`GET_${res.status}`);return await res.json()}finally{clearTimeout(timer)}}
-async function apiPatchRoot(updates){const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),35000);try{const res=await fetch(`${DB}/.json`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(updates),signal:ctrl.signal,cache:'no-store'});if(!res.ok)throw new Error(`WRITE_${res.status}`);return await res.json()}finally{clearTimeout(timer)}}
+async function apiGet(path,{timeout=20000}={}){const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),timeout);try{const res=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,{cache:'no-store',signal:ctrl.signal});if(!res.ok)throw new Error(`GET_${res.status}`);return await res.json()}finally{clearTimeout(timer)}}
+async function apiPatchRoot(updates){const ctrl=new AbortController(),timer=setTimeout(()=>ctrl.abort(),35000);try{const res=await tahadiFirebaseReadFetch(`${DB}/.json`,{method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify(updates),signal:ctrl.signal,cache:'no-store'});if(!res.ok)throw new Error(`WRITE_${res.status}`);return await res.json()}finally{clearTimeout(timer)}}
 function idb(){return new Promise((resolve,reject)=>{if(!('indexedDB' in window)){reject(new Error('IDB_UNAVAILABLE'));return}const req=indexedDB.open(CACHE_DB,1);req.onupgradeneeded=()=>{if(!req.result.objectStoreNames.contains('cache'))req.result.createObjectStore('cache')};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error('IDB_OPEN_FAILED'))})}
 function cacheGet(key){return new Promise((resolve,reject)=>{if(!store){resolve(null);return}const tx=store.transaction('cache','readonly'),rq=tx.objectStore('cache').get(key);rq.onsuccess=()=>resolve(rq.result===undefined?null:rq.result);rq.onerror=()=>reject(rq.error)})}
 function cacheSet(key,value){return new Promise((resolve,reject)=>{if(!store){resolve(false);return}const tx=store.transaction('cache','readwrite');tx.objectStore('cache').put(value,key);tx.oncomplete=()=>resolve(true);tx.onerror=()=>reject(tx.error)})}
