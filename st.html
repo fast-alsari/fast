@@ -2736,7 +2736,7 @@ const GRADE_FIELDS=["term1","midyear","term2","annual","finalExam","final","seco
 function isGrade(v){return v!==undefined&&v!==null&&v!==""&&Number.isFinite(Number(v));}function gradeNum(v){return isGrade(v)?Number(v):"";}function gradeBlank(v){return isGrade(v)?String(Math.round(Number(v)*100)/100):"";}
 function normalizeClassSubjects(c){let rows=Array.isArray(c?.subjects)?c.subjects:Object.values(c?.subjects||{});return rows.filter(Boolean).map((s,i)=>({id:String(s.id||`SUB_${i+1}`),name:String(s.name||s.subjectName||"").trim(),maxGrade:Number(s.maxGrade||100),passGrade:Number(s.passGrade??50),order:Number(s.order||i+1),autoType:s.autoType||""})).filter(s=>s.name).sort((a,b)=>a.order-b.order);}
 function recordSubjectName(rec,key=""){return String(rec?.subjectName||rec?.subject||rec?.name||key||"").trim();}function findGradeRecord(entries,subject){return entries.find(([key,r])=>String(r?.subjectId||"")===String(subject.id)||String(key)===String(subject.id)||norm(recordSubjectName(r,key))===norm(subject.name))?.[1]||{};}
-function annualFromRecord(rec,type){const a=gradeNum(rec.term1),b=gradeNum(rec.midyear),c=gradeNum(rec.term2);return isGrade(a)&&isGrade(b)&&isGrade(c)?Math.round((a+b+c)/3):(isGrade(rec.annual)?Number(rec.annual):"");}function finalFromRecord(rec,annual){if(isGrade(rec.final))return Number(rec.final);const exam=gradeNum(rec.finalExam);return isGrade(annual)&&isGrade(exam)?Math.round((Number(annual)+exam)/2):"";}
+function annualFromRecord(rec,type){if(isGrade(rec?.annual))return Number(rec.annual);const a=gradeNum(rec?.term1),b=gradeNum(rec?.midyear),c=gradeNum(rec?.term2);return isGrade(a)&&isGrade(b)&&isGrade(c)?Math.round((a+b+c)/3):"";}function finalFromRecord(rec,annual){if(isGrade(rec.final))return Number(rec.final);const exam=gradeNum(rec.finalExam);return isGrade(annual)&&isGrade(exam)?Math.round((Number(annual)+exam)/2):"";}
 function activityGrade(rows,field){const values=rows.filter(r=>!r.autoType&&isGrade(r[field])).map(r=>Number(r[field])/Math.max(1,Number(r.maxGrade||100))*100);if(!values.length)return"";const highest=Math.max(...values);return highest>=100?100:highest>80?90:85;}
 function buildGradeModel(raw){
  const type=
@@ -2865,16 +2865,21 @@ function buildGradeModel(raw){
      );
 
     if(sub.autoType){
+     const hasStored=GRADE_FIELDS.some(field=>isGrade(rec?.[field]));
+     const boardAuto=rec?.autoCalculatedByBoard===true||String(rec?.updatedSource||"")==="gradeboard_auto_activity";
+     const preserveStored=hasStored&&!boardAuto;
+     const annual=preserveStored?annualFromRecord(rec,type):"";
      return{
       ...sub,
-      term1:"",
-      midyear:"",
-      term2:"",
-      annual:"",
-      finalExam:"",
-      final:"",
-      secondRound:"",
-      record:rec
+      term1:preserveStored?gradeNum(rec.term1):"",
+      midyear:preserveStored?gradeNum(rec.midyear):"",
+      term2:preserveStored?gradeNum(rec.term2):"",
+      annual,
+      finalExam:preserveStored?gradeNum(rec.finalExam):"",
+      final:preserveStored?finalFromRecord(rec,annual):"",
+      secondRound:preserveStored?gradeNum(rec.secondRound):"",
+      record:rec,
+      _storedAuto:preserveStored
      }
     }
 
@@ -2927,7 +2932,7 @@ function buildGradeModel(raw){
  rows=
   rows.map(
    row=>
-    row.autoType
+    row.autoType&&!row._storedAuto
      ?{
        ...row,
        ...Object.fromEntries(
@@ -2995,6 +3000,7 @@ async function tahadiStudentSchemaTeacherCandidates(classId,subjectId,subjectNam
 function gradeRecordTeacherCode(record){
  const candidates=[
   record?.teacherCode,
+  ...Object.values(record?.officialPeriods||{}).map(period=>period?.lockedBy),
   record?.updatedBy,
   record?.createdBy
  ];
@@ -3054,10 +3060,8 @@ async function loadGradeSchemasForStudent(rawGrades){
       ):null;
 
      if(
-      !schemas||
-      !Object.keys(
-       schemas
-      ).length
+      teacherCode&&
+      (!schemas||!Object.keys(schemas).length)
      ){
       const legacy=
        safeGradeSchemaKey(
@@ -3073,7 +3077,7 @@ async function loadGradeSchemasForStudent(rawGrades){
      }
 
      // Read-only fallback for grades that administrators updated later.
-     if((!schemas||!Object.keys(schemas).length)&&(!teacherCode||!/^th/i.test(teacherCode))){
+     if(!schemas||!Object.keys(schemas).length){
        const candidates=await tahadiStudentSchemaTeacherCandidates(classId,subjectId,subjectName);
        for(const candidate of candidates){
          if(candidate===teacherCode)continue;
@@ -3145,6 +3149,9 @@ function schemaForGradeRow(row,field){
 }
 
 function expectedComponentKeys(row,field){
+ // A gradeboard override replaces the period with an official direct grade;
+ // do not display an older component formula as if it still determined that grade.
+ if(row?.record?.gradeOverrides?.[field]&&isGrade(row?.record?.[field]))return [];
  const schema=
         schemaForGradeRow(
          row,
@@ -3179,6 +3186,9 @@ function componentWasEntered(value){
 }
 
 function rowPeriodComponentsComplete(row,field){
+ // grades/$student/$subject contains official values only; unsent teacher columns live in teacherGradeDrafts.
+ // Teacher-locked grades and admin overrides must not disappear when the formula schema is revised.
+ if(isGrade(row?.record?.[field]))return true;
  const expected=
   expectedComponentKeys(
    row,
@@ -3754,6 +3764,8 @@ const GRADE_COMPONENT_LABELS={
  month2:"الشهر الثاني",
  month3:"الشهر الثالث",
  month4:"الشهر الرابع",
+ month5:"الشهر الخامس",month6:"الشهر السادس",month7:"الشهر السابع",month8:"الشهر الثامن",month9:"الشهر التاسع",month10:"الشهر العاشر",month11:"الشهر الحادي عشر",month12:"الشهر الثاني عشر",
+ grammar:"قواعد",literature:"أدب",composition:"إنشاء",practical:"عملي",drawing:"رسم",preparation:"تحضير",monthly:"شهري",weekly:"أسبوعي",electronic:"إلكتروني",participation:"مشاركة",
  firstMonth:"الشهر الأول",
  secondMonth:"الشهر الثاني",
  thirdMonth:"الشهر الثالث",
@@ -3813,9 +3825,11 @@ function gradeComponentsForPeriod(row,field){
          field
         ),
        keys=
-        expected.length
-         ?expected
-         :Object.keys(root);
+        isGrade(row?.record?.[field])&&Object.keys(root).length
+         ?Object.keys(root)
+         :expected.length
+          ?expected
+          :Object.keys(root);
 
  return keys.map(
   key=>({
@@ -3860,20 +3874,10 @@ function publishedStageReady(model,field){
 }
 
 function publishedStageValue(model,row,field){
- if(
-  !publishedStageReady(
-   model,
-   field
-  )
- ){
-  return""
- }
-
- return isGrade(
-  row[field]
- )
-  ?row[field]
-  :""
+ if(!rowStageActuallyComplete(row,field))return"";
+ // Per-subject official grade visibility matches the teacher, board, records and cards.
+ // Aggregate stage status/PDF decisions remain gated until all required subjects finish.
+ return isGrade(row?.[field])?row[field]:""
 }
 
 function publishedFieldStats(model,field){
