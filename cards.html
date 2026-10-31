@@ -141,6 +141,43 @@ html,body,button,input,select,.a4-page,.a4-page *{font-family:"Simplified Arabic
 <div class="rule-block"><label class="rule-toggle"><input id="ruleExemptionEnabled" type="checkbox"> قاعدة الإعفاء</label><div id="exemptionRuleSettings" class="rule-settings disabled"><div class="rule-settings-grid"><div class="field"><label>المعدل المطلوب للإعفاء العام</label><input id="exemptionMinAverage" type="number" min="0" max="100" step=".5" value="85"></div><div class="field"><label>أقل سعي للمادة</label><input id="exemptionMinSubject" type="number" min="0" max="100" step=".5" value="75"></div><div class="field"><label>عدد مواد الرسوب المسموح</label><input id="exemptionFailCount" type="number" min="0" max="10" value="0"></div><div class="field"><label>حكم عدد مواد الرسوب</label><select id="exemptionFailDecision"><option value="allow">يسمح حتى العدد المحدد</option><option value="block">العدد المحدد يمنع الإعفاء</option></select></div><div class="field"><label>سعي الإعفاء الفردي</label><input id="individualMinSubject" type="number" min="0" max="100" step=".5" value="90"></div></div><label class="rule-help-check"><input id="helperAssist" type="checkbox"> مساعدة الرياضة والفنية للوصول إلى معدل الإعفاء المطلوب إذا كانت المساعدة تحقق الإعفاء</label></div></div>
 </div><div class="modal-actions" style="flex-wrap:wrap"><button class="btn btn-soft" onclick="closeManagerModal()">إلغاء</button><button id="previewAccountantBtn" class="btn btn-g" onclick="confirmManagerPreview('accountant')">تحميل المفعل من الحسابات</button><button id="previewAllBtn" class="btn btn-p" onclick="confirmManagerPreview('all')">تحميل الكل</button></div></div></div>
 <script>
+
+/* Unified Firebase Realtime Database GET transport: retry transient failures only.
+   No changes to database paths, values, authorization, writes, or page markup. */
+async function tahadiFirebaseReadFetch(url, options={}) {
+  const verb=String(options?.method||"GET").toUpperCase();
+  if(verb!=="GET") return fetch(url,options);
+  const retryStatuses=new Set([408,429,500,502,503,504]);
+  const upstreamSignal=options?.signal;
+  for(let attempt=0;attempt<3;attempt++) {
+    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
+    const controller=new AbortController();
+    const abort=()=>controller.abort();
+    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
+    const timeout=setTimeout(()=>controller.abort(),22000);
+    try {
+      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
+      if(!retryStatuses.has(response.status)||attempt===2)return response;
+    }catch(error){
+      if(upstreamSignal?.aborted)throw error;
+      if(attempt===2)throw error;
+    }finally{
+      clearTimeout(timeout);
+      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
+    }
+    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
+  }
+  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
+}
+/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
+async function tahadiLimitedReads(items,limit,readOne){
+  const array=Array.from(items||[]),out=new Array(array.length);
+  let next=0;
+  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
+  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
+  return out;
+}
+
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",YEAR="2026-2027",PUBLIC_CARD_PATH="publicStudentCards";
 const A4_BASE_W=794,A4_BASE_H=1123,PRINT_SCALE=3.125,PRINT_W=Math.round(A4_BASE_W*PRINT_SCALE),PRINT_H=Math.round(A4_BASE_H*PRINT_SCALE);
 const $=id=>document.getElementById(id),norm=v=>String(v||"").trim().toLowerCase(),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
@@ -162,7 +199,7 @@ const FRAME_PALETTE=[
 function defaultPreviewOptions(){return{pass:{enabled:true,period:"auto"},ministerial:{enabled:false,maxSubjects:3,maxDeficitPerSubject:10},exemption:{enabled:false,minAverage:85,minSubjectGrade:75,failSubjectCount:0,failDecision:"allow",individualMinSubjectGrade:90,maximizeActivitiesForExemption:false}}}
 function normalizePreviewOptions(o={}){const d=defaultPreviewOptions();if(o?.ruleMode){d.pass.enabled=o.ruleMode==="pass";d.ministerial.enabled=o.ruleMode==="ministerial";d.exemption.enabled=o.ruleMode==="exemption";d.exemption.maximizeActivitiesForExemption=!!o.helper;return d}return{pass:{...d.pass,...(o.pass||{})},ministerial:{...d.ministerial,...(o.ministerial||{})},exemption:{...d.exemption,...(o.exemption||{})}}}
 function toast(t){$("toast").textContent=t;$("toast").classList.add("show");clearTimeout(timer);timer=setTimeout(()=>$("toast").classList.remove("show"),2600)}
-async function req(path,method="GET",data){const o={method,cache:"no-store"};if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}const r=await fetch(`${DB}/${path}.json`,o);if(!r.ok)throw new Error(`${method}_${r.status}`);return r.json()}
+async function req(path,method="GET",data){const o={method,cache:"no-store"};if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}const r=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,o);if(!r.ok)throw new Error(`${method}_${r.status}`);return r.json()}
 const dbGet=p=>req(p),dbPut=(p,d)=>req(p,"PUT",d);
 function session(){try{return JSON.parse(sessionStorage.getItem("tahadi_session")||"{}")}catch{return{}}}
 function logout(){sessionStorage.clear();localStorage.removeItem("tahadi_remembered_login");location.replace("index.html")}
