@@ -325,7 +325,8 @@ async function studentGradeModel(s){
   const rec=findGradeRecord(grades,subject);
   if(subject.autoType){
    const hasStored=["term1","midyear","term2","annual","finalExam","final","secondRound"].some(k=>gradeNumber(rec[k])!==null);
-   if(hasStored){
+   const boardAuto=rec?.autoCalculatedByBoard===true||String(rec?.updatedSource||"")==="gradeboard_auto_activity";
+   if(hasStored&&!boardAuto){
     const annual=calcAnnual(rec),final=calcFinal(rec,annual);
     return{...subject,term1:gradeNumber(rec.term1),midyear:gradeNumber(rec.midyear),term2:gradeNumber(rec.term2),annual,finalExam:gradeNumber(rec.finalExam),final,secondRound:gradeNumber(rec.secondRound),storedActivity:true}
    }
