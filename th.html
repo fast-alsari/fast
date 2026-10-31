@@ -477,6 +477,27 @@ body.record-preview-open{overflow:hidden!important}
 .builder-summary{font-size:11px!important;line-height:2!important}
 @media(max-width:560px){.formula-wizard-card{max-width:100%!important;padding:14px 12px}.formula-wizard-card .component-list.teacher-component-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.formula-max-row{grid-template-columns:minmax(85px,1fr) 65px 85px}.chain-card{width:166px}.chain-visual-wrap{margin-inline:-5px;width:calc(100% + 10px)}}
 
+
+/* ===== مخطط الدرجات الأفقي: الدرجة مباشرة تحت القسم، ومطابقة السقف ===== */
+#formulaMathStage .builder-section{border:1px solid #d6e5f8;border-radius:17px;background:#f9fcff;padding:13px}
+#formulaMathStage .chain-visual-wrap{padding:13px 9px;scrollbar-width:thin}
+#formulaMathStage .chain-card{min-height:315px;width:188px;border:1.5px solid #c3d9f4;border-radius:18px;background:linear-gradient(180deg,#f2f8ff 0,#fff 23%);box-shadow:0 6px 17px rgba(7,95,207,.08)}
+#formulaMathStage .chain-card h5{font-size:14px;min-height:38px;display:flex;align-items:center;justify-content:center;text-align:center}
+#formulaMathStage .chain-grade-entry{padding:9px;border:1px solid #b6d3fa;border-radius:13px;background:#edf5ff;display:grid;gap:6px}
+#formulaMathStage .chain-grade-entry label{font-size:10px;font-weight:900;color:#06489e;text-align:center}
+#formulaMathStage .chain-grade-input{display:flex;align-items:center;gap:7px;justify-content:center;direction:rtl}
+#formulaMathStage .chain-grade-input span{font-size:12px;font-weight:900;color:#075fcf}
+#formulaMathStage .chain-grade-input input{width:93px;height:46px;min-width:0;border:1.5px solid #9abdeb;border-radius:10px;background:#fff;text-align:center;direction:ltr;font-size:17px;font-weight:900;color:#06489e}
+#formulaMathStage .chain-grade-input input:focus{outline:2px solid #75abff;outline-offset:1px}
+#formulaMathStage .chain-connector select{font-size:13px;font-weight:900;min-height:46px;border:1.5px solid #bfd5f4}
+#formulaMathStage .chain-result{min-width:154px;padding:15px;border:2px solid #8ac9a4;border-radius:15px;background:#f0fbf5}
+#formulaMathStage .chain-result b{font-size:22px;color:#087c45}
+#formulaMathStage .formula-match-status{margin-top:11px;padding:12px;border-radius:12px;font-size:12px;line-height:1.9;font-weight:900;text-align:center}
+#formulaMathStage .formula-match-status.matched{background:#e7f8ec;color:#087c45;border:1px solid #a8d9b8}
+#formulaMathStage .formula-match-status.mismatched{background:#fff2ee;color:#aa3030;border:1px solid #eac0b4}
+#formulaMathStage #saveFormulaBtn:disabled{opacity:.48;cursor:not-allowed;background:#94a3b8}
+@media(max-width:600px){#formulaMathStage .builder-section{padding:9px}#formulaMathStage .chain-card{width:174px;padding:10px 9px}#formulaMathStage .chain-grade-input input{width:84px}}
+
 </style></head>
 <body>
 <div id="loaderScreen" class="loader-screen"><div class="loader-box"><img src="logo.png" class="loader-logo" alt=""><div class="spinner"></div><p>جاري تحميل منصة الأستاذ</p></div></div>
@@ -576,13 +597,14 @@ body.record-preview-open{overflow:hidden!important}
   <p id="formulaModalDesc" class="modal-desc"></p>
   <div class="formula-steps"><span id="formulaStep1" class="active">١ - اختر الفترة والمفردات</span><span id="formulaStep2">٢ - الدرجات والحساب الحي</span></div>
   <div id="formulaChooseStage"><div class="builder-section"><label class="field-label" for="formulaTargetPeriod">أولًا: التقسيم تابع لأي فترة؟</label><select id="formulaTargetPeriod" class="period-target-select" aria-label="الفترة المستهدفة"></select></div><p class="formula-help">اختر من شهر واحد إلى 12 شهرًا، وأضف النشاط والحضور والشفهي وغيرها. ما تحتاج تحط درجات بهذه الخطوة.</p><div class="quick-months" id="quickMonthChoices"><span>عدد الأشهر بسرعة:</span><button type="button" data-month-count="1">1</button><button type="button" data-month-count="2">2</button><button type="button" data-month-count="3">3</button><button type="button" data-month-count="4">4</button><button type="button" data-month-count="6">6</button><button type="button" data-month-count="8">8</button><button type="button" data-month-count="12">12</button></div><div id="componentList" class="component-list teacher-component-grid"></div><button id="formulaNextBtn" class="modal-save" type="button">التالي: تحديد درجات المفردات</button></div>
-  <div id="formulaMathStage" class="hidden"><p class="formula-help">اكتب سقف درجة كل مفردة، وبعدها شوفها بالمخطط الأفقي: إبقاء أو إعطاء أو طرح، واختَر + أو − أو ÷ أو الأعلى أو المتوسط بين الخانات. النتيجة تطلع مباشرة قبل الاعتماد.</p>
-   <div id="formulaMaxList" class="component-list"></div>
+  <div id="formulaMathStage" class="hidden"><p class="formula-help">الأقسام تظهر أدناه بشكل أفقي. اكتب درجة كل قسم تحت اسمه، وحدد العمليات بينها. الاعتماد متاح فقط عندما يكون الناتج مساويًا للدرجة الكاملة للمادة.</p>
+   <div id="formulaMaxList" class="component-list hidden" aria-hidden="true"></div>
    <div id="formulaVisualBuilder" class="builder-area" aria-label="طريقة احتساب الدرجة"></div>
    <textarea id="formulaExpression" class="hidden" aria-hidden="true" tabindex="-1"></textarea><div id="formulaTokens" class="hidden"></div>
-   <div class="formula-expr-field"><label for="formulaScaleMode">طريقة إظهار النتيجة النهائية</label><select id="formulaScaleMode"><option value="normalize">تحويل تلقائي إلى الدرجة الكاملة للمادة</option><option value="direct">استخدام الناتج كما هو (بشرط ألّا يتجاوز درجة المادة)</option></select></div>
+   <div class="formula-expr-field hidden"><label for="formulaScaleMode">طريقة إظهار النتيجة النهائية</label><select id="formulaScaleMode"><option value="normalize">تحويل تلقائي إلى الدرجة الكاملة للمادة</option><option value="direct">استخدام الناتج كما هو (بشرط ألّا يتجاوز درجة المادة)</option></select></div>
    <div class="formula-expr-field"><label for="formulaRounding">تقريب الناتج</label><select id="formulaRounding"><option value="0.5">أقرب نصف درجة</option><option value="1">أقرب درجة صحيحة</option><option value="0.1">أقرب عُشر</option><option value="0">دون تقريب (رقمان عشريان)</option></select></div>
-   <div id="formulaTotal" class="formula-total"><span>المحصلة النهائية حسب التقسيم</span><strong>—</strong></div>
+   <div id="formulaTotal" class="formula-total"><span>مطابقة الدرجة الكاملة للمادة</span><strong>—</strong></div>
+   <div id="formulaMatchState" class="formula-match-status" aria-live="polite">أدخل الدرجة العظمى تحت كل قسم لتظهر المطابقة هنا.</div>
    <p id="formulaFormulaPreview" class="formula-help" style="margin-top:8px"></p>
    <div class="formula-actions"><button id="formulaBackBtn" type="button" class="formula-secondary">رجوع للمفردات</button><button id="saveFormulaBtn" class="modal-save" type="button">اعتماد التقسيم</button></div>
   </div>
@@ -1422,25 +1444,31 @@ function builderRender(keep=false){
  const optionOps=Object.entries(CHAIN_OPERATORS).map(([v,label])=>[v,label]);
  const optionAdjust=Object.entries(CHAIN_ADJUSTMENTS).map(([v,label])=>[v,label]);
  $('formulaVisualBuilder').innerHTML=`
- <div class="builder-section"><h4>المخطط الحي لتقسيم الدرجات</h4><p>شوف كل مفردة بدرجتها الكاملة وحرّك يمين ويسار على الهاتف. كل مفردة «إبقاء» افتراضيًا. وإذا تختار «إعطاء» أو «طرح»، تظهر خانة الرقم تحتها. اختَر العملية بين الخانات. ولحساب متوسط شهرين مثلًا اختر «جمع» بينهما، ثم «قسمة المجموع على عدد 2» تحت الشهر الثاني. يظهر الناتج مباشرة.</p>
- <div class="chain-hint">العمليات تُنفّذ بالتسلسل من أول مفردة إلى آخر مفردة، ويمكن تغيير ترتيبها من أزرار كل خانة. «الأعلى» يأخذ الأكبر من الطرفين، و«المتوسط» يأخذ متوسطهما. عند القسمة على صفر تُحتسب القيمة صفر لمنع الخطأ.</div>
+ <div class="builder-section"><h4>المخطط الحي لتقسيم الدرجات</h4><p>اسم كل قسم بالأعلى ودرجته أسفله مباشرة. اختر العملية بين الأقسام، واضبط الناتج ليساوي الدرجة المطلوبة للفصل أو نصف السنة. يمكن تعديل الخانات أو ترتيبها قبل الاعتماد أو لاحقًا ما دامت الفترة غير مقفلة.</p>
+ <div class="chain-hint">الاحتساب من اليمين إلى اليسار حسب ترتيب الخانات. اختر جمع (+)، طرح (−)، قسمة (÷)، أو اعتماد الأعلى، ويمكن أيضًا اختيار المتوسط. اضبط الدرجات حتى يساوي سقف الناتج سقف المادة تمامًا.</div>
  <div class="chain-visual-wrap" tabindex="0" aria-label="مخطط حي أفقي للدرجات"><div class="chain-visual">
  ${ordered.map((c,i)=>{
   const setting=b.items[c.key]||{},mode=['keep','give','remove'].includes(setting.adjust)?setting.adjust:'keep',v=Number(setting.value)||0,after=setting.after==='divide'?'divide':'keep',afterValue=Number(setting.afterValue)||2;
+  const maxScore=document.querySelector(`[data-max-key="${c.key}"]`)?.value||formulas?.[editingPeriod]?.components?.[c.key]||10;
   return `${i?`<div class="chain-connector"><label>العملية</label><select data-chain-link="${esc(c.key)}" aria-label="العملية قبل ${esc(c.label)}" onchange="updateFormulaTotal()">${builderOptionList(optionOps,b.links[c.key]||'add')}</select></div>`:''}
  <div class="chain-card" data-chain-card="${esc(c.key)}">
   <span class="chain-index">المفردة ${i+1}</span><h5>${esc(c.label)}</h5>
-  <div class="chain-max" data-chain-max="${esc(c.key)}">الدرجة العظمى: —</div>
+  <div class="chain-grade-entry"><label for="grade-${esc(c.key)}">درجة ${esc(c.label)}</label><div class="chain-grade-input"><span>من</span><input id="grade-${esc(c.key)}" type="number" inputmode="decimal" min="0.1" max="10000" step="0.5" data-inline-max="${esc(c.key)}" value="${esc(maxScore)}" oninput="formulaMaxEdited(this)" aria-label="الدرجة العظمى لمفردة ${esc(c.label)}"></div></div>
   <div class="chain-field"><label>التعديل على المفردة</label><select data-chain-adjust aria-label="تعديل ${esc(c.label)}" onchange="chainAdjustChanged('${esc(c.key)}')">${builderOptionList(optionAdjust,mode)}</select></div>
   <div class="chain-field ${mode==='keep'?'hidden':''}" data-chain-value-row><label>كم درجة؟</label><input data-chain-value type="number" inputmode="decimal" min="0" step="0.5" value="${esc(v)}" oninput="updateFormulaTotal()" aria-label="قيمة الإعطاء أو الطرح في ${esc(c.label)}"></div>
   <div class="chain-after"><div class="chain-field"><label>بعد هذه الخانة</label><select data-chain-after onchange="chainAfterChanged('${esc(c.key)}')">${builderOptionList([['keep','إبقاء المجموع'],['divide','قسمة المجموع على عدد']],after)}</select></div><div class="chain-field ${after==='keep'?'hidden':''}" data-chain-after-row style="margin-top:6px"><label>على كم تقسم المجموع؟</label><input data-chain-after-value type="number" inputmode="decimal" min="0.5" step="0.5" value="${esc(afterValue)}" oninput="updateFormulaTotal()"></div></div>
   <div class="chain-move"><button type="button" ${i===0?'disabled':''} onclick="builderMove('${esc(c.key)}',-1)">السابق ◀</button><button type="button" ${i===ordered.length-1?'disabled':''} onclick="builderMove('${esc(c.key)}',1)">التالي ▶</button></div>
  </div>`}).join('')}
  <div class="chain-connector"><span style="font-size:24px;font-weight:900;color:#078746">=</span></div>
- <div class="chain-result" aria-live="polite"><strong id="chainPeriodLabel">الناتج</strong><b id="chainLiveScore">—</b><span class="chain-status">قبل اعتماد الدرجات</span></div>
+ <div class="chain-result" aria-live="polite"><strong id="chainPeriodLabel">الناتج</strong><b id="chainLiveScore">—</b><span class="chain-status" id="chainStatus">مطابقة الدرجة الكاملة قبل الاعتماد</span></div>
  </div></div><div class="chain-details"><span>المفردات المختارة: <em>${ordered.length}</em></span><span>النتيجة المستهدفة: <em id="chainPeriodInline">—</em></span></div></div>
  <div class="builder-summary" id="builderSummary" role="status">جاري حساب المثال...</div>
  ${formulas?.[editingPeriod]?.expression&&formulas?.[editingPeriod]?.builder?.kind!==CHAIN_TYPE?'<div class="builder-warning">يوجد تقسيم سابق لهذه الفترة. اعتماد المخطط الجديد سيستبدل طريقة الحساب فقط، مع الإبقاء على درجات الطلاب الموجودة، لذا راجعها قبل إرسال الفترة.</div>':''}`;
+ updateFormulaTotal();
+}
+function formulaMaxEdited(input){
+ const linked=[...document.querySelectorAll('[data-max-key]')].find(el=>el.dataset.maxKey===input.dataset.inlineMax);
+ if(linked)linked.value=input.value;
  updateFormulaTotal();
 }
 function chainTermRange(c,setting){
@@ -1523,7 +1551,7 @@ function openFormulaModal(period){
   $("formulaTargetPeriod").innerHTML=Object.entries(PERIODS).map(([key,val])=>`<option value="${esc(key)}" ${key===period?"selected":""}>${esc(val.label)}</option>`).join("");
  $("formulaModalDesc").textContent=`الدرجة النهائية لمادة ${activeAssignment()?.subjectName||"—"} من ${subjectMax()}. اختر المفردات أولًا، ثم حدد درجاتها وطريقة الحساب من الاختيارات الجاهزة.`;
  $("componentList").innerHTML=COMPONENTS.map(comp=>`<label class="component-choice"><input type="checkbox" class="component-check" data-key="${esc(comp.key)}" ${Number(values[comp.key])>0?"checked":""}><span>${esc(comp.label)}</span><small>اختر</small></label>`).join("");
- $("formulaExpression").value=f.expression||"";$("formulaScaleMode").value=f.scaleMode||"normalize";$("formulaRounding").value=String(f.rounding??"0.5");
+ $("formulaExpression").value=f.expression||"";$("formulaScaleMode").value="direct";$("formulaRounding").value=String(f.rounding??"0.5");
  formulaShowStage(1);$("formulaModal").classList.add("show")
 }
 function formulaShowStage(step){
@@ -1560,40 +1588,57 @@ function formulaFormData(){
  return values
 }
 function updateFormulaTotal(){
- const el=$("formulaTotal"),msg=$("formulaFormulaPreview");if(FORMULA_STEP!==2)return false;
+ const el=$("formulaTotal"),msg=$("formulaFormulaPreview"),state=$("formulaMatchState"),saveBtn=$("saveFormulaBtn");
+ if(FORMULA_STEP!==2)return false;
  try{
   const components=formulaFormData(),selected=wizardComponents(),list=selected.map(c=>({...c,max:components[c.key]}));
-  document.querySelectorAll('[data-chain-max]').forEach(span=>{span.textContent=`الدرجة العظمى: ${components[span.dataset.chainMax]||'—'}`});
   const builder=builderRead();if(!builder)throw new Error('لم تكتمل خيارات التقسيم');BUILDER_DRAFT=builder;
   const generated=builderGenerate(list,builder);$("formulaExpression").value=generated.expression;
   const upper=builderUpperBound(list,builder,generated.expression);
-  const scale=$("formulaScaleMode").value,target=subjectMax();
+  // لا نعيد توزيع الدرجات تلقائيًا؛ يجب مطابقة السقف الفعلي للمادة.
+  $("formulaScaleMode").value='direct';
+  const target=subjectMax(),label=PERIODS[editingPeriod]?.label||'الفترة المختارة';
+  const diff=Number((target-upper).toFixed(4));
+  const matching=Math.abs(diff)<0.0001;
   const exampleVals=Object.fromEntries(list.map(c=>[c.key,Number((c.max*0.6).toFixed(2))]));
   const example=gradeExpressionValue(generated.expression,exampleVals);
-  const actualRaw=gradeExpressionValue(generated.expression,Object.fromEntries(list.map(c=>[c.key,c.max])));
-  const mapped=scale==='direct'?example:example/upper*target;
-  if(scale==='direct'&&upper>target+0.001)throw new Error(`سقف النتيجة ${Number(upper.toFixed(2))} أكبر من درجة المادة ${target}. اختر التحويل التلقائي أو عدّل التقسيم.`);
-  const sampleFinal=roundGradeResult(Math.min(target,Math.max(0,mapped)),$("formulaRounding").value);
-  const maxPossible=roundGradeResult(Math.min(target,Math.max(0,scale==='direct'?upper:target)),$("formulaRounding").value);
-  const resultLabel=PERIODS[editingPeriod]?.label||'الفترة المختارة';
-  const place=$("chainPeriodLabel"),score=$("chainLiveScore"),inline=$("chainPeriodInline");
-  if(place)place.textContent=resultLabel;if(inline)inline.textContent=resultLabel;
-  if(score)score.textContent=`${sampleFinal} / ${target}`;
+  const exampleFinal=roundGradeResult(Math.min(target,Math.max(0,example)),$("formulaRounding").value);
+  const prettyMax=Number(upper.toFixed(2));
+  const place=$("chainPeriodLabel"),score=$("chainLiveScore"),inline=$("chainPeriodInline"),chainStatus=$("chainStatus");
+  if(place)place.textContent=label;
+  if(inline)inline.textContent=label+' من '+target;
+  if(score)score.textContent=prettyMax+' / '+target;
+  if(chainStatus)chainStatus.textContent=matching?'✓ تطابق تام — يمكن الاعتماد':'النتيجة لا تساوي الدرجة المطلوبة';
+  el.className='formula-total '+(matching?'valid':'invalid');
+  el.querySelector('strong').textContent=prettyMax+' / '+target;
+  state.className='formula-match-status '+(matching?'matched':'mismatched');
+  state.textContent=matching
+   ?`✓ التقسيم صحيح: الناتج ${prettyMax} يساوي درجة ${label} المطلوبة (${target}). يمكنك اعتماد التقسيم.`
+   :diff>0
+    ?`المتبقي ${Number(diff.toFixed(2))} درجة حتى تصل إلى ${target}. عدّل درجات الأقسام أو العمليات.`
+    :`الناتج يزيد على ${target} بمقدار ${Number((-diff).toFixed(2))} درجة. عدّل درجات الأقسام أو العمليات.`;
   const desc=$("builderSummary");
-  if(desc)desc.innerHTML=`<strong>النتيجة المستهدفة: ${esc(resultLabel)}</strong><br>تم اختيار ${selected.length} مفردات بالترتيب الموجود أعلاه. <strong>مثال مباشر:</strong> إذا الطالب حصل على 60٪ من درجة كل مفردة، تكون نتيجته ${sampleFinal} من ${target}.<br><span style="color:#667085">الحساب يتم بالتسلسل من أول مفردة، والنتيجة النهائية تُحفظ فقط بعد اعتماد التقسيم وإدخال الدرجات.</span>`;
-  el.className='formula-total valid';el.querySelector('strong').textContent=`${maxPossible} / ${target}`;
-  msg.textContent=`الدرجة النهائية لـ ${resultLabel} من ${target}. المثال المعروض للتوضيح فقط ولم يُحفظ شيء بعد.`;
-  return true;
- }catch(error){el.className='formula-total invalid';el.querySelector('strong').textContent='راجع الاختيارات';msg.textContent=error.message;
-  const d=$("builderSummary");if(d)d.textContent='مراجعة التقسيم: '+error.message;
-  const score=$("chainLiveScore");if(score)score.textContent='—';return false}
+  if(desc)desc.innerHTML=`<strong>${esc(label)} — الحد المطلوب ${target} درجة</strong><br>الناتج الأعلى للمخطط: <strong>${prettyMax}</strong>. <span>مثال لطالب حصل على 60% من درجات كل قسم: ${exampleFinal} من ${target}.</span><br><small>يمكنك تعديل الدرجات والعمليات مباشرة داخل الخانات أعلاه؛ بدون كتابة معادلات.</small>`;
+  msg.textContent=matching?'تمت مطابقة الدرجة المطلوبة، ويمكن اعتماد التقسيم.':'لا يمكن اعتماد التقسيم حتى يساوي الناتج الدرجة المطلوبة للمادة.';
+  saveBtn.disabled=!matching;
+  return matching;
+ }catch(error){
+  el.className='formula-total invalid';el.querySelector('strong').textContent='غير مطابق';
+  msg.textContent=error.message;
+  state.className='formula-match-status mismatched';state.textContent='راجع درجات الأقسام أو العملية المختارة: '+error.message;
+  const desc=$("builderSummary");if(desc)desc.textContent='مراجعة التقسيم: '+error.message;
+  const score=$("chainLiveScore");if(score)score.textContent='—';
+  const status=$("chainStatus");if(status)status.textContent='غير مطابق';
+  saveBtn.disabled=true;
+  return false;
+ }
 }
 $("saveFormulaBtn").onclick=async()=>{
  if(await refreshEditLock(editingPeriod)){toast(editLockText(editingPeriod),"warn");$("formulaModal").classList.remove("show");renderPeriodButtons();renderFormulaInfo();renderGradeTable();return}
  if(!await verifyTeacherWritePermission()){toast("تعذر التحقق من صلاحية حساب الأستاذ.","error");return}
  if(!updateFormulaTotal()){toast("راجع درجات المفردات وخيارات التقسيم.","warn");return}
  const components=formulaFormData(),expression=$("formulaExpression").value.trim(),list=COMPONENTS.filter(c=>components[c.key]>0).map(c=>({...c,max:components[c.key]}));
- try{builderUpperBound(list,builderRead(),expression)}catch(error){return toast(error.message,"error")}
+ try{const result=builderUpperBound(list,builderRead(),expression);if(Math.abs(result-subjectMax())>0.0001)return toast("لا يمكن اعتماد التقسيم: ناتج الدرجة العظمى لا يساوي درجة المادة.","warn")}catch(error){return toast(error.message,"error")}
  const old=formulas?.[editingPeriod],hasSaved=studentsOfClass(selectedClassId).some(st=>Object.keys(grades?.[st.code]?.components?.[editingPeriod]||{}).length>0);
  if(hasSaved&&JSON.stringify(old?.components)!==JSON.stringify(components)&&!window.confirm("انتبه: تغيّر الحد الأعلى لمفردات موجودة عليها درجات. درجات الطلاب القديمة ستبقى، لكن يجب مراجعتها وإعادة اعتماد الفترة بعد التعديل. هل تستمر؟"))return;
  const data={components,expression,builder:builderRead(),maxResult:builderUpperBound(list,builderRead(),expression),scaleMode:$("formulaScaleMode").value,rounding:Number($("formulaRounding").value),maxGrade:subjectMax(),subjectId:activeAssignment().subjectId,subjectName:activeAssignment().subjectName,updatedAt:Date.now(),updatedBy:TEACHER_CODE};
