@@ -55,10 +55,47 @@
 
 <div id="toast" class="toast"></div>
 <script>
+
+/* Unified Firebase Realtime Database GET transport: retry transient failures only.
+   No changes to database paths, values, authorization, writes, or page markup. */
+async function tahadiFirebaseReadFetch(url, options={}) {
+  const verb=String(options?.method||"GET").toUpperCase();
+  if(verb!=="GET") return fetch(url,options);
+  const retryStatuses=new Set([408,429,500,502,503,504]);
+  const upstreamSignal=options?.signal;
+  for(let attempt=0;attempt<3;attempt++) {
+    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
+    const controller=new AbortController();
+    const abort=()=>controller.abort();
+    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
+    const timeout=setTimeout(()=>controller.abort(),22000);
+    try {
+      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
+      if(!retryStatuses.has(response.status)||attempt===2)return response;
+    }catch(error){
+      if(upstreamSignal?.aborted)throw error;
+      if(attempt===2)throw error;
+    }finally{
+      clearTimeout(timeout);
+      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
+    }
+    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
+  }
+  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
+}
+/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
+async function tahadiLimitedReads(items,limit,readOne){
+  const array=Array.from(items||[]),out=new Array(array.length);
+  let next=0;
+  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
+  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
+  return out;
+}
+
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",$=id=>document.getElementById(id),norm=v=>String(v||"").trim().toLowerCase(),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
 let STUDENTS={},CLASSES={},NOTICES={},timer=0;
 function toast(t){$("toast").textContent=t;$("toast").classList.add("show");clearTimeout(timer);timer=setTimeout(()=>$("toast").classList.remove("show"),2600)}
-async function req(path,method="GET",data){const o={method,cache:"no-store"};if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}const r=await fetch(`${DB}/${path}.json`,o);if(!r.ok)throw new Error(`${method}_${r.status}`);return method==="DELETE"?true:r.json()}
+async function req(path,method="GET",data){const o={method,cache:"no-store"};if(data!==undefined){o.headers={"Content-Type":"application/json"};o.body=JSON.stringify(data)}const r=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,o);if(!r.ok)throw new Error(`${method}_${r.status}`);return method==="DELETE"?true:r.json()}
 const dbGet=p=>req(p),dbPatch=(p,d)=>req(p,"PATCH",d),dbPost=(p,d)=>req(p,"POST",d),dbDelete=p=>req(p,"DELETE");
 function session(){try{return JSON.parse(sessionStorage.getItem("tahadi_session")||"{}")}catch{return{}}}
 function adminCode(){return session().code||""}function logout(){sessionStorage.clear();localStorage.removeItem("tahadi_remembered_login");location.replace("index.html")}
