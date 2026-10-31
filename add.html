@@ -253,7 +253,7 @@
 <nav class="tabs"><button class="tab active" data-target="studentsSection">الطلاب</button><button class="tab" data-target="addStudentSection">إضافة طالب</button><button class="tab" data-target="teachersSection">الأساتذة</button><button class="tab" data-target="addTeacherSection">إضافة أستاذ</button><button class="tab" data-target="staffSection">الحسابات والمشرفون</button><button class="tab" data-target="addStaffSection">إنشاء حساب إداري</button><button class="tab" data-target="violationsSection">المخالفات السلوكية</button><button class="tab" data-target="objectionsSection">اعتراضات الدرجات</button></nav>
 
 <section id="studentsSection" class="section active"><div class="panel">
-<div class="panel-head"><div><h3 id="studentsTitle">جميع الطلاب</h3><p>اضغط على اسم الطالب أو زر بيانات لفتح ملفه وتعديل بياناته وصورته وكوده.</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="classCodesChangeBtn" class="btn btn-v hidden" onclick="changeCodesForClass()">تغيير أكواد الصف بالكامل</button><button class="btn btn-soft" onclick="showAllStudents()">عرض الجميع</button></div></div>
+<div class="panel-head"><div><h3 id="studentsTitle">جميع الطلاب</h3><p>اضغط على اسم الطالب أو زر بيانات لفتح ملفه وتعديل بياناته وصورته وكوده.</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="classCodesChangeBtn" class="btn btn-v hidden" onclick="changeCodesForClass()">تغيير أكواد الصف بالكامل</button><button class="btn btn-wa" type="button" onclick="openBulkMessageModal('all')">واتساب جميع الطلاب</button><button class="btn btn-soft" onclick="showAllStudents()">عرض الجميع</button></div></div>
 <div class="panel-body">
 <div class="toolbar four"><input id="studentSearch" type="search" placeholder="بحث بالاسم أو الكود أو الهاتف"><select id="studentGenderFilter"><option value="">الجنس: الجميع</option><option value="male">ذكور</option><option value="female">إناث</option></select><select id="studentStatusFilter"><option value="">جميع حالات الملف</option><option value="infoIncomplete">المعلومات ناقصة</option><option value="pending">لم يجلب الملف</option><option value="accepted">تم القبول</option></select><select id="studentAccessFilter"><option value="">كل حالات الحساب</option><option value="accountActive">الحساب فعال</option><option value="accountInactive">الحساب غير فعال</option><option value="accountantActive">الحسابات مفعلة</option><option value="accountantInactive">الحسابات غير مفعلة</option><option value="adminActive">الإدارة مفعلة</option><option value="adminInactive">الإدارة غير مفعلة</option><option value="behaviorBlocked">محظور سلوكياً</option></select></div>
 <div id="bulkBar" class="bulk"><strong id="selectedCount">تم تحديد 0 طالب</strong><div class="bulk-actions"><select id="moveClassSelect"><option value="">نقل إلى صف...</option></select><select id="moveRoomSelect"><option value="">نقل إلى قاعة...</option></select><button class="btn btn-p" onclick="moveSelectedStudents()">نقل المحددين</button><button id="bulkAccountantToggleBtn" class="btn btn-g" onclick="toggleSelectedAccountantApproval()">تفعيل الحسابات</button><button id="bulkAdminToggleBtn" class="btn btn-p" onclick="toggleSelectedAdminApproval()">تفعيل الإدارة</button><button id="bulkBooksToggleBtn" class="btn btn-g" onclick="toggleSelectedBooksStatus()">استلام الكتب</button><button id="bulkFileToggleBtn" class="btn btn-g" onclick="toggleSelectedFileStatus()">استلام الفايل</button><button id="bulkMediaRequirementToggleBtn" class="btn btn-o" onclick="toggleSelectedMediaRequirement()">إلزام الصور والهويات</button><button class="btn btn-wa" onclick="openBulkMessageModal()">رسالة واتساب</button><button class="btn btn-r" onclick="changeCodesForSelected()">تغيير أكواد المحددين</button><button class="btn btn-v" onclick="downloadSelectedStudentCodes()">تحميل الأكواد</button><button class="btn btn-o" onclick="downloadSelectedStudentInfo()">تحميل المعلومات PDF</button><button class="btn btn-g" onclick="downloadSelectedStudentData()">سحب بيانات الطلاب</button><button class="btn btn-p" onclick="printSelectedStudentPhotos()">طباعة صورة</button><button class="btn btn-r" onclick="deleteSelectedStudents()">حذف المحددين</button><button class="btn btn-soft" onclick="clearSelectedStudents()">إلغاء التحديد</button></div></div>
@@ -420,7 +420,7 @@
 
 <div id="pdfPreviewModal" class="modal pdf-preview"><div class="pdf-window"><div class="pdf-head"><div><h3>معاينة استمارة الطالب</h3><p>معاينة كاملة بحجم A4.</p></div><button class="close" onclick="closeModal('pdfPreviewModal')">×</button></div><div class="pdf-actions"><button class="btn btn-soft" onclick="closeModal('pdfPreviewModal')">رجوع</button><button class="btn btn-p" onclick="printStudentBeforeSave()">طباعة مباشرة</button></div><div id="pdfScroll" class="pdf-scroll"><div id="pdfPreviewStage" class="pdf-preview-stage"><div id="pdfPreviewContent" class="pdf-preview-content"></div></div></div></div></div>
 
-<div id="bulkMessageModal" class="modal"><div class="modal-card" style="width:min(560px,100%)"><div class="modal-head"><div><h3>إرسال رسالة واتساب للمحددين</h3><p id="bulkMessageRecipients">—</p></div><button class="close" onclick="closeModal('bulkMessageModal')">×</button></div><div class="form-grid"><div class="field full"><label>إرسال الرسالة إلى</label><select id="bulkWhatsAppTarget"><option value="student">رقم الطالب</option><option value="guardian">رقم ولي الأمر</option></select></div><div class="field full"><label>نص الرسالة</label><textarea id="bulkMessageText" placeholder="اكتب الرسالة..."></textarea></div><div id="bulkWhatsAppProgress" class="message success full" style="display:none"></div></div><div class="form-actions" style="margin-top:14px"><button type="button" class="btn btn-soft" onclick="closeModal('bulkMessageModal')">إغلاق</button><button id="sendBulkMessageBtn" type="button" class="btn btn-wa" onclick="sendBulkMessage()">بدء الإرسال على واتساب</button></div></div></div>
+<div id="bulkMessageModal" class="modal"><div class="modal-card" style="width:min(560px,100%)"><div class="modal-head"><div><h3>إرسال رسالة واتساب للمحددين</h3><p id="bulkMessageRecipients">—</p></div><button class="close" onclick="closeModal('bulkMessageModal')">×</button></div><div class="form-grid"><div class="field full"><label>إرسال الرسالة إلى</label><select id="bulkWhatsAppTarget"><option value="student">رقم الطالب</option><option value="guardian">رقم ولي الأمر</option></select></div><div class="field full"><label>المطلوب مراسلتهم</label><select id="bulkWhatsAppMode"><option value="new">غير المراسلين سابقًا فقط (بدون تكرار)</option><option value="all">مراسلة الجميع (حتى المراسلين سابقًا)</option></select></div><div class="field full"><label>الطلاب المشمولون</label><select id="bulkWhatsAppAudience"><option value="selected">الطلاب المحددون</option><option value="all">جميع الطلاب المسجلين</option></select></div><div class="field full"><label>نص الرسالة</label><textarea id="bulkMessageText" placeholder="اكتب الرسالة..."></textarea></div><div id="whatsappHistoryHint" class="message show success full" style="display:block;line-height:1.9">سأستثني الأرقام التي سبق فتح محادثاتها من داخل المنصة. فتح واتساب لا يثبت إرسال الرسالة فعليًا.</div><div class="field full"><details style="padding:9px 11px;border:1px solid #e4e7ec;border-radius:10px;background:#fafcff"><summary style="cursor:pointer;font-size:9px;font-weight:900">تسجيل أرقام تمت مراسلتها قبل هذا التحديث</summary><p style="margin:8px 0;font-size:8px;color:#667085;line-height:1.8">اكتب كل رقم في سطر منفصل؛ ولن تظهر هذه الأرقام في «غير المراسلين». تأكد أنك راسلتها بالفعل.</p><textarea id="whatsappPriorNumbers" placeholder="078xxxxxxxx&#10;077xxxxxxxx" style="min-height:72px;width:100%;padding:9px;border:1px solid #e4e7ec;border-radius:9px;direction:ltr"></textarea><button type="button" class="btn btn-soft" style="margin-top:6px" onclick="importPriorWhatsAppNumbers()">تسجيل الأرقام السابقة</button></details></div><div id="bulkWhatsAppProgress" class="message success full" style="display:none"></div></div><div class="form-actions" style="margin-top:14px"><button type="button" class="btn btn-soft" onclick="closeModal('bulkMessageModal')">إغلاق</button><button id="sendBulkMessageBtn" type="button" class="btn btn-wa" onclick="sendBulkMessage()">بدء الإرسال على واتساب</button></div></div></div>
 
 <div id="confirmModal" class="modal"><div class="modal-card" style="width:min(410px,100%)"><h3 id="confirmTitle">تأكيد</h3><p id="confirmText" style="margin-top:7px;color:#667085;font-size:9px;line-height:1.7"></p><div class="form-actions" style="margin-top:14px"><button class="btn btn-soft" onclick="closeConfirm()">إلغاء</button><button id="confirmYes" class="btn btn-p">تأكيد</button></div></div></div>
 
@@ -727,8 +727,7 @@ async function copyCode(code){try{await navigator.clipboard.writeText(code);toas
 
 function normalizePhoneDigits(value){const arabic="٠١٢٣٤٥٦٧٨٩",persian="۰۱۲۳۴۵۶۷۸۹";return String(value||"").replace(/[٠-٩]/g,d=>arabic.indexOf(d)).replace(/[۰-۹]/g,d=>persian.indexOf(d)).replace(/\D/g,"");}
 function whatsappNumber(phone){let value=normalizePhoneDigits(phone);if(!value)return"";if(value.startsWith("00964"))value=value.slice(2);if(value.startsWith("964"))return value;if(value.startsWith("0"))return"964"+value.slice(1);if(value.startsWith("7"))return"964"+value;return value;}
-function openWhatsApp(phone,text){const number=whatsappNumber(phone);if(!number){toast("رقم الهاتف غير مسجل");return;}window.open(`https://wa.me/${number}?text=${encodeURIComponent(text||"")}`,"_blank");}
-function whatsappStudent(code){const s=DATA.students[code];if(s)openWhatsApp(s.studentPhone,`السلام عليكم ${s.name||""}`);}function whatsappGuardian(code){const s=DATA.students[code];if(s)openWhatsApp(s.guardianPhone,`السلام عليكم، ولي أمر الطالب ${s.name||""}`);}function whatsappOpenedStudent(){if(openedStudentCode)whatsappStudent(openedStudentCode);}function whatsappOpenedGuardian(){if(openedStudentCode)whatsappGuardian(openedStudentCode);}
+function openWhatsApp(phone,text,target="student",studentCode=""){const number=whatsappNumber(phone);if(!number){toast("رقم الهاتف غير مسجل");return;}const popup=window.open(`https://wa.me/${number}?text=${encodeURIComponent(text||"")}`,"_blank");if(!popup){toast("تعذر فتح واتساب. تحقق من السماح بفتح الروابط.");return;}rememberWhatsAppOpened(number,target,studentCode);} function whatsappStudent(code){const s=DATA.students[code];if(s)openWhatsApp(s.studentPhone,`السلام عليكم ${s.name||""}`,"student",code);}function whatsappGuardian(code){const s=DATA.students[code];if(s)openWhatsApp(s.guardianPhone,`السلام عليكم، ولي أمر الطالب ${s.name||""}`,"guardian",code);}function whatsappOpenedStudent(){if(openedStudentCode)whatsappStudent(openedStudentCode);}function whatsappOpenedGuardian(){if(openedStudentCode)whatsappGuardian(openedStudentCode);}
 
 function studentSelect(input){input.checked?selectedStudents.add(input.value):selectedStudents.delete(input.value);updateBulk();}
 $("selectAll").onchange=function(){filteredStudents().forEach(s=>this.checked?selectedStudents.add(s.code):selectedStudents.delete(s.code));renderStudents();updateBulk();};
@@ -843,11 +842,147 @@ function unblockCurrentStudent(){if(openedStudentCode)unblockStudent(openedStude
 
 function deleteSelectedStudents(){const codes=[...selectedStudents].filter(code=>DATA.students[code]);if(!codes.length){toast("حدد طالباً واحداً على الأقل");return;}confirmBox("حذف الطلاب المحددين",`سيتم حذف ${codes.length} طالب نهائياً مع الحساب والصورة والدرجات والحضور والأقساط والرسائل.`,async()=>{const updates={};codes.forEach(code=>{updates[`students/${code}`]=null;updates[`studentPhotos/${code}`]=null;updates[`${PATH.studentDocuments}/${code}`]=null;updates[`users/${code}`]=null;updates[`grades/${code}`]=null;updates[`attendance/${code}`]=null;updates[`payments/${code}`]=null;updates[`studentMessages/${code}`]=null;updates[`behaviorViolations/${code}`]=null;});Object.entries(DATA.violations||{}).forEach(([id,v])=>{if(codes.includes(v?.studentCode))updates[`${PATH.violations}/${id}`]=null;});await dbPatch("",updates);codes.forEach(code=>{delete DATA.students[code];delete DATA.users[code];});Object.keys(DATA.violations||{}).forEach(id=>{if(codes.includes(DATA.violations[id]?.studentCode))delete DATA.violations[id];});if(codes.includes(openedStudentCode)){openedStudentCode="";closeModal("studentProfileModal");}clearSelectedStudents(false);renderAll();toast(`تم حذف ${codes.length} طالب`);});}
 
-function resetBulkWhatsAppState(){bulkWhatsAppQueue=[];bulkWhatsAppIndex=0;bulkWhatsAppText="";bulkWhatsAppTarget="student";const p=$("bulkWhatsAppProgress");p.style.display="none";p.textContent="";const b=$("sendBulkMessageBtn");b.disabled=false;b.textContent="بدء الإرسال على واتساب";}
-function openBulkMessageModal(){const count=selectedStudents.size;if(!count){toast("حدد طالباً واحداً على الأقل");return;}resetBulkWhatsAppState();$("bulkMessageRecipients").textContent=`تم تحديد ${count} طالب.`;$("bulkWhatsAppTarget").value="student";$("bulkMessageText").value="";openModal("bulkMessageModal");}
-function prepareBulkWhatsAppQueue(){const text=$("bulkMessageText").value.trim(),target=$("bulkWhatsAppTarget").value,codes=[...selectedStudents].filter(code=>DATA.students[code]);if(!text){toast("اكتب نص الرسالة أولاً");return false;}const queue=[];let missing=0;codes.forEach(code=>{const s=DATA.students[code],phone=target==="guardian"?s.guardianPhone:s.studentPhone,number=whatsappNumber(phone);if(!number){missing++;return;}queue.push({code,name:s.name||code,number});});if(!queue.length){toast("لا توجد أرقام صالحة للمحددين");return false;}bulkWhatsAppQueue=queue;bulkWhatsAppIndex=0;bulkWhatsAppText=text;bulkWhatsAppTarget=target;const p=$("bulkWhatsAppProgress");p.style.display="block";p.className="message show success full";p.textContent=`جاهز لـ ${queue.length} رقم${missing?`، تم تجاوز ${missing} بدون رقم.`:""}`;return true;}
-function openNextBulkWhatsApp(){if(bulkWhatsAppIndex>=bulkWhatsAppQueue.length){$("bulkWhatsAppProgress").textContent=`تم فتح جميع المحادثات (${bulkWhatsAppQueue.length}).`;$("sendBulkMessageBtn").disabled=true;$("sendBulkMessageBtn").textContent="تم فتح جميع المحادثات";return;}const item=bulkWhatsAppQueue[bulkWhatsAppIndex],opened=window.open(`https://wa.me/${item.number}?text=${encodeURIComponent(bulkWhatsAppText)}`,"_blank");if(!opened){toast("المتصفح منع فتح واتساب. اسمح بالنوافذ المنبثقة.");return;}bulkWhatsAppIndex++;$("bulkWhatsAppProgress").style.display="block";$("bulkWhatsAppProgress").textContent=`تم فتح ${item.name} - ${bulkWhatsAppIndex} من ${bulkWhatsAppQueue.length}.`;const b=$("sendBulkMessageBtn");if(bulkWhatsAppIndex<bulkWhatsAppQueue.length)b.textContent=`فتح التالي (${bulkWhatsAppIndex+1} من ${bulkWhatsAppQueue.length})`;else{b.disabled=true;b.textContent="تم فتح جميع المحادثات";}}
+/* ===== تاريخ روابط واتساب: متابعة الأرقام التي فُتحت من المنصة =====
+   سجل فتح الرابط لا يعني أن واتساب أكد إرسال الرسالة أو استلامها. */
+const WA_HISTORY_PATH="whatsappOpenedContacts",WA_HISTORY_LOCAL_KEY="tahadi_whatsapp_opened_v2";
+let WA_HISTORY={student:{},guardian:{}},WA_HISTORY_AVAILABLE=true,WA_HISTORY_LOADING=false;
+let bulkWhatsAppAudience="selected",bulkWhatsAppSkipped=0;
+function waLocalHistory(){try{const raw=JSON.parse(localStorage.getItem(WA_HISTORY_LOCAL_KEY)||"{}");return {student:raw.student||{},guardian:raw.guardian||{}};}catch{return {student:{},guardian:{}};}}
+function waStoreLocalHistory(){try{localStorage.setItem(WA_HISTORY_LOCAL_KEY,JSON.stringify(WA_HISTORY));}catch(e){console.warn("WHATSAPP_HISTORY_LOCAL_STORAGE",e);}}
+WA_HISTORY=waLocalHistory();
+function waContactKey(target,number){return `${target==="guardian"?"guardian":"student"}/${number}`;}
+function waAlreadyOpened(target,number){return !!WA_HISTORY[target==="guardian"?"guardian":"student"]?.[number];}
+async function loadWhatsAppHistory(){
+ if(WA_HISTORY_LOADING)return;
+ WA_HISTORY_LOADING=true;
+ const button=$("sendBulkMessageBtn");if(button)button.disabled=true;
+ const hint=$("whatsappHistoryHint");if(hint)hint.textContent="جارٍ التحقق من سجل روابط واتساب السابقة...";
+ try{
+  const remote=await dbGetFresh(WA_HISTORY_PATH);
+  const local=waLocalHistory();
+  for(const target of ["student","guardian"]){
+   WA_HISTORY[target]={...(remote?.[target]||{}),...(local?.[target]||{}),...(WA_HISTORY[target]||{})};
+  }
+  WA_HISTORY_AVAILABLE=true;
+  waStoreLocalHistory();
+  if(hint)hint.textContent="سيتم تجاوز الأرقام التي فُتحت سابقًا عبر المنصة. فتح الرابط وحده لا يؤكد إرسال الرسالة فعليًا؛ يمكنك تسجيل أرقام المراسلات القديمة أدناه.";
+ }catch(error){
+  WA_HISTORY_AVAILABLE=false;
+  WA_HISTORY=waLocalHistory();
+  console.warn("WHATSAPP_HISTORY_READ",error);
+  if(hint)hint.textContent="تعذر جلب سجل واتساب من Firebase. سيتم الاستعانة بسجل هذا الجهاز فقط؛ الأرقام المفتوحة من جهاز آخر قد تتكرر.";
+ }finally{
+  WA_HISTORY_LOADING=false;
+  if(button)button.disabled=false;
+  whatsappPreviewRecipientCount();
+ }
+}
+function rememberWhatsAppOpened(number,target,studentCode=""){
+ target=target==="guardian"?"guardian":"student";
+ number=whatsappNumber(number);
+ if(!number)return;
+ const entry={openedAt:Date.now(),studentCode:String(studentCode||""),openedBy:String(adminCode()||"")};
+ WA_HISTORY[target][number]=entry;
+ waStoreLocalHistory();
+ dbPut(`${WA_HISTORY_PATH}/${target}/${number}`,entry).catch(error=>{
+  WA_HISTORY_AVAILABLE=false;
+  console.warn("WHATSAPP_HISTORY_WRITE",error);
+  const hint=$("whatsappHistoryHint");if(hint)hint.textContent="حُفظ فتح الرابط على هذا الجهاز، لكن Firebase رفض حفظ السجل؛ قد لا تنتقل المتابعة إلى الأجهزة الأخرى.";
+ });
+}
+function resetBulkWhatsAppState(){
+ bulkWhatsAppQueue=[];bulkWhatsAppIndex=0;bulkWhatsAppText="";bulkWhatsAppTarget="student";bulkWhatsAppSkipped=0;
+ const progress=$("bulkWhatsAppProgress");if(progress){progress.style.display="none";progress.className="message success full";progress.textContent="";}
+ const button=$("sendBulkMessageBtn");if(button){button.disabled=false;button.textContent="بدء الإرسال على واتساب";}
+ for(const id of ["bulkWhatsAppTarget","bulkWhatsAppMode","bulkWhatsAppAudience","bulkMessageText"]){const el=$(id);if(el)el.disabled=false;}
+}
+function waChosenStudents(){
+ const audience=$("bulkWhatsAppAudience")?.value||"selected";
+ const codes=audience==="all"?Object.keys(DATA.students||{}):[...selectedStudents];
+ return codes.filter(code=>DATA.students[code]);
+}
+function waGenerateQueue(){
+ const target=$("bulkWhatsAppTarget").value,mode=$("bulkWhatsAppMode").value;
+ const queue=[],seen=new Set();let missing=0,previously=0,duplicates=0;
+ for(const code of waChosenStudents()){
+  const s=DATA.students[code],phone=target==="guardian"?s.guardianPhone:s.studentPhone,number=whatsappNumber(phone);
+  if(!number){missing++;continue;}
+  if(seen.has(number)){duplicates++;continue;}
+  seen.add(number);
+  if(mode==="new"&&waAlreadyOpened(target,number)){previously++;continue;}
+  queue.push({code,name:s.name||code,number});
+ }
+ return {queue,missing,previously,duplicates};
+}
+function whatsappPreviewRecipientCount(){
+ const el=$("bulkMessageRecipients");if(!el)return;
+ const all=waChosenStudents();
+ const result=waGenerateQueue();
+ const label=$("bulkWhatsAppAudience")?.value==="all"?"من جميع الطلاب":"من الطلاب المحددين";
+ el.textContent=`${all.length} طالب ${label} · ${result.queue.length} رقم للمراسلة · ${result.previously} سبق فتحها · ${result.duplicates} أرقام مكررة · ${result.missing} بلا رقم`;
+}
+function onBulkWhatsAppChanged(){resetBulkWhatsAppState();whatsappPreviewRecipientCount();}
+async function openBulkMessageModal(audience="selected"){
+ if(audience!=="all"&&!selectedStudents.size){toast("حدد طالباً واحداً على الأقل أو افتح واتساب جميع الطلاب");return;}
+ resetBulkWhatsAppState();
+ $("bulkWhatsAppAudience").value=audience==="all"?"all":"selected";
+ $("bulkWhatsAppMode").value="new";
+ $("bulkWhatsAppTarget").value="student";
+ $("bulkMessageText").value="";
+ $("whatsappPriorNumbers").value="";
+ whatsappPreviewRecipientCount();
+ openModal("bulkMessageModal");
+ await loadWhatsAppHistory();
+}
+function prepareBulkWhatsAppQueue(){
+ if(WA_HISTORY_LOADING){toast("انتظر حتى يكتمل فحص سجل الأرقام");return false;}
+ const text=$("bulkMessageText").value.trim();
+ if(!text){toast("اكتب نص الرسالة أولاً");return false;}
+ const {queue,missing,previously,duplicates}=waGenerateQueue();
+ if(!queue.length){toast(previously?"كل الأرقام المحددة تمت مراسلتها من الرابط سابقًا. اختر «مراسلة الجميع» لإعادة فتحها.":"لا توجد أرقام واتساب صالحة للمراسلة");return false;}
+ bulkWhatsAppQueue=queue;bulkWhatsAppIndex=0;bulkWhatsAppText=text;
+ bulkWhatsAppTarget=$("bulkWhatsAppTarget").value;
+ bulkWhatsAppSkipped=previously;
+ const p=$("bulkWhatsAppProgress");p.style.display="block";p.className="message show success full";
+ p.textContent=`جاهز لفتح ${queue.length} محادثة · تم تجاوز ${previously} سبق فتحها و${duplicates} أرقام مكررة و${missing} بلا رقم. اضغط لكل محادثة بصورة مستقلة.`;
+ for(const id of ["bulkWhatsAppTarget","bulkWhatsAppMode","bulkWhatsAppAudience","bulkMessageText"]){$(id).disabled=true;}
+ return true;
+}
+function openNextBulkWhatsApp(){
+ if(bulkWhatsAppIndex>=bulkWhatsAppQueue.length){
+  $("bulkWhatsAppProgress").textContent=`تم فتح ${bulkWhatsAppQueue.length} محادثة واتساب. راجع الإرسال الفعلي داخل التطبيق.`;
+  $("sendBulkMessageBtn").disabled=true;
+  $("sendBulkMessageBtn").textContent="اكتمل فتح المحادثات";return;
+ }
+ const item=bulkWhatsAppQueue[bulkWhatsAppIndex];
+ const opened=window.open(`https://wa.me/${item.number}?text=${encodeURIComponent(bulkWhatsAppText)}`,"_blank");
+ if(!opened){toast("المتصفح منع فتح واتساب. اسمح بالنوافذ المنبثقة.");return;}
+ rememberWhatsAppOpened(item.number,bulkWhatsAppTarget,item.code);
+ bulkWhatsAppIndex++;
+ const p=$("bulkWhatsAppProgress");p.style.display="block";
+ p.textContent=`تم فتح محادثة ${item.name} (${bulkWhatsAppIndex} من ${bulkWhatsAppQueue.length}). تأكد من ضغط إرسال داخل واتساب.`;
+ const b=$("sendBulkMessageBtn");
+ if(bulkWhatsAppIndex<bulkWhatsAppQueue.length)b.textContent=`فتح التالي (${bulkWhatsAppIndex+1} من ${bulkWhatsAppQueue.length})`;
+ else{b.disabled=true;b.textContent="اكتمل فتح المحادثات";}
+}
 function sendBulkMessage(){if(!bulkWhatsAppQueue.length&&!prepareBulkWhatsAppQueue())return;openNextBulkWhatsApp();}
+async function importPriorWhatsAppNumbers(){
+ if(WA_HISTORY_LOADING){toast("يرجى انتظار تحميل السجل");return;}
+ const target=$("bulkWhatsAppTarget").value;
+ const numbers=[...new Set(String($("whatsappPriorNumbers").value||"").split(/[\n,،;؛\s]+/).map(whatsappNumber).filter(n=>/^9647\d{9}$/.test(n)))];
+ if(!numbers.length){toast("اكتب أرقام هواتف عراقية صحيحة، كل رقم بسطر");return;}
+ if(numbers.length>500){toast("الحد الأقصى 500 رقم في كل مرة");return;}
+ for(const number of numbers)rememberWhatsAppOpened(number,target);
+ $("whatsappPriorNumbers").value="";
+ whatsappPreviewRecipientCount();
+ toast(`تم تسجيل ${numbers.length} رقم في سجل الروابط السابقة`);
+}
+for(const id of ["bulkWhatsAppMode","bulkWhatsAppTarget","bulkWhatsAppAudience"]){
+ $(id).addEventListener("change",onBulkWhatsAppChanged);
+}
+$("bulkMessageText").addEventListener("input",()=>{
+ if(bulkWhatsAppQueue.length){resetBulkWhatsAppState();whatsappPreviewRecipientCount();}
+});
 
 /* ===================== نظام صورة الطالب ===================== */
 function clearPendingPhotoPreview(){if(pendingStudentPhotoPreviewURL){URL.revokeObjectURL(pendingStudentPhotoPreviewURL);pendingStudentPhotoPreviewURL="";}}
