@@ -538,14 +538,14 @@ function buildStudentModel(st,c,raw){
   const rec=findGradeEntry(raw,sub)[1]||{};
   if(!sub.autoType){
    const term1=rec.term1??"",midyear=rec.midyear??"",term2=rec.term2??"";
-   return{...sub,term1,midyear,term2,annual:computeAnnual(term1,midyear,term2)}
+   return{...sub,term1,midyear,term2,annual:rawText(rec?.annual)!==""?rec.annual:computeAnnual(term1,midyear,term2)}
   }
   const hasStored=["term1","midyear","term2","annual"].some(k=>rawText(rec[k])!=="");
   const boardAuto=rec?.autoCalculatedByBoard===true||String(rec?.updatedSource||"")==="gradeboard_auto_activity";
   const preserveStored=hasStored&&!boardAuto;
   if(preserveStored){
    const term1=rec.term1??"",midyear=rec.midyear??"",term2=rec.term2??"",computed=computeAnnual(term1,midyear,term2);
-   return{...sub,term1,midyear,term2,annual:computed!==""?computed:(rec.annual??""),storedActivity:true}
+   return{...sub,term1,midyear,term2,annual:rawText(rec?.annual)!==""?rec.annual:computed,storedActivity:true}
   }
   return{...sub,term1:"",midyear:"",term2:"",annual:"",storedActivity:false}
  });
