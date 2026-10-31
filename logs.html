@@ -257,43 +257,6 @@ button{cursor:pointer}
 </div>
 
 <script>
-
-/* Unified Firebase Realtime Database GET transport: retry transient failures only.
-   No changes to database paths, values, authorization, writes, or page markup. */
-async function tahadiFirebaseReadFetch(url, options={}) {
-  const verb=String(options?.method||"GET").toUpperCase();
-  if(verb!=="GET") return fetch(url,options);
-  const retryStatuses=new Set([408,429,500,502,503,504]);
-  const upstreamSignal=options?.signal;
-  for(let attempt=0;attempt<3;attempt++) {
-    if(upstreamSignal?.aborted)throw new DOMException("تم إلغاء طلب القراءة","AbortError");
-    const controller=new AbortController();
-    const abort=()=>controller.abort();
-    if(upstreamSignal)upstreamSignal.addEventListener("abort",abort,{once:true});
-    const timeout=setTimeout(()=>controller.abort(),22000);
-    try {
-      const response=await fetch(url,{...options,cache:"no-store",signal:controller.signal});
-      if(!retryStatuses.has(response.status)||attempt===2)return response;
-    }catch(error){
-      if(upstreamSignal?.aborted)throw error;
-      if(attempt===2)throw error;
-    }finally{
-      clearTimeout(timeout);
-      if(upstreamSignal)upstreamSignal.removeEventListener("abort",abort);
-    }
-    await new Promise(resolve=>setTimeout(resolve,250*(attempt+1)));
-  }
-  throw new Error("DATABASE_READ_RETRIES_EXHAUSTED");
-}
-/* Read-only concurrency limiter. Preserves original ordering and propagates errors. */
-async function tahadiLimitedReads(items,limit,readOne){
-  const array=Array.from(items||[]),out=new Array(array.length);
-  let next=0;
-  async function worker(){while(next<array.length){const i=next++;out[i]=await readOne(array[i],i)}}
-  await Promise.all(Array.from({length:Math.min(Math.max(1,limit|0),array.length)},()=>worker()));
-  return out;
-}
-
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app";
 const $=id=>document.getElementById(id);
 let SESSION={},ADMIN_USER={},DATA={classes:{},students:{}},CLASS_CHOICES={},CURRENT={students:[],subject:null,classData:null,room:"",mode:"grades",generatedAt:0,recordId:""};
@@ -303,13 +266,13 @@ function cleanPath(p){return String(p||"").replace(/^\/+|\/+$/g,"")}
 async function dbGet(path,{fresh=false,ttl=READ_TTL}={}){
  path=cleanPath(path);
  if(!fresh){const c=READ_CACHE.get(path);if(c&&Date.now()-c.at<=ttl)return c.value;if(READ_PENDING.has(path))return READ_PENDING.get(path)}
- const run=(async()=>{const r=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,{cache:"no-store"});if(!r.ok)throw new Error("DB_READ");const v=await r.json();READ_CACHE.set(path,{at:Date.now(),value:v});return v})();
+ const run=(async()=>{const r=await fetch(`${DB}/${path}.json`,{cache:"no-store"});if(!r.ok)throw new Error("DB_READ");const v=await r.json();READ_CACHE.set(path,{at:Date.now(),value:v});return v})();
  READ_PENDING.set(path,run);try{return await run}finally{if(READ_PENDING.get(path)===run)READ_PENDING.delete(path)}
 }
 const dbGetFresh=path=>dbGet(path,{fresh:true,ttl:0});
 async function dbPut(path,value){
  path=cleanPath(path);
- const r=await tahadiFirebaseReadFetch(`${DB}/${path}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(value)});
+ const r=await fetch(`${DB}/${path}.json`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify(value)});
  if(!r.ok)throw new Error("DB_WRITE");
  READ_CACHE.set(path,{at:Date.now(),value});
  return await r.json().catch(()=>value)
@@ -344,16 +307,16 @@ function findGradeRecord(raw,subject){
  const entries=Object.entries(raw||{});
  return entries.find(([key,r])=>String(r?.subjectId||"")===String(subject.id)||String(key)===String(subject.id)||norm(recordSubjectName(r,key))===norm(subject.name))?.[1]||{}
 }
-function annualFromRecord(rec){const a=gradeNum(rec.term1),b=gradeNum(rec.midyear),c=gradeNum(rec.term2);return isGrade(a)&&isGrade(b)&&isGrade(c)?roundedGrade((a+b+c)/3):(isGrade(rec.annual)?Number(rec.annual):"")}
+function annualFromRecord(rec){if(isGrade(rec?.annual))return Number(rec.annual);const a=gradeNum(rec?.term1),b=gradeNum(rec?.midyear),c=gradeNum(rec?.term2);return isGrade(a)&&isGrade(b)&&isGrade(c)?roundedGrade((a+b+c)/3):""}
 function finalFromRecord(rec,annual){if(isGrade(rec.final))return Number(rec.final);const exam=gradeNum(rec.finalExam);return isGrade(annual)&&isGrade(exam)?roundedGrade((Number(annual)+exam)/2):""}
 function activityGrade(rows,field){
  const values=rows.filter(r=>!r.autoType&&isGrade(r[field])).map(r=>Number(r[field])/Math.max(1,Number(r.maxGrade||100))*100);
  if(!values.length)return"";const high=Math.max(...values);if(high>=100)return 100;if(high>80)return 90;return 85
 }
 function buildAllSubjectRows(c,raw){
- const subjects=normalizeClassSubjects(c),rows=subjects.map(s=>{const rec=findGradeRecord(raw,s);if(s.autoType)return{...s,term1:"",midyear:"",term2:"",annual:"",finalExam:"",final:"",secondRound:"",secondFinal:""};const annual=annualFromRecord(rec),final=finalFromRecord(rec,annual),secondFinal=gradeNum(rec.secondRoundFinal??rec.finalSecondRound??rec.secondFinal);return{...s,term1:gradeNum(rec.term1),midyear:gradeNum(rec.midyear),term2:gradeNum(rec.term2),annual,finalExam:gradeNum(rec.finalExam),final,secondRound:gradeNum(rec.secondRound),secondFinal}});
+ const subjects=normalizeClassSubjects(c),rows=subjects.map(s=>{const rec=findGradeRecord(raw,s);if(s.autoType){const preserved=["term1","midyear","term2","annual","finalExam","final","secondRound"].some(f=>isGrade(rec?.[f]))&&rec?.autoCalculatedByBoard!==true&&String(rec?.updatedSource||"")!=="gradeboard_auto_activity";if(!preserved)return{...s,term1:"",midyear:"",term2:"",annual:"",finalExam:"",final:"",secondRound:"",secondFinal:""};const annual=annualFromRecord(rec);return{...s,term1:gradeNum(rec.term1),midyear:gradeNum(rec.midyear),term2:gradeNum(rec.term2),annual,finalExam:gradeNum(rec.finalExam),final:finalFromRecord(rec,annual),secondRound:gradeNum(rec.secondRound),secondFinal:gradeNum(rec.secondRoundFinal??rec.finalSecondRound??rec.secondFinal),storedActivity:true};}const annual=annualFromRecord(rec),final=finalFromRecord(rec,annual),secondFinal=gradeNum(rec.secondRoundFinal??rec.finalSecondRound??rec.secondFinal);return{...s,term1:gradeNum(rec.term1),midyear:gradeNum(rec.midyear),term2:gradeNum(rec.term2),annual,finalExam:gradeNum(rec.finalExam),final,secondRound:gradeNum(rec.secondRound),secondFinal}});
  const academic=rows.filter(r=>!r.autoType);
- return rows.map(r=>r.autoType?{...r,term1:activityGrade(academic,"term1"),midyear:activityGrade(academic,"midyear"),term2:activityGrade(academic,"term2"),annual:activityGrade(academic,"annual"),finalExam:activityGrade(academic,"finalExam"),final:activityGrade(academic,"final"),secondRound:activityGrade(academic,"secondRound"),secondFinal:""}:r)
+ return rows.map(r=>r.autoType&&!r.storedActivity?{...r,term1:activityGrade(academic,"term1"),midyear:activityGrade(academic,"midyear"),term2:activityGrade(academic,"term2"),annual:activityGrade(academic,"annual"),finalExam:activityGrade(academic,"finalExam"),final:activityGrade(academic,"final"),secondRound:activityGrade(academic,"secondRound"),secondFinal:""}:r)
 }
 function subjectRowForStudent(c,raw,subject){return buildAllSubjectRows(c,raw).find(r=>String(r.id)===String(subject.id)||norm(r.name)===norm(subject.name))||{...subject,term1:"",midyear:"",term2:"",annual:"",finalExam:"",final:"",secondRound:"",secondFinal:""}}
 
@@ -364,7 +327,7 @@ function studentGenderValue(s,c){
  const raw=s?.gender||s?.studentGender||c?.gender||"";
  return normalizeGender(raw)
 }
-function classStudents(classId){return Object.entries(DATA.students||{}).map(([code,s])=>({code,...(s||{})})).filter(s=>String(s.classId||"")===String(classId)&&s.hidden!==true&&s.deleted!==true)}
+function classStudents(classId){return Object.entries(DATA.students||{}).map(([code,s])=>({code,...(s||{})})).filter(s=>String(s.classId||"")===String(classId))}
 function resetClassAndSubject(){
  CLASS_CHOICES={};
  $("classSelect").innerHTML='<option value="">اختر الصف والقاعة</option>';
@@ -472,7 +435,7 @@ function cellGrade(v,pass,mode){if(mode==="blank")return`<td class="grade"></td>
 async function prepareRows(selection){
  if(selection.mode==="blank")return selection.students.map(s=>({student:s,row:{...selection.subject,term1:"",midyear:"",term2:"",annual:"",finalExam:"",final:""}}));
  toast("جاري سحب درجات الطلاب...");
- const grades=await tahadiLimitedReads(selection.students,8,s=>dbGet(`grades/${encodeURIComponent(s.code)}`,{fresh:true,ttl:0}));
+ const grades=await Promise.all(selection.students.map(s=>dbGet(`grades/${encodeURIComponent(s.code)}`,{ttl:5000}).catch(()=>({}))));
  return selection.students.map((student,i)=>({student,row:subjectRowForStudent(selection.c,grades[i]||{},selection.subject)}))
 }
 
