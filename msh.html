@@ -177,6 +177,43 @@
 .report-all-present-text{font-size:17px;line-height:2.05;color:#203d35;font-weight:900;max-width:610px}
 .report-attendance-table th:nth-child(2),.report-attendance-table td:nth-child(2){text-align:right!important}
 
+
+/* Attendance supervisor: clear confirmations, historic dates, cumulative rankings. */
+.msh-tool-row{display:flex;gap:9px;flex-wrap:wrap;margin-top:13px}
+.msh-tool-row>.btn{flex:1 1 190px;min-height:49px}
+.msh-tool-historic{background:linear-gradient(125deg,#075fcf,#064798);color:#fff}
+.msh-tool-ranking{background:linear-gradient(125deg,#f0e9ff,#e7dafe);color:#6236aa;border:1px solid #ccb6ed!important}
+.msh-dialog-overlay{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;padding:13px;background:rgba(11,26,48,.73);backdrop-filter:blur(9px)}
+.msh-dialog-overlay.hidden{display:none!important}
+#mshConfirmOverlay{z-index:950}
+.msh-dialog-card{width:min(710px,100%);max-height:92vh;max-height:92dvh;overflow-y:auto;padding:20px;border:1px solid #dde6f3;border-radius:23px;background:#fff;box-shadow:0 25px 70px rgba(0,0,0,.24)}
+.msh-dialog-card.narrow{width:min(460px,100%)}
+.msh-dialog-title{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-bottom:9px}
+.msh-dialog-title h3{margin:0;font-size:17px;font-weight:900;color:#173f76}
+.msh-dialog-title button{width:35px;height:35px;flex:none;border:0;border-radius:9px;background:#f1f4f8;color:#536177;font-size:21px}
+.msh-dialog-subtitle{margin:0 0 13px;color:#52657d;line-height:1.85;font-size:11px}
+.msh-selector-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;max-height:210px;overflow:auto}
+.msh-class-choice,.msh-day-choice{display:flex;align-items:center;gap:9px;padding:10px 11px;border:1px solid #d9e6f3;border-radius:12px;background:#fafcff;font-size:11px;font-weight:900;cursor:pointer}
+.msh-class-choice input,.msh-day-choice input{width:18px;height:18px;flex:none;accent-color:#075fcf}
+.msh-date-controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:13px}
+.msh-date-controls label{display:grid;gap:5px;color:#475467;font-size:10px;font-weight:900}
+.msh-date-controls input,.msh-ranking-class{width:100%;height:45px;padding:9px;border:1px solid #d7e2ef;border-radius:11px;background:#fff;color:#172033}
+.msh-days-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;max-height:220px;overflow:auto;margin-top:10px}
+.msh-day-choice{font-size:10px;padding:8px 9px}
+.msh-dialog-label{display:block;margin:12px 0 7px;font-size:11px;font-weight:900;color:#173f76}
+.msh-dialog-note{margin:11px 0 0;padding:10px 12px;border-radius:11px;background:#fff7e7;color:#87520d;font-size:10px;line-height:1.8;font-weight:800}
+.msh-dialog-actions{display:flex;gap:8px;margin-top:15px;flex-wrap:wrap}.msh-dialog-actions>.btn{flex:1 1 125px}
+.msh-dialog-progress{min-height:20px;margin-top:9px;font-size:10px;font-weight:900;color:#075fcf;line-height:1.8}
+.msh-ranking-tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:12px 0}
+.msh-ranking-tab{min-height:44px;border:1px solid #d6e4f2;border-radius:11px;background:#f6f9fd;color:#475467;font-size:10px;font-weight:900}
+.msh-ranking-tab.active{background:#075fcf;color:#fff;border-color:#075fcf}
+.msh-ranking-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-bottom:1px solid #eef1f6;font-size:11px}
+.msh-ranking-row strong{line-height:1.6}.msh-ranking-row small{display:block;margin-top:3px;color:#667085;font-size:9px}
+.msh-ranking-count{display:flex;align-items:center;justify-content:center;min-width:49px;height:40px;border-radius:10px;background:#edf5ff;color:#075fcf;font-size:18px;font-weight:900}
+.msh-ranking-results{max-height:45vh;overflow:auto;border:1px solid #e3ebf4;border-radius:13px}
+.msh-empty-small{padding:18px;text-align:center;color:#667085;font-size:11px;line-height:1.8}
+.msh-save-gate{margin-top:7px;font-size:9px;font-weight:800;color:#a05d09;line-height:1.8}
+@media(max-width:550px){.msh-dialog-card{padding:14px}.msh-selector-grid{grid-template-columns:1fr}.msh-days-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.msh-ranking-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.msh-dialog-title h3{font-size:15px}}
 </style>
 </head>
 <body>
@@ -185,16 +222,21 @@
 <main class="main">
   <section class="hero"><div><h1>سجل الحضور والغياب</h1><p>الصفوف المكلّف بها المشرف فقط • إدخال يدوي بدون كامرة<br>أيام الدوام: الأحد إلى الخميس</p></div><div class="hero-num"><strong id="totalAssigned">0</strong><span>صف مكلّف به</span></div></section>
   <div class="status" id="connectionStatus" role="status"><span>جاري التحقق من الاتصال وتحميل الصفوف...</span><button type="button" id="refreshBtn">تحديث البيانات</button></div>
-  <section class="card" id="classesCard"><div class="card-title"><div><h2>صفوفي المكلّف بها</h2><p>الأزرق للبنين، والوردي للبنات، والبنفسجي للمختلط. اضغط الصف لعرض طلابه.</p></div><span id="allStudentsCount" class="pill">0 طالب</span></div><div class="field" style="margin-bottom:13px"><label for="globalSearch">بحث في جميع طلاب الصفوف المكلّف بها</label><input id="globalSearch" type="search" placeholder="اكتب اسم الطالب أو الكود لفتح صفه" autocomplete="off"></div><div id="globalSearchResults" class="hidden" style="display:grid;gap:6px;margin-bottom:13px"></div><div class="class-grid" id="classGrid"><div class="empty">جاري تحميل الصفوف...</div></div></section>
+  <section class="card" id="classesCard"><div class="card-title"><div><h2>صفوفي المكلّف بها</h2><p>الأزرق للبنين، والوردي للبنات، والبنفسجي للمختلط. اضغط الصف لعرض طلابه.</p></div><span id="allStudentsCount" class="pill">0 طالب</span></div><div class="field" style="margin-bottom:13px"><label for="globalSearch">بحث في جميع طلاب الصفوف المكلّف بها</label><input id="globalSearch" type="search" placeholder="اكتب اسم الطالب أو الكود لفتح صفه" autocomplete="off"></div><div id="globalSearchResults" class="hidden" style="display:grid;gap:6px;margin-bottom:13px"></div><div class="class-grid" id="classGrid"><div class="empty">جاري تحميل الصفوف...</div></div><div class="msh-tool-row"><button type="button" class="btn msh-tool-historic" id="historicDaysBtn">تحديد أيام</button><button type="button" class="btn msh-tool-ranking" id="rankingBtn">التصفية</button></div></section>
   <section class="card hidden" id="dateCard"><div class="card-title"><div><h2 id="selectedClassTitle">تسجيل الحضور</h2><p id="classHint">اختر التاريخ ثم حدد حالة الطلاب.</p></div><span id="draftBadge" class="pill">لم يُحفظ بعد</span></div><div class="toolbar"><div class="field"><label for="attendanceDate">تاريخ الحضور (بتوقيت العراق)</label><input type="date" id="attendanceDate"></div><div class="field"><label for="searchBox">بحث عن طالب في صفوفك</label><input type="search" id="searchBox" placeholder="ابحث بالاسم أو كود الطالب" autocomplete="off"></div></div><p id="dayMessage" class="warn hidden"></p><div class="day-actions" style="margin-top:12px"><button type="button" class="btn btn-neutral" id="allPresentBtn">تحديد الكل حاضر</button><button type="button" class="btn btn-neutral" id="todayBtn">الرجوع إلى اليوم</button><button type="button" class="btn btn-primary" id="reportPreviewBtn">معاينة تقرير هذا اليوم</button></div></section>
-  <section class="card hidden" id="studentsCard"><div class="card-title"><div><h2>أسماء الطلاب وحالاتهم</h2><p>الحالة الافتراضية «حاضر»، غيّر فقط الطالب الغائب أو المتأخر أو المجاز أو الهارب.</p></div><span id="studentsNumber" class="pill">0 طالب</span></div><div class="summary" id="summary"></div><div class="state-filters" id="stateFilters" aria-label="تصفية حسب حالة الطالب"></div><div class="student-list" id="studentList" style="margin-top:13px"></div><div class="field" style="margin-top:16px"><label for="dayNotes">ملاحظات اليوم الخاصة بالصف</label><textarea id="dayNotes" maxlength="1500" placeholder="ملاحظات المشرف عن حضور هذا الصف في اليوم المحدد (اختياري)"></textarea></div><p id="saveInfo" class="save-note">التغييرات تُحفظ كمسودة على هذا الجهاز؛ لا تُرفع إلى Firebase إلا عند الضغط على حفظ مع توفر الإنترنت.</p><div class="actions"><button class="btn btn-success" id="saveBtn" type="button">حفظ الحضور والغياب في Firebase</button><button class="btn btn-neutral" id="printBtn" type="button">معاينة تقرير اليوم</button></div></section>
-</main>
+  <section class="card hidden" id="studentsCard"><div class="card-title"><div><h2>أسماء الطلاب وحالاتهم</h2><p>الحالة الافتراضية «حاضر»، غيّر فقط الطالب الغائب أو المتأخر أو المجاز أو الهارب.</p></div><span id="studentsNumber" class="pill">0 طالب</span></div><div class="summary" id="summary"></div><div class="state-filters" id="stateFilters" aria-label="تصفية حسب حالة الطالب"></div><div class="student-list" id="studentList" style="margin-top:13px"></div><div class="field" style="margin-top:16px"><label for="dayNotes">ملاحظات اليوم الخاصة بالصف</label><textarea id="dayNotes" maxlength="1500" placeholder="ملاحظات المشرف عن حضور هذا الصف في اليوم المحدد (اختياري)"></textarea></div><p id="saveInfo" class="save-note">التغييرات تُحفظ كمسودة على هذا الجهاز؛ لا تُرسل إلى سجلات المدرسة إلا بعد الضغط على «حفظ» مع توفر الإنترنت.</p><div class="actions"><button class="btn btn-success" id="saveBtn" type="button">حفظ</button><button class="btn btn-neutral" id="printBtn" type="button">معاينة تقرير اليوم</button></div></section>
+<div id="savePreviewNotice" class="hidden" aria-live="polite"></div></main>
 <div id="reportModal" class="report-modal hidden" role="dialog" aria-modal="true" aria-labelledby="reportModalTitle">
  <div class="report-toolbar"><div class="report-toolbar-title"><strong id="reportModalTitle">معاينة التقرير اليومي للصف</strong><small id="reportModalHint">صف واحد • تاريخ واحد • طباعة A4</small></div><div class="report-toolbar-buttons"><button class="btn btn-primary" type="button" id="reportPrintConfirm">طباعة A4</button><button class="btn btn-success" type="button" id="reportSharePdf">مشاركة / حفظ PDF</button><button class="btn btn-neutral" type="button" id="reportCloseBtn">إغلاق المعاينة</button></div></div>
  <div class="report-modal-scroll" id="reportScroll"><div class="report-pages" id="reportPages"></div></div>
 </div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <div class="overlay hidden" id="unlockOverlay"><div class="dialog"><h3>فتح نسخة الحضور المحفوظة</h3><p>لا يوجد اتصال أو جلسة دخول فعالة. أدخل كود مشرف الحضور نفسه لعرض صفوفه التي نزلت على هذا الجهاز سابقًا. عند توفر الإنترنت يجب تسجيل الدخول بالطريقة المعتادة.</p><input id="offlineCode" type="text" placeholder="كود المشرف" autocomplete="off" spellcheck="false"><div class="actions"><button id="offlineUnlockBtn" type="button" class="btn btn-primary">عرض النسخة المحفوظة</button><button id="offlineCancelBtn" type="button" class="btn btn-neutral">رجوع للدخول</button></div><p class="help">هذا وضع عمل محلي، وليس تحققًا أمنيًا من هوية المستخدم. استخدمه فقط على جهاز المشرف الموثوق.</p></div></div>
+
+<!-- All confirmations are internal: never use native alert/confirm dialogs. -->
+<div class="msh-dialog-overlay hidden" id="mshConfirmOverlay" role="dialog" aria-modal="true" aria-labelledby="mshConfirmTitle"><div class="msh-dialog-card narrow"><div class="msh-dialog-title"><h3 id="mshConfirmTitle">تأكيد الإجراء</h3></div><p id="mshConfirmBody" class="msh-dialog-subtitle"></p><div class="msh-dialog-actions"><button type="button" class="btn btn-neutral" id="mshConfirmCancel">إلغاء</button><button type="button" class="btn btn-primary" id="mshConfirmAccept">نعم، تأكيد</button></div></div></div>
+<div class="msh-dialog-overlay hidden" id="historicOverlay" role="dialog" aria-modal="true" aria-labelledby="historicTitle"><div class="msh-dialog-card"><div class="msh-dialog-title"><h3 id="historicTitle">تحديد الأيام السابقة وتسجيل الحضور</h3><button type="button" id="historicClose" aria-label="إغلاق">×</button></div><p class="msh-dialog-subtitle">اختر الصفوف والأيام التي لم تكن سجلاتها مطبوعة أو محفوظة. سيُسجّل «حاضر» للطلاب الذين ليس لديهم سجل لذلك اليوم فقط، ولن تُمس أي حالة غياب أو تأخير أو إجازة أو هروب محفوظة.</p><strong class="msh-dialog-label">الصفوف المكلّف بها المشرف</strong><div class="msh-selector-grid" id="historicClasses"></div><div class="msh-date-controls"><label>من تاريخ<input type="date" id="historicFrom"></label><label>إلى تاريخ<input type="date" id="historicTo"></label></div><strong class="msh-dialog-label">الأيام المطلوب تسجيلها (الأحد إلى الخميس فقط)</strong><div class="msh-days-grid" id="historicDates"></div><p class="msh-dialog-note">لن تُنشأ سجلات الجمعة والسبت أو التواريخ المستقبلية. الموجود سابقًا يبقى كما هو. بعد الموافقة سيُحفظ الحضور في سجل كل طالب.</p><p id="historicProgress" class="msh-dialog-progress" role="status" aria-live="polite"></p><div class="msh-dialog-actions"><button type="button" class="btn btn-neutral" id="historicCancel">إلغاء</button><button type="button" class="btn btn-success" id="historicSave">تأكيد وحفظ الحضور</button></div></div></div>
+<div class="msh-dialog-overlay hidden" id="rankingOverlay" role="dialog" aria-modal="true" aria-labelledby="rankingTitle"><div class="msh-dialog-card"><div class="msh-dialog-title"><h3 id="rankingTitle">التصفية حسب أعلى عدد حالات</h3><button type="button" id="rankingClose" aria-label="إغلاق">×</button></div><p class="msh-dialog-subtitle">اختر الحالة لعرض أسماء الطلاب مرتبين من الأعلى إلى الأقل خلال السجلات المحفوظة. يظهر العدد مقابل كل طالب.</p><label class="msh-dialog-label" for="rankingClass">الصف</label><select class="msh-ranking-class" id="rankingClass"></select><div class="msh-ranking-tabs" id="rankingTabs"><button class="msh-ranking-tab active" data-ranking="absent" type="button">الأعلى غيابًا</button><button class="msh-ranking-tab" data-ranking="late" type="button">الأعلى تأخيرًا</button><button class="msh-ranking-tab" data-ranking="excused" type="button">الأعلى إجازةً</button><button class="msh-ranking-tab" data-ranking="escape" type="button">الأعلى هروبًا</button></div><p class="msh-dialog-progress" id="rankingProgress" role="status" aria-live="polite"></p><div class="msh-ranking-results" id="rankingResults"></div><div class="msh-dialog-actions"><button type="button" class="btn btn-neutral" id="rankingDismiss">إغلاق</button><button type="button" class="btn btn-primary" id="rankingReload">تحديث النتائج</button></div></div></div>
 <script>
 
 /* Unified Firebase Realtime Database GET transport: retry transient failures only.
@@ -242,10 +284,21 @@ const DAY_NAMES=['الأحد','الاثنين','الثلاثاء','الأربع�
 const CACHE_DB='tahadi_msh_offline_v1';
 const $=id=>document.getElementById(id);
 let session={},supervisor={},classes={},students=[],assignedIds=[],currentClass='',currentDate='',recordStatuses={},dayNotes='',dirty=false,currentlySaved=false,saving=false,loadGeneration=0,store=null,onlineVerified=false,canCache=false,dayReadFailed=false,rosterFilter='all';
+let historicBusy=false,rankingBusy=false,rankingType='absent',rankingCounts=null,rankingRun=0;
 const norm=x=>String(x??'').trim().toLowerCase();
 const esc=x=>String(x??'').replace(/[&<>"']/g,a=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[a]));
 const safelyKey=x=>encodeURIComponent(String(x));
 function notify(msg){$('toast').textContent=msg;$('toast').classList.add('show');clearTimeout(window._toastTimer);window._toastTimer=setTimeout(()=>$('toast').classList.remove('show'),3400)}
+function mshAskConfirm(message,title='تأكيد الإجراء',acceptText='نعم، تأكيد'){
+ return new Promise(resolve=>{
+  const overlay=$('mshConfirmOverlay'),yes=$('mshConfirmAccept'),no=$('mshConfirmCancel');
+  $('mshConfirmTitle').textContent=title;$('mshConfirmBody').textContent=message;yes.textContent=acceptText;
+  overlay.classList.remove('hidden');yes.focus();
+  const done=value=>{overlay.classList.add('hidden');yes.removeEventListener('click',onYes);no.removeEventListener('click',onNo);document.removeEventListener('keydown',onKey);resolve(value)};
+  const onYes=()=>done(true),onNo=()=>done(false),onKey=e=>{if(e.key==='Escape')done(false)};
+  yes.addEventListener('click',onYes);no.addEventListener('click',onNo);document.addEventListener('keydown',onKey);
+ });
+}
 function setBanner(message,type='info'){$('connectionStatus').className='status '+(type==='info'?'':type);$('connectionStatus').querySelector('span').textContent=message}
 function iraqNowParts(){const x=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date());const p=Object.fromEntries(x.map(i=>[i.type,i.value]));return [p.year,p.month,p.day]}
 function todayKey(){return iraqNowParts().join('-')}
@@ -290,7 +343,7 @@ async function initData(){setLoading('جاري تحميل صفوف المشرف 
  try{store=await idb();canCache=true}catch(e){console.warn('Offline IndexedDB unavailable',e);canCache=false}
  const backup=await cacheGet(rosterKey()).catch(()=>null);
  let loaded=false;
- if(navigator.onLine){try{await loadOnline();loaded=true;onlineVerified=true}catch(e){console.error('ONLINE_LOAD_FAILED',e);if(backup&&validProfile(backup.supervisor)){useRoster(backup);setBanner('تعذر تحديث البيانات؛ تعرض النسخة المحفوظة على الجهاز. الحفظ يتطلب اتصالًا صالحًا.','offline');loaded=true}else{stopLoading();setBanner('تعذر تحميل بيانات المشرف من Firebase. تحقق من اتصالك وصلاحيات القراءة.','error');$('classGrid').innerHTML='<div class="empty">تعذر الوصول إلى قاعدة البيانات. اضغط «تحديث البيانات» للمحاولة مجددًا.</div>';return}}}
+ if(navigator.onLine){try{await loadOnline();loaded=true;onlineVerified=true}catch(e){console.error('ONLINE_LOAD_FAILED',e);if(backup&&validProfile(backup.supervisor)){useRoster(backup);setBanner('تعذر تحديث البيانات؛ تعرض النسخة المحفوظة على الجهاز. الحفظ يتطلب اتصالًا صالحًا.','offline');loaded=true}else{stopLoading();setBanner('تعذر تحميل بيانات المشرف من قاعدة المدرسة. تحقق من اتصالك وصلاحيات القراءة.','error');$('classGrid').innerHTML='<div class="empty">تعذر الوصول إلى قاعدة البيانات. اضغط «تحديث البيانات» للمحاولة مجددًا.</div>';return}}}
  if(!loaded&&backup&&validProfile(backup.supervisor)){useRoster(backup);setBanner('أنت الآن تعمل دون إنترنت. الطلاب والصفوف من آخر تحميل، والتغييرات مسودات محلية حتى تضغط «حفظ» بعد الاتصال.','offline');loaded=true}
  if(!loaded){stopLoading();setBanner('لا توجد نسخة طلاب محفوظة على الجهاز. افتح الصفحة مرة واحدة مع الإنترنت لتنزيل بيانات المشرف.','error');$('classGrid').innerHTML='<div class="empty">أول تشغيل يحتاج الإنترنت لتحميل الصفوف والطلاب.</div>';return}
  buildClasses();if(!canCache)setBanner('تعذر تشغيل التخزين المحلي على هذا الجهاز؛ تحتاج الإنترنت لعرض البيانات بعد إغلاق الصفحة.','error');stopLoading();
@@ -300,29 +353,30 @@ function useRoster(data){supervisor=data.supervisor||{};classes=data.classes||{}
 function showOfflineUnlock(){$('unlockOverlay').classList.remove('hidden')}
 $('offlineCancelBtn').onclick=()=>location.replace('index.html');
 $('offlineUnlockBtn').onclick=async()=>{const code=$('offlineCode').value.trim();if(!code){notify('اكتب كود المشرف');return}setLoading('جاري فتح البيانات المحفوظة...');$('unlockOverlay').classList.add('hidden');try{if(!store)store=await idb();session={code};const data=await cacheGet(rosterKey());if(!data||!validProfile(data.supervisor))throw new Error('NO_CACHE');useRoster(data);buildClasses();setBanner('تم فتح نسخة المشرف المحفوظة على هذا الجهاز. لا ترفع أي بيانات قبل الدخول والتحقق عبر الإنترنت.','offline');stopLoading()}catch(e){stopLoading();session={};$('unlockOverlay').classList.remove('hidden');notify('ماكو بيانات محفوظة لهذا الكود. اتصل بالإنترنت وسجّل الدخول أولًا.')}};
-function syncConnectivity(){const off=!navigator.onLine;$('saveBtn').disabled=off||saving||!validSchoolDay(currentDate);if(off){setBanner('لا يوجد إنترنت: تستطيع تحديد الحالات وتدوين الملاحظات كمسودة، لكن لا يمكن إرسالها إلى Firebase.','offline')}else if(currentClass){setBanner('الاتصال متاح. تأكد من الحالات واضغط حفظ لإرسالها إلى قاعدة البيانات.','success')}}
+function syncConnectivity(){const off=!navigator.onLine;$('saveBtn').disabled=off||saving||!validSchoolDay(currentDate);updatePreviewGate();if(off){setBanner('لا يوجد إنترنت: تستطيع تحديد الحالات وتدوين الملاحظات كمسودة، لكن لا يمكن حفظها على الخادم.','offline')}else if(currentClass){setBanner('الاتصال متاح. تأكد من الحالات واضغط حفظ لإرسالها إلى قاعدة البيانات.','success')}}
 window.addEventListener('online',syncConnectivity);window.addEventListener('offline',syncConnectivity);
 async function openClass(id){if(!assignedIds.includes(String(id)))return;currentClass=String(id);$('dateCard').classList.remove('hidden');$('studentsCard').classList.remove('hidden');$('selectedClassTitle').textContent=className(id);$('classHint').textContent=`${availableStudents(id).length} طالب | ${classLabel(id)||'كل القاعات'} | اختر التاريخ ثم سجل الحالات`;$('searchBox').value='';rosterFilter='all';if(!$('attendanceDate').value)$('attendanceDate').value=todayKey();await loadDay();buildClasses();$('dateCard').scrollIntoView({behavior:'smooth',block:'start'})}
 function makeStatus(raw){const s=norm(raw?.status||'');if(s==='escape'||s==='هروب'||raw?.escape===true||raw?.isEscape===true)return 'escape';if(s==='late'||s==='متأخر'||raw?.late===true||raw?.isLate===true)return 'late';if(['excused','leave','مجاز','اجازة','إجازة'].includes(s)||raw?.excused===true||raw?.leave===true)return 'excused';if(s==='absent'||s==='غائب'||raw?.absent===true||raw?.isAbsent===true)return 'absent';return 'present'}
 async function fetchDayRecords(klass,date){const roster=availableStudents(klass),result={};let idx=0;async function worker(){while(idx<roster.length){const s=roster[idx++];try{const r=await apiGet(`attendance/${safelyKey(s.code)}/${date}`,{timeout:17000});if(r&&typeof r==='object')result[s.code]=r}catch(e){throw e}}}await Promise.all(Array.from({length:Math.min(7,roster.length)},()=>worker()));return result}
 async function loadDay(){const gen=++loadGeneration;dayReadFailed=false;currentDate=$('attendanceDate').value;const day=weekDay(currentDate);$('dayMessage').classList.toggle('hidden',validSchoolDay(currentDate));$('dayMessage').textContent=day===5||day===6?'الجمعة والسبت عطلة؛ لا يمكن تسجيل الحضور أو الغياب لهذين اليومين.':day<0?'التاريخ غير صحيح.':currentDate>todayKey()?'لا يمكن تسجيل حضور تاريخ مستقبلي.':'';recordStatuses={};dayNotes='';dirty=false;currentlySaved=false;const assigned=availableStudents(currentClass);for(const s of assigned)recordStatuses[s.code]='present';$('dayNotes').value='';const localDraft=await cacheGet(draftKey(currentClass,currentDate)).catch(()=>null);if(gen!==loadGeneration)return;let remote=null,hasRemote=false;
- if(validSchoolDay(currentDate)&&navigator.onLine){try{remote=await fetchDayRecords(currentClass,currentDate);hasRemote=Object.keys(remote).length>0}catch(e){console.warn('DAY_REMOTE_FAILED',e);dayReadFailed=true;notify('تعذر قراءة سجلات هذا اليوم. لن نسمح بالكتابة فوق سجلات قديمة قبل تحديث الصفحة.')}}
+ if(validSchoolDay(currentDate)&&navigator.onLine){try{remote=await fetchDayRecords(currentClass,currentDate);hasRemote=assigned.length>0&&assigned.every(s=>remote[s.code]&&typeof remote[s.code]==='object')}catch(e){console.warn('DAY_REMOTE_FAILED',e);dayReadFailed=true;notify('تعذر قراءة سجلات هذا اليوم. لن نسمح بالكتابة فوق سجلات قديمة قبل تحديث الصفحة.')}}
  if(gen!==loadGeneration)return;
  if(localDraft?.dirty){for(const s of assigned){if(VALID_STATES.includes(localDraft.statuses?.[s.code]))recordStatuses[s.code]=localDraft.statuses[s.code]}dayNotes=String(localDraft.notes||'');dirty=true;currentlySaved=false}
- else if(hasRemote){for(const s of assigned){if(remote[s.code])recordStatuses[s.code]=makeStatus(remote[s.code])}dayNotes=String(Object.values(remote).find(x=>typeof x?.note==='string'&&x.note.trim())?.note||'');currentlySaved=true;dirty=false}
- else if(localDraft){for(const s of assigned){if(VALID_STATES.includes(localDraft.statuses?.[s.code]))recordStatuses[s.code]=localDraft.statuses[s.code]}dayNotes=String(localDraft.notes||'');currentlySaved=!!localDraft.saved;dirty=!!localDraft.dirty}
+ else if(remote&&Object.keys(remote).length){for(const s of assigned){if(remote[s.code])recordStatuses[s.code]=makeStatus(remote[s.code])}dayNotes=String(Object.values(remote).find(x=>typeof x?.note==='string'&&x.note.trim())?.note||'');currentlySaved=hasRemote;dirty=!hasRemote}
+ else if(localDraft){for(const s of assigned){if(VALID_STATES.includes(localDraft.statuses?.[s.code]))recordStatuses[s.code]=localDraft.statuses[s.code]}dayNotes=String(localDraft.notes||'');currentlySaved=!!localDraft.saved&&!dayReadFailed&&!navigator.onLine;dirty=!!localDraft.dirty||!currentlySaved}
  $('dayNotes').value=dayNotes;$('saveBtn').disabled=!validSchoolDay(currentDate)||!navigator.onLine;renderAll()}
-function renderAll(){const valid=validSchoolDay(currentDate);$('studentsNumber').textContent=availableStudents(currentClass).length+' طالب';$('studentsCard').querySelectorAll('select,textarea').forEach(x=>x.disabled=!valid);$('dayNotes').disabled=!valid;let tally={present:0,absent:0,excused:0,late:0,escape:0};for(const s of availableStudents(currentClass)){const status=recordStatuses[s.code]||'present';tally[status]++} $('summary').innerHTML=VALID_STATES.map(status=>`<div class="summary-item ${status}"><strong>${tally[status]}</strong><span>${LABELS[status]}</span></div>`).join('');$('stateFilters').innerHTML=[['all','الكل',availableStudents(currentClass).length],...VALID_STATES.map(st=>[st,LABELS[st],tally[st]])].map(([st,label,count])=>`<button type="button" class="state-filter ${rosterFilter===st?'active':''}" data-filter="${st}" aria-pressed="${rosterFilter===st}">${label} <span>(${count})</span></button>`).join('');const query=norm($('searchBox').value),rows=availableStudents(currentClass).filter(s=>(rosterFilter==='all'||(recordStatuses[s.code]||'present')===rosterFilter)&&(!query||norm(s.name).includes(query)||norm(s.code).includes(query)));$('studentList').innerHTML=rows.length?rows.map((s,i)=>{const v=recordStatuses[s.code]||'present';return `<div class="student-row is-${esc(v)}"><div class="student-title"><strong>${esc(s.name||'بدون اسم')}</strong><small>${esc(s.code)}${s.roomNumber?' | القاعة '+esc(s.roomNumber):''}</small></div><select aria-label="حالة ${esc(s.name||s.code)}" class="student-select" data-student="${esc(s.code)}" ${valid?'':'disabled'}>${VALID_STATES.map(st=>`<option value="${st}" ${st===v?'selected':''}>${LABELS[st]}</option>`).join('')}</select></div>`}).join(''):'<div class="empty">لا يوجد طلاب يطابقون البحث.</div>';document.querySelectorAll('[data-student]').forEach(sel=>sel.addEventListener('change',()=>{const code=sel.dataset.student;if(!availableStudents(currentClass).some(s=>s.code===code))return;recordStatuses[code]=sel.value;markDirty();renderAll()}));$('draftBadge').textContent=dirty?'مسودة محلية لم تُرسل':currentlySaved?'تم تحميل سجل محفوظ':'غير محفوظ';$('draftBadge').style.background=dirty?'var(--orange-l)':currentlySaved?'var(--green-l)':'#f1f5fb';$('saveBtn').disabled=!valid||!navigator.onLine||saving||dayReadFailed;$('saveInfo').textContent=dirty?'تم حفظ اختياراتك محليًا على هذا الجهاز. اضغط «حفظ» عند توفر الإنترنت حتى تصل إلى Firebase.':currentlySaved?'يعرض السجل السابق لهذا اليوم. يمكنك تعديل الحالات والضغط على «حفظ» لتحديثه.':'جميع الطلاب «حاضر» افتراضيًا؛ لن يُكتب أي سجل إلى Firebase إلا بعد الضغط على «حفظ».'}
+function updatePreviewGate(){const allowed=!!(currentClass&&validSchoolDay(currentDate)&&currentlySaved&&!dirty&&!dayReadFailed&&!saving);if($('previewGateNote')){$('previewGateNote').textContent=allowed?'تم حفظ السجل. يمكنك الآن معاينة التقرير وطباعته.':'لحماية السجلات، احفظ الحضور قبل معاينة التقرير.';$('previewGateNote').style.color=allowed?'var(--green)':'var(--orange)'}for(const id of ['reportPreviewBtn','printBtn']){const el=$(id);if(el){el.disabled=!allowed;el.title=allowed?'معاينة التقرير المحفوظ':'احفظ الحضور أولًا ثم افتح المعاينة'}}return allowed}
+function renderAll(){const valid=validSchoolDay(currentDate);$('studentsNumber').textContent=availableStudents(currentClass).length+' طالب';$('studentsCard').querySelectorAll('select,textarea').forEach(x=>x.disabled=!valid);$('dayNotes').disabled=!valid;let tally={present:0,absent:0,excused:0,late:0,escape:0};for(const s of availableStudents(currentClass)){const status=recordStatuses[s.code]||'present';tally[status]++} $('summary').innerHTML=VALID_STATES.map(status=>`<div class="summary-item ${status}"><strong>${tally[status]}</strong><span>${LABELS[status]}</span></div>`).join('');$('stateFilters').innerHTML=[['all','الكل',availableStudents(currentClass).length],...VALID_STATES.map(st=>[st,LABELS[st],tally[st]])].map(([st,label,count])=>`<button type="button" class="state-filter ${rosterFilter===st?'active':''}" data-filter="${st}" aria-pressed="${rosterFilter===st}">${label} <span>(${count})</span></button>`).join('');const query=norm($('searchBox').value),rows=availableStudents(currentClass).filter(s=>(rosterFilter==='all'||(recordStatuses[s.code]||'present')===rosterFilter)&&(!query||norm(s.name).includes(query)||norm(s.code).includes(query)));$('studentList').innerHTML=rows.length?rows.map((s,i)=>{const v=recordStatuses[s.code]||'present';return `<div class="student-row is-${esc(v)}"><div class="student-title"><strong>${esc(s.name||'بدون اسم')}</strong><small>${esc(s.code)}${s.roomNumber?' | القاعة '+esc(s.roomNumber):''}</small></div><select aria-label="حالة ${esc(s.name||s.code)}" class="student-select" data-student="${esc(s.code)}" ${valid?'':'disabled'}>${VALID_STATES.map(st=>`<option value="${st}" ${st===v?'selected':''}>${LABELS[st]}</option>`).join('')}</select></div>`}).join(''):'<div class="empty">لا يوجد طلاب يطابقون البحث.</div>';document.querySelectorAll('[data-student]').forEach(sel=>sel.addEventListener('change',()=>{const code=sel.dataset.student;if(!availableStudents(currentClass).some(s=>s.code===code))return;recordStatuses[code]=sel.value;markDirty();renderAll()}));$('draftBadge').textContent=dirty?'مسودة محلية لم تُرسل':currentlySaved?'تم تحميل سجل محفوظ':'غير محفوظ';$('draftBadge').style.background=dirty?'var(--orange-l)':currentlySaved?'var(--green-l)':'#f1f5fb';$('saveBtn').disabled=!valid||!navigator.onLine||saving||dayReadFailed;updatePreviewGate();$('saveInfo').textContent=dirty?'تم حفظ اختياراتك محليًا على هذا الجهاز. اضغط «حفظ» عند توفر الإنترنت حتى تصل إلى قاعدة المدرسة.':currentlySaved?'يعرض السجل السابق لهذا اليوم. يمكنك تعديل الحالات والضغط على «حفظ» لتحديثه.':'جميع الطلاب «حاضر» افتراضيًا؛ لن يُكتب أي سجل رسمي إلا بعد الضغط على «حفظ».'}
 $('stateFilters').addEventListener('click',event=>{const btn=event.target.closest('[data-filter]');if(!btn)return;const next=btn.dataset.filter;if(next!=='all'&&!VALID_STATES.includes(next))return;rosterFilter=next;renderAll()});
 async function saveDraft(){if(!currentClass||!currentDate||!validSchoolDay(currentDate))return;const o={statuses:{...recordStatuses},notes:dayNotes,saved:currentlySaved,dirty,updatedAt:Date.now()};try{await cacheSet(draftKey(currentClass,currentDate),o)}catch(e){console.warn('DRAFT_SAVE_FAILED',e);notify('تعذر حفظ المسودة محليًا؛ تأكد من مساحة الجهاز')}}
-function markDirty(){dirty=true;currentlySaved=false;saveDraft();}
-$('dayNotes').addEventListener('input',()=>{dayNotes=$('dayNotes').value;markDirty();$('draftBadge').textContent='مسودة محلية لم تُرسل';$('saveInfo').textContent='الملاحظات محفوظة محليًا، ولإرسالها إلى Firebase اضغط حفظ عند توفر الإنترنت.'});
+function markDirty(){dirty=true;currentlySaved=false;updatePreviewGate();saveDraft();}
+$('dayNotes').addEventListener('input',()=>{dayNotes=$('dayNotes').value;markDirty();$('draftBadge').textContent='مسودة محلية لم تُرسل';$('saveInfo').textContent='الملاحظات محفوظة محليًا، ولحفظها في النظام اضغط حفظ عند توفر الإنترنت.'});
 $('attendanceDate').max=todayKey();$('attendanceDate').value=todayKey();$('attendanceDate').addEventListener('change',async()=>{if(currentClass)await loadDay()});$('todayBtn').onclick=async()=>{$('attendanceDate').value=todayKey();if(currentClass)await loadDay()};$('searchBox').addEventListener('input',renderAll);
-$('allPresentBtn').onclick=()=>{if(!currentClass||!validSchoolDay(currentDate))return;if(!confirm('هل تريد تحويل حالة جميع طلاب هذا الصف إلى حاضر؟'))return;for(const s of availableStudents(currentClass))recordStatuses[s.code]='present';markDirty();renderAll()};
+$('allPresentBtn').onclick=async()=>{if(!currentClass||!validSchoolDay(currentDate))return;if(!await mshAskConfirm('هل تريد تحويل حالة جميع طلاب هذا الصف إلى حاضر؟','تأكيد تعديل الحالات','نعم، اجعلهم حاضرين'))return;for(const s of availableStudents(currentClass))recordStatuses[s.code]='present';markDirty();renderAll()};
 function makeRecord(s,when){const status=recordStatuses[s.code]||'present';const r={status,present:status==='present',absent:status==='absent',isAbsent:status==='absent',excused:status==='excused',leave:status==='excused',late:status==='late',escape:status==='escape',date:currentDate,classId:s.classId||'',className:className(s.classId),roomNumber:s.roomNumber||'',gender:studentGender(s.gender||classes[currentClass]?.gender),studentName:s.name||'',studentCode:s.code,recordedAt:when,recordedBy:session.code,recordedByName:supervisor.name||'',method:'manual_attendance_supervisor',note:dayNotes.trim()};return r}
 $('saveBtn').addEventListener('click',async()=>{if(saving||!currentClass)return;if(!validSchoolDay(currentDate)){notify('التاريخ غير مسموح للحضور. الجمعة والسبت عطلة.');return}if(!navigator.onLine){notify('لا يوجد إنترنت. التغييرات محفوظة محليًا ولن تُرفع الآن.');return}if(dayReadFailed){notify('تعذرت قراءة سجلات هذا اليوم. غيّر التاريخ وأعد اختياره أو حدّث البيانات أولًا.');return}
  const localRoster=availableStudents(currentClass);if(!localRoster.length){notify('لا يوجد طلاب بهذا الصف');return}
- if(!confirm(`تأكيد حفظ حضور ${localRoster.length} طالبًا من ${className(currentClass)} بتاريخ ${currentDate} في Firebase؟`))return;
+ if(!await mshAskConfirm(`هل تريد حفظ حضور ${localRoster.length} طالبًا من ${className(currentClass)} بتاريخ ${currentDate} في السجل الرسمي؟`,'تأكيد حفظ الحضور','نعم، حفظ'))return;
  saving=true;renderAll();$('saveBtn').textContent='جاري التحقق والحفظ...';
  try{
  // Re-check the actual assigned classes and active role on every write.
@@ -335,9 +389,9 @@ $('saveBtn').addEventListener('click',async()=>{if(saving||!currentClass)return;
  updates[`attendanceSessions/${currentDate}/${historyId}`]={date:currentDate,recordedAt:now,recordedBy:session.code,recordedByName:supervisor.name||'',classId:currentClass,className:className(currentClass),gender:classGender(classes[currentClass]),totalStudents:localRoster.length,presentCount:tally.present,absentCount:tally.absent,excusedCount:tally.excused,lateCount:tally.late,escapeCount:tally.escape,note:dayNotes.trim(),method:'manual_attendance_supervisor'};
  // Firebase Realtime Database multipath PATCH: updates are atomic.
  await apiPatchRoot(updates);
- dirty=false;currentlySaved=true;await saveDraft();notify('تم حفظ الحضور والغياب وجميع الحالات بنجاح في Firebase.');setBanner('تم حفظ سجلات اليوم في Firebase بنجاح.','success')
- }catch(e){console.error('ATTENDANCE_SAVE_FAILED',e);dirty=true;await saveDraft();notify(e.message==='PERMISSION_CHANGED'?'تم تغيير صلاحيات المشرف؛ لم يتم الحفظ.':e.message==='INVALID_DAY'?'الجمعة والسبت أو التاريخ المستقبلي غير مسموح.':'تعذر الحفظ في Firebase. المسودة موجودة على الجهاز، حاول عند توفر الإنترنت.');setBanner('لم يتم تأكيد حفظ السجلات؛ المسودة محفوظة محليًا.','error')}
- finally{saving=false;$('saveBtn').textContent='حفظ الحضور والغياب في Firebase';renderAll()}
+ dirty=false;currentlySaved=true;await saveDraft();notify('تم الحفظ بنجاح. جميع حالات هذا اليوم محفوظة.');setBanner('تم حفظ سجلات اليوم بنجاح.','success')
+ }catch(e){console.error('ATTENDANCE_SAVE_FAILED',e);dirty=true;await saveDraft();notify(e.message==='PERMISSION_CHANGED'?'تم تغيير صلاحيات المشرف؛ لم يتم الحفظ.':e.message==='INVALID_DAY'?'الجمعة والسبت أو التاريخ المستقبلي غير مسموح.':'تعذر الحفظ في قاعدة البيانات. المسودة موجودة على الجهاز، حاول عند توفر الإنترنت.');setBanner('لم يتم تأكيد حفظ السجلات؛ المسودة محفوظة محليًا.','error')}
+ finally{saving=false;$('saveBtn').textContent='حفظ';renderAll()}
 });
 /* تقرير يوم واحد للصف المحدد، متطابق الصفحات على A4، مع تكرار الملاحظة لكل ورقة. */
 const REPORT_DEFAULT_NOTE='لا توجد ملاحظات من قبل المشرف. تم تنزيل الغياب من السجل كما هي. السادة أولياء الأمور، التفضل بالاطلاع. مع التقدير.';
@@ -389,7 +443,7 @@ function buildReportPage(roster,chunk,page,totalPages,tally,rowStart,noteText,no
  `<div class="report-all-present"><strong class="report-all-present-title">${esc(REPORT_NO_INCIDENT_TITLE)}</strong><p class="report-all-present-text">${esc(REPORT_NO_INCIDENT_MESSAGE)}</p></div>`;
  return `<div class="report-scale"><article class="report-sheet ${noteSettings.klass}" style="--note-font-size:${noteSettings.font}px;--note-line-height:${noteSettings.lineHeight}px;--note-box-height:${noteSettings.boxHeight}px" aria-label="تقرير ${esc(className(currentClass))} الصفحة ${page}"><div class="report-sheet-inner">
  <div class="report-letterhead"><div class="report-school"><img src="logo.png" alt=""><div><strong>مدرسة التحدي الأهلية المختلطة</strong><small>سجلات الحضور والغياب • تقرير يومي</small></div></div><div class="report-doc-id">العام الدراسي 2026–2027<br>صفحة ${page} من ${totalPages}</div></div>
- <div class="report-heading"><h2>${esc(reportPrintTitle())}</h2><p>تقرير الصف للتاريخ المحدد</p>${dirty?'<div class="report-unsaved">نسخة معاينة — توجد تعديلات غير محفوظة في Firebase</div>':!currentlySaved?'<div class="report-unsaved">كشف مُعدّ محليًا — لم يُعتمد الحفظ في Firebase</div>':''}</div>
+ <div class="report-heading"><h2>${esc(reportPrintTitle())}</h2><p>تقرير الصف للتاريخ المحدد</p>${dirty?'<div class="report-unsaved">نسخة معاينة — توجد تعديلات غير محفوظة</div>':!currentlySaved?'<div class="report-unsaved">كشف مُعدّ محليًا — لم يُعتمد الحفظ</div>':''}</div>
  <div class="report-details"><div class="report-detail"><small>الصف</small><strong>${esc(className(currentClass))}</strong></div><div class="report-detail"><small>التاريخ</small><strong>${esc(formatReportDate(currentDate))}</strong></div><div class="report-detail"><small>القسم</small><strong>${gender==='female'?'بنات':gender==='mixed'?'مختلط':'بنين'}</strong></div></div>
  ${rosterBlock}
  <div class="report-grow"></div>
@@ -399,6 +453,7 @@ function buildReportPage(roster,chunk,page,totalPages,tally,rowStart,noteText,no
 }
 function scaleReportPreview(){const box=$('reportScroll');if(!box||$('reportModal').classList.contains('hidden'))return;$('reportPages').querySelectorAll('.report-scale').forEach(wrapper=>{wrapper.style.width='794px';wrapper.style.height='1123px';wrapper.querySelector('.report-sheet').style.transform='none'});}
 function showReportPreview(){
+ if(!updatePreviewGate()){notify('احفظ سجل حضور هذا اليوم أولًا، ثم افتح معاينة التقرير.');return}
  if(!currentClass||!assignedIds.includes(currentClass)){notify('اختر الصف أولًا');return}
  if(!validSchoolDay(currentDate)){notify('لا يمكن طباعة كشف ليوم الجمعة أو السبت أو تاريخ مستقبلي');return}
  const roster=reportIncidents(),note=dayNotes.trim()||REPORT_DEFAULT_NOTE;
@@ -415,7 +470,7 @@ $('printBtn').addEventListener('click',showReportPreview);
 $('reportPreviewBtn').addEventListener('click',showReportPreview);
 $('reportCloseBtn').addEventListener('click',closeReportPreview);
 $('reportPrintConfirm').addEventListener('click',()=>{
- if($('reportModal').classList.contains('hidden'))return;
+ if($('reportModal').classList.contains('hidden')||!updatePreviewGate()){notify('يجب حفظ الحضور قبل الطباعة');return}
  printingReport=true;document.title=reportPrintTitle();
  // @page A4 and fixed 210×297mm sheets guide mobile and desktop print dialogs.
  window.print();
@@ -471,7 +526,7 @@ function drawPdfPage(roster,chunk,page,totalPages,tally,rowStart,noteText,noteSe
  ctx.strokeStyle='#2c6297';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(36,130);ctx.lineTo(758,130);ctx.stroke();
  pdfText(ctx,reportPrintTitle(),397,163,19,'#123e73','900','center');
  pdfText(ctx,'تقرير الصف للتاريخ المحدد',397,184,10,'#63758b','800','center');
- if(dirty||!currentlySaved){pdfRounded(ctx,222,191,350,23,5,'#fff3e5','#ead3a2');pdfText(ctx,dirty?'نسخة معاينة — توجد تعديلات غير محفوظة':'كشف مُعدّ محليًا — لم يُعتمد الحفظ في Firebase',397,207,10,'#96520b','900','center')}
+ if(dirty||!currentlySaved){pdfRounded(ctx,222,191,350,23,5,'#fff3e5','#ead3a2');pdfText(ctx,dirty?'نسخة معاينة — توجد تعديلات غير محفوظة':'كشف مُعدّ محليًا — لم يُعتمد الحفظ',397,207,10,'#96520b','900','center')}
  const gender=classGender(classes[currentClass]);const meta=[['الصف',className(currentClass)],['التاريخ',formatReportDate(currentDate)],['القسم',gender==='female'?'بنات':gender==='mixed'?'مختلط':'بنين']];
  meta.forEach(([label,value],i)=>{const x=40+(2-i)*240;pdfRounded(ctx,x,223,233,51,6,'#f4f8fd','#dbe5f0');pdfText(ctx,label,x+218,241,9,'#66768d');pdfText(ctx,value,x+218,260,11,'#21374c')});
  const hasIncidents=roster.length>0;
@@ -542,6 +597,7 @@ function assembleA4Pdf(canvases){
  return new Blob(parts,{type:'application/pdf'});
 }
 function reportPdfFile(){
+ if(!updatePreviewGate())throw new Error('UNSAVED_REPORT');
  if(!currentClass||!assignedIds.includes(currentClass)||!validSchoolDay(currentDate))throw new Error('INVALID_REPORT');
  const roster=reportIncidents(),note=dayNotes.trim()||REPORT_DEFAULT_NOTE,settings=reportNoteSettings(note),chunks=reportChunks(roster,settings.rows),tally=reportTallies(roster);
  const canvases=chunks.map((ch,i)=>drawPdfPage(roster,ch,i+1,chunks.length,tally,i*settings.rows,note,settings));
@@ -549,7 +605,7 @@ function reportPdfFile(){
 }
 $('reportSharePdf').addEventListener('click',()=>{
  try{
-  if($('reportModal').classList.contains('hidden'))return;
+  if($('reportModal').classList.contains('hidden')||!updatePreviewGate()){notify('يجب حفظ الحضور قبل مشاركة التقرير');return}
   const file=reportPdfFile();
   if(navigator.share && (!navigator.canShare || navigator.canShare({files:[file]}))){
     navigator.share({files:[file],title:reportPrintTitle()}).catch(err=>{if(err&&err.name!=='AbortError')savePdfFile(file)});
@@ -558,9 +614,157 @@ $('reportSharePdf').addEventListener('click',()=>{
 });
 function savePdfFile(file){const url=URL.createObjectURL(file);const link=document.createElement('a');link.href=url;link.download=file.name;document.body.append(link);link.click();link.remove();setTimeout(()=>URL.revokeObjectURL(url),120000);notify('تم تجهيز ملف PDF باسم التقرير والصف')}
 
-$('refreshBtn').onclick=async()=>{if(!navigator.onLine){notify('لا يوجد اتصال بالإنترنت الآن.');return}if(!session.code){location.replace('index.html');return}if(dirty&&!confirm('لديك تعديلات محفوظة محليًا لم تُرسل. هل تريد تحديث بيانات الطلاب والصفوف؟ (مسودتك لن تُمسح)'))return;try{setLoading('جاري تحديث الطلاب والصفوف...');await loadOnline();buildClasses();if(currentClass&&!assignedIds.includes(currentClass)){currentClass='';$('dateCard').classList.add('hidden');$('studentsCard').classList.add('hidden')}else if(currentClass)await loadDay();stopLoading();notify('تم تحديث البيانات بنجاح')}catch(e){stopLoading();console.error('REFRESH_FAILED',e);notify('تعذر تحديث البيانات؛ بقيت النسخة المحلية محفوظة')}};
-$('logoutBtn').onclick=()=>{
- if(dirty&&!confirm('توجد تعديلات لم تُرسل إلى Firebase، وستبقى مسودة على هذا الجهاز. هل تريد تسجيل الخروج؟'))return;
+
+/* Historical attendance: choose multiple assigned classes and school dates.
+   Existing remote student/date records are never included in a bulk write. */
+function dateAddDays(key,amount){const d=new Date(key+'T12:00:00Z');d.setUTCDate(d.getUTCDate()+amount);return d.toISOString().slice(0,10)}
+function mshOpenDialog(id){$(id).classList.remove('hidden');document.body.style.overflow='hidden'}
+function mshCloseDialog(id){$(id).classList.add('hidden');document.body.style.overflow=''}
+function historicShowDates(){
+ const from=$('historicFrom').value,to=$('historicTo').value,container=$('historicDates');
+ container.innerHTML='';
+ if(!from||!to||weekDay(from)<0||weekDay(to)<0||from>to){container.innerHTML='<div class="msh-empty-small">حدد فترة صحيحة لعرض الأيام.</div>';return}
+ const limit=dateAddDays(from,65);
+ if(to>limit){container.innerHTML='<div class="msh-empty-small">لتفادي إدخال أيام بالخطأ، اجعل الفترة 65 يومًا أو أقل في كل عملية.</div>';return}
+ let dates=[];
+ for(let day=from;day<=to;day=dateAddDays(day,1)){if(validSchoolDay(day))dates.push(day)}
+ container.innerHTML=dates.length?dates.map(day=>`<label class="msh-day-choice"><input type="checkbox" value="${day}" data-historic-day checked><span>${esc(formatReportDate(day))}</span></label>`).join(''):'<div class="msh-empty-small">لا توجد أيام دوام صالحة في هذه الفترة.</div>';
+}
+function historicSelected(){
+ const ids=Array.from($('historicClasses').querySelectorAll('input:checked')).map(el=>el.value).filter(id=>assignedIds.includes(id));
+ const days=Array.from($('historicDates').querySelectorAll('input:checked')).map(el=>el.value).filter(validSchoolDay);
+ return {ids,days};
+}
+$('historicDaysBtn').addEventListener('click',()=>{
+ if(!assignedIds.length){notify('لا توجد صفوف مخصصة لك');return}
+ $('historicClasses').innerHTML=assignedIds.filter(id=>classes[id]).map(id=>`<label class="msh-class-choice"><input type="checkbox" value="${esc(id)}" ${id===currentClass?'checked':''}><span>${esc(className(id))} — ${availableStudents(id).length} طالب</span></label>`).join('');
+ const today=todayKey();$('historicTo').max=today;$('historicFrom').max=today;
+ $('historicTo').value=today;$('historicFrom').value=dateAddDays(today,-6);
+ $('historicProgress').textContent='';$('historicSave').disabled=false;historicShowDates();mshOpenDialog('historicOverlay');
+});
+$('historicFrom').addEventListener('change',historicShowDates);
+$('historicTo').addEventListener('change',historicShowDates);
+function historicClose(){if(historicBusy)return;mshCloseDialog('historicOverlay')}
+$('historicClose').addEventListener('click',historicClose);$('historicCancel').addEventListener('click',historicClose);
+async function mshParallel(items,limit,task){const out=new Array(items.length);let index=0;async function worker(){while(index<items.length){const at=index++;out[at]=await task(items[at],at)}}await Promise.all(Array.from({length:Math.min(limit,items.length)},worker));return out}
+function historicRecord(student,klass,date,now){const record={status:'present',present:true,absent:false,isAbsent:false,excused:false,leave:false,late:false,escape:false,date,classId:klass,className:className(klass),roomNumber:student.roomNumber||'',gender:studentGender(student.gender||classes[klass]?.gender),studentName:student.name||'',studentCode:student.code,recordedAt:now,recordedBy:session.code,recordedByName:supervisor.name||'',method:'historical_bulk_present',note:''};return record}
+$('historicSave').addEventListener('click',async()=>{
+ if(historicBusy)return;
+ const {ids,days}=historicSelected();
+ if(!ids.length){notify('حدد صفًا واحدًا على الأقل');return}
+ if(!days.length){notify('حدد يومًا واحدًا على الأقل');return}
+ if(days.length>45){notify('يمكن اعتماد 45 يوم دوام كحد أقصى في العملية الواحدة');return}
+ if(!navigator.onLine){notify('الحفظ يحتاج اتصالًا بالإنترنت');return}
+ if(!onlineVerified){notify('حدّث بيانات المشرف عبر الإنترنت قبل الحفظ');return}
+ if(dirty){notify('لديك تغييرات غير محفوظة في الصف المفتوح. احفظها قبل تحديد الأيام السابقة.');return}
+ const roster=ids.flatMap(id=>availableStudents(id));
+ if(!roster.length){notify('الصفوف المحددة لا تحتوي على طلاب');return}
+ if(!await mshAskConfirm(`سيُسجَّل جميع الطلاب في ${ids.length} صفوف «حاضر» في ${days.length} يومًا محددًا، فقط عندما لا يوجد سجل سابق للطالب في ذلك اليوم. السجلات القديمة لن تتغير. هل تريد المتابعة؟`,'تأكيد الحضور للأيام السابقة','نعم، حفظ الأيام'))return;
+ historicBusy=true;$('historicSave').disabled=true;$('historicCancel').disabled=true;$('historicClose').disabled=true;
+ $('historicProgress').textContent='جاري التحقق من صلاحية المشرف وقراءة السجلات القديمة...';
+ let saved=0,skipped=0,completed=0;
+ try{
+  const profile=await apiGet('users/'+safelyKey(session.code));
+  const allowed=new Set(normalAssigned(profile));
+  if(!validProfile(profile)||ids.some(id=>!allowed.has(id)))throw new Error('PERMISSION_CHANGED');
+  const freshClasses=await Promise.all(ids.map(id=>apiGet('classes/'+safelyKey(id))));
+  if(freshClasses.some(c=>!c))throw new Error('CLASS_REMOVED');
+  // Recheck enrolment: never create attendance for students transferred out of a selected class.
+  const freshStudents=await apiGet('students');
+  const eligible=roster.filter(s=>freshStudents?.[s.code]&&String(freshStudents[s.code].classId)===String(s.classId)&&freshStudents[s.code].hidden!==true);
+  const excluded=roster.length-eligible.length;
+  if(!eligible.length)throw new Error('NO_ELIGIBLE_STUDENTS');
+  const allRecords=await mshParallel(eligible,6,async (s,index)=>{
+    const rows=await apiGet('attendance/'+safelyKey(s.code),{timeout:22000});
+    if(index%10===0)$('historicProgress').textContent=`جاري فحص السجلات: ${Math.min(eligible.length,index+1)} / ${eligible.length} طالب...`;
+    return rows&&typeof rows==='object'?rows:{};
+  });
+  const items=[],sessions=new Map(),now=Date.now();
+  eligible.forEach((student,index)=>{
+    const existing=allRecords[index];
+    for(const day of days){
+      if(Object.prototype.hasOwnProperty.call(existing,day)&&existing[day]!==null){skipped++;continue}
+      const key=`attendance/${student.code}/${day}`;
+      items.push([key,historicRecord(student,student.classId,day,now)]);
+      const skey=student.classId+'|'+day;
+      sessions.set(skey,(sessions.get(skey)||0)+1);
+    }
+  });
+  $('historicProgress').textContent=`تم التدقيق: ${items.length} سجل جديد • ${skipped} سجل سابق محفوظ • ${excluded} طالب لم يعد في الصف`;
+  if(!items.length){notify('كل الأيام المختارة محفوظة سابقًا. لم يتم تغيير أي سجل.');return}
+  // Keep writes bounded: report partial progress if any batch fails; no overwrite of known records.
+  const sessionEntries=Array.from(sessions,([k,count])=>{const [id,date]=k.split('|');return [`attendanceSessions/${date}/historic_${now}_${encodeURIComponent(id).replace(/%/g,'_')}`,
+    {date,recordedAt:now,recordedBy:session.code,recordedByName:supervisor.name||'',classId:id,className:className(id),totalStudents:availableStudents(id).length,presentCount:count,absentCount:0,excusedCount:0,lateCount:0,escapeCount:0,method:'historical_bulk_present',historical:true,note:'إكمال الأيام السابقة للطلاب الذين ليس لديهم سجل محفوظ'}]});
+  // Write session markers only after all attendance chunks succeed.
+  const chunkSize=180;
+  for(let pos=0;pos<items.length;pos+=chunkSize){
+   const chunk=Object.fromEntries(items.slice(pos,pos+chunkSize));
+   await apiPatchRoot(chunk);saved+=Math.min(chunkSize,items.length-pos);completed++;
+   $('historicProgress').textContent=`تم حفظ ${saved} من ${items.length} سجل...`;
+  }
+  for(let pos=0;pos<sessionEntries.length;pos+=chunkSize){await apiPatchRoot(Object.fromEntries(sessionEntries.slice(pos,pos+chunkSize)))}
+  $('historicProgress').textContent=`تم الحفظ بنجاح: ${saved} سجل جديد. بقي ${skipped} سجل سابق كما هو، واستُبعد ${excluded} طالب غير مسجل حاليًا.`;
+  notify(`تم الحفظ بنجاح: ${saved} سجل حضور جديد. تم الإبقاء على ${skipped} سجل سابق.`);
+  setBanner(`تم حفظ الأيام المحددة بنجاح: ${saved} سجل جديد، مع الحفاظ على السجلات السابقة.`,'success');
+  rankingCounts=null;
+  // Reload displayed day from the official database rather than retaining a stale local default.
+  if(currentClass&&ids.includes(currentClass)&&days.includes(currentDate))await loadDay();
+ }catch(e){console.error('HISTORIC_SAVE_FAILED',e);
+  const msg=e.message==='PERMISSION_CHANGED'?'تم تغيير صلاحيات المشرف، ولم تكتمل العملية.':e.message==='NO_ELIGIBLE_STUDENTS'?'لا يوجد طلاب مسجلون حاليًا في هذه الصفوف.':`تعذر إكمال الحفظ. تم حفظ ${saved} سجل فعليًا؛ راجع السجلات وأعد المحاولة للمتبقي فقط.`;
+  $('historicProgress').textContent=msg;notify(msg);setBanner(msg,'error');
+ }finally{historicBusy=false;$('historicSave').disabled=false;$('historicCancel').disabled=false;$('historicClose').disabled=false}
+});
+/* Historical ranking: count each saved student-day once and sort by frequency. */
+function rankingSelectedStudents(){const id=$('rankingClass').value;return students.filter(s=>assignedIds.includes(String(s.classId))&&(id==='all'||String(s.classId)===id)&&s.hidden!==true)}
+function renderRankings(){
+ const container=$('rankingResults');
+ if(!rankingCounts){container.innerHTML='<div class="msh-empty-small">اضغط «تحديث النتائج» لقراءة السجلات المحفوظة.</div>';return}
+ const active=new Set(rankingSelectedStudents().map(x=>x.code));
+ const matches=rankingCounts.filter(x=>active.has(x.student.code)&&x.counts[rankingType]>0).sort((a,b)=>b.counts[rankingType]-a.counts[rankingType]||String(a.student.name||'').localeCompare(String(b.student.name||''),'ar'));
+ container.innerHTML=matches.length?matches.map((entry,index)=>`<div class="msh-ranking-row"><div><strong>${index+1}. ${esc(entry.student.name||'بدون اسم')}</strong><small>${esc(className(entry.student.classId))} • ${esc(entry.student.code)}</small></div><span class="msh-ranking-count" title="${esc(LABELS[rankingType])}">${entry.counts[rankingType]}</span></div>`).join(''):'<div class="msh-empty-small">لا توجد حالات محفوظة من هذا النوع ضمن الصف المحدد.</div>';
+ $('rankingProgress').textContent=`${matches.length} طالب لديه حالة ${LABELS[rankingType]} محفوظة.`;
+}
+$('rankingBtn').addEventListener('click',()=>{
+ if(!assignedIds.length){notify('لا توجد صفوف مكلّف بها المشرف');return}
+ $('rankingClass').innerHTML='<option value="all">جميع صفوفي</option>'+assignedIds.filter(id=>classes[id]).map(id=>`<option value="${esc(id)}">${esc(className(id))}</option>`).join('');
+ $('rankingClass').value='all';rankingType='absent';rankingCounts=null;rankingRun++;
+ $('rankingTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.ranking===rankingType));
+ $('rankingProgress').textContent='';renderRankings();mshOpenDialog('rankingOverlay');
+ loadRankings();
+});
+async function loadRankings(){
+ if(rankingBusy)return;
+ if(!navigator.onLine){notify('يجب الاتصال بالإنترنت لجلب إحصاءات الأيام المحفوظة');return}
+ if(!onlineVerified){notify('حدّث البيانات عبر الإنترنت أولًا');return}
+ const token=++rankingRun;rankingBusy=true;$('rankingReload').disabled=true;
+ $('rankingProgress').textContent='جاري قراءة سجلات الحضور المحفوظة...';
+ try{
+  const all=students.filter(s=>assignedIds.includes(String(s.classId))&&s.hidden!==true);
+  const results=await mshParallel(all,7,async (student,index)=>{
+   const records=await apiGet('attendance/'+safelyKey(student.code),{timeout:22000});
+   const counts={absent:0,late:0,excused:0,escape:0};
+   if(records&&typeof records==='object')for(const [date,record] of Object.entries(records)){
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!record||typeof record!=='object')continue;
+    const st=makeStatus(record);if(Object.prototype.hasOwnProperty.call(counts,st))counts[st]++;
+   }
+   if(index%25===0&&token===rankingRun)$('rankingProgress').textContent=`جاري قراءة السجلات: ${Math.min(index+1,all.length)} / ${all.length}`;
+   return {student,counts};
+  });
+  if(token!==rankingRun)return;
+  rankingCounts=results;renderRankings();
+ }catch(e){console.error('RANKING_READ_FAILED',e);if(token===rankingRun){rankingCounts=null;$('rankingResults').innerHTML='<div class="msh-empty-small">تعذر قراءة بعض السجلات. لم تُعرض نتائج ناقصة؛ أعد المحاولة.</div>';$('rankingProgress').textContent='تعذر إكمال قراءة الإحصاءات.';notify('تعذر إكمال قراءة سجلات الطلاب')}}
+ finally{rankingBusy=false;$('rankingReload').disabled=false;if(token!==rankingRun&&!$('rankingOverlay').classList.contains('hidden'))loadRankings()}
+}
+$('rankingClass').addEventListener('change',renderRankings);
+$('rankingTabs').addEventListener('click',e=>{const btn=e.target.closest('[data-ranking]');if(!btn)return;rankingType=btn.dataset.ranking;$('rankingTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));renderRankings()});
+$('rankingReload').addEventListener('click',()=>{rankingCounts=null;loadRankings()});
+function rankingClose(){rankingRun++;mshCloseDialog('rankingOverlay')}
+$('rankingClose').addEventListener('click',rankingClose);
+$('rankingDismiss').addEventListener('click',rankingClose);
+
+$('refreshBtn').onclick=async()=>{if(!navigator.onLine){notify('لا يوجد اتصال بالإنترنت الآن.');return}if(!session.code){location.replace('index.html');return}if(dirty&&!await mshAskConfirm('لديك تعديلات غير محفوظة على الخادم. هل تريد تحديث بيانات الطلاب والصفوف؟ ستبقى مسودتك المحلية.','تحديث البيانات','نعم، تحديث'))return;try{setLoading('جاري تحديث الطلاب والصفوف...');await loadOnline();buildClasses();if(currentClass&&!assignedIds.includes(currentClass)){currentClass='';$('dateCard').classList.add('hidden');$('studentsCard').classList.add('hidden')}else if(currentClass)await loadDay();stopLoading();notify('تم تحديث البيانات بنجاح')}catch(e){stopLoading();console.error('REFRESH_FAILED',e);notify('تعذر تحديث البيانات؛ بقيت النسخة المحلية محفوظة')}};
+$('logoutBtn').onclick=async()=>{
+ if(dirty&&!await mshAskConfirm('توجد تعديلات لم تُحفظ على الخادم، وستبقى مسودة على هذا الجهاز. هل تريد تسجيل الخروج؟','تسجيل الخروج','نعم، خروج'))return;
  // إزالة الجلسة المحفوظة ومنع الدخول التلقائي بعد تسجيل الخروج.
  for(const key of ['tahadi_session','tahadi_code','tahadi_role']){try{sessionStorage.removeItem(key)}catch(_){}}
  try{localStorage.removeItem('tahadi_remembered_login')}catch(_){}
