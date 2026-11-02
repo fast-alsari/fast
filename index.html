@@ -2398,42 +2398,12 @@ function cleanRole(value){
 ========================================================= */
 
 const ALLOWED_ROLES = [
-
-    /* الإدارة */
-
-    "admin",
-    "administrator",
-    "add",
-
-
-    /* الطالب */
-
-    "student",
-    "st",
-
-
-    /* الأستاذ */
-
-    "teacher",
-    "th",
-
-
-    /* المحاسب */
-
-    "accountant",
-    "accounting",
-    "accountant_user",
-    "mn",
-
-
-    /* مشرف الحضور */
-
-    "attendance",
-    "attendance_supervisor",
-    "attendance_supervisor_user",
-    "supervisor",
-    "msh"
-
+    "admin","administrator","add",
+    "student","st",
+    "teacher","th",
+    "accountant","accounting","accountant_user","mn",
+    "attendance","attendance_supervisor","attendance_supervisor_user","supervisor","msh",
+    "md","director"
 ];
 
 
@@ -2833,7 +2803,7 @@ function isAccountDisabled(user){
    VALIDATE USER
 ========================================================= */
 
-function validateUser(user){
+function validateUser(user,code){
 
     /*
         المستخدم غير موجود.
@@ -2934,9 +2904,9 @@ function validateUser(user){
     }
 
 
-    /*
-        كل شيء صحيح.
-    */
+    if((role==="md"||role==="director")&&!/^MD[A-Z0-9]+$/.test(cleanCode(code))){
+        return {valid:false,reason:"INVALID_DIRECTOR_CODE"};
+    }
 
     return {
 
@@ -3218,95 +3188,27 @@ function clearSavedLogin(){
 ========================================================= */
 
 function getRoleRoute(role){
-
-    const value =
-        cleanRole(
-            role
-        );
-
-
-    const routes = {
-
-
-        /* ===============================
-           الإدارة
-        =============================== */
-
-        admin:
-            "add.html",
-
-        administrator:
-            "add.html",
-
-        add:
-            "add.html",
-
-
-        /* ===============================
-           الطالب
-        =============================== */
-
-        student:
-            "st.html",
-
-        st:
-            "st.html",
-
-
-        /* ===============================
-           الأستاذ
-        =============================== */
-
-        teacher:
-            "th.html",
-
-        th:
-            "th.html",
-
-
-        /* ===============================
-           المحاسب
-        =============================== */
-
-        accountant:
-            "mn.html",
-
-        accounting:
-            "mn.html",
-
-        accountant_user:
-            "mn.html",
-
-        mn:
-            "mn.html",
-
-
-        /* ===============================
-           مشرف الحضور
-        =============================== */
-
-        attendance:
-            "msh.html",
-
-        attendance_supervisor:
-            "msh.html",
-
-        attendance_supervisor_user:
-            "msh.html",
-
-        supervisor:
-            "msh.html",
-
-        msh:
-            "msh.html"
-
+    const routes={
+        admin:"add.html",
+        administrator:"add.html",
+        add:"add.html",
+        student:"st.html",
+        st:"st.html",
+        teacher:"th.html",
+        th:"th.html",
+        accountant:"mn.html",
+        accounting:"mn.html",
+        accountant_user:"mn.html",
+        mn:"mn.html",
+        attendance:"msh.html",
+        attendance_supervisor:"msh.html",
+        attendance_supervisor_user:"msh.html",
+        supervisor:"msh.html",
+        msh:"msh.html",
+        md:"md.html",
+        director:"md.html"
     };
-
-
-    return routes[
-        value
-    ] || null;
-
+    return routes[cleanRole(role)]||null;
 }
 
 
@@ -3446,9 +3348,7 @@ async function login(){
         ================================================= */
 
         const check =
-            validateUser(
-                user
-            );
+            validateUser(user,code);
 
 
         /*
@@ -3567,6 +3467,13 @@ async function login(){
         /*
             الدور غير معروف.
         */
+
+        if(!check.valid&&check.reason==="INVALID_DIRECTOR_CODE"){
+            const remembered=getRememberedLogin();
+            if(remembered&&remembered.code===code)clearSavedLogin();
+            showMessage("كود الحساب غير صحيح");
+            return false;
+        }
 
         if(
             !check.valid &&
@@ -3837,9 +3744,7 @@ async function autoLogin(){
         ================================================= */
 
         const check =
-            validateUser(
-                user
-            );
+            validateUser(user,code);
 
 
         /*
@@ -3935,6 +3840,13 @@ async function autoLogin(){
         /*
             role غير معروف.
         */
+
+        if(!check.valid&&check.reason==="INVALID_DIRECTOR_CODE"){
+            clearSavedLogin();
+            showLoginPage();
+            showMessage("كود الحساب غير صحيح");
+            return false;
+        }
 
         if(
             !check.valid &&
