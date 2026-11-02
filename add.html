@@ -198,6 +198,32 @@
 .db-backup-file-label input{width:100%;margin-top:8px;font-size:10px}
 @media(max-width:850px){.db-backup-actions{grid-template-columns:1fr}}
 
+
+/* لوحة إدارة المديرين */
+.director-panel .panel-head{background:linear-gradient(135deg,#f6faff,#fff)}
+.director-form{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:end;gap:12px;padding:15px;border:1px solid #dbe7f6;border-radius:15px;background:#f8fbff}
+.director-form .field label{font-size:10px}
+.director-code-input{display:flex;align-items:center;gap:7px}
+.director-code-input input{min-width:0;flex:1;text-align:center;font-weight:900;letter-spacing:1px;text-transform:uppercase}
+.director-code-input button{flex:none;min-height:46px}
+.director-code-hint{display:block;margin-top:5px;color:var(--muted);font-size:8px;line-height:1.7}
+.director-form-action{grid-column:1/-1;display:flex;justify-content:flex-end}
+.director-form-action button{min-width:185px;min-height:45px;font-size:10px}
+.director-separator{height:1px;background:var(--border);margin:20px 0}
+.director-list-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+.director-list-head h4{font-size:12px;font-weight:900}
+.director-list-head p{font-size:9px;color:var(--muted);margin-top:5px}
+.director-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:9px}
+.director-account{display:flex;align-items:center;justify-content:space-between;gap:10px;border:1px solid var(--border);border-radius:13px;padding:12px;background:#fff}
+.director-account-main{min-width:0}
+.director-account-main strong{display:block;font-size:11px;overflow-wrap:anywhere}
+.director-account-main .code{font-size:11px;margin-top:5px}
+.director-account-main small{display:block;font-size:8px;color:var(--muted);margin-top:6px}
+.director-account-actions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
+.director-account-actions button{min-height:31px;padding:0 9px}
+@media(max-width:760px){.director-form{grid-template-columns:1fr}.director-form-action button{width:100%}}
+@media(max-width:410px){.director-code-input{flex-wrap:wrap}.director-code-input button{width:100%}.director-account{align-items:flex-start;flex-direction:column}.director-account-actions{width:100%;justify-content:flex-start}}
+
 </style>
 </head>
 <body>
@@ -250,7 +276,7 @@
 
 <section class="panel"><div class="panel-head"><div><h3>الصفوف</h3><p>صفوف البنين تظهر يميناً والبنات يساراً، والصفوف المختلطة تظهر بقسم مستقل. لكل صف تحدد ابتدائية أو ثانوية وجنس الصف.</p></div><div class="bulk-subjects-toolbar"><button type="button" class="btn btn-v" onclick="openBulkSubjectsModal()">إنشاء مواد</button><button class="btn btn-p" onclick="openClassModal()">إنشاء صف</button></div></div><div class="panel-body"><div id="classesGrid" class="classes"></div></div></section>
 
-<nav class="tabs"><button class="tab active" data-target="studentsSection">الطلاب</button><button class="tab" data-target="addStudentSection">إضافة طالب</button><button class="tab" data-target="teachersSection">الأساتذة</button><button class="tab" data-target="addTeacherSection">إضافة أستاذ</button><button class="tab" data-target="staffSection">الحسابات والمشرفون</button><button class="tab" data-target="addStaffSection">إنشاء حساب إداري</button><button class="tab" data-target="violationsSection">المخالفات السلوكية</button><button class="tab" data-target="objectionsSection">اعتراضات الدرجات</button></nav>
+<nav class="tabs"><button class="tab active" data-target="studentsSection">الطلاب</button><button class="tab" data-target="addStudentSection">إضافة طالب</button><button class="tab" data-target="teachersSection">الأساتذة</button><button class="tab" data-target="addTeacherSection">إضافة أستاذ</button><button class="tab" data-target="staffSection">الحسابات والمشرفون</button><button class="tab" data-target="addStaffSection">إنشاء حساب إداري</button><button class="tab" data-target="directorsSection">إدارة المديرين</button><button class="tab" data-target="violationsSection">المخالفات السلوكية</button><button class="tab" data-target="objectionsSection">اعتراضات الدرجات</button></nav>
 
 <section id="studentsSection" class="section active"><div class="panel">
 <div class="panel-head"><div><h3 id="studentsTitle">جميع الطلاب</h3><p>اضغط على اسم الطالب أو زر بيانات لفتح ملفه وتعديل بياناته وصورته وكوده.</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="classCodesChangeBtn" class="btn btn-v hidden" onclick="changeCodesForClass()">تغيير أكواد الصف بالكامل</button><button class="btn btn-wa" type="button" onclick="openBulkMessageModal('all')">واتساب جميع الطلاب</button><button class="btn btn-soft" onclick="showAllStudents()">عرض الجميع</button></div></div>
@@ -276,6 +302,21 @@
 <section id="staffSection" class="section"><div class="panel"><div class="panel-head"><div><h3>المحاسبون ومشرفو الحضور والغياب</h3><p>إدارة الحسابات الإدارية.</p></div><button class="btn btn-p" onclick="openTab('addStaffSection')">إنشاء حساب</button></div><div class="panel-body"><div class="toolbar"><input id="staffSearch" type="search" placeholder="بحث بالاسم أو الكود"><select id="staffRoleFilter"><option value="">جميع الأدوار</option><option value="accountant">المحاسب</option><option value="attendance">مشرف الحضور والغياب</option></select><select id="staffStatusFilter"><option value="">جميع الحسابات</option><option value="active">فعال</option><option value="inactive">غير فعال</option></select></div><div class="table-wrap"><table><thead><tr><th>الكود</th><th>الاسم</th><th>الدور</th><th>الصفوف المرتبطة</th><th>الحساب</th><th>الإجراءات</th></tr></thead><tbody id="staffBody"></tbody></table></div><div id="staffEmpty" class="empty hidden">لا توجد حسابات.</div></div></div></section>
 
 <section id="addStaffSection" class="section"><div class="panel"><div class="panel-head"><div><h3>إنشاء حساب إداري</h3><p>إنشاء حساب محاسب أو مشرف حضور وغياب.</p></div></div><div class="panel-body"><div id="staffMessage" class="message"></div><form id="staffForm" class="form-grid"><div class="field full"><label>الاسم الكامل</label><input id="staffName" required></div><div class="field full"><label>نوع الحساب</label><select id="staffRole" required><option value="">اختر نوع الحساب</option><option value="accountant">محاسب</option><option value="attendance">مشرف حضور وغياب</option></select></div><div class="field full"><label>الصفوف المشرف عليها أو المرتبطة بالحساب</label><div class="assign-class-tools"><button class="btn btn-soft" type="button" onclick="selectAssignedClasses('staffClasses',true)">تحديد الجميع</button><button class="btn btn-soft" type="button" onclick="selectAssignedClasses('staffClasses',false)">إلغاء التحديد</button></div><div id="staffClasses" class="assign-class-list"></div><span class="assign-class-note">الأزرق للبنين، الوردي للبنات، والبنفسجي للمختلط. يُحفظ اختيار الصفوف ضمن الحساب.</span></div><div class="field full"><div class="code-box"><small>كود الحساب</small><strong id="staffCodePreview">لم يتم التوليد</strong><button type="button" class="btn btn-soft" onclick="previewStaffCode()">توليد الكود</button></div></div><div class="form-actions"><button id="saveStaffBtn" type="submit" class="btn btn-p">إنشاء الحساب</button></div></form></div></div></section>
+
+<section id="directorsSection" class="section"><div class="panel director-panel">
+ <div class="panel-head"><div><h3>إدارة المديرين</h3><p>إنشاء حساب مدير وتحديد اسمه وكوده ومراجعة الحسابات الموجودة.</p></div><span class="badge blue">MD</span></div>
+ <div class="panel-body">
+  <div id="directorMessage" class="message" role="status" aria-live="polite"></div>
+  <form id="directorForm" class="director-form">
+   <div class="field"><label for="directorName">اسم المدير الكامل</label><input id="directorName" type="text" maxlength="150" autocomplete="off" placeholder="اكتب اسم المدير" required></div>
+   <div class="field"><label for="directorCode">كود المدير</label><div class="director-code-input"><input id="directorCode" type="text" maxlength="12" autocomplete="off" autocapitalize="characters" spellcheck="false" dir="ltr" placeholder="MD123456" required><button type="button" class="btn btn-soft" id="directorGenerateBtn">توليد كود</button></div><small class="director-code-hint">يبدأ بـ MD متبوعة بـ 6 أرقام. يمكنك كتابة الكود أو توليده.</small></div>
+   <div class="director-form-action"><button id="directorCreateBtn" type="submit" class="btn btn-p">إنشاء المدير</button></div>
+  </form>
+  <div class="director-separator"></div>
+  <div class="director-list-head"><div><h4>المديرون المسجلون</h4><p>يمكن نسخ الكود أو حذف الحساب بعد التأكيد.</p></div><button type="button" class="btn btn-soft" id="directorRefreshBtn">تحديث القائمة</button></div>
+  <div id="directorList" class="director-list"><div class="empty">جاري عرض الحسابات...</div></div>
+ </div>
+</div></section>
 
 <section id="violationsSection" class="section"><div class="panel"><div class="panel-head"><div><h3>المخالفات السلوكية في الدردشة</h3><p>الرسائل التي حظر النظام الطلاب بسببها.</p></div></div><div class="panel-body"><div class="toolbar"><input id="violationSearch" type="search" placeholder="بحث باسم الطالب أو الكود أو الرسالة"><select id="violationClassFilter"><option value="">جميع الصفوف</option></select><select id="violationStatusFilter"><option value="">جميع الحالات</option><option value="blocked">محظور حالياً</option><option value="resolved">تم رفع الحظر</option></select></div><div id="violationsList"></div><div id="violationsEmpty" class="empty hidden">لا توجد مخالفات مسجلة.</div></div></div></section>
 
@@ -1367,7 +1408,97 @@ const doPrint=()=>{try{frame.contentWindow.focus();frame.contentWindow.print();}
 async function printStudentBeforeSave(){try{await printStudentForm(await studentDraft());}catch(error){console.error(error);$("pdfHost").innerHTML="";toast(error.message||"تعذر تجهيز الطباعة");}}
 async function printSavedStudent(code){try{const student=await freshStudent(code);if(!student)throw new Error("بيانات الطالب غير موجودة");const c=DATA.classes[student.classId];await printStudentForm({...student,className:c?.name||student.className||"—"});}catch(error){console.error(error);$("pdfHost").innerHTML="";toast(error.message||"تعذر تجهيز الطباعة");}}
 
-function renderAll(){renderStats();renderClasses();fillControls();fillStudentColumnFilters();renderStudents();renderTeachers();renderStaff();renderViolations();renderAdminObjections();updateBulk();}
+function renderAll(){renderStats();renderClasses();fillControls();fillStudentColumnFilters();renderStudents();renderTeachers();renderStaff();renderDirectors();renderViolations();renderAdminObjections();updateBulk();}
+
+const DIRECTOR_CODE_PATTERN=/^MD[0-9]{6}$/;
+let directorBusy=false;
+function directorEntries(){
+ return Object.entries(DATA.users||{}).filter(([code,user])=>user&&["director","md"].includes(norm(user.role)))
+ .map(([code,user])=>({code,name:String(user.name||""),active:user.active!==false}))
+ .sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+}
+function renderDirectors(){
+ const host=$("directorList");if(!host)return;
+ const entries=directorEntries();
+ host.innerHTML=entries.length?entries.map(user=>`<div class="director-account"><div class="director-account-main"><strong>${esc(user.name||"بدون اسم")}</strong><span class="code" dir="ltr">${esc(user.code)}</span><small>${user.active?"الحساب فعال":"الحساب معطل"}</small></div><div class="director-account-actions"><button type="button" class="mini btn-soft" data-director-copy="${esc(user.code)}">نسخ الكود</button><button type="button" class="mini btn-r" data-director-delete="${esc(user.code)}">حذف</button></div></div>`).join(""):'<div class="empty">لا يوجد مديرون مسجلون.</div>';
+}
+function randomDirectorCode(){
+ const numbers=new Uint32Array(6);
+ if(window.crypto&&window.crypto.getRandomValues)window.crypto.getRandomValues(numbers);
+ else for(let i=0;i<6;i++)numbers[i]=Math.floor(Math.random()*4294967296);
+ return "MD"+Array.from(numbers,n=>String(n%10)).join("");
+}
+async function makeUniqueDirectorCode(){
+ for(let i=0;i<100;i++){
+  const candidate=randomDirectorCode();
+  if(DATA.users[candidate])continue;
+  const existing=await dbGetFresh(`users/${encodeURIComponent(candidate)}`);
+  if(!existing)return candidate;
+ }
+ throw new Error("تعذر توليد كود غير مستخدم؛ حاول مرة أخرى.");
+}
+$("directorGenerateBtn").addEventListener("click",async()=>{
+ if(directorBusy)return;
+ const button=$("directorGenerateBtn");button.disabled=true;
+ try{$("directorCode").value=await makeUniqueDirectorCode();hideMessage("directorMessage");}
+ catch(error){console.error("DIRECTOR_CODE_GENERATE",error);message("directorMessage","تعذر توليد الكود. تحقق من الاتصال وحاول مجددًا.");}
+ finally{button.disabled=false;}
+});
+$("directorCode").addEventListener("input",event=>{event.target.value=event.target.value.toUpperCase().replace(/[^MD0-9]/g,"").slice(0,8)});
+$("directorForm").addEventListener("submit",async event=>{
+ event.preventDefault();if(directorBusy)return;
+ hideMessage("directorMessage");
+ const name=$("directorName").value.trim().replace(/\s+/g," ");
+ const code=$("directorCode").value.trim().toUpperCase();
+ if(!name){message("directorMessage","اكتب اسم المدير الكامل.");return;}
+ if(!DIRECTOR_CODE_PATTERN.test(code)){message("directorMessage","صيغة الكود غير صحيحة. يجب أن يبدأ بـ MD وبعدها 6 أرقام.");return;}
+ directorBusy=true;const button=$("directorCreateBtn");button.disabled=true;button.textContent="جاري الإنشاء...";
+ try{
+  if(!await verifyAdmin())return;
+  const existing=await dbGetFresh(`users/${encodeURIComponent(code)}`);
+  if(existing){message("directorMessage","هذا الكود مستخدم بالفعل. اختر كودًا آخر أو اضغط توليد كود.");return;}
+  const now=Date.now();
+  const director={code,name,role:"director",classIds:[],active:true,createdAt:now,createdBy:adminCode()};
+  await dbPut(`users/${encodeURIComponent(code)}`,director);
+  DATA.users[code]=director;renderDirectors();renderStaff();
+  $("directorName").value="";$("directorCode").value="";
+  message("directorMessage",`تم إنشاء حساب المدير ${name} بنجاح. الكود: ${code}`,"success");
+  toast("تم إنشاء المدير بنجاح");
+ }catch(error){console.error("DIRECTOR_CREATE",error);message("directorMessage","تعذر إنشاء المدير. راجع الاتصال وصلاحيات حفظ الحسابات.");}
+ finally{directorBusy=false;button.disabled=false;button.textContent="إنشاء المدير";}
+});
+$("directorList").addEventListener("click",event=>{
+ const copy=event.target.closest("[data-director-copy]");
+ if(copy){copyCode(copy.dataset.directorCopy);return;}
+ const del=event.target.closest("[data-director-delete]");
+ if(!del||directorBusy)return;
+ const code=del.dataset.directorDelete,local=DATA.users[code];
+ if(!local||!["md","director"].includes(norm(local.role))){toast("الحساب غير موجود");return;}
+ confirmBox("حذف حساب المدير",`هل تريد حذف حساب ${local.name||code} نهائيًا؟ الكود ${code} سيتوقف عن تسجيل الدخول، ولن تُحذف بيانات الطلاب أو درجاتهم.`,async()=>{
+  if(directorBusy)return;
+  directorBusy=true;
+  try{
+   if(!await verifyAdmin())return;
+   const remote=await dbGetFresh(`users/${encodeURIComponent(code)}`);
+   if(!remote||!["md","director"].includes(norm(remote.role)))throw new Error("DIRECTOR_NOT_FOUND");
+   await dbDelete(`users/${encodeURIComponent(code)}`);
+   delete DATA.users[code];renderDirectors();renderStaff();
+   message("directorMessage",`تم حذف حساب المدير ${local.name||code} بنجاح.`,"success");toast("تم حذف حساب المدير");
+  }catch(error){console.error("DIRECTOR_DELETE",error);message("directorMessage","تعذر حذف حساب المدير. تأكد من الاتصال والصلاحيات وحاول مجددًا.");}
+  finally{directorBusy=false;}
+ });
+});
+$("directorRefreshBtn").addEventListener("click",async()=>{
+ if(directorBusy)return;const button=$("directorRefreshBtn");button.disabled=true;
+ try{
+  if(!await verifyAdmin())return;
+  const all=await dbGetFresh(PATH.users);
+  DATA.users=all||{};primeCollectionCache(PATH.users,DATA.users);
+  renderDirectors();renderStaff();toast("تم تحديث قائمة المديرين");
+ }catch(error){console.error("DIRECTOR_REFRESH",error);message("directorMessage","تعذر تحديث الحسابات. تأكد من اتصالك بالإنترنت.");}
+ finally{button.disabled=false;}
+});
+
 window.addEventListener("offline",()=>toast("لا يوجد اتصال بالإنترنت"));
 window.addEventListener("online",async()=>{toast("تم استعادة الاتصال");try{await loadAll();}catch(error){console.error(error);}});
 window.addEventListener("load",async()=>{$("startDate").value=today();$("studentRoom").innerHTML=roomOptions();$("studentGenderDisplay").disabled=true;$("studentGenderDisplay").value="";$("studentNameLabel").textContent="اسم الطالب";try{if(!await loadAll({progressive:true,verify:true}))return;await loadAdminObjections();}catch(error){console.error(error);toast("تعذر تحميل بيانات الإدارة");}finally{$("loading").classList.add("hidden");}});
