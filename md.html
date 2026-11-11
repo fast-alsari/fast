@@ -34,25 +34,92 @@
 .eval-manager-grade.excellent{color:#08693f;background:#def8e8}.eval-manager-grade.very_good{color:#075daa;background:#e0f2ff}.eval-manager-grade.good{color:#6740a7;background:#eee6ff}.eval-manager-grade.acceptable{color:#9a5700;background:#fff0d9}.eval-manager-grade.weak{color:#b21e32;background:#ffe2e3}
 .eval-summary{font-weight:900;font-size:10px;color:#47607b;margin-top:9px}
 @media(max-width:550px){.eval-manager-buttons{flex-direction:column}.eval-manager-buttons .button{width:100%}}
+
+/* التقييمات والمتابعة */
+.eval-manager-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px}
+.eval-manager-inputs label{display:block;color:#344054;font-size:11px;font-weight:900;margin-bottom:5px}
+.eval-manager-inputs input,.eval-manager-inputs textarea{width:100%;padding:11px;border:1px solid #cfdded;border-radius:11px;background:#fff;color:#17283f;outline:none;font:inherit;font-size:12px;resize:vertical}
+.eval-manager-inputs textarea{min-height:84px}.eval-manager-inputs .whole{grid-column:1/-1}
+.eval-manager-tabs{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 8px}.eval-manager-tabs button{padding:10px 13px;border:1px solid #ccdbed;border-radius:10px;background:#f4f8fe;color:#0753ad;font-size:11px;font-weight:900}.eval-manager-tabs button.active{background:#075fcf;color:#fff}
+.eval-teacher-entry{padding:12px;border:1px solid #dde7f2;border-radius:13px;background:#fff;margin-top:7px}.eval-teacher-entry.complete{border-color:#bce5ce;background:#f4fcf7}.eval-teacher-entry.pending{border-color:#f1d6a9;background:#fffaf0}
+.eval-teacher-entry strong{font-size:12px}.eval-teacher-entry small{display:block;margin-top:5px;color:#617389;font-size:10px;line-height:1.8}.eval-teacher-entry .eval-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:9px}.eval-teacher-entry .eval-chips span{padding:5px 8px;border-radius:8px;background:#edf5ff;color:#0753ad;font-size:9px;font-weight:900}
+.eval-student-section{margin-top:13px;padding:13px;border:1px solid #dce8f4;border-radius:13px;background:#f7fbff}.eval-student-section h3{margin:0 0 5px;font-size:13px;color:#0753ad}.eval-student-section p{font-size:10px;line-height:1.7;color:#516882}
+.eval-student-table{width:100%;border-collapse:collapse;margin-top:9px}.eval-student-table th,.eval-student-table td{padding:9px 7px;border:1px solid #dce5ef;text-align:right;font-size:10px}.eval-student-table th{background:#eaf3ff}.eval-student-table tr:nth-child(even){background:#fff}
+.paper-evaluation-title{font-size:12px;font-weight:900;text-align:center;color:#0752ab;background:#eef5ff;padding:2mm;margin-top:2.5mm}.paper-evaluation-note{text-align:center;font-size:9px;color:#40566e;line-height:1.4;margin:1.3mm 0}
+.paper-eval-table{width:100%;border-collapse:collapse;table-layout:fixed}.paper-eval-table th,.paper-eval-table td{border:1px solid #9db4ce;padding:1mm;text-align:center;font-size:7.4px;font-weight:800}.paper-eval-table th{background:#eaf3ff;color:#064a9b}.paper-eval-table td:first-child{text-align:right}
+.paper.compact{padding-top:7mm}.paper.compact .paper-field{padding:.8mm 1.2mm}.paper.compact .paper-section-title{margin:2.5mm 0 1mm}.paper.compact .paper-grades td,.paper.compact .paper-grades th{padding:.8mm;font-size:7px}.paper.compact .paper-attendance{font-size:7.5px;line-height:1.55}
+@media(max-width:650px){.eval-manager-inputs{grid-template-columns:1fr}.eval-manager-inputs .whole{grid-column:auto}}
+
+.paper-eval-followup .paper-head{margin-bottom:4mm}
+.paper-eval-followup .paper-student-info{margin-bottom:3mm}
+@media print{
+ html,body:has(.paper-eval-followup){height:auto!important}
+ body.printing #paperHost:has(.paper-eval-followup){height:auto!important}
+ body.printing #paperHost .paper{page-break-inside:avoid!important;break-inside:avoid!important}
+ body.printing #paperHost .paper:not(:last-child){page-break-after:always!important;break-after:page!important}
+}
+
+/* لوحة المدير: متابعة التقييم والبحث وملف الطالب */
+#rankingCard{display:none!important}
+#studentCard .profile-actions button:not(#printBtn){display:none!important}
+#studentCard .profile-actions{margin-top:13px}
+#studentCard .profile-actions #printBtn{width:100%;min-height:50px;font-size:13px}
+#studentCard .card-title{margin-bottom:12px}
+#evaluationDirectorCard{border-color:#cadff5}
+#searchCard{border-color:#cadef2}
+#studentOverallLevel{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin:12px 0 3px;padding:11px 13px;border-radius:12px;background:#edf5ff;color:#084d9e;font-size:12px;font-weight:900}
+#studentOverallLevel .level-name{display:inline-flex;padding:6px 10px;border-radius:999px;background:#fff;color:#0753ad}
+#studentOverallLevel.excellent{background:#def8e8;color:#08693f}
+#studentOverallLevel.very_good{background:#e0f2ff;color:#075daa}
+#studentOverallLevel.good{background:#eee6ff;color:#6740a7}
+#studentOverallLevel.acceptable{background:#fff0d9;color:#9a5700}
+#studentOverallLevel.weak{background:#ffe2e3;color:#b21e32}
+.guardian-note-intro{font-size:11px;color:#52657b;line-height:1.85;margin:-5px 0 10px}
+.guardian-note-input{display:block;width:100%;min-height:105px;resize:vertical;padding:13px 14px;border:1.5px solid #cedeef;border-radius:12px;outline:none;background:#fbfdff;color:#182f4e;font:13px/1.8 Tahoma,Arial,sans-serif}
+.guardian-note-input:focus{border-color:#075fcf;box-shadow:0 0 0 3px #075fcf17}
+.guardian-note-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-top:9px}
+.guardian-note-actions .button{min-width:145px}
+.guardian-note-state{font-size:10px;font-weight:800;color:#63748b;line-height:1.75}
+.paper-guardian-notes{margin-top:2.4mm;padding:2.2mm 2.7mm;border:1px solid #bed3e8;border-radius:2mm;background:#f8fbff;font-size:8.5px;line-height:1.65;white-space:pre-wrap;overflow-wrap:anywhere;color:#2b435d}
+.paper-guardian-notes strong{display:block;color:#0752ab;margin-bottom:1mm;font-size:9px}
+.paper-level{margin:2mm 0 1mm;text-align:center;font-size:9px;font-weight:900;color:#0752ab;background:#edf5ff;padding:1.6mm;border-radius:2mm}
+.paper.compact .paper-guardian-notes{font-size:8px;padding:1.4mm 2mm}
+@media(max-width:700px){#studentOverallLevel{font-size:11px}.guardian-note-actions .button{width:100%}}
+
 </style>
 </head>
 <body>
 <header class="top"><div class="top-in"><div class="brand"><img src="logo.png" alt="شعار المدرسة"><div><strong>مدير ثانوية التحدي الأهلية المختلطة</strong><small>قسم الحوكمة | متابعة الطلبة اليومية</small></div></div><button class="button outline" id="logoutBtn" type="button">تسجيل الخروج</button></div></header>
 <main class="main">
-<section class="hero"><h1>لوحة المدير للمتابعة المدرسية</h1><p>بحث فوري عن الطلاب، اعتماد حالات اليوم، متابعة الغياب والدرجات، وطباعة الملف المدرسي لولي الأمر</p><div class="hero-meta"><span id="directorLabel">مدير ثانوية التحدي الأهلية المختلطة</span><span id="studentsCount">جاري تحميل الطلاب...</span><span id="dateLabel">اليوم</span></div></section>
-<section class="card" id="searchCard"><div class="card-title"><div><h2>البحث عن الطالب</h2><p>اكتب أول حرف أو جزءًا من اسم الطالب أو كوده، وستظهر النتائج مباشرة.</p></div><button class="button soft" type="button" id="reloadBtn">تحديث البيانات</button></div><div class="search-wrap"><span class="search-icon" aria-hidden="true">⌕</span><input id="searchInput" type="search" autocomplete="off" placeholder="ابحث باسم الطالب أو كود الدخول..." aria-label="البحث عن الطالب"><button class="button primary" id="searchBtn" type="button">بحث</button></div><div id="searchResults" class="results" role="listbox" aria-label="نتائج البحث"></div><p class="counter" id="searchCounter">حمّل بيانات الطلبة للبحث</p><div class="status" id="statusMsg" role="status">جاري التحقق من دخول المدير وتحميل البيانات...</div></section>
-<section class="card hidden" id="studentCard"><div class="card-title"><div><h2>الملف المباشر للطالب</h2><p>درجات الأستاذ والحضور محفوظة في المنصة؛ تُقرأ من سجلات الطالب الرسمية.</p></div><button class="button soft" id="refreshStudentBtn" type="button">تحديث ملف الطالب</button></div><div class="profile"><div id="photoArea"></div><div><h2 class="student-heading" id="studentName">—</h2><div class="profile-meta" id="studentMeta"></div></div></div><div class="chips" id="studentTotals" style="margin-top:15px"></div><div class="profile-actions"><button class="button primary" id="printBtn" type="button">طباعة ورقة ولي الأمر A4</button><button class="button danger" id="absentBtn" type="button">غائب اليوم</button><button class="button soft" id="lateBtn" type="button">متأخر اليوم</button><button class="button soft" id="excusedBtn" type="button">مجاز اليوم</button><button class="button danger" id="escapeBtn" type="button">هروب اليوم</button><button class="button success" id="presentBtn" type="button">حاضر اليوم</button></div><p class="section-note" id="todayStatusText">اقرأ حالة اليوم ثم حدد الإجراء المطلوب.</p></section>
-<section class="card hidden" id="gradesCard"><div class="card-title"><div><h2>درجات الطالب الرسمية</h2><p>الفصل الأول، نصف السنة، الفصل الثاني، السعي السنوي، الامتحان النهائي، والدور الثاني</p></div></div><div id="gradeTableArea" class="grades-box"></div></section>
-<section class="card hidden" id="attendanceCard"><div class="card-title"><div><h2>تفاصيل الحضور والغياب</h2><p>السجل المشترك مع مشرف الحضور والغياب</p></div></div><div class="history-list" id="historyList"></div></section>
-<section class="card" id="rankingCard"><div class="card-title"><div><h2>التصفية حسب الأعلى</h2><p>اسم الطالب وعدد مرات الغياب أو التأخير أو الإجازة أو الهروب؛ من الأعلى إلى الأقل.</p></div><button class="button soft" id="loadRankingBtn" type="button">تحميل الإحصاءات</button></div><div class="rank-controls"><select id="rankingClass" aria-label="الصف للتصفية"><option value="">جميع الصفوف</option></select></div><div class="rank-tabs" id="rankTabs"><button type="button" data-rank="absent" class="active">الأعلى غيابًا</button><button type="button" data-rank="late">الأعلى تأخيرًا</button><button type="button" data-rank="excused">الأعلى إجازةً</button><button type="button" data-rank="escape">الأعلى هروبًا</button></div><div id="rankingResults"><p class="section-note">اضغط «تحميل الإحصاءات» لجلب البيانات الحديثة من سجل المشرفين.</p></div></section>
-
+<section class="hero"><h1>لوحة المدير للمتابعة المدرسية</h1><p>متابعة طلبات تقييم الأساتذة، البحث باسم الطالب، الاطلاع على مستواه ومعلوماته، وطباعة تقرير ولي الأمر</p><div class="hero-meta"><span id="directorLabel">مدير ثانوية التحدي الأهلية المختلطة</span><span id="studentsCount">جاري تحميل الطلاب...</span><span id="dateLabel">اليوم</span></div></section>
 <section class="card" id="evaluationDirectorCard">
- <div class="card-title"><div><h2>طلب تقييم الطلبة من الأساتذة</h2><p>يظهر زر «تقييم الطلبة» عند الأساتذة فقط عندما يكون الطلب مفعّلًا.</p></div></div>
- <div id="directorEvalState" class="eval-manager-state">جاري قراءة حالة طلب التقييم...</div>
- <div class="eval-manager-buttons"><button type="button" id="activateEvaluationBtn" class="button success">طلب تقييم الطلبة</button><button type="button" id="stopEvaluationBtn" class="button danger">إيقاف طلب التقييم</button><button type="button" id="refreshEvaluationBtn" class="button soft">تحديث التقييمات</button></div>
- <div id="directorEvalSummary" class="eval-summary">تظهر التقييمات المرسلة عند الضغط على تحديث التقييمات.</div>
+ <div class="card-title"><div><h2>طلب تقييم الطلبة من الأساتذة</h2><p>المدير يحدد عنوان الدورة ورسالة التكليف، ثم يتابع الأساتذة المرسلين وغير المرسلين ويعتمد التقييم النهائي.</p></div></div>
+ <div id="directorEvalState" class="eval-manager-state">جاري قراءة طلب التقييم...</div>
+ <div class="eval-manager-inputs" id="evalManagerInputs">
+  <div><label for="directorEvalTitle">عنوان التقييم الذي سيظهر في التقرير</label><input id="directorEvalTitle" maxlength="100" placeholder="مثال: تقييم الشهر الأول"></div>
+  <div><label for="directorEvalTargetCodes">أكواد الأساتذة المطلوبين (اختياري)</label><input id="directorEvalTargetCodes" maxlength="2000" placeholder="اتركه فارغًا لجميع الأساتذة، أو اكتب أكواد TH مفصولة بفواصل"></div>
+  <div class="whole"><label for="directorEvalMessage">الرسالة التي ستظهر للأساتذة</label><textarea id="directorEvalMessage" maxlength="1500" placeholder="مطلوب إكمال تقييم الطلبة لجميع صفوفك وموادك المكلّف بها..."></textarea></div>
+ </div>
+ <div class="eval-manager-buttons"><button type="button" id="activateEvaluationBtn" class="button success">إرسال طلب التقييم</button><button type="button" id="stopEvaluationBtn" class="button danger">إيقاف الطلب</button><button type="button" id="completeEvaluationBtn" class="button primary">اكتمل التقييم — إغلاق الدورة</button><button type="button" id="deliverEvaluationBtn" class="button soft">إرسال التقييم إلى حاسبة الأستاذ أحمد</button><button type="button" id="refreshEvaluationBtn" class="button outline">تحديث المتابعة</button></div>
+ <div id="directorEvalSummary" class="eval-summary">تظهر أسماء الأساتذة والمواد والصفوف عند تحديث المتابعة.</div>
+ <div class="eval-manager-tabs"><button class="active" type="button" id="evalCompletedTab">الأساتذة المرسلون (0)</button><button type="button" id="evalPendingTab">الأساتذة غير المرسلين (0)</button></div>
  <div id="directorEvalResults" class="eval-manager-results"></div>
 </section>
+<section class="card" id="searchCard"><div class="card-title"><div><h2>البحث عن الطالب</h2><p>اكتب اسم الطالب أو أول حرف منه لتظهر الأسماء مباشرة.</p></div><button class="button soft" type="button" id="reloadBtn">تحديث البيانات</button></div><div class="search-wrap"><span class="search-icon" aria-hidden="true">⌕</span><input id="searchInput" type="search" autocomplete="off" placeholder="اكتب اسم الطالب..." aria-label="البحث باسم الطالب"><button class="button primary" id="searchBtn" type="button">بحث</button></div><div id="searchResults" class="results" role="listbox" aria-label="نتائج البحث"></div><p class="counter" id="searchCounter">حمّل بيانات الطلبة للبحث</p><div class="status" id="statusMsg" role="status">جاري التحقق من دخول المدير وتحميل البيانات...</div></section>
+<section class="card hidden" id="studentCard"><div class="card-title"><div><h2>الملف المباشر للطالب</h2><p>معلومات الطالب، تقييم المواد، المستوى الدراسي والحضور والغياب، مع تقرير مباشر لولي الأمر.</p></div><button class="button soft" id="refreshStudentBtn" type="button">تحديث ملف الطالب</button></div><div class="profile"><div id="photoArea"></div><div><h2 class="student-heading" id="studentName">—</h2><div class="profile-meta" id="studentMeta"></div></div></div><div class="chips" id="studentTotals" style="margin-top:15px"></div><div id="studentOverallLevel">المستوى وفق تقييم المواد: <span class="level-name">جاري قراءة التقييم...</span></div><div class="profile-actions"><button class="button primary" id="printBtn" type="button">طباعة تقرير الطالب مباشرة A4</button><button class="button danger" id="absentBtn" type="button">غائب اليوم</button><button class="button soft" id="lateBtn" type="button">متأخر اليوم</button><button class="button soft" id="excusedBtn" type="button">مجاز اليوم</button><button class="button danger" id="escapeBtn" type="button">هروب اليوم</button><button class="button success" id="presentBtn" type="button">حاضر اليوم</button></div><p class="section-note" id="todayStatusText">تظهر حالة اليوم كما سُجلت في المنصة.</p></section>
+<section class="card hidden" id="studentRatingsCard"><div class="card-title"><div><h2>تقييم الطالب حسب المواد</h2><p id="studentRatingCycle">تقييم من قبل الإدارة</p></div></div><div id="studentRatingsBody" class="grades-box"></div></section>
+<section class="card hidden" id="gradesCard"><div class="card-title"><div><h2>درجات الطالب الرسمية</h2><p>الفصل الأول، نصف السنة، الفصل الثاني، السعي السنوي، الامتحان النهائي، والدور الثاني</p></div></div><div id="gradeTableArea" class="grades-box"></div></section>
+<section class="card hidden" id="attendanceCard"><div class="card-title"><div><h2>تفاصيل الحضور والغياب</h2><p>السجل المشترك مع مشرف الحضور والغياب</p></div></div><div class="history-list" id="historyList"></div></section>
+<section class="card hidden" id="guardianNotesCard">
+ <div class="card-title"><div><h2>ملاحظات ولي الأمر</h2><p>اكتب الملاحظات والتوجيهات التي تريد إظهارها لولي الأمر في تقرير الطالب المطبوع.</p></div></div>
+ <p class="guardian-note-intro">يمكنك حفظ الملاحظات في ملف الطالب، وتُدرج الكتابة الحالية في الطباعة المباشرة حتى قبل حفظها.</p>
+ <label for="guardianNoteInput" style="display:block;font-size:11px;font-weight:900;margin-bottom:7px">نص الملاحظات</label>
+ <textarea id="guardianNoteInput" class="guardian-note-input" maxlength="1200" placeholder="اكتب الملاحظات الموجّهة إلى ولي الأمر هنا..."></textarea>
+ <div class="guardian-note-actions"><span id="guardianNoteState" class="guardian-note-state">لم تُكتب ملاحظات بعد.</span><button class="button soft" id="saveGuardianNoteBtn" type="button">حفظ الملاحظات</button><button class="button primary" id="printDirectBottomBtn" type="button">طباعة مباشرة A4</button></div>
+</section>
+<section class="card hidden" id="rankingCard"><div class="card-title"><div><h2>التصفية حسب الأعلى</h2><p>اسم الطالب وعدد مرات الغياب أو التأخير أو الإجازة أو الهروب؛ من الأعلى إلى الأقل.</p></div><button class="button soft" id="loadRankingBtn" type="button">تحميل الإحصاءات</button></div><div class="rank-controls"><select id="rankingClass" aria-label="الصف للتصفية"><option value="">جميع الصفوف</option></select></div><div class="rank-tabs" id="rankTabs"><button type="button" data-rank="absent" class="active">الأعلى غيابًا</button><button type="button" data-rank="late">الأعلى تأخيرًا</button><button type="button" data-rank="excused">الأعلى إجازةً</button><button type="button" data-rank="escape">الأعلى هروبًا</button></div><div id="rankingResults"><p class="section-note">اضغط «تحميل الإحصاءات» لجلب البيانات الحديثة من سجل المشرفين.</p></div></section>
+
+
 </main>
 <div class="overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><div class="dialog"><div class="dialog-icon" id="confirmIcon">!</div><h3 id="confirmTitle">تأكيد</h3><p id="confirmText"></p><div class="dialog-actions"><button class="button outline" id="cancelConfirm" type="button">إلغاء</button><button class="button primary" id="doConfirm" type="button">نعم، حفظ</button></div></div></div>
 <div id="paperHost" aria-hidden="true"></div>
@@ -71,11 +138,12 @@ const isGrade=x=>x!==null&&x!==undefined&&x!==''&&Number.isFinite(Number(x));
 const grade=x=>isGrade(x)?Number(x):null;
 const fmt=x=>isGrade(x)?String(Math.round(Number(x)*100)/100):'—';
 let session={},director={},students={},classes={},selectedCode='',selectedStudent=null,selectedGrades=null,selectedAttendance=null,selectedSnapshotAt=0,rankingData=null,rankingKind='absent',busy=false,loadSeq=0,confirmCallback=null,printModel=null;
+let guardianNoteDrafts=Object.create(null),selectedRatingRows=[],selectedRatingCycle=null,selectedRatingLevel='—';
 function showStatus(text,type=''){const el=$('statusMsg');el.className='status '+type;el.textContent=text}
 function dateToday(){const pts=new Intl.DateTimeFormat('en-US',{timeZone:'Asia/Baghdad',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()),map=Object.fromEntries(pts.map(p=>[p.type,p.value]));return `${map.year}-${map.month}-${map.day}`}
 function validSchoolDay(day){const index=new Date(day+'T12:00:00Z').getUTCDay();return index!==5&&index!==6}
 function friendlyDate(d){try{return new Intl.DateTimeFormat('ar-IQ',{day:'numeric',month:'long',year:'numeric',timeZone:'Asia/Baghdad'}).format(new Date(d+'T12:00:00Z'))}catch{return d}}
-function setBusy(value){busy=value;['absentBtn','lateBtn','excusedBtn','escapeBtn','presentBtn'].forEach(id=>$(id).disabled=value||!validSchoolDay(dateToday()));$('printBtn').disabled=value||!selectedStudent||selectedGrades===null||selectedAttendance===null}
+function setBusy(value){busy=value;['absentBtn','lateBtn','excusedBtn','escapeBtn','presentBtn'].forEach(id=>{const b=$(id);if(b)b.disabled=value||!validSchoolDay(dateToday())});$('printBtn').disabled=value||!selectedStudent||selectedGrades===null||selectedAttendance===null;const n=$('saveGuardianNoteBtn');if(n)n.disabled=value||!selectedCode;const p=$('printDirectBottomBtn');if(p)p.disabled=$('printBtn').disabled}
 async function fetchDb(path,{method='GET',data=null,timeout=25000}={}){
  const verb=method.toUpperCase(),url=DB+'/'+(path?path:'')+'.json',retryable=new Set([408,429,500,502,503,504]);
  for(let attempt=0;attempt<(verb==='GET'?3:1);attempt++){
@@ -99,8 +167,8 @@ function gender(st){const val=norm(st?.gender||'');return ['female','girl','girl
 function stateOf(r){const s=norm(r?.status);if(s==='escape'||s==='هروب'||r?.escape===true||r?.isEscape===true)return 'escape';if(s==='late'||s==='متاخر'||r?.late===true||r?.isLate===true)return 'late';if(['excused','leave','مجاز','اجازه'].includes(s)||r?.excused===true||r?.leave===true)return 'excused';if(s==='absent'||s==='غائب'||r?.absent===true||r?.isAbsent===true)return 'absent';return 'present'}
 function counts(records){const c={present:0,absent:0,late:0,excused:0,escape:0};Object.entries(records||{}).forEach(([date,rec])=>{if(/^\d{4}-\d{2}-\d{2}$/.test(date)&&rec&&typeof rec==='object')c[stateOf(rec)]++});return c}
 function allStudents(){return Object.entries(students).filter(([code,st])=>st&&typeof st==='object'&&st.hidden!==true&&st.deleted!==true).map(([code,st])=>({...st,code}));}
-function resultsOf(q){const arr=allStudents();if(!q)return arr.slice(0,20);const query=norm(q);return arr.filter(st=>norm(studentName(st)).includes(query)||norm(st.code).includes(query)||norm(schoolClass(st)).includes(query)).slice(0,55)}
-function renderSearch(){const q=$('searchInput').value.trim(),list=resultsOf(q);$('searchResults').innerHTML=list.map(s=>`<button class="result ${selectedCode===s.code?'active':''}" type="button" data-code="${esc(s.code)}" role="option"><span><strong>${esc(studentName(s))}</strong><small>${esc(schoolClass(s))} • ${esc(s.code)}</small></span><span class="select-hint">اختيار الطالب</span></button>`).join('')||'<p class="grade-empty">لا يوجد طالب مطابق للبحث.</p>';$('searchCounter').textContent=q?`ظهرت ${list.length} نتيجة${list.length===55?' (أول 55 فقط)':''}`:'يمكنك كتابة حرف لعرض نتائج أدق، وتظهر أول 20 اسمًا افتراضيًا';}
+function resultsOf(q){const arr=allStudents();if(!q)return arr.slice(0,20);const query=norm(q);return arr.filter(st=>norm(studentName(st)).includes(query)).slice(0,55)}
+function renderSearch(){const q=$('searchInput').value.trim(),list=resultsOf(q);$('searchResults').innerHTML=list.map(s=>`<button class="result ${selectedCode===s.code?'active':''}" type="button" data-code="${esc(s.code)}" role="option"><span><strong>${esc(studentName(s))}</strong><small>${esc(schoolClass(s))}</small></span><span class="select-hint">اختيار الطالب</span></button>`).join('')||'<p class="grade-empty">لا يوجد طالب مطابق للبحث.</p>';$('searchCounter').textContent=q?`ظهرت ${list.length} نتيجة${list.length===55?' (أول 55 فقط)':''}`:'يمكنك كتابة حرف لعرض نتائج أدق، وتظهر أول 20 اسمًا افتراضيًا';}
 function renderClassFilter(){const prev=$('rankingClass').value;const options=Object.entries(classes).sort((a,b)=>String(a[1]?.name||a[0]).localeCompare(String(b[1]?.name||b[0]),'ar'));$('rankingClass').innerHTML='<option value="">جميع الصفوف</option>'+options.map(([id,c])=>`<option value="${esc(id)}">${esc(c.name||c.title||id)}</option>`).join('');$('rankingClass').value=prev;}
 async function loadRoster(){const u=await fetchDb('users/'+key(session.code));if(!u||!PERMITTED.has(norm(u.role))||u.active===false)throw Error('ACCESS_DENIED');const [s,c]=await Promise.all([fetchDb('students'),fetchDb('classes')]);director=u;students=s||{};classes=c||{};$('directorLabel').textContent=director.name||'مدير المدرسة';$('studentsCount').textContent=`${allStudents().length} طالب وطالبة`;$('dateLabel').textContent=friendlyDate(dateToday());renderClassFilter();renderSearch();}
 async function init(){session=readSession();if(!session.code){location.replace('index.html');return}try{await loadRoster();showStatus('تم تحميل بيانات الطلاب. اكتب الاسم أو أول حرف للبحث المباشر.','good')}catch(err){console.error('MANAGER_INIT',err);showStatus(err.message==='ACCESS_DENIED'?'هذا الحساب ليس مخولًا بصفحة المدير. تأكد من دور الحساب في قاعدة المستخدمين.':'تعذر قراءة بيانات المدرسة. تحقق من الاتصال والصلاحيات ثم اضغط تحديث البيانات.','error')}}
@@ -143,10 +211,44 @@ function metaCell(name,value){return `<div class="meta"><small>${esc(name)}</sma
 function renderStudent(){const st=selectedStudent;if(!st)return;const c=counts(selectedAttendance),rows=entryGrades(selectedGrades,classes[st.classId]||{});$('studentName').textContent=studentName(st);const photo=studentPhoto(st);$('photoArea').innerHTML=photo?`<img class="photo" alt="صورة الطالب" src="${esc(photo)}" referrerpolicy="no-referrer" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'photo-placeholder',textContent:'ط'}))">`:'<div class="photo-placeholder">ط</div>';
  $('studentMeta').innerHTML=[metaCell('الصف',schoolClass(st)),metaCell('كود الدخول',st.code),metaCell('اسم الأم',st.motherName),metaCell('المواليد',st.birthDate),metaCell('القاعة',st.roomNumber||classes[st.classId]?.roomNumber),metaCell('الجنس',gender(st)),metaCell('ولي الأمر',st.guardianPhone),metaCell('هاتف الطالب',st.studentPhone),metaCell('العنوان',st.address),metaCell('المدرسة السابقة',st.previousSchool),metaCell('خط النقل',st.lineNumber||st.transportLine),metaCell('تاريخ التسجيل',st.registrationDate)].join('');
  $('studentTotals').innerHTML=[['absent','غياب'],['late','تأخير'],['excused','إجازة'],['escape','هروب']].map(([k,l])=>`<div class="chip ${k}"><strong>${c[k]}</strong><small>${l}</small></div>`).join('');renderGradeTable(rows);
- const today=dateToday(),rec=selectedAttendance?.[today],todayLabel=rec?STATE_LABELS[stateOf(rec)]:'لا يوجد سجل اليوم';$('todayStatusText').textContent=`حالة اليوم (${friendlyDate(today)}): ${todayLabel}. ${rec?'يمكن تعديل الحالة وحفظ التغيير.':'اختر الحالة المطلوبة لحفظها مباشرة.'}`;
+ const today=dateToday(),rec=selectedAttendance?.[today],todayLabel=rec?STATE_LABELS[stateOf(rec)]:'لا يوجد سجل اليوم';$('todayStatusText').textContent=`حالة اليوم (${friendlyDate(today)}): ${todayLabel}.`;
  const events=Object.entries(selectedAttendance||{}).filter(([date,v])=>/^\d{4}-\d{2}-\d{2}$/.test(date)&&v&&typeof v==='object'&&stateOf(v)!=='present').sort((a,b)=>b[0].localeCompare(a[0]));$('historyList').innerHTML=events.length?events.map(([d,r])=>`<div class="history"><span>${esc(friendlyDate(d))}</span><span>${esc(STATE_LABELS[stateOf(r)])}</span></div>`).join(''):'<div class="grade-empty">لا توجد حالات غياب أو تأخير أو إجازة أو هروب مسجلة.</div>';
- ['studentCard','gradesCard','attendanceCard'].forEach(id=>$(id).classList.remove('hidden'));setBusy(false);printModel={student:{...st},grades:rows,attendance:structuredClone(selectedAttendance),counts:c,date:today};}
-async function selectStudent(code){if(!students[code])return;const seq=++loadSeq;selectedCode=code;selectedStudent={...students[code],code};selectedGrades=null;selectedAttendance=null;renderSearch();setBusy(true);showStatus(`جاري قراءة درجات وحضور ${studentName(selectedStudent)}...`);try{const [g,a,profilePhoto]=await Promise.all([fetchDb('grades/'+key(code)),fetchDb('attendance/'+key(code)),!studentPhoto(selectedStudent)?fetchDb('studentPhotos/'+key(code)).catch(()=>null):Promise.resolve(null)]);if(seq!==loadSeq)return;if(!studentPhoto(selectedStudent)&&profilePhoto){selectedStudent.profileImage=typeof profilePhoto==='string'?profilePhoto:profilePhoto?.photo||profilePhoto?.url||''}selectedGrades=g||{};selectedAttendance=a||{};selectedSnapshotAt=Date.now();renderStudent();showStatus('تم تحديث الملف مباشرة من سجلات المدرسة.','good');$('studentCard').scrollIntoView({behavior:'smooth',block:'start'})}catch(err){console.error('MANAGER_STUDENT_READ',err);showStatus('تعذر تحميل ملف الطالب بالكامل. لم تُعرض درجات أو إحصاءات غير مؤكدة.','error');setBusy(false);$('printBtn').disabled=true}}
+ ['studentCard','gradesCard','attendanceCard','guardianNotesCard'].forEach(id=>$(id).classList.remove('hidden'));setBusy(false);printModel={student:{...st},grades:rows,attendance:structuredClone(selectedAttendance),counts:c,date:today};}
+
+function currentGuardianNote(){return $('guardianNoteInput').value.trim()}
+function prepareGuardianNotes(code){
+ const d=guardianNoteDrafts[code];$('guardianNoteInput').value=d?.text||'';
+ $('guardianNoteState').textContent=d?.dirty?'ملاحظات غير محفوظة — ستظهر بالطباعة.':d?.text?'تم تحميل الملاحظات المحفوظة.':'لا توجد ملاحظات محفوظة.';
+}
+async function loadGuardianNotes(code,seq){
+ try{const entry=await fetchDb('directorGuardianNotes/'+key(code));if(seq!==loadSeq||code!==selectedCode)return;
+  if(guardianNoteDrafts[code]?.dirty)return;
+  const value=typeof entry==='string'?entry:String(entry?.text||'');
+  guardianNoteDrafts[code]={text:value,dirty:false};prepareGuardianNotes(code);
+ }catch(error){if(seq!==loadSeq)return;console.warn('GUARDIAN_NOTE_READ',error);$('guardianNoteState').textContent='تعذر قراءة الملاحظات المحفوظة، ويمكنك كتابة ملاحظات جديدة وطباعتها.'}
+}
+async function saveGuardianNotes(){
+ const code=selectedCode;if(!code||busy)return;
+ const text=currentGuardianNote();$('saveGuardianNoteBtn').disabled=true;
+ try{await verifyManager();await fetchDb('directorGuardianNotes/'+key(code),{method:'PUT',data:{text,updatedAt:Date.now(),updatedBy:session.code,updatedByName:director.name||'المدير'}});
+  guardianNoteDrafts[code]={text,dirty:false};if(selectedCode===code)prepareGuardianNotes(code);
+  showStatus('تم حفظ ملاحظات ولي الأمر في ملف الطالب.','good');
+ }catch(error){console.error('GUARDIAN_NOTE_SAVE',error);if(selectedCode===code)$('guardianNoteState').textContent='لم تُحفظ الملاحظات في القاعدة، لكنها ستظهر في الطباعة الحالية.';showStatus('تعذر حفظ الملاحظات. تحقق من صلاحيات Firebase والاتصال.','error')}
+ finally{setBusy(false)}
+}
+function levelFromRatings(rows){
+ if(!rows.length)return {text:'لا يوجد تقييم محفوظ',kind:'',description:'بلا تقييم من الأساتذة'};
+ const counts={};rows.forEach(r=>{counts[r.rating]=(counts[r.rating]||0)+1});
+ const entries=Object.entries(counts).sort((a,b)=>b[1]-a[1]);const first=entries[0];
+ if(entries.length>1&&entries[1][1]===first[1])return {text:'مستوى متنوع',kind:'',description:`${rows.length} مادة — التقييمات متفاوتة`};
+ return{text:DIRECTOR_EVAL_LABELS[first[0]]||'غير محدد',kind:first[0],description:`التقييم الأكثر تكرارًا من ${rows.length} مادة`};
+}
+function renderOverallStudentLevel(rows){
+ const level=levelFromRatings(rows);selectedRatingLevel=level.text;
+ $('studentOverallLevel').className=level.kind;
+ $('studentOverallLevel').innerHTML=`<span>مستوى الطالب:</span><span class="level-name">${esc(level.text)}</span><span style="font-size:10px;font-weight:700">${esc(level.description)}</span>`;
+}
+async function selectStudent(code,{scroll=true}={}){if(!students[code])return;const seq=++loadSeq;selectedCode=code;selectedRatingRows=[];selectedRatingCycle=null;selectedRatingLevel='—';prepareGuardianNotes(code);selectedStudent={...students[code],code};selectedGrades=null;selectedAttendance=null;renderSearch();setBusy(true);showStatus(`جاري قراءة درجات وحضور ${studentName(selectedStudent)}...`);try{const [g,a,profilePhoto]=await Promise.all([fetchDb('grades/'+key(code)),fetchDb('attendance/'+key(code)),!studentPhoto(selectedStudent)?fetchDb('studentPhotos/'+key(code)).catch(()=>null):Promise.resolve(null)]);if(seq!==loadSeq)return;if(!studentPhoto(selectedStudent)&&profilePhoto){selectedStudent.profileImage=typeof profilePhoto==='string'?profilePhoto:profilePhoto?.photo||profilePhoto?.url||''}selectedGrades=g||{};selectedAttendance=a||{};selectedSnapshotAt=Date.now();renderStudent();await Promise.all([loadDirectorStudentEvaluations(code,seq),loadGuardianNotes(code,seq)]);showStatus('تم تحديث الملف مباشرة من سجلات المدرسة.','good');if(scroll)$('studentCard').scrollIntoView({behavior:'smooth',block:'start'})}catch(err){console.error('MANAGER_STUDENT_READ',err);showStatus('تعذر تحميل ملف الطالب بالكامل. لم تُعرض درجات أو إحصاءات غير مؤكدة.','error');setBusy(false);$('printBtn').disabled=true}}
 function openDialog(title,message,action,label='نعم، حفظ'){confirmCallback=action;$('confirmTitle').textContent=title;$('confirmText').textContent=message;$('doConfirm').textContent=label;$('confirmOverlay').classList.add('show')}
 function closeDialog(){confirmCallback=null;$('confirmOverlay').classList.remove('show')}
 async function verifyManager(){const u=await fetchDb('users/'+key(session.code));if(!u||u.active===false||!PERMITTED.has(norm(u.role)))throw Error('ACCESS_DENIED');return u}
@@ -161,77 +263,145 @@ function renderRank(){const box=$('rankingResults');if(!rankingData){box.innerHT
 async function loadRank(){const btn=$('loadRankingBtn');btn.disabled=true;btn.textContent='جاري تحميل السجلات...';try{await verifyManager();const data=await fetchDb('attendance',{timeout:45000});rankingData=data||{};renderRank();showStatus('تم تحميل إحصاءات الحضور والغياب لجميع الصفوف.','good')}catch(err){console.error('RANK_LOAD_ERROR',err);rankingData=null;renderRank();showStatus('تعذر تحميل الإحصاءات. لا يمكن عرض ترتيب غير مكتمل.','error')}finally{btn.disabled=false;btn.textContent='تحديث الإحصاءات'}}
 function printData(model){const st=model.student,rows=model.grades||[],c=model.counts;const field=(l,v)=>`<div class="paper-field"><small>${esc(l)}</small><strong>${esc(v||'—')}</strong></div>`;const photo=studentPhoto(st),img=photo?`<img class="paper-photo" src="${esc(photo)}" alt="صورة الطالب">`:'<div class="paper-photo-empty">لا توجد صورة</div>';const url=new URL('index.html',document.baseURI);url.searchParams.set('code',st.code);
  const gradeRows=rows.map(r=>`<tr><td>${esc(r.name)}</td>${FIELDS.map(([k])=>`<td>${fmt(r.values[k])}</td>`).join('')}</tr>`).join('');const absentEvents=Object.entries(model.attendance||{}).filter(([d,v])=>/^\d{4}-\d{2}-\d{2}$/.test(d)&&v&&typeof v==='object'&&stateOf(v)!=='present').sort((a,b)=>b[0].localeCompare(a[0]));
- $('paperHost').innerHTML=`<article class="paper"><div class="paper-head"><div class="paper-brand"><img src="logo.png" alt=""><div><h2>ثانوية التحدي الأهلية المختلطة</h2><p>قسم الحوكمة | تقرير متابعة الطالب لولي الأمر</p></div></div><div class="paper-header-meta">التاريخ: ${esc(friendlyDate(dateToday()))}<br>صفحة واحدة A4</div></div><div class="paper-title">الملف المدرسي الشامل للطالب</div><div class="paper-student">${img}<div class="paper-student-info">${[field('اسم الطالب',studentName(st)),field('الصف',schoolClass(st)),field('اسم الأم',st.motherName),field('المواليد',st.birthDate),field('القاعة',st.roomNumber||classes[st.classId]?.roomNumber),field('الجنس',gender(st)),field('رقم ولي الأمر',st.guardianPhone),field('هاتف الطالب',st.studentPhone),field('العنوان',st.address),field('المدرسة السابقة',st.previousSchool),field('خط النقل',st.lineNumber||st.transportLine),field('كود الطالب',st.code)].join('')}</div><div class="paper-qr-wrap"><div class="paper-qr" id="printQR"></div><small>امسح للدخول إلى المنصة</small><div class="paper-code">${esc(st.code)}</div></div></div><div class="paper-stats">${[['absent','الغياب'],['late','التأخير'],['excused','الإجازة'],['escape','الهروب']].map(([k,l])=>`<div class="paper-stat"><b>${c[k]}</b><span>${l}</span></div>`).join('')}</div><h3 class="paper-section-title">الدرجات الرسمية المحفوظة</h3>${rows.length?`<table class="paper-grades"><thead><tr><th>المادة</th>${FIELDS.map(([,l])=>`<th>${esc(l)}</th>`).join('')}</tr></thead><tbody>${gradeRows}</tbody></table>`:'<div class="paper-unavailable">لا توجد درجات رسمية محفوظة.</div>'}<h3 class="paper-section-title">ملخص سجل الحضور والغياب</h3><div class="paper-attendance">${absentEvents.length?esc(absentEvents.slice(0,22).map(([d,v])=>`${d}: ${STATE_LABELS[stateOf(v)]}`).join('   |   ')):'لا توجد حالات غياب أو تأخير أو إجازة أو هروب مسجلة.'}${absentEvents.length>22?` — وهناك ${absentEvents.length-22} حالة أخرى محفوظة في المنصة.`:''}</div><footer class="paper-foot"><span>مدير ثانوية التحدي الأهلية المختلطة</span><span>مستخرج من منصة التحدي الإلكترونية</span></footer></article>`;
+ $('paperHost').innerHTML=`<article class="paper"><div class="paper-head"><div class="paper-brand"><img src="logo.png" alt=""><div><h2>ثانوية التحدي الأهلية المختلطة</h2><p>قسم الحوكمة | تقرير متابعة الطالب لولي الأمر</p></div></div><div class="paper-header-meta">التاريخ: ${esc(friendlyDate(dateToday()))}<br>قياس A4 عمودي</div></div><div class="paper-title">تقرير التقييم والمتابعة المدرسية للطالب</div><div class="paper-student">${img}<div class="paper-student-info">${[field('اسم الطالب',studentName(st)),field('الصف',schoolClass(st)),field('اسم الأم',st.motherName),field('المواليد',st.birthDate),field('القاعة',st.roomNumber||classes[st.classId]?.roomNumber),field('الجنس',gender(st)),field('رقم ولي الأمر',st.guardianPhone),field('هاتف الطالب',st.studentPhone),field('العنوان',st.address),field('المدرسة السابقة',st.previousSchool),field('خط النقل',st.lineNumber||st.transportLine),field('تاريخ التسجيل',st.registrationDate),field('كود الطالب',st.code)].join('')}</div><div class="paper-qr-wrap"><div class="paper-qr" id="printQR"></div><small>امسح للدخول إلى المنصة</small><div class="paper-code">${esc(st.code)}</div></div></div><div class="paper-stats">${[['absent','الغياب'],['late','التأخير'],['excused','الإجازة'],['escape','الهروب']].map(([k,l])=>`<div class="paper-stat"><b>${c[k]}</b><span>${l}</span></div>`).join('')}</div><h3 class="paper-section-title">الدرجات الرسمية المحفوظة</h3>${rows.length?`<table class="paper-grades"><thead><tr><th>المادة</th>${FIELDS.map(([,l])=>`<th>${esc(l)}</th>`).join('')}</tr></thead><tbody>${gradeRows}</tbody></table>`:'<div class="paper-unavailable">لا توجد درجات رسمية محفوظة.</div>'}<h3 class="paper-section-title">ملخص سجل الحضور والغياب</h3><div class="paper-attendance">${absentEvents.length?esc(absentEvents.slice(0,22).map(([d,v])=>`${d}: ${STATE_LABELS[stateOf(v)]}`).join('   |   ')):'لا توجد حالات غياب أو تأخير أو إجازة أو هروب مسجلة.'}${absentEvents.length>22?` — وهناك ${absentEvents.length-22} حالة أخرى محفوظة في المنصة.`:''}</div>${model.guardianNote?`<div class="paper-guardian-notes"><strong>ملاحظات ولي الأمر</strong>${esc(model.guardianNote)}</div>`:''}${directorEvaluationPrintHTML(model.evaluations||[],model.evalCycle,model.evalLevel)}<footer class="paper-foot"><span>مدير ثانوية التحدي الأهلية المختلطة</span><span>مستخرج من منصة التحدي الإلكترونية</span></footer></article>`;
  if(typeof QRCode==='function'){new QRCode($('printQR'),{text:url.toString(),width:86,height:86,colorDark:'#0d335c',colorLight:'#ffffff',correctLevel:QRCode.CorrectLevel?.M||1})}else{$('printQR').textContent='رمز الدخول: '+st.code;}
 }
-async function printStudent(){if(!selectedCode||busy)return;const code=selectedCode;setBusy(true);showStatus('جاري جلب أحدث درجات وحضور قبل الطباعة...');try{const [g,a,st]=await Promise.all([fetchDb('grades/'+key(code)),fetchDb('attendance/'+key(code)),fetchDb('students/'+key(code))]);if(!st)throw Error('STUDENT_NOT_FOUND');if(code!==selectedCode)return;selectedGrades=g||{};selectedAttendance=a||{};selectedStudent={...st,code,profileImage:studentPhoto(st)||studentPhoto(selectedStudent)};renderStudent();const snapshot={student:{...selectedStudent},grades:entryGrades(selectedGrades,classes[st.classId]||{}),attendance:selectedAttendance,counts:counts(selectedAttendance)};printData(snapshot);document.body.classList.add('printing');await new Promise(resolve=>setTimeout(resolve,300));window.print();showStatus('تم تجهيز ورقة ولي الأمر للطباعة المباشرة بحجم A4.','good')}catch(err){console.error('DIRECTOR_PRINT_ERROR',err);showStatus('تعذر تحديث معلومات الطباعة. لم يُطبع تقرير قد يحتوي بيانات قديمة أو ناقصة.','error')}finally{setBusy(false)}}
+async function printStudent(){if(!selectedCode||busy)return;const code=selectedCode;setBusy(true);showStatus('جاري جلب أحدث درجات وحضور قبل الطباعة...');try{const [g,a,st]=await Promise.all([fetchDb('grades/'+key(code)),fetchDb('attendance/'+key(code)),fetchDb('students/'+key(code))]);if(!st)throw Error('STUDENT_NOT_FOUND');if(code!==selectedCode)return;selectedGrades=g||{};selectedAttendance=a||{};selectedStudent={...st,code,profileImage:studentPhoto(st)||studentPhoto(selectedStudent)};renderStudent();const snapshot={student:{...selectedStudent},grades:entryGrades(selectedGrades,classes[st.classId]||{}),attendance:selectedAttendance,counts:counts(selectedAttendance),guardianNote:currentGuardianNote()};const evalModel=await getStudentEvalRows(code,true);snapshot.evaluations=evalModel.rows;snapshot.evalCycle=evalModel.cycle;snapshot.evalLevel=levelFromRatings(evalModel.rows).text;printData(snapshot);document.body.classList.add('printing');document.querySelector('#paperHost .paper')?.classList.add('compact');directorFixPrintOverflow(snapshot);await new Promise(resolve=>setTimeout(resolve,300));window.print();showStatus('تم تجهيز ورقة ولي الأمر للطباعة المباشرة بحجم A4.','good')}catch(err){console.error('DIRECTOR_PRINT_ERROR',err);showStatus('تعذر تحديث معلومات الطباعة. لم يُطبع تقرير قد يحتوي بيانات قديمة أو ناقصة.','error')}finally{setBusy(false)}}
 $('searchInput').addEventListener('input',renderSearch);$('searchBtn').onclick=renderSearch;
 $('searchResults').addEventListener('click',e=>{const b=e.target.closest('[data-code]');if(b)selectStudent(b.dataset.code)});
 $('rankingResults').addEventListener('click',e=>{const b=e.target.closest('[data-rank-student]');if(b){const st=students[b.dataset.rankStudent];$('searchInput').value=studentName(st);renderSearch();selectStudent(b.dataset.rankStudent)}});
 $('reloadBtn').onclick=async()=>{showStatus('جاري تحديث بيانات المدرسة...');try{await loadRoster();rankingData=null;renderRank();if(selectedCode)await selectStudent(selectedCode);else showStatus('تم تحديث بيانات المدرسة.','good')}catch(err){showStatus('تعذر تحديث القائمة. تحقق من الاتصال وأعد المحاولة.','error')}};
-$('refreshStudentBtn').onclick=()=>selectedCode&&selectStudent(selectedCode);$('logoutBtn').onclick=logOut;
+$('refreshStudentBtn').onclick=()=>selectedCode&&selectStudent(selectedCode,{scroll:false});$('logoutBtn').onclick=logOut;
+$('guardianNoteInput').addEventListener('input',()=>{if(!selectedCode)return;guardianNoteDrafts[selectedCode]={text:$('guardianNoteInput').value,dirty:true};$('guardianNoteState').textContent='ملاحظات غير محفوظة — ستظهر بالطباعة.'});
+$('saveGuardianNoteBtn').onclick=saveGuardianNotes;$('printDirectBottomBtn').onclick=printStudent;
 $('absentBtn').onclick=()=>setTodayStatus('absent');$('lateBtn').onclick=()=>setTodayStatus('late');$('excusedBtn').onclick=()=>setTodayStatus('excused');$('escapeBtn').onclick=()=>setTodayStatus('escape');$('presentBtn').onclick=()=>setTodayStatus('present');$('printBtn').onclick=printStudent;
 $('loadRankingBtn').onclick=loadRank;$('rankingClass').onchange=renderRank;
 $('rankTabs').addEventListener('click',e=>{const b=e.target.closest('[data-rank]');if(!b)return;rankingKind=b.dataset.rank;document.querySelectorAll('[data-rank]').forEach(btn=>btn.classList.toggle('active',btn===b));renderRank()});
 $('cancelConfirm').onclick=closeDialog;$('confirmOverlay').onclick=e=>{if(e.target===$('confirmOverlay'))closeDialog()};$('doConfirm').onclick=async()=>{const fn=confirmCallback;if(typeof fn==='function')await fn()};
 window.addEventListener('afterprint',()=>document.body.classList.remove('printing'));
 // Refresh the open student's snapshot without modifying the visual layout or saved data.
-setInterval(()=>{if(selectedCode&&!busy&&!document.hidden&&$('confirmOverlay').classList.contains('show')===false)selectStudent(selectedCode)},45000);
+setInterval(()=>{if(selectedCode&&!busy&&!document.hidden&&$('confirmOverlay').classList.contains('show')===false)selectStudent(selectedCode,{scroll:false})},90000);
 
 const DIRECTOR_EVAL_LABELS={excellent:'ممتاز',very_good:'جيد جدًا',good:'جيد',acceptable:'مقبول',weak:'ضعيف'};
-let DIRECTOR_EVAL_REQUEST=null,DIRECTOR_EVAL_BUSY=false;
+let DIRECTOR_EVAL_REQUEST=null,DIRECTOR_EVAL_BUSY=false,DIRECTOR_EVAL_TAB='complete',DIRECTOR_EVAL_PROGRESS=[],DIRECTOR_EVAL_ROOT=null,DIRECTOR_EVAL_CACHE_AT=0,DIRECTOR_EVAL_DELIVERED=null;
+const evalValidRating=v=>Object.prototype.hasOwnProperty.call(DIRECTOR_EVAL_LABELS,typeof v==='string'?v:v?.rating);
 function evalManagerValid(v){return!!(v&&typeof v==='object'&&v.active===true&&/^[a-zA-Z0-9_-]{4,80}$/.test(String(v.requestId||'')))}
+function evalManagerTargeted(r,code){const list=Array.isArray(r?.targetTeacherCodes)?r.targetTeacherCodes:[];return !list.length||list.map(x=>String(x).toUpperCase()).includes(String(code).toUpperCase())}
+function allEvalTeacherAssignments(t){
+ const explicit=Array.isArray(t?.assignments)||!!(t?.assignments&&typeof t.assignments==='object');
+ const source=explicit?(Array.isArray(t.assignments)?t.assignments:Object.values(t.assignments||{})):(Array.isArray(t?.classIds)?t.classIds:Object.keys(t?.classIds||{}).filter(k=>t.classIds[k])).map(classId=>({classId,subjectName:t.subject}));
+ const seen=new Set();return source.filter(Boolean).map(a=>{const classId=String(a.classId||'');const c=classes[classId];if(!c)return null;const subs=Array.isArray(c.subjects)?c.subjects:Object.values(c.subjects||{});const subject=subs.find(x=>x&&!x.autoType&&String(x.id||'')===String(a.subjectId||''))||subs.find(x=>x&&!x.autoType&&norm(x.name||x.subjectName)===norm(a.subjectName||t.subject));if(!subject)return null;return{classId,subjectId:String(subject.id),subjectName:String(subject.name||subject.subjectName),className:c.name||classId}}).filter(a=>{if(!a)return false;const k=a.classId+'|'+a.subjectId;if(seen.has(k))return false;seen.add(k);return true});
+}
+function evalCurrentTeachers(teachers,request){return Object.entries(teachers||{}).filter(([code,t])=>t&&t.accountActive!==false&&evalManagerTargeted(request,code)).map(([code,t])=>({code,name:t.name||code,assignments:allEvalTeacherAssignments(t)})).filter(x=>x.assignments.length)}
+function ratingProgressFor(request,teachers,ratings,submissions){return evalCurrentTeachers(teachers,request).map(t=>{
+ const details=t.assignments.map(a=>{const roster=allStudents().filter(s=>String(s.classId)===a.classId);const stored=ratings?.[t.code]?.[a.classId]?.[a.subjectId]||{};const done=roster.filter(s=>evalValidRating(stored[s.code])).length;return{...a,total:roster.length,done,complete:roster.length===0||done===roster.length}});
+ const complete=details.every(a=>a.complete),sent=!!submissions?.[t.code]?.submittedAt;return{...t,details,complete:complete&&sent,ready:complete,sent,submittedAt:submissions?.[t.code]?.submittedAt||null};
+})}
 function renderDirectorEvalState(){
- const r=DIRECTOR_EVAL_REQUEST,active=evalManagerValid(r),state=$('directorEvalState');
+ const r=DIRECTOR_EVAL_REQUEST,active=evalManagerValid(r),finished=!!(r?.requestId&&!active),state=$('directorEvalState');
  state.className='eval-manager-state '+(active?'enabled':'disabled');
- state.textContent=active?`طلب التقييم مفتوح الآن. رقم الطلب: ${r.requestId} — تظهر نافذة التقييم في حسابات الأساتذة.`:'طلب التقييم متوقف. لا يظهر زر التقييم عند الأساتذة.';
+ state.textContent=active?`طلب التقييم مفتوح — ${r.title||'تقييم الطلبة'} | ${r.message||''}`:finished?`الدورة مغلقة: ${r.title||r.requestId}. النتائج محفوظة للمدير والإدارة فقط.`:'لا يوجد طلب تقييم حالي. أدخل عنوانًا ورسالة وأرسل الطلب.';
  $('activateEvaluationBtn').disabled=active||DIRECTOR_EVAL_BUSY;
  $('stopEvaluationBtn').disabled=!active||DIRECTOR_EVAL_BUSY;
+ $('completeEvaluationBtn').disabled=!active||DIRECTOR_EVAL_BUSY;
+ $('deliverEvaluationBtn').disabled=!finished||!!DIRECTOR_EVAL_DELIVERED||DIRECTOR_EVAL_BUSY;
  $('refreshEvaluationBtn').disabled=!r?.requestId||DIRECTOR_EVAL_BUSY;
+ $('evalManagerInputs').classList.toggle('hidden',active);
+ if(finished){$('directorEvalTitle').value=r.title||'';$('directorEvalMessage').value=r.message||'';}
+ if(DIRECTOR_EVAL_DELIVERED){state.textContent+=' — تم إرسال نسخة النتائج إلى حساب الإدارة المخصص لحاسبة الأستاذ أحمد.'}
 }
 async function readDirectorEvalState(){
- try{DIRECTOR_EVAL_REQUEST=await fetchDb('settings/studentEvaluationRequest');renderDirectorEvalState()}
- catch(error){console.error('EVAL_STATE_LOAD_FAILED',error);$('directorEvalState').textContent='تعذرت قراءة حالة التقييم. حدّث الصفحة ثم حاول مجددًا.';$('activateEvaluationBtn').disabled=true;$('stopEvaluationBtn').disabled=true}
+ try{DIRECTOR_EVAL_REQUEST=await fetchDb('settings/studentEvaluationRequest');DIRECTOR_EVAL_DELIVERED=DIRECTOR_EVAL_REQUEST?.requestId?await fetchDb('evaluationHandoffs/'+key(DIRECTOR_EVAL_REQUEST.requestId)).catch(()=>null):null;renderDirectorEvalState();if(DIRECTOR_EVAL_REQUEST?.requestId)await loadDirectorEvaluationResults();}
+ catch(e){console.error('EVAL_STATE_READ',e);$('directorEvalState').textContent='تعذرت قراءة حالة طلب التقييم.';['activateEvaluationBtn','stopEvaluationBtn','completeEvaluationBtn','deliverEvaluationBtn'].forEach(id=>$(id).disabled=true)}
 }
-async function changeDirectorEvaluation(active){
+async function changeDirectorEvaluation(mode){
  if(DIRECTOR_EVAL_BUSY)return;
- openDialog(active?'إرسال طلب التقييم':'إيقاف التقييم',active?'سيظهر زر تقييم الطلبة لجميع الأساتذة، وستُفتح دورة تقييم جديدة مستقلة عن النتائج السابقة. هل توافق؟':'سيختفي زر التقييم عند الأساتذة، ولن تُقبل عمليات حفظ جديدة ضمن هذه الدورة. هل توافق؟',async()=>{
+ const active=mode==='start',close=mode==='complete'||mode==='stop';const current=DIRECTOR_EVAL_REQUEST;
+ const title=$('directorEvalTitle').value.trim(),message=$('directorEvalMessage').value.trim();
+ if(active&&(!title||!message)){showStatus('أدخل عنوان التقييم ورسالة التكليف قبل إرسال الطلب.','warn');return}
+ let codes=$('directorEvalTargetCodes').value.toUpperCase().split(/[،,؛;\s]+/).map(x=>x.trim()).filter(Boolean);codes=[...new Set(codes)];
+ if(active&&codes.some(x=>!/^[A-Z0-9_-]{3,40}$/.test(x))){showStatus('أحد أكواد الأساتذة غير صحيح.','error');return}
+ let candidates=null;if(active&&codes.length){const ts=await fetchDb('teachers').catch(()=>null);if(!ts){showStatus('تعذر التحقق من أكواد الأساتذة.','error');return}candidates=codes.filter(x=>!Object.keys(ts).some(k=>k.toUpperCase()===x));if(candidates.length){showStatus('أكواد أساتذة غير موجودة: '+candidates.join('، '),'error');return}}
+ let msg=active?'سيظهر عنوان التقييم ورسالتك للأساتذة المعنيين، وتبدأ دورة جديدة مستقلة عن الدورات السابقة.':mode==='complete'?'سيُغلق التقييم نهائيًا، ولن يتمكن الأساتذة من تعديله أو إرساله بعد ذلك.':'سيُوقف طلب التقييم مع الاحتفاظ بما سبق حفظه، ويختفي الزر من حسابات الأساتذة.';
+ if(close&&DIRECTOR_EVAL_PROGRESS.some(x=>!x.complete))msg+=' يوجد أساتذة لم يرسلوا تقييماتهم بعد؛ ستبقى حالتهم «غير مرسل» بعد الإغلاق.';
+ openDialog(active?'إرسال طلب التقييم':mode==='complete'?'اعتماد اكتمال التقييم':'إيقاف التقييم',msg,async()=>{
   closeDialog();DIRECTOR_EVAL_BUSY=true;renderDirectorEvalState();
-  try{
-   const manager=await verifyManager();const current=await fetchDb('settings/studentEvaluationRequest');
-   if(!active&&!evalManagerValid(current))throw Error('ALREADY_STOPPED');
-   const record=active?{active:true,requestId:'eval_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8),requestedAt:Date.now(),requestedBy:session.code,requestedByName:manager.name||'المدير'}:{...(current||{}),active:false,closedAt:Date.now(),closedBy:session.code};
-   await fetchDb('settings/studentEvaluationRequest',{method:'PUT',data:record});DIRECTOR_EVAL_REQUEST=record;
-   renderDirectorEvalState();$('directorEvalResults').innerHTML='';$('directorEvalSummary').textContent=active?'بدأ طلب تقييم جديد؛ يمكن للأساتذة الآن إدخال تقييماتهم.':'تم إيقاف طلب التقييم مع الاحتفاظ بنتائج الدورة.';
-   showStatus(active?'تم إرسال طلب التقييم للأساتذة بنجاح.':'تم إيقاف التقييم بنجاح.','good')
-  }catch(error){console.error('DIRECTOR_EVAL_UPDATE_FAILED',error);showStatus('تعذر تحديث حالة طلب التقييم. تحقق من الصلاحيات والاتصال.','error')}
-  finally{DIRECTOR_EVAL_BUSY=false;await readDirectorEvalState()}
- },active?'نعم، أرسل الطلب':'نعم، أوقف الطلب');
+  try{const manager=await verifyManager(),live=await fetchDb('settings/studentEvaluationRequest');if(active&&evalManagerValid(live))throw Error('OPEN_REQUEST_EXISTS');if(close&&!evalManagerValid(live))throw Error('ALREADY_CLOSED');
+   const now=Date.now(),record=active?{active:true,status:'open',requestId:'eval_'+now.toString(36)+'_'+Math.random().toString(36).slice(2,9),title,message,targetTeacherCodes:codes,requestedAt:now,requestedBy:session.code,requestedByName:manager.name||'المدير'}:{...live,active:false,status:mode==='complete'?'completed':'stopped',closedAt:now,closedBy:session.code,closedByName:manager.name||'المدير'};
+   await fetchDb('',{method:'PATCH',data:{'settings/studentEvaluationRequest':record,['studentEvaluationCycles/'+record.requestId]:record},timeout:40000});DIRECTOR_EVAL_REQUEST=record;DIRECTOR_EVAL_DELIVERED=null;DIRECTOR_EVAL_ROOT=null;DIRECTOR_EVAL_PROGRESS=[];DIRECTOR_EVAL_CACHE_AT=0;
+   showStatus(active?'تم إرسال رسالة طلب التقييم إلى الأساتذة المعنيين.':mode==='complete'?'تم اعتماد اكتمال التقييم وإغلاقه.':'تم إيقاف التقييم، وأصبحت النتائج للمدير والإدارة فقط.','good');await readDirectorEvalState();
+  }catch(e){console.error('EVAL_UPDATE',e);showStatus('تعذر تنفيذ الإجراء: '+e.message,'error')}
+  finally{DIRECTOR_EVAL_BUSY=false;renderDirectorEvalState()}
+ },active?'نعم، أرسل الطلب':mode==='complete'?'نعم، اعتماد الاكتمال':'نعم، إيقاف الطلب');
+}
+function renderDirectorEvalResults(){
+ const complete=DIRECTOR_EVAL_PROGRESS.filter(x=>x.complete),pending=DIRECTOR_EVAL_PROGRESS.filter(x=>!x.complete);$('evalCompletedTab').textContent=`الأساتذة المرسلون (${complete.length})`;$('evalPendingTab').textContent=`الأساتذة غير المرسلين (${pending.length})`;
+ $('evalCompletedTab').classList.toggle('active',DIRECTOR_EVAL_TAB==='complete');$('evalPendingTab').classList.toggle('active',DIRECTOR_EVAL_TAB==='pending');
+ const rows=DIRECTOR_EVAL_TAB==='complete'?complete:pending;
+ $('directorEvalResults').innerHTML=rows.length?rows.map(x=>`<div class="eval-teacher-entry ${x.complete?'complete':'pending'}"><strong>${esc(x.name)} — ${esc(x.code)}</strong><small>${x.complete?'تم إرسال التقييم كاملاً إلى المدير.':'بانتظار إكمال التقييم ثم الضغط على «إرسال التقييم للمدير».'}${x.submittedAt?' تاريخ الإرسال: '+esc(new Date(x.submittedAt).toLocaleString('ar-IQ')):''}</small><div class="eval-chips">${x.details.map(a=>`<span>${esc(a.subjectName)} | ${esc(a.className)} (${a.done}/${a.total}) ${a.complete?'✓':'•'}</span>`).join('')}</div></div>`).join(''):'<div class="grade-empty">لا يوجد أساتذة بهذه الحالة.</div>';
 }
 async function loadDirectorEvaluationResults(){
- const r=DIRECTOR_EVAL_REQUEST;if(!r?.requestId)return;
- $('refreshEvaluationBtn').disabled=true;$('directorEvalResults').innerHTML='<p class="section-note">جاري تحميل التقييمات التي حفظها الأساتذة...</p>';
- try{
-  await verifyManager();const data=await fetchDb('studentEvaluations/'+key(r.requestId),{timeout:45000});const rows=[];
-  for(const [teacherCode,teacherClasses]of Object.entries(data||{}))for(const [classId,subjectGroups]of Object.entries(teacherClasses||{}))for(const [subjectId,allRatings]of Object.entries(subjectGroups||{}))for(const [studentCode,record]of Object.entries(allRatings||{})){
-   if(!record||!DIRECTOR_EVAL_LABELS[record.rating])continue;
-   rows.push({teacherCode,classId,subjectId,studentCode,record});
-  }
-  rows.sort((a,b)=>String(classes[a.classId]?.name||a.classId).localeCompare(String(classes[b.classId]?.name||b.classId),'ar')||studentName(students[a.studentCode]).localeCompare(studentName(students[b.studentCode]),'ar'));
-  const counts=Object.fromEntries(Object.keys(DIRECTOR_EVAL_LABELS).map(k=>[k,0]));rows.forEach(x=>counts[x.record.rating]++);
-  $('directorEvalSummary').textContent=`${rows.length} تقييم محفوظ — `+Object.entries(DIRECTOR_EVAL_LABELS).map(([k,label])=>`${label}: ${counts[k]}`).join(' | ');
-  $('directorEvalResults').innerHTML=rows.length?rows.slice(0,350).map(x=>{
-   const st=students[x.studentCode]||{},sub=x.record.subjectName||x.subjectId,c=classes[x.classId]||{};
-   return`<div class="eval-manager-entry"><div><strong>${esc(studentName(st))}</strong><small>${esc(c.name||x.classId)} | ${esc(sub)} | الأستاذ: ${esc(x.record.teacherName||x.teacherCode)}</small></div><span class="eval-manager-grade ${esc(x.record.rating)}">${esc(DIRECTOR_EVAL_LABELS[x.record.rating])}</span></div>`
-  }).join(''):'<p class="section-note">لم يُرسل أي تقييم ضمن هذه الدورة بعد.</p>';
-  if(rows.length>350)$('directorEvalSummary').textContent+=' — يظهر أول 350 تقييمًا في المعاينة.';
- }catch(error){console.error('DIRECTOR_EVAL_RESULTS_FAILED',error);$('directorEvalResults').innerHTML='<p class="section-note">تعذر تحميل التقييمات؛ تأكد من الاتصال والصلاحيات.</p>'}
+ const r=DIRECTOR_EVAL_REQUEST;if(!r?.requestId)return;const btn=$('refreshEvaluationBtn');btn.disabled=true;
+ try{await verifyManager();const [ts,ratings,submissions]=await Promise.all([fetchDb('teachers',{timeout:45000}),fetchDb('studentEvaluations/'+key(r.requestId),{timeout:60000}),fetchDb('studentEvaluationSubmissions/'+key(r.requestId))]);
+ DIRECTOR_EVAL_ROOT=ratings||{};DIRECTOR_EVAL_CACHE_AT=Date.now();DIRECTOR_EVAL_PROGRESS=ratingProgressFor(r,ts||{},ratings||{},submissions||{});
+ const complete=DIRECTOR_EVAL_PROGRESS.filter(x=>x.complete).length;const total=DIRECTOR_EVAL_PROGRESS.length;const rated=DIRECTOR_EVAL_PROGRESS.reduce((sum,t)=>sum+t.details.reduce((n,a)=>n+a.done,0),0);
+ $('directorEvalSummary').textContent=`أرسل ${complete} من أصل ${total} أستاذًا — التقييمات المحفوظة للطلاب: ${rated} — العنوان: ${r.title||'تقييم الطلبة'}`;
+ renderDirectorEvalResults();
+ }catch(e){console.error('EVAL_RESULTS_READ',e);$('directorEvalResults').innerHTML='<div class="grade-empty">تعذر تحديث قائمة الأساتذة وتقييماتهم.</div>'}
  finally{renderDirectorEvalState()}
 }
-$('activateEvaluationBtn').onclick=()=>changeDirectorEvaluation(true);
-$('stopEvaluationBtn').onclick=()=>changeDirectorEvaluation(false);
-$('refreshEvaluationBtn').onclick=loadDirectorEvaluationResults;
-
+async function deliverDirectorEvaluation(){
+ const r=DIRECTOR_EVAL_REQUEST;if(!r?.requestId||evalManagerValid(r))return showStatus('اعتمد اكتمال التقييم وأغلق الدورة أولًا.','warn');
+ openDialog('إرسال النتائج إلى حاسبة الأستاذ أحمد','سيُحفظ إشعار التسليم ونسخة الدورة في حساب الإدارة، وتصبح متاحة من زر «سحب التقييم» للمعاينة والطباعة. الإرسال داخل المنصة ولا ينقل ملفًا إلى جهاز خارجي.',async()=>{
+  closeDialog();DIRECTOR_EVAL_BUSY=true;
+  try{const valid=await verifyManager(),latest=await fetchDb('settings/studentEvaluationRequest');if(latest?.requestId!==r.requestId||latest.active===true)throw Error('يجب إغلاق الدورة أولًا');
+   const handoff={requestId:r.requestId,title:r.title||'تقييم الطلبة',message:r.message||'',recipient:'حاسبة الأستاذ أحمد',recipientType:'school_admin',sentBy:session.code,sentByName:valid.name||'المدير',sentAt:Date.now(),status:'delivered'};
+   await fetchDb('evaluationHandoffs/'+key(r.requestId),{method:'PUT',data:handoff});DIRECTOR_EVAL_DELIVERED=handoff;renderDirectorEvalState();showStatus('تم إرسال نتائج التقييم داخليًا إلى حساب الإدارة المخصص لحاسبة الأستاذ أحمد.','good');
+  }catch(e){console.error('EVAL_HANDOFF',e);showStatus('تعذر إرسال نسخة النتائج إلى حساب الإدارة.','error')}
+  finally{DIRECTOR_EVAL_BUSY=false;renderDirectorEvalState()}
+ },'نعم، إرسال النتائج');
+}
+async function getStudentEvalRows(studentCode,force=false){
+ const cycle=await fetchDb('settings/studentEvaluationRequest').catch(()=>null);if(!cycle?.requestId)return{rows:[],cycle:null};
+ const rid=cycle.requestId;let root=DIRECTOR_EVAL_ROOT;
+ if(!root||DIRECTOR_EVAL_REQUEST?.requestId!==rid||force||Date.now()-DIRECTOR_EVAL_CACHE_AT>15000){root=await fetchDb('studentEvaluations/'+key(rid),{timeout:60000})||{};DIRECTOR_EVAL_ROOT=root;DIRECTOR_EVAL_CACHE_AT=Date.now();}
+ const rows=[];for(const [teacherCode,cls]of Object.entries(root||{}))for(const [classId,subs]of Object.entries(cls||{}))for(const [subjectId,ratings]of Object.entries(subs||{})){
+  if(String(classId)!==String(students[studentCode]?.classId))continue;
+  const item=ratings?.[studentCode];if(!evalValidRating(item))continue;
+  rows.push({teacherCode,teacherName:item.teacherName||teacherCode,classId,subjectId,subjectName:item.subjectName||subjectId,rating:item.rating});
+ }
+ rows.sort((a,b)=>a.subjectName.localeCompare(b.subjectName,'ar')||a.teacherName.localeCompare(b.teacherName,'ar'));
+ return{rows,cycle};
+}
+async function loadDirectorStudentEvaluations(code,seq){
+ $('studentRatingsCard').classList.remove('hidden');$('studentRatingsBody').innerHTML='<div class="grade-empty">جاري قراءة تقييمات الأساتذة...</div>';
+ try{const {rows,cycle}=await getStudentEvalRows(code);if(seq!==loadSeq||code!==selectedCode)return;
+  selectedRatingRows=rows;selectedRatingCycle=cycle;renderOverallStudentLevel(rows);$('studentRatingCycle').textContent=cycle?`${cycle.title||'تقييم الطلبة'} — ${cycle.message||''}`:'لا توجد دورة تقييم محفوظة';
+  $('studentRatingsBody').innerHTML=rows.length?`<table class="eval-student-table"><thead><tr><th>المادة</th><th>الأستاذ</th><th>التقييم</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.subjectName)}</td><td>${esc(r.teacherName)}</td><td><span class="eval-manager-grade ${esc(r.rating)}">${esc(DIRECTOR_EVAL_LABELS[r.rating])}</span></td></tr>`).join('')}</tbody></table>`:'<div class="grade-empty">لا توجد تقييمات مسجلة لهذا الطالب ضمن الدورة الحالية.</div>';
+ }catch(e){if(seq!==loadSeq)return;console.error('STUDENT_EVAL_READ',e);selectedRatingRows=[];selectedRatingCycle=null;selectedRatingLevel='—';$('studentOverallLevel').textContent='تعذر قراءة مستوى الطالب من التقييمات المحفوظة.';$('studentRatingsBody').innerHTML='<div class="grade-empty">تعذرت قراءة التقييمات. لا توجد بيانات مؤكدة للعرض.</div>'}
+}
+function directorFixPrintOverflow(model){
+ const page=$('paperHost')?.querySelector('.paper');if(!page)return;
+ if(page.scrollHeight<=page.clientHeight+3)return;
+ const title=page.querySelector('.paper-evaluation-title'),note=page.querySelector('.paper-evaluation-note'),level=page.querySelector('.paper-level'),table=page.querySelector('.paper-eval-table')||page.querySelector('.paper-unavailable');
+ if(!title||!table)return;
+ const second=document.createElement('article');second.className='paper compact paper-eval-followup';
+ const st=model.student||{},photo=studentPhoto(st),photoBox=photo?`<img src="${esc(photo)}" class="paper-photo" alt="صورة الطالب">`:'<div class="paper-photo-empty">صورة الطالب</div>';
+ second.innerHTML=`<div class="paper-head"><div class="paper-brand"><img src="logo.png" alt=""><div><h2>ثانوية التحدي الأهلية المختلطة</h2><p>قسم الحوكمة | متابعة تقرير تقييم الطالب</p></div></div><div class="paper-header-meta">A4 — تتمة التقرير</div></div><div class="paper-title">تقييم الطالب حسب المواد</div><div class="paper-student" style="grid-template-columns:28mm 1fr;gap:4mm;align-items:start">${photoBox}<div class="paper-student-info" style="align-self:start">${[['اسم الطالب',studentName(st)],['الصف',schoolClass(st)],['كود الطالب',st.code],['عنوان التقييم',model.evalCycle?.title||'تقييم الطلبة']].map(([n,v])=>`<div class="paper-field"><small>${esc(n)}</small><strong>${esc(v||'—')}</strong></div>`).join('')}</div></div>`;
+ [title,note,level,table].filter(Boolean).forEach(node=>second.appendChild(node));
+ const foot=document.createElement('footer');foot.className='paper-foot';foot.innerHTML='<span>مدير ثانوية التحدي الأهلية المختلطة</span><span>تقييم من قبل الإدارة</span>';second.appendChild(foot);
+ $('paperHost').appendChild(second);
+}
+function directorEvaluationPrintHTML(rows,cycle,level){
+  return`<div class="paper-evaluation-title">تقييم الطالب من قبل الإدارة — ${esc(cycle?.title||'تقييم الطلبة')}</div><div class="paper-evaluation-note">${esc(cycle?.message||'بيانات التقييم كما سجلها أساتذة الصف')}</div><div class="paper-level">مستوى الطالب وفق تقييم المواد: ${esc(level||'—')}</div>${rows.length?`<table class="paper-eval-table"><thead><tr><th>المادة</th><th>الأستاذ</th><th>التقييم</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${esc(r.subjectName)}</td><td>${esc(r.teacherName)}</td><td>${esc(DIRECTOR_EVAL_LABELS[r.rating]||'—')}</td></tr>`).join('')}</tbody></table>`:'<div class="paper-unavailable">لا توجد تقييمات لهذا الطالب.</div>'}`;
+}
+$('activateEvaluationBtn').onclick=()=>changeDirectorEvaluation('start');
+$('stopEvaluationBtn').onclick=()=>changeDirectorEvaluation('stop');
+$('completeEvaluationBtn').onclick=()=>changeDirectorEvaluation('complete');
+$('deliverEvaluationBtn').onclick=deliverDirectorEvaluation;
+$('refreshEvaluationBtn').onclick=()=>readDirectorEvalState();
+$('evalCompletedTab').onclick=()=>{DIRECTOR_EVAL_TAB='complete';renderDirectorEvalResults()};
+$('evalPendingTab').onclick=()=>{DIRECTOR_EVAL_TAB='pending';renderDirectorEvalResults()};
 init().then(readDirectorEvalState);
 </script>
 </body>
