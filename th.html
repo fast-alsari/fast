@@ -548,11 +548,49 @@ body.record-preview-open{overflow:hidden!important}
 .refresh-assigned-btn{min-height:35px;padding:7px 12px;border:1px solid #bfd9f8;border-radius:11px;background:#edf5ff;color:#075fcf;font-size:9px;font-weight:900;white-space:nowrap}
 .refresh-assigned-btn:disabled{opacity:.5}
 @media(max-width:450px){.section-head:has(#refreshAssignedBtn){align-items:flex-start;flex-wrap:wrap}.refresh-assigned-btn{flex:0 0 auto}}
+/* Subject tabs and director-requested student ratings */
+.subject-picker{margin-top:15px;display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.subject-tab{min-height:45px;padding:10px 17px;border-radius:13px;border:1.5px solid rgba(255,255,255,.45);background:rgba(255,255,255,.12);color:#fff;font-size:11px;font-weight:900;transition:.2s}
+.subject-tab[aria-selected="true"]{color:#0752ab;background:#fff;border-color:#fff;box-shadow:0 5px 15px #002a6533}
+.subject-tab:disabled{opacity:.55;cursor:wait}
+.subject-tab:focus-visible{outline:3px solid #fff;outline-offset:3px}
+.subject-scope-caption{margin-top:9px;font-size:9px;font-weight:800;opacity:.94}
+.eval-launch{margin:10px 0 4px;padding:12px;border:1px solid #c5defb;border-radius:18px;background:#f2f8ff;box-shadow:var(--shadow)}
+.eval-launch-btn{width:100%;min-height:52px;border:0;border-radius:14px;background:linear-gradient(135deg,#1478da,#064da6);color:#fff;font-size:11px;font-weight:900}
+.eval-modal-card{max-width:1100px!important;width:min(1100px,100%)!important}
+.eval-head-label{font-size:10px;font-weight:800;color:#52647e;line-height:1.8;margin-bottom:10px}
+.eval-class-choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:8px;margin:10px 0 13px}
+.eval-class-choice{padding:10px 12px;min-height:60px;border:1px solid #cbdcf0;border-radius:13px;background:#fff;color:#344054;text-align:right;font-size:10px;font-weight:900}
+.eval-class-choice.active{background:#edf5ff;border-color:#075fcf;box-shadow:0 0 0 2px #075fcf22;color:#075fcf}
+.eval-class-choice small{display:block;margin-top:5px;font-size:8px;color:#667085}
+.eval-roster{display:grid;gap:7px;max-height:52vh;overflow-y:auto;padding:3px}
+.eval-roster-row{display:grid;grid-template-columns:32px minmax(155px,1.15fr) minmax(390px,2fr);align-items:center;gap:8px;padding:11px;border:1px solid #e0e8f3;border-radius:13px;background:#fff}
+.eval-roster-row:nth-child(even){background:#f9fbff}
+.eval-sequence{font-size:11px;font-weight:900;color:#667085;text-align:center}
+.eval-student-name{font-size:11px;font-weight:900;line-height:1.7}
+.eval-student-name small{display:block;color:#98a2b3;font-size:8px;direction:ltr;text-align:right}
+.eval-choices{display:grid;grid-template-columns:repeat(5,minmax(60px,1fr));gap:5px}
+.eval-choice{min-height:43px;padding:6px 3px;border:1.4px solid var(--rating-border);border-radius:10px;background:var(--rating-bg);color:var(--rating-text);font-size:9px;font-weight:900;opacity:.8}
+.eval-choice.is-selected{opacity:1;outline:2px solid var(--rating-text);outline-offset:1px;box-shadow:0 3px 12px #0001}
+.eval-choice:focus-visible{outline:3px solid #075fcf;outline-offset:2px}
+.eval-choice[data-rating="excellent"]{--rating-bg:#e6f8ed;--rating-border:#9ce1b6;--rating-text:#076b40}
+.eval-choice[data-rating="very_good"]{--rating-bg:#eaf2ff;--rating-border:#a8cdfc;--rating-text:#075fcf}
+.eval-choice[data-rating="good"]{--rating-bg:#f2ebff;--rating-border:#c7b3f5;--rating-text:#6e38ba}
+.eval-choice[data-rating="acceptable"]{--rating-bg:#fff5e5;--rating-border:#f5d099;--rating-text:#945707}
+.eval-choice[data-rating="weak"]{--rating-bg:#fff0f1;--rating-border:#f0afb5;--rating-text:#ba2c3a}
+.eval-stats{margin-top:11px;padding:11px 13px;border-radius:12px;background:#edf5ff;color:#075fcf;font-size:10px;font-weight:900;line-height:1.8}
+.eval-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.eval-actions .btn{flex:1;min-height:46px;border:0;border-radius:12px;background:#075fcf;color:#fff;font-size:10px;font-weight:900}
+.eval-actions .btn.secondary{background:#f1f4f9;color:#475467}
+.eval-actions .btn:disabled{opacity:.5}
+@media(max-width:830px){.eval-roster-row{grid-template-columns:30px 1fr}.eval-choices{grid-column:1/-1}.eval-roster{max-height:55vh}}
+@media(max-width:440px){.subject-tab{flex:1 1 43%;font-size:10px}.eval-choices{gap:3px}.eval-choice{font-size:8px;min-height:45px;padding:4px 1px}}
+
 </style></head>
 <body>
 <div id="loaderScreen" class="loader-screen"><div class="loader-box"><img src="logo.png" class="loader-logo" alt=""><div class="spinner"></div><p>جاري تحميل منصة الأستاذ</p></div></div>
 <header class="topbar"><div class="brand"><img src="logo.png" class="logo" alt=""><div><h1>مدرسة التحدي الأهلية المختلطة</h1><p>منصة الأستاذ</p></div></div><button id="logoutBtn" class="logout" type="button">خروج</button></header>
-<main class="main"><section class="teacher-card"><div class="teacher-label">الأستاذ</div><div id="teacherName" class="teacher-name">—</div><div id="teacherSubject" class="teacher-subject">المادة: —</div></section><div class="section-head"><h3>الصفوف والمواد المسندة إليك</h3><button id="refreshAssignedBtn" class="refresh-assigned-btn" type="button">↻ تحديث الصفوف والمواد</button></div><section id="classesGrid" class="classes-grid"></section>
+<main class="main"><section class="teacher-card"><div class="teacher-label">الأستاذ</div><div id="teacherName" class="teacher-name">—</div><div id="teacherSubject" class="teacher-subject">المادة: —</div><div id="teacherSubjectPicker" class="subject-picker" role="tablist" aria-label="المواد المسندة للأستاذ"></div><div id="teacherScopeCaption" class="subject-scope-caption"></div></section><div class="section-head"><h3>الصفوف والمواد المسندة إليك</h3><button id="refreshAssignedBtn" class="refresh-assigned-btn" type="button">↻ تحديث الصفوف والمواد</button></div><section id="classesGrid" class="classes-grid"></section>
 <section class="records-launch">
  <div class="records-launch-actions">
   <button id="openRecordsHubBtn" class="records-launch-btn" type="button">سحب السجلات</button>
@@ -560,6 +598,7 @@ body.record-preview-open{overflow:hidden!important}
  </div>
 </section>
 <section class="objection-launch"><button id="openTeacherObjectionsBtn" class="objection-launch-btn" type="button">اعتراضات الدرجات <span id="teacherObjectionCount" class="objection-count">0</span></button></section>
+<section id="studentEvaluationLaunch" class="eval-launch hidden"><button id="openStudentEvaluationsBtn" class="eval-launch-btn" type="button">تقييم الطلبة — بطلب من المدير</button></section>
 <section id="gradesSection" class="hidden"><div class="section-head"><h3 id="selectedClassTitle">درجات الصف</h3><span id="studentCount">0 طالب</span></div><div id="periodTools" class="period-tools"></div><div id="formulaInfo" class="grade-info"></div><input id="searchInput" class="search" type="search" placeholder="بحث باسم الطالب أو الكود..." autocomplete="off"><div id="tableArea"></div><div class="save-bar"><button id="saveGradesBtn" class="save-btn" type="button">حفظ وقفل درجات الفترة</button><button id="reloadBtn" class="reload-btn" type="button" title="إعادة تحميل">↻</button></div></section></main>
 
 
@@ -621,6 +660,16 @@ body.record-preview-open{overflow:hidden!important}
  </div>
 </div>
 
+<div id="studentEvaluationsModal" class="modal" aria-modal="true" role="dialog" aria-labelledby="studentEvaluationTitle">
+ <div class="modal-card eval-modal-card">
+  <div class="modal-head"><h3 id="studentEvaluationTitle">تقييم الطلبة</h3><button id="closeStudentEvaluationsBtn" class="close" type="button" aria-label="إغلاق">×</button></div>
+  <p class="eval-head-label" id="evalRequestNote">تقييم الطلبة ضمن المادة والصف المكلّف بهما الأستاذ.</p>
+  <div class="eval-class-choices" id="evalClassChoices"></div>
+  <div class="eval-roster" id="evalStudentRows"></div>
+  <div class="eval-stats" id="evalSummary">اختر الصف لعرض الطلاب.</div>
+  <div class="eval-actions"><button type="button" class="btn" id="saveStudentEvaluationsBtn">حفظ التقييمات</button><button type="button" class="btn secondary" id="refreshStudentEvaluationsBtn">تحديث التقييمات</button></div>
+ </div>
+</div>
 <div id="teacherObjectionsModal" class="modal">
  <div class="modal-card teacher-objections-card">
   <div class="modal-head"><h3>اعتراضات الدرجات</h3><button id="closeTeacherObjectionsBtn" class="close" type="button">×</button></div>
@@ -734,7 +783,7 @@ async function tahadiLimitedReads(items,limit,readOne){
 }
 
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",PERIODS={term1:{label:"الفصل الأول"},midyear:{label:"نصف السنة"},term2:{label:"الفصل الثاني"},finalExam:{label:"الامتحان النهائي"},secondRound:{label:"الدور الثاني"}},COMPONENTS=[["month1","الشهر الأول"],["month2","الشهر الثاني"],["month3","الشهر الثالث"],["month4","الشهر الرابع"],["month5","الشهر الخامس"],["month6","الشهر السادس"],["month7","الشهر السابع"],["month8","الشهر الثامن"],["month9","الشهر التاسع"],["month10","الشهر العاشر"],["month11","الشهر الحادي عشر"],["month12","الشهر الثاني عشر"],["grammar","قواعد"],["literature","أدب"],["composition","إنشاء"],["oral","شفهي"],["practical","عملي"],["behavior","سلوك"],["attendance","حضور"],["drawing","رسم"],["preparation","تحضير"],["homework","واجب"],["daily","يومي"],["monthly","شهري"],["weekly","أسبوعي"],["electronic","إلكتروني"],["quiz","اختبار قصير"],["participation","مشاركة"],["project","مشروع"],["activity","نشاط"]].map(([key,label])=>({key,label}));
-let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedSubjectId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null;
+let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedSubjectId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null,selectedSubjectScope="",subjectSwitchBusy=false,teacherSubjectSerial=0,EVAL_REQUEST=null,EVAL_RATINGS={},EVAL_DIRTY=false,EVAL_CLASS="",EVAL_SUBJECT="",EVAL_DATA_LOAD=0,EVAL_POLL=null,EVAL_BUSY=false;
 const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])),norm=v=>String(v??"").trim().toLowerCase(),num=v=>v===""||v===null||v===undefined?null:(Number.isFinite(Number(v))?Number(v):null),safeJS=v=>String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"),safeId=v=>String(v||"").replace(/[^a-zA-Z0-9_-]/g,"_"),safeKey=v=>String(v||"").trim().toLowerCase().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[^a-z0-9\u0600-\u06ff]+/gi,"_").replace(/^_+|_+$/g,"");
 let SCREEN_ALERT_LAST_FOCUS=null;
 function closeScreenAlert(){
@@ -894,24 +943,56 @@ function assignmentFor(classId,subjectId=""){
 }
 function activeAssignment(){return assignmentFor(selectedClassId,selectedSubjectId)}function subjectMax(){return Number(activeAssignment()?.maxGrade||100)}function subjectPass(){return Number(activeAssignment()?.passGrade??50)}
 function studentsOfClass(classId){return Object.entries(students).map(([code,s])=>({code,...s})).filter(s=>s.classId===classId&&s.deleted!==true&&s.hidden!==true).sort((a,b)=>(Number(a.serial||999999)-Number(b.serial||999999))||String(a.name||"").localeCompare(String(b.name||""),"ar"))}
-function renderTeacher(){const names=[...new Set(assignments.map(a=>a.subjectName))];$("teacherName").textContent=teacher.name||teacherUser.name||"—";$("teacherSubject").textContent=`المواد: ${names.join("، ")||teacher.subject||"—"}`}
+function teacherSubjectGroups(){const found=new Map();for(const a of assignments){const key=safeKey(a.subjectName)||String(a.subjectId||"");if(!found.has(key))found.set(key,{key,name:a.subjectName,count:0});found.get(key).count++}return [...found.values()]}
+function teacherSubjectMatches(a){return!!a&&(!selectedSubjectScope||safeKey(a.subjectName)===selectedSubjectScope)}
+function visibleTeacherAssignments(){return assignments.filter(teacherSubjectMatches)}
+function maintainSubjectScope(preferred=""){
+ const groups=teacherSubjectGroups();
+ if(!groups.length){selectedSubjectScope="";return}
+ const match=groups.find(g=>g.key===preferred)||groups.find(g=>g.key===selectedSubjectScope);
+ selectedSubjectScope=(match||groups[0]).key;
+}
+function renderTeacher(){
+ maintainSubjectScope();
+ const groups=teacherSubjectGroups(),active=groups.find(g=>g.key===selectedSubjectScope);
+ $("teacherName").textContent=teacher.name||teacherUser.name||"—";
+ $("teacherSubject").textContent=`المادة: ${active?.name||teacher.subject||"—"}`;
+ $("teacherSubjectPicker").innerHTML=groups.length>1?groups.map(g=>`<button type="button" class="subject-tab" role="tab" aria-selected="${g.key===selectedSubjectScope}" data-subject-scope="${esc(g.key)}" ${subjectSwitchBusy?"disabled":""}>${esc(g.name)}</button>`).join(""):"";
+ $("teacherSubjectPicker").classList.toggle("hidden",groups.length<=1);
+ $("teacherScopeCaption").textContent=active?`${active.count} ${active.count===1?"صف مكلّف به":"صفوف مكلّف بها"} لهذه المادة — السجلات والدرجات تعرض المادة المختارة فقط`:"لم تحدد الإدارة أي مادة لهذا الحساب";
+}
+async function switchTeacherSubject(scope){
+ if(subjectSwitchBusy||scope===selectedSubjectScope)return;
+ if(!teacherSubjectGroups().some(g=>g.key===scope))return;
+ if(gradesDirty&&!window.confirm("توجد درجات غير محفوظة. هل تريد الانتقال إلى مادة أخرى؟"))return;
+ subjectSwitchBusy=true;teacherSubjectSerial++;
+ selectedSubjectScope=scope;selectedClassId="";selectedSubjectId="";
+ grades={};formulas={};gradeKeys={};gradesDirty=false;
+ $("gradesSection").classList.add("hidden");RECORD_ASSIGNMENT_INDEXES.clear();closeRecordsHub();closeTeacherObjections();closeStudentEvaluations(true);
+ renderTeacher();renderClasses();renderTeacherObjections();
+ try{const first=visibleTeacherAssignments()[0];if(first)await selectClass(first.classId,first.subjectId,{scroll:false});await refreshEvaluationRequest();}
+ catch(e){console.error("SUBJECT_SWITCH_FAILED",e);toast("تعذر تحديث بيانات المادة المختارة. أعد المحاولة.","error")}
+ finally{subjectSwitchBusy=false;renderTeacher();renderClasses();}
+}
+$("teacherSubjectPicker").addEventListener("click",event=>{const button=event.target.closest("[data-subject-scope]");if(button)switchTeacherSubject(button.dataset.subjectScope)});
 function renderClasses(){
- if(!assignments.length){$("classesGrid").innerHTML=`<div class="empty">لا توجد مادة وصف مسندان إلى حسابك حالياً. يجب ربط الأستاذ من صفحة الإدارة بمادة موجودة داخل الصف.</div>`;return}
- $("classesGrid").innerHTML=assignments.map(a=>{
+ const visible=visibleTeacherAssignments();
+ if(!visible.length){$("classesGrid").innerHTML=`<div class="empty">لا توجد مادة وصف مسندان إلى حسابك حالياً. يجب ربط الأستاذ من صفحة الإدارة بمادة موجودة داخل الصف.</div>`;return}
+ $("classesGrid").innerHTML=visible.map(a=>{
   const c=classes[a.classId]||{},list=studentsOfClass(a.classId),count=list.length,gender=recordGenderFromList(c,list),genderText=gender==="female"?"بنات":gender==="male"?"بنين":"بنين و بنات",genderClass=gender==="female"?"gender-female":gender==="male"?"gender-male":"gender-mixed";
   return`<button type="button" class="class-card ${genderClass} ${selectedClassId===a.classId&&selectedSubjectId===a.subjectId?"active":""}" onclick="selectClass('${safeJS(a.classId)}','${safeJS(a.subjectId)}')"><div class="class-count">${count}</div><div class="class-icon gender-label">${genderText}</div><h4>${esc(c.name||a.classId)}</h4><p>${esc(a.subjectName)}<br>من ${a.maxGrade} | النجاح ${a.passGrade}</p></button>`
  }).join("")
 }
-async function selectClass(classId,subjectId=""){
+async function selectClass(classId,subjectId="",options={}){
  const chosen=assignmentFor(classId,subjectId);
- if(!chosen){toast("هذه المادة غير مسندة إلى حسابك. حدّث الصفوف والمواد.","warn");return}
+ if(!chosen||!teacherSubjectMatches(chosen)){toast("هذه المادة غير مسندة إلى حسابك. حدّث الصفوف والمواد.","warn");return}
  if(gradesDirty&&(selectedClassId!==String(classId)||selectedSubjectId!==chosen.subjectId)&&!window.confirm("توجد تغييرات لم تُحفظ. هل تريد الانتقال إلى مادة أخرى؟"))return;
  selectedClassId=String(classId);selectedSubjectId=chosen.subjectId;selectedPeriod="term1";$("searchInput").value="";$("gradesSection").classList.remove("hidden");renderClasses();
  await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);await loadSavedColumnDrafts();renderPeriodButtons();renderFormulaInfo();renderGradeTable();
  const a=activeAssignment(),c=classes[classId]||{},list=studentsOfClass(classId),gender=recordGenderFromList(c,list),genderText=gender==="female"?"بنات":gender==="male"?"بنين":"بنين و بنات";
  $("selectedClassTitle").textContent=`${c.name||"الصف"} - ${a?.subjectName||"المادة"} - ${genderText}`;
  $("studentCount").textContent=`${list.length} اسم — ${genderText}`;
- setTimeout(()=>$("gradesSection").scrollIntoView({behavior:"smooth",block:"start"}),100)
+ if(options.scroll!==false)setTimeout(()=>$("gradesSection").scrollIntoView({behavior:"smooth",block:"start"}),100)
 }
 function gradePath(code){const a=activeAssignment();return`grades/${encodeURIComponent(code)}/${encodeURIComponent(a.subjectId)}`}async function loadClassGrades(){
  gradesDirty=false;
@@ -2503,13 +2584,13 @@ function recordClassStudents(classId){return studentsOfClass(classId).slice().so
 function genderRank(g){const x=recordNormalizeGender(g);return x==="male"?0:x==="female"?1:2}
 function selectedRecordIndexes(){return[...RECORD_ASSIGNMENT_INDEXES].sort((a,b)=>a-b)}
 function renderRecordClassChoices(){
- $("recordClassChoices").innerHTML=assignments.map((a,i)=>{
+ $("recordClassChoices").innerHTML=assignments.map((a,i)=>({a,i})).filter(x=>teacherSubjectMatches(x.a)).map(({a,i})=>{
   const c=classes[a.classId]||{},list=recordClassStudents(a.classId),gender=recordGenderFromList(c,list),sel=RECORD_ASSIGNMENT_INDEXES.has(i),genderText=gender==="female"?"بنات":gender==="male"?"بنين":"بنين و بنات",genderClass=gender==="female"?"gender-female":gender==="male"?"gender-male":"gender-mixed";
   return`<button type="button" class="record-class-option ${genderClass} ${sel?"selected":""}" onclick="chooseRecordAssignment(${i})"><h4>${esc(c.name||a.classId)}</h4><p>${esc(a.subjectName)}<br>${list.length} اسم</p><span class="record-gender-badge">${genderText}</span></button>`
  }).join("");
  const n=RECORD_ASSIGNMENT_INDEXES.size;$("recordSelectionNote").textContent=n?`تم تحديد ${n} صف/مادة. سيتم ترتيب البنين أولاً ثم البنات.`:"لم يتم تحديد أي صف بعد."
 }
-function chooseRecordAssignment(i){i=Number(i);if(RECORD_ASSIGNMENT_INDEXES.has(i))RECORD_ASSIGNMENT_INDEXES.delete(i);else RECORD_ASSIGNMENT_INDEXES.add(i);renderRecordClassChoices()}
+function chooseRecordAssignment(i){i=Number(i);if(!teacherSubjectMatches(assignments[i]))return;if(RECORD_ASSIGNMENT_INDEXES.has(i))RECORD_ASSIGNMENT_INDEXES.delete(i);else RECORD_ASSIGNMENT_INDEXES.add(i);renderRecordClassChoices()}
 function showRecordType(kind){
  RECORD_KIND=kind;RECORD_ASSIGNMENT_INDEXES.clear();$("recordsTypesView").classList.add("hidden");$("recordsConfigView").classList.remove("hidden");
  $("adminRecordOptions").classList.toggle("hidden",kind!=="admin");$("oralRecordOptions").classList.toggle("hidden",kind!=="oral");$("draftRecordOptions").classList.toggle("hidden",kind!=="draft");
@@ -2520,7 +2601,7 @@ function closeRecordsHub(){$("recordsHubModal").classList.remove("show")}
 function backRecordTypes(){RECORD_KIND="";RECORD_ASSIGNMENT_INDEXES.clear();$("recordsConfigView").classList.add("hidden");$("recordsTypesView").classList.remove("hidden")}
 function selectedRecordGroups(){
  const idxs=selectedRecordIndexes();if(!idxs.length)throw new Error("حدد صفاً واحداً على الأقل");
- const groups=idxs.map(i=>{const a=assignments[i],c=classes[a.classId]||{},list=recordClassStudents(a.classId),gender=recordGenderFromList(c,list);return{index:i,a,c,list,gender,room:c.roomNumber??list[0]?.roomNumber??""}}).filter(x=>x.a&&x.list.length);
+ const groups=idxs.map(i=>{const a=assignments[i];if(!teacherSubjectMatches(a))return null;const c=classes[a.classId]||{},list=recordClassStudents(a.classId),gender=recordGenderFromList(c,list);return{index:i,a,c,list,gender,room:c.roomNumber??list[0]?.roomNumber??""}}).filter(x=>x&&x.a&&x.list.length);
  if(!groups.length)throw new Error("لا توجد أسماء ضمن الصفوف المحددة");
  return groups.sort((x,y)=>genderRank(x.gender)-genderRank(y.gender)||String(x.c.name||"").localeCompare(String(y.c.name||""),"ar")||String(x.a.subjectName||"").localeCompare(String(y.a.subjectName||""),"ar"))
 }
@@ -2758,10 +2839,115 @@ $("openRecordsHubBtn").onclick=openRecordsHub;
 $("openExamsPageBtn").onclick=()=>{location.href="examples.html"};$("closeRecordsHubBtn").onclick=closeRecordsHub;$("closeRecordsHubBtn2").onclick=closeRecordsHub;$("recordsHomeBtn").onclick=closeRecordsHub;$("recordsHomeBtn2").onclick=closeRecordsHub;$("recordsBackTypesBtn").onclick=backRecordTypes;$("recordsHubModal").addEventListener("click",e=>{if(e.target===$("recordsHubModal"))closeRecordsHub()});document.querySelectorAll("[data-record-kind]").forEach(b=>b.addEventListener("click",()=>showRecordType(b.dataset.recordKind)));$("hubPreviewBtn").onclick=previewHubRecord;
 
 
+/* مدير المدرسة يفعّل دورة تقييم واحدة، ولكل أستاذ تقييم مستقل بحسب المادة والصف. */
+const STUDENT_EVAL_LEVELS=[
+ {key:"excellent",label:"ممتاز"},{key:"very_good",label:"جيد جدًا"},
+ {key:"good",label:"جيد"},{key:"acceptable",label:"مقبول"},{key:"weak",label:"ضعيف"}
+];
+const EVAL_LABEL_BY_KEY=Object.fromEntries(STUDENT_EVAL_LEVELS.map(x=>[x.key,x.label]));
+function evaluationIsForTeacher(req){
+ if(!req||req.active!==true||!req.requestId)return false;
+ const target=req.teacherCodes;
+ return !Array.isArray(target)||target.length===0||target.map(String).includes(String(TEACHER_CODE));
+}
+function evaluationModalOpen(){return $("studentEvaluationsModal").classList.contains("show")}
+function renderEvaluationLaunch(){
+ const has=evaluationIsForTeacher(EVAL_REQUEST)&&visibleTeacherAssignments().length>0;
+ $("studentEvaluationLaunch").classList.toggle("hidden",!has);
+ if(!has&&evaluationModalOpen())closeStudentEvaluations(true);
+}
+async function refreshEvaluationRequest(){
+ try{
+  const latest=await dbGet("studentEvaluationRequests/current");
+  const wasId=EVAL_REQUEST?.requestId||"";
+  EVAL_REQUEST=evaluationIsForTeacher(latest)?latest:null;
+  if(wasId&&EVAL_REQUEST?.requestId!==wasId&&evaluationModalOpen())closeStudentEvaluations(true);
+ }catch(e){console.warn("EVALUATION_REQUEST_READ_FAILED",e);EVAL_REQUEST=null}
+ renderEvaluationLaunch();
+}
+function evaluationAssignments(){return visibleTeacherAssignments().slice().sort((a,b)=>String(classes[a.classId]?.name||a.classId).localeCompare(String(classes[b.classId]?.name||b.classId),"ar"))}
+function evaluationCurrentAssignment(){return assignments.find(a=>String(a.classId)===String(EVAL_CLASS)&&String(a.subjectId)===String(EVAL_SUBJECT)&&teacherSubjectMatches(a))||null}
+function renderEvaluationChoices(){
+ const rows=evaluationAssignments();
+ $("evalClassChoices").innerHTML=rows.map(a=>`<button type="button" class="eval-class-choice ${a.classId===EVAL_CLASS&&a.subjectId===EVAL_SUBJECT?"active":""}" data-eval-class="${esc(a.classId)}" data-eval-subject="${esc(a.subjectId)}"><strong>${esc(classes[a.classId]?.name||a.classId)}</strong><small>${esc(a.subjectName)} · ${studentsOfClass(a.classId).length} طالب</small></button>`).join("");
+}
+function renderEvaluationRows(){
+ const a=evaluationCurrentAssignment(),studentsList=a?studentsOfClass(a.classId):[];
+ $("evalRequestNote").textContent=a?`طلب المدير: ${EVAL_REQUEST?.requestedByName||"إدارة المدرسة"} • المادة: ${a.subjectName} • الصف: ${classes[a.classId]?.name||a.classId} • اختر تقييمًا واحدًا فقط لكل طالب.`:"اختر الصف المراد تقييم طلبته.";
+ $("evalStudentRows").innerHTML=studentsList.length?studentsList.map((st,i)=>`<div class="eval-roster-row"><span class="eval-sequence">${i+1}</span><div class="eval-student-name">${esc(st.name||"طالب")}<small>${esc(st.code)}</small></div><div class="eval-choices" role="group" aria-label="تقييم ${esc(st.name||st.code)}">${STUDENT_EVAL_LEVELS.map(level=>`<button type="button" class="eval-choice ${EVAL_RATINGS[st.code]===level.key?"is-selected":""}" data-eval-student="${esc(st.code)}" data-rating="${level.key}" aria-pressed="${EVAL_RATINGS[st.code]===level.key}">${level.label}</button>`).join("")}</div></div>`).join(""):'<div class="empty">لا توجد أسماء طلاب في هذا الصف.</div>';
+ const done=studentsList.filter(s=>Boolean(EVAL_RATINGS[s.code])).length;
+ $("evalSummary").textContent=`تم اختيار تقييم ${done} من أصل ${studentsList.length} طالب — ${EVAL_DIRTY?"توجد تغييرات لم تُحفظ":"التقييمات المعروضة محفوظة أو جاهزة للإدخال"}`;
+ $("saveStudentEvaluationsBtn").disabled=EVAL_BUSY||!a||!EVAL_DIRTY;
+}
+function confirmEvaluationNavigation(){return !EVAL_DIRTY||window.confirm("توجد تقييمات لم تُحفظ. هل تريد المتابعة دون حفظها؟")}
+async function loadEvaluationClass(classId,subjectId,{force=false}={}){
+ const a=assignments.find(x=>String(x.classId)===String(classId)&&String(x.subjectId)===String(subjectId)&&teacherSubjectMatches(x));
+ if(!a||!evaluationIsForTeacher(EVAL_REQUEST))return;
+ if(!force&&!confirmEvaluationNavigation())return;
+ const id=++EVAL_DATA_LOAD;EVAL_CLASS=a.classId;EVAL_SUBJECT=a.subjectId;EVAL_RATINGS={};EVAL_DIRTY=false;EVAL_BUSY=true;
+ renderEvaluationChoices();$("evalStudentRows").innerHTML='<div class="empty">جاري تحميل التقييمات المحفوظة...</div>';
+ $("saveStudentEvaluationsBtn").disabled=true;
+ try{
+  const records=await dbGet(`studentEvaluations/${encodeURIComponent(EVAL_REQUEST.requestId)}/${encodeURIComponent(TEACHER_CODE)}/${encodeURIComponent(a.classId)}/${encodeURIComponent(a.subjectId)}`)||{};
+  if(id!==EVAL_DATA_LOAD)return;
+  for(const [code,value] of Object.entries(records))if(EVAL_LABEL_BY_KEY[value?.rating])EVAL_RATINGS[code]=value.rating;
+ }catch(e){console.error("EVALUATION_LOAD_FAILED",e);if(id===EVAL_DATA_LOAD){$("evalStudentRows").innerHTML='<div class="empty">تعذر قراءة التقييمات. أعد التحديث قبل الكتابة.</div>';EVAL_BUSY=true;return}}
+ if(id!==EVAL_DATA_LOAD)return;EVAL_BUSY=false;renderEvaluationRows();
+}
+async function openStudentEvaluations(){
+ await refreshEvaluationRequest();
+ if(!evaluationIsForTeacher(EVAL_REQUEST))return toast("لم يصدر طلب تقييم فعّال من المدير.","warn");
+ const a=evaluationAssignments()[0];if(!a)return toast("لا توجد صفوف مكلّف بها لهذه المادة.","warn");
+ $("studentEvaluationsModal").classList.add("show");EVAL_DIRTY=false;await loadEvaluationClass(a.classId,a.subjectId,{force:true});
+}
+function closeStudentEvaluations(force=false){
+ if(!force&&!confirmEvaluationNavigation())return false;
+ ++EVAL_DATA_LOAD;EVAL_DIRTY=false;EVAL_BUSY=false;EVAL_CLASS="";EVAL_SUBJECT="";EVAL_RATINGS={};$("evalClassChoices").innerHTML="";$("evalStudentRows").innerHTML="";$("studentEvaluationsModal").classList.remove("show");return true;
+}
+function pickStudentEvaluation(code,rating){
+ if(EVAL_BUSY||!EVAL_LABEL_BY_KEY[rating]||!studentsOfClass(EVAL_CLASS).some(s=>s.code===code))return;
+ EVAL_RATINGS[code]=EVAL_RATINGS[code]===rating?"":rating;EVAL_DIRTY=true;renderEvaluationRows();
+}
+async function saveStudentEvaluations(){
+ if(EVAL_BUSY||!EVAL_DIRTY)return;
+ const req=EVAL_REQUEST,a=evaluationCurrentAssignment();if(!req||!a)return;
+ EVAL_BUSY=true;renderEvaluationRows();
+ try{
+  const [latest,usr,liveTeacher,liveStudents]=await Promise.all([
+   dbGet("studentEvaluationRequests/current"),dbGet(`users/${encodeURIComponent(session.code)}`),
+   dbGet(`teachers/${encodeURIComponent(TEACHER_CODE)}`),dbGet("students")
+  ]);
+  if(!evaluationIsForTeacher(latest)||String(latest.requestId)!==String(req.requestId))throw Error("REQUEST_CLOSED");
+  if(!usr||!["teacher","th"].includes(norm(usr.role))||usr.active===false||!liveTeacher||liveTeacher.accountActive===false)throw Error("ACCESS_CHANGED");
+  const entries=Array.isArray(liveTeacher.assignments)?liveTeacher.assignments:Object.values(liveTeacher.assignments||{});
+  const explicit=Array.isArray(liveTeacher.assignments)||!!(liveTeacher.assignments&&typeof liveTeacher.assignments==="object");
+  const assigned=explicit?entries.some(x=>String(x?.classId)===String(a.classId)&&(String(x?.subjectId)===String(a.subjectId)||safeKey(x?.subjectName)===safeKey(a.subjectName))):((Array.isArray(liveTeacher.classIds)?liveTeacher.classIds:Object.keys(liveTeacher.classIds||{})).map(String).includes(String(a.classId))&&safeKey(liveTeacher.subject)===safeKey(a.subjectName));
+  if(!assigned)throw Error("ACCESS_CHANGED");
+  const liveRoster=studentsOfClass(a.classId),now=Date.now(),updates={};let count=0;
+  for(const st of liveRoster){
+   if(!liveStudents?.[st.code]||String(liveStudents[st.code].classId)!==String(a.classId)||liveStudents[st.code].hidden===true||liveStudents[st.code].deleted===true)continue;
+   const rating=EVAL_RATINGS[st.code]||"";
+   updates[st.code]=rating?{rating,label:EVAL_LABEL_BY_KEY[rating],studentName:st.name||"",studentCode:st.code,classId:a.classId,className:classes[a.classId]?.name||a.classId,subjectId:a.subjectId,subjectName:a.subjectName,teacherCode:TEACHER_CODE,teacherName:teacher.name||teacherUser.name||"",requestId:req.requestId,recordedAt:now}:null;
+   if(rating)count++;
+  }
+  await dbPatch(`studentEvaluations/${encodeURIComponent(req.requestId)}/${encodeURIComponent(TEACHER_CODE)}/${encodeURIComponent(a.classId)}/${encodeURIComponent(a.subjectId)}`,updates);
+  EVAL_DIRTY=false;toast(`تم حفظ تقييم ${count} طالبًا بنجاح.`,"success");
+ }catch(error){console.error("EVALUATION_SAVE_FAILED",error);toast(error.message==="REQUEST_CLOSED"?"أوقف المدير طلب التقييم، لذلك لم يتم الحفظ.":error.message==="ACCESS_CHANGED"?"تغيّرت صلاحيات المادة أو حساب الأستاذ. لم يتم الحفظ.":"تعذر حفظ التقييمات. تحقق من الاتصال والصلاحيات.","error")}
+ finally{EVAL_BUSY=false;renderEvaluationRows();await refreshEvaluationRequest()}
+}
+$("openStudentEvaluationsBtn").onclick=openStudentEvaluations;
+$("closeStudentEvaluationsBtn").onclick=()=>closeStudentEvaluations();
+$("studentEvaluationsModal").addEventListener("click",e=>{if(e.target===$("studentEvaluationsModal"))closeStudentEvaluations()});
+$("evalClassChoices").addEventListener("click",e=>{const b=e.target.closest("[data-eval-class]");if(b)loadEvaluationClass(b.dataset.evalClass,b.dataset.evalSubject)});
+$("evalStudentRows").addEventListener("click",e=>{const b=e.target.closest("[data-eval-student]");if(b)pickStudentEvaluation(b.dataset.evalStudent,b.dataset.rating)});
+$("saveStudentEvaluationsBtn").onclick=saveStudentEvaluations;
+$("refreshStudentEvaluationsBtn").onclick=()=>{if(EVAL_CLASS)loadEvaluationClass(EVAL_CLASS,EVAL_SUBJECT)};
+function startEvaluationPolling(){clearInterval(EVAL_POLL);EVAL_POLL=setInterval(()=>{if(!document.hidden)refreshEvaluationRequest()},25000);document.addEventListener("visibilitychange",()=>{if(!document.hidden)refreshEvaluationRequest()})}
+
 const OBJECTION_PERIOD_LABELS={term1:"الفصل الأول",midyear:"نصف السنة",term2:"الفصل الثاني",annual:"السعي السنوي",finalExam:"نهاية السنة / الامتحان النهائي",secondRound:"الدور الثاني"};
 function teacherCanSeeObjection(o){
  if(!o||!o.classId||!o.subjectId)return false;
- return assignments.some(a=>String(a.classId)===String(o.classId)&&(String(a.subjectId)===String(o.subjectId)||norm(a.subjectName)===norm(o.subjectName)))
+ return assignments.some(a=>teacherSubjectMatches(a)&&String(a.classId)===String(o.classId)&&(String(a.subjectId)===String(o.subjectId)||norm(a.subjectName)===norm(o.subjectName)))
 }
 function teacherObjectionStatusLabel(v){
  return v==="resolved"
@@ -2915,23 +3101,22 @@ async function refreshAssignedClasses(){
  const button=$("refreshAssignedBtn");
  if(button?.disabled)return;
  if(gradesDirty&&!window.confirm("توجد تغييرات درجات لم تُحفظ. هل تريد تحديث الصفوف والمواد؟"))return;
- const previousClass=selectedClassId,previousSubject=selectedSubjectId;
+ const previousClass=selectedClassId,previousSubject=selectedSubjectId,previousScope=selectedSubjectScope;
  if(button){button.disabled=true;button.textContent="جاري التحديث..."}
  try{
   if(!await verifyTeacher())return;
-  await loadBaseData();
-  renderTeacher();
-  if(previousClass&&assignmentFor(previousClass,previousSubject)){
-   selectedClassId="";selectedSubjectId="";
-   await selectClass(previousClass,previousSubject);
-  }else{
-   selectedClassId="";selectedSubjectId="";grades={};formulas={};gradeKeys={};
-   $("gradesSection").classList.add("hidden");
-  }
-  renderClasses();toast("تم تحديث المواد والصفوف من الإدارة.","success")
+  await loadBaseData();maintainSubjectScope(previousScope);
+  const preferred=assignmentFor(previousClass,previousSubject);
+  const target=preferred&&teacherSubjectMatches(preferred)?preferred:visibleTeacherAssignments()[0];
+  selectedClassId="";selectedSubjectId="";grades={};formulas={};gradeKeys={};gradesDirty=false;
+  $("gradesSection").classList.add("hidden");
+  renderTeacher();renderClasses();
+  if(target)await selectClass(target.classId,target.subjectId,{scroll:false});
+  await refreshEvaluationRequest();renderTeacherObjections();
+  toast("تم تحديث المواد والصفوف من الإدارة.","success")
  }catch(error){console.error("TEACHER_ASSIGNMENTS_REFRESH_FAILED",error);toast("تعذر تحديث المواد والصفوف. حاول مجددًا.","error")}
  finally{if(button){button.disabled=false;button.textContent="↻ تحديث الصفوف والمواد"}}
 }
 $("refreshAssignedBtn").addEventListener("click",refreshAssignedClasses);
-async function init(){const publicKey=String(new URLSearchParams(location.search).get("record")||"").trim();if(publicKey){await initPublicTeacherRecord(publicKey);return}try{if(!await verifyTeacher())return;await loadBaseData();renderTeacher();renderClasses();await loadTeacherObjections();startTeacherObjectionPolling()}catch(e){console.error(e);toast("تعذر تحميل حساب الأستاذ")}finally{$("loaderScreen").classList.add("hidden")}}window.addEventListener("load",init);
+async function init(){const publicKey=String(new URLSearchParams(location.search).get("record")||"").trim();if(publicKey){await initPublicTeacherRecord(publicKey);return}try{if(!await verifyTeacher())return;await loadBaseData();maintainSubjectScope();renderTeacher();renderClasses();const first=visibleTeacherAssignments()[0];if(first)await selectClass(first.classId,first.subjectId,{scroll:false});await Promise.all([loadTeacherObjections(),refreshEvaluationRequest()]);startTeacherObjectionPolling();startEvaluationPolling()}catch(e){console.error(e);toast("تعذر تحميل حساب الأستاذ")}finally{$("loaderScreen").classList.add("hidden")}}window.addEventListener("load",init);
 </script></body></html>
