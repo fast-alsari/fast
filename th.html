@@ -578,6 +578,11 @@ body.record-preview-open{overflow:hidden!important}
 .eval-choice[data-rating="weak"]{background:#ffe2e3;color:#b21e32;border-color:#fac1c5}
 .eval-choice.selected{opacity:1;box-shadow:inset 0 0 0 2px currentColor,0 3px 8px #14233917;font-size:9.5px}
 .eval-choice:disabled{opacity:.35}
+
+.eval-manager-note{margin:9px 0 12px;padding:12px;border:1px solid #cbdff7;border-radius:12px;background:#f2f8ff;color:#244f7b;font-size:10px;font-weight:900;line-height:1.9;white-space:pre-wrap}
+.eval-send{min-height:46px;padding:10px 18px;border:0;border-radius:12px;background:#6938ef;color:#fff;font-size:11px;font-weight:900}
+.eval-send:disabled{opacity:.5}
+.eval-sent-summary{margin-top:8px;padding:8px 12px;border-radius:10px;background:#ecfdf3;color:#087746;font-size:10px;font-weight:900;line-height:1.8}
 .eval-foot{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-top:12px;flex-wrap:wrap}
 .eval-progress{color:#475467;font-size:10px;font-weight:900}
 .eval-save{min-height:46px;border:0;border-radius:12px;padding:10px 26px;color:#fff;background:#078746;font-size:11px;font-weight:900}
@@ -737,10 +742,10 @@ body.record-preview-open{overflow:hidden!important}
 <div id="studentEvaluationModal" class="modal eval-modal" role="dialog" aria-modal="true" aria-labelledby="studentEvalTitle">
  <div class="modal-card">
   <div class="modal-head"><h3 id="studentEvalTitle">تقييم الطلبة</h3><button type="button" class="close" id="closeEvaluationBtn" aria-label="إغلاق">×</button></div>
-  <p class="modal-desc" id="evaluationHint">اختر الصف لتظهر أسماء طلابه، ثم حدد تقييمًا واحدًا لكل طالب.</p>
+  <p class="modal-desc" id="evaluationHint">اختر الصف لتظهر أسماء طلابه، ثم حدد تقييمًا واحدًا لكل طالب.</p><div class="eval-manager-note" id="evaluationDirectorMessage"></div>
   <div class="eval-tools"><label for="evaluationClass">الصف</label><select id="evaluationClass" class="eval-class-select"></select></div>
   <div id="evaluationList" class="eval-list"><div class="eval-empty">اختر الصف المطلوب.</div></div>
-  <div class="eval-foot"><span id="evaluationProgress" class="eval-progress">لم يتم اختيار صف.</span><button id="saveEvaluationsBtn" class="eval-save" type="button">حفظ التقييمات</button></div>
+  <div class="eval-foot"><span id="evaluationProgress" class="eval-progress">لم يتم اختيار صف.</span><button id="saveEvaluationsBtn" class="eval-save" type="button">حفظ التقييمات</button></div><div id="evaluationSubmissionStatus" class="eval-sent-summary">يجب تقييم جميع الصفوف والمواد قبل الإرسال.</div><button id="sendEvaluationToDirectorBtn" class="eval-send" style="width:100%;margin-top:9px" type="button" disabled>إرسال التقييم كاملًا إلى المدير</button>
  </div>
 </div>
 <script>
@@ -782,7 +787,7 @@ async function tahadiLimitedReads(items,limit,readOne){
 }
 
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",PERIODS={term1:{label:"الفصل الأول"},midyear:{label:"نصف السنة"},term2:{label:"الفصل الثاني"},finalExam:{label:"الامتحان النهائي"},secondRound:{label:"الدور الثاني"}},COMPONENTS=[["month1","الشهر الأول"],["month2","الشهر الثاني"],["month3","الشهر الثالث"],["month4","الشهر الرابع"],["month5","الشهر الخامس"],["month6","الشهر السادس"],["month7","الشهر السابع"],["month8","الشهر الثامن"],["month9","الشهر التاسع"],["month10","الشهر العاشر"],["month11","الشهر الحادي عشر"],["month12","الشهر الثاني عشر"],["grammar","قواعد"],["literature","أدب"],["composition","إنشاء"],["oral","شفهي"],["practical","عملي"],["behavior","سلوك"],["attendance","حضور"],["drawing","رسم"],["preparation","تحضير"],["homework","واجب"],["daily","يومي"],["monthly","شهري"],["weekly","أسبوعي"],["electronic","إلكتروني"],["quiz","اختبار قصير"],["participation","مشاركة"],["project","مشروع"],["activity","نشاط"]].map(([key,label])=>({key,label}));
-let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedSubjectId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null,ACTIVE_SUBJECT_KEY="",EVAL_REQUEST=null,EVAL_POLL_TIMER=null,EVAL_CLASS="",EVAL_SUBJECT="",EVAL_SELECTED={},EVAL_DIRTY=false,EVAL_LOADING=false;
+let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedSubjectId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null,ACTIVE_SUBJECT_KEY="",EVAL_REQUEST=null,EVAL_POLL_TIMER=null,EVAL_CLASS="",EVAL_SUBJECT="",EVAL_SELECTED={},EVAL_DIRTY=false,EVAL_LOADING=false,EVAL_ALREADY_SUBMITTED=false;
 const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])),norm=v=>String(v??"").trim().toLowerCase(),num=v=>v===""||v===null||v===undefined?null:(Number.isFinite(Number(v))?Number(v):null),safeJS=v=>String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"),safeId=v=>String(v||"").replace(/[^a-zA-Z0-9_-]/g,"_"),safeKey=v=>String(v||"").trim().toLowerCase().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[^a-z0-9\u0600-\u06ff]+/gi,"_").replace(/^_+|_+$/g,"");
 let SCREEN_ALERT_LAST_FOCUS=null;
 function closeScreenAlert(){
@@ -2980,11 +2985,11 @@ $("teacherObjectionsModal").addEventListener("click",e=>{if(e.target===$("teache
 $("searchInput").addEventListener("input",renderGradeTable);$("reloadBtn").onclick=async()=>{if(!selectedClassId)return;try{$("reloadBtn").disabled=true;await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);await loadSavedColumnDrafts();renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم تحديث البيانات.")}catch(e){console.error(e);toast("تعذر تحديث البيانات")}finally{$("reloadBtn").disabled=false}};$("logoutBtn").onclick=logout;
 
 const EVAL_CHOICES=[{key:"excellent",label:"ممتاز"},{key:"very_good",label:"جيد جدًا"},{key:"good",label:"جيد"},{key:"acceptable",label:"مقبول"},{key:"weak",label:"ضعيف"}];
-function evalRequestEnabled(r){return!!(r&&typeof r==="object"&&r.active===true&&/^[a-zA-Z0-9_-]{4,80}$/.test(String(r.requestId||"")))}
+function evalRequestEnabled(r){const targets=Array.isArray(r?.targetTeacherCodes)?r.targetTeacherCodes:[];return!!(r&&typeof r==="object"&&r.active===true&&/^[a-zA-Z0-9_-]{4,80}$/.test(String(r.requestId||""))&&(!targets.length||targets.some(c=>String(c).toUpperCase()===String(TEACHER_CODE).toUpperCase())))}
 function renderEvalLaunch(){
  const ready=evalRequestEnabled(EVAL_REQUEST)&&subjectAssignments().length>0;
  $("evaluationLaunch").classList.toggle("hidden",!ready);
- if(ready)$("evaluationLaunchNote").textContent=`طلب تقييم فعّال — ${subjectGroups().find(g=>g.key===ACTIVE_SUBJECT_KEY)?.name||""}`;
+ if(ready)$("evaluationLaunchNote").textContent=`${EVAL_REQUEST.title||"تقييم الطلبة"} — ${EVAL_REQUEST.message||"يرجى إكمال تقييم صفوفك وموادك"}`;
 }
 async function loadEvaluationRequest(){
  try{
@@ -2997,7 +3002,7 @@ async function loadEvaluationRequest(){
   EVAL_REQUEST=newer||null;renderEvalLaunch();
  }catch(e){console.warn("EVALUATION_REQUEST_READ_FAILED",e);EVAL_REQUEST=null;$("evaluationLaunch").classList.add("hidden")}
 }
-function evaluationAssignments(){return subjectAssignments().filter(a=>a.classId&&a.subjectId)}
+function evaluationAssignments(){return assignments.filter(a=>a.classId&&a.subjectId)}
 function renderEvalClasses(){
  const options=evaluationAssignments();
  $("evaluationClass").innerHTML=options.map(a=>`<option value="${esc(a.classId)}|${esc(a.subjectId)}">${esc(classes[a.classId]?.name||a.classId)} — ${esc(a.subjectName)}</option>`).join("");
@@ -3008,8 +3013,8 @@ function evalRatingValue(v){const value=typeof v==="string"?v:String(v?.rating||
 function renderEvaluationRows(){
  const list=studentsOfClass(EVAL_CLASS),count=list.filter(s=>evalRatingValue(EVAL_SELECTED[s.code])).length;
  $("evaluationProgress").textContent=`${count} من ${list.length} طالب — ${EVAL_DIRTY?"تغييرات لم تُحفظ":"يمكنك تعديل التقييمات المحفوظة"}`;
- $("saveEvaluationsBtn").disabled=EVAL_LOADING||!list.length||!EVAL_DIRTY;
- $("evaluationList").innerHTML=list.length?list.map((s,i)=>`<div class="eval-row"><span class="eval-no">${i+1}</span><strong class="eval-student">${esc(s.name||"بدون اسم")}</strong><div class="eval-choices" role="group" aria-label="تقييم ${esc(s.name||s.code)}">${EVAL_CHOICES.map(level=>`<button type="button" class="eval-choice ${EVAL_SELECTED[s.code]===level.key?"selected":""}" data-eval-code="${esc(s.code)}" data-rating="${level.key}" aria-pressed="${EVAL_SELECTED[s.code]===level.key}">${level.label}</button>`).join("")}</div></div>`).join(""):'<div class="eval-empty">لا يوجد طلاب مسجلون في هذا الصف.</div>';
+ $("saveEvaluationsBtn").disabled=EVAL_LOADING||EVAL_ALREADY_SUBMITTED||!list.length||!EVAL_DIRTY;
+ $("evaluationList").innerHTML=list.length?list.map((s,i)=>`<div class="eval-row"><span class="eval-no">${i+1}</span><strong class="eval-student">${esc(s.name||"بدون اسم")}</strong><div class="eval-choices" role="group" aria-label="تقييم ${esc(s.name||s.code)}">${EVAL_CHOICES.map(level=>`<button type="button" class="eval-choice ${EVAL_SELECTED[s.code]===level.key?"selected":""}" data-eval-code="${esc(s.code)}" data-rating="${level.key}" ${EVAL_ALREADY_SUBMITTED?"disabled":""} aria-pressed="${EVAL_SELECTED[s.code]===level.key}">${level.label}</button>`).join("")}</div></div>`).join(""):'<div class="eval-empty">لا يوجد طلاب مسجلون في هذا الصف.</div>';
 }
 async function loadEvaluationClass(){
  const value=$("evaluationClass").value;
@@ -3027,8 +3032,10 @@ async function loadEvaluationClass(){
  finally{EVAL_LOADING=false;$("saveEvaluationsBtn").disabled=!EVAL_DIRTY}
 }
 async function openEvaluationModal(){
- await loadEvaluationRequest();if(!evalRequestEnabled(EVAL_REQUEST))return toast("لا يوجد طلب تقييم فعّال من الإدارة.","warn");
- renderEvalClasses();$("studentEvaluationModal").classList.add("show");
+  await loadEvaluationRequest();if(!evalRequestEnabled(EVAL_REQUEST))return toast("لا يوجد طلب تقييم فعّال من الإدارة.","warn");
+  $("evaluationDirectorMessage").textContent=`${EVAL_REQUEST.title||"تقييم الطلبة"}\n${EVAL_REQUEST.message||"مطلوب إكمال التقييمات وإرسالها للمدير."}`;
+  EVAL_ALREADY_SUBMITTED=false;await checkTeacherEvaluationCompletion();
+  renderEvalClasses();$("studentEvaluationModal").classList.add("show");
  const first=evaluationAssignments()[0];if(first){$("evaluationClass").value=`${first.classId}|${first.subjectId}`;await loadEvaluationClass()}
 }
 function closeEvaluationModal(){if(EVAL_DIRTY&&!window.confirm("هناك تقييمات لم تُحفظ. هل تريد الإغلاق؟"))return false;$("studentEvaluationModal").classList.remove("show");EVAL_DIRTY=false;return true}
@@ -3037,13 +3044,13 @@ $("closeEvaluationBtn").onclick=closeEvaluationModal;
 $("studentEvaluationModal").addEventListener("click",e=>{if(e.target===$("studentEvaluationModal"))closeEvaluationModal()});
 $("evaluationClass").onchange=async function(){if(EVAL_DIRTY&&!window.confirm("هناك تقييمات غير محفوظة. هل تريد اختيار صف آخر؟")){this.value=`${EVAL_CLASS}|${EVAL_SUBJECT}`;return}await loadEvaluationClass()};
 $("evaluationList").addEventListener("click",e=>{
- const button=e.target.closest("[data-eval-code][data-rating]");if(!button||EVAL_LOADING)return;
+ const button=e.target.closest("[data-eval-code][data-rating]");if(!button||EVAL_LOADING||EVAL_ALREADY_SUBMITTED)return;
  const code=button.dataset.evalCode,rating=button.dataset.rating;
  if(!studentsOfClass(EVAL_CLASS).some(s=>s.code===code)||!EVAL_CHOICES.some(x=>x.key===rating))return;
- EVAL_SELECTED[code]=rating;EVAL_DIRTY=true;renderEvaluationRows();
+ EVAL_SELECTED[code]=rating;EVAL_DIRTY=true;$("sendEvaluationToDirectorBtn").disabled=true;renderEvaluationRows();
 });
 async function saveStudentEvaluations(){
- if(EVAL_LOADING||!EVAL_DIRTY||!EVAL_CLASS||!evalRequestEnabled(EVAL_REQUEST))return;
+ if(EVAL_LOADING||EVAL_ALREADY_SUBMITTED||!EVAL_DIRTY||!EVAL_CLASS||!evalRequestEnabled(EVAL_REQUEST))return;
  const chosen=evaluationAssignments().find(a=>a.classId===EVAL_CLASS&&a.subjectId===EVAL_SUBJECT),roster=studentsOfClass(EVAL_CLASS);
  if(!chosen||!roster.length)return toast("الصف غير متاح للتقييم.","error");
  const missing=roster.filter(s=>!evalRatingValue(EVAL_SELECTED[s.code]));
@@ -3059,11 +3066,49 @@ async function saveStudentEvaluations(){
   const stamp=Date.now(),data={};
   for(const st of roster)data[st.code]={rating:EVAL_SELECTED[st.code],teacherCode:TEACHER_CODE,teacherName:teacher.name||teacherUser.name||"",classId:EVAL_CLASS,subjectId:EVAL_SUBJECT,subjectName:chosen.subjectName,requestId:request.requestId,updatedAt:stamp};
   const base=`studentEvaluations/${encodeURIComponent(request.requestId)}/${encodeURIComponent(TEACHER_CODE)}/${encodeURIComponent(EVAL_CLASS)}/${encodeURIComponent(EVAL_SUBJECT)}`;
-  await dbPatch(base,data);EVAL_DIRTY=false;renderEvaluationRows();toast(`تم حفظ تقييم ${roster.length} طالبًا بنجاح.`,"success")
+  await dbPatch(base,data);EVAL_DIRTY=false;renderEvaluationRows();await checkTeacherEvaluationCompletion();toast(`تم حفظ تقييم ${roster.length} طالبًا بنجاح.`,"success")
  }catch(error){console.error("STUDENT_EVALUATION_SAVE_FAILED",error);toast(error.message==="REQUEST_CLOSED"?"تم إيقاف طلب التقييم من الإدارة.":error.message==="ASSIGNMENT_REMOVED"?"هذا الصف أو المادة لم يعد مسندًا إليك.":"تعذر حفظ التقييمات. لم يتم تأكيد الحفظ.","error")}
  finally{EVAL_LOADING=false;$("saveEvaluationsBtn").textContent="حفظ التقييمات";$("saveEvaluationsBtn").disabled=!EVAL_DIRTY}
 }
 $("saveEvaluationsBtn").onclick=saveStudentEvaluations;
+
+async function checkTeacherEvaluationCompletion(){
+ const btn=$("sendEvaluationToDirectorBtn"),box=$("evaluationSubmissionStatus");
+ if(!evalRequestEnabled(EVAL_REQUEST)){btn.disabled=true;box.textContent="انتهى طلب التقييم.";return false}
+ try{
+  const rid=encodeURIComponent(EVAL_REQUEST.requestId),tc=encodeURIComponent(TEACHER_CODE);
+  const [existing,all]=await Promise.all([dbGet(`studentEvaluationSubmissions/${rid}/${tc}`),dbGet(`studentEvaluations/${rid}/${tc}`)]);
+  EVAL_ALREADY_SUBMITTED=!!existing?.submittedAt;
+  const targets=evaluationAssignments().filter(a=>studentsOfClass(a.classId).length>0);
+  let incomplete=0,done=0,total=0;
+  for(const a of targets){const roster=studentsOfClass(a.classId),saved=all?.[a.classId]?.[a.subjectId]||{};total+=roster.length;for(const s of roster){if(EVAL_CHOICES.some(c=>c.key===(saved?.[s.code]?.rating||saved?.[s.code])))done++;else incomplete++}}
+  if(EVAL_ALREADY_SUBMITTED){box.textContent="تم إرسال تقييماتك إلى المدير بنجاح، وهي الآن معتمدة ولا يمكن تعديلها.";btn.disabled=true;btn.textContent="تم إرسال التقييم إلى المدير"}
+  else{box.textContent=`حُفظ ${done} من أصل ${total} تقييمًا لجميع موادك وصفوفك. ${incomplete?`المتبقي ${incomplete} تقييم.`:"اكتمل الحفظ، يمكنك إرسال التقييم للمدير."}`;btn.disabled=incomplete>0||total===0;btn.textContent="إرسال التقييم كاملًا إلى المدير"}
+  return!EVAL_ALREADY_SUBMITTED&&incomplete===0&&total>0;
+ }catch(e){console.error("EVAL_COMPLETION_CHECK",e);btn.disabled=true;box.textContent="تعذر التحقق من اكتمال التقييم، حدّث الصفحة وحاول مرة أخرى.";return false}
+}
+async function submitTeacherEvaluations(){
+ const btn=$("sendEvaluationToDirectorBtn");if(btn.disabled||EVAL_DIRTY)return toast("احفظ التقييمات أولًا ثم أرسلها.","warn");
+ btn.disabled=true;btn.textContent="جاري تدقيق جميع التقييمات...";
+ try{
+  const r=await dbGet("settings/studentEvaluationRequest");if(!evalRequestEnabled(r)||r.requestId!==EVAL_REQUEST?.requestId)throw Error("REQUEST_CLOSED");
+  const allowed=await verifyTeacher();if(!allowed)throw Error("NO_ACCESS");
+  await checkTeacherEvaluationCompletion();if(EVAL_ALREADY_SUBMITTED)return;
+  const rid=encodeURIComponent(r.requestId),tc=encodeURIComponent(TEACHER_CODE);
+  const all=await dbGet(`studentEvaluations/${rid}/${tc}`)||{};
+  const liveAssignments=resolveAssignments();
+  const needed=liveAssignments.filter(a=>studentsOfClass(a.classId).length>0);
+  if(!needed.length)throw Error("EMPTY");
+  for(const a of needed)for(const st of studentsOfClass(a.classId)){
+   const rating=all?.[a.classId]?.[a.subjectId]?.[st.code]?.rating;
+   if(!EVAL_CHOICES.some(x=>x.key===rating))throw Error("INCOMPLETE");
+  }
+  const stamp=Date.now();await dbPut(`studentEvaluationSubmissions/${rid}/${tc}`,{submittedAt:stamp,teacherCode:TEACHER_CODE,teacherName:teacher.name||teacherUser.name||TEACHER_CODE,requestId:r.requestId,assignmentCount:needed.length,ratingsCount:needed.reduce((n,a)=>n+studentsOfClass(a.classId).length,0)});
+  EVAL_ALREADY_SUBMITTED=true;EVAL_DIRTY=false;await checkTeacherEvaluationCompletion();if(EVAL_CLASS)renderEvaluationRows();toast("تم إرسال التقييمات إلى المدير بنجاح.","success");
+ }catch(e){console.error("EVAL_TEACHER_SUBMIT",e);toast(e.message==="INCOMPLETE"?"توجد صفوف أو مواد لم تكتمل تقييماتها.":e.message==="REQUEST_CLOSED"?"المدير أغلق طلب التقييم.":"تعذر إرسال التقييمات. تحقق من الاتصال والصلاحيات.","error")}
+ finally{if(!EVAL_ALREADY_SUBMITTED){btn.textContent="إرسال التقييم كاملًا إلى المدير";await checkTeacherEvaluationCompletion()}}
+}
+$("sendEvaluationToDirectorBtn").onclick=submitTeacherEvaluations;
 function startEvaluationPolling(){if(EVAL_POLL_TIMER)clearInterval(EVAL_POLL_TIMER);EVAL_POLL_TIMER=setInterval(()=>{if(!document.hidden)loadEvaluationRequest()},18000)}
 
 async function refreshAssignedClasses(){
