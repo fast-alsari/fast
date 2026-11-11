@@ -20,6 +20,20 @@
 @page{size:A4 portrait;margin:0}
 @media print{html,body{width:210mm!important;height:297mm!important;margin:0!important;background:#fff!important;overflow:visible!important}body>*:not(#paperHost){display:none!important}#paperHost{display:block!important;position:static!important;width:210mm!important;height:297mm!important}#paperHost .paper{width:210mm!important;height:297mm!important;page-break-inside:avoid!important;break-inside:avoid!important;box-shadow:none!important}*{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}}
 @media(max-width:780px){.main{padding:13px 9px 45px}.hero{padding:19px}.hero h1{font-size:19px}.profile{grid-template-columns:1fr}.photo,.photo-placeholder{width:120px;height:145px}.profile-meta{grid-template-columns:repeat(2,minmax(0,1fr))}.lower{grid-template-columns:1fr}.chips{gap:5px}.chip{padding:11px 4px}.chip strong{font-size:20px}.search-wrap{gap:3px}.search-wrap .button{min-width:76px;padding:6px 10px}.top-in{padding:9px}.brand strong{font-size:11px}.brand img{width:42px;height:42px}.card{padding:14px}}
+
+/* طلب تقييم الطلبة من المدير */
+.eval-manager-buttons{display:flex;gap:9px;flex-wrap:wrap}
+.eval-manager-buttons .button{flex:1;min-width:160px}
+.eval-manager-state{padding:12px 14px;border:1px solid #d4e5f3;border-radius:13px;background:#f5f9ff;color:#365673;font-size:11px;font-weight:900;line-height:1.8;margin:10px 0}
+.eval-manager-state.enabled{background:#eefbf3;border-color:#b9e5c9;color:#08774a}
+.eval-manager-state.disabled{background:#fff9f1;border-color:#f1dcb7;color:#91611a}
+.eval-manager-results{display:grid;gap:7px;max-height:440px;overflow:auto;margin-top:10px}
+.eval-manager-entry{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid #dce5ee;border-radius:11px;background:#fff;font-size:10px}
+.eval-manager-entry small{display:block;margin-top:5px;color:#667085;line-height:1.6}
+.eval-manager-grade{border-radius:999px;padding:6px 10px;white-space:nowrap;font-weight:900}
+.eval-manager-grade.excellent{color:#08693f;background:#def8e8}.eval-manager-grade.very_good{color:#075daa;background:#e0f2ff}.eval-manager-grade.good{color:#6740a7;background:#eee6ff}.eval-manager-grade.acceptable{color:#9a5700;background:#fff0d9}.eval-manager-grade.weak{color:#b21e32;background:#ffe2e3}
+.eval-summary{font-weight:900;font-size:10px;color:#47607b;margin-top:9px}
+@media(max-width:550px){.eval-manager-buttons{flex-direction:column}.eval-manager-buttons .button{width:100%}}
 </style>
 </head>
 <body>
@@ -31,6 +45,14 @@
 <section class="card hidden" id="gradesCard"><div class="card-title"><div><h2>درجات الطالب الرسمية</h2><p>الفصل الأول، نصف السنة، الفصل الثاني، السعي السنوي، الامتحان النهائي، والدور الثاني</p></div></div><div id="gradeTableArea" class="grades-box"></div></section>
 <section class="card hidden" id="attendanceCard"><div class="card-title"><div><h2>تفاصيل الحضور والغياب</h2><p>السجل المشترك مع مشرف الحضور والغياب</p></div></div><div class="history-list" id="historyList"></div></section>
 <section class="card" id="rankingCard"><div class="card-title"><div><h2>التصفية حسب الأعلى</h2><p>اسم الطالب وعدد مرات الغياب أو التأخير أو الإجازة أو الهروب؛ من الأعلى إلى الأقل.</p></div><button class="button soft" id="loadRankingBtn" type="button">تحميل الإحصاءات</button></div><div class="rank-controls"><select id="rankingClass" aria-label="الصف للتصفية"><option value="">جميع الصفوف</option></select></div><div class="rank-tabs" id="rankTabs"><button type="button" data-rank="absent" class="active">الأعلى غيابًا</button><button type="button" data-rank="late">الأعلى تأخيرًا</button><button type="button" data-rank="excused">الأعلى إجازةً</button><button type="button" data-rank="escape">الأعلى هروبًا</button></div><div id="rankingResults"><p class="section-note">اضغط «تحميل الإحصاءات» لجلب البيانات الحديثة من سجل المشرفين.</p></div></section>
+
+<section class="card" id="evaluationDirectorCard">
+ <div class="card-title"><div><h2>طلب تقييم الطلبة من الأساتذة</h2><p>يظهر زر «تقييم الطلبة» عند الأساتذة فقط عندما يكون الطلب مفعّلًا.</p></div></div>
+ <div id="directorEvalState" class="eval-manager-state">جاري قراءة حالة طلب التقييم...</div>
+ <div class="eval-manager-buttons"><button type="button" id="activateEvaluationBtn" class="button success">طلب تقييم الطلبة</button><button type="button" id="stopEvaluationBtn" class="button danger">إيقاف طلب التقييم</button><button type="button" id="refreshEvaluationBtn" class="button soft">تحديث التقييمات</button></div>
+ <div id="directorEvalSummary" class="eval-summary">تظهر التقييمات المرسلة عند الضغط على تحديث التقييمات.</div>
+ <div id="directorEvalResults" class="eval-manager-results"></div>
+</section>
 </main>
 <div class="overlay" id="confirmOverlay" role="dialog" aria-modal="true" aria-labelledby="confirmTitle"><div class="dialog"><div class="dialog-icon" id="confirmIcon">!</div><h3 id="confirmTitle">تأكيد</h3><p id="confirmText"></p><div class="dialog-actions"><button class="button outline" id="cancelConfirm" type="button">إلغاء</button><button class="button primary" id="doConfirm" type="button">نعم، حفظ</button></div></div></div>
 <div id="paperHost" aria-hidden="true"></div>
@@ -155,7 +177,62 @@ $('cancelConfirm').onclick=closeDialog;$('confirmOverlay').onclick=e=>{if(e.targ
 window.addEventListener('afterprint',()=>document.body.classList.remove('printing'));
 // Refresh the open student's snapshot without modifying the visual layout or saved data.
 setInterval(()=>{if(selectedCode&&!busy&&!document.hidden&&$('confirmOverlay').classList.contains('show')===false)selectStudent(selectedCode)},45000);
-init();
+
+const DIRECTOR_EVAL_LABELS={excellent:'ممتاز',very_good:'جيد جدًا',good:'جيد',acceptable:'مقبول',weak:'ضعيف'};
+let DIRECTOR_EVAL_REQUEST=null,DIRECTOR_EVAL_BUSY=false;
+function evalManagerValid(v){return!!(v&&typeof v==='object'&&v.active===true&&/^[a-zA-Z0-9_-]{4,80}$/.test(String(v.requestId||'')))}
+function renderDirectorEvalState(){
+ const r=DIRECTOR_EVAL_REQUEST,active=evalManagerValid(r),state=$('directorEvalState');
+ state.className='eval-manager-state '+(active?'enabled':'disabled');
+ state.textContent=active?`طلب التقييم مفتوح الآن. رقم الطلب: ${r.requestId} — تظهر نافذة التقييم في حسابات الأساتذة.`:'طلب التقييم متوقف. لا يظهر زر التقييم عند الأساتذة.';
+ $('activateEvaluationBtn').disabled=active||DIRECTOR_EVAL_BUSY;
+ $('stopEvaluationBtn').disabled=!active||DIRECTOR_EVAL_BUSY;
+ $('refreshEvaluationBtn').disabled=!r?.requestId||DIRECTOR_EVAL_BUSY;
+}
+async function readDirectorEvalState(){
+ try{DIRECTOR_EVAL_REQUEST=await fetchDb('settings/studentEvaluationRequest');renderDirectorEvalState()}
+ catch(error){console.error('EVAL_STATE_LOAD_FAILED',error);$('directorEvalState').textContent='تعذرت قراءة حالة التقييم. حدّث الصفحة ثم حاول مجددًا.';$('activateEvaluationBtn').disabled=true;$('stopEvaluationBtn').disabled=true}
+}
+async function changeDirectorEvaluation(active){
+ if(DIRECTOR_EVAL_BUSY)return;
+ openDialog(active?'إرسال طلب التقييم':'إيقاف التقييم',active?'سيظهر زر تقييم الطلبة لجميع الأساتذة، وستُفتح دورة تقييم جديدة مستقلة عن النتائج السابقة. هل توافق؟':'سيختفي زر التقييم عند الأساتذة، ولن تُقبل عمليات حفظ جديدة ضمن هذه الدورة. هل توافق؟',async()=>{
+  closeDialog();DIRECTOR_EVAL_BUSY=true;renderDirectorEvalState();
+  try{
+   const manager=await verifyManager();const current=await fetchDb('settings/studentEvaluationRequest');
+   if(!active&&!evalManagerValid(current))throw Error('ALREADY_STOPPED');
+   const record=active?{active:true,requestId:'eval_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,8),requestedAt:Date.now(),requestedBy:session.code,requestedByName:manager.name||'المدير'}:{...(current||{}),active:false,closedAt:Date.now(),closedBy:session.code};
+   await fetchDb('settings/studentEvaluationRequest',{method:'PUT',data:record});DIRECTOR_EVAL_REQUEST=record;
+   renderDirectorEvalState();$('directorEvalResults').innerHTML='';$('directorEvalSummary').textContent=active?'بدأ طلب تقييم جديد؛ يمكن للأساتذة الآن إدخال تقييماتهم.':'تم إيقاف طلب التقييم مع الاحتفاظ بنتائج الدورة.';
+   showStatus(active?'تم إرسال طلب التقييم للأساتذة بنجاح.':'تم إيقاف التقييم بنجاح.','good')
+  }catch(error){console.error('DIRECTOR_EVAL_UPDATE_FAILED',error);showStatus('تعذر تحديث حالة طلب التقييم. تحقق من الصلاحيات والاتصال.','error')}
+  finally{DIRECTOR_EVAL_BUSY=false;await readDirectorEvalState()}
+ },active?'نعم، أرسل الطلب':'نعم، أوقف الطلب');
+}
+async function loadDirectorEvaluationResults(){
+ const r=DIRECTOR_EVAL_REQUEST;if(!r?.requestId)return;
+ $('refreshEvaluationBtn').disabled=true;$('directorEvalResults').innerHTML='<p class="section-note">جاري تحميل التقييمات التي حفظها الأساتذة...</p>';
+ try{
+  await verifyManager();const data=await fetchDb('studentEvaluations/'+key(r.requestId),{timeout:45000});const rows=[];
+  for(const [teacherCode,teacherClasses]of Object.entries(data||{}))for(const [classId,subjectGroups]of Object.entries(teacherClasses||{}))for(const [subjectId,allRatings]of Object.entries(subjectGroups||{}))for(const [studentCode,record]of Object.entries(allRatings||{})){
+   if(!record||!DIRECTOR_EVAL_LABELS[record.rating])continue;
+   rows.push({teacherCode,classId,subjectId,studentCode,record});
+  }
+  rows.sort((a,b)=>String(classes[a.classId]?.name||a.classId).localeCompare(String(classes[b.classId]?.name||b.classId),'ar')||studentName(students[a.studentCode]).localeCompare(studentName(students[b.studentCode]),'ar'));
+  const counts=Object.fromEntries(Object.keys(DIRECTOR_EVAL_LABELS).map(k=>[k,0]));rows.forEach(x=>counts[x.record.rating]++);
+  $('directorEvalSummary').textContent=`${rows.length} تقييم محفوظ — `+Object.entries(DIRECTOR_EVAL_LABELS).map(([k,label])=>`${label}: ${counts[k]}`).join(' | ');
+  $('directorEvalResults').innerHTML=rows.length?rows.slice(0,350).map(x=>{
+   const st=students[x.studentCode]||{},sub=x.record.subjectName||x.subjectId,c=classes[x.classId]||{};
+   return`<div class="eval-manager-entry"><div><strong>${esc(studentName(st))}</strong><small>${esc(c.name||x.classId)} | ${esc(sub)} | الأستاذ: ${esc(x.record.teacherName||x.teacherCode)}</small></div><span class="eval-manager-grade ${esc(x.record.rating)}">${esc(DIRECTOR_EVAL_LABELS[x.record.rating])}</span></div>`
+  }).join(''):'<p class="section-note">لم يُرسل أي تقييم ضمن هذه الدورة بعد.</p>';
+  if(rows.length>350)$('directorEvalSummary').textContent+=' — يظهر أول 350 تقييمًا في المعاينة.';
+ }catch(error){console.error('DIRECTOR_EVAL_RESULTS_FAILED',error);$('directorEvalResults').innerHTML='<p class="section-note">تعذر تحميل التقييمات؛ تأكد من الاتصال والصلاحيات.</p>'}
+ finally{renderDirectorEvalState()}
+}
+$('activateEvaluationBtn').onclick=()=>changeDirectorEvaluation(true);
+$('stopEvaluationBtn').onclick=()=>changeDirectorEvaluation(false);
+$('refreshEvaluationBtn').onclick=loadDirectorEvaluationResults;
+
+init().then(readDirectorEvalState);
 </script>
 </body>
 </html>
