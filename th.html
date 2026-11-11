@@ -545,11 +545,14 @@ body.record-preview-open{overflow:hidden!important}
 #formulaMathStage .formula-max-row span{font-size:9px;color:#667085}
 @media(max-width:650px){.group-settings{grid-template-columns:1fr}.group-add-bar button{flex-basis:calc(50% - 8px)}#formulaMathStage .component-list{grid-template-columns:1fr}#formulaMathStage .formula-max-row{grid-template-columns:1fr auto 105px}.group-assignment{grid-template-columns:1fr 145px}}
 @media(max-width:430px){.schema-action-bar{width:100%;justify-content:stretch}.schema-button{flex:1}.group-add-bar button{flex-basis:100%}.group-assignment{grid-template-columns:1fr 130px}}
+.refresh-assigned-btn{min-height:35px;padding:7px 12px;border:1px solid #bfd9f8;border-radius:11px;background:#edf5ff;color:#075fcf;font-size:9px;font-weight:900;white-space:nowrap}
+.refresh-assigned-btn:disabled{opacity:.5}
+@media(max-width:450px){.section-head:has(#refreshAssignedBtn){align-items:flex-start;flex-wrap:wrap}.refresh-assigned-btn{flex:0 0 auto}}
 </style></head>
 <body>
 <div id="loaderScreen" class="loader-screen"><div class="loader-box"><img src="logo.png" class="loader-logo" alt=""><div class="spinner"></div><p>جاري تحميل منصة الأستاذ</p></div></div>
 <header class="topbar"><div class="brand"><img src="logo.png" class="logo" alt=""><div><h1>مدرسة التحدي الأهلية المختلطة</h1><p>منصة الأستاذ</p></div></div><button id="logoutBtn" class="logout" type="button">خروج</button></header>
-<main class="main"><section class="teacher-card"><div class="teacher-label">الأستاذ</div><div id="teacherName" class="teacher-name">—</div><div id="teacherSubject" class="teacher-subject">المادة: —</div></section><div class="section-head"><h3>الصفوف والمواد المسندة إليك</h3><span>حسب إعدادات الإدارة</span></div><section id="classesGrid" class="classes-grid"></section>
+<main class="main"><section class="teacher-card"><div class="teacher-label">الأستاذ</div><div id="teacherName" class="teacher-name">—</div><div id="teacherSubject" class="teacher-subject">المادة: —</div></section><div class="section-head"><h3>الصفوف والمواد المسندة إليك</h3><button id="refreshAssignedBtn" class="refresh-assigned-btn" type="button">↻ تحديث الصفوف والمواد</button></div><section id="classesGrid" class="classes-grid"></section>
 <section class="records-launch">
  <div class="records-launch-actions">
   <button id="openRecordsHubBtn" class="records-launch-btn" type="button">سحب السجلات</button>
@@ -731,7 +734,7 @@ async function tahadiLimitedReads(items,limit,readOne){
 }
 
 const DB="https://tahadi-school-default-rtdb.europe-west1.firebasedatabase.app",PERIODS={term1:{label:"الفصل الأول"},midyear:{label:"نصف السنة"},term2:{label:"الفصل الثاني"},finalExam:{label:"الامتحان النهائي"},secondRound:{label:"الدور الثاني"}},COMPONENTS=[["month1","الشهر الأول"],["month2","الشهر الثاني"],["month3","الشهر الثالث"],["month4","الشهر الرابع"],["month5","الشهر الخامس"],["month6","الشهر السادس"],["month7","الشهر السابع"],["month8","الشهر الثامن"],["month9","الشهر التاسع"],["month10","الشهر العاشر"],["month11","الشهر الحادي عشر"],["month12","الشهر الثاني عشر"],["grammar","قواعد"],["literature","أدب"],["composition","إنشاء"],["oral","شفهي"],["practical","عملي"],["behavior","سلوك"],["attendance","حضور"],["drawing","رسم"],["preparation","تحضير"],["homework","واجب"],["daily","يومي"],["monthly","شهري"],["weekly","أسبوعي"],["electronic","إلكتروني"],["quiz","اختبار قصير"],["participation","مشاركة"],["project","مشروع"],["activity","نشاط"]].map(([key,label])=>({key,label}));
-let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null;
+let session={},teacherUser={},teacher={},classes={},students={},grades={},gradeKeys={},formulas={},assignments=[],TEACHER_CODE="",selectedClassId="",selectedSubjectId="",selectedPeriod="term1",editingPeriod="",gradesDirty=false,GRADE_LOCKS={},SUBMISSIONS={},GRADE_BASELINE={},lastCriticalKey="",RECORD_KIND="",RECORD_ASSIGNMENT_INDEXES=new Set(),GRADE_OBJECTIONS={},teacherObjectionPolling=null;
 const $=id=>document.getElementById(id),esc=v=>String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c])),norm=v=>String(v??"").trim().toLowerCase(),num=v=>v===""||v===null||v===undefined?null:(Number.isFinite(Number(v))?Number(v):null),safeJS=v=>String(v||"").replace(/\\/g,"\\\\").replace(/'/g,"\\'"),safeId=v=>String(v||"").replace(/[^a-zA-Z0-9_-]/g,"_"),safeKey=v=>String(v||"").trim().toLowerCase().replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي").replace(/[^a-z0-9\u0600-\u06ff]+/gi,"_").replace(/^_+|_+$/g,"");
 let SCREEN_ALERT_LAST_FOCUS=null;
 function closeScreenAlert(){
@@ -851,11 +854,12 @@ function isCriticalGrade(raw,max,pass){
  return n<pass&&n>=pass-gap
 }
 function teacherHasCurrentAssignment(t){
- const a=activeAssignment();if(!a||!selectedClassId)return false;
- let rows=Array.isArray(t?.assignments)?t.assignments:Object.values(t?.assignments||{});
- if(rows.some(x=>x&&String(x.classId)===String(selectedClassId)&&(String(x.subjectId||"")===String(a.subjectId)||norm(x.subjectName||"")===norm(a.subjectName))))return true;
- const ids=Array.isArray(t?.classIds)?t.classIds:(t?.classIds&&typeof t.classIds==="object"?Object.keys(t.classIds):[]);
- return ids.map(String).includes(String(selectedClassId))&&norm(t?.subject||"")===norm(a.subjectName)
+ const a=activeAssignment();if(!a||!selectedClassId||!t||t.accountActive===false)return false;
+ const hasExplicit=Array.isArray(t.assignments)||Boolean(t.assignments&&typeof t.assignments==="object");
+ const rows=Array.isArray(t.assignments)?t.assignments:Object.values(t.assignments||{});
+ if(hasExplicit)return rows.some(x=>x&&String(x.classId)===String(selectedClassId)&&(String(x.subjectId||"")===String(a.subjectId)||norm(x.subjectName||"")===norm(a.subjectName)));
+ const ids=Array.isArray(t.classIds)?t.classIds:(t.classIds&&typeof t.classIds==="object"?Object.keys(t.classIds).filter(k=>t.classIds[k]):[]);
+ return ids.map(String).includes(String(selectedClassId))&&norm(t.subject||"")===norm(a.subjectName)
 }
 async function verifyTeacherWritePermission(){
  try{
@@ -868,22 +872,41 @@ function logout(){sessionStorage.removeItem("tahadi_session");sessionStorage.rem
 function loadSession(){try{session=JSON.parse(sessionStorage.getItem("tahadi_session")||"{}")}catch{session={}}if(!session.code){location.replace("index.html");return false}return true}
 function normalizeClassSubjects(c){let rows=Array.isArray(c?.subjects)?c.subjects:Object.values(c?.subjects||{});return rows.filter(Boolean).map((s,i)=>({id:String(s.id||`SUB_${i+1}`),name:String(s.name||s.subjectName||"").trim(),maxGrade:Number(s.maxGrade||100),passGrade:Number(s.passGrade??50),order:Number(s.order||i+1),autoType:s.autoType||""})).filter(s=>s.name).sort((a,b)=>a.order-b.order)}
 function classSubject(classId,subjectId="",subjectName=""){const list=normalizeClassSubjects(classes[classId]);return list.find(s=>!s.autoType&&String(s.id)===String(subjectId))||list.find(s=>!s.autoType&&norm(s.name)===norm(subjectName))||null}
-function rawClassIds(){const x=teacher.classIds;return Array.isArray(x)?x:(x&&typeof x==="object"?Object.keys(x):[])}
-function resolveAssignments(){let rows=Array.isArray(teacher.assignments)?teacher.assignments:Object.values(teacher.assignments||{});rows=rows.filter(Boolean).map(a=>{const s=classSubject(a.classId,a.subjectId,a.subjectName||teacher.subject);return s&&classes[a.classId]?{classId:a.classId,subjectId:s.id,subjectName:s.name,maxGrade:s.maxGrade,passGrade:s.passGrade}:null}).filter(Boolean);if(rows.length)return rows;return rawClassIds().map(classId=>{const s=classSubject(classId,"",teacher.subject);return s?{classId,subjectId:s.id,subjectName:s.name,maxGrade:s.maxGrade,passGrade:s.passGrade}:null}).filter(Boolean)}
-async function verifyTeacher(){if(!loadSession())return false;teacherUser=await dbGet(`users/${encodeURIComponent(session.code)}`);if(!teacherUser||!["teacher","th"].includes(norm(teacherUser.role))||teacherUser.active===false||teacherUser.hidden===true){logout();return false}TEACHER_CODE=teacherUser.teacherId||session.code;teacher=await dbGet(`teachers/${encodeURIComponent(TEACHER_CODE)}`);if(!teacher)throw new Error("TEACHER_NOT_FOUND");return true}
+function rawClassIds(){const x=teacher.classIds;return Array.isArray(x)?x:(x&&typeof x==="object"?Object.keys(x).filter(k=>x[k]):[])}
+function resolveAssignments(){
+ const hasExplicit=Array.isArray(teacher.assignments)||Boolean(teacher.assignments&&typeof teacher.assignments==="object");
+ const source=hasExplicit?(Array.isArray(teacher.assignments)?teacher.assignments:Object.values(teacher.assignments)):
+   rawClassIds().map(classId=>({classId,subjectName:teacher.subject||""}));
+ const seen=new Set();
+ return source.filter(Boolean).map(a=>{
+  const classId=String(a.classId||"");const s=classSubject(classId,a.subjectId,a.subjectName||teacher.subject);
+  return s&&classes[classId]?{classId,subjectId:String(s.id),subjectName:s.name,maxGrade:s.maxGrade,passGrade:s.passGrade}:null;
+ }).filter(a=>{
+  if(!a)return false;const key=JSON.stringify([a.classId,a.subjectId]);
+  if(seen.has(key))return false;seen.add(key);return true;
+ });
+}
+async function verifyTeacher(){if(!loadSession())return false;teacherUser=await dbGet(`users/${encodeURIComponent(session.code)}`);if(!teacherUser||!["teacher","th"].includes(norm(teacherUser.role))||teacherUser.active===false||teacherUser.hidden===true){logout();return false}TEACHER_CODE=teacherUser.teacherId||session.code;teacher=await dbGet(`teachers/${encodeURIComponent(TEACHER_CODE)}`);if(!teacher||teacher.accountActive===false)throw new Error("TEACHER_NOT_FOUND_OR_INACTIVE");return true}
 async function loadBaseData(){const[a,b]=await Promise.all([dbGet("classes"),dbGet("students")]);classes=a||{};students=b||{};assignments=resolveAssignments()}
-function assignmentFor(classId){return assignments.find(a=>a.classId===classId)||null}function activeAssignment(){return assignmentFor(selectedClassId)}function subjectMax(){return Number(activeAssignment()?.maxGrade||100)}function subjectPass(){return Number(activeAssignment()?.passGrade??50)}
+function assignmentFor(classId,subjectId=""){
+ const rows=assignments.filter(a=>String(a.classId)===String(classId));
+ return subjectId?rows.find(a=>String(a.subjectId)===String(subjectId))||null:rows[0]||null;
+}
+function activeAssignment(){return assignmentFor(selectedClassId,selectedSubjectId)}function subjectMax(){return Number(activeAssignment()?.maxGrade||100)}function subjectPass(){return Number(activeAssignment()?.passGrade??50)}
 function studentsOfClass(classId){return Object.entries(students).map(([code,s])=>({code,...s})).filter(s=>s.classId===classId&&s.deleted!==true&&s.hidden!==true).sort((a,b)=>(Number(a.serial||999999)-Number(b.serial||999999))||String(a.name||"").localeCompare(String(b.name||""),"ar"))}
 function renderTeacher(){const names=[...new Set(assignments.map(a=>a.subjectName))];$("teacherName").textContent=teacher.name||teacherUser.name||"—";$("teacherSubject").textContent=`المواد: ${names.join("، ")||teacher.subject||"—"}`}
 function renderClasses(){
  if(!assignments.length){$("classesGrid").innerHTML=`<div class="empty">لا توجد مادة وصف مسندان إلى حسابك حالياً. يجب ربط الأستاذ من صفحة الإدارة بمادة موجودة داخل الصف.</div>`;return}
  $("classesGrid").innerHTML=assignments.map(a=>{
   const c=classes[a.classId]||{},list=studentsOfClass(a.classId),count=list.length,gender=recordGenderFromList(c,list),genderText=gender==="female"?"بنات":gender==="male"?"بنين":"بنين و بنات",genderClass=gender==="female"?"gender-female":gender==="male"?"gender-male":"gender-mixed";
-  return`<button type="button" class="class-card ${genderClass} ${selectedClassId===a.classId?"active":""}" onclick="selectClass('${safeJS(a.classId)}')"><div class="class-count">${count}</div><div class="class-icon gender-label">${genderText}</div><h4>${esc(c.name||a.classId)}</h4><p>${esc(a.subjectName)}<br>من ${a.maxGrade} | النجاح ${a.passGrade}</p></button>`
+  return`<button type="button" class="class-card ${genderClass} ${selectedClassId===a.classId&&selectedSubjectId===a.subjectId?"active":""}" onclick="selectClass('${safeJS(a.classId)}','${safeJS(a.subjectId)}')"><div class="class-count">${count}</div><div class="class-icon gender-label">${genderText}</div><h4>${esc(c.name||a.classId)}</h4><p>${esc(a.subjectName)}<br>من ${a.maxGrade} | النجاح ${a.passGrade}</p></button>`
  }).join("")
 }
-async function selectClass(classId){
- selectedClassId=classId;selectedPeriod="term1";$("searchInput").value="";$("gradesSection").classList.remove("hidden");renderClasses();
+async function selectClass(classId,subjectId=""){
+ const chosen=assignmentFor(classId,subjectId);
+ if(!chosen){toast("هذه المادة غير مسندة إلى حسابك. حدّث الصفوف والمواد.","warn");return}
+ if(gradesDirty&&(selectedClassId!==String(classId)||selectedSubjectId!==chosen.subjectId)&&!window.confirm("توجد تغييرات لم تُحفظ. هل تريد الانتقال إلى مادة أخرى؟"))return;
+ selectedClassId=String(classId);selectedSubjectId=chosen.subjectId;selectedPeriod="term1";$("searchInput").value="";$("gradesSection").classList.remove("hidden");renderClasses();
  await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);await loadSavedColumnDrafts();renderPeriodButtons();renderFormulaInfo();renderGradeTable();
  const a=activeAssignment(),c=classes[classId]||{},list=studentsOfClass(classId),gender=recordGenderFromList(c,list),genderText=gender==="female"?"بنات":gender==="male"?"بنين":"بنين و بنات";
  $("selectedClassTitle").textContent=`${c.name||"الصف"} - ${a?.subjectName||"المادة"} - ${genderText}`;
@@ -2888,5 +2911,27 @@ $("closeTeacherObjectionsBtn").onclick=closeTeacherObjections;
 $("teacherObjectionsModal").addEventListener("click",e=>{if(e.target===$("teacherObjectionsModal"))closeTeacherObjections()});
 
 $("searchInput").addEventListener("input",renderGradeTable);$("reloadBtn").onclick=async()=>{if(!selectedClassId)return;try{$("reloadBtn").disabled=true;await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);await loadSavedColumnDrafts();renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم تحديث البيانات.")}catch(e){console.error(e);toast("تعذر تحديث البيانات")}finally{$("reloadBtn").disabled=false}};$("logoutBtn").onclick=logout;
+async function refreshAssignedClasses(){
+ const button=$("refreshAssignedBtn");
+ if(button?.disabled)return;
+ if(gradesDirty&&!window.confirm("توجد تغييرات درجات لم تُحفظ. هل تريد تحديث الصفوف والمواد؟"))return;
+ const previousClass=selectedClassId,previousSubject=selectedSubjectId;
+ if(button){button.disabled=true;button.textContent="جاري التحديث..."}
+ try{
+  if(!await verifyTeacher())return;
+  await loadBaseData();
+  renderTeacher();
+  if(previousClass&&assignmentFor(previousClass,previousSubject)){
+   selectedClassId="";selectedSubjectId="";
+   await selectClass(previousClass,previousSubject);
+  }else{
+   selectedClassId="";selectedSubjectId="";grades={};formulas={};gradeKeys={};
+   $("gradesSection").classList.add("hidden");
+  }
+  renderClasses();toast("تم تحديث المواد والصفوف من الإدارة.","success")
+ }catch(error){console.error("TEACHER_ASSIGNMENTS_REFRESH_FAILED",error);toast("تعذر تحديث المواد والصفوف. حاول مجددًا.","error")}
+ finally{if(button){button.disabled=false;button.textContent="↻ تحديث الصفوف والمواد"}}
+}
+$("refreshAssignedBtn").addEventListener("click",refreshAssignedClasses);
 async function init(){const publicKey=String(new URLSearchParams(location.search).get("record")||"").trim();if(publicKey){await initPublicTeacherRecord(publicKey);return}try{if(!await verifyTeacher())return;await loadBaseData();renderTeacher();renderClasses();await loadTeacherObjections();startTeacherObjectionPolling()}catch(e){console.error(e);toast("تعذر تحميل حساب الأستاذ")}finally{$("loaderScreen").classList.add("hidden")}}window.addEventListener("load",init);
 </script></body></html>
