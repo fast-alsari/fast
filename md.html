@@ -86,6 +86,48 @@
 .paper.compact .paper-guardian-notes{font-size:8px;padding:1.4mm 2mm}
 @media(max-width:700px){#studentOverallLevel{font-size:11px}.guardian-note-actions .button{width:100%}}
 
+
+/* لوحة متابعة الحضور والغياب الجماعي */
+.m-att-controls{display:grid;grid-template-columns:minmax(170px,1.4fr) minmax(135px,.7fr) auto;gap:10px;align-items:end}
+.m-att-field label{display:block;margin:0 2px 7px;font-size:11px;font-weight:900;color:#314b68}
+.m-att-field input,.m-att-field select{height:45px;width:100%;border:1.5px solid #d8e4f0;border-radius:11px;background:#fff;padding:0 12px;color:#1e3450;outline:none}
+.m-att-field input:focus,.m-att-field select:focus{border-color:#075fcf;box-shadow:0 0 0 3px #075fcf12}
+.m-att-note{font-size:10px;line-height:1.9;color:#61758d;margin-top:12px}
+.m-att-note.error{color:#a91e2d}.m-att-note.good{color:#067647}.m-att-note.warn{color:#a05f11}
+.m-att-stats{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin:13px 0}
+.m-att-stat{border:1px solid #dfe7f0;background:#f9fbff;border-radius:12px;padding:12px 8px;text-align:center}
+.m-att-stat b{display:block;font-size:22px;color:#075fcf}.m-att-stat small{display:block;font-size:10px;color:#66768d;margin-top:4px;font-weight:800}
+.m-att-stat.absent b{color:#b42318}.m-att-stat.late b{color:#b45309}.m-att-stat.excused b{color:#6740a7}.m-att-stat.escape b{color:#9e1746}
+.m-att-tools{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:9px;margin:12px 0}
+.m-att-tools input{height:40px;border:1px solid #dfe8f1;border-radius:11px;padding:0 12px;min-width:180px;flex:1;max-width:360px}
+.m-att-tabs{display:flex;gap:6px;flex-wrap:wrap}
+.m-att-tabs button{padding:8px 12px;border-radius:9px;background:#f5f8fc;border:1px solid #dbe5f1;color:#455a76;font-size:10px;font-weight:900}
+.m-att-tabs button.active{background:#075fcf;border-color:#075fcf;color:#fff}
+.m-att-list{display:grid;gap:8px;margin-top:11px}
+.m-att-row{display:grid;grid-template-columns:minmax(170px,1.1fr) minmax(0,2fr);gap:12px;align-items:center;border:1px solid #dce6f1;border-right:4px solid #a4bacf;background:#fff;padding:12px;border-radius:13px}
+.m-att-row.is-absent{border-right-color:#c52932;background:#fffafa}.m-att-row.is-late{border-right-color:#dd7400}.m-att-row.is-excused{border-right-color:#7742b7}.m-att-row.is-escape{border-right-color:#a82450}
+.m-att-person strong{display:block;font-size:12px;line-height:1.65}.m-att-person small{font-size:9px;color:#667990;display:block;margin-top:3px}
+.m-att-person.female strong{color:#9c3281}.m-att-person.male strong{color:#0755b8}
+.m-att-choices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.m-att-choice{position:relative;cursor:pointer;min-width:0}
+.m-att-choice input{position:absolute;opacity:0;width:1px;height:1px;pointer-events:none}
+.m-att-choice span{display:flex;align-items:center;justify-content:center;min-height:37px;padding:5px 2px;border:1px solid #dfe7ee;border-radius:9px;font-size:10px;font-weight:900;background:#f7f9fc;color:#4b596a;white-space:nowrap}
+.m-att-choice input:focus-visible+span{outline:3px solid #075fcf;outline-offset:2px}
+.m-att-choice.present input:checked+span{background:#e8faee;color:#067647;border-color:#67c48e}
+.m-att-choice.absent input:checked+span{background:#ffeced;color:#ba252f;border-color:#e49a9d}
+.m-att-choice.excused input:checked+span{background:#f3edff;color:#6938aa;border-color:#c5b0ee}
+.m-att-choice.late input:checked+span{background:#fff2df;color:#a95e06;border-color:#f0cb8b}
+.m-att-choice.escape input:checked+span{background:#ffeaf2;color:#ab2554;border-color:#edabc3}
+.m-att-choice input:disabled+span{opacity:.6;cursor:default}
+.m-att-bottom{margin-top:12px;padding-top:12px;border-top:1px solid #e0e8f0;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
+.m-att-bottom textarea{width:100%;min-height:75px;resize:vertical;padding:11px;border:1px solid #dce6f0;border-radius:10px;outline:none;font:inherit;font-size:11px}
+.m-att-save-buttons{display:flex;gap:8px;flex-wrap:wrap}
+.m-att-save-buttons .button{min-width:125px}
+.m-att-empty{padding:23px 10px;border:1px dashed #c6d4e4;border-radius:12px;text-align:center;color:#76869a;font-size:11px}
+.m-att-unsaved{display:inline-block;margin-right:7px;color:#ae550d;font-size:10px;font-weight:900}
+@media(max-width:860px){.m-att-row{grid-template-columns:1fr;gap:9px}.m-att-choices{grid-template-columns:repeat(5,minmax(0,1fr))}.m-att-bottom{grid-template-columns:1fr}.m-att-controls{grid-template-columns:1fr 1fr}.m-att-refresh-control{grid-column:1/-1}}
+@media(max-width:520px){.m-att-controls{grid-template-columns:1fr}.m-att-stats{gap:4px}.m-att-stat{padding:9px 2px}.m-att-stat b{font-size:17px}.m-att-stat small{font-size:8px}.m-att-row{padding:10px}.m-att-choice span{font-size:8px;min-height:36px}.m-att-tools input{max-width:none}.m-att-save-buttons{display:grid;grid-template-columns:1fr 1fr}.m-att-save-buttons .button{min-width:0;padding:8px}}
+
 </style>
 </head>
 <body>
@@ -105,6 +147,30 @@
  <div class="eval-manager-tabs"><button class="active" type="button" id="evalCompletedTab">الأساتذة المرسلون (0)</button><button type="button" id="evalPendingTab">الأساتذة غير المرسلين (0)</button></div>
  <div id="directorEvalResults" class="eval-manager-results"></div>
 </section>
+
+<section class="card" id="directorAttendanceCard">
+ <div class="card-title"><div><h2>تسجيل الحضور والغياب — إشراف المدير</h2><p>اختر الصف والتاريخ، وحدّد حالة كل طالب كما يفعل مشرف الحضور، ثم احفظ السجل لجميع الطلاب في قاعدة المدرسة.</p></div><button type="button" class="button soft" id="attReloadRosterBtn">تحديث بيانات الصفوف</button></div>
+ <div class="m-att-controls">
+  <div class="m-att-field"><label for="attClassSelect">الصف / الشعبة</label><select id="attClassSelect"><option value="">اختر الصف أولاً</option></select></div>
+  <div class="m-att-field"><label for="attDatePicker">تاريخ الحضور</label><input type="date" id="attDatePicker"></div>
+  <div class="m-att-refresh-control"><button type="button" class="button outline" id="attLoadBtn">عرض السجل</button></div>
+ </div>
+ <div id="attStatus" class="m-att-note" role="status">اختر الصف والتاريخ لعرض الطلاب وحالاتهم السابقة.</div>
+ <div id="attWorkingArea" class="hidden">
+  <div class="m-att-stats" id="attStats"></div>
+  <div class="m-att-tools">
+   <input id="attSearch" type="search" placeholder="ابحث باسم الطالب داخل الصف..." aria-label="البحث داخل الصف">
+   <div class="m-att-tabs" id="attFilterTabs"></div>
+   <button type="button" class="button soft" id="attAllPresentBtn">جميع الطلاب حاضرون</button>
+  </div>
+  <div class="m-att-list" id="attStudentList"></div>
+  <div class="m-att-bottom">
+   <div class="m-att-field"><label for="attDayNotes">ملاحظات المدير على سجل الحضور (اختياري)</label><textarea id="attDayNotes" maxlength="1800" placeholder="ملاحظات سجل اليوم..."></textarea></div>
+   <div class="m-att-save-buttons"><button type="button" class="button outline" id="attCancelBtn">إلغاء التعديلات</button><button type="button" class="button primary" id="attSaveBtn">حفظ الحضور والغياب</button></div>
+  </div>
+ </div>
+</section>
+
 <section class="card" id="searchCard"><div class="card-title"><div><h2>البحث عن الطالب</h2><p>اكتب اسم الطالب أو أول حرف منه لتظهر الأسماء مباشرة.</p></div><button class="button soft" type="button" id="reloadBtn">تحديث البيانات</button></div><div class="search-wrap"><span class="search-icon" aria-hidden="true">⌕</span><input id="searchInput" type="search" autocomplete="off" placeholder="اكتب اسم الطالب..." aria-label="البحث باسم الطالب"><button class="button primary" id="searchBtn" type="button">بحث</button></div><div id="searchResults" class="results" role="listbox" aria-label="نتائج البحث"></div><p class="counter" id="searchCounter">حمّل بيانات الطلبة للبحث</p><div class="status" id="statusMsg" role="status">جاري التحقق من دخول المدير وتحميل البيانات...</div></section>
 <section class="card hidden" id="studentCard"><div class="card-title"><div><h2>الملف المباشر للطالب</h2><p>معلومات الطالب، تقييم المواد، المستوى الدراسي والحضور والغياب، مع تقرير مباشر لولي الأمر.</p></div><button class="button soft" id="refreshStudentBtn" type="button">تحديث ملف الطالب</button></div><div class="profile"><div id="photoArea"></div><div><h2 class="student-heading" id="studentName">—</h2><div class="profile-meta" id="studentMeta"></div></div></div><div class="chips" id="studentTotals" style="margin-top:15px"></div><div id="studentOverallLevel">المستوى وفق تقييم المواد: <span class="level-name">جاري قراءة التقييم...</span></div><div class="profile-actions"><button class="button primary" id="printBtn" type="button">طباعة تقرير الطالب مباشرة A4</button><button class="button danger" id="absentBtn" type="button">غائب اليوم</button><button class="button soft" id="lateBtn" type="button">متأخر اليوم</button><button class="button soft" id="excusedBtn" type="button">مجاز اليوم</button><button class="button danger" id="escapeBtn" type="button">هروب اليوم</button><button class="button success" id="presentBtn" type="button">حاضر اليوم</button></div><p class="section-note" id="todayStatusText">تظهر حالة اليوم كما سُجلت في المنصة.</p></section>
 <section class="card hidden" id="studentRatingsCard"><div class="card-title"><div><h2>تقييم الطالب حسب المواد</h2><p id="studentRatingCycle">تقييم من قبل الإدارة</p></div></div><div id="studentRatingsBody" class="grades-box"></div></section>
@@ -170,7 +236,7 @@ function allStudents(){return Object.entries(students).filter(([code,st])=>st&&t
 function resultsOf(q){const arr=allStudents();if(!q)return arr.slice(0,20);const query=norm(q);return arr.filter(st=>norm(studentName(st)).includes(query)).slice(0,55)}
 function renderSearch(){const q=$('searchInput').value.trim(),list=resultsOf(q);$('searchResults').innerHTML=list.map(s=>`<button class="result ${selectedCode===s.code?'active':''}" type="button" data-code="${esc(s.code)}" role="option"><span><strong>${esc(studentName(s))}</strong><small>${esc(schoolClass(s))}</small></span><span class="select-hint">اختيار الطالب</span></button>`).join('')||'<p class="grade-empty">لا يوجد طالب مطابق للبحث.</p>';$('searchCounter').textContent=q?`ظهرت ${list.length} نتيجة${list.length===55?' (أول 55 فقط)':''}`:'يمكنك كتابة حرف لعرض نتائج أدق، وتظهر أول 20 اسمًا افتراضيًا';}
 function renderClassFilter(){const prev=$('rankingClass').value;const options=Object.entries(classes).sort((a,b)=>String(a[1]?.name||a[0]).localeCompare(String(b[1]?.name||b[0]),'ar'));$('rankingClass').innerHTML='<option value="">جميع الصفوف</option>'+options.map(([id,c])=>`<option value="${esc(id)}">${esc(c.name||c.title||id)}</option>`).join('');$('rankingClass').value=prev;}
-async function loadRoster(){const u=await fetchDb('users/'+key(session.code));if(!u||!PERMITTED.has(norm(u.role))||u.active===false)throw Error('ACCESS_DENIED');const [s,c]=await Promise.all([fetchDb('students'),fetchDb('classes')]);director=u;students=s||{};classes=c||{};$('directorLabel').textContent=director.name||'مدير المدرسة';$('studentsCount').textContent=`${allStudents().length} طالب وطالبة`;$('dateLabel').textContent=friendlyDate(dateToday());renderClassFilter();renderSearch();}
+async function loadRoster(){const u=await fetchDb('users/'+key(session.code));if(!u||!PERMITTED.has(norm(u.role))||u.active===false)throw Error('ACCESS_DENIED');const [s,c]=await Promise.all([fetchDb('students'),fetchDb('classes')]);director=u;students=s||{};classes=c||{};$('directorLabel').textContent=director.name||'مدير المدرسة';$('studentsCount').textContent=`${allStudents().length} طالب وطالبة`;$('dateLabel').textContent=friendlyDate(dateToday());renderClassFilter();renderSearch();attUpdateSelector();}
 async function init(){session=readSession();if(!session.code){location.replace('index.html');return}try{await loadRoster();showStatus('تم تحميل بيانات الطلاب. اكتب الاسم أو أول حرف للبحث المباشر.','good')}catch(err){console.error('MANAGER_INIT',err);showStatus(err.message==='ACCESS_DENIED'?'هذا الحساب ليس مخولًا بصفحة المدير. تأكد من دور الحساب في قاعدة المستخدمين.':'تعذر قراءة بيانات المدرسة. تحقق من الاتصال والصلاحيات ثم اضغط تحديث البيانات.','error')}}
 function entryGrades(raw,clazz){
  const subjects=Array.isArray(clazz?.subjects)?clazz.subjects:Object.values(clazz?.subjects||{}),rawEntries=Object.entries(raw||{}),rows=[],known=new Set();
@@ -338,7 +404,7 @@ function renderDirectorEvalResults(){
  const complete=DIRECTOR_EVAL_PROGRESS.filter(x=>x.complete),pending=DIRECTOR_EVAL_PROGRESS.filter(x=>!x.complete);$('evalCompletedTab').textContent=`الأساتذة المرسلون (${complete.length})`;$('evalPendingTab').textContent=`الأساتذة غير المرسلين (${pending.length})`;
  $('evalCompletedTab').classList.toggle('active',DIRECTOR_EVAL_TAB==='complete');$('evalPendingTab').classList.toggle('active',DIRECTOR_EVAL_TAB==='pending');
  const rows=DIRECTOR_EVAL_TAB==='complete'?complete:pending;
- $('directorEvalResults').innerHTML=rows.length?rows.map(x=>`<div class="eval-teacher-entry ${x.complete?'complete':'pending'}"><strong>${esc(x.name)} — ${esc(x.code)}</strong><small>${x.complete?'تم إرسال التقييم كاملاً إلى المدير.':'بانتظار إكمال التقييم ثم الضغط على «إرسال التقييم للمدير».'}${x.submittedAt?' تاريخ الإرسال: '+esc(new Date(x.submittedAt).toLocaleString('ar-IQ')):''}</small><div class="eval-chips">${x.details.map(a=>`<span>${esc(a.subjectName)} | ${esc(a.className)} (${a.done}/${a.total}) ${a.complete?'✓':'•'}</span>`).join('')}</div></div>`).join(''):'<div class="grade-empty">لا يوجد أساتذة بهذه الحالة.</div>';
+ $('directorEvalResults').innerHTML=rows.length?rows.map(x=>`<div class="eval-teacher-entry ${x.complete?'complete':'pending'}"><strong>${esc(x.name)}</strong><small>الصفوف: ${esc([...new Set(x.details.map(a=>a.className))].join('، ')||'غير محددة')} — ${x.complete?'تم إرسال التقييم كاملاً إلى المدير.':'بانتظار إكمال التقييم ثم الضغط على «إرسال التقييم للمدير».'}${x.submittedAt?' تاريخ الإرسال: '+esc(new Date(x.submittedAt).toLocaleString('ar-IQ')):''}</small></div>`).join(''):'<div class="grade-empty">لا يوجد أساتذة بهذه الحالة.</div>';
 }
 async function loadDirectorEvaluationResults(){
  const r=DIRECTOR_EVAL_REQUEST;if(!r?.requestId)return;const btn=$('refreshEvaluationBtn');btn.disabled=true;
@@ -402,6 +468,106 @@ $('deliverEvaluationBtn').onclick=deliverDirectorEvaluation;
 $('refreshEvaluationBtn').onclick=()=>readDirectorEvalState();
 $('evalCompletedTab').onclick=()=>{DIRECTOR_EVAL_TAB='complete';renderDirectorEvalResults()};
 $('evalPendingTab').onclick=()=>{DIRECTOR_EVAL_TAB='pending';renderDirectorEvalResults()};
+
+/* تسجيل الحضور والغياب من حساب المدير وفق نفس مسارات المشرف */
+let attClass='',attDay='',attRoster=[],attRecords={},attStates={},attNotes='',attSavedNotes='',attFilter='all',attLoading=false,attSaving=false,attDirty=false,attLoadNumber=0,attLoaded=false;
+const attOptions=[['present','حاضر'],['absent','غائب'],['excused','مجاز'],['late','متأخر'],['escape','هروب']];
+function attDayAllowed(day){if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||day>dateToday())return false;const d=new Date(day+'T12:00:00Z');return !Number.isNaN(d.getTime())&&d.toISOString().slice(0,10)===day&&![5,6].includes(d.getUTCDay())}
+function attText(text,type=''){$('attStatus').className='m-att-note '+type;$('attStatus').textContent=text}
+function attForClass(id){return allStudents().filter(s=>String(s.classId||'')===String(id)).sort((a,b)=>String(studentName(a)).localeCompare(String(studentName(b)),'ar'))}
+function attClassName(id){return String(classes[id]?.name||classes[id]?.title||id)}
+function attUpdateSelector(){
+ const previous=$('attClassSelect').value;
+ const entries=Object.entries(classes||{}).sort((a,b)=>attClassName(a[0]).localeCompare(attClassName(b[0]),'ar'));
+ $('attClassSelect').innerHTML='<option value="">اختر الصف / الشعبة</option>'+entries.map(([id])=>`<option value="${esc(id)}">${esc(attClassName(id))}</option>`).join('');
+ $('attClassSelect').value=classes[previous]?previous:'';
+}
+function attControlLock(){
+ const disabled=attLoading||attSaving;
+ ['attClassSelect','attDatePicker','attLoadBtn','attReloadRosterBtn'].forEach(id=>$(id).disabled=disabled);
+ const editable=attLoaded&&!disabled&&attDayAllowed(attDay);
+ ['attSearch','attDayNotes','attAllPresentBtn','attCancelBtn','attSaveBtn'].forEach(id=>$(id).disabled=!editable);
+}
+async function attBatchRead(roster,day){
+ const output={};let pointer=0;
+ async function worker(){while(pointer<roster.length){const item=roster[pointer++];output[item.code]=await fetchDb('attendance/'+key(item.code)+'/'+day,{timeout:25000});}}
+ await Promise.all(Array.from({length:Math.min(8,roster.length)},()=>worker()));
+ return output;
+}
+function attCopyRecords(records){return structuredClone(records||{})}
+function attMarkDirty(){attDirty=true;attRender();}
+function attRender(){
+ const working=$('attWorkingArea');working.classList.toggle('hidden',!attLoaded);if(!attLoaded){attControlLock();return}
+ const tally=Object.fromEntries(attOptions.map(([id])=>[id,0]));attRoster.forEach(s=>tally[attStates[s.code]||'present']++);
+ $('attStats').innerHTML=attOptions.map(([id,label])=>`<div class="m-att-stat ${id}"><b>${tally[id]}</b><small>${label}</small></div>`).join('');
+ $('attFilterTabs').innerHTML=[['all','الكل',attRoster.length],...attOptions.map(([id,label])=>[id,label,tally[id]])].map(([id,label,num])=>`<button type="button" class="${attFilter===id?'active':''}" data-att-filter="${id}" aria-pressed="${attFilter===id}">${label} (${num})</button>`).join('');
+ const query=norm($('attSearch').value),visible=attRoster.filter(s=>(attFilter==='all'||attStates[s.code]===attFilter)&&(!query||norm(studentName(s)).includes(query)));
+ const locked=!attDayAllowed(attDay)||attLoading||attSaving;
+ $('attStudentList').innerHTML=visible.length?visible.map(s=>{const status=attStates[s.code]||'present',kind=gender(s)==='أنثى'?'female':'male';return `<div class="m-att-row is-${status}"><div class="m-att-person ${kind}"><strong>${esc(studentName(s))}</strong><small>التسلسل ${attRoster.indexOf(s)+1} • ${esc(attClassName(attClass))}</small></div><div class="m-att-choices" role="radiogroup" aria-label="حالة ${esc(studentName(s))}">${attOptions.map(([state,label])=>`<label class="m-att-choice ${state}"><input type="radio" name="att_${esc(s.code)}" value="${state}" data-att-student="${esc(s.code)}" ${status===state?'checked':''} ${locked?'disabled':''}><span>${label}</span></label>`).join('')}</div></div>`}).join(''):'<div class="m-att-empty">لا توجد أسماء مطابقة للتصفية.</div>';
+ attControlLock();
+ const validity=attDayAllowed(attDay);
+ if(!validity)attText('الجمعة والسبت عطلة، ولا يمكن تسجيل حضور لتاريخ مستقبلي. اختر يوم دوام سابقًا أو اليوم.','warn');
+ else if(attDirty)attText('هناك تغييرات غير محفوظة. اضغط «حفظ الحضور والغياب» حتى تُسجَّل في المنصة.','warn');
+ else attText(`تم عرض ${attRoster.length} طالبًا في ${attClassName(attClass)} بتاريخ ${attDay}. الحالات المعروضة مأخوذة من السجل الرسمي إن وُجد.`,'good');
+}
+async function attLoadDay({keep=false}={}){
+ if(attLoading||attSaving)return;
+ const classId=$('attClassSelect').value,day=$('attDatePicker').value;
+ if(!classId||!classes[classId]){attText('اختر الصف أولًا.','warn');return}
+ if(!attDayAllowed(day)){attText('التاريخ غير مسموح. الجمعة والسبت عطلة، ولا يمكن تسجيل يوم مستقبلي.','warn');return}
+ if(attDirty&&!keep&&!confirm('لديك تغييرات لم تُحفظ في حضور الصف الحالي. هل تريد إهمالها وعرض السجل من جديد؟'))return;
+ const number=++attLoadNumber;attLoading=true;attLoaded=false;attControlLock();$('attWorkingArea').classList.add('hidden');attText('جاري قراءة حضور الطلاب من نفس قاعدة المشرف...');
+ try{
+  await verifyManager();const roster=attForClass(classId);if(!roster.length)throw new Error('لا يوجد طلاب مسجلون في هذا الصف.');
+  const records=await attBatchRead(roster,day);if(number!==attLoadNumber)return;
+  attClass=classId;attDay=day;attRoster=roster;attRecords=attCopyRecords(records);attStates={};for(const s of roster)attStates[s.code]=records[s.code]?stateOf(records[s.code]):'present';
+  attNotes=String(Object.values(records).find(r=>r&&typeof r.note==='string'&&r.note.trim())?.note||'');attSavedNotes=attNotes;
+  $('attDayNotes').value=attNotes;attFilter='all';$('attSearch').value='';attDirty=false;attLoaded=true;attRender();
+ }catch(error){console.error('DIRECTOR_ATTENDANCE_LOAD',error);attLoaded=false;$('attWorkingArea').classList.add('hidden');attText(error?.message==='لا يوجد طلاب مسجلون في هذا الصف.'?error.message:'تعذر تحميل سجل الصف بالكامل. لا يُسمح بالحفظ قبل اكتمال القراءة.','error')}
+ finally{attLoading=false;if(attLoaded)attRender();else attControlLock()}
+}
+function attReset(){if(!attLoaded||attSaving)return;for(const s of attRoster)attStates[s.code]=attRecords[s.code]?stateOf(attRecords[s.code]):'present';attNotes=attSavedNotes;$('attDayNotes').value=attNotes;attDirty=false;attFilter='all';$('attSearch').value='';attRender()}
+function attAllPresent(){if(!attLoaded||attSaving||!attDayAllowed(attDay))return;if(!confirm('هل تريد تعيين جميع طلبة الصف «حاضر»؟ لن تُحفظ التغييرات إلا بعد الضغط على حفظ.'))return;for(const s of attRoster)attStates[s.code]='present';attMarkDirty()}
+function attRecord(student,status,old,now,user){return{...(old&&typeof old==='object'?old:{}),status,present:status==='present',absent:status==='absent',isAbsent:status==='absent',excused:status==='excused',leave:status==='excused',late:status==='late',escape:status==='escape',date:attDay,classId:attClass,className:attClassName(attClass),roomNumber:student.roomNumber||'',gender:student.gender||'',studentName:studentName(student),studentCode:student.code,recordedAt:now,recordedBy:session.code,recordedByName:user.name||'مدير المدرسة',method:'manual_school_director',note:attNotes}}
+async function attSave(){
+ if(!attLoaded||attSaving||attLoading)return;
+ const id=attClass,day=attDay;if(!attDayAllowed(day)){attText('هذا التاريخ غير مسموح.','error');return}
+ const currentClass=$('attClassSelect').value,date=$('attDatePicker').value;
+ if(currentClass!==id||date!==day){attText('تغيّر الصف أو التاريخ. اضغط «عرض السجل» أولًا.','warn');return}
+ const count=attRoster.length;if(!confirm(`هل تريد حفظ حضور وغياب جميع طلاب «${attClassName(id)}» وعددهم ${count} بتاريخ ${day} في السجل الرسمي؟`))return;
+ attSaving=true;let finalMessage='',finalType='';attControlLock();attText('جاري التحقق من الصلاحيات ومقارنة السجلات قبل الحفظ...');
+ try{
+  const [manager,liveClass,latestStudents,liveRecords]=await Promise.all([verifyManager(),fetchDb('classes/'+key(id)),fetchDb('students',{timeout:45000}),attBatchRead(attRoster,day)]);
+  if(!liveClass)throw new Error('CLASS_REMOVED');if(!attDayAllowed(day))throw new Error('INVALID_DATE');
+  for(const st of attRoster){
+   const live=latestStudents?.[st.code];if(!live||live.hidden===true||live.deleted===true||String(live.classId||'')!==String(id))throw new Error('ROSTER_CHANGED');
+   const prev=attRecords[st.code],now=liveRecords[st.code];
+   if(JSON.stringify(prev??null)!==JSON.stringify(now??null))throw new Error('CONCURRENT_CHANGE');
+  }
+  const now=Date.now(),tally=Object.fromEntries(attOptions.map(([status])=>[status,0])),updates={};
+  for(const st of attRoster){const status=attStates[st.code]||'present';if(!STATES.includes(status))throw new Error('INVALID_STATUS');tally[status]++;updates[`attendance/${st.code}/${day}`]=attRecord(st,status,liveRecords[st.code],now,manager)}
+  const idEvent='md_'+now+'_'+Math.random().toString(36).slice(2,9);
+  updates[`attendanceSessions/${day}/${idEvent}`]={date:day,recordedAt:now,recordedBy:session.code,recordedByName:manager.name||'مدير المدرسة',classId:id,className:attClassName(id),gender:liveClass.gender||'',totalStudents:count,presentCount:tally.present,absentCount:tally.absent,excusedCount:tally.excused,lateCount:tally.late,escapeCount:tally.escape,note:attNotes,method:'manual_school_director'};
+  await fetchDb('',{method:'PATCH',data:updates,timeout:45000});
+  attRecords=Object.fromEntries(attRoster.map(st=>[st.code,updates[`attendance/${st.code}/${day}`]]));attSavedNotes=attNotes;attDirty=false;
+  if(selectedCode&&attRoster.some(st=>st.code===selectedCode))await selectStudent(selectedCode,{scroll:false}).catch(()=>{});
+  finalMessage=`تم حفظ حضور وغياب ${count} طالبًا بنجاح بتاريخ ${day}. تظهر الحالات في صفحة المشرف والطالب أيضًا.`;finalType='good';
+ }catch(error){console.error('DIRECTOR_ATTENDANCE_SAVE',error);
+  const msg=error.message==='CONCURRENT_CHANGE'?'تم تعديل بعض سجلات الطلاب من مشرف آخر خلال عملك. لم يتم الحفظ؛ اضغط «عرض السجل» لتحديثها ثم أعد المحاولة.':error.message==='ROSTER_CHANGED'?'حدث تغيير في بيانات الطلاب أو صفوفهم من الإدارة. حدّث الصفوف وأعد القراءة.':'تعذر حفظ الحضور. لم نؤكد أي تغيير في قاعدة المدرسة؛ تحقق من الاتصال والصلاحيات.';
+  finalMessage=msg;finalType='error';
+ }finally{attSaving=false;if(attLoaded)attRender();else attControlLock();if(finalMessage)attText(finalMessage,finalType)}
+}
+$('attDatePicker').value=dateToday();$('attDatePicker').max=dateToday();
+$('attClassSelect').addEventListener('change',()=>{if(attDirty&&!confirm('هناك تغييرات غير محفوظة. هل تريد إهمالها والانتقال إلى صف آخر؟')){$('attClassSelect').value=attClass;return}attLoaded=false;attDirty=false;attRoster=[];$('attWorkingArea').classList.add('hidden');attText('اضغط «عرض السجل» لقراءة حضور الصف المحدد.');attControlLock()});
+$('attDatePicker').addEventListener('change',()=>{if(attDirty&&!confirm('هناك تغييرات غير محفوظة. هل تريد إهمالها وتغيير التاريخ؟')){$('attDatePicker').value=attDay;return}attLoaded=false;attDirty=false;attRoster=[];$('attWorkingArea').classList.add('hidden');attText('اضغط «عرض السجل» لقراءة حضور هذا التاريخ.');attControlLock()});
+$('attLoadBtn').onclick=()=>attLoadDay();$('attReloadRosterBtn').onclick=async()=>{if(attDirty&&!confirm('هناك تغييرات غير محفوظة. هل تريد إهمالها وتحديث البيانات؟'))return;attLoading=true;attControlLock();try{await loadRoster();attUpdateSelector();attLoaded=false;attDirty=false;$('attWorkingArea').classList.add('hidden');attText('تم تحديث بيانات الصفوف والطلاب. اختر الصف واضغط «عرض السجل».','good')}catch(e){attText('تعذر تحديث بيانات الطلاب والصفوف.','error')}finally{attLoading=false;attControlLock()}};
+$('attSearch').addEventListener('input',attRender);
+$('attFilterTabs').addEventListener('click',e=>{const b=e.target.closest('[data-att-filter]');if(!b)return;attFilter=b.dataset.attFilter;attRender()});
+$('attStudentList').addEventListener('change',e=>{const input=e.target.closest('input[data-att-student]');if(!input||attLoading||attSaving||!attLoaded)return;const code=input.dataset.attStudent;if(!attRoster.some(s=>s.code===code)||!STATES.includes(input.value))return;attStates[code]=input.value;attMarkDirty()});
+$('attDayNotes').addEventListener('input',()=>{if(!attLoaded)return;attNotes=$('attDayNotes').value;attDirty=true;attText('هناك ملاحظات غير محفوظة. اضغط «حفظ الحضور والغياب».','warn')});
+$('attAllPresentBtn').onclick=attAllPresent;$('attCancelBtn').onclick=attReset;$('attSaveBtn').onclick=attSave;
+attControlLock();
+
 init().then(readDirectorEvalState);
 </script>
 </body>
