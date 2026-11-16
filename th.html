@@ -569,11 +569,12 @@ body.record-preview-open{overflow:hidden!important}
 .eval-row:last-child{border-bottom:0}.eval-row:nth-child(even){background:#f8fbfe}
 .eval-no{font-size:11px;font-weight:900;color:#667085;text-align:center}
 .eval-student{font-size:11px;font-weight:900;line-height:1.65;overflow-wrap:anywhere}
-.eval-choices{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;min-width:0}
+.eval-choices{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:6px;min-width:0}
 .eval-choice{min-height:41px;border:1.5px solid transparent;border-radius:10px;padding:5px 4px;font-size:9px;font-weight:900;white-space:nowrap;opacity:.75;transition:.15s}
 .eval-choice[data-rating="excellent"]{background:#def8e8;color:#04693c;border-color:#a6e7c0}
 .eval-choice[data-rating="very_good"]{background:#e0f2ff;color:#075daa;border-color:#a9d6f5}
 .eval-choice[data-rating="good"]{background:#eee6ff;color:#6740a7;border-color:#d7c7fa}
+.eval-choice[data-rating="average"]{background:#eaf7f6;color:#0a716e;border-color:#abdfda}
 .eval-choice[data-rating="acceptable"]{background:#fff0d9;color:#9a5700;border-color:#f7d39d}
 .eval-choice[data-rating="weak"]{background:#ffe2e3;color:#b21e32;border-color:#fac1c5}
 .eval-choice.selected{opacity:1;box-shadow:inset 0 0 0 2px currentColor,0 3px 8px #14233917;font-size:9.5px}
@@ -588,7 +589,7 @@ body.record-preview-open{overflow:hidden!important}
 .eval-save{min-height:46px;border:0;border-radius:12px;padding:10px 26px;color:#fff;background:#078746;font-size:11px;font-weight:900}
 .eval-save:disabled{opacity:.5}
 .eval-empty{padding:25px 14px;color:#667085;text-align:center;font-weight:800;font-size:11px}
-@media(max-width:800px){.eval-row{grid-template-columns:32px minmax(120px,1fr);gap:5px 8px}.eval-choices{grid-column:1/-1;grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media(max-width:800px){.eval-row{grid-template-columns:32px minmax(120px,1fr);gap:5px 8px}.eval-choices{grid-column:1/-1;grid-template-columns:repeat(6,minmax(0,1fr))}}
 @media(max-width:440px){.eval-choice{min-height:40px;font-size:8px;padding:4px 1px}.eval-choice.selected{font-size:8px}.eval-row{padding:11px 7px}.eval-save{width:100%}.eval-modal .modal-card{padding:14px 11px 20px}}
 </style></head>
 <body>
@@ -2984,7 +2985,7 @@ $("teacherObjectionsModal").addEventListener("click",e=>{if(e.target===$("teache
 
 $("searchInput").addEventListener("input",renderGradeTable);$("reloadBtn").onclick=async()=>{if(!selectedClassId)return;try{$("reloadBtn").disabled=true;await Promise.all([loadClassGrades(),loadFormulas(),loadGradeLocks(),loadSubmissionState()]);await loadSavedColumnDrafts();renderPeriodButtons();renderFormulaInfo();renderGradeTable();toast("تم تحديث البيانات.")}catch(e){console.error(e);toast("تعذر تحديث البيانات")}finally{$("reloadBtn").disabled=false}};$("logoutBtn").onclick=logout;
 
-const EVAL_CHOICES=[{key:"excellent",label:"ممتاز"},{key:"very_good",label:"جيد جدًا"},{key:"good",label:"جيد"},{key:"acceptable",label:"مقبول"},{key:"weak",label:"ضعيف"}];
+const EVAL_CHOICES=[{key:"excellent",label:"ممتاز"},{key:"very_good",label:"جيد جدًا"},{key:"good",label:"جيد"},{key:"average",label:"متوسط"},{key:"acceptable",label:"مقبول"},{key:"weak",label:"ضعيف"}];
 function evalRequestEnabled(r){const targets=Array.isArray(r?.targetTeacherCodes)?r.targetTeacherCodes:[];return!!(r&&typeof r==="object"&&r.active===true&&/^[a-zA-Z0-9_-]{4,80}$/.test(String(r.requestId||""))&&(!targets.length||targets.some(c=>String(c).toUpperCase()===String(TEACHER_CODE).toUpperCase())))}
 function renderEvalLaunch(){
  const ready=evalRequestEnabled(EVAL_REQUEST)&&subjectAssignments().length>0;
@@ -3009,9 +3010,16 @@ function renderEvalClasses(){
  $("evaluationClass").disabled=!options.length;
  if(!options.length){$("evaluationList").innerHTML='<div class="eval-empty">لا توجد صفوف لهذه المادة.</div>';return}
 }
+// أسماء التقييم أبجدية فقط؛ تسلسل سجلات الدرجات يبقى على حاله.
+function evaluationStudentsOfClass(classId){
+ return studentsOfClass(classId).sort((a,b)=>{
+  const name=x=>String(x.name||x.fullName||"").trim().replace(/[أإآٱ]/g,"ا").replace(/ى/g,"ي").replace(/ة/g,"ه").replace(/[\u064b-\u065f\u0670]/g,"").replace(/ـ/g,"").replace(/\s+/g," ");
+  return name(a).localeCompare(name(b),"ar",{sensitivity:"base"})||String(a.name||"").localeCompare(String(b.name||""),"ar")||String(a.code||"").localeCompare(String(b.code||""),"ar");
+ });
+}
 function evalRatingValue(v){const value=typeof v==="string"?v:String(v?.rating||"");return EVAL_CHOICES.some(x=>x.key===value)?value:""}
 function renderEvaluationRows(){
- const list=studentsOfClass(EVAL_CLASS),count=list.filter(s=>evalRatingValue(EVAL_SELECTED[s.code])).length;
+ const list=evaluationStudentsOfClass(EVAL_CLASS),count=list.filter(s=>evalRatingValue(EVAL_SELECTED[s.code])).length;
  $("evaluationProgress").textContent=`${count} من ${list.length} طالب — ${EVAL_DIRTY?"تغييرات لم تُحفظ":"يمكنك تعديل التقييمات المحفوظة"}`;
  $("saveEvaluationsBtn").disabled=EVAL_LOADING||EVAL_ALREADY_SUBMITTED||!list.length||!EVAL_DIRTY;
  $("evaluationList").innerHTML=list.length?list.map((s,i)=>`<div class="eval-row"><span class="eval-no">${i+1}</span><strong class="eval-student">${esc(s.name||"بدون اسم")}</strong><div class="eval-choices" role="group" aria-label="تقييم ${esc(s.name||s.code)}">${EVAL_CHOICES.map(level=>`<button type="button" class="eval-choice ${EVAL_SELECTED[s.code]===level.key?"selected":""}" data-eval-code="${esc(s.code)}" data-rating="${level.key}" ${EVAL_ALREADY_SUBMITTED?"disabled":""} aria-pressed="${EVAL_SELECTED[s.code]===level.key}">${level.label}</button>`).join("")}</div></div>`).join(""):'<div class="eval-empty">لا يوجد طلاب مسجلون في هذا الصف.</div>';
@@ -3046,12 +3054,12 @@ $("evaluationClass").onchange=async function(){if(EVAL_DIRTY&&!window.confirm("�
 $("evaluationList").addEventListener("click",e=>{
  const button=e.target.closest("[data-eval-code][data-rating]");if(!button||EVAL_LOADING||EVAL_ALREADY_SUBMITTED)return;
  const code=button.dataset.evalCode,rating=button.dataset.rating;
- if(!studentsOfClass(EVAL_CLASS).some(s=>s.code===code)||!EVAL_CHOICES.some(x=>x.key===rating))return;
+ if(!evaluationStudentsOfClass(EVAL_CLASS).some(s=>s.code===code)||!EVAL_CHOICES.some(x=>x.key===rating))return;
  EVAL_SELECTED[code]=rating;EVAL_DIRTY=true;$("sendEvaluationToDirectorBtn").disabled=true;renderEvaluationRows();
 });
 async function saveStudentEvaluations(){
  if(EVAL_LOADING||EVAL_ALREADY_SUBMITTED||!EVAL_DIRTY||!EVAL_CLASS||!evalRequestEnabled(EVAL_REQUEST))return;
- const chosen=evaluationAssignments().find(a=>a.classId===EVAL_CLASS&&a.subjectId===EVAL_SUBJECT),roster=studentsOfClass(EVAL_CLASS);
+ const chosen=evaluationAssignments().find(a=>a.classId===EVAL_CLASS&&a.subjectId===EVAL_SUBJECT),roster=evaluationStudentsOfClass(EVAL_CLASS);
  if(!chosen||!roster.length)return toast("الصف غير متاح للتقييم.","error");
  const missing=roster.filter(s=>!evalRatingValue(EVAL_SELECTED[s.code]));
  if(missing.length)return toast(`بقي ${missing.length} طالبًا بلا تقييم. يجب اختيار تقييم واحد لكل طالب.`,"warn");
@@ -3079,9 +3087,9 @@ async function checkTeacherEvaluationCompletion(){
   const rid=encodeURIComponent(EVAL_REQUEST.requestId),tc=encodeURIComponent(TEACHER_CODE);
   const [existing,all]=await Promise.all([dbGet(`studentEvaluationSubmissions/${rid}/${tc}`),dbGet(`studentEvaluations/${rid}/${tc}`)]);
   EVAL_ALREADY_SUBMITTED=!!existing?.submittedAt;
-  const targets=evaluationAssignments().filter(a=>studentsOfClass(a.classId).length>0);
+  const targets=evaluationAssignments().filter(a=>evaluationStudentsOfClass(a.classId).length>0);
   let incomplete=0,done=0,total=0;
-  for(const a of targets){const roster=studentsOfClass(a.classId),saved=all?.[a.classId]?.[a.subjectId]||{};total+=roster.length;for(const s of roster){if(EVAL_CHOICES.some(c=>c.key===(saved?.[s.code]?.rating||saved?.[s.code])))done++;else incomplete++}}
+  for(const a of targets){const roster=evaluationStudentsOfClass(a.classId),saved=all?.[a.classId]?.[a.subjectId]||{};total+=roster.length;for(const s of roster){if(EVAL_CHOICES.some(c=>c.key===(saved?.[s.code]?.rating||saved?.[s.code])))done++;else incomplete++}}
   if(EVAL_ALREADY_SUBMITTED){box.textContent="تم إرسال تقييماتك إلى المدير بنجاح، وهي الآن معتمدة ولا يمكن تعديلها.";btn.disabled=true;btn.textContent="تم إرسال التقييم إلى المدير"}
   else{box.textContent=`حُفظ ${done} من أصل ${total} تقييمًا لجميع موادك وصفوفك. ${incomplete?`المتبقي ${incomplete} تقييم.`:"اكتمل الحفظ، يمكنك إرسال التقييم للمدير."}`;btn.disabled=incomplete>0||total===0;btn.textContent="إرسال التقييم كاملًا إلى المدير"}
   return!EVAL_ALREADY_SUBMITTED&&incomplete===0&&total>0;
@@ -3097,13 +3105,13 @@ async function submitTeacherEvaluations(){
   const rid=encodeURIComponent(r.requestId),tc=encodeURIComponent(TEACHER_CODE);
   const all=await dbGet(`studentEvaluations/${rid}/${tc}`)||{};
   const liveAssignments=resolveAssignments();
-  const needed=liveAssignments.filter(a=>studentsOfClass(a.classId).length>0);
+  const needed=liveAssignments.filter(a=>evaluationStudentsOfClass(a.classId).length>0);
   if(!needed.length)throw Error("EMPTY");
-  for(const a of needed)for(const st of studentsOfClass(a.classId)){
+  for(const a of needed)for(const st of evaluationStudentsOfClass(a.classId)){
    const rating=all?.[a.classId]?.[a.subjectId]?.[st.code]?.rating;
    if(!EVAL_CHOICES.some(x=>x.key===rating))throw Error("INCOMPLETE");
   }
-  const stamp=Date.now();await dbPut(`studentEvaluationSubmissions/${rid}/${tc}`,{submittedAt:stamp,teacherCode:TEACHER_CODE,teacherName:teacher.name||teacherUser.name||TEACHER_CODE,requestId:r.requestId,assignmentCount:needed.length,ratingsCount:needed.reduce((n,a)=>n+studentsOfClass(a.classId).length,0)});
+  const stamp=Date.now();await dbPut(`studentEvaluationSubmissions/${rid}/${tc}`,{submittedAt:stamp,teacherCode:TEACHER_CODE,teacherName:teacher.name||teacherUser.name||TEACHER_CODE,requestId:r.requestId,assignmentCount:needed.length,ratingsCount:needed.reduce((n,a)=>n+evaluationStudentsOfClass(a.classId).length,0)});
   EVAL_ALREADY_SUBMITTED=true;EVAL_DIRTY=false;await checkTeacherEvaluationCompletion();if(EVAL_CLASS)renderEvaluationRows();toast("تم إرسال التقييمات إلى المدير بنجاح.","success");
  }catch(e){console.error("EVAL_TEACHER_SUBMIT",e);toast(e.message==="INCOMPLETE"?"توجد صفوف أو مواد لم تكتمل تقييماتها.":e.message==="REQUEST_CLOSED"?"المدير أغلق طلب التقييم.":"تعذر إرسال التقييمات. تحقق من الاتصال والصلاحيات.","error")}
  finally{if(!EVAL_ALREADY_SUBMITTED){btn.textContent="إرسال التقييم كاملًا إلى المدير";await checkTeacherEvaluationCompletion()}}
