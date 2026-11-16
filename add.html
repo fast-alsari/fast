@@ -313,6 +313,49 @@
  body.aeval-printing .aeval-print-paper:last-child{page-break-after:auto!important;break-after:auto!important}
  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
+
+/* ===== تحديث تقرير التقييم: أبجدي، ورقة واحدة، وإحصاءات الحضور ===== */
+.aeval-one-sheet .aeval-letter-flow{
+ --aeval-fit:1;position:relative;width:calc(100% / var(--aeval-fit));
+ transform:scale(var(--aeval-fit));transform-origin:top right;
+}
+.aeval-one-sheet .aeval-print-head{padding:1.1mm 0 2.3mm}
+.aeval-one-sheet .aeval-print-head img{width:14mm;height:14mm;margin-bottom:.5mm}
+.aeval-one-sheet .aeval-print-head h2{font-size:16px;line-height:1.4}
+.aeval-one-sheet .aeval-print-head p{margin-top:.4mm}
+.aeval-one-sheet .aeval-letter-heading{margin:2.9mm 0 2.1mm}
+.aeval-one-sheet .aeval-letter-heading .aeval-letter-title{font-size:15px;line-height:1.5}
+.aeval-one-sheet .aeval-letter-heading .aeval-letter-class{font-size:15.5px;margin-top:0}
+.aeval-one-sheet .aeval-letter-separator{margin:1.5mm auto 0}
+.aeval-one-sheet .aeval-letter-date{margin-top:.3mm;font-size:8.5px}
+.aeval-one-sheet .aeval-letter-address{margin:2.5mm 0 1.5mm;font-size:11.4px}
+.aeval-one-sheet .aeval-letter-address .aeval-letter-student-name{font-size:16px}
+.aeval-one-sheet .aeval-letter-greeting{margin-bottom:.5mm;font-size:11px}
+.aeval-one-sheet .aeval-letter-paragraph{font-size:10.3px;line-height:1.65;margin-bottom:2mm}
+.aeval-one-sheet .aeval-letter-details-title{font-size:10.8px;margin-bottom:1mm}
+.aeval-one-sheet .aeval-letter-details{margin-bottom:2mm;padding:0 0 1.6mm;row-gap:.5mm}
+.aeval-one-sheet .aeval-letter-detail{font-size:9px;line-height:1.35}
+.aeval-one-sheet .aeval-print-h{font-size:11.3px;margin:2.2mm 0 1.3mm}
+.aeval-one-sheet .aeval-print-table th{height:7mm;font-size:9.5px;padding:1.1mm .7mm}
+.aeval-one-sheet .aeval-print-table td{font-size:9.5px;line-height:1.25;padding:1.25mm .8mm}
+.aeval-one-sheet .aeval-letter-closing{font-size:9.8px;line-height:1.55;margin:2.5mm 0 0}
+.aeval-one-sheet .aeval-letter-signature{font-size:10px;line-height:1.45;margin-top:2mm}
+.aeval-one-sheet .aeval-letter-foot{font-size:7.5px;padding-top:1.5mm}
+.aeval-one-sheet .aeval-attendance-line{display:flex;align-items:center;justify-content:space-between;gap:3mm;flex-wrap:wrap;
+ margin-top:3mm;padding:2.1mm 1mm;border-top:1px solid #c6d5e6;border-bottom:1px solid #c6d5e6;
+ background:rgba(239,245,252,.76);color:#263b55;font-size:9.4px;font-weight:800;line-height:1.7}
+.aeval-one-sheet .aeval-attendance-line b{color:#163f70}
+.aeval-one-sheet .aeval-attendance-line strong{color:#963c3c;font-weight:900}
+.aeval-one-sheet.aeval-one-compact .aeval-letter-details{row-gap:0}
+.aeval-one-sheet.aeval-one-compact .aeval-print-table td{padding:.8mm .55mm;font-size:9px;line-height:1.15}
+.aeval-one-sheet.aeval-one-compact .aeval-print-table th{height:6mm}
+.aeval-one-sheet.aeval-one-compact .aeval-letter-paragraph{font-size:9.8px;line-height:1.5}
+.aeval-one-sheet.aeval-one-dense .aeval-letter-details{row-gap:0;margin-bottom:1mm}
+.aeval-one-sheet.aeval-one-dense .aeval-print-table td{padding:.55mm .5mm;font-size:8.5px;line-height:1.1}
+.aeval-one-sheet.aeval-one-dense .aeval-print-table th{height:5.5mm;font-size:8.7px}
+.aeval-one-sheet.aeval-one-dense .aeval-letter-paragraph{font-size:9.4px;line-height:1.4;margin-bottom:1mm}
+.aeval-one-sheet.aeval-one-dense .aeval-letter-details-title{margin-bottom:.4mm}
+.aeval-one-sheet.aeval-one-dense .aeval-letter-closing{margin-top:1mm}
 </style>
 </head>
 <body>
@@ -2245,44 +2288,95 @@ async function openAdminEvaluationModal(){
  }catch(e){console.error('ADMIN_EVAL_LOAD',e);$('adminEvaluationNote').textContent='تعذر قراءة تقييمات المدير، تحقق من الاتصال وصلاحيات الحساب.'}
 }
 function aevalSubjectKey(v){return norm(String(v||'').replace(/[أإآٱ]/g,'ا').replace(/ى/g,'ي').replace(/ة/g,'ه').replace(/[\u064b-\u065f]/g,'').replace(/ـ/g,''))}
+function aevalExcludedSubject(row){
+ const name=aevalSubjectKey(row?.name||row?.subjectName||row?.subject||'').trim();
+ const auto=norm(row?.autoType||row?.type||'');
+ const id=norm(row?.subjectId||row?.id||'');
+ if(['sport','sports','art','arts','physical_education','physicaleducation'].includes(auto))return true;
+ if(['sport','sports','art','arts'].includes(id))return true;
+ // لا تستبعد الرياضيات: الاسم يجب أن يكون "رياضة/رياضية" لا "رياضيات".
+ return /(?:^|\s)(?:التربيه\s+)?(?:الرياضه|رياضه|الرياضيه|رياضيه|الفنيه|فنيه|الفن|البدنيه|بدنيه|الرسم|رسم)(?=\s|$)/.test(name);
+}
 function aevalOrderedRows(clazz,ratings){
- const mapped=Array.isArray(ratings)?ratings:[],raw=Array.isArray(clazz?.subjects)?clazz.subjects:Object.values(clazz?.subjects||{});
- const subjects=raw.filter(Boolean).map((sub,i)=>({id:String(sub.id||`SUB_${i+1}`),name:String(sub.name||sub.subjectName||'').trim(),order:Number(sub.order||i+1)})).filter(sub=>sub.name).sort((a,b)=>a.order-b.order),used=new Set(),result=[];
+ const mapped=(Array.isArray(ratings)?ratings:[]).filter(r=>!aevalExcludedSubject(r));
+ const raw=Array.isArray(clazz?.subjects)?clazz.subjects:Object.values(clazz?.subjects||{});
+ const subjects=raw.filter(Boolean).map((sub,i)=>({id:String(sub.id||`SUB_${i+1}`),name:String(sub.name||sub.subjectName||'').trim(),order:Number(sub.order??i+1),autoType:sub.autoType||''})).filter(sub=>sub.name&&!aevalExcludedSubject(sub)).sort((a,b)=>a.order-b.order),used=new Set(),result=[];
  for(const sub of subjects){
   const matches=mapped.map((r,i)=>({r,i})).filter(({r,i})=>!used.has(i)&&(String(r.subjectId||'')===String(sub.id)||aevalSubjectKey(r.subjectName)===aevalSubjectKey(sub.name)));
-  if(!matches.length){result.push({subjectId:sub.id,subjectName:sub.name,teacherName:'—',rating:''});continue}
-  for(const {r,i} of matches){used.add(i);result.push({...r,subjectId:sub.id,subjectName:sub.name})}
+  if(!matches.length){result.push({subjectId:sub.id,subjectName:sub.name,teacherName:'—',rating:''});continue;}
+  for(const {r,i} of matches){used.add(i);result.push({...r,subjectId:sub.id,subjectName:sub.name});}
  }
+ // التقييمات التي لا تتطابق مع مواد الصف تضاف أخيرًا، ولا تُعرض الرياضة أو الفنية.
  for(let i=0;i<mapped.length;i++)if(!used.has(i))result.push(mapped[i]);
  return result;
+}
+function aevalAttendanceTotals(records){
+ const totals={absent:0,late:0,escape:0,excused:0};
+ for(const [day,rec] of Object.entries(records||{})){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(day)||!rec||typeof rec!=='object')continue;
+  const status=aevalSubjectKey(rec.status||'');
+  if(status==='escape'||status==='هروب'||rec.escape===true||rec.isEscape===true)totals.escape++;
+  else if(status==='late'||status==='متاخر'||rec.late===true||rec.isLate===true)totals.late++;
+  else if(['excused','leave','مجاز','اجازه','اجازة'].includes(status)||rec.excused===true||rec.leave===true)totals.excused++;
+  else if(status==='absent'||status==='غائب'||rec.absent===true||rec.isAbsent===true)totals.absent++;
+ }
+ return totals;
+}
+async function aevalLoadAttendance(roster){
+ // كل قراءة خاصة بطالب واحد، تفادي تحميل غيابات المدرسة كلها إلى المتصفح.
+ const output={},workerCount=Math.min(6,roster.length);let pos=0;
+ await Promise.all(Array.from({length:workerCount},async()=>{
+  while(pos<roster.length){
+   const st=roster[pos++];
+   output[st.code]=await dbGetFresh(`attendance/${aevalKey(st.code)}`)||{};
+  }
+ }));
+ return output;
+}
+function aevalFitSinglePages(){
+ document.querySelectorAll('#adminEvaluationPreviewPages .aeval-print-paper').forEach(page=>{
+  const content=page.querySelector('.aeval-letter-content'),flow=page.querySelector('.aeval-letter-flow'),footer=page.querySelector('.aeval-letter-foot');
+  if(!content||!flow||!footer)return;
+  let factor=1;flow.style.setProperty('--aeval-fit','1');
+  // مقياس الحروف لا يتغير، ويتم التصغير فقط عند الضرورة لضمان ورقة واحدة لكل طالب.
+  for(let i=0;i<9;i++){
+   const maxBottom=footer.getBoundingClientRect().top-8;
+   const actualBottom=flow.getBoundingClientRect().bottom;
+   if(actualBottom<=maxBottom+1)break;
+   factor=Math.max(.38,Math.min(.995,factor*(maxBottom-flow.getBoundingClientRect().top)/Math.max(1,actualBottom-flow.getBoundingClientRect().top)*.984));
+   flow.style.setProperty('--aeval-fit',factor.toFixed(4));
+  }
+ });
 }
 function aevalLetterDetails(st,clazz){
  const pairs=[['اسم الأم',st.motherName],['تاريخ الميلاد',st.birthDate],['الجنس',genderStudent(st.gender||clazz.gender)],['هاتف ولي الأمر',st.guardianPhone],['العنوان',st.address],['المدرسة السابقة',st.previousSchool],['القاعة',st.roomNumber||clazz.roomNumber],['هاتف الطالب',st.studentPhone],['خط النقل',st.lineNumber||st.transportLine],['تاريخ التسجيل',st.registrationDate],['رمز الطالب',st.code]];
  return pairs.filter(([,v])=>v!==null&&v!==undefined&&String(v).trim()!=='').map(([l,v])=>`<div class="aeval-letter-detail"><span>${esc(l)}: </span><b>${esc(v)}</b></div>`).join('');
 }
-function aevalPaper(st,clazz,rows,cycle,attendance,index,count,partIndex=0,partsCount=1){
+function aevalPaper(st,clazz,rows,cycle,attendance,index,count){
  const female=normalizeGender(st.gender||clazz.gender)==='female',studentTerm=female?'الطالبة':'الطالب';
  const studentName=String(st.name||st.fullName||'—'),className=String(clazz.name||st.className||st.classId||'—');
  const title=String(cycle.title||'تقييم الطلبة').trim(),intro=female?'ابنتكم':'ابنكم',follow=female?'مستواها':'مستواه';
- const continuation=partIndex>0,isLast=partIndex===partsCount-1;
- const startNumber=partIndex===0?0:10+(partIndex-1)*18;
- const tableRows=rows.map((r,i)=>`<tr><td>${startNumber+i+1}</td><td>${esc(r.subjectName||'—')}</td><td>${esc(r.teacherName||'—')}</td><td class="${r.rating?'aeval-rating-'+esc(r.rating):'aeval-rating-empty'}">${esc(AEVAL_NAMES[r.rating]||'لم يرد تقييم')}</td></tr>`).join('');
- return `<article class="aeval-print-paper ${continuation?'aeval-letter-continuation':''}">
+ const density=rows.length>=22?'aeval-one-dense':rows.length>=15?'aeval-one-compact':'';
+ const attendanceTotals=aevalAttendanceTotals(attendance);
+ const tableRows=rows.map((r,i)=>`<tr><td>${i+1}</td><td>${esc(r.subjectName||'—')}</td><td>${esc(r.teacherName||'—')}</td><td class="${r.rating?'aeval-rating-'+esc(r.rating):'aeval-rating-empty'}">${esc(AEVAL_NAMES[r.rating]||'لم يرد تقييم')}</td></tr>`).join('');
+ return `<article class="aeval-print-paper aeval-one-sheet ${density}">
   <img class="aeval-print-watermark" src="logo.png" alt="" aria-hidden="true">
   <div class="aeval-letter-content">
-   <div class="aeval-print-head"><img src="logo.png" alt="شعار المدرسة"><div class="aeval-letter-kicker">قسم الحوكمة</div><h2>إدارة ثانوية التحدي الأهلية المختلطة</h2><p>التواصل المدرسي والتربوي مع أولياء الأمور</p></div>
-   <div class="aeval-letter-heading"><div class="aeval-letter-title">${esc(title)} لطلاب الصف</div><span class="aeval-letter-class">${esc(className)}</span><div class="aeval-letter-separator"></div></div>
-   <div class="aeval-letter-date">التاريخ: ${esc(viewDate(Date.now()))}</div>
-   ${continuation?
-    `<div class="aeval-letter-address">استكمال تقييم ${esc(studentTerm)} <span class="aeval-letter-student-name">${esc(studentName)}</span></div><div class="aeval-letter-cont-note">تابع جدول المواد الدراسية — الصفحة ${partIndex+1} من ${partsCount}</div>`:
-    `<div class="aeval-letter-address">السيد ولي أمر ${esc(studentTerm)} <span class="aeval-letter-student-name">${esc(studentName)}</span> المحترم</div>
-     <div class="aeval-letter-greeting">تحية طيبة وبعد...</div>
-     <p class="aeval-letter-paragraph">نود إعلامكم بأن التقييم التربوي الخاص بـ${intro} خلال هذا الشهر قد أُعدّ استنادًا إلى متابعة أساتذة المواد الدراسية، ويُبيّن الجدول أدناه ${follow} في كل مادة. نأمل منكم التفضل بالاطلاع على النتائج ومتابعتها بما يسهم في تعزيز مواطن التميز وتطوير الجوانب التي تتطلب مزيدًا من الاهتمام.</p>
-     <div class="aeval-letter-details-title">البيانات المدرسية ${female?'للطالبة':'للطالب'}</div><div class="aeval-letter-details">${aevalLetterDetails(st,clazz)}</div>`}
-   <h3 class="aeval-print-h">جدول تقييم المواد الدراسية ${continuation?'(تابع)':''}</h3>
-   <table class="aeval-print-table"><thead><tr><th>التسلسل</th><th>المادة الدراسية</th><th>اسم الأستاذ</th><th>التقييم</th></tr></thead><tbody>${tableRows||'<tr><td colspan="4">لم تُسجّل تقييمات لهذا الطالب</td></tr>'}</tbody></table>
-   ${isLast?`<p class="aeval-letter-closing">شاكرين لكم تعاونكم وحرصكم الدائم على متابعة المسيرة العلمية والتربوية ${female?'لابنتكم':'لابنكم'}، مع خالص الشكر والتقدير.</p><div class="aeval-letter-signature">إدارة ثانوية التحدي الأهلية المختلطة<br>قسم الحوكمة</div>`:`<p class="aeval-letter-closing">تستكمل بقية المواد الدراسية في الصفحة التالية.</p>`}
-   <div class="aeval-letter-foot"><span>تقرير تقييم تربوي صادر من منصة التحدي</span><span>${esc(studentName)} — الصفحة ${partIndex+1} من ${partsCount} — ${index+1} / ${count}</span></div>
+   <div class="aeval-letter-flow">
+    <div class="aeval-print-head"><img src="logo.png" alt="شعار المدرسة"><div class="aeval-letter-kicker">قسم الحوكمة</div><h2>إدارة ثانوية التحدي الأهلية المختلطة</h2><p>التواصل المدرسي والتربوي مع أولياء الأمور</p></div>
+    <div class="aeval-letter-heading"><div class="aeval-letter-title">${esc(title)} لطلاب الصف</div><span class="aeval-letter-class">${esc(className)}</span><div class="aeval-letter-separator"></div></div>
+    <div class="aeval-letter-date">التاريخ: ${esc(viewDate(Date.now()))}</div>
+    <div class="aeval-letter-address">السيد ولي أمر ${esc(studentTerm)} <span class="aeval-letter-student-name">${esc(studentName)}</span> المحترم</div>
+    <div class="aeval-letter-greeting">تحية طيبة وبعد...</div>
+    <p class="aeval-letter-paragraph">نود إعلامكم بأن التقييم التربوي الخاص بـ${intro} خلال هذا الشهر قد أُعدّ استنادًا إلى متابعة أساتذة المواد الدراسية، ويُبيّن الجدول أدناه ${follow} في كل مادة. نأمل منكم التفضل بالاطلاع على النتائج ومتابعتها بما يسهم في تعزيز مواطن التميز وتطوير الجوانب التي تتطلب مزيدًا من الاهتمام.</p>
+    <div class="aeval-letter-details-title">البيانات المدرسية ${female?'للطالبة':'للطالب'}</div><div class="aeval-letter-details">${aevalLetterDetails(st,clazz)}</div>
+    <h3 class="aeval-print-h">جدول تقييم المواد الدراسية</h3>
+    <table class="aeval-print-table"><thead><tr><th>التسلسل</th><th>المادة الدراسية</th><th>اسم الأستاذ</th><th>التقييم</th></tr></thead><tbody>${tableRows||'<tr><td colspan="4">لم تُسجّل تقييمات لهذا الطالب</td></tr>'}</tbody></table>
+    <div class="aeval-attendance-line"><b>إحصاءات الحضور والغياب:</b> <span>الغياب: <strong>${attendanceTotals.absent}</strong></span><span>التأخير: <strong>${attendanceTotals.late}</strong></span><span>الهروب: <strong>${attendanceTotals.escape}</strong></span><span>المجاز: <strong>${attendanceTotals.excused}</strong></span></div>
+    <p class="aeval-letter-closing">شاكرين لكم تعاونكم وحرصكم الدائم على متابعة المسيرة العلمية والتربوية ${female?'لابنتكم':'لابنكم'}، مع خالص الشكر والتقدير.</p>
+    <div class="aeval-letter-signature">إدارة ثانوية التحدي الأهلية المختلطة<br>قسم الحوكمة</div>
+   </div>
+   <div class="aeval-letter-foot"><span>تقرير تقييم تربوي صادر من منصة التحدي</span><span>${esc(studentName)} — ${index+1} / ${count}</span></div>
   </div></article>`;
 }
 async function previewAdminEvaluations(){
@@ -2293,28 +2387,25 @@ async function previewAdminEvaluations(){
   if(!await verifyAdmin())throw Error('ACCESS_DENIED');const [cycle,handoff,allStudents,allRatings,clazz]=await Promise.all([
    dbGetFresh(`studentEvaluationCycles/${aevalKey(cycleId)}`),dbGetFresh(`evaluationHandoffs/${aevalKey(cycleId)}`),dbGetFresh('students'),dbGetFresh(`studentEvaluations/${aevalKey(cycleId)}`),dbGetFresh(`classes/${aevalKey(classId)}`)]);
   if(!aevalValid(cycle)||handoff?.status!=='delivered'||!clazz)throw Error('NOT_APPROVED');
-  const roster=Object.entries(allStudents||{}).filter(([code,s])=>s&&String(s.classId)===String(classId)&&s.hidden!==true&&s.deleted!==true).map(([code,s])=>({...s,code})).sort((a,b)=>(Number(a.serial||999999)-Number(b.serial||999999))||String(a.name||'').localeCompare(String(b.name||''),'ar'));
+  const roster=Object.entries(allStudents||{}).filter(([code,s])=>s&&String(s.classId)===String(classId)&&s.hidden!==true&&s.deleted!==true).map(([code,s])=>({...s,code})).sort((a,b)=>new Intl.Collator('ar',{sensitivity:'base',ignorePunctuation:true}).compare(String(a.name||a.fullName||''),String(b.name||b.fullName||''))||Number(a.serial||999999)-Number(b.serial||999999));
   if(!roster.length)throw Error('EMPTY_CLASS');
   const byStudent={};for(const [teacherCode,cls]of Object.entries(allRatings||{}))for(const [cid,subjects]of Object.entries(cls||{})){
    if(String(cid)!==String(classId))continue;for(const [subjectId,ratings]of Object.entries(subjects||{}))for(const [studentCode,rec]of Object.entries(ratings||{})){
-    if(!AEVAL_NAMES[rec?.rating])continue;(byStudent[studentCode]??=[]).push({rating:rec.rating,subjectId,subjectName:rec.subjectName||subjectId,teacherName:rec.teacherName||teacherCode});
+    if(!AEVAL_NAMES[rec?.rating])continue;(byStudent[studentCode]??=[]).push({rating:rec.rating,subjectId,subjectName:rec.subjectName||subjectId,teacherName:rec.teacherName||DATA.teachers?.[teacherCode]?.name||'—'});
    }
   }
-  const sheets=[];roster.forEach((st,i)=>{
-   const ordered=aevalOrderedRows(clazz,byStudent[st.code]||[]),parts=[];
-   if(!ordered.length)parts.push([]);
-   else{parts.push(ordered.slice(0,10));for(let k=10;k<ordered.length;k+=18)parts.push(ordered.slice(k,k+18));}
-   parts.forEach((part,j)=>sheets.push(aevalPaper(st,clazz,part,cycle,null,i,roster.length,j,parts.length)));
-  });
+  $('adminEvaluationNote').textContent=`جاري جلب إحصاءات حضور وغياب ${roster.length} طالبًا...`;
+  const attendanceByStudent=await aevalLoadAttendance(roster);
+  const sheets=roster.map((st,i)=>aevalPaper(st,clazz,aevalOrderedRows(clazz,byStudent[st.code]||[]),cycle,attendanceByStudent[st.code],i,roster.length));
   $('adminEvaluationPreviewPages').innerHTML=sheets.join('');
-  $('adminEvaluationPreviewCount').textContent=`${cycle.title||'التقييم'} — ${clazz.name||classId} — ${roster.length} طالبًا — ${sheets.length} صفحة A4`;
+  $('adminEvaluationPreviewCount').textContent=`${cycle.title||'التقييم'} — ${clazz.name||classId} — ${roster.length} طالبًا بالترتيب الأبجدي — ${sheets.length} ورقة A4 (ورقة لكل طالب)`;
   $('adminEvaluationPreview').dataset.exportName=`${cycle.title||'تقييم الطلبة'}_${clazz.name||'الصف'}`;
-  AEVAL_PRINT_READY=true;closeModal('adminEvaluationModal');$('adminEvaluationPreview').classList.add('show');
+  AEVAL_PRINT_READY=true;closeModal('adminEvaluationModal');$('adminEvaluationPreview').classList.add('show');aevalFitSinglePages();
  }catch(e){console.error('ADMIN_EVAL_PREVIEW',e);$('adminEvaluationNote').textContent=e.message==='NOT_APPROVED'?'هذه الدورة غير معتمدة أو لم يرسلها المدير للإدارة بعد.':e.message==='EMPTY_CLASS'?'لا يوجد طلاب في الصف المختار.':'تعذر تحميل بيانات التقييم كاملة. تحقق من الاتصال والصلاحيات.';AEVAL_PRINT_READY=false}
  finally{AEVAL_PRINT_BUSY=false;$('adminEvaluationPreviewBtn').disabled=false}
 }
 function closeAdminEvaluationPreview(){if(AEVAL_PDF_BUSY)return;$('adminEvaluationPreview').classList.remove('show');$('adminEvaluationPreviewPages').innerHTML='';AEVAL_PRINT_READY=false;document.body.classList.remove('aeval-printing')}
-function printAdminEvaluations(){if(!AEVAL_PRINT_READY||AEVAL_PRINT_BUSY||AEVAL_PDF_BUSY)return;document.body.classList.add('aeval-printing');window.print()}
+function printAdminEvaluations(){if(!AEVAL_PRINT_READY||AEVAL_PRINT_BUSY||AEVAL_PDF_BUSY)return;aevalFitSinglePages();document.body.classList.add('aeval-printing');window.print()}
 async function downloadAdminEvaluationsPDF(){
  if(!AEVAL_PRINT_READY||AEVAL_PRINT_BUSY||AEVAL_PDF_BUSY)return;
  if(typeof window.html2canvas!=='function'||typeof window.jspdf?.jsPDF!=='function'){toast('تعذر تحميل مكتبات PDF. تأكد من الاتصال بالإنترنت ثم أعد المحاولة.');return;}
@@ -2322,7 +2413,7 @@ async function downloadAdminEvaluationsPDF(){
  const pages=[...$('adminEvaluationPreviewPages').querySelectorAll('.aeval-print-paper')];if(!pages.length)return;
  AEVAL_PDF_BUSY=true;btn.disabled=true;$('adminEvalPrintBtn').disabled=true;
  try{
-  if(document.fonts?.ready)await document.fonts.ready;
+  if(document.fonts?.ready)await document.fonts.ready;aevalFitSinglePages();
   const images=[...$('adminEvaluationPreviewPages').querySelectorAll('img')];await Promise.all(images.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.addEventListener('load',resolve,{once:true});img.addEventListener('error',resolve,{once:true})})));
   const pdf=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
   for(let i=0;i<pages.length;i++){
