@@ -291,7 +291,7 @@
 .aeval-print-table th:nth-child(4),.aeval-print-table td:nth-child(4){width:23%;font-weight:900}
 .aeval-print-table tbody tr:nth-child(even){background:rgba(241,246,251,.63)}
 .aeval-print-table .aeval-rating-empty{color:#8090a1;font-weight:700}
-.aeval-print-table .aeval-rating-excellent{color:#086c45}.aeval-print-table .aeval-rating-very_good{color:#145ba6}.aeval-print-table .aeval-rating-good{color:#6c4d9a}.aeval-print-table .aeval-rating-acceptable{color:#9c600e}.aeval-print-table .aeval-rating-weak{color:#b22b32}
+.aeval-print-table .aeval-rating-excellent{color:#086c45}.aeval-print-table .aeval-rating-very_good{color:#145ba6}.aeval-print-table .aeval-rating-good{color:#6c4d9a}.aeval-print-table .aeval-rating-average{color:#08736c}.aeval-print-table .aeval-rating-acceptable{color:#9c600e}.aeval-print-table .aeval-rating-weak{color:#b22b32}
 .aeval-letter-closing{margin:6mm 0 0;color:#26374c;font-size:10.8px;line-height:1.9;font-weight:800;text-align:right}
 .aeval-letter-signature{margin-top:4.5mm;text-align:left;color:#173e6b;font-weight:900;font-size:11px;line-height:1.65}
 .aeval-letter-foot{position:absolute;bottom:0;right:0;left:0;display:flex;align-items:center;justify-content:space-between;gap:3mm;border-top:1px solid #dbc7a9;padding-top:2.2mm;font-size:8px;color:#65778b;font-weight:800}
@@ -2271,7 +2271,7 @@ $("dbDeleteProofFile").addEventListener("change",tahadiDeleteProofFileSelected);
 
 setupClassBulkStudentImport();
 
-const AEVAL_NAMES={excellent:'ممتاز',very_good:'جيد جدًا',good:'جيد',acceptable:'مقبول',weak:'ضعيف'};
+const AEVAL_NAMES={excellent:'ممتاز',very_good:'جيد جدًا',good:'جيد',average:'متوسط',acceptable:'مقبول',weak:'ضعيف'};
 let AEVAL_CYCLES={},AEVAL_PRINT_READY=false,AEVAL_PRINT_BUSY=false,AEVAL_PDF_BUSY=false;
 const aevalKey=s=>encodeURIComponent(String(s));
 function aevalValid(r){return r&&r.requestId&&r.active!==true&&['completed','stopped'].includes(r.status)}
