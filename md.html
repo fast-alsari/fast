@@ -31,7 +31,7 @@
 .eval-manager-entry{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 12px;border:1px solid #dce5ee;border-radius:11px;background:#fff;font-size:10px}
 .eval-manager-entry small{display:block;margin-top:5px;color:#667085;line-height:1.6}
 .eval-manager-grade{border-radius:999px;padding:6px 10px;white-space:nowrap;font-weight:900}
-.eval-manager-grade.excellent{color:#08693f;background:#def8e8}.eval-manager-grade.very_good{color:#075daa;background:#e0f2ff}.eval-manager-grade.good{color:#6740a7;background:#eee6ff}.eval-manager-grade.acceptable{color:#9a5700;background:#fff0d9}.eval-manager-grade.weak{color:#b21e32;background:#ffe2e3}
+.eval-manager-grade.excellent{color:#08693f;background:#def8e8}.eval-manager-grade.very_good{color:#075daa;background:#e0f2ff}.eval-manager-grade.good{color:#6740a7;background:#eee6ff}.eval-manager-grade.average{color:#08736c;background:#eaf7f6}.eval-manager-grade.acceptable{color:#9a5700;background:#fff0d9}.eval-manager-grade.weak{color:#b21e32;background:#ffe2e3}
 .eval-summary{font-weight:900;font-size:10px;color:#47607b;margin-top:9px}
 @media(max-width:550px){.eval-manager-buttons{flex-direction:column}.eval-manager-buttons .button{width:100%}}
 
@@ -72,6 +72,7 @@
 #studentOverallLevel.excellent{background:#def8e8;color:#08693f}
 #studentOverallLevel.very_good{background:#e0f2ff;color:#075daa}
 #studentOverallLevel.good{background:#eee6ff;color:#6740a7}
+#studentOverallLevel.average{background:#eaf7f6;color:#08736c}
 #studentOverallLevel.acceptable{background:#fff0d9;color:#9a5700}
 #studentOverallLevel.weak{background:#ffe2e3;color:#b21e32}
 .guardian-note-intro{font-size:11px;color:#52657b;line-height:1.85;margin:-5px 0 10px}
@@ -348,7 +349,7 @@ window.addEventListener('afterprint',()=>document.body.classList.remove('printin
 // Refresh the open student's snapshot without modifying the visual layout or saved data.
 setInterval(()=>{if(selectedCode&&!busy&&!document.hidden&&$('confirmOverlay').classList.contains('show')===false)selectStudent(selectedCode,{scroll:false})},90000);
 
-const DIRECTOR_EVAL_LABELS={excellent:'ممتاز',very_good:'جيد جدًا',good:'جيد',acceptable:'مقبول',weak:'ضعيف'};
+const DIRECTOR_EVAL_LABELS={excellent:'ممتاز',very_good:'جيد جدًا',good:'جيد',average:'متوسط',acceptable:'مقبول',weak:'ضعيف'};
 let DIRECTOR_EVAL_REQUEST=null,DIRECTOR_EVAL_BUSY=false,DIRECTOR_EVAL_TAB='complete',DIRECTOR_EVAL_PROGRESS=[],DIRECTOR_EVAL_ROOT=null,DIRECTOR_EVAL_CACHE_AT=0,DIRECTOR_EVAL_DELIVERED=null;
 const evalValidRating=v=>Object.prototype.hasOwnProperty.call(DIRECTOR_EVAL_LABELS,typeof v==='string'?v:v?.rating);
 function evalManagerValid(v){return!!(v&&typeof v==='object'&&v.active===true&&/^[a-zA-Z0-9_-]{4,80}$/.test(String(v.requestId||'')))}
