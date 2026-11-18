@@ -356,6 +356,23 @@
 .aeval-one-sheet.aeval-one-dense .aeval-letter-paragraph{font-size:9.4px;line-height:1.4;margin-bottom:1mm}
 .aeval-one-sheet.aeval-one-dense .aeval-letter-details-title{margin-bottom:.4mm}
 .aeval-one-sheet.aeval-one-dense .aeval-letter-closing{margin-top:1mm}
+
+/* إعدادات رسائل تعطيل حسابات الطلاب دون تغيير لوحات الإدارة الحالية */
+.login-policy-panel .panel-body{display:grid;gap:15px}
+.login-policy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.login-policy-group{padding:15px;border:1px solid #dbe7f2;background:linear-gradient(140deg,#fff,#f9fbff);border-radius:14px}
+.login-policy-group h4{margin:0 0 10px;color:#0753aa;font-size:12px}
+.login-policy-group label,.login-policy-modal label{display:grid;gap:6px;margin-top:10px;color:#3b4b63;font-size:10px;font-weight:900}
+.login-policy-group textarea,.login-policy-group input[type=tel],.login-policy-modal textarea,.login-policy-modal input[type=tel]{width:100%;padding:10px 12px;border:1px solid #d4dfeb;border-radius:10px;background:#fff;outline:0;font-size:11px;line-height:1.8;resize:vertical;color:#172033}
+.login-policy-group textarea,.login-policy-modal textarea{min-height:84px}
+.login-policy-group .show-phone,.login-policy-modal .show-phone{display:flex;align-items:center;gap:8px;line-height:1.6}
+.login-policy-group .show-phone input,.login-policy-modal .show-phone input{width:18px;height:18px;accent-color:#075fcf}
+.login-policy-status{font-size:10px;color:#667085;line-height:1.7}
+.login-policy-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.login-policy-modal{width:min(600px,100%)}.login-policy-modal select{width:100%;height:44px;border:1px solid #d4dfeb;border-radius:10px;padding:0 10px;background:#fff}
+.login-policy-inline{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}.login-policy-inline .btn{flex:1;min-width:135px}
+@media(max-width:700px){.login-policy-grid{grid-template-columns:1fr}}
+
 </style>
 </head>
 <body>
@@ -401,6 +418,19 @@
       <button type="button" class="db-backup-restore-go danger" id="dbDeleteConfirmButton" onclick="deleteEntireDatabaseTree()">تنفيذ حذف الشجرة بالكامل</button>
     </div>
   </div>
+</section>
+
+
+<section class="panel login-policy-panel" id="loginPolicyPanel">
+ <div class="panel-head"><div><h3>إعدادات إيقاف حسابات الطلاب ورسائل الدخول</h3><p>رسالة الحسابات ورسالة الإدارة مستقلة، وتظهر للطالب فقط إذا كان حسابه غير مفعّل من الجهة المعنية. التحكم بإظهار رقم واتساب أو إخفائه.</p></div></div>
+ <div class="panel-body">
+  <div class="login-policy-grid">
+   <div class="login-policy-group"><h4>إيقاف الحساب من الحسابات</h4><label>النص الذي يظهر للطالب<textarea id="lpAccountantMessage" maxlength="1200" placeholder="رسالة الحسابات"></textarea></label><label>رقم واتساب المحاسب<input id="lpAccountantPhone" type="tel" maxlength="24" placeholder="07706640499"></label><label class="show-phone"><input id="lpAccountantShow" type="checkbox"> إظهار رقم المحاسب وزر واتساب للطالب</label></div>
+   <div class="login-policy-group"><h4>إيقاف الحساب من الإدارة</h4><label>النص الذي يظهر للطالب<textarea id="lpAdminMessage" maxlength="1200" placeholder="رسالة الإدارة"></textarea></label><label>رقم واتساب الإدارة<input id="lpAdminPhone" type="tel" maxlength="24" placeholder="07851521585"></label><label class="show-phone"><input id="lpAdminShow" type="checkbox"> إظهار رقم الإدارة وزر واتساب للطالب</label></div>
+  </div>
+  <div class="login-policy-actions"><button type="button" class="btn btn-p" id="lpSaveSettings" onclick="saveStudentLoginPolicies()">حفظ رسائل الإيقاف وأرقام التواصل</button><span class="login-policy-status" id="lpStatus">تحميل الإعدادات...</span></div>
+  <p class="help">لتعطيل طالب من الإدارة: افتح بيانات الطالب ثم «تعطيل ورسالة الدخول». ويمكن تفعيل/إلغاء تفعيل الحسابات أو الإدارة عبر أزرار الطالب الأصلية أيضًا.</p>
+ </div>
 </section>
 
 <div class="quick-pages"><a class="quick-page" href="chat.html">الدردشات</a><a class="quick-page" href="notify.html">التبليغات</a><a class="quick-page" href="cards.html">الكرتات</a><a class="quick-page" href="gradeboard.html">بورد الدرجات</a><a class="quick-page" href="logs.html">السجلات</a></div>
@@ -591,7 +621,7 @@
 
 <div class="profile-summary"><div class="profile-photo-area"><div class="profile-photo-frame" onclick="openCurrentStudentPhotoViewer()" title="عرض الصورة بالحجم الكامل"><img id="profilePhoto" class="profile-photo hidden" alt="صورة الطالب"><div id="profilePhotoFallback" class="avatar">ط</div></div><div class="profile-photo-actions"><button type="button" class="btn btn-p" onclick="openCurrentStudentPhotoViewer()">عرض الصورة</button><label class="btn btn-soft" style="display:flex;align-items:center;justify-content:center;cursor:pointer"><span id="profilePhotoActionText">إضافة / تغيير الصورة</span><input id="profilePhotoInput" type="file" accept="image/*" hidden></label><button id="profilePhotoRemoveBtn" type="button" class="btn btn-r">حذف الصورة</button></div></div><div style="min-width:0"><h2 id="profileName">—</h2><div id="profileBadges" class="profile-badges"></div></div></div>
 
-<div class="profile-actions"><button id="profileBooksBtn" class="btn btn-g" onclick="toggleBooksStatusCurrent()">استلام الكتب</button><button id="profileFileBtn" class="btn btn-g" onclick="toggleFileStatusCurrent()">استلام الفايل</button><button id="profileAccountantAccessBtn" class="btn btn-g" onclick="toggleAccountantApprovalCurrent()">تفعيل الحسابات</button><button id="profileAdminAccessBtn" class="btn btn-p" onclick="toggleAdminApprovalCurrent()">تفعيل الإدارة</button><button id="profileMediaRequirementBtn" class="btn btn-o" onclick="toggleMediaRequirementCurrent()">إلزام الصور والهويات</button><button id="profileUnblockBtn" class="btn btn-r hidden" onclick="unblockCurrentStudent()">رفع الحظر السلوكي</button><button class="btn btn-wa" onclick="whatsappOpenedStudent()">واتساب الطالب</button><button class="btn btn-wa" onclick="whatsappOpenedGuardian()">واتساب ولي الأمر</button><button id="profilePDFBtn" class="btn btn-v">طباعة بيانات الطالب</button></div>
+<div class="profile-actions"><button id="profileBooksBtn" class="btn btn-g" onclick="toggleBooksStatusCurrent()">استلام الكتب</button><button id="profileFileBtn" class="btn btn-g" onclick="toggleFileStatusCurrent()">استلام الفايل</button><button id="profileAccountantAccessBtn" class="btn btn-g" onclick="toggleAccountantApprovalCurrent()">تفعيل الحسابات</button><button class="btn btn-r" type="button" onclick="openedStudentCode&&openStudentLoginPolicy(openedStudentCode)">تعطيل ورسالة الدخول</button><button id="profileAdminAccessBtn" class="btn btn-p" onclick="toggleAdminApprovalCurrent()">تفعيل الإدارة</button><button id="profileMediaRequirementBtn" class="btn btn-o" onclick="toggleMediaRequirementCurrent()">إلزام الصور والهويات</button><button id="profileUnblockBtn" class="btn btn-r hidden" onclick="unblockCurrentStudent()">رفع الحظر السلوكي</button><button class="btn btn-wa" onclick="whatsappOpenedStudent()">واتساب الطالب</button><button class="btn btn-wa" onclick="whatsappOpenedGuardian()">واتساب ولي الأمر</button><button id="profilePDFBtn" class="btn btn-v">طباعة بيانات الطالب</button></div>
 
 <div class="profile-tabs"><button class="profile-tab active" data-profile="profileInfo">البيانات</button><button class="profile-tab" data-profile="profileGrades">الدرجات</button><button class="profile-tab" data-profile="profileAttendance">الحضور والغياب</button><button class="profile-tab" data-profile="profilePayments">الأقساط</button></div>
 
@@ -706,7 +736,7 @@ async function verifyAdmin(prefetchedUsers=null){const s=session();if(!s.code){l
 function logout(){sessionStorage.removeItem("tahadi_session");sessionStorage.removeItem("tahadi_code");sessionStorage.removeItem("tahadi_role");localStorage.removeItem("tahadi_remembered_login");location.replace("index.html");}
 
 function accountantApprovalActive(student){if(!student||student.accountantApproved!==true)return false;if(student.accountantPermanent===true)return true;const until=Number(student.accountantApprovedUntil||0);if(!until)return true;return Date.now()<until;}
-function accountShouldBeActive(student){return!!(student&&accountantApprovalActive(student)&&student.adminApproved===true);}
+function accountShouldBeActive(student){return!!(student&&accountantApprovalActive(student)&&student.adminApproved===true&&student.loginRestriction?.active!==true);}
 async function syncDerivedStudentAccounts(){const updates={};Object.entries(DATA.students||{}).forEach(([code,s])=>{if(!s)return;const active=accountShouldBeActive(s),userActive=active&&s.hidden!==true;if(s.accountActive!==active){updates[`students/${code}/accountActive`]=active;s.accountActive=active;}if(DATA.users[code]){if(DATA.users[code].active!==userActive){updates[`users/${code}/active`]=userActive;DATA.users[code].active=userActive;}if(DATA.users[code].hidden!==!!s.hidden){updates[`users/${code}/hidden`]=!!s.hidden;DATA.users[code].hidden=!!s.hidden;}}});if(Object.keys(updates).length)await dbPatch("",updates);}
 
 function applyLoadedCore(users,students,classes){DATA.users=users||{};DATA.students=students||{};DATA.classes=classes||{};Object.entries(DATA.classes).forEach(([id,c])=>{if(c&&!c.id)c.id=id;});Object.entries(DATA.students).forEach(([code,s])=>{if(s&&!s.code)s.code=code;});DATA_SYNCED_AT=Date.now();primeCollectionCache(PATH.users,DATA.users);primeCollectionCache(PATH.students,DATA.students);primeCollectionCache(PATH.classes,DATA.classes);}
@@ -1026,7 +1056,7 @@ function studentInfoComplete(s){return studentInfoMissingFields(s).length===0}
 
 function filteredStudents(){const q=norm($("studentSearch").value),gender=$("studentGenderFilter").value,status=$("studentStatusFilter").value,access=$("studentAccessFilter").value,serialQ=norm($("colSerialFilter").value),photo=$("colPhotoFilter").value,codeQ=norm($("colCodeFilter").value),nameQ=norm($("colNameFilter").value),colGender=$("colGenderFilter").value,colClass=$("colClassFilter").value,colRoom=$("colRoomFilter").value,colFile=$("colFileFilter").value,colBooks=$("colBooksFilter").value,tuitionQ=norm($("colTuitionFilter").value).replace(/[,،\s]/g,""),colAccount=$("colAccountFilter").value,colAccountant=$("colAccountantFilter").value,colAdmin=$("colAdminFilter").value,colBehavior=$("colBehaviorFilter").value;return Object.values(DATA.students).filter(s=>{if(selectedClassId&&s.classId!==selectedClassId)return false;if(gender&&s.gender!==gender)return false;if(status==="infoIncomplete"&&studentInfoComplete(s))return false;if(status&&status!=="infoIncomplete"&&s.fileStatus!==status)return false;if(access==="accountActive"&&!accountShouldBeActive(s))return false;if(access==="accountInactive"&&accountShouldBeActive(s))return false;if(access==="accountantActive"&&!accountantApprovalActive(s))return false;if(access==="accountantInactive"&&accountantApprovalActive(s))return false;if(access==="adminActive"&&s.adminApproved!==true)return false;if(access==="adminInactive"&&s.adminApproved===true)return false;if(access==="behaviorBlocked"&&s.behaviorBlocked!==true)return false;if(q&&!norm([s.name,s.code,s.motherName,s.birthDate,s.guardianPhone,s.studentPhone,s.lineNumber,s.previousSchool].join(" ")).includes(q))return false;if(serialQ&&!norm(s.serial).includes(serialQ))return false;if(photo==="yes"&&!studentHasTablePhoto(s))return false;if(photo==="no"&&studentHasTablePhoto(s))return false;if(codeQ&&!norm(s.code).includes(codeQ))return false;if(nameQ&&!norm(s.name).includes(nameQ))return false;if(colGender&&s.gender!==colGender)return false;if(colClass&&s.classId!==colClass)return false;if(colRoom&&String(s.roomNumber||"")!==colRoom)return false;if(colFile&&String(s.fileStatus||"pending")!==colFile)return false;if(colBooks==="yes"&&s.booksReceived!==true)return false;if(colBooks==="no"&&s.booksReceived===true)return false;if(tuitionQ&&!String(Number(s.tuitionTotal||0)).includes(tuitionQ))return false;if(colAccount==="yes"&&!accountShouldBeActive(s))return false;if(colAccount==="no"&&accountShouldBeActive(s))return false;if(colAccountant==="yes"&&!accountantApprovalActive(s))return false;if(colAccountant==="no"&&accountantApprovalActive(s))return false;if(colAdmin==="yes"&&s.adminApproved!==true)return false;if(colAdmin==="no"&&s.adminApproved===true)return false;if(colBehavior==="clean"&&s.behaviorBlocked===true)return false;if(colBehavior==="blocked"&&s.behaviorBlocked!==true)return false;return true;}).sort((a,b)=>String(a.name||"").localeCompare(String(b.name||""),"ar",{sensitivity:"base"}));}
 
-function renderStudents(){const rows=filteredStudents();$("studentsEmpty").classList.toggle("hidden",rows.length>0);$("studentsBody").innerHTML=rows.map(s=>{const c=DATA.classes[s.classId],fileAccepted=s.fileStatus==="accepted",booksReceived=s.booksReceived===true,accountantOn=accountantApprovalActive(s),adminOn=s.adminApproved===true,missingInfo=studentInfoMissingFields(s),infoIncomplete=missingInfo.length>0,infoComplete=!infoIncomplete,mediaComplete=studentMediaComplete(s),nameState=infoComplete?(mediaComplete?"info-media-complete":"info-complete-media-missing"):"";return`<tr class="${infoIncomplete?"student-info-incomplete":""}" title="${infoIncomplete?esc(`معلومات ناقصة: ${missingInfo.join("، ")}`):""}" style="${s.hidden?"opacity:.5":""}"><td><input type="checkbox" value="${esc(s.code)}" ${selectedStudents.has(s.code)?"checked":""} onchange="studentSelect(this)"></td><td>${esc(s.serial||"—")}</td><td>${studentPhotoCell(s)}</td><td><span class="code">${esc(s.code)}</span></td><td><button class="student-link ${nameState}" title="${esc(studentMediaMissingText(s)+(studentMediaRequirementOn(s)?" — الإلزام مفعل":""))}" onclick="openStudentProfile('${safeJS(s.code)}')">${esc(s.name)}</button>${infoIncomplete?`<span class="student-info-incomplete-mark">معلومات ناقصة</span>`:""}</td><td><span class="badge ${s.gender==="female"?"purple":"blue"}">${genderStudent(s.gender)}</span></td><td>${esc(c?.name||s.className||"—")}</td><td>${esc(roomLabel(s.roomNumber))}</td><td><button type="button" class="state-toggle ${fileAccepted?"on":"off"}" onclick="toggleStudentFileStatus('${safeJS(s.code)}')" title="اضغط لتغيير الحالة">${fileAccepted?"إلغاء استلام الفايل":"استلام الفايل"}</button></td><td><button type="button" class="state-toggle ${booksReceived?"on":"off"}" onclick="setStudentBooksStatus('${safeJS(s.code)}',${booksReceived?"false":"true"})">${booksReceived?"إلغاء استلام الكتب":"استلام الكتب"}</button></td><td>${money(s.tuitionTotal)}</td><td><span class="badge ${accountShouldBeActive(s)?"green":"red"}">${accountShouldBeActive(s)?"فعال":"غير فعال"}</span></td><td><button type="button" class="state-toggle ${accountantOn?"on":"off"}" onclick="toggleAccountantApproval('${safeJS(s.code)}')">${accountantOn?"إلغاء تفعيل الحسابات":"تفعيل الحسابات"}</button></td><td><button type="button" class="state-toggle ${adminOn?"on":"off"}" onclick="toggleAdminApproval('${safeJS(s.code)}')">${adminOn?"إلغاء تفعيل الإدارة":"تفعيل الإدارة"}</button></td><td><span class="badge ${s.behaviorBlocked===true?"red":"green"}">${s.behaviorBlocked===true?"محظور":"سليم"}</span></td><td><div class="row-actions"><button class="mini btn-p" onclick="openStudentProfile('${safeJS(s.code)}')">بيانات</button><button class="mini btn-soft" onclick="openStudentPhotoViewer('${safeJS(s.code)}')">صورة</button><button class="mini btn-v" onclick="openStudentGrades('${safeJS(s.code)}')">الدرجات</button><button class="mini btn-soft" onclick="copyCode('${safeJS(s.code)}')">نسخ</button><button class="mini btn-v" onclick="printSavedStudent('${safeJS(s.code)}')">طباعة</button><button class="mini ${fileAccepted?"btn-o":"btn-g"}" onclick="toggleStudentFileStatus('${safeJS(s.code)}')">${fileAccepted?"إلغاء استلام الفايل":"استلام الفايل"}</button><button class="mini ${booksReceived?"btn-o":"btn-g"}" onclick="setStudentBooksStatus('${safeJS(s.code)}',${booksReceived?"false":"true"})">${booksReceived?"إلغاء استلام الكتب":"استلام الكتب"}</button><button class="mini ${accountantOn?"btn-r":"btn-g"}" onclick="toggleAccountantApproval('${safeJS(s.code)}')">${accountantOn?"إلغاء تفعيل الحسابات":"تفعيل الحسابات"}</button><button class="mini ${adminOn?"btn-r":"btn-p"}" onclick="toggleAdminApproval('${safeJS(s.code)}')">${adminOn?"إلغاء تفعيل الإدارة":"تفعيل الإدارة"}</button>${s.behaviorBlocked===true?`<button class="mini btn-r" onclick="unblockStudent('${safeJS(s.code)}')">رفع الحظر</button>`:""}<button class="mini btn-o" onclick="toggleStudentHidden('${safeJS(s.code)}')">${s.hidden?"إظهار":"إخفاء"}</button></div></td></tr>`;}).join("");}
+function renderStudents(){const rows=filteredStudents();$("studentsEmpty").classList.toggle("hidden",rows.length>0);$("studentsBody").innerHTML=rows.map(s=>{const c=DATA.classes[s.classId],fileAccepted=s.fileStatus==="accepted",booksReceived=s.booksReceived===true,accountantOn=accountantApprovalActive(s),adminOn=s.adminApproved===true,missingInfo=studentInfoMissingFields(s),infoIncomplete=missingInfo.length>0,infoComplete=!infoIncomplete,mediaComplete=studentMediaComplete(s),nameState=infoComplete?(mediaComplete?"info-media-complete":"info-complete-media-missing"):"";return`<tr class="${infoIncomplete?"student-info-incomplete":""}" title="${infoIncomplete?esc(`معلومات ناقصة: ${missingInfo.join("، ")}`):""}" style="${s.hidden?"opacity:.5":""}"><td><input type="checkbox" value="${esc(s.code)}" ${selectedStudents.has(s.code)?"checked":""} onchange="studentSelect(this)"></td><td>${esc(s.serial||"—")}</td><td>${studentPhotoCell(s)}</td><td><span class="code">${esc(s.code)}</span></td><td><button class="student-link ${nameState}" title="${esc(studentMediaMissingText(s)+(studentMediaRequirementOn(s)?" — الإلزام مفعل":""))}" onclick="openStudentProfile('${safeJS(s.code)}')">${esc(s.name)}</button>${infoIncomplete?`<span class="student-info-incomplete-mark">معلومات ناقصة</span>`:""}</td><td><span class="badge ${s.gender==="female"?"purple":"blue"}">${genderStudent(s.gender)}</span></td><td>${esc(c?.name||s.className||"—")}</td><td>${esc(roomLabel(s.roomNumber))}</td><td><button type="button" class="state-toggle ${fileAccepted?"on":"off"}" onclick="toggleStudentFileStatus('${safeJS(s.code)}')" title="اضغط لتغيير الحالة">${fileAccepted?"إلغاء استلام الفايل":"استلام الفايل"}</button></td><td><button type="button" class="state-toggle ${booksReceived?"on":"off"}" onclick="setStudentBooksStatus('${safeJS(s.code)}',${booksReceived?"false":"true"})">${booksReceived?"إلغاء استلام الكتب":"استلام الكتب"}</button></td><td>${money(s.tuitionTotal)}</td><td><span class="badge ${accountShouldBeActive(s)?"green":"red"}">${accountShouldBeActive(s)?"فعال":"غير فعال"}</span></td><td><button type="button" class="state-toggle ${accountantOn?"on":"off"}" onclick="toggleAccountantApproval('${safeJS(s.code)}')">${accountantOn?"إلغاء تفعيل الحسابات":"تفعيل الحسابات"}</button></td><td><button type="button" class="state-toggle ${adminOn?"on":"off"}" onclick="toggleAdminApproval('${safeJS(s.code)}')">${adminOn?"إلغاء تفعيل الإدارة":"تفعيل الإدارة"}</button></td><td><span class="badge ${s.behaviorBlocked===true?"red":"green"}">${s.behaviorBlocked===true?"محظور":"سليم"}</span></td><td><div class="row-actions"><button class="mini btn-p" onclick="openStudentProfile('${safeJS(s.code)}')">بيانات</button><button class="mini btn-r" onclick="openStudentLoginPolicy('${safeJS(s.code)}')">إيقاف الدخول</button><button class="mini btn-soft" onclick="openStudentPhotoViewer('${safeJS(s.code)}')">صورة</button><button class="mini btn-v" onclick="openStudentGrades('${safeJS(s.code)}')">الدرجات</button><button class="mini btn-soft" onclick="copyCode('${safeJS(s.code)}')">نسخ</button><button class="mini btn-v" onclick="printSavedStudent('${safeJS(s.code)}')">طباعة</button><button class="mini ${fileAccepted?"btn-o":"btn-g"}" onclick="toggleStudentFileStatus('${safeJS(s.code)}')">${fileAccepted?"إلغاء استلام الفايل":"استلام الفايل"}</button><button class="mini ${booksReceived?"btn-o":"btn-g"}" onclick="setStudentBooksStatus('${safeJS(s.code)}',${booksReceived?"false":"true"})">${booksReceived?"إلغاء استلام الكتب":"استلام الكتب"}</button><button class="mini ${accountantOn?"btn-r":"btn-g"}" onclick="toggleAccountantApproval('${safeJS(s.code)}')">${accountantOn?"إلغاء تفعيل الحسابات":"تفعيل الحسابات"}</button><button class="mini ${adminOn?"btn-r":"btn-p"}" onclick="toggleAdminApproval('${safeJS(s.code)}')">${adminOn?"إلغاء تفعيل الإدارة":"تفعيل الإدارة"}</button>${s.behaviorBlocked===true?`<button class="mini btn-r" onclick="unblockStudent('${safeJS(s.code)}')">رفع الحظر</button>`:""}<button class="mini btn-o" onclick="toggleStudentHidden('${safeJS(s.code)}')">${s.hidden?"إظهار":"إخفاء"}</button></div></td></tr>`;}).join("");}
 
 async function copyCode(code){try{await navigator.clipboard.writeText(code);toast("تم نسخ الكود");}catch{toast(code);}}
 
@@ -1125,7 +1155,7 @@ function setSelectedBooksStatus(received){const codes=[...selectedStudents].filt
 
 function toggleAccountantApproval(code){const st=DATA.students[code];if(!st)return;const active=!accountantApprovalActive(st);confirmBox(active?"تفعيل الحسابات":"إلغاء تفعيل الحسابات",`${active?"تفعيل دائم":"إلغاء تفعيل"} الحسابات للطالب ${st.name}؟`,async()=>{const time=Date.now();st.accountantApproved=active;st.accountantPermanent=active;st.accountantApprovalMode=active?"permanent":"disabled";st.accountantApprovedUntil=null;const accountActive=accountShouldBeActive(st),updates={};updates[`students/${code}/accountantApproved`]=active;updates[`students/${code}/accountantApprovedAt`]=active?time:null;updates[`students/${code}/accountantApprovedBy`]=active?adminCode():null;updates[`students/${code}/accountantPermanent`]=active;updates[`students/${code}/accountantApprovalMode`]=active?"permanent":"disabled";updates[`students/${code}/accountantApprovedUntil`]=null;updates[`students/${code}/accountActive`]=accountActive;updates[`students/${code}/accountStatusUpdatedAt`]=time;updates[`students/${code}/accountStatusUpdatedBy`]=adminCode();updates[`users/${code}/active`]=accountActive&&st.hidden!==true;await dbPatch("",updates);st.accountActive=accountActive;if(DATA.users[code])DATA.users[code].active=accountActive&&st.hidden!==true;renderStudents();updateBulk();if(openedStudentCode===code)await refreshOpenedStudent();toast(active?"تم التفعيل الدائم من الإدارة":"تم إلغاء تفعيل الحسابات");});}
 function toggleAccountantApprovalCurrent(){if(openedStudentCode)toggleAccountantApproval(openedStudentCode);}
-function toggleAdminApproval(code){const s=DATA.students[code];if(!s)return;const active=s.adminApproved!==true;confirmBox(active?"تفعيل الإدارة":"إلغاء تفعيل الإدارة",`${active?"تفعيل":"إلغاء تفعيل"} الإدارة للطالب ${s.name}؟`,async()=>{const time=Date.now(),accountActive=active&&s.accountantApproved===true;const updates={};updates[`students/${code}/adminApproved`]=active;updates[`students/${code}/adminApprovedAt`]=active?time:null;updates[`students/${code}/adminApprovedBy`]=active?adminCode():null;updates[`students/${code}/accountActive`]=accountActive;updates[`students/${code}/accountStatusUpdatedAt`]=time;updates[`students/${code}/accountStatusUpdatedBy`]=adminCode();updates[`users/${code}/active`]=accountActive&&s.hidden!==true;await dbPatch("",updates);s.adminApproved=active;s.accountActive=accountActive;if(DATA.users[code])DATA.users[code].active=accountActive&&s.hidden!==true;renderStudents();updateBulk();if(openedStudentCode===code)await refreshOpenedStudent();toast(active?"تم تفعيل الإدارة":"تم إلغاء تفعيل الإدارة");});}
+function toggleAdminApproval(code){const s=DATA.students[code];if(!s)return;const active=s.adminApproved!==true;confirmBox(active?"تفعيل الإدارة":"إلغاء تفعيل الإدارة",`${active?"تفعيل":"إلغاء تفعيل"} الإدارة للطالب ${s.name}؟`,async()=>{const time=Date.now(),accountActive=active&&accountantApprovalActive(s)&&s.loginRestriction?.active!==true;const updates={};updates[`students/${code}/adminApproved`]=active;updates[`students/${code}/adminApprovedAt`]=active?time:null;updates[`students/${code}/adminApprovedBy`]=active?adminCode():null;updates[`students/${code}/accountActive`]=accountActive;updates[`students/${code}/accountStatusUpdatedAt`]=time;updates[`students/${code}/accountStatusUpdatedBy`]=adminCode();updates[`users/${code}/active`]=accountActive&&s.hidden!==true;await dbPatch("",updates);s.adminApproved=active;s.accountActive=accountActive;if(DATA.users[code])DATA.users[code].active=accountActive&&s.hidden!==true;renderStudents();updateBulk();if(openedStudentCode===code)await refreshOpenedStudent();toast(active?"تم تفعيل الإدارة":"تم إلغاء تفعيل الإدارة");});}
 function toggleAdminApprovalCurrent(){if(openedStudentCode)toggleAdminApproval(openedStudentCode);}
 function setStudentMediaRequirement(code,required){const s=DATA.students[code];if(!s)return;confirmBox(required?"إلزام الصور والهويات":"إلغاء إلزام الصور والهويات",required?`سيتم إلزام ${s.name||code} بإكمال الصورة الشخصية وصور الهويات الأربع.`:`سيتم إلغاء إلزام الصور والهويات عن ${s.name||code}.`,async()=>{const time=Date.now(),by=adminCode();await dbPatch(`students/${encodeURIComponent(code)}`,{mediaCompletionRequired:required,mediaCompletionRequiredAt:required?time:null,mediaCompletionRequiredBy:required?by:null,mediaCompletionRequirementUpdatedAt:time,mediaCompletionRequirementUpdatedBy:by});s.mediaCompletionRequired=required;s.mediaCompletionRequiredAt=required?time:null;s.mediaCompletionRequiredBy=required?by:null;s.mediaCompletionRequirementUpdatedAt=time;s.mediaCompletionRequirementUpdatedBy=by;renderStudents();updateBulk();if(openedStudentCode===code)await refreshOpenedStudent();toast(required?"تم تفعيل إلزام الصور والهويات":"تم إلغاء إلزام الصور والهويات");});}
 function toggleMediaRequirementCurrent(){if(!openedStudentCode)return;const s=DATA.students[openedStudentCode];if(!s)return;setStudentMediaRequirement(openedStudentCode,!studentMediaRequirementOn(s));}
@@ -2430,7 +2460,86 @@ async function downloadAdminEvaluationsPDF(){
  finally{AEVAL_PDF_BUSY=false;btn.disabled=false;btn.textContent=oldLabel;$('adminEvalPrintBtn').disabled=false;info.textContent=oldInfo}
 }
 window.addEventListener('afterprint',()=>document.body.classList.remove('aeval-printing'));
+
+/* ===== رسائل تسجيل الدخول: الإدارة والحسابات + إيقاف مخصص لكل طالب ===== */
+const TAHADI_LOGIN_MESSAGE_DEFAULTS={
+ accountant:{message:'تم إيقاف الحساب من قبل الحسابات. يرجى التواصل مع المحاسب لإعادة تفعيل الحساب.',phone:'07706640499',showPhone:true},
+ administration:{message:'تم تعطيل الحساب من قبل الإدارة. يرجى التواصل مع إدارة المدرسة.',phone:'07851521585',showPhone:true}
+};
+let STUDENT_LOGIN_POLICY_CODE='';
+function lpValue(id){return document.getElementById(id)}
+function lpSettingsFromUI(){return{
+ accountant:{message:lpValue('lpAccountantMessage').value.trim(),phone:lpValue('lpAccountantPhone').value.trim(),showPhone:lpValue('lpAccountantShow').checked},
+ administration:{message:lpValue('lpAdminMessage').value.trim(),phone:lpValue('lpAdminPhone').value.trim(),showPhone:lpValue('lpAdminShow').checked}
+}}
+function lpFillSettings(val){val=val||{};
+ for(const [slug,kind] of [['Accountant','accountant'],['Admin','administration']]){
+  const v=val[kind]||{},d=TAHADI_LOGIN_MESSAGE_DEFAULTS[kind];
+  lpValue('lp'+slug+'Message').value=typeof v.message==='string'?v.message:d.message;
+  lpValue('lp'+slug+'Phone').value=typeof v.phone==='string'?v.phone:d.phone;
+  lpValue('lp'+slug+'Show').checked=typeof v.showPhone==='boolean'?v.showPhone:d.showPhone;
+ }
+}
+async function loadStudentLoginPolicies(){
+ try{const record=await dbGetFresh('settings/loginAccessMessages');lpFillSettings(record);lpValue('lpStatus').textContent='الإعدادات جاهزة للتعديل.'}
+ catch(e){lpFillSettings(null);lpValue('lpStatus').textContent='تعذر تحميل الإعدادات، تظهر القيم الافتراضية. تحقق من الاتصال قبل الحفظ.'}
+}
+function lpValidPhone(p){const digits=String(p||'').replace(/[٠-٩]/g,x=>'٠١٢٣٤٥٦٧٨٩'.indexOf(x)).replace(/\D/g,'');return !digits||/^((0|00964|964)?7\d{9})$/.test(digits)}
+async function saveStudentLoginPolicies(){
+ const data=lpSettingsFromUI();
+ if(!data.accountant.message||!data.administration.message){toast('يرجى كتابة رسالة لكل جهة');return}
+ if(!lpValidPhone(data.accountant.phone)||!lpValidPhone(data.administration.phone)){toast('تأكد من صحة رقم واتساب');return}
+ const btn=lpValue('lpSaveSettings');btn.disabled=true;lpValue('lpStatus').textContent='جاري حفظ الإعدادات...';
+ try{
+  if(!await verifyAdmin())return;
+  await dbPut('settings/loginAccessMessages',{...data,updatedAt:Date.now(),updatedBy:adminCode()});
+  lpValue('lpStatus').textContent='تم حفظ الرسائل والأرقام بنجاح.';toast('تم حفظ إعدادات إيقاف الحسابات');
+ }catch(e){console.error('LOGIN_POLICY_SAVE',e);lpValue('lpStatus').textContent='تعذر الحفظ. لم يُؤكّد تحديث الإعدادات.'}
+ finally{btn.disabled=false}
+}
+function openStudentLoginPolicy(code){
+ const st=DATA.students[code];if(!st)return toast('بيانات الطالب غير موجودة');
+ STUDENT_LOGIN_POLICY_CODE=code;
+ lpValue('lpStudentLabel').textContent=(st.name||'الطالب')+' — '+(DATA.classes[st.classId]?.name||st.className||'');
+ const v=st.loginRestriction||{};
+ lpValue('lpStudentBlock').value=v.active===true?'yes':'no';
+ lpValue('lpStudentMessage').value=v.message||'';
+ lpValue('lpStudentPhone').value=v.phone||'';
+ lpValue('lpStudentShow').checked=typeof v.showPhone==='boolean'?v.showPhone:true;
+ lpValue('lpStudentStatus').textContent='';openModal('studentLoginPolicyModal');
+}
+async function saveStudentLoginPolicy(){
+ const code=STUDENT_LOGIN_POLICY_CODE,st=DATA.students[code];if(!code||!st)return;
+ const isBlocked=lpValue('lpStudentBlock').value==='yes',message=lpValue('lpStudentMessage').value.trim(),phone=lpValue('lpStudentPhone').value.trim();
+ if(phone&&!lpValidPhone(phone)){lpValue('lpStudentStatus').textContent='رقم واتساب غير صحيح';return}
+ const now=Date.now(),saved=isBlocked?{active:true,source:'administration',message,phone,showPhone:lpValue('lpStudentShow').checked,updatedAt:now,updatedBy:adminCode()}:null;
+ const nextSt={...st,loginRestriction:saved},active=accountShouldBeActive(nextSt)&&nextSt.hidden!==true;
+ const btn=lpValue('lpStudentSave');btn.disabled=true;lpValue('lpStudentStatus').textContent='جاري الحفظ...';
+ try{
+  if(!await verifyAdmin())return;
+  await dbPatch('',{[`students/${code}/loginRestriction`]:saved,[`students/${code}/accountActive`]:active,[`students/${code}/accountStatusUpdatedAt`]:now,[`students/${code}/accountStatusUpdatedBy`]:adminCode(),[`users/${code}/active`]:active});
+  st.loginRestriction=saved;st.accountActive=active;if(DATA.users[code])DATA.users[code].active=active;
+  renderStudents();updateBulk();lpValue('lpStudentStatus').textContent='تم الحفظ.';toast(isBlocked?'تم إيقاف الحساب من الإدارة':'تم إزالة الإيقاف المخصص');
+  closeModal('studentLoginPolicyModal');
+  if(openedStudentCode===code)await refreshOpenedStudent();
+ }catch(e){console.error('STUDENT_LOGIN_POLICY_SAVE',e);lpValue('lpStudentStatus').textContent='تعذر الحفظ. تحقق من الاتصال وصلاحيات قاعدة البيانات.'}
+ finally{btn.disabled=false}
+}
+window.addEventListener('load',()=>{loadStudentLoginPolicies()});
+
 </script>
 <div id="studentInfoExportHost" class="student-info-export-host"></div>
+
+<div class="modal" id="studentLoginPolicyModal"><div class="modal-card login-policy-modal">
+ <div class="modal-head"><div><h3>إيقاف حساب الطالب ورسالة الدخول</h3><p id="lpStudentLabel">—</p></div><button type="button" class="close" onclick="closeModal('studentLoginPolicyModal')">×</button></div>
+ <label>حالة الإيقاف الإضافي من الإدارة<select id="lpStudentBlock"><option value="no">بدون إيقاف إضافي (حسب موافقات الحسابات والإدارة)</option><option value="yes">إيقاف الدخول من الإدارة</option></select></label>
+ <label>رسالة خاصة لهذا الطالب (اختياري: الفارغ يستخدم رسالة الإدارة العامة)<textarea id="lpStudentMessage" maxlength="1200" placeholder="يمكن إدخال رسالة خاصة لهذا الطالب"></textarea></label>
+ <label>رقم خاص لهذا الطالب (اختياري: الفارغ يستخدم رقم الإدارة العام)<input id="lpStudentPhone" type="tel" maxlength="24"></label>
+ <label class="show-phone"><input type="checkbox" id="lpStudentShow"> إظهار رقم واتساب وزر التواصل لهذا الطالب</label>
+ <p class="help" style="margin-top:10px">عند إزالة الإيقاف الإضافي ستبقى موافقتا الحسابات والإدارة معمولًا بهما، ولن يصبح الحساب فعالاً إلا إذا كانت الموافقتان ساريتين.</p>
+ <div class="login-policy-inline"><button class="btn btn-p" id="lpStudentSave" onclick="saveStudentLoginPolicy()">حفظ حالة الطالب</button><button class="btn btn-soft" onclick="closeModal('studentLoginPolicyModal')">إلغاء</button></div>
+ <div id="lpStudentStatus" class="login-policy-status" role="status" style="margin-top:9px"></div>
+</div></div>
+
 </body>
 </html>
