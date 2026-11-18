@@ -1760,6 +1760,25 @@ input{
 @media(max-width:380px){.ios-guide-body{padding:13px}.ios-guide-head{padding:23px 16px 19px}.ios-step{grid-template-columns:30px minmax(0,1fr) 52px;gap:7px;padding:9px;min-height:78px}.ios-step-number{width:27px;height:27px;font-size:13px}.ios-symbol{width:49px;height:49px;border-radius:13px}.ios-symbol svg{width:29px;height:29px}.ios-step-label strong{font-size:12px}.ios-step-label small{font-size:9px}.ios-guide-brand h3{font-size:17px}.ios-guide-icon{width:57px;height:57px}}
 @media(prefers-reduced-motion:reduce){.ios-guide-card,.install-help.show,.ios-share-pulse{animation:none}}
 
+
+/* ===== رسائل حالة الحساب والدخول الصامت ===== */
+.access-boot,.access-notice{position:fixed;inset:0;z-index:45000;display:none;align-items:center;justify-content:center;padding:20px;background:radial-gradient(circle at 80% 0%,#dcecff 0%,#f4f8fd 48%,#fff 100%);direction:rtl;font-family:Tahoma,Arial,sans-serif}
+.access-boot.show,.access-notice.show{display:flex}
+.access-boot-card,.access-notice-card{width:min(440px,100%);padding:28px 23px 23px;text-align:center;border:1px solid #dce7f5;border-radius:23px;background:#fff;box-shadow:0 22px 65px #1e47721c}
+.access-boot-card img,.access-notice-card img{width:75px;height:75px;object-fit:contain;margin:0 auto 14px}
+.access-boot h2,.access-notice h2{font-size:20px;color:#113d75;margin:0 0 10px;line-height:1.7}
+.access-boot p,.access-notice p{font-size:12px;color:#52657b;line-height:2;white-space:pre-line}
+.access-notice-card{border-top:5px solid #c76c20}.access-notice-card.admin{border-top-color:#075fcf}.access-notice-card.missing{border-top-color:#bc3a43}
+.access-notice-card .access-icon{width:57px;height:57px;display:grid;place-items:center;margin:0 auto 13px;border-radius:16px;background:#fff5e8;color:#ae6015;font-size:27px;font-weight:900}
+.access-notice-card.admin .access-icon{background:#edf5ff;color:#075fcf}.access-notice-card.missing .access-icon{background:#fff1f1;color:#bf3039}
+.access-notice-actions{display:grid;gap:9px;margin-top:19px}
+.access-notice-actions a,.access-notice-actions button{display:flex;justify-content:center;align-items:center;min-height:48px;width:100%;padding:10px 12px;border-radius:12px;text-decoration:none;border:0;background:linear-gradient(135deg,#087aeb,#0753b8);color:#fff;font-size:12px;font-weight:900;cursor:pointer}
+.access-notice-actions a{background:#078752}.access-notice-actions button.outline{background:#f1f6fc;color:#0753b8;border:1px solid #cfdfef}
+.access-boot-spin{width:33px;height:33px;border-radius:100%;margin:15px auto 0;border:4px solid #deebf9;border-top-color:#075fcf;animation:spin .7s linear infinite}
+.access-notice [hidden]{display:none!important}
+.access-notice-phone{direction:ltr;margin-top:8px!important;font-size:13px!important;font-weight:900;color:#078752!important}
+@media(max-width:430px){.access-notice-card,.access-boot-card{padding:24px 16px}.access-notice h2,.access-boot h2{font-size:18px}}
+
 </style>
 
 </head>
@@ -2123,6 +2142,16 @@ input{
 
 </audio>
 
+
+
+<!-- حالة التحقق التلقائي: لا نظهر الكود المحفوظ أو نموذج إدخاله -->
+<div class="access-boot" id="accessBoot" role="status" aria-live="polite">
+  <div class="access-boot-card"><img src="logo.png" alt="شعار المدرسة"><h2>منصة التحدي الإلكترونية</h2><p id="accessBootText">جاري التحقق من الحساب وفتح الصفحة الخاصة بك...</p><div class="access-boot-spin"></div></div>
+</div>
+<!-- رسالة الإيقاف أو عدم وجود الكود -->
+<div class="access-notice" id="accessNotice" role="alertdialog" aria-modal="true" aria-labelledby="accessNoticeTitle" aria-describedby="accessNoticeText">
+  <div class="access-notice-card" id="accessNoticeCard"><img src="logo.png" alt="شعار المدرسة"><div class="access-icon" aria-hidden="true">!</div><h2 id="accessNoticeTitle">تنبيه بخصوص الحساب</h2><p id="accessNoticeText"></p><p class="access-notice-phone" id="accessNoticePhone" hidden></p><div class="access-notice-actions"><a id="accessNoticeWhatsapp" href="#" target="_self" hidden>التواصل عبر واتساب</a><button type="button" id="accessNoticeRetry" class="outline" hidden>إعادة التحقق</button><button type="button" id="accessNoticeDifferent" class="outline">الدخول بكود آخر</button></div></div>
+</div>
 
 <script>
 
@@ -3248,732 +3277,130 @@ function redirectByRole(role){
 }
 
 
-/* =========================================================
-   MANUAL LOGIN
-========================================================= */
 
-async function login(){
-
-    if(
-        loginRunning ||
-        autoLoginRunning
-    ){
-
-        return;
-
-    }
-
-
-    hideMessage();
-
-
-    /*
-        فحص الإنترنت.
-    */
-
-    if(
-        !navigator.onLine
-    ){
-
-        showOfflineScreen();
-
-        return;
-
-    }
-
-
-    /*
-        تنظيف الكود.
-    */
-
-    const code =
-        cleanCode(
-            userCodeInput.value
-        );
-
-
-    /*
-        لا يوجد كود.
-    */
-
-    if(
-        !code
-    ){
-
-        showMessage(
-            "يرجى إدخال الكود الخاص بك"
-        );
-
-
-        userCodeInput.focus();
-
-
-        return;
-
-    }
-
-
-    /*
-        إظهار الكود بعد تنظيفه.
-    */
-
-    userCodeInput.value =
-        code;
-
-
-    /*
-        تشغيل التحميل.
-    */
-
-    setLoginLoading(
-        true
-    );
-
-
-    try{
-
-
-        /* =================================================
-           قراءة المستخدم من Firebase
-        ================================================= */
-
-        const user =
-            await readUser(
-                code
-            );
-
-
-        /* =================================================
-           فحص الحساب
-        ================================================= */
-
-        const check =
-            validateUser(user,code);
-
-
-        /*
-            الحساب غير موجود.
-        */
-
-        if(
-            !check.valid &&
-            check.reason ===
-            "NOT_FOUND"
-        ){
-
-            /*
-                إذا كان هذا نفسه الحساب المحفوظ،
-                نحذفه لأنه لم يعد موجوداً.
-            */
-
-            const remembered =
-                getRememberedLogin();
-
-
-            if(
-                remembered &&
-                remembered.code ===
-                code
-            ){
-
-                clearSavedLogin();
-
-            }
-
-
-            showMessage(
-                "الكود الذي أدخلته غير صحيح"
-            );
-
-
-            userCodeInput.select();
-
-
-            return;
-
-        }
-
-
-        /*
-            الحساب معطل.
-        */
-
-        if(
-            !check.valid &&
-            check.reason ===
-            "DISABLED"
-        ){
-
-            const remembered =
-                getRememberedLogin();
-
-
-            if(
-                remembered &&
-                remembered.code ===
-                code
-            ){
-
-                clearSavedLogin();
-
-            }
-
-
-            showMessage(
-                "هذا الحساب غير فعال، يرجى مراجعة إدارة المدرسة"
-            );
-
-
-            return;
-
-        }
-
-
-        /*
-            لا يوجد role.
-        */
-
-        if(
-            !check.valid &&
-            check.reason ===
-            "NO_ROLE"
-        ){
-
-            const remembered =
-                getRememberedLogin();
-
-
-            if(
-                remembered &&
-                remembered.code ===
-                code
-            ){
-
-                clearSavedLogin();
-
-            }
-
-
-            showMessage(
-                "بيانات الحساب غير مكتملة، يرجى مراجعة الإدارة"
-            );
-
-
-            return;
-
-        }
-
-
-        /*
-            الدور غير معروف.
-        */
-
-        if(!check.valid&&check.reason==="INVALID_DIRECTOR_CODE"){
-            const remembered=getRememberedLogin();
-            if(remembered&&remembered.code===code)clearSavedLogin();
-            showMessage("كود الحساب غير صحيح");
-            return false;
-        }
-
-        if(
-            !check.valid &&
-            check.reason ===
-            "UNKNOWN_ROLE"
-        ){
-
-            console.error(
-                "Unsupported role:",
-                check.role,
-                user
-            );
-
-
-            const remembered =
-                getRememberedLogin();
-
-
-            if(
-                remembered &&
-                remembered.code ===
-                code
-            ){
-
-                clearSavedLogin();
-
-            }
-
-
-            showMessage(
-                "نوع الحساب غير معرف في النظام، يرجى مراجعة الإدارة"
-            );
-
-
-            return;
-
-        }
-
-
-        /*
-            role الصحيح.
-        */
-
-        const role =
-            check.role;
-
-
-        /* =================================================
-           حفظ الحساب
-        ================================================= */
-
-        saveSession(
-            code,
-            {
-                ...user,
-                role
-            }
-        );
-
-
-        /* =================================================
-           نجاح
-        ================================================= */
-
-        showMessage(
-            user.name
-                ? `مرحباً ${user.name}، تم تسجيل الدخول بنجاح`
-                : "تم تسجيل الدخول بنجاح",
-            "success"
-        );
-
-
-        /*
-            انتظار بسيط حتى تظهر رسالة النجاح.
-        */
-
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    350
-                )
-        );
-
-
-        /* =================================================
-           توجيه
-        ================================================= */
-
-        redirectByRole(
-            role
-        );
-
-
-    }catch(error){
-
-
-        console.error(
-            "Login Error:",
-            error
-        );
-
-
-        if(
-            !navigator.onLine
-        ){
-
-            showOfflineScreen();
-
-        }
-
-        else if(
-            error.message ===
-            "UNKNOWN_ROLE"
-        ){
-
-            showMessage(
-                "نوع الحساب غير مربوط بصفحة داخل المنصة، يرجى مراجعة الإدارة"
-            );
-
-        }
-
-        else{
-
-            showMessage(
-                "تعذر الاتصال بالنظام، حاول مرة أخرى"
-            );
-
-        }
-
-
-    }finally{
-
-
-        setLoginLoading(
-            false
-        );
-
-    }
-
+/* ===== التحقق من دخول الحساب وإظهار سبب تعطيل الطالب ===== */
+const TAHADI_ACCESS_DEFAULTS={
+ accountant:{title:"تم إيقاف الحساب من قبل الحسابات",message:"تم إيقاف الحساب من قبل الحسابات. يرجى التواصل مع المحاسب لإعادة تفعيل الحساب.",phone:"07706640499",showPhone:true},
+ administration:{title:"تم تعطيل الحساب من قبل الإدارة",message:"تم تعطيل الحساب من قبل الإدارة. يرجى التواصل مع إدارة المدرسة.",phone:"07851521585",showPhone:true},
+ notFound:{title:"الكود غير موجود",message:"لا يوجد هكذا كود لطالب، يرجى مراجعة بناية المدرسة."}
+};
+let tahadiLastAttempt="";
+function tahadiBoot(show=true){
+  document.getElementById('accessBoot').classList.toggle('show',show);
+  if(show){loginPage.classList.remove('show');splashScreen.classList.remove('show');}
 }
-
-
-/* =========================================================
-   AUTO LOGIN
-========================================================= */
-
+function tahadiHideNotice(){document.getElementById('accessNotice').classList.remove('show')}
+function tahadiBackToLogin(){
+  tahadiHideNotice();tahadiBoot(false);clearSavedLogin();userCodeInput.value="";hideMessage();showLoginPage();
+}
+document.getElementById('accessNoticeDifferent').addEventListener('click',tahadiBackToLogin);
+document.getElementById('accessNoticeRetry').addEventListener('click',()=>{
+  tahadiHideNotice();const saved=getRememberedLogin();
+  if(saved)autoLogin();else if(tahadiLastAttempt)authenticateTahadiCode(tahadiLastAttempt,{remembered:false});
+  else tahadiBackToLogin();
+});
+function tahadiPhone(value){
+ let p=normalizeNumbers(value).replace(/[^0-9]/g,'');
+ if(p.startsWith('00'))p=p.slice(2);
+ if(p.startsWith('0'))p='964'+p.slice(1);
+ else if(p.startsWith('7'))p='964'+p;
+ return p.startsWith('964')&&p.length>=12&&p.length<=15?p:'';
+}
+function tahadiNotice({title,message,phone,showPhone,kind='admin',retry=false}){
+ tahadiBoot(false);loginPage.classList.remove('show');splashScreen.classList.remove('show');
+ const el=document.getElementById('accessNotice'),card=document.getElementById('accessNoticeCard');
+ card.className='access-notice-card '+(kind==='accountant'?'':kind==='missing'?'missing':'admin');
+ document.getElementById('accessNoticeTitle').textContent=title||'تنبيه بخصوص الحساب';
+ document.getElementById('accessNoticeText').textContent=message||'';
+ const p=tahadiPhone(phone),visible=showPhone===true&&!!p;
+ const numberText=document.getElementById('accessNoticePhone'),wa=document.getElementById('accessNoticeWhatsapp');
+ numberText.hidden=!visible;wa.hidden=!visible;
+ if(visible){numberText.textContent=normalizeNumbers(phone);wa.href='https://api.whatsapp.com/send?phone='+encodeURIComponent(p);wa.target='_self';}
+ else{numberText.textContent='';wa.removeAttribute('href')}
+ document.getElementById('accessNoticeRetry').hidden=!retry;
+ el.classList.add('show');
+}
+async function tahadiReadPath(path){
+ const response=await tahadiFirebaseReadFetch(`${DATABASE_URL}/${path}.json`,{method:'GET',cache:'no-store',headers:{Accept:'application/json'}});
+ if(!response.ok)throw Error('FIREBASE_READ_FAILED');return response.json();
+}
+function tahadiAccountStatus(st,user){
+ if(st?.loginRestriction?.active===true)return {source:'administration',override:st.loginRestriction};
+ if(st?.hidden===true||user?.hidden===true)return {source:'administration'};
+ // فحص مدة تفعيل الحسابات مع موافقة الإدارة، لا نعتمد فقط على users.active.
+ const accountingOn=st?.accountantApproved===true&&(
+   st.accountantPermanent===true||!Number(st.accountantApprovedUntil||0)||Date.now()<Number(st.accountantApprovedUntil)
+ );
+ if(!accountingOn)return {source:'accountant'};
+ if(st?.adminApproved!==true)return {source:'administration'};
+ if(isAccountDisabled(user)||st?.accountActive===false)return {source:'administration'};
+ return null;
+}
+async function tahadiAccessMessage(source,st){
+ let remote={};try{remote=await tahadiReadPath('settings/loginAccessMessages')||{}}catch(error){console.warn('LOGIN_NOTICE_DEFAULTS',error)}
+ const config=remote?.[source]||{},def=TAHADI_ACCESS_DEFAULTS[source]||TAHADI_ACCESS_DEFAULTS.administration;
+ const override=st?.loginRestriction?.active===true?st.loginRestriction:{};
+ return {
+  title:source==='accountant'?def.title:def.title,
+  message:typeof override.message==='string'&&override.message.trim()?override.message:typeof config.message==='string'&&config.message.trim()?config.message:def.message,
+  phone:typeof override.phone==='string'&&override.phone.trim()?override.phone:typeof config.phone==='string'?config.phone:def.phone,
+  showPhone:typeof override.showPhone==='boolean'?override.showPhone:typeof config.showPhone==='boolean'?config.showPhone:def.showPhone,
+  kind:source==='accountant'?'accountant':'admin'
+ };
+}
+async function authenticateTahadiCode(code,{remembered=false}={}){
+ code=cleanCode(code);tahadiLastAttempt=code;
+ if(!code){tahadiBoot(false);showLoginPage();showMessage('يرجى إدخال كود الدخول');return false}
+ if(!navigator.onLine){tahadiBoot(false);showOfflineScreen();return false}
+ tahadiHideNotice();tahadiBoot(true);
+ try{
+  const user=await readUser(code);
+  if(!user||typeof user!=='object'){
+   if(remembered)clearSavedLogin();
+   const studentLike=code.startsWith('ST');
+   tahadiNotice({title:'الكود غير موجود',message:studentLike?TAHADI_ACCESS_DEFAULTS.notFound.message:'لا يوجد هكذا كود في المدرسة، يرجى مراجعة بناية المدرسة.',kind:'missing'});
+   return false;
+  }
+  const role=cleanRole(user.role),isStudent=['student','st'].includes(role)||code.startsWith('ST');
+  if(isStudent){
+   const st=await tahadiReadPath('students/'+encodeURIComponent(code));
+   if(!st||typeof st!=='object'){
+    tahadiNotice({title:'بيانات الطالب غير متوفرة',message:'تعذر العثور على الملف المدرسي لهذا الكود، يرجى مراجعة بناية المدرسة.',kind:'missing'});return false;
+   }
+   const blocked=tahadiAccountStatus(st,user);
+   if(blocked){tahadiNotice(await tahadiAccessMessage(blocked.source,st));return false}
+  }
+  const check=validateUser(user,code);
+  if(!check.valid){
+   if(check.reason==='DISABLED'){
+    const source=isStudent?'administration':'administration';
+    const notice=await tahadiAccessMessage(source,{});
+    tahadiNotice(notice);return false;
+   }
+   tahadiNotice({title:'تعذر تسجيل الدخول',message:'الكود أو صلاحية الحساب غير مكتملة. يرجى مراجعة إدارة المدرسة.',kind:'missing'});return false;
+  }
+  saveSession(code,{...user,role:check.role});
+  redirectByRole(check.role);return true;
+ }catch(error){
+  console.error('TAHADI_LOGIN_VERIFY',error);
+  if(!navigator.onLine){tahadiBoot(false);showOfflineScreen();return false}
+  tahadiNotice({title:'تعذر التحقق من الحساب',message:'تعذر الاتصال بقاعدة بيانات المدرسة. لم يُلغَ الحساب المحفوظ. يمكنك إعادة المحاولة عند توفر الاتصال.',kind:'missing',retry:true});return false;
+ }
+}
+async function login(){
+ if(loginRunning||autoLoginRunning)return false;
+ const code=cleanCode(userCodeInput.value);
+ if(!code){showLoginPage();showMessage('يرجى إدخال الكود الخاص بك');return false}
+ loginRunning=true;setLoginLoading(true);
+ try{return await authenticateTahadiCode(code,{remembered:false})}
+ finally{setLoginLoading(false);loginRunning=false;userCodeInput.value=''}
+}
 async function autoLogin(){
-
-    /*
-        منع التكرار.
-    */
-
-    if(
-        autoLoginRunning ||
-        loginRunning
-    ){
-
-        return false;
-
-    }
-
-
-    /*
-        قراءة الحساب المحفوظ.
-    */
-
-    const remembered =
-        getRememberedLogin();
-
-
-    /*
-        لا يوجد حساب محفوظ.
-    */
-
-    if(
-        !remembered
-    ){
-
-        return false;
-
-    }
-
-
-    /*
-        استخراج الكود.
-    */
-
-    const code =
-        cleanCode(
-            remembered.code
-        );
-
-
-    /*
-        بيانات غير صحيحة.
-    */
-
-    if(
-        !code
-    ){
-
-        clearSavedLogin();
-
-        return false;
-
-    }
-
-
-    /*
-        وضع الكود داخل الحقل.
-    */
-
-    userCodeInput.value =
-        code;
-
-
-    /*
-        إذا لا يوجد إنترنت نبقي الحساب محفوظاً.
-    */
-
-    if(
-        !navigator.onLine
-    ){
-
-        showOfflineScreen();
-
-        return true;
-
-    }
-
-
-    /*
-        بدء تسجيل الدخول التلقائي.
-    */
-
-    autoLoginRunning =
-        true;
-
-
-    loginButton.disabled =
-        true;
-
-
-    loginButtonText.textContent =
-        "جاري تسجيل الدخول تلقائياً";
-
-
-    loginSpinner.style.display =
-        "inline-block";
-
-
-    try{
-
-
-        /* =================================================
-           التحقق من Firebase
-        ================================================= */
-
-        const user =
-            await readUser(
-                code
-            );
-
-
-        /* =================================================
-           فحص الحساب
-        ================================================= */
-
-        const check =
-            validateUser(user,code);
-
-
-        /*
-            الحساب غير موجود.
-        */
-
-        if(
-            !check.valid &&
-            check.reason ===
-            "NOT_FOUND"
-        ){
-
-            clearSavedLogin();
-
-
-            userCodeInput.value =
-                "";
-
-
-            showLoginPage();
-
-
-            showMessage(
-                "الحساب المحفوظ لم يعد موجوداً، يرجى تسجيل الدخول من جديد"
-            );
-
-
-            return false;
-
-        }
-
-
-        /*
-            الحساب معطل.
-        */
-
-        if(
-            !check.valid &&
-            check.reason ===
-            "DISABLED"
-        ){
-
-            clearSavedLogin();
-
-
-            userCodeInput.value =
-                code;
-
-
-            showLoginPage();
-
-
-            showMessage(
-                "هذا الحساب غير فعال، يرجى مراجعة إدارة المدرسة"
-            );
-
-
-            return false;
-
-        }
-
-
-        /*
-            role مفقود.
-        */
-
-        if(
-            !check.valid &&
-            check.reason ===
-            "NO_ROLE"
-        ){
-
-            clearSavedLogin();
-
-
-            userCodeInput.value =
-                code;
-
-
-            showLoginPage();
-
-
-            showMessage(
-                "بيانات الحساب غير مكتملة، يرجى مراجعة الإدارة"
-            );
-
-
-            return false;
-
-        }
-
-
-        /*
-            role غير معروف.
-        */
-
-        if(!check.valid&&check.reason==="INVALID_DIRECTOR_CODE"){
-            clearSavedLogin();
-            showLoginPage();
-            showMessage("كود الحساب غير صحيح");
-            return false;
-        }
-
-        if(
-            !check.valid &&
-            check.reason ===
-            "UNKNOWN_ROLE"
-        ){
-
-            console.error(
-                "Unsupported remembered role:",
-                check.role
-            );
-
-
-            clearSavedLogin();
-
-
-            userCodeInput.value =
-                code;
-
-
-            showLoginPage();
-
-
-            showMessage(
-                "نوع الحساب غير معرف في النظام، يرجى مراجعة الإدارة"
-            );
-
-
-            return false;
-
-        }
-
-
-        /*
-            role صحيح.
-        */
-
-        const role =
-            check.role;
-
-
-        /*
-            إعادة بناء sessionStorage.
-            لأن sessionStorage يختفي بعد إغلاق المتصفح.
-        */
-
-        saveSession(
-            code,
-            {
-                ...user,
-                role
-            }
-        );
-
-
-        /*
-            التوجيه مباشرة.
-        */
-
-        redirectByRole(
-            role
-        );
-
-
-        return true;
-
-
-    }catch(error){
-
-
-        console.error(
-            "Auto Login Error:",
-            error
-        );
-
-
-        /*
-            إذا انقطع الإنترنت لا نحذف الحساب.
-        */
-
-        if(
-            !navigator.onLine
-        ){
-
-            showOfflineScreen();
-
-            return true;
-
-        }
-
-
-        /*
-            إذا Firebase تعطل مؤقتاً:
-            لا نحذف الحساب المحفوظ.
-        */
-
-        showLoginPage();
-
-
-        showMessage(
-            "تعذر التحقق من الحساب المحفوظ، حاول مرة أخرى"
-        );
-
-
-        return false;
-
-
-    }finally{
-
-
-        autoLoginRunning =
-            false;
-
-
-        loginButton.disabled =
-            false;
-
-
-        loginButtonText.textContent =
-            "الدخول إلى المنصة";
-
-
-        loginSpinner.style.display =
-            "none";
-
-    }
-
+ if(autoLoginRunning||loginRunning)return false;
+ const remembered=getRememberedLogin();if(!remembered?.code)return false;
+ autoLoginRunning=true;
+ try{return await authenticateTahadiCode(remembered.code,{remembered:true})}
+ finally{autoLoginRunning=false}
 }
 
 
@@ -4031,201 +3458,23 @@ userCodeInput.addEventListener(
 );
 
 
-/* =========================================================
-   QR LOGIN
-========================================================= */
 
 async function handleQRLogin(){
-
-    /*
-        قراءة URL.
-    */
-
-    const params =
-        new URLSearchParams(
-            window.location.search
-        );
-
-
-    /*
-        استخراج code.
-    */
-
-    const code =
-        cleanCode(
-            params.get("code") ||
-            ""
-        );
-
-
-    /*
-        لا يوجد كود.
-    */
-
-    if(
-        !code
-    ){
-
-        return false;
-
-    }
-
-
-    /*
-        وضع الكود داخل الحقل.
-    */
-
-    userCodeInput.value =
-        code;
-
-
-    /*
-        حذف code من رابط المتصفح بعد قراءته.
-    */
-
-    try{
-
-        history.replaceState(
-            {},
-            document.title,
-            window.location.pathname
-        );
-
-    }catch(error){
-
-        console.log(
-            "Unable to clean URL",
-            error
-        );
-
-    }
-
-
-    /*
-        انتظار بسيط.
-    */
-
-    await new Promise(
-        resolve =>
-            setTimeout(
-                resolve,
-                180
-            )
-    );
-
-
-    /*
-        تسجيل الدخول.
-        login() سيحفظ الحساب في localStorage تلقائياً.
-    */
-
-    await login();
-
-
-    return true;
-
+ const params=new URLSearchParams(window.location.search);
+ const code=cleanCode(params.get('code')||'');if(!code)return false;
+ try{params.delete('code');const q=params.toString();history.replaceState({},document.title,location.pathname+(q?'?'+q:'')+location.hash)}catch(e){}
+ return authenticateTahadiCode(code,{remembered:false});
 }
 
 
-/* =========================================================
-   NETWORK OFFLINE
-========================================================= */
 
-window.addEventListener(
-    "offline",
-    () => {
-
-        loginRunning =
-            false;
-
-
-        autoLoginRunning =
-            false;
-
-
-        loginButton.disabled =
-            false;
-
-
-        loginButtonText.textContent =
-            "الدخول إلى المنصة";
-
-
-        loginSpinner.style.display =
-            "none";
-
-
-        showOfflineScreen();
-
-    }
-);
-
-
-/* =========================================================
-   NETWORK ONLINE
-========================================================= */
-
-window.addEventListener(
-    "online",
-    async () => {
-
-
-        hideOfflineScreen();
-
-
-        hideMessage();
-
-
-        /*
-            عند رجوع الإنترنت نفحص هل يوجد حساب محفوظ.
-        */
-
-        const remembered =
-            getRememberedLogin();
-
-
-        /*
-            يوجد حساب محفوظ.
-        */
-
-        if(
-            remembered
-        ){
-
-            userCodeInput.value =
-                remembered.code;
-
-
-            showLoginPage();
-
-
-            /*
-                تسجيل الدخول تلقائياً.
-            */
-
-            const handled =
-                await autoLogin();
-
-
-            if(
-                handled
-            ){
-
-                return;
-
-            }
-
-        }
-
-
-        /*
-            لا يوجد حساب محفوظ.
-        */
-
-        showLoginPage();
-
-    }
-);
+window.addEventListener('offline',()=>{
+ loginRunning=false;autoLoginRunning=false;setLoginLoading(false);tahadiBoot(false);tahadiHideNotice();showOfflineScreen();
+});
+window.addEventListener('online',async()=>{
+ hideOfflineScreen();tahadiHideNotice();
+ if(getRememberedLogin())await autoLogin();else showLoginPage();
+});
 
 
 /* =========================================================
@@ -4394,142 +3643,18 @@ function fillSavedCode(){
 }
 
 
-/* =========================================================
-   START
-========================================================= */
 
-window.addEventListener(
-    "load",
-    async () => {
+window.addEventListener('load',async()=>{
+ const params=new URLSearchParams(location.search),qrCode=cleanCode(params.get('code')||'');
+ if(!navigator.onLine){showOfflineScreen();return}
+ if(qrCode){splashPlayed=true;await handleQRLogin();return}
+ if(getRememberedLogin()){
+  // لا تظهر شاشة إدخال الكود ولا الكود المحفوظ أثناء التحقق.
+  splashPlayed=true;tahadiBoot(true);await autoLogin();return;
+ }
+ playSplash();
+});
 
-
-        /* =================================================
-           قراءة QR أولاً
-        ================================================= */
-
-        const params =
-            new URLSearchParams(
-                window.location.search
-            );
-
-
-        const qrCode =
-            cleanCode(
-                params.get("code") ||
-                ""
-            );
-
-
-        /* =================================================
-           إذا لا يوجد إنترنت
-        ================================================= */
-
-        if(
-            !navigator.onLine
-        ){
-
-            /*
-                إذا يوجد حساب محفوظ نضع الكود بالحقل
-                حتى يكون جاهزاً عند رجوع الإنترنت.
-            */
-
-            fillSavedCode();
-
-
-            showOfflineScreen();
-
-
-            return;
-
-        }
-
-
-        /* =================================================
-           QR له الأولوية
-        ================================================= */
-
-        if(
-            qrCode
-        ){
-
-            /*
-                لا نشغل Splash في QR.
-            */
-
-            splashPlayed =
-                true;
-
-
-            showLoginPage();
-
-
-            await handleQRLogin();
-
-
-            return;
-
-        }
-
-
-        /* =================================================
-           فحص الحساب المحفوظ
-        ================================================= */
-
-        const remembered =
-            getRememberedLogin();
-
-
-        /*
-            يوجد حساب محفوظ.
-        */
-
-        if(
-            remembered
-        ){
-
-            /*
-                لا نحتاج مشهد البداية في كل مرة.
-            */
-
-            splashPlayed =
-                true;
-
-
-            /*
-                وضع الكود المحفوظ.
-            */
-
-            userCodeInput.value =
-                remembered.code;
-
-
-            /*
-                إظهار صفحة الدخول أثناء الفحص.
-            */
-
-            showLoginPage();
-
-
-            /*
-                تسجيل الدخول تلقائياً.
-            */
-
-            await autoLogin();
-
-
-            return;
-
-        }
-
-
-        /* =================================================
-           لا يوجد حساب محفوظ
-        ================================================= */
-
-        playSplash();
-
-    }
-);
 
 </script>
 
