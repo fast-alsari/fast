@@ -3282,7 +3282,7 @@ function redirectByRole(role){
 const TAHADI_ACCESS_DEFAULTS={
  accountant:{title:"تم إيقاف الحساب من قبل الحسابات",message:"تم إيقاف الحساب من قبل الحسابات. يرجى التواصل مع المحاسب لإعادة تفعيل الحساب.",phone:"07706640499",showPhone:true},
  administration:{title:"تم تعطيل الحساب من قبل الإدارة",message:"تم تعطيل الحساب من قبل الإدارة. يرجى التواصل مع إدارة المدرسة.",phone:"07851521585",showPhone:true},
- notFound:{title:"الكود غير موجود",message:"لا يوجد هكذا كود لطالب، يرجى مراجعة بناية المدرسة."}
+ notFound:{title:"الكود الذي كتبته غير صحيح",message:"تأكد من كود الدخول الخاص بك، أو تواصل مع إدارة المدرسة للحصول على المساعدة.",phone:"07851521585",showPhone:true}
 };
 let tahadiLastAttempt="";
 function tahadiBoot(show=true){
@@ -3315,11 +3315,47 @@ function tahadiNotice({title,message,phone,showPhone,kind='admin',retry=false}){
  const p=tahadiPhone(phone),visible=showPhone===true&&!!p;
  const numberText=document.getElementById('accessNoticePhone'),wa=document.getElementById('accessNoticeWhatsapp');
  numberText.hidden=!visible;wa.hidden=!visible;
- if(visible){numberText.textContent=normalizeNumbers(phone);wa.href='https://api.whatsapp.com/send?phone='+encodeURIComponent(p);wa.target='_self';}
- else{numberText.textContent='';wa.removeAttribute('href')}
+ if(visible){numberText.textContent=normalizeNumbers(phone);wa.dataset.whatsappPhone=p;wa.href='https://api.whatsapp.com/send?phone='+encodeURIComponent(p);wa.target='_blank';wa.rel='noopener noreferrer';}
+ else{numberText.textContent='';delete wa.dataset.whatsappPhone;wa.removeAttribute('href')}
  document.getElementById('accessNoticeRetry').hidden=!retry;
  el.classList.add('show');
 }
+
+// فتح واتساب يعمل بروابط رسمية في المتصفح وداخل WebView؛ يحتاج WebViewClient لاعتراض الرابط وفتحه بتطبيق واتساب.
+document.getElementById('accessNoticeWhatsapp').addEventListener('click',function(event){
+ const phone=tahadiPhone(this.dataset.whatsappPhone||'');
+ if(!phone){event.preventDefault();return}
+ const webUrl='https://api.whatsapp.com/send?phone='+encodeURIComponent(phone);
+ const agent=navigator.userAgent||'';
+ const inAndroidWebView=/Android/i.test(agent)&&(/;\s*wv\)/i.test(agent)||/\bWebView\b/i.test(agent)||/Version\/4\.0.*Chrome/i.test(agent));
+ // إن وفّر تطبيق أندرويد جسرًا أصليًا، يكون فتح واتساب مباشرًا دون مغادرة صفحة الاندكس.
+ const nativeBridge=window.TahadiAndroid||window.Android;
+ if(inAndroidWebView&&typeof nativeBridge?.openWhatsApp==='function'){
+  event.preventDefault();
+  try{nativeBridge.openWhatsApp(phone);return}catch(error){console.warn('WHATSAPP_NATIVE_BRIDGE',error)}
+ }
+ // HTTPS لا يسبب خطأ UNKNOWN_URL_SCHEME في WebView القديمة. للافتتاح المباشر
+ // في تطبيق واتساب ينبغي اعتراض هذين الرابطين في WebViewClient عبر ACTION_VIEW.
+ this.href=webUrl;
+ this.target=inAndroidWebView?'_self':'_blank';
+ this.rel='noopener noreferrer';
+});
+
+// رسالة الكود غير الصحيح تستمد بياناتها من إعدادات الإدارة بالقاعدة نفسها.
+async function tahadiIncorrectCodeNotice(){
+ const fallback=TAHADI_ACCESS_DEFAULTS.notFound;
+ let remote={};
+ try{remote=(await tahadiReadPath('settings/loginAccessMessages'))?.notFound||{}}
+ catch(error){console.warn('WRONG_CODE_MESSAGE_DEFAULTS',error)}
+ return tahadiNotice({
+  title:typeof remote.title==='string'&&remote.title.trim()?remote.title.trim():fallback.title,
+  message:typeof remote.message==='string'&&remote.message.trim()?remote.message.trim():fallback.message,
+  phone:typeof remote.phone==='string'?remote.phone:fallback.phone,
+  showPhone:typeof remote.showPhone==='boolean'?remote.showPhone:fallback.showPhone,
+  kind:'missing'
+ });
+}
+
 async function tahadiReadPath(path){
  const response=await tahadiFirebaseReadFetch(`${DATABASE_URL}/${path}.json`,{method:'GET',cache:'no-store',headers:{Accept:'application/json'}});
  if(!response.ok)throw Error('FIREBASE_READ_FAILED');return response.json();
@@ -3357,8 +3393,7 @@ async function authenticateTahadiCode(code,{remembered=false}={}){
   const user=await readUser(code);
   if(!user||typeof user!=='object'){
    if(remembered)clearSavedLogin();
-   const studentLike=code.startsWith('ST');
-   tahadiNotice({title:'الكود غير موجود',message:studentLike?TAHADI_ACCESS_DEFAULTS.notFound.message:'لا يوجد هكذا كود في المدرسة، يرجى مراجعة بناية المدرسة.',kind:'missing'});
+   await tahadiIncorrectCodeNotice();
    return false;
   }
   const role=cleanRole(user.role),isStudent=['student','st'].includes(role)||code.startsWith('ST');
