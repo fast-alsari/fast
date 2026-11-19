@@ -360,7 +360,8 @@
 
 /* إعدادات رسائل تعطيل حسابات الطلاب دون تغيير لوحات الإدارة الحالية */
 .login-policy-panel .panel-body{display:grid;gap:15px}
-.login-policy-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.login-policy-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px}
+@media(max-width:1100px){.login-policy-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:690px){.login-policy-grid{grid-template-columns:1fr}}
 .login-policy-group{padding:15px;border:1px solid #dbe7f2;background:linear-gradient(140deg,#fff,#f9fbff);border-radius:14px}
 .login-policy-group h4{margin:0 0 10px;color:#0753aa;font-size:12px}
 .login-policy-group label,.login-policy-modal label{display:grid;gap:6px;margin-top:10px;color:#3b4b63;font-size:10px;font-weight:900}
@@ -490,13 +491,14 @@
 
 
 <section class="panel login-policy-panel" id="loginPolicyPanel">
- <div class="panel-head"><div><h3>إعدادات إيقاف حسابات الطلاب ورسائل الدخول</h3><p>رسالة الحسابات ورسالة الإدارة مستقلة، وتظهر للطالب فقط إذا كان حسابه غير مفعّل من الجهة المعنية. التحكم بإظهار رقم واتساب أو إخفائه.</p></div></div>
+ <div class="panel-head"><div><h3>إعدادات رسائل الدخول وأرقام واتساب</h3><p>تخصيص رسالة إيقاف الحسابات ورسالة الإدارة وتنبيه الكود غير الصحيح، مع التحكم بأرقام التواصل وزر واتساب لكل حالة.</p></div></div>
  <div class="panel-body">
   <div class="login-policy-grid">
    <div class="login-policy-group"><h4>إيقاف الحساب من الحسابات</h4><label>النص الذي يظهر للطالب<textarea id="lpAccountantMessage" maxlength="1200" placeholder="رسالة الحسابات"></textarea></label><label>رقم واتساب المحاسب<input id="lpAccountantPhone" type="tel" maxlength="24" placeholder="07706640499"></label><label class="show-phone"><input id="lpAccountantShow" type="checkbox"> إظهار رقم المحاسب وزر واتساب للطالب</label></div>
    <div class="login-policy-group"><h4>إيقاف الحساب من الإدارة</h4><label>النص الذي يظهر للطالب<textarea id="lpAdminMessage" maxlength="1200" placeholder="رسالة الإدارة"></textarea></label><label>رقم واتساب الإدارة<input id="lpAdminPhone" type="tel" maxlength="24" placeholder="07851521585"></label><label class="show-phone"><input id="lpAdminShow" type="checkbox"> إظهار رقم الإدارة وزر واتساب للطالب</label></div>
+   <div class="login-policy-group"><h4>عند إدخال كود غير صحيح أو غير موجود</h4><label>عنوان التنبيه<input id="lpInvalidTitle" type="text" maxlength="150" placeholder="الكود الذي كتبته غير صحيح"></label><label>نص الرسالة الذي يظهر في الاندكس<textarea id="lpInvalidMessage" maxlength="1200" placeholder="تأكد من الكود، أو تواصل مع إدارة المدرسة"></textarea></label><label>رقم واتساب المساعدة<input id="lpInvalidPhone" type="tel" maxlength="24" placeholder="07851521585" inputmode="tel"></label><label class="show-phone"><input id="lpInvalidShow" type="checkbox"> إظهار رقم المساعدة وزر مراسلة واتساب عند الخطأ</label></div>
   </div>
-  <div class="login-policy-actions"><button type="button" class="btn btn-p" id="lpSaveSettings" onclick="saveStudentLoginPolicies()">حفظ رسائل الإيقاف وأرقام التواصل</button><span class="login-policy-status" id="lpStatus">تحميل الإعدادات...</span></div>
+  <div class="login-policy-actions"><button type="button" class="btn btn-p" id="lpSaveSettings" onclick="saveStudentLoginPolicies()">حفظ رسائل الدخول وأرقام التواصل</button><span class="login-policy-status" id="lpStatus">تحميل الإعدادات...</span></div>
   <p class="help">لتعطيل طالب من الإدارة: افتح بيانات الطالب ثم «تعطيل ورسالة الدخول». ويمكن تفعيل/إلغاء تفعيل الحسابات أو الإدارة عبر أزرار الطالب الأصلية أيضًا.</p>
  </div>
 </section>
@@ -2532,17 +2534,20 @@ window.addEventListener('afterprint',()=>document.body.classList.remove('aeval-p
 /* ===== رسائل تسجيل الدخول: الإدارة والحسابات + إيقاف مخصص لكل طالب ===== */
 const TAHADI_LOGIN_MESSAGE_DEFAULTS={
  accountant:{message:'تم إيقاف الحساب من قبل الحسابات. يرجى التواصل مع المحاسب لإعادة تفعيل الحساب.',phone:'07706640499',showPhone:true},
- administration:{message:'تم تعطيل الحساب من قبل الإدارة. يرجى التواصل مع إدارة المدرسة.',phone:'07851521585',showPhone:true}
+ administration:{message:'تم تعطيل الحساب من قبل الإدارة. يرجى التواصل مع إدارة المدرسة.',phone:'07851521585',showPhone:true},
+ notFound:{title:'الكود الذي كتبته غير صحيح',message:'تأكد من كود الدخول الخاص بك، أو تواصل مع إدارة المدرسة للحصول على المساعدة.',phone:'07851521585',showPhone:true}
 };
 let STUDENT_LOGIN_POLICY_CODE='';
 function lpValue(id){return document.getElementById(id)}
 function lpSettingsFromUI(){return{
  accountant:{message:lpValue('lpAccountantMessage').value.trim(),phone:lpValue('lpAccountantPhone').value.trim(),showPhone:lpValue('lpAccountantShow').checked},
- administration:{message:lpValue('lpAdminMessage').value.trim(),phone:lpValue('lpAdminPhone').value.trim(),showPhone:lpValue('lpAdminShow').checked}
+ administration:{message:lpValue('lpAdminMessage').value.trim(),phone:lpValue('lpAdminPhone').value.trim(),showPhone:lpValue('lpAdminShow').checked},
+ notFound:{title:lpValue('lpInvalidTitle').value.trim(),message:lpValue('lpInvalidMessage').value.trim(),phone:lpValue('lpInvalidPhone').value.trim(),showPhone:lpValue('lpInvalidShow').checked}
 }}
 function lpFillSettings(val){val=val||{};
- for(const [slug,kind] of [['Accountant','accountant'],['Admin','administration']]){
+ for(const [slug,kind] of [['Accountant','accountant'],['Admin','administration'],['Invalid','notFound']]){
   const v=val[kind]||{},d=TAHADI_LOGIN_MESSAGE_DEFAULTS[kind];
+  if(kind==='notFound')lpValue('lpInvalidTitle').value=typeof v.title==='string'?v.title:d.title;
   lpValue('lp'+slug+'Message').value=typeof v.message==='string'?v.message:d.message;
   lpValue('lp'+slug+'Phone').value=typeof v.phone==='string'?v.phone:d.phone;
   lpValue('lp'+slug+'Show').checked=typeof v.showPhone==='boolean'?v.showPhone:d.showPhone;
@@ -2555,8 +2560,9 @@ async function loadStudentLoginPolicies(){
 function lpValidPhone(p){const digits=String(p||'').replace(/[٠-٩]/g,x=>'٠١٢٣٤٥٦٧٨٩'.indexOf(x)).replace(/\D/g,'');return !digits||/^((0|00964|964)?7\d{9})$/.test(digits)}
 async function saveStudentLoginPolicies(){
  const data=lpSettingsFromUI();
- if(!data.accountant.message||!data.administration.message){toast('يرجى كتابة رسالة لكل جهة');return}
- if(!lpValidPhone(data.accountant.phone)||!lpValidPhone(data.administration.phone)){toast('تأكد من صحة رقم واتساب');return}
+ if(!data.accountant.message||!data.administration.message||!data.notFound.title||!data.notFound.message){toast('يرجى كتابة العنوان والرسائل لكل الحالات');return}
+ if(!lpValidPhone(data.accountant.phone)||!lpValidPhone(data.administration.phone)||!lpValidPhone(data.notFound.phone)){toast('تأكد من صحة رقم واتساب');return}
+ if(data.notFound.showPhone&&!data.notFound.phone){toast('أدخل رقم واتساب المساعدة أو ألغِ إظهار الزر');return}
  const btn=lpValue('lpSaveSettings');btn.disabled=true;lpValue('lpStatus').textContent='جاري حفظ الإعدادات...';
  try{
   if(!await verifyAdmin())return;
