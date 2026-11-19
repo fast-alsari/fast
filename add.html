@@ -406,6 +406,17 @@
 @media(max-width:700px){.roster-group-body{grid-template-columns:repeat(2,minmax(0,1fr))}.roster-modal-card{max-height:94dvh}.roster-options{align-items:stretch}.roster-actions{flex-direction:column;align-items:stretch}.roster-actions .roster-download-btn{width:100%}}
 @media(max-width:430px){.roster-group-body{grid-template-columns:1fr}}
 
+
+/* حقول عنوان مجموعة الصفوف و الجنس للملف الموحد */
+.roster-custom-fields{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:10px;margin:12px 0;padding:13px;border:1px solid #ebdbb8;border-radius:13px;background:#fffdf8}
+.roster-custom-field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.roster-custom-field label{font-size:11px;font-weight:900;color:#76521a}
+.roster-custom-field input{width:100%;height:47px;padding:0 11px;border:1px solid #d7c296;border-radius:10px;background:#fff;color:#2d2418;font-size:13px;font-weight:800;outline:none}
+.roster-custom-field input:focus{border-color:#a87921;box-shadow:0 0 0 3px #b9964033}
+.roster-custom-field small{font-size:9px;color:#786b57;line-height:1.7}
+.roster-merge-counter{padding:8px 11px;border:1px solid #ead6ac;border-radius:10px;background:#fff9ed;color:#785a26;font-size:11px;line-height:1.6;font-weight:900}
+@media(max-width:630px){.roster-custom-fields{grid-template-columns:1fr}}
+
 /* ===== ورقة الأسماء A4: خط Simplified Arabic 16 نقطة، ذهبية وأبيض ===== */
 .tahadi-roster-page{position:relative;box-sizing:border-box;width:794px;height:1123px;padding:42px 43px 32px;overflow:hidden;direction:rtl;background:#fff;color:#2d2418;font-family:'Simplified Arabic','Noto Naskh Arabic','Traditional Arabic',Tahoma,serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 .tahadi-roster-page::before{content:"";position:absolute;inset:15px;border:3px double #ab7f27;pointer-events:none}
@@ -2599,52 +2610,84 @@ window.addEventListener('load',()=>{loadStudentLoginPolicies()});
 </div></div>
 
 
-<!-- سحب قوائم أسماء الطلبة: نافذة مستقلة ولا تغير بيانات القاعدة -->
+<!-- نافذة دمج قوائم الطلاب: تصدير فقط دون تغيير أي بيانات -->
 <div class="modal" id="rosterExportModal" role="dialog" aria-modal="true" aria-labelledby="rosterExportModalTitle">
-  <div class="modal-card roster-modal-card">
-    <div class="roster-modal-title"><div class="modal-head">
-      <div><h3 id="rosterExportModalTitle">سحب قوائم أسماء الطلاب</h3><p>حدد الصفوف المطلوبة ثم اختر قائمة واحدة أو قائمتين في الورقة الواحدة. لكل صف ملف PDF مستقل داخل ZIP.</p></div>
-      <button type="button" class="close" onclick="closeModal('rosterExportModal')" aria-label="إغلاق">×</button>
-    </div></div>
-    <div class="roster-modal-main">
-      <div class="roster-explain">ترتيب الأسماء أبجدي من الألف إلى الياء، مع ترقيم متصل دون تكرار. عند اختيار قائمتين في سجل واحد يظهر عمودان متتابعان في كل ورقة PDF، وتبقى أسماء كل صف في ملف خاص به.</div>
-      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px"><button class="btn btn-soft" type="button" onclick="rosterSelectAll(true)">تحديد جميع الصفوف</button><button class="btn btn-soft" type="button" onclick="rosterSelectAll(false)">إلغاء التحديد</button></div>
-      <div id="rosterExportClasses" aria-label="الصفوف المتاحة"></div>
-      <div class="roster-options">
-        <button class="roster-layout-btn active" type="button" id="rosterSingleBtn" onclick="rosterSetColumns(1)">قائمة واحدة في الورقة</button>
-        <button class="roster-layout-btn" type="button" id="rosterDoubleBtn" onclick="rosterSetColumns(2)">+ قائمة أخرى (قائمتان في سجل واحد)</button>
-        <span id="rosterSelectionNote" class="roster-selection-note" aria-live="polite">حدد صفًا واحدًا على الأقل</span>
-      </div>
-    </div>
-    <div class="roster-actions">
-      <span id="rosterExportStatus" class="roster-status" role="status" aria-live="polite">ملف ZIP يحتوي على PDF لكل صف، واسماء طلابه كاملة.</span>
-      <button type="button" id="rosterDownloadBtn" class="roster-download-btn" onclick="downloadClassRostersZIP()">تحميل القوائم ZIP</button>
-    </div>
+ <div class="modal-card roster-modal-card">
+  <div class="roster-modal-title"><div class="modal-head">
+   <div><h3 id="rosterExportModalTitle">سحب قوائم أسماء الطلاب</h3><p>حدد صفًا واحدًا أو مجموعة صفوف؛ جميع الأسماء المختارة تُدمج في ملف PDF واحد وتُرتب أبجديًا.</p></div>
+   <button type="button" class="close" onclick="closeModal('rosterExportModal')" aria-label="إغلاق">×</button>
+  </div></div>
+  <div class="roster-modal-main">
+   <div class="roster-explain">الصفوف المختارة تصبح قائمة واحدة بترقيم متصل، حتى لو كانت من مراحل مختلفة. يمكن طباعة القائمة في عمود أو عمودين في الورقة. اختر عنوان القائمة والجنس بنفسك، ولا يظهر تاريخ السحب.</div>
+   <div style="display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px"><button class="btn btn-soft" type="button" onclick="rosterSelectAll(true)">تحديد جميع الصفوف</button><button class="btn btn-soft" type="button" onclick="rosterSelectAll(false)">إلغاء التحديد</button></div>
+   <div id="rosterExportClasses" aria-label="الصفوف المتاحة"></div>
+   <div class="roster-custom-fields">
+    <div class="roster-custom-field"><label for="rosterCustomClass">عنوان الصف أو مجموعة الصفوف على الورقة</label><input id="rosterCustomClass" type="text" maxlength="120" placeholder="مثل: الأول المتوسط والثاني المتوسط" oninput="this.dataset.edited='1'"><small>اكتب ما تريد أن يظهر بعد «قائمة أسماء طلاب»؛ ويمكن تغييره حسب المجموعة المختارة.</small></div>
+    <div class="roster-custom-field"><label for="rosterCustomGender">الصفة المكتوبة في القائمة</label><input id="rosterCustomGender" type="text" maxlength="70" placeholder="مثل: ذكور أو إناث أو مختلط" oninput="this.dataset.edited='1'"><small>تستطيع كتابة «ذكور» أو «إناث» أو أي وصف تريده، دون تعديل بيانات الطلاب.</small></div>
+   </div>
+   <div class="roster-options">
+    <button class="roster-layout-btn active" type="button" id="rosterSingleBtn" onclick="rosterSetColumns(1)">عمود واحد في الورقة</button>
+    <button class="roster-layout-btn" type="button" id="rosterDoubleBtn" onclick="rosterSetColumns(2)">عمودان في الورقة</button>
+    <span id="rosterSelectionNote" class="roster-selection-note" aria-live="polite">حدد صفًا واحدًا على الأقل</span>
+   </div>
   </div>
+  <div class="roster-actions">
+   <span id="rosterExportStatus" class="roster-status" role="status" aria-live="polite">سيُحمَّل ملف PDF واحد يضم جميع طلاب الصفوف المختارة بترتيب أبجدي.</span>
+   <button type="button" class="btn btn-soft" onclick="closeModal('rosterExportModal')">إلغاء</button>
+   <button type="button" id="rosterDownloadBtn" class="roster-download-btn" onclick="downloadMergedClassRostersPDF()">تحميل PDF مباشرة</button>
+  </div>
+ </div>
 </div>
 <div class="roster-pdf-host" id="rosterPdfHost" aria-hidden="true"></div>
 
 
 <script>
-/* ===== سحب قوائم الصفوف. قراءة فقط، لا تغير بنية Firebase أو الوظائف الأصلية. ===== */
-let rosterColumns=1,rosterBusy=false;
+/* ===== قوائم الأسماء المجمّعة - قراءة Firebase فقط، بدون تعديل أي سجل ===== */
+let rosterColumns=1, rosterBusy=false;
 const rosterCollator=new Intl.Collator('ar',{sensitivity:'base',ignorePunctuation:true});
-const rosterSafeFilename=v=>String(v||'صف').replace(/[\\/:*?"<>|\x00-\x1f]/g,'-').replace(/\s+/g,' ').trim().slice(0,90)||'صف';
+const rosterSafeFilename=v=>String(v||'قائمة').replace(/[\\/:*?"<>|\x00-\x1f]/g,'-').replace(/\s+/g,' ').trim().slice(0,100)||'قائمة';
 function rosterClassRows(){
  return Object.entries(DATA.classes||{}).filter(([id,c])=>c&&typeof c==='object')
- .map(([id,c])=>({...c,id:String(id)}))
- .sort((a,b)=>classStageLabel(a).localeCompare(classStageLabel(b),'ar')||String(a.name||'').localeCompare(String(b.name||''),'ar',{sensitivity:'base'})||String(a.id).localeCompare(String(b.id)));
+  .map(([id,c])=>({...c,id:String(id)}))
+  .sort((a,b)=>classStageLabel(a).localeCompare(classStageLabel(b),'ar')||rosterCollator.compare(String(a.name||''),String(b.name||''))||String(a.id).localeCompare(String(b.id)));
 }
 function rosterStudentsForClass(students,classId){
  return Object.entries(students||{}).filter(([code,st])=>st&&typeof st==='object'&&String(st.classId)===String(classId)&&st.hidden!==true&&st.deleted!==true)
- .map(([code,st])=>({...st,code:String(st.code||code)}))
- .sort((a,b)=>rosterCollator.compare(String(a.name||'').trim(),String(b.name||'').trim())||String(a.code).localeCompare(String(b.code)));
+  .map(([code,st])=>({...st,code:String(st.code||code)}))
+  .sort((a,b)=>rosterCollator.compare(String(a.name||'').trim(),String(b.name||'').trim())||String(a.code).localeCompare(String(b.code)));
+}
+function rosterSelectedIds(){return [...document.querySelectorAll('#rosterExportClasses .roster-class-checkbox:checked')].map(x=>x.value);}
+function rosterSelectAll(v){document.querySelectorAll('#rosterExportClasses .roster-class-checkbox').forEach(x=>x.checked=!!v);rosterUpdateSelectionNote();}
+function rosterMergedClassTitle(classes){
+ if(!classes.length)return '';
+ if(classes.length===1)return String(classes[0].name||'الصف المختار');
+ if(classes.length<=3)return classes.map(c=>String(c.name||'صف')).join(' و ');
+ return `مجموعة الصفوف المختارة (${classes.length} صفوف)`;
+}
+function rosterMergedGenderTitle(classes){
+ if(!classes.length)return '';
+ const genders=[...new Set(classes.map(c=>normalizeGender(c)))];
+ return genders.length!==1?'ذكور وإناث':genders[0]==='male'?'ذكور':genders[0]==='female'?'إناث':'مختلط';
+}
+function rosterUpdateSelectionNote(){
+ const ids=rosterSelectedIds(),classes=rosterClassRows().filter(c=>ids.includes(c.id));
+ const title=document.getElementById('rosterCustomClass'),gender=document.getElementById('rosterCustomGender');
+ if(title&&title.dataset.edited!=='1')title.value=rosterMergedClassTitle(classes);
+ if(gender&&gender.dataset.edited!=='1')gender.value=rosterMergedGenderTitle(classes);
+ document.getElementById('rosterSelectionNote').textContent=ids.length?`المحدد: ${ids.length} صف | دمج الجميع في PDF واحد | ${rosterColumns===2?'عمودان':'عمود واحد'}`:'حدد صفًا واحدًا على الأقل';
+}
+function rosterSetColumns(n){
+ rosterColumns=n===2?2:1;
+ document.getElementById('rosterSingleBtn').classList.toggle('active',rosterColumns===1);
+ document.getElementById('rosterDoubleBtn').classList.toggle('active',rosterColumns===2);
+ rosterUpdateSelectionNote();
 }
 function openRosterExportModal(){
  if(rosterBusy)return;
+ const title=document.getElementById('rosterCustomClass'),gender=document.getElementById('rosterCustomGender');
+ title.value='';title.dataset.edited='0';gender.value='';gender.dataset.edited='0';
  rosterColumns=1;
- rosterSetColumns(1);
- const classes=rosterClassRows(),groups=[
+ const groups=[
   ['ابتدائية - البنين','male',c=>classStageValue(c)==='primary'&&normalizeGender(c)==='male'],
   ['ابتدائية - البنات','female',c=>classStageValue(c)==='primary'&&normalizeGender(c)==='female'],
   ['ابتدائية - المختلط','mixed',c=>classStageValue(c)==='primary'&&normalizeGender(c)==='mixed'],
@@ -2652,126 +2695,117 @@ function openRosterExportModal(){
   ['ثانوية - البنات','female',c=>classStageValue(c)!=='primary'&&normalizeGender(c)==='female'],
   ['ثانوية - المختلط','mixed',c=>classStageValue(c)!=='primary'&&normalizeGender(c)==='mixed']
  ];
+ const classes=rosterClassRows();
  document.getElementById('rosterExportClasses').innerHTML=groups.map(([label,color,filter])=>{
   const list=classes.filter(filter);if(!list.length)return '';
   return `<section class="roster-group"><div class="roster-group-head ${color}"><span>${esc(label)}</span><small>${list.length} صفوف</small></div><div class="roster-group-body">${list.map(c=>`<label class="roster-choice"><input type="checkbox" value="${esc(c.id)}" class="roster-class-checkbox" onchange="rosterUpdateSelectionNote()"><span><strong>${esc(c.name||'بدون اسم')}</strong><small>${esc(classPlaceLabel(c))} · ${rosterStudentsForClass(DATA.students,c.id).length} طالب/ة</small></span></label>`).join('')}</div></section>`;
  }).join('')||'<p class="empty">لا توجد صفوف محفوظة.</p>';
- document.getElementById('rosterExportStatus').textContent='حدد الصفوف ثم اضغط تحميل القوائم ZIP.';
- rosterUpdateSelectionNote();openModal('rosterExportModal');
+ document.getElementById('rosterExportStatus').textContent='اختر صفًا أو أكثر؛ سيُنشأ PDF واحد بأسماء الطلاب أبجديًا.';
+ rosterSetColumns(1);openModal('rosterExportModal');
 }
-function rosterSelectedIds(){return [...document.querySelectorAll('#rosterExportClasses .roster-class-checkbox:checked')].map(x=>x.value);}
-function rosterSelectAll(v){document.querySelectorAll('#rosterExportClasses .roster-class-checkbox').forEach(x=>x.checked=!!v);rosterUpdateSelectionNote();}
-function rosterUpdateSelectionNote(){const n=rosterSelectedIds().length;document.getElementById('rosterSelectionNote').textContent=n?`المحدد: ${n} صف | ${rosterColumns===2?'قائمتان متتابعتان في الورقة':'قائمة واحدة في الورقة'}`:'حدد صفًا واحدًا على الأقل';}
-function rosterSetColumns(n){rosterColumns=n===2?2:1;document.getElementById('rosterSingleBtn').classList.toggle('active',rosterColumns===1);document.getElementById('rosterDoubleBtn').classList.toggle('active',rosterColumns===2);rosterUpdateSelectionNote();}
-function rosterGetFontLineCount(name,maxWidth){
- const canvas=rosterGetFontLineCount.canvas||(rosterGetFontLineCount.canvas=document.createElement('canvas'));
- const ctx=canvas.getContext('2d');ctx.font="bold 21.333px 'Simplified Arabic','Noto Naskh Arabic',Tahoma,serif";
- let width=0,lines=1;
- for(const word of String(name||'—').split(/\s+/)){
-  const w=ctx.measureText(word+' ').width;
-  if(width&&width+w>maxWidth){lines++;width=w;}else{width+=w;}
-  if(w>maxWidth){lines+=Math.max(0,Math.ceil(w/maxWidth)-1);width=0;}
- }
- return Math.max(1,lines);
-}
-function rosterEstimateRowHeight(student,two){const width=two?263:604;const lines=rosterGetFontLineCount(student?.name||'—',width);return Math.max(38,13+Math.ceil(lines*29));}
-function rosterPaginate(students,two){
- /* Measure the actual rendered Arabic name height; conservative guard protects the footer. */
+function rosterPaginate(students,two,info){
+ /* قياس ارتفاع الأسماء الحقيقي بمحتوى عنوان المجموعة لتجنب تداخل التذييل. */
  const pages=[];let position=0;
  if(!students.length)return [{columns:[[],...(two?[[]]:[])]}];
  const tester=document.createElement('div');
- tester.className='tahadi-roster-page';
  tester.style.cssText='position:absolute;left:-13000px;top:0;pointer-events:none;z-index:-10000';
- tester.innerHTML=`<div class="tahadi-roster-inner"><div class="tahadi-roster-columns ${two?'two':''}"><div class="tahadi-roster-col"><div class="tahadi-roster-col-title">أسماء الطلاب</div><div class="tahadi-roster-row"><span class="tahadi-roster-index">1</span><span class="tahadi-roster-name"></span></div></div>${two?'<div class="tahadi-roster-col"></div>':''}</div></div>`;
+ tester.innerHTML=rosterPdfPageHTML(info,{columns:[[{student:students[0],num:1}],...(two?[[]]:[])]},0,1,students.length,two);
  document.body.appendChild(tester);
- const cell=tester.querySelector('.tahadi-roster-name'),row=tester.querySelector('.tahadi-roster-row'),heights=new Map();
- const estimate=(student)=>{
-  const code=String(student.code||student.name);
-  if(heights.has(code))return heights.get(code);
+ const row=tester.querySelector('.tahadi-roster-row'),cell=tester.querySelector('.tahadi-roster-name'),heights=new Map();
+ const page=tester.querySelector('.tahadi-roster-page');
+ const nameAreaStart=page.querySelector('.tahadi-roster-columns').getBoundingClientRect().top;
+ const footerTop=page.querySelector('.tahadi-roster-footer').getBoundingClientRect().top;
+ const limit=Math.floor(footerTop-nameAreaStart-16);
+ if(limit<110){tester.remove();throw new Error('عنوان القائمة طويل جدًا، اختصره حتى تتسع الورقة للأسماء.');}
+ const measure=student=>{
+  const key=String(student.code||student.name);
+  if(heights.has(key))return heights.get(key);
   cell.textContent=String(student.name||'الاسم غير مسجل');
-  const actual=Math.ceil(row.getBoundingClientRect().height);
-  const val=Math.max(37,actual+2);
-  heights.set(code,val);return val;
+  const val=Math.max(37,Math.ceil(row.getBoundingClientRect().height)+2);
+  heights.set(key,val);return val;
  };
  try{
   while(position<students.length){
-    const cols=[];
-    for(let col=0;col<(two?2:1);col++){
-      const rows=[];let height=38;
-      while(position<students.length){
-        const student=students[position],h=estimate(student);
-        if(rows.length&&height+h>762)break;
-        rows.push({student,num:position+1});height+=h;position++;
-      }
-      cols.push(rows);
+   const cols=[];
+   for(let col=0;col<(two?2:1);col++){
+    const rows=[];let height=38;
+    while(position<students.length){
+     const student=students[position],h=measure(student);
+     if(height+h>limit){
+      if(!rows.length)throw new Error('اسم طالب طويل جدًا ليتسع داخل العمود؛ جرّب اختيار عمود واحد.');
+      break;
+     }
+     rows.push({student,num:position+1});height+=h;position++;
     }
-    pages.push({columns:cols});
+    cols.push(rows);
+   }
+   pages.push({columns:cols});
   }
   return pages;
  }finally{tester.remove();}
 }
-function rosterPdfPageHTML(clazz,rosterPage,pageIndex,pageTotal,count,two){
- const clsName=esc(clazz.name||'غير محدد');
- const columns=rosterPage.columns.map((rows,i)=>`<div class="tahadi-roster-col"><div class="tahadi-roster-col-title"><span>ت</span><span>${two?`أسماء الطلاب - القائمة ${i===0?'الأولى':'الثانية'}`:'أسماء الطلاب'}</span></div>${rows.length?rows.map(({student,num})=>`<div class="tahadi-roster-row"><span class="tahadi-roster-index">${num}</span><span class="tahadi-roster-name">${esc(student.name||'الاسم غير مسجل')}</span></div>`).join(''):count===0?'<div class="tahadi-roster-empty">لا يوجد طلاب مسجلون في هذا الصف</div>':''}</div>`).join('');
- return `<section class="tahadi-roster-page"><img class="tahadi-roster-watermark" src="logo.png" alt="" onerror="this.style.display='none'"><div class="tahadi-roster-inner"><header class="tahadi-roster-top"><div class="tahadi-roster-school">${classStageValue(clazz)==='primary'?'إدارة ابتدائية التحدي الأهلية المختلطة':'إدارة ثانوية التحدي الأهلية المختلطة'}</div><div class="tahadi-roster-title">قائمة أسماء طلاب الصف ${clsName}</div><div class="tahadi-roster-subtitle">${esc(classStageLabel(clazz))} · قسم ${esc(genderClass(clazz.gender))} · ${esc(classPlaceLabel(clazz))}</div></header><div class="tahadi-roster-meta"><span>عدد الطلاب الكلي: ${count}</span><span>العام الدراسي 2026 - 2027</span></div><div class="tahadi-roster-columns ${two?'two':''}">${columns}</div><footer class="tahadi-roster-footer"><span>${classStageValue(clazz)==='primary'?'إدارة ابتدائية التحدي الأهلية المختلطة':'إدارة ثانوية التحدي الأهلية المختلطة'}</span><span>الصفحة ${pageIndex+1} من ${pageTotal}</span><span>تاريخ السحب: ${today()}</span></footer></div></section>`;
+function rosterPdfPageHTML(info,rosterPage,pageIndex,pageTotal,count,two){
+ const clsName=esc(info.title||'الصفوف المختارة'),gender=esc(info.gender||'غير محدد');
+ const cols=rosterPage.columns.map((rows,i)=>`<div class="tahadi-roster-col"><div class="tahadi-roster-col-title"><span>ت</span><span>${two?'أسماء الطلاب':'أسماء الطلاب'}</span></div>${rows.length?rows.map(({student,num})=>`<div class="tahadi-roster-row"><span class="tahadi-roster-index">${num}</span><span class="tahadi-roster-name">${esc(student.name||'الاسم غير مسجل')}</span></div>`).join(''):count===0?'<div class="tahadi-roster-empty">لا يوجد طلاب في الصفوف المحددة</div>':''}</div>`).join('');
+ return `<section class="tahadi-roster-page"><img class="tahadi-roster-watermark" src="logo.png" alt="" onerror="this.style.display='none'"><div class="tahadi-roster-inner"><header class="tahadi-roster-top"><div class="tahadi-roster-school">إدارة مدارس التحدي الأهلية المختلطة</div><div class="tahadi-roster-title">قائمة أسماء طلاب ${clsName}</div><div class="tahadi-roster-subtitle">${gender}</div></header><div class="tahadi-roster-meta"><span>عدد الطلاب الكلي: ${count}</span><span>العام الدراسي 2026 - 2027</span></div><div class="tahadi-roster-columns ${two?'two':''}">${cols}</div><footer class="tahadi-roster-footer"><span>إدارة مدارس التحدي الأهلية المختلطة</span><span>الصفحة ${pageIndex+1} من ${pageTotal}</span></footer></div></section>`;
 }
-async function rosterPdfForClass(clazz,students,options={}){
- const two=options.two===true;
- const pages=rosterPaginate(students,two),host=document.getElementById('rosterPdfHost');
- const included=pages.reduce((sum,p)=>sum+p.columns.reduce((s,c)=>s+c.length,0),0);
- if(included!==students.length)throw new Error('تعذر التحقق من اكتمال أسماء الطلاب في الصف '+clazz.name);
+async function rosterMergedPDF(info,students,options={}){
+ const two=options.two===true,host=document.getElementById('rosterPdfHost');
+ if(typeof document.fonts?.ready?.then==='function')await document.fonts.ready;
+ const pages=rosterPaginate(students,two,info);
+ const included=pages.reduce((sum,p)=>sum+p.columns.reduce((n,col)=>n+col.length,0),0);
+ if(included!==students.length)throw new Error('خطأ في اكتمال الأسماء؛ لم يتم إنشاء ملف ناقص.');
  const pdf=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
  try{
   for(let i=0;i<pages.length;i++){
-    host.innerHTML=rosterPdfPageHTML(clazz,pages[i],i,pages.length,students.length,two);
-    const element=host.firstElementChild;
-    if(typeof document.fonts?.ready?.then==='function')await document.fonts.ready;
-    await waitImages(element);
-    await waitPaint();
-    const namesBottom=element.querySelector('.tahadi-roster-columns').getBoundingClientRect().bottom;
-    const footerTop=element.querySelector('.tahadi-roster-footer').getBoundingClientRect().top;
-    if(namesBottom>footerTop-8)throw new Error('الأسماء تجاوزت مساحة الورقة للصف '+clazz.name+'. لم يتم إنشاء ملف ناقص.');
-    const canvas=await html2canvas(element,{scale:1.6,useCORS:true,allowTaint:false,backgroundColor:'#ffffff',logging:false,width:794,height:1123,windowWidth:794,windowHeight:1123,scrollX:0,scrollY:0});
-    if(i)pdf.addPage('a4','portrait');
-    pdf.addImage(canvas.toDataURL('image/jpeg',.93),'JPEG',0,0,210,297,undefined,'FAST');
-    canvas.width=0;canvas.height=0;
+   host.innerHTML=rosterPdfPageHTML(info,pages[i],i,pages.length,students.length,two);
+   const element=host.firstElementChild;
+   await waitImages(element);await waitPaint();
+   const bottom=element.querySelector('.tahadi-roster-columns').getBoundingClientRect().bottom;
+   const footer=element.querySelector('.tahadi-roster-footer').getBoundingClientRect().top;
+   if(bottom>footer-8)throw new Error('تجاوزت الأسماء مساحة الورقة؛ لم يتم تنزيل ملف ناقص.');
+   const canvas=await html2canvas(element,{scale:1.6,useCORS:true,allowTaint:false,backgroundColor:'#ffffff',logging:false,width:794,height:1123,windowWidth:794,windowHeight:1123,scrollX:0,scrollY:0});
+   if(i)pdf.addPage('a4','portrait');
+   pdf.addImage(canvas.toDataURL('image/jpeg',.93),'JPEG',0,0,210,297,undefined,'FAST');
+   canvas.width=0;canvas.height=0;
   }
   return {bytes:pdf.output('arraybuffer'),pages:pages.length};
  }finally{host.innerHTML='';}
 }
-async function downloadClassRostersZIP(){
+async function downloadMergedClassRostersPDF(){
  if(rosterBusy)return;
- const ids=rosterSelectedIds();
- if(!ids.length){document.getElementById('rosterExportStatus').textContent='اختر صفًا واحدًا على الأقل.';return;}
- if(typeof JSZip!=='function'||typeof html2canvas!=='function'||!window.jspdf?.jsPDF){document.getElementById('rosterExportStatus').textContent='تعذر تحميل مكتبات ZIP/PDF. تحقق من الإنترنت ثم أعد فتح الصفحة.';return;}
- const status=document.getElementById('rosterExportStatus'),btn=document.getElementById('rosterDownloadBtn');
- const classes=rosterClassRows().filter(c=>ids.includes(String(c.id)));
- rosterBusy=true;btn.disabled=true;btn.textContent='جاري تجهيز الملفات...';
+ const ids=rosterSelectedIds(),status=document.getElementById('rosterExportStatus'),btn=document.getElementById('rosterDownloadBtn');
+ if(!ids.length){status.textContent='اختر صفًا واحدًا على الأقل.';return;}
+ if(typeof html2canvas!=='function'||!window.jspdf?.jsPDF){status.textContent='مكتبات إنشاء PDF غير متاحة. تحقق من اتصال الإنترنت ثم أعد فتح الصفحة.';return;}
+ const classes=rosterClassRows().filter(c=>ids.includes(c.id));
+ const info={title:document.getElementById('rosterCustomClass').value.trim()||rosterMergedClassTitle(classes),gender:document.getElementById('rosterCustomGender').value.trim()||rosterMergedGenderTitle(classes)};
+ if(!info.title){status.textContent='اكتب عنوان القائمة أو اختر صفًا.';return;}
+ rosterBusy=true;btn.disabled=true;btn.textContent='جاري تجهيز PDF...';
  try{
-  status.textContent='جاري تحديث بيانات الطلاب قبل إصدار القوائم...';
+  status.textContent='قراءة بيانات الطلاب الحالية من قاعدة البيانات...';
   const fresh=await dbGetFresh(PATH.students);
-  if(!fresh||typeof fresh!=='object'||Array.isArray(fresh))throw new Error('تعذر قراءة سجلات الطلاب الحالية؛ لم يتم تنزيل قائمة ناقصة.');
-  if(typeof document.fonts?.ready?.then==='function')await document.fonts.ready;
-  const zip=new JSZip(),seen=new Set();let files=0,pages=0;
-  for(let i=0;i<classes.length;i++){
-    const clazz=classes[i],students=rosterStudentsForClass(fresh,clazz.id);
-    if(students.some(st=>!String(st.name||'').trim()))throw new Error(`يوجد طالب بدون اسم في الصف ${clazz.name}. يرجى تصحيح البيانات قبل التنزيل.`);
-    status.textContent=`تجهيز صف ${clazz.name} (${i+1} من ${classes.length}) | ${students.length} اسم...`;
-    const pdf=await rosterPdfForClass(clazz,students,{two:rosterColumns===2});
-    let basename=`قائمة أسماء طلاب الصف ${rosterSafeFilename(clazz.name)} - ${rosterSafeFilename(genderClass(clazz.gender))} - ${rosterSafeFilename(classPlaceLabel(clazz))}`;
-    let filename=basename+'.pdf',suffix=2;
-    while(seen.has(filename)){filename=`${basename} (${suffix++}).pdf`;}
-    seen.add(filename);zip.file(filename,pdf.bytes);files++;pages+=pdf.pages;
+  if(!fresh||typeof fresh!=='object'||Array.isArray(fresh))throw new Error('تعذر قراءة سجلات الطلاب الحالية؛ لم يتم إنشاء قائمة ناقصة.');
+  const merged=[],seen=new Set();
+  for(const clazz of classes){
+   const rows=rosterStudentsForClass(fresh,clazz.id);
+   for(const student of rows){
+    if(!String(student.name||'').trim())throw new Error('يوجد طالب دون اسم في الصف '+String(clazz.name||'')+'. صحح البيانات قبل التنزيل.');
+    const key=String(student.code);
+    if(seen.has(key))throw new Error('كود طالب مكرر بين الصفوف المحددة: '+key+'. تحقق من البيانات قبل التنزيل.');
+    seen.add(key);merged.push(student);
+   }
   }
-  if(files!==classes.length)throw new Error('حدث عدم تطابق بعدد ملفات الصفوف.');
-  status.textContent=`اكتمل ${files} ملف PDF (${pages} صفحة). جارٍ ضغط ZIP...`;
-  const content=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:5}});
-  const url=URL.createObjectURL(content),a=document.createElement('a');
-  a.href=url;a.download=`قوائم طلاب ثانوية التحدي - ${today()}.zip`;a.style.display='none';document.body.append(a);a.click();a.remove();
+  merged.sort((a,b)=>rosterCollator.compare(String(a.name||'').trim(),String(b.name||'').trim())||String(a.code).localeCompare(String(b.code)));
+  if(merged.length!==seen.size)throw new Error('تعذّر التحقق من اكتمال قائمة الأسماء.');
+  status.textContent=`دمج ${classes.length} صفوف وترتيب ${merged.length} اسمًا أبجديًا...`;
+  const result=await rosterMergedPDF(info,merged,{two:rosterColumns===2});
+  const blob=new Blob([result.bytes],{type:'application/pdf'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`قائمة أسماء طلاب ${rosterSafeFilename(info.title)} - ${rosterSafeFilename(info.gender)}.pdf`;
+  a.style.display='none';document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),60000);
-  status.textContent=`تم تجهيز وتحميل ${files} ملف PDF داخل ZIP، بعدد ${pages} صفحة.`;
- }catch(error){console.error('ROSTER_EXPORT_ERROR',error);status.textContent=error?.message||'تعذر إنشاء القوائم، يرجى المحاولة مجددًا.';}
- finally{rosterBusy=false;btn.disabled=false;btn.textContent='تحميل القوائم ZIP';}
+  status.textContent=`تم تجهيز ملف PDF واحد: ${classes.length} صفوف، ${merged.length} اسمًا، ${result.pages} صفحة. لم يُضف تاريخ سحب.`;
+ }catch(error){console.error('ROSTER_MERGE_PDF_ERROR',error);status.textContent=error?.message||'تعذر إنشاء ملف PDF، يرجى إعادة المحاولة.';}
+ finally{rosterBusy=false;btn.disabled=false;btn.textContent='تحميل PDF مباشرة';}
 }
 </script>
 
