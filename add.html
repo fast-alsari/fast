@@ -442,6 +442,53 @@
 .tahadi-roster-footer{position:absolute;right:0;left:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:5px;padding:11px 2px 0;border-top:2px solid #bb9651;color:#6e5022;font-size:11pt;font-weight:700}
 .tahadi-roster-watermark{position:absolute;z-index:0;top:48%;right:50%;width:315px;height:315px;object-fit:contain;opacity:.03;transform:translate(50%,-50%);pointer-events:none}
 
+
+/* ===== إضافة مستقلة: تبليغات الأقساط A4 (نصفان متطابقان لكل طالب) ===== */
+.account-notice-blue-btn{color:#fff;background:linear-gradient(135deg,#127cf1,#0751af);border:1px solid #0751af;box-shadow:0 6px 18px rgba(7,95,207,.14)}
+.account-notice-modal-card{width:min(950px,100%)!important;max-height:95dvh;padding:0!important;overflow:hidden!important;display:flex;flex-direction:column}
+.account-notice-modal-header{padding:18px 19px 14px;background:linear-gradient(125deg,#edf5ff,#fff);border-bottom:1px solid #d9e5f5}
+.account-notice-modal-header h3{font-size:17px;color:#0751a6;font-weight:900}
+.account-notice-modal-header p{margin-top:5px;color:#52657b;line-height:1.9;font-size:10px}
+.account-notice-modal-main{padding:16px 18px;overflow:auto;min-height:100px}
+.account-notice-tools{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:11px}
+.account-notice-picker{display:grid;gap:10px}
+.account-notice-picker .roster-group{margin:0}
+.account-notice-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:16px}
+.account-notice-field{min-width:0;display:flex;flex-direction:column;gap:6px}
+.account-notice-field label{color:#25486c;font-size:10px;font-weight:900}
+.account-notice-field input,.account-notice-field select{width:100%;min-height:45px;border:1px solid #cad9eb;border-radius:11px;padding:0 11px;background:#fff;color:#172033;font-size:11px;font-weight:800;outline:none}
+.account-notice-field input:focus,.account-notice-field select:focus{border-color:#075fcf;box-shadow:0 0 0 3px rgba(7,95,207,.08)}
+.account-notice-field small{color:#667085;font-size:8.5px;line-height:1.75}
+.account-notice-help{padding:11px 12px;border:1px solid #ead8a9;border-radius:11px;background:#fff9ea;color:#775521;font-size:10px;line-height:1.85;font-weight:800}
+.account-notice-summary{margin-top:10px;padding:10px 12px;border-radius:11px;background:#edf5ff;color:#0751a6;font-size:10px;font-weight:900;line-height:1.7}
+.account-notice-actions{padding:12px 18px;border-top:1px solid #d9e5f5;display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;background:#fff}
+.account-notice-status{flex:1;min-width:180px;color:#52657b;font-size:9px;line-height:1.7;font-weight:800}
+.account-notice-download{min-height:45px;padding:0 18px;background:#075fcf;color:#fff;border:0;border-radius:11px;font-size:10px;font-weight:900}
+.account-notice-download:disabled{opacity:.6;cursor:wait}
+.account-notice-pdf-host{position:fixed;left:-14000px;top:0;width:794px;pointer-events:none;z-index:-9999}
+.account-notice-page{position:relative;width:794px;height:1123px;overflow:hidden;direction:rtl;background:#fff4da;color:#252015;font-family:'Simplified Arabic','Noto Naskh Arabic','Traditional Arabic',Tahoma,serif;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.account-notice-half{position:relative;box-sizing:border-box;width:794px;height:561.5px;overflow:hidden;padding:37px 50px 28px;background:linear-gradient(155deg,#fff8e8 0%,#f7e7c1 47%,#fff5db 100%)}
+.account-notice-half::before{content:"";position:absolute;z-index:0;inset:15px 24px;border:3px double #b78b39;pointer-events:none}
+.account-notice-half::after{content:"";position:absolute;z-index:0;inset:22px 31px;border:1px solid #d6b67b;pointer-events:none}
+.account-notice-midline{position:absolute;z-index:10;top:560px;right:0;left:0;height:3px;background:#876527;border-top:1px solid #f3deb2;border-bottom:1px solid #876527}
+.account-notice-watermark{position:absolute;z-index:0;top:50%;left:50%;width:254px;height:254px;transform:translate(-50%,-50%);object-fit:contain;opacity:.095;pointer-events:none}
+.account-notice-half-inner{position:relative;z-index:1;display:flex;flex-direction:column;height:100%}
+.account-notice-heading{text-align:center;line-height:1.4}
+.account-notice-school{font-size:21px;font-weight:900;color:#6f4b12}
+.account-notice-section{margin-top:6px;font-size:20px;font-weight:900;color:#7d5a22}
+.account-notice-heading-rule{height:2px;width:68%;margin:12px auto 0;background:#ae8745}
+.account-notice-subject{margin-top:16px;text-align:center;font-size:23px;font-weight:900;color:#2c2417}
+.account-notice-class{margin-top:7px;text-align:center;font-size:14px;font-weight:900;color:#74531f;line-height:1.4}
+.account-notice-recipient{margin-top:22px;font-size:19px;font-weight:900;line-height:1.75;overflow-wrap:anywhere}
+.account-notice-recipient strong{color:#694512;font-size:20px}
+.account-notice-recipient.long-name,.account-notice-recipient.long-name strong{font-size:16px}
+.account-notice-body{margin-top:15px;font-size:19px;font-weight:700;line-height:1.95;text-align:justify;overflow-wrap:anywhere}
+.account-notice-amount{font-weight:900;white-space:nowrap}
+.account-notice-warning{margin-top:5px;color:#7f291e;font-size:19px;font-weight:900;line-height:1.65}
+.account-notice-footer{margin-top:auto;align-self:flex-end;min-width:185px;text-align:center;font-size:19px;font-weight:900;color:#614617;line-height:1.5}
+.account-notice-footer-name{display:block;margin-top:3px;font-size:15px;color:#4e3b22;overflow-wrap:anywhere}
+@media(max-width:680px){.account-notice-fields{grid-template-columns:1fr}.account-notice-modal-main{padding:12px}.account-notice-actions{flex-direction:column;align-items:stretch}.account-notice-actions .btn,.account-notice-actions button{width:100%}.account-notice-modal-header{padding:13px}.account-notice-status{min-width:0}}
+
 </style>
 </head>
 <body>
@@ -506,7 +553,7 @@
 <div class="quick-pages"><a class="quick-page" href="chat.html">الدردشات</a><a class="quick-page" href="notify.html">التبليغات</a><a class="quick-page" href="cards.html">الكرتات</a><a class="quick-page" href="gradeboard.html">بورد الدرجات</a><a class="quick-page" href="logs.html">السجلات</a></div>
 <div class="stats"><div class="stat"><span>عدد الصفوف</span><strong id="totalClasses">0</strong></div><div class="stat"><span>إجمالي الطلاب</span><strong id="totalStudents">0</strong></div><div class="stat"><span>الطلاب الذكور</span><strong id="totalMaleStudents">0</strong></div><div class="stat"><span>الطلاب الإناث</span><strong id="totalFemaleStudents">0</strong></div><div class="stat"><span>طلاب الابتدائية</span><strong id="totalPrimaryStudents">0</strong></div><div class="stat"><span>ابتدائية - ذكور</span><strong id="totalPrimaryMaleStudents">0</strong></div><div class="stat"><span>ابتدائية - إناث</span><strong id="totalPrimaryFemaleStudents">0</strong></div><div class="stat"><span>تم القبول</span><strong id="totalAccepted">0</strong></div><div class="stat"><span>عدد الأساتذة</span><strong id="totalTeachers">0</strong></div><div class="stat"><span>المخالفات السلوكية</span><strong id="totalViolations">0</strong></div></div>
 
-<section class="panel"><div class="panel-head"><div><h3>الصفوف</h3><p>صفوف البنين تظهر يميناً والبنات يساراً، والصفوف المختلطة تظهر بقسم مستقل. لكل صف تحدد ابتدائية أو ثانوية وجنس الصف.</p></div><div class="bulk-subjects-toolbar"><button type="button" class="btn btn-v" onclick="openBulkSubjectsModal()">إنشاء مواد</button><button class="btn btn-v" type="button" onclick="openAdminEvaluationModal()">سحب التقييم</button><button type="button" class="btn roster-open-btn" onclick="openRosterExportModal()">سحب قوائم</button><button class="btn btn-p" onclick="openClassModal()">إنشاء صف</button></div></div><div class="panel-body"><div id="classesGrid" class="classes"></div></div></section>
+<section class="panel"><div class="panel-head"><div><h3>الصفوف</h3><p>صفوف البنين تظهر يميناً والبنات يساراً، والصفوف المختلطة تظهر بقسم مستقل. لكل صف تحدد ابتدائية أو ثانوية وجنس الصف.</p></div><div class="bulk-subjects-toolbar"><button type="button" class="btn btn-v" onclick="openBulkSubjectsModal()">إنشاء مواد</button><button class="btn btn-v" type="button" onclick="openAdminEvaluationModal()">سحب التقييم</button><button type="button" class="btn roster-open-btn" onclick="openRosterExportModal()">سحب قوائم</button><button type="button" class="btn account-notice-blue-btn" onclick="openAccountNoticeModal()">ورقة الحسابات A4</button><button class="btn btn-p" onclick="openClassModal()">إنشاء صف</button></div></div><div class="panel-body"><div id="classesGrid" class="classes"></div></div></section>
 
 <nav class="tabs"><button class="tab active" data-target="studentsSection">الطلاب</button><button class="tab" data-target="addStudentSection">إضافة طالب</button><button class="tab" data-target="teachersSection">الأساتذة</button><button class="tab" data-target="addTeacherSection">إضافة أستاذ</button><button class="tab" data-target="staffSection">الحسابات والمشرفون</button><button class="tab" data-target="addStaffSection">إنشاء حساب إداري</button><button class="tab" data-target="directorsSection">إدارة المديرين</button><button class="tab" data-target="violationsSection">المخالفات السلوكية</button><button class="tab" data-target="objectionsSection">اعتراضات الدرجات</button></nav>
 
@@ -2616,6 +2663,28 @@ window.addEventListener('load',()=>{loadStudentLoginPolicies()});
 </div></div>
 
 
+
+<!-- نافذة سحب تبليغات الأقساط: إضافة مستقلة تقرأ الطلاب فقط -->
+<div class="modal" id="accountNoticeModal" role="dialog" aria-modal="true" aria-labelledby="accountNoticeTitle">
+ <div class="modal-card account-notice-modal-card">
+  <div class="account-notice-modal-header"><div class="modal-head" style="margin:0"><div><h3 id="accountNoticeTitle">سحب تبليغات الأقساط للطلاب</h3><p>اختر صفًا أو أكثر، وسيكون لكل طالب ورقة A4 ذهبية تحتوي على نسختين متطابقتين من تبليغه.</p></div><button type="button" class="close" aria-label="إغلاق" onclick="closeModal('accountNoticeModal')">×</button></div></div>
+  <div class="account-notice-modal-main">
+   <div class="account-notice-help">كل ورقة مخصصة لطالب واحد فقط، ومقسومة في المنتصف إلى نصفين متطابقين، وفي مركز كل نصف شعار المدرسة كعلامة مائية. تُرتّب أوراق الطلاب أبجديًا، ويُترك مبلغ القسط منقّطًا لكتابته يدويًا.</div>
+   <div class="account-notice-tools"><button class="btn btn-soft" type="button" onclick="accountNoticeSelectAll(true)">تحديد جميع الصفوف</button><button class="btn btn-soft" type="button" onclick="accountNoticeSelectAll(false)">إلغاء التحديد</button></div>
+   <div id="accountNoticeClasses" class="account-notice-picker" aria-label="اختيار الصفوف"></div>
+   <div class="account-notice-fields">
+    <div class="account-notice-field"><label for="accountNoticeClassLabel">اسم الصف كما تريد ظهوره على الورقة</label><input id="accountNoticeClassLabel" type="text" maxlength="140" placeholder="اتركه فارغًا لإظهار الصف الحقيقي لكل طالب"><small>يمكنك كتابة عنوان مختلف لكل الطلبة المحددين، أو تركه فارغًا حتى يظهر صف كل طالب كما هو محفوظ.</small></div>
+    <div class="account-notice-field"><label for="accountNoticeGenderOverride">الجنس وصيغة المخاطبة</label><select id="accountNoticeGenderOverride"><option value="auto">تلقائي حسب جنس كل طالب</option><option value="male">ذكور — إلى الطالب</option><option value="female">إناث — إلى الطالبة</option></select><small>الأصل قراءة جنس كل طالب؛ ويمكنك تغييره للنسخ المطبوعة فقط دون تغيير قاعدة البيانات.</small></div>
+    <div class="account-notice-field"><label for="accountNoticeAccountant">اسم المحاسب (اختياري)</label><input id="accountNoticeAccountant" type="text" maxlength="110" placeholder="اتركه فارغًا لظهور «الحسابات» فقط"><small>إذا كتبت الاسم فسيظهر أسفل كلمة «الحسابات» في كلا النصفين.</small></div>
+    <div class="account-notice-field"><label for="accountNoticeGenderLabel">وصف الجنس الظاهر في عنوان الورقة (اختياري)</label><input id="accountNoticeGenderLabel" type="text" maxlength="60" placeholder="مثل: ذكور أو إناث"><small>فارغ = يتحدد تلقائيًا من جنس الطالب، ويمكن تغييره إلى أي وصف مناسب.</small></div>
+   </div>
+   <div id="accountNoticeSummary" class="account-notice-summary" aria-live="polite">لم يتم تحديد أي صف بعد.</div>
+  </div>
+  <div class="account-notice-actions"><span class="account-notice-status" id="accountNoticeStatus" role="status" aria-live="polite">سيُحمّل PDF واحد بورقة مستقلة لكل طالب.</span><button type="button" class="btn btn-soft" onclick="closeModal('accountNoticeModal')">إلغاء</button><button class="account-notice-download" id="accountNoticeDownload" type="button" onclick="downloadAccountNoticesPDF()">تحميل تبليغات PDF</button></div>
+ </div>
+</div>
+<div class="account-notice-pdf-host" id="accountNoticePdfHost" aria-hidden="true"></div>
+
 <!-- نافذة دمج قوائم الطلاب: تصدير فقط دون تغيير أي بيانات -->
 <div class="modal" id="rosterExportModal" role="dialog" aria-modal="true" aria-labelledby="rosterExportModalTitle">
  <div class="modal-card roster-modal-card">
@@ -2638,7 +2707,7 @@ window.addEventListener('load',()=>{loadStudentLoginPolicies()});
    </div>
   </div>
   <div class="roster-actions">
-   <span id="rosterExportStatus" class="roster-status" role="status" aria-live="polite">سيُحمَّل ملف PDF واحد يضم جميع طلاب الصفوف المختارة بترتيب أبجدي.</span>
+   <span id="rosterExportStatus" class="roster-status" role="status" aria-live="polite">سيُحمَّل ملف PDF واحد يضم جميع طلاب الصفوف المختارة بترتيب أبجدي.</span>
    <button type="button" class="btn btn-soft" onclick="closeModal('rosterExportModal')">إلغاء</button>
    <button type="button" id="rosterDownloadBtn" class="roster-download-btn" onclick="downloadMergedClassRostersPDF()">تحميل PDF مباشرة</button>
   </div>
@@ -2813,6 +2882,132 @@ async function downloadMergedClassRostersPDF(){
  }catch(error){console.error('ROSTER_MERGE_PDF_ERROR',error);status.textContent=error?.message||'تعذر إنشاء ملف PDF، يرجى إعادة المحاولة.';}
  finally{rosterBusy=false;btn.disabled=false;btn.textContent='تحميل PDF مباشرة';}
 }
+
+/* ===== تبليغات الحسابات A4 - قراءة فقط، لا تغيّر حالة الطلاب أو الأقساط ===== */
+let accountNoticeBusy=false;
+function accountNoticeSelectedIds(){return [...document.querySelectorAll('#accountNoticeClasses .account-notice-check:checked')].map(x=>x.value);}
+function accountNoticeSelectAll(on){document.querySelectorAll('#accountNoticeClasses .account-notice-check').forEach(x=>x.checked=!!on);accountNoticeUpdateSummary();}
+function accountNoticeUpdateSummary(){
+ const ids=accountNoticeSelectedIds();
+ const classes=rosterClassRows().filter(c=>ids.includes(c.id));
+ const codes=new Set();
+ for(const c of classes)for(const st of rosterStudentsForClass(DATA.students||{},c.id))codes.add(st.code);
+ document.getElementById('accountNoticeSummary').textContent=ids.length?`تم اختيار ${ids.length} صفوف، و${codes.size} طالب/ة حسب البيانات المحمّلة. سيُنشأ PDF بورقة لكل طالب، مرتبة أبجديًا.`:'حدد صفًا واحدًا على الأقل.';
+}
+function openAccountNoticeModal(){
+ if(accountNoticeBusy)return;
+ for(const id of ['accountNoticeClassLabel','accountNoticeAccountant','accountNoticeGenderLabel'])document.getElementById(id).value='';
+ document.getElementById('accountNoticeGenderOverride').value='auto';
+ const groups=[
+  ['ابتدائية - بنين','male',c=>classStageValue(c)==='primary'&&normalizeGender(c)==='male'],
+  ['ابتدائية - بنات','female',c=>classStageValue(c)==='primary'&&normalizeGender(c)==='female'],
+  ['ابتدائية - مختلط','mixed',c=>classStageValue(c)==='primary'&&normalizeGender(c)==='mixed'],
+  ['ثانوية - بنين','male',c=>classStageValue(c)!=='primary'&&normalizeGender(c)==='male'],
+  ['ثانوية - بنات','female',c=>classStageValue(c)!=='primary'&&normalizeGender(c)==='female'],
+  ['ثانوية - مختلط','mixed',c=>classStageValue(c)!=='primary'&&normalizeGender(c)==='mixed']
+ ];
+ const classes=rosterClassRows();
+ document.getElementById('accountNoticeClasses').innerHTML=groups.map(([title,color,filter])=>{
+  const matching=classes.filter(filter);
+  return matching.length?`<section class="roster-group"><div class="roster-group-head ${color}"><span>${esc(title)}</span><small>${matching.length} صفوف</small></div><div class="roster-group-body">${matching.map(c=>`<label class="roster-choice"><input class="account-notice-check" type="checkbox" value="${esc(c.id)}" onchange="accountNoticeUpdateSummary()"><span><strong>${esc(c.name||'صف دون اسم')}</strong><small>${esc(classPlaceLabel(c))} · ${rosterStudentsForClass(DATA.students||{},c.id).length} طالب/ة</small></span></label>`).join('')}</div></section>`:'';
+ }).join('')||'<div class="empty">لا توجد صفوف للاختيار</div>';
+ document.getElementById('accountNoticeStatus').textContent='اختر الصفوف، وحدد اسم المحاسب اختياريًا، ثم حمّل PDF.';
+ accountNoticeUpdateSummary();openModal('accountNoticeModal');
+}
+function accountNoticeStudentGender(st,c,override){
+ return override==='male'||override==='female'?override:normalizeGender(st.gender||c?.gender||'male');
+}
+function accountNoticeHalfHTML(st,config){
+ const studentName=String(st.name||'').trim(),name=esc(studentName);
+ const isFemale=config.gender==='female';
+ const person=isFemale?'الطالبة':'الطالب';
+ const className=esc(config.classTitle||'—');
+ const genderLabel=esc(config.genderLabel||(isFemale?'إناث':'ذكور'));
+ const accountant=String(config.accountant||'').trim();
+ return `<div class="account-notice-half">
+  <img src="logo.png" class="account-notice-watermark" alt="شعار المدرسة" aria-hidden="true">
+  <div class="account-notice-half-inner">
+   <header class="account-notice-heading"><div class="account-notice-school">إدارة ثانوية التحدي الأهلية المختلطة</div><div class="account-notice-section">الحسابات</div><div class="account-notice-heading-rule"></div></header>
+   <div class="account-notice-subject">م/ تبليغ</div>
+   <div class="account-notice-class">${className} &nbsp;|&nbsp; ${genderLabel}</div>
+   <div class="account-notice-recipient ${studentName.length>41?'long-name':''}">إلى ${person}: <strong>${name}</strong></div>
+   <div class="account-notice-body">نود إعلامكم بضرورة تسديد القسط المترتب في ذمتك، والذي قدره <span class="account-notice-amount">(...............)</span> ألف دينار عراقي.</div>
+   <div class="account-notice-warning">خلاف ذلك سوف يتم منعك من دخول المدرسة.</div>
+   <div class="account-notice-footer">الحسابات${accountant?`<span class="account-notice-footer-name">${esc(accountant)}</span>`:''}</div>
+  </div>
+ </div>`;
+}
+function accountNoticePageHTML(st,config){
+ const half=accountNoticeHalfHTML(st,config);
+ return `<article class="account-notice-page" data-student-code="${esc(st.code)}">${half}<div class="account-notice-midline"></div>${half}</article>`;
+}
+async function accountNoticeWaitImages(root){
+ const imgs=[...root.querySelectorAll('img')];
+ await Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{
+  const end=()=>{img.removeEventListener('load',end);img.removeEventListener('error',end);resolve()};
+  img.addEventListener('load',end,{once:true});img.addEventListener('error',end,{once:true});
+  setTimeout(end,8000);
+ })));
+}
+async function downloadAccountNoticesPDF(){
+ if(accountNoticeBusy)return;
+ const ids=accountNoticeSelectedIds(),status=document.getElementById('accountNoticeStatus'),button=document.getElementById('accountNoticeDownload');
+ if(!ids.length){status.textContent='اختر صفًا واحدًا على الأقل قبل التنزيل.';return;}
+ if(typeof html2canvas!=='function'||!window.jspdf?.jsPDF){status.textContent='مكتبة إنشاء PDF غير متاحة. تحقق من الاتصال بالإنترنت.';return;}
+ accountNoticeBusy=true;button.disabled=true;button.textContent='جاري تجهيز الأوراق...';
+ const host=document.getElementById('accountNoticePdfHost');
+ try{
+  if(!await verifyAdmin())throw new Error('يجب الدخول بحساب إدارة فعال.');
+  status.textContent='جاري قراءة الطلاب من قاعدة البيانات...';
+  const fresh=await dbGetFresh(PATH.students);
+  if(!fresh||typeof fresh!=='object'||Array.isArray(fresh))throw new Error('تعذرت قراءة الطلاب؛ لن يُحمّل ملف قد تكون بياناته ناقصة.');
+  const classes=rosterClassRows().filter(c=>ids.includes(c.id));
+  const classMap=new Map(classes.map(c=>[String(c.id),c]));
+  const students=[],seenCodes=new Set();
+  for(const clazz of classes){
+   for(const student of rosterStudentsForClass(fresh,clazz.id)){
+    if(!String(student.name||'').trim())throw new Error(`يوجد طالب بلا اسم في ${clazz.name||'الصف المحدد'}؛ صحّح البيانات قبل التنزيل.`);
+    if(seenCodes.has(student.code))throw new Error('وجد كود طالب مكرر بين الصفوف المحددة: '+student.code);
+    seenCodes.add(student.code);students.push(student);
+   }
+  }
+  if(!students.length)throw new Error('الصفوف المحددة لا تحتوي على طلاب مسجلين.');
+  students.sort((a,b)=>rosterCollator.compare(String(a.name).trim(),String(b.name).trim())||String(a.code).localeCompare(String(b.code)));
+  const customClass=document.getElementById('accountNoticeClassLabel').value.trim();
+  const customGender=document.getElementById('accountNoticeGenderLabel').value.trim();
+  const override=document.getElementById('accountNoticeGenderOverride').value;
+  const accountant=document.getElementById('accountNoticeAccountant').value.trim();
+  const pdf=new window.jspdf.jsPDF({orientation:'portrait',unit:'mm',format:'a4',compress:true});
+  if(document.fonts?.ready)await document.fonts.ready;
+  for(let i=0;i<students.length;i++){
+   const student=students[i],clazz=classMap.get(String(student.classId));
+   const gender=accountNoticeStudentGender(student,clazz,override);
+   const config={gender,genderLabel:customGender,classTitle:customClass||String(clazz?.name||student.className||'الصف غير محدد'),accountant};
+   host.innerHTML=accountNoticePageHTML(student,config);
+   const page=host.firstElementChild;
+   await accountNoticeWaitImages(page);await waitPaint();
+   const marks=[...page.querySelectorAll('img.account-notice-watermark')];
+   if(marks.length!==2||marks.some(mark=>!mark.naturalWidth))throw new Error('تعذر تحميل logo.png. يجب وجود شعار المدرسة بجانب add.html لإظهار العلامتين المائيتين.');
+   for(const half of page.querySelectorAll('.account-notice-half')){
+    const footer=half.querySelector('.account-notice-footer').getBoundingClientRect(),warning=half.querySelector('.account-notice-warning').getBoundingClientRect();
+    if(footer.bottom>half.getBoundingClientRect().bottom-14||warning.bottom>footer.top-4)throw new Error('النص طويل ولا يتسع في نصف A4. اختصر عنوان الصف أو اسم المحاسب.');
+   }
+   const canvas=await html2canvas(page,{scale:1.5,useCORS:true,allowTaint:false,backgroundColor:'#fff4da',logging:false,width:794,height:1123,windowWidth:794,windowHeight:1123,scrollX:0,scrollY:0});
+   if(i)pdf.addPage('a4','portrait');
+   pdf.addImage(canvas.toDataURL('image/jpeg',.94),'JPEG',0,0,210,297,undefined,'FAST');
+   canvas.width=0;canvas.height=0;
+   if(i===0||(i+1)%5===0||i===students.length-1)status.textContent=`تم تجهيز ${i+1} من ${students.length} ورقة...`;
+  }
+  const blob=new Blob([pdf.output('arraybuffer')],{type:'application/pdf'});
+  const url=URL.createObjectURL(blob),a=document.createElement('a');
+  a.href=url;a.download=`تبليغات الحسابات - ${rosterSafeFilename(customClass||rosterMergedClassTitle(classes)||'الصفوف')} - ${students.length} طالب.pdf`;
+  a.style.display='none';document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+  status.textContent=`اكتمل تحميل ${students.length} ورقة A4، كل ورقة لطالب واحد ونصفان متطابقان. الأسماء مرتبة أبجديًا.`;
+ }catch(e){console.error('ACCOUNT_NOTICE_PDF_ERROR',e);status.textContent=e?.message||'تعذّر إنشاء تبليغات الحسابات.';}
+ finally{host.innerHTML='';accountNoticeBusy=false;button.disabled=false;button.textContent='تحميل تبليغات PDF';}
+}
+
 </script>
 
 </body>
