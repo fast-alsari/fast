@@ -210,7 +210,29 @@
 .msh-ranking-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;border-bottom:1px solid #eef1f6;font-size:11px}
 .msh-ranking-row strong{line-height:1.6}.msh-ranking-row small{display:block;margin-top:3px;color:#667085;font-size:9px}
 .msh-ranking-count{display:flex;align-items:center;justify-content:center;min-width:49px;height:40px;border-radius:10px;background:#edf5ff;color:#075fcf;font-size:18px;font-weight:900}
-.msh-ranking-results{max-height:45vh;overflow:auto;border:1px solid #e3ebf4;border-radius:13px}
+.msh-ranking-results{max-height:43vh;overflow:auto;border:1px solid #e3ebf4;border-radius:13px}
+/* السجل التاريخي: ملخص الصف ثم تواريخ الحالات عند فتح اسم الطالب */
+.msh-ranking-overview{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:11px 0}
+.msh-ranking-overview .overview-main{grid-column:1/-1;border:1px solid #bcd3ed;background:#f3f8ff;border-radius:13px;padding:11px 13px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.msh-ranking-overview .overview-main strong{font-size:12px;color:#173f76;line-height:1.7}
+.msh-ranking-overview .overview-main span{font-size:10px;font-weight:900;color:#526277}
+.msh-ranking-overview .overview-status{border:1px solid #dce6f2;background:#fafcff;border-radius:12px;padding:10px 12px;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.msh-ranking-overview .overview-status span{color:#485b72;font-size:10px;font-weight:900}.msh-ranking-overview .overview-status strong{font-size:18px;color:#143e70;font-weight:900}
+.msh-ranking-overview .overview-status.absent strong{color:#c62828}.msh-ranking-overview .overview-status.excused strong{color:#7441ba}.msh-ranking-overview .overview-status.late strong{color:#b9660b}.msh-ranking-overview .overview-status.escape strong{color:#9c2237}
+.msh-ranking-date-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:10px 0}
+.msh-ranking-date-grid label{display:flex;flex-direction:column;gap:6px;color:#475467;font-weight:900;font-size:10px}
+.msh-ranking-date-grid input{width:100%;height:43px;padding:7px;border:1px solid #d7e2ef;border-radius:10px;background:#fff;color:#172033}
+.msh-ranking-student{border-bottom:1px solid #e7edf5;background:#fff}.msh-ranking-student:last-child{border-bottom:0}
+.msh-ranking-student summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 11px}
+.msh-ranking-student summary::-webkit-details-marker{display:none}.msh-ranking-student summary:focus-visible{outline:2px solid #075fcf;outline-offset:-3px}
+.msh-ranking-student[open]{background:#f8fbff}.msh-ranking-student[open] summary{border-bottom:1px solid #dce6f3}
+.msh-ranking-student .msh-ranking-person{min-width:0;flex:1}.msh-ranking-student .msh-ranking-person strong{display:block;font-size:11px;line-height:1.65;color:#172033}.msh-ranking-student .msh-ranking-person small{display:block;margin-top:3px;color:#667085;font-size:9px;line-height:1.6}
+.msh-ranking-expand{display:block;margin-top:5px;font-size:9px;color:#075fcf;font-weight:900}.msh-ranking-count{flex:none}
+.msh-ranking-dates{padding:9px 12px 13px}.msh-ranking-dates-title{margin:0 0 7px;font-size:10px;font-weight:900;color:#143e70}
+.msh-ranking-date-item{display:flex;align-items:center;justify-content:space-between;gap:9px;padding:9px 10px;margin-top:6px;border:1px solid #dce7f4;border-radius:9px;background:#fff;font-size:10px;font-weight:900}
+.msh-ranking-date-item small{color:#667085;font-size:9px;font-weight:900}.msh-ranking-date-note{margin-top:5px;padding:6px 8px;background:#fffdf2;border:1px solid #f6e5b6;border-radius:7px;color:#755312;font-size:9px;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+.msh-ranking-no-dates{padding:10px;background:#f6f8fa;color:#667085;border-radius:9px;font-size:10px;line-height:1.8}
+@media(max-width:550px){.msh-ranking-overview .overview-main{flex-direction:column;align-items:flex-start}.msh-ranking-date-grid{gap:6px}}
 .msh-empty-small{padding:18px;text-align:center;color:#667085;font-size:11px;line-height:1.8}
 .msh-save-gate{margin-top:7px;font-size:9px;font-weight:800;color:#a05d09;line-height:1.8}
 @media(max-width:550px){.msh-dialog-card{padding:14px}.msh-selector-grid{grid-template-columns:1fr}.msh-days-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.msh-ranking-tabs{grid-template-columns:repeat(2,minmax(0,1fr))}.msh-dialog-title h3{font-size:15px}}
@@ -243,7 +265,7 @@
 <!-- All confirmations are internal: never use native alert/confirm dialogs. -->
 <div class="msh-dialog-overlay hidden" id="mshConfirmOverlay" role="dialog" aria-modal="true" aria-labelledby="mshConfirmTitle"><div class="msh-dialog-card narrow"><div class="msh-dialog-title"><h3 id="mshConfirmTitle">تأكيد الإجراء</h3></div><p id="mshConfirmBody" class="msh-dialog-subtitle"></p><div class="msh-dialog-actions"><button type="button" class="btn btn-neutral" id="mshConfirmCancel">إلغاء</button><button type="button" class="btn btn-primary" id="mshConfirmAccept">نعم، تأكيد</button></div></div></div>
 <div class="msh-dialog-overlay hidden" id="historicOverlay" role="dialog" aria-modal="true" aria-labelledby="historicTitle"><div class="msh-dialog-card"><div class="msh-dialog-title"><h3 id="historicTitle">تحديد الأيام السابقة وتسجيل الحضور</h3><button type="button" id="historicClose" aria-label="إغلاق">×</button></div><p class="msh-dialog-subtitle">اختر الصفوف والأيام التي لم تكن سجلاتها مطبوعة أو محفوظة. سيُسجّل «حاضر» للطلاب الذين ليس لديهم سجل لذلك اليوم فقط، ولن تُمس أي حالة غياب أو تأخير أو إجازة أو هروب محفوظة.</p><strong class="msh-dialog-label">الصفوف المكلّف بها المشرف</strong><div class="msh-selector-grid" id="historicClasses"></div><div class="msh-date-controls"><label>من تاريخ<input type="date" id="historicFrom"></label><label>إلى تاريخ<input type="date" id="historicTo"></label></div><strong class="msh-dialog-label">الأيام المطلوب تسجيلها (الأحد إلى الخميس فقط)</strong><div class="msh-days-grid" id="historicDates"></div><p class="msh-dialog-note">لن تُنشأ سجلات الجمعة والسبت أو التواريخ المستقبلية. الموجود سابقًا يبقى كما هو. بعد الموافقة سيُحفظ الحضور في سجل كل طالب.</p><p id="historicProgress" class="msh-dialog-progress" role="status" aria-live="polite"></p><div class="msh-dialog-actions"><button type="button" class="btn btn-neutral" id="historicCancel">إلغاء</button><button type="button" class="btn btn-success" id="historicSave">تأكيد وحفظ الحضور</button></div></div></div>
-<div class="msh-dialog-overlay hidden" id="rankingOverlay" role="dialog" aria-modal="true" aria-labelledby="rankingTitle"><div class="msh-dialog-card"><div class="msh-dialog-title"><h3 id="rankingTitle">التصفية حسب أعلى عدد حالات</h3><button type="button" id="rankingClose" aria-label="إغلاق">×</button></div><p class="msh-dialog-subtitle">اختر الحالة لعرض أسماء الطلاب مرتبين من الأعلى إلى الأقل خلال السجلات المحفوظة. يظهر العدد مقابل كل طالب.</p><label class="msh-dialog-label" for="rankingClass">الصف</label><select class="msh-ranking-class" id="rankingClass"></select><div class="msh-ranking-tabs" id="rankingTabs"><button class="msh-ranking-tab active" data-ranking="absent" type="button">الأعلى غيابًا</button><button class="msh-ranking-tab" data-ranking="late" type="button">الأعلى تأخيرًا</button><button class="msh-ranking-tab" data-ranking="excused" type="button">الأعلى إجازةً</button><button class="msh-ranking-tab" data-ranking="escape" type="button">الأعلى هروبًا</button></div><p class="msh-dialog-progress" id="rankingProgress" role="status" aria-live="polite"></p><div class="msh-ranking-results" id="rankingResults"></div><div class="msh-dialog-actions"><button type="button" class="btn btn-neutral" id="rankingDismiss">إغلاق</button><button type="button" class="btn btn-primary" id="rankingReload">تحديث النتائج</button></div></div></div>
+<div class="msh-dialog-overlay hidden" id="rankingOverlay" role="dialog" aria-modal="true" aria-labelledby="rankingTitle"><div class="msh-dialog-card"><div class="msh-dialog-title"><h3 id="rankingTitle">التصفية حسب أعلى عدد حالات</h3><button type="button" id="rankingClose" aria-label="إغلاق">×</button></div><p class="msh-dialog-subtitle">اختر الصف والحالة. ستظهر أعداد الحالات المحفوظة لكل طالب، واضغط على اسم الطالب لعرض <strong>تواريخ الغياب أو الإجازة أو التأخير أو الهروب</strong> بالتفصيل. الأعداد من سجل المدرسة المحفوظ، وليست من المسودة المحلية.</p><label class="msh-dialog-label" for="rankingClass">الصف</label><select class="msh-ranking-class" id="rankingClass"></select><div class="msh-ranking-date-grid"><label for="rankingFrom">من تاريخ (اختياري)<input type="date" id="rankingFrom"></label><label for="rankingTo">إلى تاريخ (اختياري)<input type="date" id="rankingTo"></label></div><div class="msh-ranking-overview" id="rankingOverview" aria-live="polite"></div><div class="msh-ranking-tabs" id="rankingTabs"><button class="msh-ranking-tab active" data-ranking="absent" type="button">الأعلى غيابًا</button><button class="msh-ranking-tab" data-ranking="late" type="button">الأعلى تأخيرًا</button><button class="msh-ranking-tab" data-ranking="excused" type="button">الأعلى إجازةً</button><button class="msh-ranking-tab" data-ranking="escape" type="button">الأعلى هروبًا</button></div><p class="msh-dialog-progress" id="rankingProgress" role="status" aria-live="polite"></p><div class="msh-ranking-results" id="rankingResults"></div><div class="msh-dialog-actions"><button type="button" class="btn btn-neutral" id="rankingDismiss">إغلاق</button><button type="button" class="btn btn-primary" id="rankingReload">تحديث النتائج</button></div></div></div>
 <script>
 
 /* Unified Firebase Realtime Database GET transport: retry transient failures only.
@@ -722,20 +744,62 @@ $('historicSave').addEventListener('click',async()=>{
   $('historicProgress').textContent=msg;notify(msg);setBanner(msg,'error');
  }finally{historicBusy=false;$('historicSave').disabled=false;$('historicCancel').disabled=false;$('historicClose').disabled=false}
 });
-/* Historical ranking: count each saved student-day once and sort by frequency. */
-function rankingSelectedStudents(){const id=$('rankingClass').value;return students.filter(s=>assignedIds.includes(String(s.classId))&&(id==='all'||String(s.classId)===id)&&s.hidden!==true)}
+/* Historical filter: one official student/day record = one counted day.
+   Show all students in the selected class, counts by status, and exact saved dates.
+   Never use unsaved local attendance drafts for the historical summary. */
+function rankingSelectedStudents(){
+ const id=$('rankingClass').value;
+ return students.filter(s=>assignedIds.includes(String(s.classId))&&(id==='all'||String(s.classId)===id)&&s.hidden!==true);
+}
+function rankingDateAllowed(date){
+ const from=$('rankingFrom').value,to=$('rankingTo').value;
+ return (!from||date>=from)&&(!to||date<=to);
+}
+function rankingDatesOf(entry,status){
+ return (entry.dates?.[status]||[]).filter(item=>rankingDateAllowed(item.date));
+}
+function rankingDayLabel(date){
+ const day=weekDay(date);
+ return day>=0?DAY_NAMES[day]:'';
+}
 function renderRankings(){
- const container=$('rankingResults');
- if(!rankingCounts){container.innerHTML='<div class="msh-empty-small">اضغط «تحديث النتائج» لقراءة السجلات المحفوظة.</div>';return}
- const active=new Set(rankingSelectedStudents().map(x=>x.code));
- const matches=rankingCounts.filter(x=>active.has(x.student.code)&&x.counts[rankingType]>0).sort((a,b)=>b.counts[rankingType]-a.counts[rankingType]||String(a.student.name||'').localeCompare(String(b.student.name||''),'ar'));
- container.innerHTML=matches.length?matches.map((entry,index)=>`<div class="msh-ranking-row"><div><strong>${index+1}. ${esc(entry.student.name||'بدون اسم')}</strong><small>${esc(className(entry.student.classId))} • ${esc(entry.student.code)}</small></div><span class="msh-ranking-count" title="${esc(LABELS[rankingType])}">${entry.counts[rankingType]}</span></div>`).join(''):'<div class="msh-empty-small">لا توجد حالات محفوظة من هذا النوع ضمن الصف المحدد.</div>';
- $('rankingProgress').textContent=`${matches.length} طالب لديه حالة ${LABELS[rankingType]} محفوظة.`;
+ const container=$('rankingResults'),overview=$('rankingOverview');
+ const from=$('rankingFrom').value,to=$('rankingTo').value;
+ if(from&&to&&from>to){
+  overview.innerHTML='';container.innerHTML='<div class="msh-empty-small">تاريخ البداية يجب أن يكون قبل تاريخ النهاية أو مساويًا له.</div>';
+  $('rankingProgress').textContent='صحّح نطاق التاريخ للمتابعة.';return;
+ }
+ if(!rankingCounts){overview.innerHTML='';container.innerHTML='<div class="msh-empty-small">جاري تجهيز البيانات. اضغط «تحديث النتائج» لقراءة السجلات المحفوظة.</div>';return;}
+ const active=new Set(rankingSelectedStudents().map(s=>String(s.code)));
+ const subset=rankingCounts.filter(e=>active.has(String(e.student.code)));
+ const sums={absent:0,excused:0,late:0,escape:0};
+ const rows=subset.map(e=>{
+  const counts={};
+  for(const type of Object.keys(sums)){
+   counts[type]=rankingDatesOf(e,type).length;
+   sums[type]+=counts[type];
+  }
+  return {entry:e,counts,events:rankingDatesOf(e,rankingType)};
+ });
+ const affected=rows.filter(row=>Object.values(row.counts).some(n=>n>0)).length;
+ overview.innerHTML=`<div class="overview-main"><strong>ملخص ${esc($('rankingClass').value==='all'?'جميع صفوف المشرف':className($('rankingClass').value))}</strong><span>${rows.length} طالب • ${affected} لديهم حالات مسجلة</span></div>`
+  +[['absent','الغياب'],['excused','الإجازات'],['late','التأخير'],['escape','الهروب']].map(([type,label])=>`<div class="overview-status ${type}"><span>${label}</span><strong>${sums[type]}</strong></div>`).join('');
+ rows.sort((a,b)=>b.counts[rankingType]-a.counts[rankingType]||mshArabicNameSorter.compare(a.entry.student.name||'',b.entry.student.name||'')||mshArabicNameSorter.compare(a.entry.student.code||'',b.entry.student.code||''));
+ container.innerHTML=rows.length?rows.map((row,index)=>{
+  const {entry,counts,events}=row;
+  const label=LABELS[rankingType],count=counts[rankingType];
+  const dates=events.slice().sort((a,b)=>b.date.localeCompare(a.date));
+  return `<details class="msh-ranking-student"><summary><div class="msh-ranking-person"><strong>${index+1}. ${esc(entry.student.name||'بدون اسم')}</strong><small>${esc(className(entry.student.classId))} • كود الطالب: ${esc(entry.student.code)}</small><span class="msh-ranking-expand">اضغط لعرض تواريخ ${esc(label)} ${count?'':'(لا توجد حالات)'}</span></div><span class="msh-ranking-count" title="${esc(label)}">${count}</span></summary><div class="msh-ranking-dates"><p class="msh-ranking-dates-title">${esc(label)}: ${count} ${count===1?'يوم':'أيام'} مسجلة</p>${dates.length?dates.map(item=>`<div class="msh-ranking-date-item"><span>${esc(item.date)}</span><small>${esc(rankingDayLabel(item.date))}</small></div>${item.note?`<div class="msh-ranking-date-note">${esc(item.note)}</div>`:''}`).join(''):'<div class="msh-ranking-no-dates">لا توجد تواريخ مسجلة لهذا الطالب في هذه الحالة ضمن الفترة المحددة.</div>'}</div></details>`;
+ }).join(''):'<div class="msh-empty-small">لا يوجد طلاب مسجلون في الصف المحدد.</div>';
+ const haveStatus=rows.filter(r=>r.counts[rankingType]>0).length;
+ $('rankingProgress').textContent=`${rows.length} طالب في القائمة • ${haveStatus} لديهم حالة ${LABELS[rankingType]} • المجموع ${sums[rankingType]} يوم مسجل.`;
 }
 $('rankingBtn').addEventListener('click',()=>{
  if(!assignedIds.length){notify('لا توجد صفوف مكلّف بها المشرف');return}
- $('rankingClass').innerHTML='<option value="all">جميع صفوفي</option>'+assignedIds.filter(id=>classes[id]).map(id=>`<option value="${esc(id)}">${esc(className(id))}</option>`).join('');
- $('rankingClass').value='all';rankingType='absent';rankingCounts=null;rankingRun++;
+ $('rankingClass').innerHTML='<option value="all">جميع صفوفي</option>'+assignedIds.filter(id=>classes[id]).sort((a,b)=>mshArabicNameSorter.compare(className(a),className(b))).map(id=>`<option value="${esc(id)}">${esc(className(id))}</option>`).join('');
+ // The class currently opened by the supervisor is the natural default.
+ $('rankingClass').value=(currentClass&&assignedIds.includes(currentClass))?currentClass:'all';
+ $('rankingFrom').value='';$('rankingTo').value='';rankingType='absent';rankingCounts=null;rankingRun++;
  $('rankingTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b.dataset.ranking===rankingType));
  $('rankingProgress').textContent='';renderRankings();mshOpenDialog('rankingOverlay');
  loadRankings();
@@ -745,25 +809,32 @@ async function loadRankings(){
  if(!navigator.onLine){notify('يجب الاتصال بالإنترنت لجلب إحصاءات الأيام المحفوظة');return}
  if(!onlineVerified){notify('حدّث البيانات عبر الإنترنت أولًا');return}
  const token=++rankingRun;rankingBusy=true;$('rankingReload').disabled=true;
- $('rankingProgress').textContent='جاري قراءة سجلات الحضور المحفوظة...';
+ $('rankingProgress').textContent='جاري قراءة تواريخ الحضور والغياب المحفوظة...';
  try{
   const all=students.filter(s=>assignedIds.includes(String(s.classId))&&s.hidden!==true);
   const results=await mshParallel(all,7,async (student,index)=>{
    const records=await apiGet('attendance/'+safelyKey(student.code),{timeout:22000});
-   const counts={absent:0,late:0,excused:0,escape:0};
+   const dates={absent:[],late:[],excused:[],escape:[]};
    if(records&&typeof records==='object')for(const [date,record] of Object.entries(records)){
-    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!record||typeof record!=='object')continue;
-    const st=makeStatus(record);if(Object.prototype.hasOwnProperty.call(counts,st))counts[st]++;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)||!record||typeof record!=='object'||weekDay(date)<0)continue;
+    const st=makeStatus(record);
+    if(Object.prototype.hasOwnProperty.call(dates,st)){
+     // Only include a dated note if it is explicitly attached to the student's record.
+     const raw=typeof record.note==='string'?record.note:typeof record.reason==='string'?record.reason:'';
+     dates[st].push({date,note:raw.trim().slice(0,350)});
+    }
    }
    if(index%25===0&&token===rankingRun)$('rankingProgress').textContent=`جاري قراءة السجلات: ${Math.min(index+1,all.length)} / ${all.length}`;
-   return {student,counts};
+   return {student,dates};
   });
   if(token!==rankingRun)return;
   rankingCounts=results;renderRankings();
- }catch(e){console.error('RANKING_READ_FAILED',e);if(token===rankingRun){rankingCounts=null;$('rankingResults').innerHTML='<div class="msh-empty-small">تعذر قراءة بعض السجلات. لم تُعرض نتائج ناقصة؛ أعد المحاولة.</div>';$('rankingProgress').textContent='تعذر إكمال قراءة الإحصاءات.';notify('تعذر إكمال قراءة سجلات الطلاب')}}
+ }catch(e){console.error('RANKING_READ_FAILED',e);if(token===rankingRun){rankingCounts=null;$('rankingOverview').innerHTML='';$('rankingResults').innerHTML='<div class="msh-empty-small">تعذر قراءة بعض السجلات. لم تُعرض نتائج ناقصة؛ أعد المحاولة.</div>';$('rankingProgress').textContent='تعذر إكمال قراءة الإحصاءات.';notify('تعذر إكمال قراءة سجلات الطلاب')}}
  finally{rankingBusy=false;$('rankingReload').disabled=false;if(token!==rankingRun&&!$('rankingOverlay').classList.contains('hidden'))loadRankings()}
 }
 $('rankingClass').addEventListener('change',renderRankings);
+$('rankingFrom').addEventListener('change',renderRankings);
+$('rankingTo').addEventListener('change',renderRankings);
 $('rankingTabs').addEventListener('click',e=>{const btn=e.target.closest('[data-ranking]');if(!btn)return;rankingType=btn.dataset.ranking;$('rankingTabs').querySelectorAll('button').forEach(b=>b.classList.toggle('active',b===btn));renderRankings()});
 $('rankingReload').addEventListener('click',()=>{rankingCounts=null;loadRankings()});
 function rankingClose(){rankingRun++;mshCloseDialog('rankingOverlay')}
