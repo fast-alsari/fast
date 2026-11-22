@@ -441,6 +441,17 @@
 .tahadi-roster-empty{padding:16px;text-align:center;font-size:15pt;font-weight:700}
 .tahadi-roster-footer{position:absolute;right:0;left:0;bottom:0;display:flex;align-items:center;justify-content:space-between;gap:5px;padding:11px 2px 0;border-top:2px solid #bb9651;color:#6e5022;font-size:11pt;font-weight:700}
 .tahadi-roster-watermark{position:absolute;z-index:0;top:48%;right:50%;width:315px;height:315px;object-fit:contain;opacity:.03;transform:translate(50%,-50%);pointer-events:none}
+/* ===== قائمة الطلاب المحددين: نفس القالب الذهبي، مع عمود الصف لكل طالب ===== */
+.selected-roster-gold-btn{background:linear-gradient(135deg,#ad863e,#8f611f)!important;color:#fff!important;border:1px solid #9c7536!important;box-shadow:0 3px 10px rgba(142,103,40,.14)}
+.selected-roster-gold-btn:disabled{opacity:.65;cursor:wait}
+.tahadi-roster-page.with-student-class .tahadi-roster-col-title,
+.tahadi-roster-page.with-student-class .tahadi-roster-row{grid-template-columns:41px minmax(0,1fr) 174px}
+.tahadi-roster-page.with-student-class .tahadi-roster-col-title{display:grid;justify-content:stretch;align-items:stretch;gap:0}
+.tahadi-roster-page.with-student-class .tahadi-roster-col-title>span{display:flex;justify-content:center;align-items:center;min-width:0;padding:0 5px;text-align:center;font-size:12pt}
+.tahadi-roster-page.with-student-class .tahadi-roster-col-title>span:not(:last-child){border-left:1px solid #d4b774}
+.tahadi-roster-page.with-student-class .tahadi-roster-name{border-left:1px solid #d5bd8d}
+.tahadi-roster-class-cell{min-width:0;display:flex;align-items:center;justify-content:center;padding:4px 6px;text-align:center;overflow-wrap:anywhere;white-space:normal;font-family:'Simplified Arabic','Noto Naskh Arabic','Traditional Arabic',Tahoma,serif;font-size:12pt;font-weight:700;line-height:1.33;color:#49371c}
+
 
 
 /* ===== إضافة مستقلة: تبليغات الأقساط A4 (نصفان متطابقان لكل طالب) ===== */
@@ -561,7 +572,7 @@
 <div class="panel-head"><div><h3 id="studentsTitle">جميع الطلاب</h3><p>اضغط على اسم الطالب أو زر بيانات لفتح ملفه وتعديل بياناته وصورته وكوده.</p></div><div style="display:flex;gap:6px;flex-wrap:wrap"><button id="classCodesChangeBtn" class="btn btn-v hidden" onclick="changeCodesForClass()">تغيير أكواد الصف بالكامل</button><button class="btn btn-wa" type="button" onclick="openBulkMessageModal('all')">واتساب جميع الطلاب</button><button class="btn btn-soft" onclick="showAllStudents()">عرض الجميع</button></div></div>
 <div class="panel-body">
 <div class="toolbar four"><input id="studentSearch" type="search" placeholder="بحث بالاسم أو الكود أو الهاتف"><select id="studentGenderFilter"><option value="">الجنس: الجميع</option><option value="male">ذكور</option><option value="female">إناث</option></select><select id="studentStatusFilter"><option value="">جميع حالات الملف</option><option value="infoIncomplete">المعلومات ناقصة</option><option value="pending">لم يجلب الملف</option><option value="accepted">تم القبول</option></select><select id="studentAccessFilter"><option value="">كل حالات الحساب</option><option value="accountActive">الحساب فعال</option><option value="accountInactive">الحساب غير فعال</option><option value="accountantActive">الحسابات مفعلة</option><option value="accountantInactive">الحسابات غير مفعلة</option><option value="adminActive">الإدارة مفعلة</option><option value="adminInactive">الإدارة غير مفعلة</option><option value="behaviorBlocked">محظور سلوكياً</option></select></div>
-<div id="bulkBar" class="bulk"><strong id="selectedCount">تم تحديد 0 طالب</strong><div class="bulk-actions"><select id="moveClassSelect"><option value="">نقل إلى صف...</option></select><select id="moveRoomSelect"><option value="">نقل إلى قاعة...</option></select><button class="btn btn-p" onclick="moveSelectedStudents()">نقل المحددين</button><button id="bulkAccountantToggleBtn" class="btn btn-g" onclick="toggleSelectedAccountantApproval()">تفعيل الحسابات</button><button id="bulkAdminToggleBtn" class="btn btn-p" onclick="toggleSelectedAdminApproval()">تفعيل الإدارة</button><button id="bulkBooksToggleBtn" class="btn btn-g" onclick="toggleSelectedBooksStatus()">استلام الكتب</button><button id="bulkFileToggleBtn" class="btn btn-g" onclick="toggleSelectedFileStatus()">استلام الفايل</button><button id="bulkMediaRequirementToggleBtn" class="btn btn-o" onclick="toggleSelectedMediaRequirement()">إلزام الصور والهويات</button><button class="btn btn-wa" onclick="openBulkMessageModal()">رسالة واتساب</button><button class="btn btn-r" onclick="changeCodesForSelected()">تغيير أكواد المحددين</button><button class="btn btn-v" onclick="downloadSelectedStudentCodes()">تحميل الأكواد</button><button class="btn btn-o" onclick="downloadSelectedStudentInfo()">تحميل المعلومات PDF</button><button class="btn btn-g" onclick="downloadSelectedStudentData()">سحب بيانات الطلاب</button><button class="btn btn-p" onclick="printSelectedStudentPhotos()">طباعة صورة</button><button class="btn btn-r" onclick="deleteSelectedStudents()">حذف المحددين</button><button class="btn btn-soft" onclick="clearSelectedStudents()">إلغاء التحديد</button></div></div>
+<div id="bulkBar" class="bulk"><strong id="selectedCount">تم تحديد 0 طالب</strong><div class="bulk-actions"><select id="moveClassSelect"><option value="">نقل إلى صف...</option></select><select id="moveRoomSelect"><option value="">نقل إلى قاعة...</option></select><button class="btn btn-p" onclick="moveSelectedStudents()">نقل المحددين</button><button id="bulkAccountantToggleBtn" class="btn btn-g" onclick="toggleSelectedAccountantApproval()">تفعيل الحسابات</button><button id="bulkAdminToggleBtn" class="btn btn-p" onclick="toggleSelectedAdminApproval()">تفعيل الإدارة</button><button id="bulkBooksToggleBtn" class="btn btn-g" onclick="toggleSelectedBooksStatus()">استلام الكتب</button><button id="bulkFileToggleBtn" class="btn btn-g" onclick="toggleSelectedFileStatus()">استلام الفايل</button><button id="bulkMediaRequirementToggleBtn" class="btn btn-o" onclick="toggleSelectedMediaRequirement()">إلزام الصور والهويات</button><button class="btn btn-wa" onclick="openBulkMessageModal()">رسالة واتساب</button><button class="btn btn-r" onclick="changeCodesForSelected()">تغيير أكواد المحددين</button><button type="button" id="downloadSelectedRosterBtn" class="btn selected-roster-gold-btn" onclick="downloadSelectedStudentsRosterPDF()">تحميل قائمة المحددين</button><button class="btn btn-v" onclick="downloadSelectedStudentCodes()">تحميل الأكواد</button><button class="btn btn-o" onclick="downloadSelectedStudentInfo()">تحميل المعلومات PDF</button><button class="btn btn-g" onclick="downloadSelectedStudentData()">سحب بيانات الطلاب</button><button class="btn btn-p" onclick="printSelectedStudentPhotos()">طباعة صورة</button><button class="btn btn-r" onclick="deleteSelectedStudents()">حذف المحددين</button><button class="btn btn-soft" onclick="clearSelectedStudents()">إلغاء التحديد</button></div></div>
 <div class="table-wrap"><table style="min-width:1850px"><thead><tr><th><input id="selectAll" type="checkbox"></th><th>العدد</th><th>الصورة</th><th>الكود</th><th>الطالب</th><th>الجنس</th><th>الصف</th><th>القاعة</th><th>الملف</th><th>الكتب</th><th>القسط</th><th>حالة الحساب</th><th>الحسابات</th><th>الإدارة</th><th>السلوك</th><th>الإجراءات</th></tr><tr class="excel-filter-row"><th></th><th><input id="colSerialFilter" placeholder="العدد"></th><th><select id="colPhotoFilter"><option value="">الكل</option><option value="yes">بصورة</option><option value="no">بدون صورة</option></select></th><th><input id="colCodeFilter" placeholder="الكود"></th><th><input id="colNameFilter" placeholder="الاسم"></th><th><select id="colGenderFilter"><option value="">الكل</option><option value="male">ذكر</option><option value="female">أنثى</option></select></th><th><select id="colClassFilter"><option value="">كل الصفوف</option></select></th><th><select id="colRoomFilter"><option value="">كل القاعات</option></select></th><th><select id="colFileFilter"><option value="">الكل</option><option value="accepted">سلم الفايل</option><option value="pending">لم يسلم الفايل</option></select></th><th><select id="colBooksFilter"><option value="">الكل</option><option value="yes">استلم</option><option value="no">لم يستلم</option></select></th><th><input id="colTuitionFilter" placeholder="القسط"></th><th><select id="colAccountFilter"><option value="">الكل</option><option value="yes">فعال</option><option value="no">غير فعال</option></select></th><th><select id="colAccountantFilter"><option value="">الكل</option><option value="yes">مفعّل</option><option value="no">غير مفعّل</option></select></th><th><select id="colAdminFilter"><option value="">الكل</option><option value="yes">مفعّل</option><option value="no">غير مفعّل</option></select></th><th><select id="colBehaviorFilter"><option value="">الكل</option><option value="clean">سليم</option><option value="blocked">محظور</option></select></th><th><button type="button" class="mini btn-soft" onclick="clearStudentColumnFilters()">مسح الفلاتر</button></th></tr></thead><tbody id="studentsBody"></tbody></table></div><div id="studentsEmpty" class="empty hidden">لا توجد بيانات مطابقة.</div>
 </div></div></section>
 
@@ -2786,7 +2797,7 @@ function rosterPaginate(students,two,info){
  tester.style.cssText='position:absolute;left:-13000px;top:0;pointer-events:none;z-index:-10000';
  tester.innerHTML=rosterPdfPageHTML(info,{columns:[[{student:students[0],num:1}],...(two?[[]]:[])]},0,1,students.length,two);
  document.body.appendChild(tester);
- const row=tester.querySelector('.tahadi-roster-row'),cell=tester.querySelector('.tahadi-roster-name'),heights=new Map();
+ const row=tester.querySelector('.tahadi-roster-row'),cell=tester.querySelector('.tahadi-roster-name'),classCell=tester.querySelector('.tahadi-roster-class-cell'),heights=new Map();
  const page=tester.querySelector('.tahadi-roster-page');
  const nameAreaStart=page.querySelector('.tahadi-roster-columns').getBoundingClientRect().top;
  const footerTop=page.querySelector('.tahadi-roster-footer').getBoundingClientRect().top;
@@ -2796,6 +2807,7 @@ function rosterPaginate(students,two,info){
   const key=String(student.code||student.name);
   if(heights.has(key))return heights.get(key);
   cell.textContent=String(student.name||'الاسم غير مسجل');
+   if(classCell)classCell.textContent=String(student.rosterClassLabel||'');
   const val=Math.max(37,Math.ceil(row.getBoundingClientRect().height)+2);
   heights.set(key,val);return val;
  };
@@ -2820,9 +2832,12 @@ function rosterPaginate(students,two,info){
  }finally{tester.remove();}
 }
 function rosterPdfPageHTML(info,rosterPage,pageIndex,pageTotal,count,two){
- const clsName=esc(info.title||'الصفوف المختارة'),gender=esc(info.gender||'غير محدد');
- const cols=rosterPage.columns.map((rows,i)=>`<div class="tahadi-roster-col"><div class="tahadi-roster-col-title"><span>ت</span><span>${two?'أسماء الطلاب':'أسماء الطلاب'}</span></div>${rows.length?rows.map(({student,num})=>`<div class="tahadi-roster-row"><span class="tahadi-roster-index">${num}</span><span class="tahadi-roster-name">${esc(student.name||'الاسم غير مسجل')}</span></div>`).join(''):count===0?'<div class="tahadi-roster-empty">لا يوجد طلاب في الصفوف المحددة</div>':''}</div>`).join('');
- return `<section class="tahadi-roster-page"><img class="tahadi-roster-watermark" src="logo.png" alt="" onerror="this.style.display='none'"><div class="tahadi-roster-inner"><header class="tahadi-roster-top"><div class="tahadi-roster-school">إدارة مدارس التحدي الأهلية المختلطة</div><div class="tahadi-roster-title">قائمة أسماء طلاب ${clsName}</div><div class="tahadi-roster-subtitle">${gender}</div></header><div class="tahadi-roster-meta"><span>عدد الطلاب الكلي: ${count}</span><span>العام الدراسي 2026 - 2027</span></div><div class="tahadi-roster-columns ${two?'two':''}">${cols}</div><footer class="tahadi-roster-footer"><span>إدارة مدارس التحدي الأهلية المختلطة</span><span>الصفحة ${pageIndex+1} من ${pageTotal}</span></footer></div></section>`;
+  const clsName=esc(info.title||'الصفوف المختارة'),gender=esc(info.gender||'غير محدد');
+  const withClass=info?.showStudentClass===true;
+  const heading=info?.fullTitle?esc(info.fullTitle):`قائمة أسماء طلاب ${clsName}`;
+  const columnHead=withClass?'<span>ت</span><span>أسماء الطلاب</span><span>الصف</span>':'<span>ت</span><span>أسماء الطلاب</span>';
+  const cols=rosterPage.columns.map(rows=>`<div class="tahadi-roster-col"><div class="tahadi-roster-col-title">${columnHead}</div>${rows.length?rows.map(({student,num})=>`<div class="tahadi-roster-row"><span class="tahadi-roster-index">${num}</span><span class="tahadi-roster-name">${esc(student.name||'الاسم غير مسجل')}</span>${withClass?`<span class="tahadi-roster-class-cell">${esc(student.rosterClassLabel||'')}</span>`:''}</div>`).join(''):count===0?'<div class="tahadi-roster-empty">لا يوجد طلاب في الصفوف المحددة</div>':''}</div>`).join('');
+  return `<section class="tahadi-roster-page ${withClass?'with-student-class':''}"><img class="tahadi-roster-watermark" src="logo.png" alt="" onerror="this.style.display='none'"><div class="tahadi-roster-inner"><header class="tahadi-roster-top"><div class="tahadi-roster-school">إدارة مدارس التحدي الأهلية المختلطة</div><div class="tahadi-roster-title">${heading}</div><div class="tahadi-roster-subtitle">${gender}</div></header><div class="tahadi-roster-meta"><span>عدد الطلاب الكلي: ${count}</span><span>العام الدراسي 2026 - 2027</span></div><div class="tahadi-roster-columns ${two?'two':''}">${cols}</div><footer class="tahadi-roster-footer"><span>إدارة مدارس التحدي الأهلية المختلطة</span><span>الصفحة ${pageIndex+1} من ${pageTotal}</span></footer></div></section>`;
 }
 async function rosterMergedPDF(info,students,options={}){
  const two=options.two===true,host=document.getElementById('rosterPdfHost');
@@ -2847,6 +2862,62 @@ async function rosterMergedPDF(info,students,options={}){
   return {bytes:pdf.output('arraybuffer'),pages:pages.length};
  }finally{host.innerHTML='';}
 }
+
+/* ===== قائمة الطلاب المحددين: زر مستقل في شريط تحديد الطلاب، لا يغير البيانات ===== */
+let selectedRosterExportBusy=false;
+async function downloadSelectedStudentsRosterPDF(){
+ if(selectedRosterExportBusy)return;
+ const codes=[...selectedStudents].map(String),button=document.getElementById('downloadSelectedRosterBtn');
+ if(!codes.length){toast('حدد طالبًا واحدًا على الأقل لتنزيل القائمة.');return;}
+ if(typeof html2canvas!=='function'||!window.jspdf?.jsPDF){toast('مكتبات إنشاء PDF غير متاحة؛ تأكد من الإنترنت وأعد المحاولة.');return;}
+ if(!navigator.onLine){toast('تنزيل القائمة يتطلب الإنترنت للتحقق من بيانات الطلاب الحالية.');return;}
+ selectedRosterExportBusy=true;
+ if(button){button.disabled=true;button.textContent='جاري تجهيز قائمة المحددين...';}
+ try{
+  const [freshStudents,freshClasses]=await Promise.all([dbGetFresh(PATH.students),dbGetFresh(PATH.classes)]);
+  if(!freshStudents||typeof freshStudents!=='object'||Array.isArray(freshStudents))throw new Error('تعذرت قراءة قائمة الطلاب الحالية من Firebase.');
+  if(!freshClasses||typeof freshClasses!=='object'||Array.isArray(freshClasses))throw new Error('تعذرت قراءة الصفوف الحالية من Firebase.');
+  const rows=[],classIds=new Set(),classNameIds=new Map(),genders=new Set();
+  for(const code of codes){
+   const st=freshStudents[code];
+   if(!st||typeof st!=='object')throw new Error('الطالب ذو الكود '+code+' لم يعد موجودًا؛ أعد تحميل الصفحة والتحديد.');
+   const name=String(st.name||st.fullName||'').trim();
+   if(!name)throw new Error('الطالب ذو الكود '+code+' لا يحتوي على اسم، لم يتم تنزيل قائمة ناقصة.');
+   const classId=String(st.classId||'');
+   const clazz=freshClasses[classId];
+   if(!classId||!clazz||typeof clazz!=='object')throw new Error('الصف غير معروف للطالب '+name+'؛ صحح بياناته قبل الطباعة.');
+   const className=String(clazz.name||clazz.title||'').trim();
+   if(!className)throw new Error('اسم الصف غير موجود للطالب '+name+'؛ صحح بيانات الصف.');
+   const gender=normalizeGender(st.gender||clazz.gender);
+   genders.add(gender);classIds.add(classId);
+   if(!classNameIds.has(className))classNameIds.set(className,new Set());
+   classNameIds.get(className).add(classId);
+   rows.push({...st,name,code,classId,rosterClassLabel:className,_classObject:clazz});
+  }
+  if(rows.length!==codes.length)throw new Error('توجد بيانات ناقصة في الطلاب المحددين.');
+  for(const st of rows){
+   const sameNamed=classNameIds.get(st.rosterClassLabel)?.size>1;
+   if(sameNamed){
+    const place=String(classPlaceLabel(st._classObject)||'').trim();
+    st.rosterClassLabel+=` (${genderClass(st._classObject)}${place?'، '+place:''})`;
+   }
+   delete st._classObject;
+  }
+  rows.sort((a,b)=>rosterCollator.compare(a.name,b.name)||a.code.localeCompare(b.code));
+  const genderTitle=genders.size!==1?'ذكور وإناث':genders.has('female')?'إناث':genders.has('male')?'ذكور':'مختلط';
+  const singleClass=classIds.size===1;
+  const info={showStudentClass:true,fullTitle:singleClass?'قائمة أسماء طلاب '+rows[0].rosterClassLabel:'قائمة أسماء الطلاب المحددين',gender:genderTitle,title:'الطلاب المحددين'};
+  const result=await rosterMergedPDF(info,rows,{two:false});
+  const blob=new Blob([result.bytes],{type:'application/pdf'}),url=URL.createObjectURL(blob);
+  const link=document.createElement('a');link.href=url;
+  link.download=rosterSafeFilename((singleClass?'قائمة طلاب '+rows[0].rosterClassLabel:'قائمة الطلاب المحددين')+' - '+rows.length+' طالب')+'.pdf';
+  link.style.display='none';document.body.appendChild(link);link.click();link.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),60000);
+  toast('تم تجهيز قائمة '+rows.length+' طالب مرتبة أبجديًا مع الصف والتسلسل في '+result.pages+' صفحة.');
+ }catch(error){console.error('SELECTED_STUDENTS_ROSTER_PDF_ERROR',error);toast(error?.message||'تعذر إنشاء قائمة الطلاب المحددين.');}
+ finally{selectedRosterExportBusy=false;if(button){button.disabled=false;button.textContent='تحميل قائمة المحددين';}}
+}
+
 async function downloadMergedClassRostersPDF(){
  if(rosterBusy)return;
  const ids=rosterSelectedIds(),status=document.getElementById('rosterExportStatus'),btn=document.getElementById('rosterDownloadBtn');
